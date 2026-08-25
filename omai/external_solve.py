@@ -51,7 +51,8 @@ Validation is fail-closed and happens BEFORE any dispatch concept exists:
       identity lists exactly, order included (a reordered, noncanonical
       binding fails);
     * the stored edge and target identities must recompute to their own
-      uids (a tampered materialized view fails);
+      uids (a tampered stored map entry fails; reads replay the live log
+      via :meth:`omai.store.Store.read`, never ``map/current/``);
     * the target must resolve by name plus uid and be structurally
       downstream of the frontier's outputs over live edges;
     * a lineage that names a node must name the target (and its pin must
@@ -225,7 +226,9 @@ def _check_shape(request: Any, *, where: str = "<request>") -> None:
                 if k not in request]
     if required:
         raise _fail(where, f"missing fields {sorted(required)!r}")
-    if request["v"] != REQUEST_VERSION:
+    # isinstance guards the bool == int coercion: v=true must not alias v=1
+    # (it would mint a second request id for the same frontier).
+    if isinstance(request["v"], bool) or request["v"] != REQUEST_VERSION:
         raise _fail(where, f"v must be {REQUEST_VERSION}, got {request['v']!r}")
     _check_hex64(request["map_version"], where=where, what="map_version")
     _check_hex64(request["request_id"], where=where, what="request_id")

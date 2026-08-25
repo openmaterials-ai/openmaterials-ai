@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import json
 import shutil
+from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
@@ -68,6 +69,26 @@ def _tmp_store(tmp_path: Path) -> Path:
     return root
 
 
+def _doctored_store(tmp_path: Path, uid: str,
+                    doctor: Callable[[dict[str, Any]], None]) -> Path:
+    """A private copy of the live log with the stored identity of one add
+    record doctored in place, every version hash left untouched: what
+    Store.read replays is then a tampered stored entry under an unchanged
+    head."""
+    root = tmp_path / "map"
+    root.mkdir()
+    lines = []
+    for line in (_MAP / "log.jsonl").read_text().splitlines():
+        record = json.loads(line)
+        payload = record.get("payload", {})
+        if payload.get("uid") == uid and "identity" in payload:
+            doctor(payload["identity"])
+            line = json.dumps(record)
+        lines.append(line)
+    (root / "log.jsonl").write_text("\n".join(lines) + "\n")
+    return root
+
+
 # --------------------------------------------------------------------------
 # The kALDo direct-BTE fixture.
 # --------------------------------------------------------------------------
@@ -84,7 +105,7 @@ def test_fixture_parses_and_validates_against_the_live_map() -> None:
 def test_fixture_pins_the_exact_solve_edge_output_and_target() -> None:
     """The frontier is the direct-inverse BTE solve edge, its output the
     mean-free-displacement node, its target the thermal conductivity, all
-    resolved by name against the live materialized view."""
+    resolved by name against the live log-derived view."""
     fx = _fixture()
     current = Store(_MAP).read()
     assert fx["operator"]["name"] == _SOLVE_EDGE_NAME
@@ -122,6 +143,11 @@ def test_fixture_regenerates_from_the_live_producers() -> None:
         execution=fx["execution"],
     )
     assert rebuilt == fx
+    # Pin the committed serialization too (one serializer, byte-for-byte),
+    # so a cosmetic re-write of the fixture file cannot silently change the
+    # bytes a consumer vendors downstream.
+    assert _FIXTURE.read_text() == json.dumps(rebuilt, indent=1,
+                                              sort_keys=True) + "\n"
 
 
 def test_fixture_lineage_id_is_the_committed_instance_id() -> None:
@@ -205,6 +231,7 @@ def test_malformed_requests_fail_closed() -> None:
         ({k: v for k, v in fx.items() if k != "target"}, "missing fields"),
         ({**fx, "dispatch": True}, "unknown fields"),
         ({**fx, "v": 2}, "v must be"),
+        ({**fx, "v": True}, "v must be"),
         ({**fx, "map_version": "not-a-hash"}, "map_version"),
         ({**fx, "operator": {"name": "", "uid": fx["operator"]["uid"]}},
          "operator.name"),
@@ -224,6 +251,17 @@ def test_malformed_requests_fail_closed() -> None:
             parse_request(json.dumps(request))
     with pytest.raises(ExternalSolveRequestError, match="not valid JSON"):
         parse_request("{nope")
+
+
+def test_boolean_v_reminted_still_fails_the_shape_gate() -> None:
+    """bool == int in Python, so a self-consistently re-minted v=true
+    envelope would otherwise pass every gate and mint a second request id as
+    an alias of the v=1 frontier; the shape gate rejects bools outright."""
+    request = _reminted(_fixture(), v=True)
+    with pytest.raises(ExternalSolveRequestError, match="v must be"):
+        parse_request(json.dumps(request))
+    with pytest.raises(ExternalSolveRequestError, match="v must be"):
+        validate_request(request)
 
 
 # --------------------------------------------------------------------------
@@ -319,6 +357,28 @@ def test_stale_lineage_node_uid_pin_fails_closed() -> None:
     request = _reminted(fx, lineage=lineage)
     with pytest.raises(ExternalSolveRequestError, match="node_uid pin"):
         validate_request(request)
+
+
+def test_tampered_stored_edge_identity_fails_closed(tmp_path: Path) -> None:
+    """The defense-in-depth gate behind the uid equality checks: a stored
+    edge whose identity no longer recomputes to its own uid (a doctored
+    log-derived entry, head unchanged) fails as tampered."""
+    fx = _fixture()
+    root = _doctored_store(tmp_path, fx["operator"]["uid"],
+                           lambda ident: ident["inputs"].reverse())
+    with pytest.raises(ExternalSolveRequestError,
+                       match="stored edge identity does not recompute"):
+        validate_request(fx, store_root=root)
+
+
+def test_tampered_stored_target_identity_fails_closed(tmp_path: Path) -> None:
+    fx = _fixture()
+    root = _doctored_store(
+        tmp_path, fx["target"]["uid"],
+        lambda ident: ident["labels"].update(doctored="yes"))
+    with pytest.raises(ExternalSolveRequestError,
+                       match="stored target identity does not recompute"):
+        validate_request(fx, store_root=root)
 
 
 def test_deprecated_operator_edge_fails_closed(tmp_path: Path) -> None:
