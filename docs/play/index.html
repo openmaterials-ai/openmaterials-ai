@@ -215,6 +215,7 @@
   .rec-vtable td{padding:3px 10px;border-bottom:1px solid var(--line);vertical-align:baseline;}
   .rec-vtable tr:last-child td{border-bottom:none;}
   .rec-vtable .rec-vk{color:var(--ink-2,#3d4149);}
+  .rec-vtable .rec-vc{font-size:.68rem;color:var(--muted);margin-top:2px;}
   .rec-vtable .rec-vv{font-family:var(--font-mono,monospace);font-variant-numeric:tabular-nums;
     color:var(--ink);text-align:right;white-space:nowrap;padding-right:0;}
   .rec-vtable .rec-vu{font-family:var(--font-mono,monospace);color:var(--muted);white-space:nowrap;}
@@ -1992,12 +1993,12 @@ function resultsHTML(record){
   return '<div class="rec-sec"><div class="rec-h">Values</div>' +
     '<p class="rec-explain">What the run reported, one row per value instance, in the units each declares. ' +
     'These rows sit outside the lineage id: they are evidence attached to the record, not part of its identity.</p>' +
-    '<table class="rec-vtable"><thead><tr><th>Quantity</th><th>Conditions</th><th class="num">Value</th><th>Units</th></tr></thead><tbody>' +
+    '<table class="rec-vtable"><thead><tr><th>Quantity</th><th class="num">Value</th><th>Units</th></tr></thead><tbody>' +
     rows.map(function(r){
       var c = r.conditions && typeof r.conditions === 'object' ? r.conditions : {};
       var conds = Object.keys(c).map(function(k){ return k + ' = ' + fmtScalar(c[k]); }).join(' · ');
       var val = fmtValue(r.value) + (typeof r.uncertainty === 'number' ? ' ± ' + fmtScalar(r.uncertainty) : '');
-      return '<tr><td class="rec-vk">' + esc(r.variable) + '</td><td class="rec-vc">' + esc(conds) + '</td>' +
+      return '<tr><td class="rec-vk">' + esc(r.variable) + (conds ? '<div class="rec-vc">' + esc(conds) + '</div>' : '') + '</td>' +
         '<td class="rec-vv">' + esc(val) + '</td><td class="rec-vu">' + esc(cleanUnit(r.units)) + '</td></tr>';
     }).join('') + '</tbody></table></div>';
 }
