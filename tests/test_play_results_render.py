@@ -78,6 +78,7 @@ def test_list_values_render():
 def test_no_results_renders_nothing():
     assert _render({"results": []}).strip() == ""
     assert _render({}).strip() == ""
+    assert _render({"results": "not a list"}).strip() == ""
 
 
 def test_page_wires_results_after_lineage_values():

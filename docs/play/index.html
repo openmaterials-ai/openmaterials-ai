@@ -1980,7 +1980,8 @@ function valuesHTML(lineage, node){
 // the lineage carries no values of its own. instanceToRecord maps one stub into
 // a lineage; this is the N-row table with a Conditions column instead.
 function reportedValues(record){
-  return ((record && record.results) || []).filter(function(r){
+  var results = record && Array.isArray(record.results) ? record.results : [];
+  return results.filter(function(r){
     return r && r.value != null && typeof r.variable === 'string' &&
       (typeof r.value !== 'number' || isFinite(r.value));
   });
