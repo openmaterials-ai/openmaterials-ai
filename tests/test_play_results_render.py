@@ -52,7 +52,8 @@ def _render(record: dict) -> str:
     if not node:
         pytest.skip("node not available; render checked where present")
     html = _PLAY.read_text()
-    src = "\n".join(_grab_function(html, n) for n in ("esc", "fmtScalar", "cleanUnit", "resultsHTML"))
+    src = "\n".join(_grab_function(html, n)
+                    for n in ("esc", "fmtScalar", "fmtValue", "cleanUnit", "reportedValues", "resultsHTML"))
     script = src + "\nconsole.log(resultsHTML(%s));" % json.dumps(record)
     proc = subprocess.run([node, "-e", script], capture_output=True, text=True)
     assert proc.returncode == 0, f"node failed: {proc.stderr}"
@@ -65,7 +66,13 @@ def test_results_render_as_a_values_table():
     assert "20.16 ± 0.5" in out
     assert "W/(m K)" in out
     assert "temperature_K = 300" in out and "code = MESKAL" in out
-    assert "Bogus" not in out, "a non-numeric instance is not a value"
+    assert "Bogus" in out and "not a number" in out, "a stated value renders even when not numeric"
+    assert "outside the lineage id" in out
+
+
+def test_list_values_render():
+    rec = {"results": [{"variable": "ThermalConductivity", "value": [10, 20, 30], "units": "W/(m K)"}]}
+    assert "10 × 20 × 30" in _render(rec)
 
 
 def test_no_results_renders_nothing():
