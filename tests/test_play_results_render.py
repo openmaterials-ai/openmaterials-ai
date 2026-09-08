@@ -53,7 +53,7 @@ def _render(record: dict) -> str:
         pytest.skip("node not available; render checked where present")
     html = _PLAY.read_text()
     src = "\n".join(_grab_function(html, n)
-                    for n in ("esc", "fmtScalar", "fmtValue", "cleanUnit", "reportedValues", "resultsHTML"))
+                    for n in ("esc", "fmtScalar", "fmtValue", "fmtSig", "cleanUnit", "reportedValues", "resultsHTML"))
     script = src + "\nconsole.log(resultsHTML(%s));" % json.dumps(record)
     proc = subprocess.run([node, "-e", script], capture_output=True, text=True)
     assert proc.returncode == 0, f"node failed: {proc.stderr}"
@@ -68,6 +68,13 @@ def test_results_render_as_a_values_table():
     assert "temperature_K = 300" in out and "code = MESKAL" in out
     assert "Bogus" in out and "not a number" in out, "a stated value renders even when not numeric"
     assert "outside the lineage id" in out
+
+
+def test_values_display_six_significant_digits():
+    rec = {"results": [{"variable": "ThermalConductivity", "value": 19.98035554910192,
+                        "uncertainty": 109.46818688469766, "units": "W/(m K)"}]}
+    out = _render(rec)
+    assert "19.9804 ± 109.468" in out and "19.98035554910192" not in out
 
 
 def test_list_values_render():

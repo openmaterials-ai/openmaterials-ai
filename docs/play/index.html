@@ -1987,6 +1987,10 @@ function reportedValues(record){
       (typeof r.value !== 'number' || isFinite(r.value));
   });
 }
+// Six significant digits for display; the record itself keeps the full value.
+function fmtSig(v){
+  return typeof v === 'number' && isFinite(v) ? String(Number(v.toPrecision(6))) : fmtValue(v);
+}
 function resultsHTML(record){
   var rows = reportedValues(record);
   if (!rows.length) return '';
@@ -1997,7 +2001,7 @@ function resultsHTML(record){
     rows.map(function(r){
       var c = r.conditions && typeof r.conditions === 'object' ? r.conditions : {};
       var conds = Object.keys(c).map(function(k){ return k + ' = ' + fmtScalar(c[k]); }).join(' · ');
-      var val = fmtValue(r.value) + (typeof r.uncertainty === 'number' ? ' ± ' + fmtScalar(r.uncertainty) : '');
+      var val = fmtSig(r.value) + (typeof r.uncertainty === 'number' ? ' ± ' + fmtSig(r.uncertainty) : '');
       return '<tr><td class="rec-vk">' + esc(r.variable) + (conds ? '<div class="rec-vc">' + esc(conds) + '</div>' : '') + '</td>' +
         '<td class="rec-vv">' + esc(val) + '</td><td class="rec-vu">' + esc(cleanUnit(r.units)) + '</td></tr>';
     }).join('') + '</tbody></table></div>';
