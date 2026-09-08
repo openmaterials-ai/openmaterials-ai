@@ -1979,7 +1979,7 @@ function valuesHTML(lineage, node){
 
 // The run's value instances (results[], outside the lineage hash), shown when
 // the lineage carries no values of its own. instanceToRecord maps one stub into
-// a lineage; this is the N-row table with a Conditions column instead.
+// a lineage; this is the N-row table, conditions as a sub-line under the quantity.
 function reportedValues(record){
   var results = record && Array.isArray(record.results) ? record.results : [];
   return results.filter(function(r){
