@@ -92,3 +92,4 @@ def test_page_wires_results_after_lineage_values():
     html = _PLAY.read_text()
     assert "function resultsHTML" in html
     assert "(valuesHTML(lineage, node) || resultsHTML(record))" in html
+    assert ".rec-vtable{width:100%;table-layout:fixed;" in html

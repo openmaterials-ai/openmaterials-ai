@@ -206,18 +206,20 @@
     color:var(--muted);margin-left:7px;}
   .rec-none{font-size:.8rem;color:var(--muted);font-style:italic;}
   /* the values table: value + units, no chart. A plain two-column table. */
-  .rec-vtable{width:100%;border-collapse:collapse;font-size:.78rem;}
+  .rec-vtable{width:100%;table-layout:fixed;border-collapse:collapse;font-size:.78rem;}
+  .rec-vtable th:first-child:nth-last-child(3){width:52%;}
   .rec-vtable th{text-align:left;font-size:.64rem;font-weight:700;letter-spacing:.05em;
     text-transform:uppercase;color:var(--faint,#9aa0a8);padding:3px 10px;border-bottom:1px solid var(--line);}
   .rec-vtable th.num{text-align:right;padding-right:0;}
+  .rec-vtable th.num:nth-last-child(2){width:28%;}
   .rec-vtable th:first-child,.rec-vtable td:first-child{padding-left:0;}
   .rec-vtable th:last-child,.rec-vtable td:last-child{padding-right:0;}
   .rec-vtable td{padding:3px 10px;border-bottom:1px solid var(--line);vertical-align:baseline;}
   .rec-vtable tr:last-child td{border-bottom:none;}
-  .rec-vtable .rec-vk{color:var(--ink-2,#3d4149);}
+  .rec-vtable .rec-vk{color:var(--ink-2,#3d4149);overflow-wrap:anywhere;}
   .rec-vtable .rec-vc{font-size:.68rem;color:var(--muted);margin-top:2px;}
   .rec-vtable .rec-vv{font-family:var(--font-mono,monospace);font-variant-numeric:tabular-nums;
-    color:var(--ink);text-align:right;white-space:nowrap;padding-right:0;}
+    color:var(--ink);text-align:right;padding-right:0;overflow-wrap:anywhere;}
   .rec-vtable .rec-vu{font-family:var(--font-mono,monospace);color:var(--muted);white-space:nowrap;}
   .rec-vtable a{color:var(--accent);text-decoration:none;}
   .rec-vtable a:hover{text-decoration:underline;}
