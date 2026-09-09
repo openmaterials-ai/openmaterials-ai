@@ -1972,7 +1972,7 @@ function valuesHTML(lineage, node){
     rows.map(function(row){
       var u = row.key === picked.primary.key ? unit : '';
       return '<tr><td class="rec-vk">' + esc(row.key) + '</td>' +
-        '<td class="rec-vv">' + esc(fmtValue(row.val)) + '</td>' +
+        '<td class="rec-vv">' + esc(fmtSig(row.val)) + '</td>' +
         '<td class="rec-vu">' + esc(u) + '</td></tr>';
     }).join('') + '</tbody></table></div>';
 }
@@ -1987,6 +1987,10 @@ function reportedValues(record){
       (typeof r.value !== 'number' || isFinite(r.value));
   });
 }
+// Six significant digits for display; the record itself keeps the full value.
+function fmtSig(v){
+  return typeof v === 'number' && isFinite(v) ? String(Number(v.toPrecision(6))) : fmtValue(v);
+}
 function resultsHTML(record){
   var rows = reportedValues(record);
   if (!rows.length) return '';
@@ -1997,7 +2001,7 @@ function resultsHTML(record){
     rows.map(function(r){
       var c = r.conditions && typeof r.conditions === 'object' ? r.conditions : {};
       var conds = Object.keys(c).map(function(k){ return k + ' = ' + fmtScalar(c[k]); }).join(' · ');
-      var val = fmtValue(r.value) + (typeof r.uncertainty === 'number' ? ' ± ' + fmtScalar(r.uncertainty) : '');
+      var val = fmtSig(r.value) + (typeof r.uncertainty === 'number' ? ' ± ' + fmtSig(r.uncertainty) : '');
       return '<tr><td class="rec-vk">' + esc(r.variable) + (conds ? '<div class="rec-vc">' + esc(conds) + '</div>' : '') + '</td>' +
         '<td class="rec-vv">' + esc(val) + '</td><td class="rec-vu">' + esc(cleanUnit(r.units)) + '</td></tr>';
     }).join('') + '</tbody></table></div>';
@@ -2201,10 +2205,10 @@ function renderBundle(env){
     var mat = materialName(lineage.material);
     var picked = pickValues(lineage.values, lineage.node);
     var isUnitMeta = picked.primary && (picked.primary.key === 'units' || picked.primary.key === 'unit');
-    var val = picked.primary && !isUnitMeta ? fmtValue(picked.primary.val) : '';
+    var val = picked.primary && !isUnitMeta ? fmtSig(picked.primary.val) : '';
     var unit = cleanUnit(lineage.units || (lineage.values && lineage.values.units) || '');
     var reported = reportedValues(member)[0];
-    if (!val && reported) { val = fmtValue(reported.value); unit = cleanUnit(reported.units || ''); }
+    if (!val && reported) { val = fmtSig(reported.value); unit = cleanUnit(reported.units || ''); }
     var short = member.id ? String(member.id).slice(0, 12) : '';
     h += '<tr><td class="rec-vk"><a href="#" class="rec-member" data-idx="' + idx + '" title="Jump to this lineage\'s datasheet below">' + esc(label ? label + (mat ? ' of ' + mat : '') : (mat || 'lineage record')) + '</a></td>' +
       '<td class="rec-vv">' + esc(val) + '</td><td class="rec-vu">' + esc(unit) + '</td>' +
