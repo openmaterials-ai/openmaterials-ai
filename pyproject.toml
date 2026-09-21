@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "openmaterials-ai"
-version = "0.0.1"
+version = "0.1.0"
 description = "A symbolic substrate for computational materials science"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -17,6 +17,10 @@ dependencies = [
     "pydantic>=2.5",
     "numpy>=1.26",
     "sympy>=1.12",
+    # omai.schema.validate_record is part of the library contract, so the
+    # validator is a core dependency, not an extra: a consumer installing omai
+    # to validate a record must not have to discover a second install step.
+    "jsonschema>=4",
 ]
 
 [project.optional-dependencies]
@@ -61,6 +65,12 @@ dev = [
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["omai*", "omdc*", "omds*"]
+
+# The golden vectors ship INSIDE the wheel: mapengine and the MCG worker assert
+# their own canonicalization against these files, so a consumer that pip
+# installs omai must get them without cloning the repository.
+[tool.setuptools.package-data]
+omai = ["vectors/*.json", "tools/*.json"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

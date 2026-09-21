@@ -1,0 +1,668 @@
+[
+ {
+  "canonical_id": "ab0da9ec11b99b44b3c942c609a8aee24b83240955d2c029c5d05dfa34dbe84c",
+  "canonical_id_with_execution": "ab0da9ec11b99b44b3c942c609a8aee24b83240955d2c029c5d05dfa34dbe84c",
+  "canonical_json": "{\"conditions\":{\"T\":\"300 K\",\"approximation\":\"harmonic (RRHO)\",\"code\":\"xtb 6.7.1\",\"model\":\"GFN2-xTB\",\"n_imaginary\":0,\"phase\":\"gas\",\"smiles\":\"CC(C)(c1ccc(OCC2CO2)cc1)c1ccc(OCC2CO2)cc1\"},\"material\":\"C21H24O4 (DGEBA)\",\"node\":\"MolarHeatCapacity\",\"values\":{\"units\":\"J/(K mol)\",\"value\":397.7}}",
+  "lineage": {
+   "conditions": {
+    "T": "300 K",
+    "approximation": "harmonic (RRHO)",
+    "code": "xtb 6.7.1",
+    "model": "GFN2-xTB",
+    "n_imaginary": 0,
+    "phase": "gas",
+    "smiles": "CC(C)(c1ccc(OCC2CO2)cc1)c1ccc(OCC2CO2)cc1"
+   },
+   "material": "C21H24O4 (DGEBA)",
+   "node": "MolarHeatCapacity",
+   "values": {
+    "units": "J/(K mol)",
+    "value": 397.7
+   }
+  },
+  "lineage_id": "ab0da9ec11b99b44b3c942c609a8aee24b83240955d2c029c5d05dfa34dbe84c",
+  "name": "commons:molar_heat_capacity",
+  "source": "openmaterials commons conformance target (c21h24o4-dgeba-molarheatcapacity-materialscodegraph-dgeba-cp300-gfn2-target.json)"
+ },
+ {
+  "canonical_id": "e63f4de3a73a9a868ff0b54c94848e3af7993c9d9e74ad83309c81ad797fc823",
+  "canonical_id_with_execution": "e63f4de3a73a9a868ff0b54c94848e3af7993c9d9e74ad83309c81ad797fc823",
+  "canonical_json": "{\"conditions\":{\"T\":\"298.15 K\",\"code\":\"xtb 6.7.1\",\"dh298_kJ_per_mol\":-106.3,\"model\":\"GFN2-xTB\",\"normalization\":\"per_reaction_event\",\"phase\":\"gas\",\"quantity\":\"reaction enthalpy dH(298 K)\",\"reaction\":\"glycidyl phenyl ether + aniline -> 1-(phenylamino)-3-phenoxy-2-propanol\"},\"material\":\"C9H10O2 (glycidyl phenyl ether)\",\"node\":\"ReactionEnergy\",\"values\":{\"units\":\"eV\",\"value\":-1.101722}}",
+  "lineage": {
+   "conditions": {
+    "T": "298.15 K",
+    "code": "xtb 6.7.1",
+    "dh298_kJ_per_mol": -106.3,
+    "model": "GFN2-xTB",
+    "normalization": "per_reaction_event",
+    "phase": "gas",
+    "quantity": "reaction enthalpy dH(298 K)",
+    "reaction": "glycidyl phenyl ether + aniline -> 1-(phenylamino)-3-phenoxy-2-propanol"
+   },
+   "material": "C9H10O2 (glycidyl phenyl ether)",
+   "node": "ReactionEnergy",
+   "values": {
+    "units": "eV",
+    "value": -1.101722
+   }
+  },
+  "lineage_id": "e63f4de3a73a9a868ff0b54c94848e3af7993c9d9e74ad83309c81ad797fc823",
+  "name": "commons:reaction_energy_aniline",
+  "source": "openmaterials commons conformance target (c9h10o2-glycidyl-phenyl-ether-reactionenergy-materialscodegraph-cure-dh-gpe-aniline-gfn2-target.json)"
+ },
+ {
+  "canonical_id": "c9de95163fd69a7672036f13a983faf560b8265880262c9b554809853a717888",
+  "canonical_id_with_execution": "c9de95163fd69a7672036f13a983faf560b8265880262c9b554809853a717888",
+  "canonical_json": "{\"conditions\":{\"T\":\"298.15 K\",\"code\":\"xtb 6.7.1\",\"dh298_kJ_per_mol\":-116.1,\"model\":\"GFN2-xTB\",\"normalization\":\"per_reaction_event\",\"phase\":\"gas\",\"quantity\":\"reaction enthalpy dH(298 K)\",\"reaction\":\"glycidyl phenyl ether + methylamine -> 1-(methylamino)-3-phenoxy-2-propanol\"},\"material\":\"C9H10O2 (glycidyl phenyl ether)\",\"node\":\"ReactionEnergy\",\"values\":{\"units\":\"eV\",\"value\":-1.203292}}",
+  "lineage": {
+   "conditions": {
+    "T": "298.15 K",
+    "code": "xtb 6.7.1",
+    "dh298_kJ_per_mol": -116.1,
+    "model": "GFN2-xTB",
+    "normalization": "per_reaction_event",
+    "phase": "gas",
+    "quantity": "reaction enthalpy dH(298 K)",
+    "reaction": "glycidyl phenyl ether + methylamine -> 1-(methylamino)-3-phenoxy-2-propanol"
+   },
+   "material": "C9H10O2 (glycidyl phenyl ether)",
+   "node": "ReactionEnergy",
+   "values": {
+    "units": "eV",
+    "value": -1.203292
+   }
+  },
+  "lineage_id": "c9de95163fd69a7672036f13a983faf560b8265880262c9b554809853a717888",
+  "name": "commons:reaction_energy_methylamine",
+  "source": "openmaterials commons conformance target (c9h10o2-glycidyl-phenyl-ether-reactionenergy-materialscodegraph-cure-dh-gpe-methylamine-gfn2-target.json)"
+ },
+ {
+  "canonical_id": "b13e25c6787b385f038dc27625126c29eb2db611237b680e0eae83067dd89e4e",
+  "canonical_id_with_execution": "b13e25c6787b385f038dc27625126c29eb2db611237b680e0eae83067dd89e4e",
+  "canonical_json": "{\"conditions\":{\"G_MW_per_m2K\":25,\"d1_um\":5,\"d3_um\":0.02,\"f\":0.05,\"k11_W_per_mK\":1200,\"k33_W_per_mK\":6,\"kapitza_radius_nm\":8.0,\"km_W_per_mK\":0.2,\"orientation\":\"random\"},\"material\":\"DGEBA epoxy + 5 vol% GNP (reference formulation)\",\"node\":\"ThermalConductivity[effective_medium=nan,orientation=random]\",\"values\":{\"units\":\"W/(m K)\",\"value\":1.2452}}",
+  "lineage": {
+   "conditions": {
+    "G_MW_per_m2K": 25,
+    "d1_um": 5,
+    "d3_um": 0.02,
+    "f": 0.05,
+    "k11_W_per_mK": 1200,
+    "k33_W_per_mK": 6,
+    "kapitza_radius_nm": 8.0,
+    "km_W_per_mK": 0.2,
+    "orientation": "random"
+   },
+   "material": "DGEBA epoxy + 5 vol% GNP (reference formulation)",
+   "node": "ThermalConductivity[effective_medium=nan,orientation=random]",
+   "values": {
+    "units": "W/(m K)",
+    "value": 1.2452
+   }
+  },
+  "lineage_id": "b13e25c6787b385f038dc27625126c29eb2db611237b680e0eae83067dd89e4e",
+  "name": "commons:thermal_conductivity",
+  "source": "openmaterials commons conformance target (dgeba-epoxy-5-vol-gnp-reference-formulation-thermalconductivity-effective-medium-nan-orientation-random-materialscodegraph-target.json)"
+ },
+ {
+  "canonical_id": "03dc6386fc14c5325f8dcff5a8cc4b8385677d7e729ef6bfd7758bc94bbcb81e",
+  "canonical_id_with_execution": "03dc6386fc14c5325f8dcff5a8cc4b8385677d7e729ef6bfd7758bc94bbcb81e",
+  "canonical_json": "{\"conditions\":{\"T\":1e+16},\"material\":{\"name\":\"Si\"},\"node\":\"ThermalConductivity[transport_model=hnemd]\",\"node_uid\":\"e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88\",\"params\":{}}",
+  "lineage": {
+   "conditions": {
+    "T": 1e+16
+   },
+   "material": {
+    "name": "Si"
+   },
+   "node": "ThermalConductivity[transport_model=hnemd]",
+   "node_uid": "e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88",
+   "params": {}
+  },
+  "lineage_id": "03dc6386fc14c5325f8dcff5a8cc4b8385677d7e729ef6bfd7758bc94bbcb81e",
+  "name": "mcg:cond_1e16",
+  "source": "MCG test_record.py / worker record.spec.ts golden vector"
+ },
+ {
+  "canonical_id": "5f5739bd9fc011a868335981f1b8f51d9bd824ff7f20d6449d112334c3f2b25b",
+  "canonical_id_with_execution": "5f5739bd9fc011a868335981f1b8f51d9bd824ff7f20d6449d112334c3f2b25b",
+  "canonical_json": "{\"conditions\":{\"T\":1e+21},\"material\":{\"name\":\"Si\"},\"node\":\"ThermalConductivity[transport_model=hnemd]\",\"node_uid\":\"e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88\",\"params\":{}}",
+  "lineage": {
+   "conditions": {
+    "T": 1e+21
+   },
+   "material": {
+    "name": "Si"
+   },
+   "node": "ThermalConductivity[transport_model=hnemd]",
+   "node_uid": "e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88",
+   "params": {}
+  },
+  "lineage_id": "5f5739bd9fc011a868335981f1b8f51d9bd824ff7f20d6449d112334c3f2b25b",
+  "name": "mcg:cond_1e21",
+  "source": "MCG test_record.py / worker record.spec.ts golden vector"
+ },
+ {
+  "canonical_id": "6d8096e6aba8f91eac26a1d5a25a4ce6957a8919d7a5d9357f6a1947d6ffaeff",
+  "canonical_id_with_execution": "6d8096e6aba8f91eac26a1d5a25a4ce6957a8919d7a5d9357f6a1947d6ffaeff",
+  "canonical_json": "{\"conditions\":{\"T\":1.5e+16},\"material\":{\"name\":\"Si\"},\"node\":\"ThermalConductivity[transport_model=hnemd]\",\"node_uid\":\"e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88\",\"params\":{}}",
+  "lineage": {
+   "conditions": {
+    "T": 1.5e+16
+   },
+   "material": {
+    "name": "Si"
+   },
+   "node": "ThermalConductivity[transport_model=hnemd]",
+   "node_uid": "e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88",
+   "params": {}
+  },
+  "lineage_id": "6d8096e6aba8f91eac26a1d5a25a4ce6957a8919d7a5d9357f6a1947d6ffaeff",
+  "name": "mcg:cond_1_5e16",
+  "source": "MCG test_record.py / worker record.spec.ts golden vector"
+ },
+ {
+  "canonical_id": "d49bd45faa4753d6bf9fc690824128542d2a36a79e20e2f0a2039250ed02b056",
+  "canonical_id_with_execution": "d49bd45faa4753d6bf9fc690824128542d2a36a79e20e2f0a2039250ed02b056",
+  "canonical_json": "{\"conditions\":{\"T\":1000000000000000.0},\"material\":{\"name\":\"Si\"},\"node\":\"ThermalConductivity[transport_model=hnemd]\",\"node_uid\":\"e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88\",\"params\":{}}",
+  "lineage": {
+   "conditions": {
+    "T": 1000000000000000.0
+   },
+   "material": {
+    "name": "Si"
+   },
+   "node": "ThermalConductivity[transport_model=hnemd]",
+   "node_uid": "e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88",
+   "params": {}
+  },
+  "lineage_id": "d49bd45faa4753d6bf9fc690824128542d2a36a79e20e2f0a2039250ed02b056",
+  "name": "mcg:cond_1e15",
+  "source": "MCG test_record.py / worker record.spec.ts golden vector"
+ },
+ {
+  "canonical_id": "2d600f4a9b14f07cbddbc1ce04e53ff4a3176370df47645b68bfe384eafd3b35",
+  "canonical_id_with_execution": "2d600f4a9b14f07cbddbc1ce04e53ff4a3176370df47645b68bfe384eafd3b35",
+  "canonical_json": "{\"conditions\":{\"T\":9999999999999998.0},\"material\":{\"name\":\"Si\"},\"node\":\"ThermalConductivity[transport_model=hnemd]\",\"node_uid\":\"e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88\",\"params\":{}}",
+  "lineage": {
+   "conditions": {
+    "T": 9999999999999998.0
+   },
+   "material": {
+    "name": "Si"
+   },
+   "node": "ThermalConductivity[transport_model=hnemd]",
+   "node_uid": "e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88",
+   "params": {}
+  },
+  "lineage_id": "2d600f4a9b14f07cbddbc1ce04e53ff4a3176370df47645b68bfe384eafd3b35",
+  "name": "mcg:cond_9999e15",
+  "source": "MCG test_record.py / worker record.spec.ts golden vector"
+ },
+ {
+  "canonical_id": "04b0df55f2c269d149457285b010e81be17d6d161b3e09c68d1e448fdf51751e",
+  "canonical_id_with_execution": "04b0df55f2c269d149457285b010e81be17d6d161b3e09c68d1e448fdf51751e",
+  "canonical_json": "{\"conditions\":{\"T\":0.0},\"material\":{\"name\":\"Si\"},\"node\":\"ThermalConductivity[transport_model=hnemd]\",\"node_uid\":\"e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88\",\"params\":{}}",
+  "lineage": {
+   "conditions": {
+    "T": 1e-07
+   },
+   "material": {
+    "name": "Si"
+   },
+   "node": "ThermalConductivity[transport_model=hnemd]",
+   "node_uid": "e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88",
+   "params": {}
+  },
+  "lineage_id": "04b0df55f2c269d149457285b010e81be17d6d161b3e09c68d1e448fdf51751e",
+  "name": "mcg:cond_1e-7",
+  "source": "MCG test_record.py / worker record.spec.ts golden vector"
+ },
+ {
+  "canonical_id": "cef873a368b661e7b1880b40689985643d2a50755d99ea998fe08553a1fc3434",
+  "canonical_id_with_execution": "cef873a368b661e7b1880b40689985643d2a50755d99ea998fe08553a1fc3434",
+  "canonical_json": "{\"conditions\":{\"T\":0.0001},\"material\":{\"name\":\"Si\"},\"node\":\"ThermalConductivity[transport_model=hnemd]\",\"node_uid\":\"e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88\",\"params\":{}}",
+  "lineage": {
+   "conditions": {
+    "T": 0.0001
+   },
+   "material": {
+    "name": "Si"
+   },
+   "node": "ThermalConductivity[transport_model=hnemd]",
+   "node_uid": "e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88",
+   "params": {}
+  },
+  "lineage_id": "cef873a368b661e7b1880b40689985643d2a50755d99ea998fe08553a1fc3434",
+  "name": "mcg:cond_1e-4",
+  "source": "MCG test_record.py / worker record.spec.ts golden vector"
+ },
+ {
+  "canonical_id": "cc2bec714154e22615579a0e3c59f910260ca906e7a8d2daf7c7c8d78dadf2d7",
+  "canonical_id_with_execution": "cc2bec714154e22615579a0e3c59f910260ca906e7a8d2daf7c7c8d78dadf2d7",
+  "canonical_json": "{\"conditions\":{\"T\":1e-05},\"material\":{\"name\":\"Si\"},\"node\":\"ThermalConductivity[transport_model=hnemd]\",\"node_uid\":\"e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88\",\"params\":{}}",
+  "lineage": {
+   "conditions": {
+    "T": 1e-05
+   },
+   "material": {
+    "name": "Si"
+   },
+   "node": "ThermalConductivity[transport_model=hnemd]",
+   "node_uid": "e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88",
+   "params": {}
+  },
+  "lineage_id": "cc2bec714154e22615579a0e3c59f910260ca906e7a8d2daf7c7c8d78dadf2d7",
+  "name": "mcg:cond_1e-5",
+  "source": "MCG test_record.py / worker record.spec.ts golden vector"
+ },
+ {
+  "canonical_id": "04b0df55f2c269d149457285b010e81be17d6d161b3e09c68d1e448fdf51751e",
+  "canonical_id_with_execution": "04b0df55f2c269d149457285b010e81be17d6d161b3e09c68d1e448fdf51751e",
+  "canonical_json": "{\"conditions\":{\"T\":0.0},\"material\":{\"name\":\"Si\"},\"node\":\"ThermalConductivity[transport_model=hnemd]\",\"node_uid\":\"e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88\",\"params\":{}}",
+  "lineage": {
+   "conditions": {
+    "T": 1.23e-07
+   },
+   "material": {
+    "name": "Si"
+   },
+   "node": "ThermalConductivity[transport_model=hnemd]",
+   "node_uid": "e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88",
+   "params": {}
+  },
+  "lineage_id": "04b0df55f2c269d149457285b010e81be17d6d161b3e09c68d1e448fdf51751e",
+  "name": "mcg:cond_123e-7",
+  "source": "MCG test_record.py / worker record.spec.ts golden vector"
+ },
+ {
+  "canonical_id": "b3b62903a6c9bdedfff4e89a5ae7e8d0ce9cc9683f9636fae75ad6f50196ce8a",
+  "canonical_id_with_execution": "b3b62903a6c9bdedfff4e89a5ae7e8d0ce9cc9683f9636fae75ad6f50196ce8a",
+  "canonical_json": "{\"conditions\":{\"T\":-0.0},\"material\":{\"name\":\"Si\"},\"node\":\"ThermalConductivity[transport_model=hnemd]\",\"node_uid\":\"e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88\",\"params\":{}}",
+  "lineage": {
+   "conditions": {
+    "T": -1e-07
+   },
+   "material": {
+    "name": "Si"
+   },
+   "node": "ThermalConductivity[transport_model=hnemd]",
+   "node_uid": "e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88",
+   "params": {}
+  },
+  "lineage_id": "b3b62903a6c9bdedfff4e89a5ae7e8d0ce9cc9683f9636fae75ad6f50196ce8a",
+  "name": "mcg:cond_neg_1e-7",
+  "source": "MCG test_record.py / worker record.spec.ts golden vector"
+ },
+ {
+  "canonical_id": "57e6c5cd71ac90b3162116b015ebf54b4c354b38a997d82bf7e6e7a0168e207e",
+  "canonical_id_with_execution": "57e6c5cd71ac90b3162116b015ebf54b4c354b38a997d82bf7e6e7a0168e207e",
+  "canonical_json": "{\"conditions\":{\"T\":0.123456},\"material\":{\"name\":\"Si\"},\"node\":\"ThermalConductivity[transport_model=hnemd]\",\"node_uid\":\"e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88\",\"params\":{}}",
+  "lineage": {
+   "conditions": {
+    "T": 0.1234565
+   },
+   "material": {
+    "name": "Si"
+   },
+   "node": "ThermalConductivity[transport_model=hnemd]",
+   "node_uid": "e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88",
+   "params": {}
+  },
+  "lineage_id": "57e6c5cd71ac90b3162116b015ebf54b4c354b38a997d82bf7e6e7a0168e207e",
+  "name": "mcg:cond_0_1234565",
+  "source": "MCG test_record.py / worker record.spec.ts golden vector"
+ },
+ {
+  "canonical_id": "244d1ceed4cd257da5801d86f60b0cc771ae487eae88199048c2114a547c39cf",
+  "canonical_id_with_execution": "244d1ceed4cd257da5801d86f60b0cc771ae487eae88199048c2114a547c39cf",
+  "canonical_json": "{\"conditions\":{\"T\":2.500001},\"material\":{\"name\":\"Si\"},\"node\":\"ThermalConductivity[transport_model=hnemd]\",\"node_uid\":\"e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88\",\"params\":{}}",
+  "lineage": {
+   "conditions": {
+    "T": 2.5000005
+   },
+   "material": {
+    "name": "Si"
+   },
+   "node": "ThermalConductivity[transport_model=hnemd]",
+   "node_uid": "e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88",
+   "params": {}
+  },
+  "lineage_id": "244d1ceed4cd257da5801d86f60b0cc771ae487eae88199048c2114a547c39cf",
+  "name": "mcg:cond_2_5000005",
+  "source": "MCG test_record.py / worker record.spec.ts golden vector"
+ },
+ {
+  "canonical_id": "04b0df55f2c269d149457285b010e81be17d6d161b3e09c68d1e448fdf51751e",
+  "canonical_id_with_execution": "04b0df55f2c269d149457285b010e81be17d6d161b3e09c68d1e448fdf51751e",
+  "canonical_json": "{\"conditions\":{\"T\":0.0},\"material\":{\"name\":\"Si\"},\"node\":\"ThermalConductivity[transport_model=hnemd]\",\"node_uid\":\"e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88\",\"params\":{}}",
+  "lineage": {
+   "conditions": {
+    "T": 5e-07
+   },
+   "material": {
+    "name": "Si"
+   },
+   "node": "ThermalConductivity[transport_model=hnemd]",
+   "node_uid": "e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88",
+   "params": {}
+  },
+  "lineage_id": "04b0df55f2c269d149457285b010e81be17d6d161b3e09c68d1e448fdf51751e",
+  "name": "mcg:cond_0_0000005",
+  "source": "MCG test_record.py / worker record.spec.ts golden vector"
+ },
+ {
+  "canonical_id": "9b08e2394e0606507c2cb95e92d1eb559c51bc5e5fbe4be2add93bf23369dc11",
+  "canonical_id_with_execution": "9b08e2394e0606507c2cb95e92d1eb559c51bc5e5fbe4be2add93bf23369dc11",
+  "canonical_json": "{\"conditions\":{\"T\":2e-06},\"material\":{\"name\":\"Si\"},\"node\":\"ThermalConductivity[transport_model=hnemd]\",\"node_uid\":\"e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88\",\"params\":{}}",
+  "lineage": {
+   "conditions": {
+    "T": 1.5e-06
+   },
+   "material": {
+    "name": "Si"
+   },
+   "node": "ThermalConductivity[transport_model=hnemd]",
+   "node_uid": "e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88",
+   "params": {}
+  },
+  "lineage_id": "9b08e2394e0606507c2cb95e92d1eb559c51bc5e5fbe4be2add93bf23369dc11",
+  "name": "mcg:cond_0_0000015",
+  "source": "MCG test_record.py / worker record.spec.ts golden vector"
+ },
+ {
+  "canonical_id": "adcbedc79908df92c2f89fe8b63a765c0e5c066244b4c16e97648bdb8c5c71c2",
+  "canonical_id_with_execution": "adcbedc79908df92c2f89fe8b63a765c0e5c066244b4c16e97648bdb8c5c71c2",
+  "canonical_json": "{\"conditions\":{\"T\":123.456789},\"material\":{\"name\":\"Si\"},\"node\":\"ThermalConductivity[transport_model=hnemd]\",\"node_uid\":\"e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88\",\"params\":{}}",
+  "lineage": {
+   "conditions": {
+    "T": 123.4567895
+   },
+   "material": {
+    "name": "Si"
+   },
+   "node": "ThermalConductivity[transport_model=hnemd]",
+   "node_uid": "e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88",
+   "params": {}
+  },
+  "lineage_id": "adcbedc79908df92c2f89fe8b63a765c0e5c066244b4c16e97648bdb8c5c71c2",
+  "name": "mcg:cond_123_4567895",
+  "source": "MCG test_record.py / worker record.spec.ts golden vector"
+ },
+ {
+  "canonical_id": "b3b62903a6c9bdedfff4e89a5ae7e8d0ce9cc9683f9636fae75ad6f50196ce8a",
+  "canonical_id_with_execution": "b3b62903a6c9bdedfff4e89a5ae7e8d0ce9cc9683f9636fae75ad6f50196ce8a",
+  "canonical_json": "{\"conditions\":{\"T\":-0.0},\"material\":{\"name\":\"Si\"},\"node\":\"ThermalConductivity[transport_model=hnemd]\",\"node_uid\":\"e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88\",\"params\":{}}",
+  "lineage": {
+   "conditions": {
+    "T": -0.0
+   },
+   "material": {
+    "name": "Si"
+   },
+   "node": "ThermalConductivity[transport_model=hnemd]",
+   "node_uid": "e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88",
+   "params": {}
+  },
+  "lineage_id": "b3b62903a6c9bdedfff4e89a5ae7e8d0ce9cc9683f9636fae75ad6f50196ce8a",
+  "name": "mcg:cond_neg_zero",
+  "source": "MCG test_record.py / worker record.spec.ts golden vector"
+ },
+ {
+  "canonical_id": "04b0df55f2c269d149457285b010e81be17d6d161b3e09c68d1e448fdf51751e",
+  "canonical_id_with_execution": "04b0df55f2c269d149457285b010e81be17d6d161b3e09c68d1e448fdf51751e",
+  "canonical_json": "{\"conditions\":{\"T\":0.0},\"material\":{\"name\":\"Si\"},\"node\":\"ThermalConductivity[transport_model=hnemd]\",\"node_uid\":\"e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88\",\"params\":{}}",
+  "lineage": {
+   "conditions": {
+    "T": 0.0
+   },
+   "material": {
+    "name": "Si"
+   },
+   "node": "ThermalConductivity[transport_model=hnemd]",
+   "node_uid": "e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88",
+   "params": {}
+  },
+  "lineage_id": "04b0df55f2c269d149457285b010e81be17d6d161b3e09c68d1e448fdf51751e",
+  "name": "mcg:cond_pos_zero",
+  "source": "MCG test_record.py / worker record.spec.ts golden vector"
+ },
+ {
+  "canonical_id": "b3b62903a6c9bdedfff4e89a5ae7e8d0ce9cc9683f9636fae75ad6f50196ce8a",
+  "canonical_id_with_execution": "b3b62903a6c9bdedfff4e89a5ae7e8d0ce9cc9683f9636fae75ad6f50196ce8a",
+  "canonical_json": "{\"conditions\":{\"T\":-0.0},\"material\":{\"name\":\"Si\"},\"node\":\"ThermalConductivity[transport_model=hnemd]\",\"node_uid\":\"e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88\",\"params\":{}}",
+  "lineage": {
+   "conditions": {
+    "T": -1e-08
+   },
+   "material": {
+    "name": "Si"
+   },
+   "node": "ThermalConductivity[transport_model=hnemd]",
+   "node_uid": "e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88",
+   "params": {}
+  },
+  "lineage_id": "b3b62903a6c9bdedfff4e89a5ae7e8d0ce9cc9683f9636fae75ad6f50196ce8a",
+  "name": "mcg:cond_neg_round0",
+  "source": "MCG test_record.py / worker record.spec.ts golden vector"
+ },
+ {
+  "canonical_id": "06eec29d9a9f965fca57aaf5aa68b8b22bc8a430d86f86764d522e71662e0d3f",
+  "canonical_id_with_execution": "06eec29d9a9f965fca57aaf5aa68b8b22bc8a430d86f86764d522e71662e0d3f",
+  "canonical_json": "{\"conditions\":{\"T\":9007199254740993},\"material\":{\"name\":\"Si\"},\"node\":\"ThermalConductivity[transport_model=hnemd]\",\"node_uid\":\"e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88\",\"params\":{}}",
+  "lineage": {
+   "conditions": {
+    "T": 9007199254740993
+   },
+   "material": {
+    "name": "Si"
+   },
+   "node": "ThermalConductivity[transport_model=hnemd]",
+   "node_uid": "e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88",
+   "params": {}
+  },
+  "lineage_id": "06eec29d9a9f965fca57aaf5aa68b8b22bc8a430d86f86764d522e71662e0d3f",
+  "name": "mcg:cond_bigint_9e15",
+  "source": "MCG test_record.py / worker record.spec.ts golden vector"
+ },
+ {
+  "canonical_id": "ea290137577dc694e6d2b673eeb62bcdea418c867875f3b74c6c187145597e43",
+  "canonical_id_with_execution": "ea290137577dc694e6d2b673eeb62bcdea418c867875f3b74c6c187145597e43",
+  "canonical_json": "{\"conditions\":{\"T\":1000000000000000000000},\"material\":{\"name\":\"Si\"},\"node\":\"ThermalConductivity[transport_model=hnemd]\",\"node_uid\":\"e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88\",\"params\":{}}",
+  "lineage": {
+   "conditions": {
+    "T": 1000000000000000000000
+   },
+   "material": {
+    "name": "Si"
+   },
+   "node": "ThermalConductivity[transport_model=hnemd]",
+   "node_uid": "e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88",
+   "params": {}
+  },
+  "lineage_id": "ea290137577dc694e6d2b673eeb62bcdea418c867875f3b74c6c187145597e43",
+  "name": "mcg:cond_bigint_1e21",
+  "source": "MCG test_record.py / worker record.spec.ts golden vector"
+ },
+ {
+  "canonical_id": "176e10c1672046aa7975e8a7ccd2c2e1c2563d000e808e26f7aad00bc5d80c2c",
+  "canonical_id_with_execution": "176e10c1672046aa7975e8a7ccd2c2e1c2563d000e808e26f7aad00bc5d80c2c",
+  "canonical_json": "{\"conditions\":{\"T\":-12345678901234567890},\"material\":{\"name\":\"Si\"},\"node\":\"ThermalConductivity[transport_model=hnemd]\",\"node_uid\":\"e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88\",\"params\":{}}",
+  "lineage": {
+   "conditions": {
+    "T": -12345678901234567890
+   },
+   "material": {
+    "name": "Si"
+   },
+   "node": "ThermalConductivity[transport_model=hnemd]",
+   "node_uid": "e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88",
+   "params": {}
+  },
+  "lineage_id": "176e10c1672046aa7975e8a7ccd2c2e1c2563d000e808e26f7aad00bc5d80c2c",
+  "name": "mcg:cond_bigint_neg",
+  "source": "MCG test_record.py / worker record.spec.ts golden vector"
+ },
+ {
+  "canonical_id": "b988d04cf89bd02c080ebb8d18b92251e7a3214ab4bf517321a9e6a8872a2d24",
+  "canonical_id_with_execution": "b988d04cf89bd02c080ebb8d18b92251e7a3214ab4bf517321a9e6a8872a2d24",
+  "canonical_json": "{\"conditions\":{\"T\":300},\"material\":{\"name\":\"Si\"},\"node\":\"ThermalConductivity[transport_model=hnemd]\",\"node_uid\":\"e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88\",\"params\":{}}",
+  "lineage": {
+   "conditions": {
+    "T": 300
+   },
+   "material": {
+    "name": "Si"
+   },
+   "node": "ThermalConductivity[transport_model=hnemd]",
+   "node_uid": "e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88",
+   "params": {}
+  },
+  "lineage_id": "b988d04cf89bd02c080ebb8d18b92251e7a3214ab4bf517321a9e6a8872a2d24",
+  "name": "mcg:cond_safe_int",
+  "source": "MCG test_record.py / worker record.spec.ts golden vector"
+ },
+ {
+  "canonical_id": "7a29c805d56903284a51ba729ec88002fb5f004b238fd379d1d3d3ca3e9bdcf8",
+  "canonical_id_with_execution": "7a29c805d56903284a51ba729ec88002fb5f004b238fd379d1d3d3ca3e9bdcf8",
+  "canonical_json": "{\"conditions\":{\"T\":9007199254740991},\"material\":{\"name\":\"Si\"},\"node\":\"ThermalConductivity[transport_model=hnemd]\",\"node_uid\":\"e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88\",\"params\":{}}",
+  "lineage": {
+   "conditions": {
+    "T": 9007199254740991
+   },
+   "material": {
+    "name": "Si"
+   },
+   "node": "ThermalConductivity[transport_model=hnemd]",
+   "node_uid": "e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88",
+   "params": {}
+  },
+  "lineage_id": "7a29c805d56903284a51ba729ec88002fb5f004b238fd379d1d3d3ca3e9bdcf8",
+  "name": "mcg:cond_max_safe",
+  "source": "MCG test_record.py / worker record.spec.ts golden vector"
+ },
+ {
+  "canonical_id": "a39b81ba92b2a62ae0219e7dd23fa0113b1e4a5355a7b7e6b9312d4606d2b2a7",
+  "canonical_id_with_execution": "a39b81ba92b2a62ae0219e7dd23fa0113b1e4a5355a7b7e6b9312d4606d2b2a7",
+  "canonical_json": "{\"conditions\":{\"grid\":{\"dt\":1.0},\"on\":true,\"steps\":1000000},\"material\":{\"name\":\"Si\"},\"node\":\"ThermalConductivity[transport_model=hnemd]\",\"node_uid\":\"e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88\",\"params\":{\"n_atoms\":49}}",
+  "lineage": {
+   "conditions": {
+    "grid": {
+     "dt": 1.0000004
+    },
+    "on": true,
+    "steps": 1000000
+   },
+   "material": {
+    "name": "Si"
+   },
+   "node": "ThermalConductivity[transport_model=hnemd]",
+   "node_uid": "e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88",
+   "params": {
+    "n_atoms": 49
+   }
+  },
+  "lineage_id": "a39b81ba92b2a62ae0219e7dd23fa0113b1e4a5355a7b7e6b9312d4606d2b2a7",
+  "name": "mcg:nested_floats",
+  "source": "MCG test_record.py / worker record.spec.ts golden vector"
+ },
+ {
+  "canonical_id": "20b4d6472999e154f59799b6898103e0f16769a5741b02fa2986a78d37fc36bc",
+  "canonical_id_with_execution": "20b4d6472999e154f59799b6898103e0f16769a5741b02fa2986a78d37fc36bc",
+  "canonical_json": "{\"conditions\":{\"T\":300.0},\"material\":{\"name\":\"Si\"},\"node\":\"ThermalConductivity[transport_model=hnemd]\",\"node_uid\":\"e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88\",\"params\":{\"scale\":1e+18}}",
+  "lineage": {
+   "conditions": {
+    "T": 300.0
+   },
+   "material": {
+    "name": "Si"
+   },
+   "node": "ThermalConductivity[transport_model=hnemd]",
+   "node_uid": "e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88",
+   "params": {
+    "scale": 1e+18
+   }
+  },
+  "lineage_id": "20b4d6472999e154f59799b6898103e0f16769a5741b02fa2986a78d37fc36bc",
+  "name": "mcg:param_big_float",
+  "source": "MCG test_record.py / worker record.spec.ts golden vector"
+ },
+ {
+  "canonical_id": "d1e9c986b5adc7c591e684b911a4c745e49f352b90c7e65dad3c0b111e7e479c",
+  "canonical_id_with_execution": "d1e9c986b5adc7c591e684b911a4c745e49f352b90c7e65dad3c0b111e7e479c",
+  "canonical_json": "{\"conditions\":{\"mat\":\"caf\\u00e9 \\u65e5\\u672c\",\"note\":\"\\u00e9\\ud83d\\udca9\"},\"material\":{\"name\":\"Si\"},\"node\":\"ThermalConductivity[transport_model=hnemd]\",\"node_uid\":\"e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88\",\"params\":{}}",
+  "lineage": {
+   "conditions": {
+    "mat": "caf\u00e9 \u65e5\u672c",
+    "note": "\u00e9\ud83d\udca9"
+   },
+   "material": {
+    "name": "Si"
+   },
+   "node": "ThermalConductivity[transport_model=hnemd]",
+   "node_uid": "e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88",
+   "params": {}
+  },
+  "lineage_id": "d1e9c986b5adc7c591e684b911a4c745e49f352b90c7e65dad3c0b111e7e479c",
+  "name": "mcg:nonascii",
+  "source": "MCG test_record.py / worker record.spec.ts golden vector"
+ },
+ {
+  "canonical_id": "6db0c040d4b7542b68e5fae623e947cb9473c744c47b725afe7d261505c3970c",
+  "canonical_id_with_execution": "6db0c040d4b7542b68e5fae623e947cb9473c744c47b725afe7d261505c3970c",
+  "canonical_json": "{\"conditions\":{\"T\":300,\"material\":\"Si\",\"potential\":\"Si-NEP\"},\"material\":{\"name\":\"Si\"},\"node\":\"ThermalConductivity[transport_model=hnemd]\",\"node_uid\":\"e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88\",\"params\":{}}",
+  "lineage": {
+   "conditions": {
+    "T": 300,
+    "material": "Si",
+    "potential": "Si-NEP"
+   },
+   "material": {
+    "name": "Si"
+   },
+   "node": "ThermalConductivity[transport_model=hnemd]",
+   "node_uid": "e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88",
+   "params": {}
+  },
+  "lineage_id": "6db0c040d4b7542b68e5fae623e947cb9473c744c47b725afe7d261505c3970c",
+  "name": "mcg:safe_light",
+  "source": "MCG test_record.py / worker record.spec.ts golden vector"
+ },
+ {
+  "canonical_id": "f64affbf549a037ebe3396bfed9073dac91d481bdbc235d6c86b07e7759d40da",
+  "canonical_id_with_execution": "f64affbf549a037ebe3396bfed9073dac91d481bdbc235d6c86b07e7759d40da",
+  "canonical_json": "{\"conditions\":{\"bte_solver\":\"direct_inverse\",\"code\":\"kaldo\",\"code_version\":\"2.2.1\",\"delta_shift_angstrom\":0.0001,\"lattice_constant_angstrom\":5.432,\"material\":\"Si\",\"mesh\":[5,5,5],\"occupation\":\"quantum\",\"potential_file\":\"Si.tersoff\",\"potential_sha256\":\"52a93e90596829c57d54eef091de6215f1fac7ca15d57eac7568ddfdda26adfb\",\"supercell_fc\":[3,3,3],\"temperature_K\":300.0},\"material\":\"Si\",\"node\":\"ThermalConductivity[bte_solver=direct_inverse]\",\"values\":{\"units\":\"W/(m K)\",\"value\":254.466183}}",
+  "lineage": {
+   "conditions": {
+    "bte_solver": "direct_inverse",
+    "code": "kaldo",
+    "code_version": "2.2.1",
+    "delta_shift_angstrom": 0.0001,
+    "lattice_constant_angstrom": 5.432,
+    "material": "Si",
+    "mesh": [
+     5,
+     5,
+     5
+    ],
+    "occupation": "quantum",
+    "potential_file": "Si.tersoff",
+    "potential_sha256": "52a93e90596829c57d54eef091de6215f1fac7ca15d57eac7568ddfdda26adfb",
+    "supercell_fc": [
+     3,
+     3,
+     3
+    ],
+    "temperature_K": 300.0
+   },
+   "material": "Si",
+   "node": "ThermalConductivity[bte_solver=direct_inverse]",
+   "values": {
+    "units": "W/(m K)",
+    "value": 254.46618271513248
+   }
+  },
+  "lineage_id": "f64affbf549a037ebe3396bfed9073dac91d481bdbc235d6c86b07e7759d40da",
+  "name": "kaldo:direct_bte_si",
+  "source": "omai tests/fixtures/external_solve/kaldo-direct-bte-si.json"
+ }
+]
