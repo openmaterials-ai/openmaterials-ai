@@ -189,11 +189,7 @@ def _execution_schema() -> dict:
                 "description": "The per-run image digest (commons vocabulary).",
                 "type": "string",
             },
-            "registry": {
-                "description": "Registries the image was resolved from.",
-                "type": "array",
-                "items": {"type": "string"},
-            },
+            "registry": _registry_schema(),
             "runner": {"type": "string"},
             "wall_time_s": {"type": "number"},
             "seeds": {"type": "array", "items": {"type": "integer"}},
@@ -201,6 +197,46 @@ def _execution_schema() -> dict:
             "finished_at": {"type": "string"},
             "current_stage": {"type": "string"},
             "kind": {"type": "string"},
+        },
+    }
+
+
+def _registry_schema() -> dict:
+    """The codes that ran, as the engine manifest states them.
+
+    Not registry hosts: each row is one code with its licence provenance, the
+    block minted per run from the engine manifest. This is what every record
+    the platform serves carries, and what ``record_simulation`` accepts
+    (``execution.registry`` is stored, never inspected, so the writer never
+    disagreed with this; the 0.1.0 schema did, and refused real records).
+
+    ``version`` is nullable: a code pinned by digest alone has no version
+    string to state, and inventing one would be a provenance lie.
+    """
+    return {
+        "description": "The codes that ran, with their licence provenance.",
+        "type": "array",
+        "items": {
+            "type": "object",
+            "required": ["id", "name", "spdx", "license_source", "source",
+                         "version"],
+            "additionalProperties": False,
+            "properties": {
+                "id": {"description": "Stable code id.", **_NON_EMPTY},
+                "name": {"description": "Human-readable code name.",
+                         **_NON_EMPTY},
+                "spdx": {"description": "SPDX licence identifier.",
+                         **_NON_EMPTY},
+                "license_source": {
+                    "description": "Where the licence was read from.",
+                    **_NON_EMPTY},
+                "source": {"description": "The code's source repository.",
+                           **_NON_EMPTY},
+                "version": {
+                    "description": "The version that ran, or null when the "
+                                   "code is pinned by digest alone.",
+                    "type": ["string", "null"]},
+            },
         },
     }
 
@@ -265,6 +301,15 @@ def _result_schema() -> dict:
             "units": {"type": "string"},
             "uncertainty": {"type": ["number", "null"]},
             "artifact": {"type": ["string", "null"]},
+            # Emitted by the worker's renderer for a configuration-pinned run
+            # (record.ts kappaInstanceFrom). Same spelling as the lineage's
+            # own configuration pin.
+            "configuration": {
+                "description": "The configuration uid this value was computed "
+                               "for, bare or 'sha256:'-prefixed.",
+                "type": "string",
+                "pattern": _CONFIGURATION_UID,
+            },
             "simulation": {
                 "description": "Backref to the record that produced it.",
                 "type": "string",

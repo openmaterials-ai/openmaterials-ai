@@ -131,6 +131,18 @@ def test_the_generator_reads_only_files_beside_itself():
         assert path.exists()
 
 
+def test_the_proof_record_vector_is_real_production_bytes():
+    # A vector set built only from shapes this repository invents cannot catch
+    # a producer/schema mismatch; this one is what the platform served.
+    proof = next(e for e in RECORD_VECTORS
+                 if e["name"] == "mcg:cut1_proof_run_903616ec")["record"]
+    assert proof["id"] == lineage_id(proof["lineage"])
+    rows = proof["execution"]["registry"]
+    assert rows and all(isinstance(r, dict) for r in rows)
+    assert {"id", "name", "spdx", "license_source", "source",
+            "version"} == set(rows[0])
+
+
 def test_all_three_pinned_sources_are_represented():
     sources = {v["name"].split(":", 1)[0] for v in LINEAGE_VECTORS}
     assert sources == {"commons", "mcg", "kaldo"}

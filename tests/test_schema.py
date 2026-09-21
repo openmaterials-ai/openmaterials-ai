@@ -134,6 +134,94 @@ def test_a_result_value_may_be_null_for_a_node_with_no_scalar():
     assert validate_record(record) == []
 
 
+# --- execution.registry: the engine manifest's code rows (0.1.1) -----------
+# 0.1.0 declared these as registry HOST strings and refused every record the
+# platform serves. The regression that caught it is the proof record vector.
+
+def _code_row(**over) -> dict:
+    row = {"id": "gpumd", "name": "GPUMD", "spdx": "GPL-3.0-or-later",
+           "license_source": "https://github.com/brucefan1983/GPUMD (LICENSE)",
+           "source": "https://github.com/brucefan1983/GPUMD",
+           "version": "3.9.5"}
+    row.update(over)
+    return row
+
+
+def test_the_cut1_proof_record_validates():
+    # The record the platform actually served for run_74cdf438f9e64a9bb90a.
+    # This is the vector whose absence let the 0.1.0 defect ship.
+    proof = next(e for e in RECORD_VECTORS
+                 if e["name"] == "mcg:cut1_proof_run_903616ec")["record"]
+    assert proof["id"] == (
+        "903616ec0a2fc0ad6bbc59d90a24855d7eeaa6748a691b17b859d8ae0a6f3aa9")
+    assert validate_record(proof) == []
+    # It is the object shape that matters, not just that it passes.
+    assert isinstance(proof["execution"]["registry"][0], dict)
+
+
+def test_a_registry_code_row_validates():
+    record = _light()
+    record["execution"]["registry"] = [_code_row()]
+    assert validate_record(record) == []
+
+
+def test_a_registry_row_version_may_be_null():
+    # A code pinned by digest alone has no version string to state.
+    record = _light()
+    record["execution"]["registry"] = [_code_row(version=None)]
+    assert validate_record(record) == []
+
+
+def test_a_registry_host_string_is_refused():
+    # The 0.1.0 spelling. No producer emits it; accepting it would keep two
+    # vocabularies alive in every consumer that validates.
+    record = _light()
+    record["execution"]["registry"] = ["ghcr.io/openmaterials-ai"]
+    errors = validate_record(record)
+    assert errors
+    assert any("registry" in e for e in errors)
+
+
+def test_a_registry_row_missing_a_key_is_refused():
+    for missing in ("id", "name", "spdx", "license_source", "source",
+                    "version"):
+        row = _code_row()
+        del row[missing]
+        record = _light()
+        record["execution"]["registry"] = [row]
+        errors = validate_record(record)
+        assert errors, f"a row without {missing!r} must be refused"
+        assert any(missing in e for e in errors), (missing, errors)
+
+
+def test_a_registry_row_with_an_extra_key_is_refused():
+    record = _light()
+    record["execution"]["registry"] = [_code_row(unexpected="x")]
+    errors = validate_record(record)
+    assert errors
+    assert any("unexpected" in e for e in errors)
+
+
+# --- results[].configuration (0.1.1) ---------------------------------------
+# The worker's renderer emits it for a configuration-pinned run
+# (record.ts kappaInstanceFrom); 0.1.0 closed results items without it.
+
+def test_a_result_may_carry_a_configuration_pin():
+    uid = "b" * 64
+    for pin in (uid, f"sha256:{uid}"):
+        record = _heavy()
+        record["results"][0]["configuration"] = pin
+        assert validate_record(record) == [], pin
+
+
+def test_a_malformed_result_configuration_is_refused():
+    record = _heavy()
+    record["results"][0]["configuration"] = "not-a-uid"
+    errors = validate_record(record)
+    assert errors
+    assert any("configuration" in e for e in errors)
+
+
 def test_a_missing_id_is_refused():
     record = _light()
     del record["id"]

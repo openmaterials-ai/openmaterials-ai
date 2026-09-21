@@ -8,7 +8,14 @@
     "code_version": "3.9.5",
     "image_digest": "sha256:deadbeef",
     "registry": [
-     "ghcr.io/openmaterials-ai"
+     {
+      "id": "gpumd",
+      "license_source": "https://github.com/brucefan1983/GPUMD (LICENSE)",
+      "name": "GPUMD",
+      "source": "https://github.com/brucefan1983/GPUMD",
+      "spdx": "GPL-3.0-or-later",
+      "version": "3.9.5"
+     }
     ]
    },
    "id": "ab0da9ec11b99b44b3c942c609a8aee24b83240955d2c029c5d05dfa34dbe84c",
@@ -42,7 +49,14 @@
     "code_version": "3.9.5",
     "image_digest": "sha256:deadbeef",
     "registry": [
-     "ghcr.io/openmaterials-ai"
+     {
+      "id": "gpumd",
+      "license_source": "https://github.com/brucefan1983/GPUMD (LICENSE)",
+      "name": "GPUMD",
+      "source": "https://github.com/brucefan1983/GPUMD",
+      "spdx": "GPL-3.0-or-later",
+      "version": "3.9.5"
+     }
     ]
    },
    "id": "e63f4de3a73a9a868ff0b54c94848e3af7993c9d9e74ad83309c81ad797fc823",
@@ -77,7 +91,14 @@
     "code_version": "3.9.5",
     "image_digest": "sha256:deadbeef",
     "registry": [
-     "ghcr.io/openmaterials-ai"
+     {
+      "id": "gpumd",
+      "license_source": "https://github.com/brucefan1983/GPUMD (LICENSE)",
+      "name": "GPUMD",
+      "source": "https://github.com/brucefan1983/GPUMD",
+      "spdx": "GPL-3.0-or-later",
+      "version": "3.9.5"
+     }
     ]
    },
    "id": "c9de95163fd69a7672036f13a983faf560b8265880262c9b554809853a717888",
@@ -112,7 +133,14 @@
     "code_version": "3.9.5",
     "image_digest": "sha256:deadbeef",
     "registry": [
-     "ghcr.io/openmaterials-ai"
+     {
+      "id": "gpumd",
+      "license_source": "https://github.com/brucefan1983/GPUMD (LICENSE)",
+      "name": "GPUMD",
+      "source": "https://github.com/brucefan1983/GPUMD",
+      "spdx": "GPL-3.0-or-later",
+      "version": "3.9.5"
+     }
     ]
    },
    "id": "b13e25c6787b385f038dc27625126c29eb2db611237b680e0eae83067dd89e4e",
@@ -148,7 +176,14 @@
     "code_version": "3.9.5",
     "image_digest": "sha256:deadbeef",
     "registry": [
-     "ghcr.io/openmaterials-ai"
+     {
+      "id": "gpumd",
+      "license_source": "https://github.com/brucefan1983/GPUMD (LICENSE)",
+      "name": "GPUMD",
+      "source": "https://github.com/brucefan1983/GPUMD",
+      "spdx": "GPL-3.0-or-later",
+      "version": "3.9.5"
+     }
     ]
    },
    "id": "03dc6386fc14c5325f8dcff5a8cc4b8385677d7e729ef6bfd7758bc94bbcb81e",
@@ -176,7 +211,14 @@
     "code_version": "3.9.5",
     "image_digest": "sha256:deadbeef",
     "registry": [
-     "ghcr.io/openmaterials-ai"
+     {
+      "id": "gpumd",
+      "license_source": "https://github.com/brucefan1983/GPUMD (LICENSE)",
+      "name": "GPUMD",
+      "source": "https://github.com/brucefan1983/GPUMD",
+      "spdx": "GPL-3.0-or-later",
+      "version": "3.9.5"
+     }
     ]
    },
    "id": "5f5739bd9fc011a868335981f1b8f51d9bd824ff7f20d6449d112334c3f2b25b",
@@ -204,7 +246,14 @@
     "code_version": "3.9.5",
     "image_digest": "sha256:deadbeef",
     "registry": [
-     "ghcr.io/openmaterials-ai"
+     {
+      "id": "gpumd",
+      "license_source": "https://github.com/brucefan1983/GPUMD (LICENSE)",
+      "name": "GPUMD",
+      "source": "https://github.com/brucefan1983/GPUMD",
+      "spdx": "GPL-3.0-or-later",
+      "version": "3.9.5"
+     }
     ]
    },
    "id": "6d8096e6aba8f91eac26a1d5a25a4ce6957a8919d7a5d9357f6a1947d6ffaeff",
@@ -232,7 +281,14 @@
     "code_version": "3.9.5",
     "image_digest": "sha256:deadbeef",
     "registry": [
-     "ghcr.io/openmaterials-ai"
+     {
+      "id": "gpumd",
+      "license_source": "https://github.com/brucefan1983/GPUMD (LICENSE)",
+      "name": "GPUMD",
+      "source": "https://github.com/brucefan1983/GPUMD",
+      "spdx": "GPL-3.0-or-later",
+      "version": "3.9.5"
+     }
     ]
    },
    "id": "d49bd45faa4753d6bf9fc690824128542d2a36a79e20e2f0a2039250ed02b056",
@@ -260,7 +316,14 @@
     "code_version": "3.9.5",
     "image_digest": "sha256:deadbeef",
     "registry": [
-     "ghcr.io/openmaterials-ai"
+     {
+      "id": "gpumd",
+      "license_source": "https://github.com/brucefan1983/GPUMD (LICENSE)",
+      "name": "GPUMD",
+      "source": "https://github.com/brucefan1983/GPUMD",
+      "spdx": "GPL-3.0-or-later",
+      "version": "3.9.5"
+     }
     ]
    },
    "id": "2d600f4a9b14f07cbddbc1ce04e53ff4a3176370df47645b68bfe384eafd3b35",
@@ -288,7 +351,14 @@
     "code_version": "3.9.5",
     "image_digest": "sha256:deadbeef",
     "registry": [
-     "ghcr.io/openmaterials-ai"
+     {
+      "id": "gpumd",
+      "license_source": "https://github.com/brucefan1983/GPUMD (LICENSE)",
+      "name": "GPUMD",
+      "source": "https://github.com/brucefan1983/GPUMD",
+      "spdx": "GPL-3.0-or-later",
+      "version": "3.9.5"
+     }
     ]
    },
    "id": "04b0df55f2c269d149457285b010e81be17d6d161b3e09c68d1e448fdf51751e",
@@ -316,7 +386,14 @@
     "code_version": "3.9.5",
     "image_digest": "sha256:deadbeef",
     "registry": [
-     "ghcr.io/openmaterials-ai"
+     {
+      "id": "gpumd",
+      "license_source": "https://github.com/brucefan1983/GPUMD (LICENSE)",
+      "name": "GPUMD",
+      "source": "https://github.com/brucefan1983/GPUMD",
+      "spdx": "GPL-3.0-or-later",
+      "version": "3.9.5"
+     }
     ]
    },
    "id": "cef873a368b661e7b1880b40689985643d2a50755d99ea998fe08553a1fc3434",
@@ -344,7 +421,14 @@
     "code_version": "3.9.5",
     "image_digest": "sha256:deadbeef",
     "registry": [
-     "ghcr.io/openmaterials-ai"
+     {
+      "id": "gpumd",
+      "license_source": "https://github.com/brucefan1983/GPUMD (LICENSE)",
+      "name": "GPUMD",
+      "source": "https://github.com/brucefan1983/GPUMD",
+      "spdx": "GPL-3.0-or-later",
+      "version": "3.9.5"
+     }
     ]
    },
    "id": "cc2bec714154e22615579a0e3c59f910260ca906e7a8d2daf7c7c8d78dadf2d7",
@@ -372,7 +456,14 @@
     "code_version": "3.9.5",
     "image_digest": "sha256:deadbeef",
     "registry": [
-     "ghcr.io/openmaterials-ai"
+     {
+      "id": "gpumd",
+      "license_source": "https://github.com/brucefan1983/GPUMD (LICENSE)",
+      "name": "GPUMD",
+      "source": "https://github.com/brucefan1983/GPUMD",
+      "spdx": "GPL-3.0-or-later",
+      "version": "3.9.5"
+     }
     ]
    },
    "id": "04b0df55f2c269d149457285b010e81be17d6d161b3e09c68d1e448fdf51751e",
@@ -400,7 +491,14 @@
     "code_version": "3.9.5",
     "image_digest": "sha256:deadbeef",
     "registry": [
-     "ghcr.io/openmaterials-ai"
+     {
+      "id": "gpumd",
+      "license_source": "https://github.com/brucefan1983/GPUMD (LICENSE)",
+      "name": "GPUMD",
+      "source": "https://github.com/brucefan1983/GPUMD",
+      "spdx": "GPL-3.0-or-later",
+      "version": "3.9.5"
+     }
     ]
    },
    "id": "b3b62903a6c9bdedfff4e89a5ae7e8d0ce9cc9683f9636fae75ad6f50196ce8a",
@@ -428,7 +526,14 @@
     "code_version": "3.9.5",
     "image_digest": "sha256:deadbeef",
     "registry": [
-     "ghcr.io/openmaterials-ai"
+     {
+      "id": "gpumd",
+      "license_source": "https://github.com/brucefan1983/GPUMD (LICENSE)",
+      "name": "GPUMD",
+      "source": "https://github.com/brucefan1983/GPUMD",
+      "spdx": "GPL-3.0-or-later",
+      "version": "3.9.5"
+     }
     ]
    },
    "id": "57e6c5cd71ac90b3162116b015ebf54b4c354b38a997d82bf7e6e7a0168e207e",
@@ -456,7 +561,14 @@
     "code_version": "3.9.5",
     "image_digest": "sha256:deadbeef",
     "registry": [
-     "ghcr.io/openmaterials-ai"
+     {
+      "id": "gpumd",
+      "license_source": "https://github.com/brucefan1983/GPUMD (LICENSE)",
+      "name": "GPUMD",
+      "source": "https://github.com/brucefan1983/GPUMD",
+      "spdx": "GPL-3.0-or-later",
+      "version": "3.9.5"
+     }
     ]
    },
    "id": "244d1ceed4cd257da5801d86f60b0cc771ae487eae88199048c2114a547c39cf",
@@ -484,7 +596,14 @@
     "code_version": "3.9.5",
     "image_digest": "sha256:deadbeef",
     "registry": [
-     "ghcr.io/openmaterials-ai"
+     {
+      "id": "gpumd",
+      "license_source": "https://github.com/brucefan1983/GPUMD (LICENSE)",
+      "name": "GPUMD",
+      "source": "https://github.com/brucefan1983/GPUMD",
+      "spdx": "GPL-3.0-or-later",
+      "version": "3.9.5"
+     }
     ]
    },
    "id": "04b0df55f2c269d149457285b010e81be17d6d161b3e09c68d1e448fdf51751e",
@@ -512,7 +631,14 @@
     "code_version": "3.9.5",
     "image_digest": "sha256:deadbeef",
     "registry": [
-     "ghcr.io/openmaterials-ai"
+     {
+      "id": "gpumd",
+      "license_source": "https://github.com/brucefan1983/GPUMD (LICENSE)",
+      "name": "GPUMD",
+      "source": "https://github.com/brucefan1983/GPUMD",
+      "spdx": "GPL-3.0-or-later",
+      "version": "3.9.5"
+     }
     ]
    },
    "id": "9b08e2394e0606507c2cb95e92d1eb559c51bc5e5fbe4be2add93bf23369dc11",
@@ -540,7 +666,14 @@
     "code_version": "3.9.5",
     "image_digest": "sha256:deadbeef",
     "registry": [
-     "ghcr.io/openmaterials-ai"
+     {
+      "id": "gpumd",
+      "license_source": "https://github.com/brucefan1983/GPUMD (LICENSE)",
+      "name": "GPUMD",
+      "source": "https://github.com/brucefan1983/GPUMD",
+      "spdx": "GPL-3.0-or-later",
+      "version": "3.9.5"
+     }
     ]
    },
    "id": "adcbedc79908df92c2f89fe8b63a765c0e5c066244b4c16e97648bdb8c5c71c2",
@@ -568,7 +701,14 @@
     "code_version": "3.9.5",
     "image_digest": "sha256:deadbeef",
     "registry": [
-     "ghcr.io/openmaterials-ai"
+     {
+      "id": "gpumd",
+      "license_source": "https://github.com/brucefan1983/GPUMD (LICENSE)",
+      "name": "GPUMD",
+      "source": "https://github.com/brucefan1983/GPUMD",
+      "spdx": "GPL-3.0-or-later",
+      "version": "3.9.5"
+     }
     ]
    },
    "id": "b3b62903a6c9bdedfff4e89a5ae7e8d0ce9cc9683f9636fae75ad6f50196ce8a",
@@ -596,7 +736,14 @@
     "code_version": "3.9.5",
     "image_digest": "sha256:deadbeef",
     "registry": [
-     "ghcr.io/openmaterials-ai"
+     {
+      "id": "gpumd",
+      "license_source": "https://github.com/brucefan1983/GPUMD (LICENSE)",
+      "name": "GPUMD",
+      "source": "https://github.com/brucefan1983/GPUMD",
+      "spdx": "GPL-3.0-or-later",
+      "version": "3.9.5"
+     }
     ]
    },
    "id": "04b0df55f2c269d149457285b010e81be17d6d161b3e09c68d1e448fdf51751e",
@@ -624,7 +771,14 @@
     "code_version": "3.9.5",
     "image_digest": "sha256:deadbeef",
     "registry": [
-     "ghcr.io/openmaterials-ai"
+     {
+      "id": "gpumd",
+      "license_source": "https://github.com/brucefan1983/GPUMD (LICENSE)",
+      "name": "GPUMD",
+      "source": "https://github.com/brucefan1983/GPUMD",
+      "spdx": "GPL-3.0-or-later",
+      "version": "3.9.5"
+     }
     ]
    },
    "id": "b3b62903a6c9bdedfff4e89a5ae7e8d0ce9cc9683f9636fae75ad6f50196ce8a",
@@ -652,7 +806,14 @@
     "code_version": "3.9.5",
     "image_digest": "sha256:deadbeef",
     "registry": [
-     "ghcr.io/openmaterials-ai"
+     {
+      "id": "gpumd",
+      "license_source": "https://github.com/brucefan1983/GPUMD (LICENSE)",
+      "name": "GPUMD",
+      "source": "https://github.com/brucefan1983/GPUMD",
+      "spdx": "GPL-3.0-or-later",
+      "version": "3.9.5"
+     }
     ]
    },
    "id": "06eec29d9a9f965fca57aaf5aa68b8b22bc8a430d86f86764d522e71662e0d3f",
@@ -680,7 +841,14 @@
     "code_version": "3.9.5",
     "image_digest": "sha256:deadbeef",
     "registry": [
-     "ghcr.io/openmaterials-ai"
+     {
+      "id": "gpumd",
+      "license_source": "https://github.com/brucefan1983/GPUMD (LICENSE)",
+      "name": "GPUMD",
+      "source": "https://github.com/brucefan1983/GPUMD",
+      "spdx": "GPL-3.0-or-later",
+      "version": "3.9.5"
+     }
     ]
    },
    "id": "ea290137577dc694e6d2b673eeb62bcdea418c867875f3b74c6c187145597e43",
@@ -708,7 +876,14 @@
     "code_version": "3.9.5",
     "image_digest": "sha256:deadbeef",
     "registry": [
-     "ghcr.io/openmaterials-ai"
+     {
+      "id": "gpumd",
+      "license_source": "https://github.com/brucefan1983/GPUMD (LICENSE)",
+      "name": "GPUMD",
+      "source": "https://github.com/brucefan1983/GPUMD",
+      "spdx": "GPL-3.0-or-later",
+      "version": "3.9.5"
+     }
     ]
    },
    "id": "176e10c1672046aa7975e8a7ccd2c2e1c2563d000e808e26f7aad00bc5d80c2c",
@@ -736,7 +911,14 @@
     "code_version": "3.9.5",
     "image_digest": "sha256:deadbeef",
     "registry": [
-     "ghcr.io/openmaterials-ai"
+     {
+      "id": "gpumd",
+      "license_source": "https://github.com/brucefan1983/GPUMD (LICENSE)",
+      "name": "GPUMD",
+      "source": "https://github.com/brucefan1983/GPUMD",
+      "spdx": "GPL-3.0-or-later",
+      "version": "3.9.5"
+     }
     ]
    },
    "id": "b988d04cf89bd02c080ebb8d18b92251e7a3214ab4bf517321a9e6a8872a2d24",
@@ -764,7 +946,14 @@
     "code_version": "3.9.5",
     "image_digest": "sha256:deadbeef",
     "registry": [
-     "ghcr.io/openmaterials-ai"
+     {
+      "id": "gpumd",
+      "license_source": "https://github.com/brucefan1983/GPUMD (LICENSE)",
+      "name": "GPUMD",
+      "source": "https://github.com/brucefan1983/GPUMD",
+      "spdx": "GPL-3.0-or-later",
+      "version": "3.9.5"
+     }
     ]
    },
    "id": "7a29c805d56903284a51ba729ec88002fb5f004b238fd379d1d3d3ca3e9bdcf8",
@@ -792,7 +981,14 @@
     "code_version": "3.9.5",
     "image_digest": "sha256:deadbeef",
     "registry": [
-     "ghcr.io/openmaterials-ai"
+     {
+      "id": "gpumd",
+      "license_source": "https://github.com/brucefan1983/GPUMD (LICENSE)",
+      "name": "GPUMD",
+      "source": "https://github.com/brucefan1983/GPUMD",
+      "spdx": "GPL-3.0-or-later",
+      "version": "3.9.5"
+     }
     ]
    },
    "id": "a39b81ba92b2a62ae0219e7dd23fa0113b1e4a5355a7b7e6b9312d4606d2b2a7",
@@ -826,7 +1022,14 @@
     "code_version": "3.9.5",
     "image_digest": "sha256:deadbeef",
     "registry": [
-     "ghcr.io/openmaterials-ai"
+     {
+      "id": "gpumd",
+      "license_source": "https://github.com/brucefan1983/GPUMD (LICENSE)",
+      "name": "GPUMD",
+      "source": "https://github.com/brucefan1983/GPUMD",
+      "spdx": "GPL-3.0-or-later",
+      "version": "3.9.5"
+     }
     ]
    },
    "id": "20b4d6472999e154f59799b6898103e0f16769a5741b02fa2986a78d37fc36bc",
@@ -856,7 +1059,14 @@
     "code_version": "3.9.5",
     "image_digest": "sha256:deadbeef",
     "registry": [
-     "ghcr.io/openmaterials-ai"
+     {
+      "id": "gpumd",
+      "license_source": "https://github.com/brucefan1983/GPUMD (LICENSE)",
+      "name": "GPUMD",
+      "source": "https://github.com/brucefan1983/GPUMD",
+      "spdx": "GPL-3.0-or-later",
+      "version": "3.9.5"
+     }
     ]
    },
    "id": "d1e9c986b5adc7c591e684b911a4c745e49f352b90c7e65dad3c0b111e7e479c",
@@ -885,7 +1095,14 @@
     "code_version": "3.9.5",
     "image_digest": "sha256:deadbeef",
     "registry": [
-     "ghcr.io/openmaterials-ai"
+     {
+      "id": "gpumd",
+      "license_source": "https://github.com/brucefan1983/GPUMD (LICENSE)",
+      "name": "GPUMD",
+      "source": "https://github.com/brucefan1983/GPUMD",
+      "spdx": "GPL-3.0-or-later",
+      "version": "3.9.5"
+     }
     ]
    },
    "id": "6db0c040d4b7542b68e5fae623e947cb9473c744c47b725afe7d261505c3970c",
@@ -915,7 +1132,14 @@
     "code_version": "3.9.5",
     "image_digest": "sha256:deadbeef",
     "registry": [
-     "ghcr.io/openmaterials-ai"
+     {
+      "id": "gpumd",
+      "license_source": "https://github.com/brucefan1983/GPUMD (LICENSE)",
+      "name": "GPUMD",
+      "source": "https://github.com/brucefan1983/GPUMD",
+      "spdx": "GPL-3.0-or-later",
+      "version": "3.9.5"
+     }
     ]
    },
    "id": "f64affbf549a037ebe3396bfed9073dac91d481bdbc235d6c86b07e7759d40da",
@@ -1017,6 +1241,111 @@
      "units": "W/(m K)",
      "value": 137.5,
      "variable": "ThermalConductivity[transport_model=hnemd]"
+    }
+   ]
+  }
+ },
+ {
+  "name": "mcg:cut1_proof_run_903616ec",
+  "record": {
+   "artifacts": [],
+   "execution": {
+    "code": "qe_d3q",
+    "image_digest": "registry.materialscodegraph.com/mcg-qe@sha256:0de9778debf6d640ece4f30ab4f8a0a70438b799d80e6c93747b6ba94cf2abc5",
+    "registry": [
+     {
+      "id": "quantum-espresso",
+      "license_source": "https://github.com/QEF/q-e (License and README.md)",
+      "name": "Quantum ESPRESSO",
+      "source": "https://github.com/QEF/q-e",
+      "spdx": "GPL-2.0-or-later",
+      "version": "qe-7.5"
+     },
+     {
+      "id": "qe-d3q",
+      "license_source": "https://github.com/anharmonic/d3q (README.md and LICENSE)",
+      "name": "D3Q and thermal2",
+      "source": "https://github.com/anharmonic/d3q",
+      "spdx": "GPL-2.0-or-later",
+      "version": "q-e-7.5"
+     }
+    ]
+   },
+   "id": "903616ec0a2fc0ad6bbc59d90a24855d7eeaa6748a691b17b859d8ae0a6f3aa9",
+   "lineage": {
+    "conditions": {
+     "bte_solver": "rta",
+     "casimir_length_um": null,
+     "celldm_1_bohr": 10.2,
+     "code": "qe+d3q",
+     "code_version": "qe-7.5+d3q-q-e-7.5",
+     "ecutwfc_ry": 24,
+     "fc3_method": "dfpt_2n+1",
+     "functional": "lda",
+     "ibrav": 2,
+     "isotopic_disorder": false,
+     "k_mesh": [
+      4,
+      4,
+      4
+     ],
+     "k_mesh_bte": [
+      5,
+      5,
+      5
+     ],
+     "lattice_constant_angstrom": 5.39785,
+     "material": "Si",
+     "n_atoms": 2,
+     "prefix": "silicon",
+     "pseudopotential_family": "d3q-example-pz-rrkj",
+     "pseudopotential_file": "Si.pz-rrkj.UPF",
+     "q_mesh_d3q": [
+      2,
+      2,
+      2
+     ],
+     "q_mesh_dfpt": [
+      4,
+      4,
+      4
+     ],
+     "smearing_cm1": 10,
+     "temperature_K": [
+      300
+     ]
+    },
+    "material": {
+     "name": "Si"
+    },
+    "node": "ThermalConductivity[bte_solver=rta]",
+    "node_uid": "d79d88d53266c147ea8d806cdbd30df309199469351ee13bcc9040a98745ebc4",
+    "params": {
+     "n_atoms": 2,
+     "n_k": 64,
+     "n_k_bte": 125,
+     "n_q": 64,
+     "n_q_d3q": 8
+    }
+   },
+   "mirrors": {},
+   "results": [
+    {
+     "conditions": {
+      "T": "300 K",
+      "code": "qe+d3q",
+      "method": "bte_rta",
+      "n_seeds": 1
+     },
+     "material": "Si",
+     "source": {
+      "detail": "Bulk Si kappa (BTE_RTA, 97.93078199999998 +/- None W/(m K) at 300 K, 1 seed(s)) from a MaterialsCodeGraph run; rendered against openmaterials map version 9802d9e854c915eb47d867575730a556ab7f4a565e392bf5b29da58338f08434.",
+      "kind": "simulation",
+      "ref": "materialscodegraph"
+     },
+     "units": "W/(m K)",
+     "value": 97.93078199999998,
+     "variable": "ThermalConductivity[bte_solver=rta]"
     }
    ]
   }

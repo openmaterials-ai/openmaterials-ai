@@ -300,8 +300,11 @@ validating it (`{**record, "lineage": record_lineage(record)}`, minus the
   openmaterials commons conformance targets, the 27 adversarial float/int
   vectors MaterialsCodeGraph pins in Python and TypeScript, and the kaldo
   external-solve fixture.
-- `records.json`: 33 full records with their ids, including one carrying
-  artifacts and mirrors whose id equals its artifact-free twin.
+- `records.json`: 34 full records with their ids, including one carrying
+  artifacts and mirrors whose id equals its artifact-free twin, and the Cut 1
+  proof record exactly as the platform served it (real production bytes, so
+  the vectors pin the shape a producer emits and not only the shapes this
+  repository invents).
 - `render.json`: renderer inputs and the instances they render to.
 
 Every id in these files is produced by the functions above and equals the id
@@ -309,11 +312,20 @@ its source already pinned. A vector whose id changes is a defect in the
 canonicalization, never a reason to regenerate; `python -m omai.tools.gen_vectors`
 refuses to write when a recomputed id disagrees with its pin.
 
+`execution.registry` is the engine manifest's code rows, each
+`{id, name, spdx, license_source, source, version}` with a nullable `version`:
+the licence provenance of what ran, not a list of registry hosts. 0.1.0
+declared it as an array of strings and refused every record the platform
+serves; 0.1.1 fixes that. A result instance may also carry an optional
+`configuration` uid, which the renderer emits for a configuration-pinned run.
+
 **Versioning.** Semantic versioning, with identity treated as the strongest
 promise: a change to `lineage_id`, to the canonical JSON, or to a vector's id
 is breaking and takes a major version, because every id ever minted by this
 library would stop reproducing. Adding a schema field, a renderer, or a vector
-is a minor version. Consumers pin an exact version (`openmaterials-ai==0.1.0`).
+is a minor version. Widening a schema field to accept a shape real producers
+already emit is a patch, since it can only turn a spurious rejection into an
+acceptance. Consumers pin an exact version (`openmaterials-ai==0.1.1`).
 
 ## Install
 

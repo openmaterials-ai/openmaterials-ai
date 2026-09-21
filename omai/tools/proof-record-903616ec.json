@@ -1,0 +1,102 @@
+{
+ "artifacts": [],
+ "execution": {
+  "code": "qe_d3q",
+  "image_digest": "registry.materialscodegraph.com/mcg-qe@sha256:0de9778debf6d640ece4f30ab4f8a0a70438b799d80e6c93747b6ba94cf2abc5",
+  "registry": [
+   {
+    "id": "quantum-espresso",
+    "license_source": "https://github.com/QEF/q-e (License and README.md)",
+    "name": "Quantum ESPRESSO",
+    "source": "https://github.com/QEF/q-e",
+    "spdx": "GPL-2.0-or-later",
+    "version": "qe-7.5"
+   },
+   {
+    "id": "qe-d3q",
+    "license_source": "https://github.com/anharmonic/d3q (README.md and LICENSE)",
+    "name": "D3Q and thermal2",
+    "source": "https://github.com/anharmonic/d3q",
+    "spdx": "GPL-2.0-or-later",
+    "version": "q-e-7.5"
+   }
+  ]
+ },
+ "id": "903616ec0a2fc0ad6bbc59d90a24855d7eeaa6748a691b17b859d8ae0a6f3aa9",
+ "lineage": {
+  "conditions": {
+   "bte_solver": "rta",
+   "casimir_length_um": null,
+   "celldm_1_bohr": 10.2,
+   "code": "qe+d3q",
+   "code_version": "qe-7.5+d3q-q-e-7.5",
+   "ecutwfc_ry": 24,
+   "fc3_method": "dfpt_2n+1",
+   "functional": "lda",
+   "ibrav": 2,
+   "isotopic_disorder": false,
+   "k_mesh": [
+    4,
+    4,
+    4
+   ],
+   "k_mesh_bte": [
+    5,
+    5,
+    5
+   ],
+   "lattice_constant_angstrom": 5.39785,
+   "material": "Si",
+   "n_atoms": 2,
+   "prefix": "silicon",
+   "pseudopotential_family": "d3q-example-pz-rrkj",
+   "pseudopotential_file": "Si.pz-rrkj.UPF",
+   "q_mesh_d3q": [
+    2,
+    2,
+    2
+   ],
+   "q_mesh_dfpt": [
+    4,
+    4,
+    4
+   ],
+   "smearing_cm1": 10,
+   "temperature_K": [
+    300
+   ]
+  },
+  "material": {
+   "name": "Si"
+  },
+  "node": "ThermalConductivity[bte_solver=rta]",
+  "node_uid": "d79d88d53266c147ea8d806cdbd30df309199469351ee13bcc9040a98745ebc4",
+  "params": {
+   "n_atoms": 2,
+   "n_k": 64,
+   "n_k_bte": 125,
+   "n_q": 64,
+   "n_q_d3q": 8
+  }
+ },
+ "mirrors": {},
+ "results": [
+  {
+   "conditions": {
+    "T": "300 K",
+    "code": "qe+d3q",
+    "method": "bte_rta",
+    "n_seeds": 1
+   },
+   "material": "Si",
+   "source": {
+    "detail": "Bulk Si kappa (BTE_RTA, 97.93078199999998 +/- None W/(m K) at 300 K, 1 seed(s)) from a MaterialsCodeGraph run; rendered against openmaterials map version 9802d9e854c915eb47d867575730a556ab7f4a565e392bf5b29da58338f08434.",
+    "kind": "simulation",
+    "ref": "materialscodegraph"
+   },
+   "units": "W/(m K)",
+   "value": 97.93078199999998,
+   "variable": "ThermalConductivity[bte_solver=rta]"
+  }
+ ]
+}
