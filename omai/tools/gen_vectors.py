@@ -236,30 +236,62 @@ def build_records(inputs: dict) -> list[dict]:
     return out
 
 
-# The renderer inputs: the field sets MCG's KappaResult, MolecularThermoResult
-# and ReactionThermoResult carry, as plain dicts (the shape omai.render now
-# accepts). Values are the ones the commons conformance targets report, so a
-# rendered instance is comparable with a committed one.
+# The renderer inputs. Two producers are represented, because both exist:
+#
+# - The PLATFORM form (no run_ref): what the MCG worker serves. The ref is the
+#   bare provider and the detail names no run, because a public share page
+#   carries no run identity. `kappa_served_proof` is the Cut 1 proof record's
+#   own result, and the vector asserts the rendered bytes equal the ones
+#   stored for run_74cdf438f9e64a9bb90a.
+# - The COMMONS form (with run_ref): what the committed instances under
+#   docs/data/instances/ carry, e.g. "materialscodegraph-dgeba-cp300-gfn2".
+#   The run refs below are the real committed ones, not invented labels.
+#
+# 0.1.0 shipped six cases in the commons form with INVENTED run refs
+# ("run-ref-xyz"), rendered by MCG's Python renderer, which never served a
+# record. Those bytes had no producer. The kappa cases are re-cut in the
+# platform form (the worker is the only producer of a kappa instance); the
+# molar-Cp and reaction-energy cases keep the commons form and now carry the
+# run refs their committed instances actually use.
 _RENDER_CASES = [
-    {"name": "kappa_hnemd",
+    # The served proof record's own result: these exact bytes are stored for
+    # run_74cdf438f9e64a9bb90a. std is 0 (single seed), so uncertainty is
+    # absent and the detail prints "+/- None".
+    {"name": "kappa_served_proof",
+     "function": "render_kappa",
+     "result": {"method": "bte_rta", "material_name": "Si",
+                "temperature_K": 300, "n_seeds": 1, "code": "qe+d3q",
+                "kappa_W_per_mK": 97.93078199999998,
+                "kappa_std_W_per_mK": 0},
+     "kwargs": {}},
+    # A multi-seed run: a real spread, so uncertainty IS emitted.
+    {"name": "kappa_hnemd_with_spread",
      "function": "render_kappa",
      "result": {"method": "hnemd", "material_name": "Si",
                 "temperature_K": 300.0, "n_seeds": 4, "code": "GPUMD",
                 "kappa_W_per_mK": 137.5, "kappa_std_W_per_mK": 4.2},
-     "kwargs": {"run_ref": "run-ref-xyz", "potential": "Si-NEP"}},
+     "kwargs": {"potential": "Si-NEP"}},
+    # A fractional temperature (the %g path) and a null std.
     {"name": "kappa_green_kubo_no_std",
      "function": "render_kappa",
      "result": {"method": "green_kubo", "material_name": "Si",
                 "temperature_K": 301.5, "n_seeds": 1, "code": "ASE",
                 "kappa_W_per_mK": 120.25, "kappa_std_W_per_mK": None},
-     "kwargs": {"run_ref": "run-ref-gk"}},
+     "kwargs": {}},
     {"name": "kappa_bte_direct_inverse",
      "function": "render_kappa",
      "result": {"method": "bte_direct_inverse", "material_name": "Si",
                 "temperature_K": 300.0, "n_seeds": 1, "code": "kaldo",
                 "kappa_W_per_mK": 254.46618271513248,
                 "kappa_std_W_per_mK": None},
-     "kwargs": {"run_ref": "run-ref-kaldo"}},
+     "kwargs": {}},
+    # The run-identified form, still available to callers that want it.
+    {"name": "kappa_hnemd_with_run_ref",
+     "function": "render_kappa",
+     "result": {"method": "hnemd", "material_name": "Si",
+                "temperature_K": 300.0, "n_seeds": 4, "code": "GPUMD",
+                "kappa_W_per_mK": 137.5, "kappa_std_W_per_mK": 4.2},
+     "kwargs": {"run_ref": "run_74cdf438f9e64a9bb90a"}},
     {"name": "molar_cp_dgeba",
      "function": "render_molar_cp",
      "result": {"molecule_name": "C21H24O4 (DGEBA)",

@@ -279,7 +279,7 @@ shipped here.
 | `omai.schema.simulation_record_schema()` | The SimulationRecord as JSON Schema draft 2020-12, closed objects. |
 | `omai.schema.validate_record(record)` | Every schema violation as a readable message; an empty list means valid. |
 | `omai.render.render_kappa / render_molar_cp / render_reaction_energy` | A typed result to a map evidence `Instance`. |
-| `omai.render.provenance(run_ref, what, map_version=...)` | The `Source` every rendered instance carries, stamping the map version. |
+| `omai.render.provenance(run_ref=None, what, map_version=...)` | The `Source` every rendered instance carries, stamping the map version. |
 
 The schema is a SHAPE gate. That `id` equals `lineage_id(lineage)`, that the
 node resolves against the live map, and the contribution gates in
@@ -305,14 +305,24 @@ validating it (`{**record, "lineage": record_lineage(record)}`, minus the
   proof record exactly as the platform served it (real production bytes, so
   the vectors pin the shape a producer emits and not only the shapes this
   repository invents).
-- `render.json`: renderer inputs and the instances they render to.
+- `render.json`: 8 renderer inputs and the instances they render to, in both
+  producer forms. Five carry no `run_ref`: the form the platform serves, where
+  `source.ref` is the bare provider and the detail names no run, because a
+  public share page carries no run identity. One of those, `kappa_served_proof`,
+  is asserted byte-for-byte against the result stored for the Cut 1 proof run.
+  Three carry a `run_ref`, the form the committed instances under
+  `docs/data/instances/` use (`materialscodegraph-dgeba-cp300-gfn2` and
+  friends).
 
 Every id in these files is produced by the functions above and equals the id
 its source already pinned. A vector whose id changes is a defect in the
 canonicalization, never a reason to regenerate; `python -m omai.tools.gen_vectors`
 refuses to write when a recomputed id disagrees with its pin.
 
-`execution.registry` is the engine manifest's code rows, each
+A rendered instance omits `uncertainty` entirely when the run reports no
+spread (a single-seed run reports 0, which is not a claim of exactness), and
+its detail prints `+/- None`. `execution.registry` is the engine manifest's
+code rows, each
 `{id, name, spdx, license_source, source, version}` with a nullable `version`:
 the licence provenance of what ran, not a list of registry hosts. 0.1.0
 declared it as an array of strings and refused every record the platform
@@ -325,7 +335,7 @@ is breaking and takes a major version, because every id ever minted by this
 library would stop reproducing. Adding a schema field, a renderer, or a vector
 is a minor version. Widening a schema field to accept a shape real producers
 already emit is a patch, since it can only turn a spurious rejection into an
-acceptance. Consumers pin an exact version (`openmaterials-ai==0.1.1`).
+acceptance. Consumers pin an exact version (`openmaterials-ai==0.1.2`).
 
 ## Install
 

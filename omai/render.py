@@ -1,9 +1,22 @@
 """Result renderers: a typed stage result -> a map evidence instance.
 
-Moved here from MCG (mcg/tools/openmaterials/render.py) so the rendering rule
-lives once, beside the identity it is rendered against. Output is unchanged:
-the same variable, conditions, value, units and source.detail string the MCG
-renderers produced.
+Moved here from MCG so the rendering rule lives once, beside the identity it is
+rendered against.
+
+The bytes these functions emit are the ones the PLATFORM SERVED. The move in
+0.1.0 took MCG's Python ``render.py`` as its source, but the records the
+platform actually served were rendered by the worker's TypeScript renderer
+(``platform/worker/src/services/record.ts``, ``kappaInstanceFrom``), and the
+two differ. 0.1.2 makes these functions reproduce the worker's bytes, because
+the served record is the truth a consumer verifies against:
+
+- ``run_ref`` is OPTIONAL. A public share page deliberately carries no run
+  identity, so the served ``source.ref`` is the bare provider
+  ("materialscodegraph") and the ``detail`` names no run. Passing a
+  ``run_ref`` keeps the older, run-identified form for a caller that wants it.
+- ``uncertainty`` is emitted only for a spread strictly greater than zero. A
+  single-seed run reports ``kappa_std = 0``, which is not a claim of
+  exactness, so the key is ABSENT and the detail prints "+/- None".
 
 The one deliberate change is the INPUT type. MCG passed its own pydantic
 result models (KappaResult, MolecularThermoResult, ReactionThermoResult) and
@@ -41,6 +54,9 @@ KAPPA_NODE = {
 # it was rendered against; "unknown" says so plainly instead of implying a pin.
 UNKNOWN_MAP_VERSION = "unknown"
 
+# Who holds the bytes and mints the citation. The worker's MIRROR_PROVIDER.
+MIRROR_PROVIDER = "materialscodegraph"
+
 
 @dataclass
 class Source:
@@ -77,9 +93,9 @@ class Instance:
     def to_json_dict(self) -> dict:
         """Plain dict in the map's key order.
 
-        ``value`` and ``artifact`` are omitted when None, so a scalar instance
-        serializes byte-identically to the ones committed before ``artifact``
-        existed and gains no key it never had.
+        ``value``, ``uncertainty`` and ``artifact`` are omitted when None, so
+        the document is byte-identical to the served one and gains no key it
+        never had.
         """
         d: dict = {
             "variable": self.variable,
@@ -89,7 +105,11 @@ class Instance:
         if self.value is not None:
             d["value"] = self.value
         d["units"] = self.units
-        d["uncertainty"] = self.uncertainty
+        # Omitted when there is no spread to report, matching the served
+        # records (the worker spreads the key only for a positive std). A
+        # `"uncertainty": null` would be a different document.
+        if self.uncertainty is not None:
+            d["uncertainty"] = self.uncertainty
         if self.artifact is not None:
             d["artifact"] = self.artifact
         d["source"] = self.source.to_json_dict()
@@ -106,16 +126,28 @@ def kj_per_mol_to_ev(kj_per_mol: float) -> float:
     return kj_per_mol / KJ_PER_MOL_PER_EV
 
 
-def provenance(run_ref: str, what: str, *,
+def provenance(run_ref: str | None = None, what: str = "", *,
                map_version: str = UNKNOWN_MAP_VERSION) -> Source:
     """The source block every rendered instance carries.
 
     ``what`` is the sentence fragment naming the quantity, ending in "from a",
-    which this completes with the run reference and the map version pin.
+    which this completes with the map version pin and, when a ``run_ref`` is
+    given, the run reference.
+
+    With NO ``run_ref`` (the default, and what the platform serves) the ref is
+    the bare provider and the detail names no run: a public share page carries
+    no run identity. With one, both fields identify the run.
     """
+    if run_ref is None:
+        return Source(
+            kind="simulation",
+            ref=MIRROR_PROVIDER,
+            detail=f"{what} MaterialsCodeGraph run; "
+                   f"rendered against openmaterials map version {map_version}.",
+        )
     return Source(
         kind="simulation",
-        ref=f"materialscodegraph-{slugify(run_ref)}",
+        ref=f"{MIRROR_PROVIDER}-{slugify(run_ref)}",
         detail=f"{what} MaterialsCodeGraph run {run_ref}; "
                f"rendered against openmaterials map version {map_version}.",
     )
@@ -128,7 +160,8 @@ def _get(result, name, default=None):
     return getattr(result, name, default)
 
 
-def render_kappa(result, *, run_ref: str, potential: str | None = None,
+def render_kappa(result, *, run_ref: str | None = None,
+                 potential: str | None = None,
                  map_version: str = UNKNOWN_MAP_VERSION) -> Instance:
     """Bulk thermal conductivity onto the method-specific map node.
 
@@ -156,24 +189,29 @@ def render_kappa(result, *, run_ref: str, potential: str | None = None,
     }
     if potential:
         conditions["potential"] = potential
+    # A spread of 0 (a single-seed run computed none) is not exactness: the
+    # key is dropped and the detail says "None", which is what was served.
+    has_std = isinstance(kappa_std, (int, float)) and not isinstance(
+        kappa_std, bool) and kappa_std > 0
+    std_text = f"{kappa_std}" if has_std else "None"
     return Instance(
         variable=node,
         material=material_name,
         conditions=conditions,
         value=kappa,
         units="W/(m K)",
-        uncertainty=kappa_std or None,
+        uncertainty=kappa_std if has_std else None,
         source=provenance(
             run_ref,
             f"Bulk {material_name} kappa ({method.upper()}, "
-            f"{kappa} +/- {kappa_std} W/(m K) "
+            f"{kappa} +/- {std_text} W/(m K) "
             f"at {temperature_K:g} K, {_get(result, 'n_seeds')} seed(s)) from a",
             map_version=map_version,
         ),
     )
 
 
-def render_molar_cp(result, *, run_ref: str, at_K: float = 300.0,
+def render_molar_cp(result, *, run_ref: str | None = None, at_K: float = 300.0,
                     material_label: str | None = None,
                     map_version: str = UNKNOWN_MAP_VERSION) -> Instance:
     """Gas-phase harmonic molar heat capacity at one grid temperature.
@@ -216,7 +254,8 @@ def render_molar_cp(result, *, run_ref: str, at_K: float = 300.0,
     )
 
 
-def render_reaction_energy(result, *, run_ref: str, material: str,
+def render_reaction_energy(result, *, run_ref: str | None = None,
+                           material: str = "",
                            reaction: str | None = None,
                            map_version: str = UNKNOWN_MAP_VERSION) -> Instance:
     """Reaction enthalpy dH(298 K) in eV per reaction event.

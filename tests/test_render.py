@@ -69,6 +69,37 @@ def test_render_kappa_uncertainty_is_none_when_std_is_absent_or_zero():
                         run_ref="r").uncertainty is None
 
 
+def test_render_kappa_omits_the_uncertainty_key_when_there_is_no_spread():
+    # The served records carry no "uncertainty": null. A single-seed run
+    # reports std 0, which is not a claim of exactness.
+    d = render_kappa(kappa(kappa_std_W_per_mK=0), run_ref="r").to_json_dict()
+    assert "uncertainty" not in d
+    assert render_kappa(kappa(), run_ref="r").to_json_dict()["uncertainty"] == 4.2
+
+
+def test_render_kappa_detail_prints_none_for_an_absent_spread():
+    # The worker prints "+/- None", not "+/- 0", and the served bytes have it.
+    detail = render_kappa(kappa(kappa_std_W_per_mK=0), run_ref="r").source.detail
+    assert "+/- None W/(m K)" in detail
+    assert "+/- 4.2 W/(m K)" in render_kappa(kappa(), run_ref="r").source.detail
+
+
+def test_render_kappa_without_a_run_ref_is_the_served_platform_form():
+    # What a public share page carries: no run identity anywhere.
+    inst = render_kappa(kappa(), map_version=MAP_VERSION)
+    assert inst.source.ref == "materialscodegraph"
+    assert "MaterialsCodeGraph run;" in inst.source.detail
+    assert "run-ref" not in inst.source.detail
+
+
+def test_render_kappa_with_a_run_ref_keeps_the_commons_form():
+    # Still available: the committed instances under docs/data/instances/ use
+    # it (materialscodegraph-dgeba-cp300-gfn2 and friends).
+    inst = render_kappa(kappa(), run_ref="dgeba-cp300-gfn2")
+    assert inst.source.ref == "materialscodegraph-dgeba-cp300-gfn2"
+    assert "MaterialsCodeGraph run dgeba-cp300-gfn2;" in inst.source.detail
+
+
 def test_render_kappa_code_defaults_to_gpumd():
     result = kappa()
     del result["code"]
@@ -168,6 +199,13 @@ def test_kj_per_mol_to_ev_is_the_codata_constant():
     assert kj_per_mol_to_ev(96.48533212331) == 1.0
 
 
+def test_provenance_without_a_run_ref_names_no_run():
+    src = provenance(what="Something from a", map_version="abc123")
+    assert src.ref == "materialscodegraph"
+    assert src.detail == ("Something from a MaterialsCodeGraph run; "
+                          "rendered against openmaterials map version abc123.")
+
+
 def test_provenance_stamps_the_map_version_and_slugs_the_ref():
     src = provenance("Run Ref XYZ", "Something from a", map_version="abc123")
     assert isinstance(src, Source)
@@ -183,12 +221,13 @@ def test_provenance_says_unknown_when_no_map_version_is_given():
     assert "map version unknown." in provenance("r", "x").detail
 
 
-def test_instance_to_json_dict_omits_value_and_artifact_when_absent():
+def test_instance_to_json_dict_omits_absent_optional_keys():
     inst = Instance(variable="Frequency", material="Si", conditions={},
                     units="THz", source=provenance("r", "x"))
-    assert "value" not in inst.to_json_dict()
-    assert "artifact" not in inst.to_json_dict()
-    assert inst.to_json_dict()["uncertainty"] is None
+    d = inst.to_json_dict()
+    assert "value" not in d
+    assert "artifact" not in d
+    assert "uncertainty" not in d
 
 
 def test_instance_filename_is_the_map_kebab_convention():
