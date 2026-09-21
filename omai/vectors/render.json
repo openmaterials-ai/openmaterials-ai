@@ -1,6 +1,39 @@
 [
  {
-  "filename": "si-thermalconductivity-transport-model-hnemd-materialscodegraph-run-ref-xyz.json",
+  "filename": "si-thermalconductivity-bte-solver-rta-materialscodegraph.json",
+  "function": "render_kappa",
+  "instance": {
+   "conditions": {
+    "T": "300 K",
+    "code": "qe+d3q",
+    "method": "bte_rta",
+    "n_seeds": 1
+   },
+   "material": "Si",
+   "source": {
+    "detail": "Bulk Si kappa (BTE_RTA, 97.93078199999998 +/- None W/(m K) at 300 K, 1 seed(s)) from a MaterialsCodeGraph run; rendered against openmaterials map version 9802d9e854c915eb47d867575730a556ab7f4a565e392bf5b29da58338f08434.",
+    "kind": "simulation",
+    "ref": "materialscodegraph"
+   },
+   "units": "W/(m K)",
+   "value": 97.93078199999998,
+   "variable": "ThermalConductivity[bte_solver=rta]"
+  },
+  "kwargs": {},
+  "map_version": "9802d9e854c915eb47d867575730a556ab7f4a565e392bf5b29da58338f08434",
+  "name": "kappa_served_proof",
+  "result": {
+   "code": "qe+d3q",
+   "kappa_W_per_mK": 97.93078199999998,
+   "kappa_std_W_per_mK": 0,
+   "material_name": "Si",
+   "method": "bte_rta",
+   "n_seeds": 1,
+   "temperature_K": 300
+  }
+ },
+ {
+  "filename": "si-thermalconductivity-transport-model-hnemd-materialscodegraph.json",
   "function": "render_kappa",
   "instance": {
    "conditions": {
@@ -12,9 +45,9 @@
    },
    "material": "Si",
    "source": {
-    "detail": "Bulk Si kappa (HNEMD, 137.5 +/- 4.2 W/(m K) at 300 K, 4 seed(s)) from a MaterialsCodeGraph run run-ref-xyz; rendered against openmaterials map version 9802d9e854c915eb47d867575730a556ab7f4a565e392bf5b29da58338f08434.",
+    "detail": "Bulk Si kappa (HNEMD, 137.5 +/- 4.2 W/(m K) at 300 K, 4 seed(s)) from a MaterialsCodeGraph run; rendered against openmaterials map version 9802d9e854c915eb47d867575730a556ab7f4a565e392bf5b29da58338f08434.",
     "kind": "simulation",
-    "ref": "materialscodegraph-run-ref-xyz"
+    "ref": "materialscodegraph"
    },
    "uncertainty": 4.2,
    "units": "W/(m K)",
@@ -22,11 +55,10 @@
    "variable": "ThermalConductivity[transport_model=hnemd]"
   },
   "kwargs": {
-   "potential": "Si-NEP",
-   "run_ref": "run-ref-xyz"
+   "potential": "Si-NEP"
   },
   "map_version": "9802d9e854c915eb47d867575730a556ab7f4a565e392bf5b29da58338f08434",
-  "name": "kappa_hnemd",
+  "name": "kappa_hnemd_with_spread",
   "result": {
    "code": "GPUMD",
    "kappa_W_per_mK": 137.5,
@@ -38,7 +70,7 @@
   }
  },
  {
-  "filename": "si-thermalconductivity-transport-model-green-kubo-materialscodegraph-run-ref-gk.json",
+  "filename": "si-thermalconductivity-transport-model-green-kubo-materialscodegraph.json",
   "function": "render_kappa",
   "instance": {
    "conditions": {
@@ -49,18 +81,15 @@
    },
    "material": "Si",
    "source": {
-    "detail": "Bulk Si kappa (GREEN_KUBO, 120.25 +/- None W/(m K) at 301.5 K, 1 seed(s)) from a MaterialsCodeGraph run run-ref-gk; rendered against openmaterials map version 9802d9e854c915eb47d867575730a556ab7f4a565e392bf5b29da58338f08434.",
+    "detail": "Bulk Si kappa (GREEN_KUBO, 120.25 +/- None W/(m K) at 301.5 K, 1 seed(s)) from a MaterialsCodeGraph run; rendered against openmaterials map version 9802d9e854c915eb47d867575730a556ab7f4a565e392bf5b29da58338f08434.",
     "kind": "simulation",
-    "ref": "materialscodegraph-run-ref-gk"
+    "ref": "materialscodegraph"
    },
-   "uncertainty": null,
    "units": "W/(m K)",
    "value": 120.25,
    "variable": "ThermalConductivity[transport_model=green_kubo]"
   },
-  "kwargs": {
-   "run_ref": "run-ref-gk"
-  },
+  "kwargs": {},
   "map_version": "9802d9e854c915eb47d867575730a556ab7f4a565e392bf5b29da58338f08434",
   "name": "kappa_green_kubo_no_std",
   "result": {
@@ -74,7 +103,7 @@
   }
  },
  {
-  "filename": "si-thermalconductivity-bte-solver-direct-inverse-materialscodegraph-run-ref-kaldo.json",
+  "filename": "si-thermalconductivity-bte-solver-direct-inverse-materialscodegraph.json",
   "function": "render_kappa",
   "instance": {
    "conditions": {
@@ -85,18 +114,15 @@
    },
    "material": "Si",
    "source": {
-    "detail": "Bulk Si kappa (BTE_DIRECT_INVERSE, 254.46618271513248 +/- None W/(m K) at 300 K, 1 seed(s)) from a MaterialsCodeGraph run run-ref-kaldo; rendered against openmaterials map version 9802d9e854c915eb47d867575730a556ab7f4a565e392bf5b29da58338f08434.",
+    "detail": "Bulk Si kappa (BTE_DIRECT_INVERSE, 254.46618271513248 +/- None W/(m K) at 300 K, 1 seed(s)) from a MaterialsCodeGraph run; rendered against openmaterials map version 9802d9e854c915eb47d867575730a556ab7f4a565e392bf5b29da58338f08434.",
     "kind": "simulation",
-    "ref": "materialscodegraph-run-ref-kaldo"
+    "ref": "materialscodegraph"
    },
-   "uncertainty": null,
    "units": "W/(m K)",
    "value": 254.46618271513248,
    "variable": "ThermalConductivity[bte_solver=direct_inverse]"
   },
-  "kwargs": {
-   "run_ref": "run-ref-kaldo"
-  },
+  "kwargs": {},
   "map_version": "9802d9e854c915eb47d867575730a556ab7f4a565e392bf5b29da58338f08434",
   "name": "kappa_bte_direct_inverse",
   "result": {
@@ -106,6 +132,42 @@
    "material_name": "Si",
    "method": "bte_direct_inverse",
    "n_seeds": 1,
+   "temperature_K": 300.0
+  }
+ },
+ {
+  "filename": "si-thermalconductivity-transport-model-hnemd-materialscodegraph-run-74cdf438f9e64a9bb90a.json",
+  "function": "render_kappa",
+  "instance": {
+   "conditions": {
+    "T": "300 K",
+    "code": "GPUMD",
+    "method": "hnemd",
+    "n_seeds": 4
+   },
+   "material": "Si",
+   "source": {
+    "detail": "Bulk Si kappa (HNEMD, 137.5 +/- 4.2 W/(m K) at 300 K, 4 seed(s)) from a MaterialsCodeGraph run run_74cdf438f9e64a9bb90a; rendered against openmaterials map version 9802d9e854c915eb47d867575730a556ab7f4a565e392bf5b29da58338f08434.",
+    "kind": "simulation",
+    "ref": "materialscodegraph-run-74cdf438f9e64a9bb90a"
+   },
+   "uncertainty": 4.2,
+   "units": "W/(m K)",
+   "value": 137.5,
+   "variable": "ThermalConductivity[transport_model=hnemd]"
+  },
+  "kwargs": {
+   "run_ref": "run_74cdf438f9e64a9bb90a"
+  },
+  "map_version": "9802d9e854c915eb47d867575730a556ab7f4a565e392bf5b29da58338f08434",
+  "name": "kappa_hnemd_with_run_ref",
+  "result": {
+   "code": "GPUMD",
+   "kappa_W_per_mK": 137.5,
+   "kappa_std_W_per_mK": 4.2,
+   "material_name": "Si",
+   "method": "hnemd",
+   "n_seeds": 4,
    "temperature_K": 300.0
   }
  },
@@ -126,7 +188,6 @@
     "kind": "simulation",
     "ref": "materialscodegraph-dgeba-cp300-gfn2"
    },
-   "uncertainty": null,
    "units": "J/(K mol)",
    "value": 397.7,
    "variable": "MolarHeatCapacity"
@@ -174,7 +235,6 @@
     "kind": "simulation",
     "ref": "materialscodegraph-cure-dh-gpe-aniline-gfn2"
    },
-   "uncertainty": null,
    "units": "eV",
    "value": -1.101722,
    "variable": "ReactionEnergy"
@@ -211,7 +271,6 @@
     "kind": "simulation",
     "ref": "materialscodegraph-cure-dh-gpe-methylamine-gfn2"
    },
-   "uncertainty": null,
    "units": "eV",
    "value": -1.203292,
    "variable": "ReactionEnergy"

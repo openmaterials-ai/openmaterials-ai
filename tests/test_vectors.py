@@ -131,6 +131,29 @@ def test_the_generator_reads_only_files_beside_itself():
         assert path.exists()
 
 
+def test_the_renderer_reproduces_the_served_proof_instance_byte_for_byte():
+    """The renderer's output equals the result stored for
+    run_74cdf438f9e64a9bb90a, field for field.
+
+    This is the assertion 0.1.0 and 0.1.1 lacked. The renderers were moved from
+    MCG's Python render.py, but the records the platform served were rendered
+    by the worker's TypeScript renderer, and the two disagreed on source.ref,
+    source.detail and the uncertainty key. Nothing compared them, so the
+    divergence shipped twice.
+    """
+    proof = next(e for e in RECORD_VECTORS
+                 if e["name"] == "mcg:cut1_proof_run_903616ec")["record"]
+    served = proof["results"][0]
+    rendered = next(v for v in RENDER_VECTORS
+                    if v["name"] == "kappa_served_proof")["instance"]
+    assert rendered == served
+    # And through the live function, not only the committed vector.
+    case = next(v for v in RENDER_VECTORS if v["name"] == "kappa_served_proof")
+    live = render_kappa(case["result"], map_version=case["map_version"],
+                        **case["kwargs"]).to_json_dict()
+    assert live == served
+
+
 def test_the_proof_record_vector_is_real_production_bytes():
     # A vector set built only from shapes this repository invents cannot catch
     # a producer/schema mismatch; this one is what the platform served.
