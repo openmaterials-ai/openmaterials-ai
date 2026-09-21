@@ -20,8 +20,10 @@ ids, never retyped:
 - ``mcg_number_vectors``: the adversarial float/int canonicalization vectors
   from MCG's ``mcg/tests/tools/openmaterials/test_record.py`` and the identical
   set in ``platform/worker/test/record.spec.ts``.
-- the kaldo external-solve fixture, read from ``tests/fixtures/external_solve/``
-  in this repository.
+- ``kaldo-direct-bte-si.json``: the kaldo external-solve fixture, a byte copy
+  of ``tests/fixtures/external_solve/kaldo-direct-bte-si.json`` kept beside
+  this script so the generator runs from an installed wheel too.
+  ``tests/test_vectors.py`` asserts the two copies are identical.
 
 Each input carries the id it was pinned with; the generator RECOMPUTES the id
 and refuses to write when the two disagree. A changed id is a defect in the
@@ -42,11 +44,15 @@ from omai.render import (
     render_reaction_energy,
 )
 
+# Every input resolves relative to THIS FILE, never to a repository layout, so
+# the generator runs the same from a checkout and from an installed wheel. The
+# kaldo fixture is copied in beside vector_inputs.json and shipped as package
+# data for exactly that reason: reading it out of tests/ would resolve under
+# site-packages and fail on an installed copy.
 _HERE = Path(__file__).resolve().parent
-_REPO = _HERE.parent.parent
 _INPUTS = _HERE / "vector_inputs.json"
-_VECTORS = _REPO / "omai" / "vectors"
-_KALDO = _REPO / "tests" / "fixtures" / "external_solve" / "kaldo-direct-bte-si.json"
+_KALDO = _HERE / "kaldo-direct-bte-si.json"
+_VECTORS = _HERE.parent / "vectors"
 
 # The lineage envelope MCG's number vectors vary: only conditions and params
 # differ per vector, so the node pin stays constant and the number edges sit

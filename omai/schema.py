@@ -14,12 +14,31 @@ contract names, so a key nobody agreed on is refused rather than carried
 silently into storage. The two open maps are the ones whose keys are data:
 ``lineage.conditions`` / ``lineage.params`` (the dials of an experiment) and
 ``mirrors`` (artifact path -> location).
+
+SCOPE: a CURRENT record, the one that carries its lineage under ``lineage``.
+A legacy record carrying the pre-rename ``recipe`` key is OUT OF SCOPE and is
+refused here, although :func:`omai.lineages.record_lineage` still reads it.
+That is deliberate: the schema states the shape new records are written in, and
+widening it to ``recipe`` would keep the legacy spelling alive in every
+consumer that validates. A caller holding a possibly-legacy record normalizes
+it first, which is one line::
+
+    record = {**record, "lineage": record_lineage(record)}
+    record.pop("recipe", None)
+    errors = validate_record(record)
+
+Legacy links stay readable forever through ``record_lineage``; they are simply
+not what this schema describes.
 """
 
 from __future__ import annotations
 
 # A sha256 hex digest, the shape lineages.py's _SHA256_RE enforces.
 _SHA256 = r"^[0-9a-f]{64}$"
+
+# A configuration pin: the bare uid, or the "sha256:<uid>" spelling that
+# lineages.py _validate_configuration also accepts.
+_CONFIGURATION_UID = r"^(sha256:)?[0-9a-f]{64}$"
 
 _NON_EMPTY = {"type": "string", "minLength": 1}
 
@@ -120,9 +139,13 @@ def _lineage_schema() -> dict:
                         "properties": {
                             "name": _NON_EMPTY,
                             "configuration": {
-                                "description": "A committed configuration uid.",
+                                # lineages.py _validate_configuration accepts
+                                # the uid bare or as "sha256:<uid>"; the schema
+                                # must not refuse a form the gate admits.
+                                "description": "A committed configuration uid, "
+                                               "bare or 'sha256:'-prefixed.",
                                 "type": "string",
-                                "pattern": _SHA256,
+                                "pattern": _CONFIGURATION_UID,
                             },
                         },
                     },

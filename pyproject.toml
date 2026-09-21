@@ -70,7 +70,7 @@ include = ["omai*", "omdc*", "omds*"]
 # their own canonicalization against these files, so a consumer that pip
 # installs omai must get them without cloning the repository.
 [tool.setuptools.package-data]
-omai = ["vectors/*.json", "tools/vector_inputs.json"]
+omai = ["vectors/*.json", "tools/*.json"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

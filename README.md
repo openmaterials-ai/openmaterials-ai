@@ -285,6 +285,14 @@ The schema is a SHAPE gate. That `id` equals `lineage_id(lineage)`, that the
 node resolves against the live map, and the contribution gates in
 `omai.gates` are separate checks: a schema cannot hash.
 
+It describes a CURRENT record, the one carrying its lineage under `lineage`.
+A legacy record using the pre-rename `recipe` key is out of scope and is
+refused, although `record_lineage` still reads it: the schema states the shape
+new records are written in, and widening it would keep the legacy spelling
+alive in every consumer that validates. Normalize such a record before
+validating it (`{**record, "lineage": record_lineage(record)}`, minus the
+`recipe` key); legacy links stay readable through `record_lineage` forever.
+
 **The vectors.** `omai/vectors/*.json` ship inside the wheel.
 
 - `lineage_ids.json`: 32 lineages, each with its canonical JSON, `lineage_id`,

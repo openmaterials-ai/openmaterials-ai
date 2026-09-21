@@ -111,6 +111,26 @@ def test_render_vector_reproduces_through_the_public_renderer(vector):
 
 # --- the vector set is the one the consumers need ---------------------------
 
+def test_the_packaged_kaldo_fixture_equals_the_test_fixture():
+    # gen_vectors reads its own copy so it runs from an installed wheel. The
+    # two must stay byte-identical, or the vectors are generated from an input
+    # nobody else sees.
+    packaged = Path(gen_vectors.__file__).resolve().parent / "kaldo-direct-bte-si.json"
+    original = (Path(gen_vectors.__file__).resolve().parents[2] / "tests" /
+                "fixtures" / "external_solve" / "kaldo-direct-bte-si.json")
+    assert packaged.read_bytes() == original.read_bytes()
+
+
+def test_the_generator_reads_only_files_beside_itself():
+    # The property that makes `python -m omai.tools.gen_vectors` work from an
+    # installed wheel: every input path sits in the package, never in the
+    # repository layout around it.
+    here = Path(gen_vectors.__file__).resolve().parent
+    for path in (gen_vectors._INPUTS, gen_vectors._KALDO):
+        assert path.parent == here, f"{path} is outside the package"
+        assert path.exists()
+
+
 def test_all_three_pinned_sources_are_represented():
     sources = {v["name"].split(":", 1)[0] for v in LINEAGE_VECTORS}
     assert sources == {"commons", "mcg", "kaldo"}

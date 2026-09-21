@@ -80,6 +80,38 @@ def test_a_missing_lineage_node_uid_is_accepted_but_a_malformed_one_is_not():
     assert any("node_uid" in e for e in errors)
 
 
+def test_a_configuration_pin_is_accepted_bare_and_sha256_prefixed():
+    # lineages.py _validate_configuration accepts both spellings, so the schema
+    # must not refuse either one.
+    uid = "a" * 64
+    for pin in (uid, f"sha256:{uid}"):
+        record = _light()
+        record["lineage"]["material"] = {"name": "Si", "configuration": pin}
+        assert validate_record(record) == [], pin
+
+
+def test_a_malformed_configuration_pin_is_refused():
+    record = _light()
+    record["lineage"]["material"] = {"name": "Si", "configuration": "sha256:xyz"}
+    assert validate_record(record)
+
+
+def test_a_legacy_recipe_keyed_record_is_out_of_scope_and_refused():
+    # The schema describes CURRENT records. record_lineage still READS a
+    # recipe-keyed record; validating one is a caller error, and the caller
+    # normalizes first. Pinned so the scope stays a decision, not an accident.
+    from omai.lineages import record_lineage
+
+    record = _light()
+    record["recipe"] = record.pop("lineage")
+    assert record_lineage(record) is record["recipe"]
+    assert validate_record(record)
+
+    normalized = {**record, "lineage": record_lineage(record)}
+    normalized.pop("recipe")
+    assert validate_record(normalized) == []
+
+
 def test_a_missing_lineage_node_is_refused():
     record = _light()
     del record["lineage"]["node"]
