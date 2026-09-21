@@ -1,0 +1,1024 @@
+[
+ {
+  "name": "commons:molar_heat_capacity",
+  "record": {
+   "artifacts": [],
+   "execution": {
+    "code": "gpumd_hnemd",
+    "code_version": "3.9.5",
+    "image_digest": "sha256:deadbeef",
+    "registry": [
+     "ghcr.io/openmaterials-ai"
+    ]
+   },
+   "id": "ab0da9ec11b99b44b3c942c609a8aee24b83240955d2c029c5d05dfa34dbe84c",
+   "lineage": {
+    "conditions": {
+     "T": "300 K",
+     "approximation": "harmonic (RRHO)",
+     "code": "xtb 6.7.1",
+     "model": "GFN2-xTB",
+     "n_imaginary": 0,
+     "phase": "gas",
+     "smiles": "CC(C)(c1ccc(OCC2CO2)cc1)c1ccc(OCC2CO2)cc1"
+    },
+    "material": "C21H24O4 (DGEBA)",
+    "node": "MolarHeatCapacity",
+    "values": {
+     "units": "J/(K mol)",
+     "value": 397.7
+    }
+   },
+   "mirrors": {},
+   "results": []
+  }
+ },
+ {
+  "name": "commons:reaction_energy_aniline",
+  "record": {
+   "artifacts": [],
+   "execution": {
+    "code": "gpumd_hnemd",
+    "code_version": "3.9.5",
+    "image_digest": "sha256:deadbeef",
+    "registry": [
+     "ghcr.io/openmaterials-ai"
+    ]
+   },
+   "id": "e63f4de3a73a9a868ff0b54c94848e3af7993c9d9e74ad83309c81ad797fc823",
+   "lineage": {
+    "conditions": {
+     "T": "298.15 K",
+     "code": "xtb 6.7.1",
+     "dh298_kJ_per_mol": -106.3,
+     "model": "GFN2-xTB",
+     "normalization": "per_reaction_event",
+     "phase": "gas",
+     "quantity": "reaction enthalpy dH(298 K)",
+     "reaction": "glycidyl phenyl ether + aniline -> 1-(phenylamino)-3-phenoxy-2-propanol"
+    },
+    "material": "C9H10O2 (glycidyl phenyl ether)",
+    "node": "ReactionEnergy",
+    "values": {
+     "units": "eV",
+     "value": -1.101722
+    }
+   },
+   "mirrors": {},
+   "results": []
+  }
+ },
+ {
+  "name": "commons:reaction_energy_methylamine",
+  "record": {
+   "artifacts": [],
+   "execution": {
+    "code": "gpumd_hnemd",
+    "code_version": "3.9.5",
+    "image_digest": "sha256:deadbeef",
+    "registry": [
+     "ghcr.io/openmaterials-ai"
+    ]
+   },
+   "id": "c9de95163fd69a7672036f13a983faf560b8265880262c9b554809853a717888",
+   "lineage": {
+    "conditions": {
+     "T": "298.15 K",
+     "code": "xtb 6.7.1",
+     "dh298_kJ_per_mol": -116.1,
+     "model": "GFN2-xTB",
+     "normalization": "per_reaction_event",
+     "phase": "gas",
+     "quantity": "reaction enthalpy dH(298 K)",
+     "reaction": "glycidyl phenyl ether + methylamine -> 1-(methylamino)-3-phenoxy-2-propanol"
+    },
+    "material": "C9H10O2 (glycidyl phenyl ether)",
+    "node": "ReactionEnergy",
+    "values": {
+     "units": "eV",
+     "value": -1.203292
+    }
+   },
+   "mirrors": {},
+   "results": []
+  }
+ },
+ {
+  "name": "commons:thermal_conductivity",
+  "record": {
+   "artifacts": [],
+   "execution": {
+    "code": "gpumd_hnemd",
+    "code_version": "3.9.5",
+    "image_digest": "sha256:deadbeef",
+    "registry": [
+     "ghcr.io/openmaterials-ai"
+    ]
+   },
+   "id": "b13e25c6787b385f038dc27625126c29eb2db611237b680e0eae83067dd89e4e",
+   "lineage": {
+    "conditions": {
+     "G_MW_per_m2K": 25,
+     "d1_um": 5,
+     "d3_um": 0.02,
+     "f": 0.05,
+     "k11_W_per_mK": 1200,
+     "k33_W_per_mK": 6,
+     "kapitza_radius_nm": 8.0,
+     "km_W_per_mK": 0.2,
+     "orientation": "random"
+    },
+    "material": "DGEBA epoxy + 5 vol% GNP (reference formulation)",
+    "node": "ThermalConductivity[effective_medium=nan,orientation=random]",
+    "values": {
+     "units": "W/(m K)",
+     "value": 1.2452
+    }
+   },
+   "mirrors": {},
+   "results": []
+  }
+ },
+ {
+  "name": "mcg:cond_1e16",
+  "record": {
+   "artifacts": [],
+   "execution": {
+    "code": "gpumd_hnemd",
+    "code_version": "3.9.5",
+    "image_digest": "sha256:deadbeef",
+    "registry": [
+     "ghcr.io/openmaterials-ai"
+    ]
+   },
+   "id": "03dc6386fc14c5325f8dcff5a8cc4b8385677d7e729ef6bfd7758bc94bbcb81e",
+   "lineage": {
+    "conditions": {
+     "T": 1e+16
+    },
+    "material": {
+     "name": "Si"
+    },
+    "node": "ThermalConductivity[transport_model=hnemd]",
+    "node_uid": "e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88",
+    "params": {}
+   },
+   "mirrors": {},
+   "results": []
+  }
+ },
+ {
+  "name": "mcg:cond_1e21",
+  "record": {
+   "artifacts": [],
+   "execution": {
+    "code": "gpumd_hnemd",
+    "code_version": "3.9.5",
+    "image_digest": "sha256:deadbeef",
+    "registry": [
+     "ghcr.io/openmaterials-ai"
+    ]
+   },
+   "id": "5f5739bd9fc011a868335981f1b8f51d9bd824ff7f20d6449d112334c3f2b25b",
+   "lineage": {
+    "conditions": {
+     "T": 1e+21
+    },
+    "material": {
+     "name": "Si"
+    },
+    "node": "ThermalConductivity[transport_model=hnemd]",
+    "node_uid": "e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88",
+    "params": {}
+   },
+   "mirrors": {},
+   "results": []
+  }
+ },
+ {
+  "name": "mcg:cond_1_5e16",
+  "record": {
+   "artifacts": [],
+   "execution": {
+    "code": "gpumd_hnemd",
+    "code_version": "3.9.5",
+    "image_digest": "sha256:deadbeef",
+    "registry": [
+     "ghcr.io/openmaterials-ai"
+    ]
+   },
+   "id": "6d8096e6aba8f91eac26a1d5a25a4ce6957a8919d7a5d9357f6a1947d6ffaeff",
+   "lineage": {
+    "conditions": {
+     "T": 1.5e+16
+    },
+    "material": {
+     "name": "Si"
+    },
+    "node": "ThermalConductivity[transport_model=hnemd]",
+    "node_uid": "e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88",
+    "params": {}
+   },
+   "mirrors": {},
+   "results": []
+  }
+ },
+ {
+  "name": "mcg:cond_1e15",
+  "record": {
+   "artifacts": [],
+   "execution": {
+    "code": "gpumd_hnemd",
+    "code_version": "3.9.5",
+    "image_digest": "sha256:deadbeef",
+    "registry": [
+     "ghcr.io/openmaterials-ai"
+    ]
+   },
+   "id": "d49bd45faa4753d6bf9fc690824128542d2a36a79e20e2f0a2039250ed02b056",
+   "lineage": {
+    "conditions": {
+     "T": 1000000000000000.0
+    },
+    "material": {
+     "name": "Si"
+    },
+    "node": "ThermalConductivity[transport_model=hnemd]",
+    "node_uid": "e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88",
+    "params": {}
+   },
+   "mirrors": {},
+   "results": []
+  }
+ },
+ {
+  "name": "mcg:cond_9999e15",
+  "record": {
+   "artifacts": [],
+   "execution": {
+    "code": "gpumd_hnemd",
+    "code_version": "3.9.5",
+    "image_digest": "sha256:deadbeef",
+    "registry": [
+     "ghcr.io/openmaterials-ai"
+    ]
+   },
+   "id": "2d600f4a9b14f07cbddbc1ce04e53ff4a3176370df47645b68bfe384eafd3b35",
+   "lineage": {
+    "conditions": {
+     "T": 9999999999999998.0
+    },
+    "material": {
+     "name": "Si"
+    },
+    "node": "ThermalConductivity[transport_model=hnemd]",
+    "node_uid": "e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88",
+    "params": {}
+   },
+   "mirrors": {},
+   "results": []
+  }
+ },
+ {
+  "name": "mcg:cond_1e-7",
+  "record": {
+   "artifacts": [],
+   "execution": {
+    "code": "gpumd_hnemd",
+    "code_version": "3.9.5",
+    "image_digest": "sha256:deadbeef",
+    "registry": [
+     "ghcr.io/openmaterials-ai"
+    ]
+   },
+   "id": "04b0df55f2c269d149457285b010e81be17d6d161b3e09c68d1e448fdf51751e",
+   "lineage": {
+    "conditions": {
+     "T": 1e-07
+    },
+    "material": {
+     "name": "Si"
+    },
+    "node": "ThermalConductivity[transport_model=hnemd]",
+    "node_uid": "e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88",
+    "params": {}
+   },
+   "mirrors": {},
+   "results": []
+  }
+ },
+ {
+  "name": "mcg:cond_1e-4",
+  "record": {
+   "artifacts": [],
+   "execution": {
+    "code": "gpumd_hnemd",
+    "code_version": "3.9.5",
+    "image_digest": "sha256:deadbeef",
+    "registry": [
+     "ghcr.io/openmaterials-ai"
+    ]
+   },
+   "id": "cef873a368b661e7b1880b40689985643d2a50755d99ea998fe08553a1fc3434",
+   "lineage": {
+    "conditions": {
+     "T": 0.0001
+    },
+    "material": {
+     "name": "Si"
+    },
+    "node": "ThermalConductivity[transport_model=hnemd]",
+    "node_uid": "e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88",
+    "params": {}
+   },
+   "mirrors": {},
+   "results": []
+  }
+ },
+ {
+  "name": "mcg:cond_1e-5",
+  "record": {
+   "artifacts": [],
+   "execution": {
+    "code": "gpumd_hnemd",
+    "code_version": "3.9.5",
+    "image_digest": "sha256:deadbeef",
+    "registry": [
+     "ghcr.io/openmaterials-ai"
+    ]
+   },
+   "id": "cc2bec714154e22615579a0e3c59f910260ca906e7a8d2daf7c7c8d78dadf2d7",
+   "lineage": {
+    "conditions": {
+     "T": 1e-05
+    },
+    "material": {
+     "name": "Si"
+    },
+    "node": "ThermalConductivity[transport_model=hnemd]",
+    "node_uid": "e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88",
+    "params": {}
+   },
+   "mirrors": {},
+   "results": []
+  }
+ },
+ {
+  "name": "mcg:cond_123e-7",
+  "record": {
+   "artifacts": [],
+   "execution": {
+    "code": "gpumd_hnemd",
+    "code_version": "3.9.5",
+    "image_digest": "sha256:deadbeef",
+    "registry": [
+     "ghcr.io/openmaterials-ai"
+    ]
+   },
+   "id": "04b0df55f2c269d149457285b010e81be17d6d161b3e09c68d1e448fdf51751e",
+   "lineage": {
+    "conditions": {
+     "T": 1.23e-07
+    },
+    "material": {
+     "name": "Si"
+    },
+    "node": "ThermalConductivity[transport_model=hnemd]",
+    "node_uid": "e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88",
+    "params": {}
+   },
+   "mirrors": {},
+   "results": []
+  }
+ },
+ {
+  "name": "mcg:cond_neg_1e-7",
+  "record": {
+   "artifacts": [],
+   "execution": {
+    "code": "gpumd_hnemd",
+    "code_version": "3.9.5",
+    "image_digest": "sha256:deadbeef",
+    "registry": [
+     "ghcr.io/openmaterials-ai"
+    ]
+   },
+   "id": "b3b62903a6c9bdedfff4e89a5ae7e8d0ce9cc9683f9636fae75ad6f50196ce8a",
+   "lineage": {
+    "conditions": {
+     "T": -1e-07
+    },
+    "material": {
+     "name": "Si"
+    },
+    "node": "ThermalConductivity[transport_model=hnemd]",
+    "node_uid": "e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88",
+    "params": {}
+   },
+   "mirrors": {},
+   "results": []
+  }
+ },
+ {
+  "name": "mcg:cond_0_1234565",
+  "record": {
+   "artifacts": [],
+   "execution": {
+    "code": "gpumd_hnemd",
+    "code_version": "3.9.5",
+    "image_digest": "sha256:deadbeef",
+    "registry": [
+     "ghcr.io/openmaterials-ai"
+    ]
+   },
+   "id": "57e6c5cd71ac90b3162116b015ebf54b4c354b38a997d82bf7e6e7a0168e207e",
+   "lineage": {
+    "conditions": {
+     "T": 0.1234565
+    },
+    "material": {
+     "name": "Si"
+    },
+    "node": "ThermalConductivity[transport_model=hnemd]",
+    "node_uid": "e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88",
+    "params": {}
+   },
+   "mirrors": {},
+   "results": []
+  }
+ },
+ {
+  "name": "mcg:cond_2_5000005",
+  "record": {
+   "artifacts": [],
+   "execution": {
+    "code": "gpumd_hnemd",
+    "code_version": "3.9.5",
+    "image_digest": "sha256:deadbeef",
+    "registry": [
+     "ghcr.io/openmaterials-ai"
+    ]
+   },
+   "id": "244d1ceed4cd257da5801d86f60b0cc771ae487eae88199048c2114a547c39cf",
+   "lineage": {
+    "conditions": {
+     "T": 2.5000005
+    },
+    "material": {
+     "name": "Si"
+    },
+    "node": "ThermalConductivity[transport_model=hnemd]",
+    "node_uid": "e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88",
+    "params": {}
+   },
+   "mirrors": {},
+   "results": []
+  }
+ },
+ {
+  "name": "mcg:cond_0_0000005",
+  "record": {
+   "artifacts": [],
+   "execution": {
+    "code": "gpumd_hnemd",
+    "code_version": "3.9.5",
+    "image_digest": "sha256:deadbeef",
+    "registry": [
+     "ghcr.io/openmaterials-ai"
+    ]
+   },
+   "id": "04b0df55f2c269d149457285b010e81be17d6d161b3e09c68d1e448fdf51751e",
+   "lineage": {
+    "conditions": {
+     "T": 5e-07
+    },
+    "material": {
+     "name": "Si"
+    },
+    "node": "ThermalConductivity[transport_model=hnemd]",
+    "node_uid": "e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88",
+    "params": {}
+   },
+   "mirrors": {},
+   "results": []
+  }
+ },
+ {
+  "name": "mcg:cond_0_0000015",
+  "record": {
+   "artifacts": [],
+   "execution": {
+    "code": "gpumd_hnemd",
+    "code_version": "3.9.5",
+    "image_digest": "sha256:deadbeef",
+    "registry": [
+     "ghcr.io/openmaterials-ai"
+    ]
+   },
+   "id": "9b08e2394e0606507c2cb95e92d1eb559c51bc5e5fbe4be2add93bf23369dc11",
+   "lineage": {
+    "conditions": {
+     "T": 1.5e-06
+    },
+    "material": {
+     "name": "Si"
+    },
+    "node": "ThermalConductivity[transport_model=hnemd]",
+    "node_uid": "e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88",
+    "params": {}
+   },
+   "mirrors": {},
+   "results": []
+  }
+ },
+ {
+  "name": "mcg:cond_123_4567895",
+  "record": {
+   "artifacts": [],
+   "execution": {
+    "code": "gpumd_hnemd",
+    "code_version": "3.9.5",
+    "image_digest": "sha256:deadbeef",
+    "registry": [
+     "ghcr.io/openmaterials-ai"
+    ]
+   },
+   "id": "adcbedc79908df92c2f89fe8b63a765c0e5c066244b4c16e97648bdb8c5c71c2",
+   "lineage": {
+    "conditions": {
+     "T": 123.4567895
+    },
+    "material": {
+     "name": "Si"
+    },
+    "node": "ThermalConductivity[transport_model=hnemd]",
+    "node_uid": "e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88",
+    "params": {}
+   },
+   "mirrors": {},
+   "results": []
+  }
+ },
+ {
+  "name": "mcg:cond_neg_zero",
+  "record": {
+   "artifacts": [],
+   "execution": {
+    "code": "gpumd_hnemd",
+    "code_version": "3.9.5",
+    "image_digest": "sha256:deadbeef",
+    "registry": [
+     "ghcr.io/openmaterials-ai"
+    ]
+   },
+   "id": "b3b62903a6c9bdedfff4e89a5ae7e8d0ce9cc9683f9636fae75ad6f50196ce8a",
+   "lineage": {
+    "conditions": {
+     "T": -0.0
+    },
+    "material": {
+     "name": "Si"
+    },
+    "node": "ThermalConductivity[transport_model=hnemd]",
+    "node_uid": "e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88",
+    "params": {}
+   },
+   "mirrors": {},
+   "results": []
+  }
+ },
+ {
+  "name": "mcg:cond_pos_zero",
+  "record": {
+   "artifacts": [],
+   "execution": {
+    "code": "gpumd_hnemd",
+    "code_version": "3.9.5",
+    "image_digest": "sha256:deadbeef",
+    "registry": [
+     "ghcr.io/openmaterials-ai"
+    ]
+   },
+   "id": "04b0df55f2c269d149457285b010e81be17d6d161b3e09c68d1e448fdf51751e",
+   "lineage": {
+    "conditions": {
+     "T": 0.0
+    },
+    "material": {
+     "name": "Si"
+    },
+    "node": "ThermalConductivity[transport_model=hnemd]",
+    "node_uid": "e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88",
+    "params": {}
+   },
+   "mirrors": {},
+   "results": []
+  }
+ },
+ {
+  "name": "mcg:cond_neg_round0",
+  "record": {
+   "artifacts": [],
+   "execution": {
+    "code": "gpumd_hnemd",
+    "code_version": "3.9.5",
+    "image_digest": "sha256:deadbeef",
+    "registry": [
+     "ghcr.io/openmaterials-ai"
+    ]
+   },
+   "id": "b3b62903a6c9bdedfff4e89a5ae7e8d0ce9cc9683f9636fae75ad6f50196ce8a",
+   "lineage": {
+    "conditions": {
+     "T": -1e-08
+    },
+    "material": {
+     "name": "Si"
+    },
+    "node": "ThermalConductivity[transport_model=hnemd]",
+    "node_uid": "e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88",
+    "params": {}
+   },
+   "mirrors": {},
+   "results": []
+  }
+ },
+ {
+  "name": "mcg:cond_bigint_9e15",
+  "record": {
+   "artifacts": [],
+   "execution": {
+    "code": "gpumd_hnemd",
+    "code_version": "3.9.5",
+    "image_digest": "sha256:deadbeef",
+    "registry": [
+     "ghcr.io/openmaterials-ai"
+    ]
+   },
+   "id": "06eec29d9a9f965fca57aaf5aa68b8b22bc8a430d86f86764d522e71662e0d3f",
+   "lineage": {
+    "conditions": {
+     "T": 9007199254740993
+    },
+    "material": {
+     "name": "Si"
+    },
+    "node": "ThermalConductivity[transport_model=hnemd]",
+    "node_uid": "e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88",
+    "params": {}
+   },
+   "mirrors": {},
+   "results": []
+  }
+ },
+ {
+  "name": "mcg:cond_bigint_1e21",
+  "record": {
+   "artifacts": [],
+   "execution": {
+    "code": "gpumd_hnemd",
+    "code_version": "3.9.5",
+    "image_digest": "sha256:deadbeef",
+    "registry": [
+     "ghcr.io/openmaterials-ai"
+    ]
+   },
+   "id": "ea290137577dc694e6d2b673eeb62bcdea418c867875f3b74c6c187145597e43",
+   "lineage": {
+    "conditions": {
+     "T": 1000000000000000000000
+    },
+    "material": {
+     "name": "Si"
+    },
+    "node": "ThermalConductivity[transport_model=hnemd]",
+    "node_uid": "e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88",
+    "params": {}
+   },
+   "mirrors": {},
+   "results": []
+  }
+ },
+ {
+  "name": "mcg:cond_bigint_neg",
+  "record": {
+   "artifacts": [],
+   "execution": {
+    "code": "gpumd_hnemd",
+    "code_version": "3.9.5",
+    "image_digest": "sha256:deadbeef",
+    "registry": [
+     "ghcr.io/openmaterials-ai"
+    ]
+   },
+   "id": "176e10c1672046aa7975e8a7ccd2c2e1c2563d000e808e26f7aad00bc5d80c2c",
+   "lineage": {
+    "conditions": {
+     "T": -12345678901234567890
+    },
+    "material": {
+     "name": "Si"
+    },
+    "node": "ThermalConductivity[transport_model=hnemd]",
+    "node_uid": "e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88",
+    "params": {}
+   },
+   "mirrors": {},
+   "results": []
+  }
+ },
+ {
+  "name": "mcg:cond_safe_int",
+  "record": {
+   "artifacts": [],
+   "execution": {
+    "code": "gpumd_hnemd",
+    "code_version": "3.9.5",
+    "image_digest": "sha256:deadbeef",
+    "registry": [
+     "ghcr.io/openmaterials-ai"
+    ]
+   },
+   "id": "b988d04cf89bd02c080ebb8d18b92251e7a3214ab4bf517321a9e6a8872a2d24",
+   "lineage": {
+    "conditions": {
+     "T": 300
+    },
+    "material": {
+     "name": "Si"
+    },
+    "node": "ThermalConductivity[transport_model=hnemd]",
+    "node_uid": "e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88",
+    "params": {}
+   },
+   "mirrors": {},
+   "results": []
+  }
+ },
+ {
+  "name": "mcg:cond_max_safe",
+  "record": {
+   "artifacts": [],
+   "execution": {
+    "code": "gpumd_hnemd",
+    "code_version": "3.9.5",
+    "image_digest": "sha256:deadbeef",
+    "registry": [
+     "ghcr.io/openmaterials-ai"
+    ]
+   },
+   "id": "7a29c805d56903284a51ba729ec88002fb5f004b238fd379d1d3d3ca3e9bdcf8",
+   "lineage": {
+    "conditions": {
+     "T": 9007199254740991
+    },
+    "material": {
+     "name": "Si"
+    },
+    "node": "ThermalConductivity[transport_model=hnemd]",
+    "node_uid": "e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88",
+    "params": {}
+   },
+   "mirrors": {},
+   "results": []
+  }
+ },
+ {
+  "name": "mcg:nested_floats",
+  "record": {
+   "artifacts": [],
+   "execution": {
+    "code": "gpumd_hnemd",
+    "code_version": "3.9.5",
+    "image_digest": "sha256:deadbeef",
+    "registry": [
+     "ghcr.io/openmaterials-ai"
+    ]
+   },
+   "id": "a39b81ba92b2a62ae0219e7dd23fa0113b1e4a5355a7b7e6b9312d4606d2b2a7",
+   "lineage": {
+    "conditions": {
+     "grid": {
+      "dt": 1.0000004
+     },
+     "on": true,
+     "steps": 1000000
+    },
+    "material": {
+     "name": "Si"
+    },
+    "node": "ThermalConductivity[transport_model=hnemd]",
+    "node_uid": "e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88",
+    "params": {
+     "n_atoms": 49
+    }
+   },
+   "mirrors": {},
+   "results": []
+  }
+ },
+ {
+  "name": "mcg:param_big_float",
+  "record": {
+   "artifacts": [],
+   "execution": {
+    "code": "gpumd_hnemd",
+    "code_version": "3.9.5",
+    "image_digest": "sha256:deadbeef",
+    "registry": [
+     "ghcr.io/openmaterials-ai"
+    ]
+   },
+   "id": "20b4d6472999e154f59799b6898103e0f16769a5741b02fa2986a78d37fc36bc",
+   "lineage": {
+    "conditions": {
+     "T": 300.0
+    },
+    "material": {
+     "name": "Si"
+    },
+    "node": "ThermalConductivity[transport_model=hnemd]",
+    "node_uid": "e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88",
+    "params": {
+     "scale": 1e+18
+    }
+   },
+   "mirrors": {},
+   "results": []
+  }
+ },
+ {
+  "name": "mcg:nonascii",
+  "record": {
+   "artifacts": [],
+   "execution": {
+    "code": "gpumd_hnemd",
+    "code_version": "3.9.5",
+    "image_digest": "sha256:deadbeef",
+    "registry": [
+     "ghcr.io/openmaterials-ai"
+    ]
+   },
+   "id": "d1e9c986b5adc7c591e684b911a4c745e49f352b90c7e65dad3c0b111e7e479c",
+   "lineage": {
+    "conditions": {
+     "mat": "caf\u00e9 \u65e5\u672c",
+     "note": "\u00e9\ud83d\udca9"
+    },
+    "material": {
+     "name": "Si"
+    },
+    "node": "ThermalConductivity[transport_model=hnemd]",
+    "node_uid": "e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88",
+    "params": {}
+   },
+   "mirrors": {},
+   "results": []
+  }
+ },
+ {
+  "name": "mcg:safe_light",
+  "record": {
+   "artifacts": [],
+   "execution": {
+    "code": "gpumd_hnemd",
+    "code_version": "3.9.5",
+    "image_digest": "sha256:deadbeef",
+    "registry": [
+     "ghcr.io/openmaterials-ai"
+    ]
+   },
+   "id": "6db0c040d4b7542b68e5fae623e947cb9473c744c47b725afe7d261505c3970c",
+   "lineage": {
+    "conditions": {
+     "T": 300,
+     "material": "Si",
+     "potential": "Si-NEP"
+    },
+    "material": {
+     "name": "Si"
+    },
+    "node": "ThermalConductivity[transport_model=hnemd]",
+    "node_uid": "e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88",
+    "params": {}
+   },
+   "mirrors": {},
+   "results": []
+  }
+ },
+ {
+  "name": "kaldo:direct_bte_si",
+  "record": {
+   "artifacts": [],
+   "execution": {
+    "code": "gpumd_hnemd",
+    "code_version": "3.9.5",
+    "image_digest": "sha256:deadbeef",
+    "registry": [
+     "ghcr.io/openmaterials-ai"
+    ]
+   },
+   "id": "f64affbf549a037ebe3396bfed9073dac91d481bdbc235d6c86b07e7759d40da",
+   "lineage": {
+    "conditions": {
+     "bte_solver": "direct_inverse",
+     "code": "kaldo",
+     "code_version": "2.2.1",
+     "delta_shift_angstrom": 0.0001,
+     "lattice_constant_angstrom": 5.432,
+     "material": "Si",
+     "mesh": [
+      5,
+      5,
+      5
+     ],
+     "occupation": "quantum",
+     "potential_file": "Si.tersoff",
+     "potential_sha256": "52a93e90596829c57d54eef091de6215f1fac7ca15d57eac7568ddfdda26adfb",
+     "supercell_fc": [
+      3,
+      3,
+      3
+     ],
+     "temperature_K": 300.0
+    },
+    "material": "Si",
+    "node": "ThermalConductivity[bte_solver=direct_inverse]",
+    "values": {
+     "units": "W/(m K)",
+     "value": 254.46618271513248
+    }
+   },
+   "mirrors": {},
+   "results": []
+  }
+ },
+ {
+  "name": "mcg:safe_light_with_artifacts",
+  "record": {
+   "artifacts": [
+    {
+     "bytes": 5,
+     "path": "hnemd/kappa.out",
+     "role": "series",
+     "sha256": "a04cf110bdbd4519399c9d622f423ce1e7e70701e0263f59ccdb1884133678f3"
+    },
+    {
+     "bytes": 16,
+     "path": "results/kappa.json",
+     "role": "report",
+     "sha256": "2f0ed6b289619d8deeb5e1f5154d5fd64ee3609cf3581372508d36a10ade6b39"
+    }
+   ],
+   "execution": {
+    "code": "gpumd_hnemd",
+    "wall_time_s": 120.5
+   },
+   "id": "6db0c040d4b7542b68e5fae623e947cb9473c744c47b725afe7d261505c3970c",
+   "lineage": {
+    "conditions": {
+     "T": 300,
+     "material": "Si",
+     "potential": "Si-NEP"
+    },
+    "material": {
+     "name": "Si"
+    },
+    "node": "ThermalConductivity[transport_model=hnemd]",
+    "node_uid": "e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88",
+    "params": {}
+   },
+   "mirrors": {
+    "hnemd/kappa.out": {
+     "provider": "materialscodegraph",
+     "url": "https://app.materialscodegraph.com/s/tok123/artifact/hnemd/kappa.out"
+    },
+    "results/kappa.json": {
+     "provider": "materialscodegraph",
+     "url": "https://app.materialscodegraph.com/s/tok123/artifact/results/kappa.json"
+    }
+   },
+   "results": [
+    {
+     "conditions": {
+      "T": "300 K",
+      "code": "GPUMD",
+      "method": "hnemd",
+      "n_seeds": 4
+     },
+     "material": "Si",
+     "simulation": "6db0c040d4b7542b68e5fae623e947cb9473c744c47b725afe7d261505c3970c",
+     "source": {
+      "detail": "Bulk Si kappa from a MaterialsCodeGraph run.",
+      "kind": "simulation",
+      "ref": "materialscodegraph-run-ref-xyz"
+     },
+     "uncertainty": 4.2,
+     "units": "W/(m K)",
+     "value": 137.5,
+     "variable": "ThermalConductivity[transport_model=hnemd]"
+    }
+   ]
+  }
+ }
+]

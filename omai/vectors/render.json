@@ -1,0 +1,231 @@
+[
+ {
+  "filename": "si-thermalconductivity-transport-model-hnemd-materialscodegraph-run-ref-xyz.json",
+  "function": "render_kappa",
+  "instance": {
+   "conditions": {
+    "T": "300 K",
+    "code": "GPUMD",
+    "method": "hnemd",
+    "n_seeds": 4,
+    "potential": "Si-NEP"
+   },
+   "material": "Si",
+   "source": {
+    "detail": "Bulk Si kappa (HNEMD, 137.5 +/- 4.2 W/(m K) at 300 K, 4 seed(s)) from a MaterialsCodeGraph run run-ref-xyz; rendered against openmaterials map version 9802d9e854c915eb47d867575730a556ab7f4a565e392bf5b29da58338f08434.",
+    "kind": "simulation",
+    "ref": "materialscodegraph-run-ref-xyz"
+   },
+   "uncertainty": 4.2,
+   "units": "W/(m K)",
+   "value": 137.5,
+   "variable": "ThermalConductivity[transport_model=hnemd]"
+  },
+  "kwargs": {
+   "potential": "Si-NEP",
+   "run_ref": "run-ref-xyz"
+  },
+  "map_version": "9802d9e854c915eb47d867575730a556ab7f4a565e392bf5b29da58338f08434",
+  "name": "kappa_hnemd",
+  "result": {
+   "code": "GPUMD",
+   "kappa_W_per_mK": 137.5,
+   "kappa_std_W_per_mK": 4.2,
+   "material_name": "Si",
+   "method": "hnemd",
+   "n_seeds": 4,
+   "temperature_K": 300.0
+  }
+ },
+ {
+  "filename": "si-thermalconductivity-transport-model-green-kubo-materialscodegraph-run-ref-gk.json",
+  "function": "render_kappa",
+  "instance": {
+   "conditions": {
+    "T": "301.5 K",
+    "code": "ASE",
+    "method": "green_kubo",
+    "n_seeds": 1
+   },
+   "material": "Si",
+   "source": {
+    "detail": "Bulk Si kappa (GREEN_KUBO, 120.25 +/- None W/(m K) at 301.5 K, 1 seed(s)) from a MaterialsCodeGraph run run-ref-gk; rendered against openmaterials map version 9802d9e854c915eb47d867575730a556ab7f4a565e392bf5b29da58338f08434.",
+    "kind": "simulation",
+    "ref": "materialscodegraph-run-ref-gk"
+   },
+   "uncertainty": null,
+   "units": "W/(m K)",
+   "value": 120.25,
+   "variable": "ThermalConductivity[transport_model=green_kubo]"
+  },
+  "kwargs": {
+   "run_ref": "run-ref-gk"
+  },
+  "map_version": "9802d9e854c915eb47d867575730a556ab7f4a565e392bf5b29da58338f08434",
+  "name": "kappa_green_kubo_no_std",
+  "result": {
+   "code": "ASE",
+   "kappa_W_per_mK": 120.25,
+   "kappa_std_W_per_mK": null,
+   "material_name": "Si",
+   "method": "green_kubo",
+   "n_seeds": 1,
+   "temperature_K": 301.5
+  }
+ },
+ {
+  "filename": "si-thermalconductivity-bte-solver-direct-inverse-materialscodegraph-run-ref-kaldo.json",
+  "function": "render_kappa",
+  "instance": {
+   "conditions": {
+    "T": "300 K",
+    "code": "kaldo",
+    "method": "bte_direct_inverse",
+    "n_seeds": 1
+   },
+   "material": "Si",
+   "source": {
+    "detail": "Bulk Si kappa (BTE_DIRECT_INVERSE, 254.46618271513248 +/- None W/(m K) at 300 K, 1 seed(s)) from a MaterialsCodeGraph run run-ref-kaldo; rendered against openmaterials map version 9802d9e854c915eb47d867575730a556ab7f4a565e392bf5b29da58338f08434.",
+    "kind": "simulation",
+    "ref": "materialscodegraph-run-ref-kaldo"
+   },
+   "uncertainty": null,
+   "units": "W/(m K)",
+   "value": 254.46618271513248,
+   "variable": "ThermalConductivity[bte_solver=direct_inverse]"
+  },
+  "kwargs": {
+   "run_ref": "run-ref-kaldo"
+  },
+  "map_version": "9802d9e854c915eb47d867575730a556ab7f4a565e392bf5b29da58338f08434",
+  "name": "kappa_bte_direct_inverse",
+  "result": {
+   "code": "kaldo",
+   "kappa_W_per_mK": 254.46618271513248,
+   "kappa_std_W_per_mK": null,
+   "material_name": "Si",
+   "method": "bte_direct_inverse",
+   "n_seeds": 1,
+   "temperature_K": 300.0
+  }
+ },
+ {
+  "filename": "c21h24o4-dgeba-molarheatcapacity-materialscodegraph-dgeba-cp300-gfn2.json",
+  "function": "render_molar_cp",
+  "instance": {
+   "conditions": {
+    "T": "300 K",
+    "approximation": "harmonic (RRHO)",
+    "model": "GFN2-xTB",
+    "n_imaginary": 0,
+    "phase": "gas"
+   },
+   "material": "C21H24O4 (DGEBA)",
+   "source": {
+    "detail": "Gas-phase harmonic molar heat capacity of C21H24O4 (DGEBA) at 300 K (397.7 J/(K mol), GFN2-xTB, 0 imaginary modes) from a MaterialsCodeGraph run dgeba-cp300-gfn2; rendered against openmaterials map version 9802d9e854c915eb47d867575730a556ab7f4a565e392bf5b29da58338f08434.",
+    "kind": "simulation",
+    "ref": "materialscodegraph-dgeba-cp300-gfn2"
+   },
+   "uncertainty": null,
+   "units": "J/(K mol)",
+   "value": 397.7,
+   "variable": "MolarHeatCapacity"
+  },
+  "kwargs": {
+   "at_K": 300.0,
+   "run_ref": "dgeba-cp300-gfn2"
+  },
+  "map_version": "9802d9e854c915eb47d867575730a556ab7f4a565e392bf5b29da58338f08434",
+  "name": "molar_cp_dgeba",
+  "result": {
+   "cp_harmonic_J_per_molK": [
+    301.2,
+    350.9,
+    397.7,
+    442.1
+   ],
+   "cp_temperatures_K": [
+    200.0,
+    250.0,
+    300.0,
+    350.0
+   ],
+   "molecule_name": "C21H24O4 (DGEBA)",
+   "n_imaginary": 0
+  }
+ },
+ {
+  "filename": "c9h10o2-glycidyl-phenyl-ether-reactionenergy-materialscodegraph-cure-dh-gpe-aniline-gfn2.json",
+  "function": "render_reaction_energy",
+  "instance": {
+   "conditions": {
+    "T": "298.15 K",
+    "de_elec_kJ_per_mol": -98.4,
+    "dh298_kJ_per_mol": -106.3,
+    "model": "GFN2-xTB",
+    "normalization": "per_reaction_event",
+    "phase": "gas",
+    "quantity": "reaction enthalpy dH(298 K)",
+    "reaction": "glycidyl phenyl ether + aniline -> 1-(phenylamino)-3-phenoxy-2-propanol"
+   },
+   "material": "C9H10O2 (glycidyl phenyl ether)",
+   "source": {
+    "detail": "Reaction enthalpy dH(298 K) of glycidyl phenyl ether + aniline -> 1-(phenylamino)-3-phenoxy-2-propanol (-106.3 kJ/mol = -1.101722 eV per reaction event, GFN2-xTB) from a MaterialsCodeGraph run cure-dh-gpe-aniline-gfn2; rendered against openmaterials map version 9802d9e854c915eb47d867575730a556ab7f4a565e392bf5b29da58338f08434.",
+    "kind": "simulation",
+    "ref": "materialscodegraph-cure-dh-gpe-aniline-gfn2"
+   },
+   "uncertainty": null,
+   "units": "eV",
+   "value": -1.101722,
+   "variable": "ReactionEnergy"
+  },
+  "kwargs": {
+   "material": "C9H10O2 (glycidyl phenyl ether)",
+   "run_ref": "cure-dh-gpe-aniline-gfn2"
+  },
+  "map_version": "9802d9e854c915eb47d867575730a556ab7f4a565e392bf5b29da58338f08434",
+  "name": "reaction_energy_aniline",
+  "result": {
+   "de_elec_kJ_per_mol": -98.4,
+   "dh298_kJ_per_mol": -106.3,
+   "reaction_name": "glycidyl phenyl ether + aniline -> 1-(phenylamino)-3-phenoxy-2-propanol"
+  }
+ },
+ {
+  "filename": "c9h10o2-glycidyl-phenyl-ether-reactionenergy-materialscodegraph-cure-dh-gpe-methylamine-gfn2.json",
+  "function": "render_reaction_energy",
+  "instance": {
+   "conditions": {
+    "T": "298.15 K",
+    "de_elec_kJ_per_mol": -107.9,
+    "dh298_kJ_per_mol": -116.1,
+    "model": "GFN2-xTB",
+    "normalization": "per_reaction_event",
+    "phase": "gas",
+    "quantity": "reaction enthalpy dH(298 K)",
+    "reaction": "glycidyl phenyl ether + methylamine -> 1-(methylamino)-3-phenoxy-2-propanol"
+   },
+   "material": "C9H10O2 (glycidyl phenyl ether)",
+   "source": {
+    "detail": "Reaction enthalpy dH(298 K) of glycidyl phenyl ether + methylamine -> 1-(methylamino)-3-phenoxy-2-propanol (-116.1 kJ/mol = -1.203292 eV per reaction event, GFN2-xTB) from a MaterialsCodeGraph run cure-dh-gpe-methylamine-gfn2; rendered against openmaterials map version 9802d9e854c915eb47d867575730a556ab7f4a565e392bf5b29da58338f08434.",
+    "kind": "simulation",
+    "ref": "materialscodegraph-cure-dh-gpe-methylamine-gfn2"
+   },
+   "uncertainty": null,
+   "units": "eV",
+   "value": -1.203292,
+   "variable": "ReactionEnergy"
+  },
+  "kwargs": {
+   "material": "C9H10O2 (glycidyl phenyl ether)",
+   "run_ref": "cure-dh-gpe-methylamine-gfn2"
+  },
+  "map_version": "9802d9e854c915eb47d867575730a556ab7f4a565e392bf5b29da58338f08434",
+  "name": "reaction_energy_methylamine",
+  "result": {
+   "de_elec_kJ_per_mol": -107.9,
+   "dh298_kJ_per_mol": -116.1,
+   "reaction_name": "glycidyl phenyl ether + methylamine -> 1-(methylamino)-3-phenoxy-2-propanol"
+  }
+ }
+]

@@ -260,6 +260,53 @@ flowchart LR
 
 The playground's Map tab has a Copy as Mermaid button for any view you build.
 
+## Library contract
+
+From 0.1.0 `openmaterials-ai` is the one implementation of record identity,
+shape and rendering. mapengine and the MaterialsCodeGraph pipeline import it
+instead of reimplementing it, and the MaterialsCodeGraph worker (TypeScript,
+where importing is not an option) asserts its own copy against the vectors
+shipped here.
+
+**The public functions.**
+
+| function | contract |
+|---|---|
+| `omai.lineages.lineage_id(lineage)` | The record id: sha256 of the canonical lineage. Identity is the lineage alone. |
+| `omai.lineages.canonical_id(lineage, execution=None, artifacts=None)` | The same id. Execution and artifacts are accepted for older call sites and ignored. |
+| `omai.lineages.record_lineage(record)` | A record's lineage, accepting the legacy `recipe` key. |
+| `omai.lineages.record_simulation(...)` | Writes a strict, checksummed record. |
+| `omai.schema.simulation_record_schema()` | The SimulationRecord as JSON Schema draft 2020-12, closed objects. |
+| `omai.schema.validate_record(record)` | Every schema violation as a readable message; an empty list means valid. |
+| `omai.render.render_kappa / render_molar_cp / render_reaction_energy` | A typed result to a map evidence `Instance`. |
+| `omai.render.provenance(run_ref, what, map_version=...)` | The `Source` every rendered instance carries, stamping the map version. |
+
+The schema is a SHAPE gate. That `id` equals `lineage_id(lineage)`, that the
+node resolves against the live map, and the contribution gates in
+`omai.gates` are separate checks: a schema cannot hash.
+
+**The vectors.** `omai/vectors/*.json` ship inside the wheel.
+
+- `lineage_ids.json`: 32 lineages, each with its canonical JSON, `lineage_id`,
+  and `canonical_id` with and without an execution block. Sources: the four
+  openmaterials commons conformance targets, the 27 adversarial float/int
+  vectors MaterialsCodeGraph pins in Python and TypeScript, and the kaldo
+  external-solve fixture.
+- `records.json`: 33 full records with their ids, including one carrying
+  artifacts and mirrors whose id equals its artifact-free twin.
+- `render.json`: renderer inputs and the instances they render to.
+
+Every id in these files is produced by the functions above and equals the id
+its source already pinned. A vector whose id changes is a defect in the
+canonicalization, never a reason to regenerate; `python -m omai.tools.gen_vectors`
+refuses to write when a recomputed id disagrees with its pin.
+
+**Versioning.** Semantic versioning, with identity treated as the strongest
+promise: a change to `lineage_id`, to the canonical JSON, or to a vector's id
+is breaking and takes a major version, because every id ever minted by this
+library would stop reproducing. Adding a schema field, a renderer, or a vector
+is a minor version. Consumers pin an exact version (`openmaterials-ai==0.1.0`).
+
 ## Install
 
 ```bash

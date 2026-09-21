@@ -1,0 +1,321 @@
+{
+ "commons_conformance_targets": {
+  "MOLAR_HEAT_CAPACITY": {
+   "lineage": {
+    "conditions": {
+     "T": "300 K",
+     "approximation": "harmonic (RRHO)",
+     "code": "xtb 6.7.1",
+     "model": "GFN2-xTB",
+     "n_imaginary": 0,
+     "phase": "gas",
+     "smiles": "CC(C)(c1ccc(OCC2CO2)cc1)c1ccc(OCC2CO2)cc1"
+    },
+    "material": "C21H24O4 (DGEBA)",
+    "node": "MolarHeatCapacity",
+    "values": {
+     "units": "J/(K mol)",
+     "value": 397.7
+    }
+   },
+   "pinned_id": "ab0da9ec11b99b44b3c942c609a8aee24b83240955d2c029c5d05dfa34dbe84c",
+   "source_file": "c21h24o4-dgeba-molarheatcapacity-materialscodegraph-dgeba-cp300-gfn2-target.json"
+  },
+  "REACTION_ENERGY_ANILINE": {
+   "lineage": {
+    "conditions": {
+     "T": "298.15 K",
+     "code": "xtb 6.7.1",
+     "dh298_kJ_per_mol": -106.3,
+     "model": "GFN2-xTB",
+     "normalization": "per_reaction_event",
+     "phase": "gas",
+     "quantity": "reaction enthalpy dH(298 K)",
+     "reaction": "glycidyl phenyl ether + aniline -> 1-(phenylamino)-3-phenoxy-2-propanol"
+    },
+    "material": "C9H10O2 (glycidyl phenyl ether)",
+    "node": "ReactionEnergy",
+    "values": {
+     "units": "eV",
+     "value": -1.101722
+    }
+   },
+   "pinned_id": "e63f4de3a73a9a868ff0b54c94848e3af7993c9d9e74ad83309c81ad797fc823",
+   "source_file": "c9h10o2-glycidyl-phenyl-ether-reactionenergy-materialscodegraph-cure-dh-gpe-aniline-gfn2-target.json"
+  },
+  "REACTION_ENERGY_METHYLAMINE": {
+   "lineage": {
+    "conditions": {
+     "T": "298.15 K",
+     "code": "xtb 6.7.1",
+     "dh298_kJ_per_mol": -116.1,
+     "model": "GFN2-xTB",
+     "normalization": "per_reaction_event",
+     "phase": "gas",
+     "quantity": "reaction enthalpy dH(298 K)",
+     "reaction": "glycidyl phenyl ether + methylamine -> 1-(methylamino)-3-phenoxy-2-propanol"
+    },
+    "material": "C9H10O2 (glycidyl phenyl ether)",
+    "node": "ReactionEnergy",
+    "values": {
+     "units": "eV",
+     "value": -1.203292
+    }
+   },
+   "pinned_id": "c9de95163fd69a7672036f13a983faf560b8265880262c9b554809853a717888",
+   "source_file": "c9h10o2-glycidyl-phenyl-ether-reactionenergy-materialscodegraph-cure-dh-gpe-methylamine-gfn2-target.json"
+  },
+  "THERMAL_CONDUCTIVITY": {
+   "lineage": {
+    "conditions": {
+     "G_MW_per_m2K": 25,
+     "d1_um": 5,
+     "d3_um": 0.02,
+     "f": 0.05,
+     "k11_W_per_mK": 1200,
+     "k33_W_per_mK": 6,
+     "kapitza_radius_nm": 8.0,
+     "km_W_per_mK": 0.2,
+     "orientation": "random"
+    },
+    "material": "DGEBA epoxy + 5 vol% GNP (reference formulation)",
+    "node": "ThermalConductivity[effective_medium=nan,orientation=random]",
+    "values": {
+     "units": "W/(m K)",
+     "value": 1.2452
+    }
+   },
+   "pinned_id": "b13e25c6787b385f038dc27625126c29eb2db611237b680e0eae83067dd89e4e",
+   "source_file": "dgeba-epoxy-5-vol-gnp-reference-formulation-thermalconductivity-effective-medium-nan-orientation-random-materialscodegraph-target.json"
+  }
+ },
+ "mcg_number_vectors": [
+  {
+   "conditions": {
+    "T": 1e+16
+   },
+   "label": "cond_1e16",
+   "params": {},
+   "pinned_id": "03dc6386fc14c5325f8dcff5a8cc4b8385677d7e729ef6bfd7758bc94bbcb81e"
+  },
+  {
+   "conditions": {
+    "T": 1e+21
+   },
+   "label": "cond_1e21",
+   "params": {},
+   "pinned_id": "5f5739bd9fc011a868335981f1b8f51d9bd824ff7f20d6449d112334c3f2b25b"
+  },
+  {
+   "conditions": {
+    "T": 1.5e+16
+   },
+   "label": "cond_1_5e16",
+   "params": {},
+   "pinned_id": "6d8096e6aba8f91eac26a1d5a25a4ce6957a8919d7a5d9357f6a1947d6ffaeff"
+  },
+  {
+   "conditions": {
+    "T": 1000000000000000.0
+   },
+   "label": "cond_1e15",
+   "params": {},
+   "pinned_id": "d49bd45faa4753d6bf9fc690824128542d2a36a79e20e2f0a2039250ed02b056"
+  },
+  {
+   "conditions": {
+    "T": 9999999999999998.0
+   },
+   "label": "cond_9999e15",
+   "params": {},
+   "pinned_id": "2d600f4a9b14f07cbddbc1ce04e53ff4a3176370df47645b68bfe384eafd3b35"
+  },
+  {
+   "conditions": {
+    "T": 1e-07
+   },
+   "label": "cond_1e-7",
+   "params": {},
+   "pinned_id": "04b0df55f2c269d149457285b010e81be17d6d161b3e09c68d1e448fdf51751e"
+  },
+  {
+   "conditions": {
+    "T": 0.0001
+   },
+   "label": "cond_1e-4",
+   "params": {},
+   "pinned_id": "cef873a368b661e7b1880b40689985643d2a50755d99ea998fe08553a1fc3434"
+  },
+  {
+   "conditions": {
+    "T": 1e-05
+   },
+   "label": "cond_1e-5",
+   "params": {},
+   "pinned_id": "cc2bec714154e22615579a0e3c59f910260ca906e7a8d2daf7c7c8d78dadf2d7"
+  },
+  {
+   "conditions": {
+    "T": 1.23e-07
+   },
+   "label": "cond_123e-7",
+   "params": {},
+   "pinned_id": "04b0df55f2c269d149457285b010e81be17d6d161b3e09c68d1e448fdf51751e"
+  },
+  {
+   "conditions": {
+    "T": -1e-07
+   },
+   "label": "cond_neg_1e-7",
+   "params": {},
+   "pinned_id": "b3b62903a6c9bdedfff4e89a5ae7e8d0ce9cc9683f9636fae75ad6f50196ce8a"
+  },
+  {
+   "conditions": {
+    "T": 0.1234565
+   },
+   "label": "cond_0_1234565",
+   "params": {},
+   "pinned_id": "57e6c5cd71ac90b3162116b015ebf54b4c354b38a997d82bf7e6e7a0168e207e"
+  },
+  {
+   "conditions": {
+    "T": 2.5000005
+   },
+   "label": "cond_2_5000005",
+   "params": {},
+   "pinned_id": "244d1ceed4cd257da5801d86f60b0cc771ae487eae88199048c2114a547c39cf"
+  },
+  {
+   "conditions": {
+    "T": 5e-07
+   },
+   "label": "cond_0_0000005",
+   "params": {},
+   "pinned_id": "04b0df55f2c269d149457285b010e81be17d6d161b3e09c68d1e448fdf51751e"
+  },
+  {
+   "conditions": {
+    "T": 1.5e-06
+   },
+   "label": "cond_0_0000015",
+   "params": {},
+   "pinned_id": "9b08e2394e0606507c2cb95e92d1eb559c51bc5e5fbe4be2add93bf23369dc11"
+  },
+  {
+   "conditions": {
+    "T": 123.4567895
+   },
+   "label": "cond_123_4567895",
+   "params": {},
+   "pinned_id": "adcbedc79908df92c2f89fe8b63a765c0e5c066244b4c16e97648bdb8c5c71c2"
+  },
+  {
+   "conditions": {
+    "T": -0.0
+   },
+   "label": "cond_neg_zero",
+   "params": {},
+   "pinned_id": "b3b62903a6c9bdedfff4e89a5ae7e8d0ce9cc9683f9636fae75ad6f50196ce8a"
+  },
+  {
+   "conditions": {
+    "T": 0.0
+   },
+   "label": "cond_pos_zero",
+   "params": {},
+   "pinned_id": "04b0df55f2c269d149457285b010e81be17d6d161b3e09c68d1e448fdf51751e"
+  },
+  {
+   "conditions": {
+    "T": -1e-08
+   },
+   "label": "cond_neg_round0",
+   "params": {},
+   "pinned_id": "b3b62903a6c9bdedfff4e89a5ae7e8d0ce9cc9683f9636fae75ad6f50196ce8a"
+  },
+  {
+   "conditions": {
+    "T": 9007199254740993
+   },
+   "label": "cond_bigint_9e15",
+   "params": {},
+   "pinned_id": "06eec29d9a9f965fca57aaf5aa68b8b22bc8a430d86f86764d522e71662e0d3f"
+  },
+  {
+   "conditions": {
+    "T": 1000000000000000000000
+   },
+   "label": "cond_bigint_1e21",
+   "params": {},
+   "pinned_id": "ea290137577dc694e6d2b673eeb62bcdea418c867875f3b74c6c187145597e43"
+  },
+  {
+   "conditions": {
+    "T": -12345678901234567890
+   },
+   "label": "cond_bigint_neg",
+   "params": {},
+   "pinned_id": "176e10c1672046aa7975e8a7ccd2c2e1c2563d000e808e26f7aad00bc5d80c2c"
+  },
+  {
+   "conditions": {
+    "T": 300
+   },
+   "label": "cond_safe_int",
+   "params": {},
+   "pinned_id": "b988d04cf89bd02c080ebb8d18b92251e7a3214ab4bf517321a9e6a8872a2d24"
+  },
+  {
+   "conditions": {
+    "T": 9007199254740991
+   },
+   "label": "cond_max_safe",
+   "params": {},
+   "pinned_id": "7a29c805d56903284a51ba729ec88002fb5f004b238fd379d1d3d3ca3e9bdcf8"
+  },
+  {
+   "conditions": {
+    "grid": {
+     "dt": 1.0000004
+    },
+    "on": true,
+    "steps": 1000000
+   },
+   "label": "nested_floats",
+   "params": {
+    "n_atoms": 49
+   },
+   "pinned_id": "a39b81ba92b2a62ae0219e7dd23fa0113b1e4a5355a7b7e6b9312d4606d2b2a7"
+  },
+  {
+   "conditions": {
+    "T": 300.0
+   },
+   "label": "param_big_float",
+   "params": {
+    "scale": 1e+18
+   },
+   "pinned_id": "20b4d6472999e154f59799b6898103e0f16769a5741b02fa2986a78d37fc36bc"
+  },
+  {
+   "conditions": {
+    "mat": "caf\u00e9 \u65e5\u672c",
+    "note": "\u00e9\ud83d\udca9"
+   },
+   "label": "nonascii",
+   "params": {},
+   "pinned_id": "d1e9c986b5adc7c591e684b911a4c745e49f352b90c7e65dad3c0b111e7e479c"
+  },
+  {
+   "conditions": {
+    "T": 300,
+    "material": "Si",
+    "potential": "Si-NEP"
+   },
+   "label": "safe_light",
+   "params": {},
+   "pinned_id": "6db0c040d4b7542b68e5fae623e947cb9473c744c47b725afe7d261505c3970c"
+  }
+ ]
+}
