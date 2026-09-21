@@ -20,6 +20,10 @@ ids, never retyped:
 - ``mcg_number_vectors``: the adversarial float/int canonicalization vectors
   from MCG's ``mcg/tests/tools/openmaterials/test_record.py`` and the identical
   set in ``platform/worker/test/record.spec.ts``.
+- ``proof-record-903616ec.json``: the Cut 1 RunPod proof record as the platform
+  served it, carrying the engine manifest's code rows under
+  ``execution.registry``. A real served record, so the vectors describe the
+  shape a producer emits and not only the shape this repository invents.
 - ``kaldo-direct-bte-si.json``: the kaldo external-solve fixture, a byte copy
   of ``tests/fixtures/external_solve/kaldo-direct-bte-si.json`` kept beside
   this script so the generator runs from an installed wheel too.
@@ -52,6 +56,11 @@ from omai.render import (
 _HERE = Path(__file__).resolve().parent
 _INPUTS = _HERE / "vector_inputs.json"
 _KALDO = _HERE / "kaldo-direct-bte-si.json"
+# The Cut 1 RunPod proof record, exactly as the platform served it
+# (run_74cdf438f9e64a9bb90a, study std_7eccab0fd6c44f699b4e). Real production
+# bytes: the vector set now contains the shape a producer actually emits,
+# which is what would have caught the 0.1.0 registry defect.
+_PROOF_RECORD = _HERE / "proof-record-903616ec.json"
 _VECTORS = _HERE.parent / "vectors"
 
 # The lineage envelope MCG's number vectors vary: only conditions and params
@@ -154,7 +163,16 @@ def build_records(inputs: dict) -> list[dict]:
             "execution": {"code": "gpumd_hnemd",
                           "code_version": "3.9.5",
                           "image_digest": "sha256:deadbeef",
-                          "registry": ["ghcr.io/openmaterials-ai"]},
+                          # The engine manifest's code rows, the shape every
+                          # real record carries. 0.1.0 put registry HOST
+                          # strings here, which no producer emits.
+                          "registry": [{
+                              "id": "gpumd",
+                              "name": "GPUMD",
+                              "spdx": "GPL-3.0-or-later",
+                              "license_source": "https://github.com/brucefan1983/GPUMD (LICENSE)",
+                              "source": "https://github.com/brucefan1983/GPUMD",
+                              "version": "3.9.5"}]},
             "artifacts": [],
             "mirrors": {},
             "results": [],
@@ -204,6 +222,17 @@ def build_records(inputs: dict) -> list[dict]:
             }],
         },
     })
+    # The Cut 1 proof record, verbatim production bytes. Its id must be the
+    # lineage id like every other record; the generator checks that below, so
+    # a copy that drifted from what was served cannot land silently.
+    proof = json.loads(_PROOF_RECORD.read_text())
+    computed = lineage_id(proof["lineage"])
+    if computed != proof["id"]:
+        raise SystemExit(
+            f"proof record: stated id {proof['id']} but lineage_id computes "
+            f"{computed}. The copy drifted from the served bytes; re-fetch it, "
+            f"do not adjust the id.")
+    out.append({"name": "mcg:cut1_proof_run_903616ec", "record": proof})
     return out
 
 
