@@ -335,7 +335,7 @@ is breaking and takes a major version, because every id ever minted by this
 library would stop reproducing. Adding a schema field, a renderer, or a vector
 is a minor version. Widening a schema field to accept a shape real producers
 already emit is a patch, since it can only turn a spurious rejection into an
-acceptance. Consumers pin an exact version (`openmaterials-ai==0.1.2`).
+acceptance. Consumers pin an exact version (`openmaterials-ai==0.1.3`).
 
 ## Install
 
