@@ -45,8 +45,8 @@ full list with source anchors):
     side by side; matdyn.freq is cm^-1 only. Negative value = imaginary
     mode (omega^2 < 0).
 
-FC3 is out of QE's tree (thirdorder.py / D3Q produce it); the FC3 node
-stays grounded by the phono3py / ShengBTE adapters. Heat capacity, group
+FC3 is out of QE's tree: the D3Q plugin produces it (the qe-d3q representation,
+qe_d3q.py), as does thirdorder.py for ShengBTE. Heat capacity, group
 velocities, linewidths, and kappa are not produced by this slice: the
 BTE-solving codes consume QE's outputs and produce those downstream.
 """

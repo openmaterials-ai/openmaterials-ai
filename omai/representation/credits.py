@@ -150,6 +150,27 @@ CODE_CREDITS: dict[str, dict] = {
         "license_source": "q-e/LICENSE (vendored clone, GPL v2)",
         "url": "https://www.quantum-espresso.org",
     },
+    "qe-d3q": {
+        "citation": "L. Paulatto, F. Mauri, M. Lazzeri, Anharmonic properties "
+        "from a generalized third-order ab initio approach: Theory and "
+        "applications to graphite and graphene, Phys. Rev. B 87, 214303 "
+        "(2013); exact BTE: G. Fugallo, M. Lazzeri, L. Paulatto, F. Mauri, "
+        "Ab initio variational approach for evaluating lattice thermal "
+        "conductivity, Phys. Rev. B 88, 045430 (2013), "
+        "doi:10.1103/PhysRevB.88.045430",
+        "doi": "10.1103/PhysRevB.87.214303",
+        "license": "GPL-2.0 (thermal2: CeCILL-2.1 OR GPL-2.0-or-later; some "
+        "files GPL-3.0)",
+        "license_source": "anharmonic/d3q tag q-e-7.5, read 2026-10-01: "
+        "LICENSE ('This code is licenced under GPLv2, you wll find a copy in "
+        "the Doc subdirectory. Some libraries are available under GPLv3. The "
+        "thermal2 part is dual licenced under CeCILL v 2.1.'), License (GPLv2, "
+        "'GPLv2 and following' where possible) and the file headers: thermal2 "
+        "CeCILL v2.1 and GPLv2-and-following, thermal2/PROGRAM_q2r.f90 "
+        "GPLv2-and-following only, thermal2/functions.f90 embedding a GPLv3 "
+        "quicksort; both DOIs verified against Crossref metadata the same day",
+        "url": "https://github.com/anharmonic/d3q",
+    },
     "vasp": {
         "citation": "G. Kresse, J. Furthmuller, Efficient iterative schemes for "
         "ab initio total-energy calculations using a plane-wave basis set, "
