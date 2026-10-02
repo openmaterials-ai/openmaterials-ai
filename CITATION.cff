@@ -7,8 +7,6 @@ title: "openmaterials.ai: a versioned, content-addressed map of physics"
 authors:
   - family-names: Barbalinardo
     given-names: Giuseppe
-  - family-names: Donadio
-    given-names: Davide
 repository-code: "https://github.com/openmaterials-ai/openmaterials-ai"
 url: "https://openmaterials.ai"
 license: Apache-2.0
