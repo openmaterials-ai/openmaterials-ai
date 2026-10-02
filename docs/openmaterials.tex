@@ -2456,7 +2456,7 @@ We have committed to Python for Sprint 1. The trade-offs were:
 
 The operator layer is an architectural commitment, not an implementation. The implementation
 began as a Python skeleton plus adapters for three thermal-transport codes and has since grown
-to the 31-rail map of Part~\ref{part:status}. The
+to the map of Part~\ref{part:status}, with its 32 code representations. The
 artifact that motivates the project---a paper-worthy demonstration of cross-code reconciliation
 and decomposed error bounds for lattice thermal conductivity---is downstream of the operator layer but
 is the operator layer's first proof-of-value.
@@ -3036,10 +3036,10 @@ numbers:
         rendered-link count exceeds the operator count because the site graph
         draws one link per (input $\to$ output) pair while an operator with
         several inputs is a single edge in the store.
-  \item \textbf{Representations.} 31 codes mapped, with per-code variable coverage:
-        kaldo 34, phono3py 31, phonopy 22, pymatgen 22, ShengBTE 20, mp-api 13,
-        Quantum ESPRESSO 13, LAMMPS 12, VASP 10, GPUMD 8, pycalphad 7, matgl 5,
-        mat-elasticity 5, amset 5, ORCA 5, pymatgen-analysis-diffusion 5,
+  \item \textbf{Representations.} 32 codes mapped, with per-code variable coverage:
+        kaldo 34, phono3py 31, phonopy 22, pymatgen 22, ShengBTE 20,
+        Quantum ESPRESSO 14, mp-api 13, LAMMPS 12, VASP 10, GPUMD 8, pycalphad 7, matgl 5,
+        mat-elasticity 5, amset 5, ORCA 5, pymatgen-analysis-diffusion 5, D3Q 5,
         i-PI 4, fairchem 4, MACE 4, OpenMM 4, ASE 3,
         mat-diffusion-analysis 2, mescal 2, plumed 2, smol 2, xtb 2,
         mat-equation-of-state 1, mat-surface-adsorption 1, rxn-network 1,
@@ -3106,8 +3106,8 @@ phono3py                     & 31 & BSD-3-Clause \\
 phonopy                      & 22 & BSD-3-Clause \\
 pymatgen                     & 22 & MIT \\
 ShengBTE                     & 20 & GPL-3.0 \\
+Quantum ESPRESSO             & 14 & GPL-2.0 \\
 mp-api                       & 13 & BSD-3-Clause \\
-Quantum ESPRESSO             & 13 & GPL-2.0 \\
 LAMMPS                       & 12 & GPL-2.0 \\
 VASP                         & 10 & Proprietary \\
 GPUMD                        & 8  & GPL-3.0 \\
@@ -3117,6 +3117,7 @@ mat-elasticity               & 5  & MIT \\
 amset                        & 5  & BSD-3-Clause \\
 ORCA                         & 5  & Proprietary \\
 pymatgen-analysis-diffusion  & 5  & BSD-3-Clause \\
+D3Q (thermal2)               & 5  & GPL-2.0 (CeCILL-2.1, GPL-3.0 parts) \\
 i-PI                         & 4  & GPL-2.0-or-later / MIT \\
 fairchem                     & 4  & MIT \\
 MACE                         & 4  & MIT \\
@@ -3140,7 +3141,9 @@ Every code we represent must be cited and must carry its license. The License
 column above is read from the actual license text (the vendored LICENSE files
 for kaldo, LAMMPS, Quantum ESPRESSO, phonopy, phono3py, ShengBTE, and the
 AtomisticSkills skills; package metadata for the pip-distributed codes; the
-project's GitHub LICENSE for GPUMD, MatterGen, DiffCSP, and OpenMM; the i-PI
+project's GitHub LICENSE for GPUMD, MatterGen, DiffCSP, and OpenMM; the D3Q
+repository's LICENSE and License files plus its file headers, GPL-2.0
+(thermal2: CeCILL-2.1 OR GPL-2.0-or-later; some files GPL-3.0); the i-PI
 repository's \texttt{licenses/LICENSE.md} for i-PI, distributed under both the
 GPL and MIT at the user's choice). VASP and
 ORCA are proprietary: VASP under the commercial license at vasp.at, ORCA free
@@ -3154,7 +3157,7 @@ citation or a license, so no future rail can land uncredited.
 \label{sec:code-citations}
 
 The principal code rails on the map are cited below (the remaining rails,
-i-PI, PLUMED, and MESCAL, carry their citations in
+i-PI, PLUMED, MESCAL, and D3Q, carry their citations in
 \texttt{omai/representation/credits.py}, the single source of truth the
 enforcement test reads). Where one code serves nodes through different
 methods, a per-node override (\texttt{PER\_NODE\_CREDITS}) carries the
