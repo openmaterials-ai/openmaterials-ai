@@ -63,7 +63,7 @@
   .band .ord{font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);fill:var(--ink-2,#4D4D4D);}
   .band .h{font-weight:450;fill:var(--ink,#171717);}
   .band .sh{fill:var(--ink-2,#4D4D4D);}
-  #svg.far .band .sh{display:none;}
+  #svg.far .band .sh,#svg.far .band .ord{display:none;}   /* 16-unit text hides below 12 px */
   /* edges: 1px base; parameter links dashed (data encoding); hot edges observable indigo */
   .edge{fill:none;stroke:var(--edge,#8F8F8F);stroke-width:1;vector-effect:non-scaling-stroke;transition:opacity var(--dur,150ms) var(--ease,ease);}
   .edge.param{stroke-dasharray:3 3;opacity:.6;}
@@ -221,7 +221,7 @@ function setVB(){
   const k=overFloor(VB);
   if(k>1){ const cx=VB.x+VB.w/2, cy=VB.y+VB.h/2; VB.w/=k; VB.h/=k; VB.x=cx-VB.w/2; VB.y=cy-VB.h/2; }
   svg.setAttribute('viewBox', VB.x+' '+VB.y+' '+VB.w+' '+VB.h);
-  svg.classList.toggle('far', 16*scaleOf()<12);   // band descriptions hide below 12 px
+  svg.classList.toggle('far', 16*scaleOf()<11.99);   // 16-unit band text hides below 12 px (11.99 absorbs rounding)
   syncLabels();
 }
 // A zoom-out factor capped at the floor, for zooms anchored off center (wheel, pinch).
@@ -377,7 +377,7 @@ function renderBands(minY, maxY){
     s+='<g class="band" data-band="'+i+'">';
     s+='<rect x="'+(x+4)+'" y="'+top+'" width="'+(BAND_W-8)+'" height="'+h+'" rx="0"></rect>';
     if(i>0) s+='<line class="bl" x1="'+(x-BAND_GAP/2)+'" y1="'+top+'" x2="'+(x-BAND_GAP/2)+'" y2="'+bottom+'"></line>';
-    s+='<text class="ord" x="'+(x+BAND_PADX)+'" y="'+(top+34)+'" font-size="14">'+(t.order===1e6?'*':(t.order+1).toString().padStart(2,'0'))+'</text>';
+    s+='<text class="ord" x="'+(x+BAND_PADX)+'" y="'+(top+34)+'" font-size="16">'+(t.order===1e6?'*':(t.order+1).toString().padStart(2,'0'))+'</text>';
     s+='<text class="h" x="'+(x+BAND_PADX)+'" y="'+(top+66)+'" font-size="24">'+esc(t.name)+'</text>';
     s+=wrapText(t.description||'', x+BAND_PADX, top+96, BAND_W-2*BAND_PADX-6, 16, 'sh', 3);
     s+='</g>';
