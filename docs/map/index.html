@@ -173,6 +173,7 @@
 <script>window.onerror=function(m){var e=document.getElementById('err');e.style.display='block';e.textContent='Error: '+m;};</script>
 <script src="../assets/vendor/dagre.min.js"></script>
 <script src="../assets/vendor/katex/dist/katex.min.js"></script>
+<script src="../assets/map-words.js"></script>
 <script>
 "use strict";
 // ============================================================================
@@ -257,25 +258,8 @@ Promise.all([
 
 // The semantic index: a node/edge's surface labels (auto + curated), keyed by
 // id. Labels are structure metadata over uids, not evidence, so the map view
-// stays MVC-pure. resolveLabel() mirrors omai/semantics.resolve: normalize,
-// exact-alias, token-containment; deterministic, no server call.
+// stays MVC-pure; resolveLabels (map-words.js) mirrors omai/semantics.resolve.
 let semById={};
-function normLabel(s){ return String(s).replace(/([a-z0-9])([A-Z])/g,'$1 $2').replace(/[-_]/g,' ').toLowerCase().replace(/[^a-z0-9 ]+/g,' ').replace(/\s+/g,' ').trim(); }
-const STOP=new Set(['calculation','estimation','computation','analysis','the','a','an','of','and']);
-function tokset(s){ return new Set(normLabel(s).split(' ').filter(t=> t && !STOP.has(t))); }
-function resolveLabel(q){
-  const nq=normLabel(q), qt=tokset(q); if(!nq) return [];
-  const out=[];
-  for(const id in semById){
-    const e=semById[id]; let score=0;
-    if((e.curated||[]).some(c=> normLabel(c)===nq)) score=1.0;
-    else if((e.labels||[]).some(l=> normLabel(l)===nq)) score=0.9;
-    // token containment: 0.6 plus a coverage bonus, rounded as omai/semantics.py rounds it
-    else if(qt.size){ const es=tokset((e.labels||[]).join(' ')+' '+id); let all=true; qt.forEach(t=>{ if(!es.has(t)) all=false; }); if(all) score=Math.round((0.6+Math.min(0.2,0.2*qt.size/Math.max(1,tokset(id).size)))*1000)/1000; }
-    if(score) out.push({id, kind:e.kind, score});
-  }
-  return out.sort((a,b)=> b.score-a.score || a.id.localeCompare(b.id));
-}
 
 function build([graph, codes, semantics, lean]){
   leanData = lean || {nodes:{},edges:{}};
@@ -532,7 +516,7 @@ function chip(id){ return '<button type="button" class="chip" onclick="navTo(\''
 function closeBtn(){ return '<button type="button" class="x" aria-label="Close" onclick="clearSel()">&times;</button>'; }
 
 function mappedByHtml(id){
-  const rows=Object.keys(codesData).filter(c=> codesData[c] && codesData[c][id]).sort().map(c=>{ const m=codesData[c][id]; return '<div class="om-kv-row"><span class="om-kv-k">'+esc(c)+'</span><span class="om-kv-v">'+esc((m.api||''))+(m.unit?(' · '+esc(m.unit)):'')+'</span></div>'; });
+  const rows=Object.keys(codesData).filter(c=> codesData[c] && codesData[c][id]).sort().map(c=>{ const m=codesData[c][id]; return '<div class="om-kv-row"><span class="om-kv-k">'+esc(codeName(c))+'</span><span class="om-kv-v">'+esc((m.api||''))+(m.unit?(' · '+esc(m.unit)):'')+'</span></div>'; });
   return rows.length? ('<div class="om-panel-label">Mapped by '+rows.length+' code'+(rows.length>1?'s':'')+'</div><div class="mapby om-kv">'+rows.join('')+'</div>') : '';
 }
 function selectNode(node){
@@ -564,7 +548,6 @@ function showTier(i){
   panelEl.innerHTML=closeBtn()+'<div class="om-panel-label">Tier '+(t.order===1e6?'':String(t.order+1).padStart(2,'0'))+'</div><p class="tier">'+esc(t.name)+'</p><p class="muted">'+esc(t.description||'')+'</p>';
   panelEl.style.display='block';
 }
-function opName(op){ return (op||'').replace(/\[.*?\]/g,'').replace(/_/g,' ').trim() || 'operation'; }
 // The formula of the operator on one edge: a node with several producing routes carries one per operator.
 function edgeFormula(n, op){ const f=(n.formulas||[]).find(x=>x.op===op); return f?f.latex:n.formula; }
 function selectEdge(key, op){
@@ -624,7 +607,7 @@ function showExperiment(ref, recs){
   vp.querySelectorAll('.edge').forEach(el=>{ const ab=el.dataset.edge.split('>>'); const inc=keep.has(ab[0])&&keep.has(ab[1]); el.classList.toggle('dim', !inc); el.classList.toggle('hot', inc); });
   h+='<div class="om-panel-label">'+mine.length+' value'+(mine.length>1?'s':'')+' on '+ids.length+' quantit'+(ids.length>1?'ies':'y')+', marked on the map</div>';
   h+='<div class="chips">'+ids.map(chip).join('')+'</div>';
-  h+='<p><a href="../experiment/#ref='+encodeURIComponent(ref)+'">Open the experiment page</a></p>';
+  h+='<p><a href="../experiment/#ref='+encodeURIComponent(ref)+'">All values from this source</a></p>';
   panelEl.innerHTML=h; panelEl.style.display='block';
   fitTo(ids, ids[0]);
 }
@@ -683,8 +666,9 @@ svg.addEventListener('mousemove', e=>{ const ed=e.target.closest('.edge'); if(!e
 svg.addEventListener('mouseleave', ()=>{ tip.style.display='none'; });
 
 // ---- interaction: code filter ----------------------------------------------
+function codeName(code){ const e=Object.values(codesData[code]||{}).find(x=>x && x.name); return e ? e.name : code; }
 function codeCredit(code){ const sp=codesData[code]||{}; const any=Object.values(sp).find(e=>e && (e.citation||e.license)); if(!any) return ''; const cit=(any.citation||'').trim().replace(/\.$/,''); const lic=(any.license||'').trim(); return cit&&lic?(cit+'. License: '+lic+'.'):(cit||lic); }
-function renderCodeBar(){ Object.keys(codesData).sort().forEach(code=>{ const o=document.createElement('option'); o.value=code; o.textContent=code+' ('+Object.keys(codesData[code]||{}).length+')'; const cr=codeCredit(code); if(cr) o.title=cr; codeFilter.appendChild(o); }); }
+function renderCodeBar(){ Object.keys(codesData).sort().forEach(code=>{ const o=document.createElement('option'); o.value=code; o.textContent=codeName(code)+' ('+Object.keys(codesData[code]||{}).length+')'; const cr=codeCredit(code); if(cr) o.title=cr; codeFilter.appendChild(o); }); }
 codeFilter.addEventListener('change', function(){ if(this.value) toggleCode(this.value); else if(activeCode) toggleCode(activeCode); });
 function toggleCode(code){
   if(activeCode===code){ activeCode=null; codeFilter.value=''; depth='expanded'; applyDepth(); return; }
@@ -704,7 +688,7 @@ qInput.addEventListener('input', function(){
   // or "kappa" and the map grounds it to the matching nodes AND the edges of
   // matched families. Falls back to the id/symbol substring match so partial
   // typing still narrows.
-  const resolved=resolveLabel(v);
+  const resolved=resolveLabels(v, semById);
   let nodeHits, edgeOps;
   if(resolved.length){
     nodeHits=resolved.filter(r=> r.kind==='node').map(r=> r.id).filter(id=> nodeById[id]);
