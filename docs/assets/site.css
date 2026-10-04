@@ -1,257 +1,328 @@
-/* ============================================================================
-   openmaterials design system: an editorial, typographically serious identity.
-   The register is a modern physics journal, not a SaaS landing.
+/* openmaterials.ai on the web system of 2026-10-03 (D-051): Brand/style-guide-web-2026-10-03.md
+   with the OpenMaterials layer of Brand/omai-site-spec-2026-10-03.md. One stylesheet for every page;
+   section numbers below refer to the guide unless they say "spec". */
+@import url('fonts/geist.css');
 
-   Three faces, three jobs (all vendored woff2, latin subset, zero external
-   fetch):
-     - Source Serif 4 (600/700, 400 italic): DISPLAY ONLY. Headings, wordmark,
-       card/section titles, tier headings.
-     - Inter (400/500/600): UI AND BODY. Nav, paragraphs, buttons, labels.
-     - JetBrains Mono (400/500): DATA VOICE. Hashes, uids, node ids, code,
-       stat numerals, version stamps, file paths. Slashed/dotted zero.
+/* 1. Tokens, with the OpenMaterials accent and data colors (spec 1.1) */
+:root {
+  color-scheme: light dark;
+  --page:      light-dark(#FFFFFF, #000000);
+  --surface:   light-dark(#FAFAFA, #0A0A0A);
+  --surface-2: light-dark(#F2F2F2, #1A1A1A);
+  --ink:       light-dark(#171717, #EDEDED);
+  --ink-2:     light-dark(#4D4D4D, #A1A1A1);
+  --line:      light-dark(#EBEBEB, #242424);
+  --cross:     light-dark(#A8A8A8, #878787);
+  --edge:      light-dark(#8F8F8F, #878787);
+  --focus:     var(--ink);
+  --accent:    light-dark(#4F46E5, #908BEF);
+  --on-accent: light-dark(#FFFFFF, #000000);
+  /* data encoding: canvases, datasheets and legends only, never chrome */
+  --data-obs:      #4F46E5;
+  --data-obs-line: light-dark(#4F46E5, #908BEF);
+  --data-sim:      light-dark(#0C7C55, #0F9D6B);
+  --data-meas:     light-dark(#99610E, #D98A14);
+  --shadow-float: 0 0 0 1px var(--line), 0 4px 8px -4px rgb(0 0 0 / .04), 0 16px 24px -8px rgb(0 0 0 / .06);
+  --canvas-dots: radial-gradient(circle at 1px 1px, var(--line) 1px, transparent 0) 0 0 / 24px 24px;
+  --font-sans: "Geist", "Geist Fallback", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --frame: 1080px;
+  --margin: 0px;
+  --inset: 16px;
+  --section-y: 72px;
+  --head-gap: 48px;
+  --header-h: 64px;
+  --radius: 6px;
+  --cross-size: 15px;
+  --ease: cubic-bezier(.4, 0, .2, 1);
+  --dur: 150ms;
+}
+:root[data-theme="light"] { color-scheme: light; }
+:root[data-theme="dark"]  { color-scheme: dark; }
+@media (min-width: 601px) { :root { --margin: 32px; --inset: 40px; --section-y: 96px; --head-gap: 64px; } }
+@media (min-width: 961px) { :root { --inset: 48px; --section-y: 120px; --head-gap: 72px; --cross-size: 21px; } }
 
-   The semantic colors of the map are load-bearing and must not drift in hue:
-   observable indigo #4f46e5, simulation green #0f9d6b, measurement amber
-   #d98a14. The neutrals are warm paper (prose pages); the map keeps its cooler
-   canvas.
-   ============================================================================ */
-@import url('./vendor/inter/inter.css');
-@import url('./vendor/source-serif-4/source-serif-4.css');
-@import url('./vendor/jetbrains-mono/jetbrains-mono.css');
+*, *::before, *::after { box-sizing: border-box; }
+html { background: var(--page); color: var(--ink); scroll-padding-top: var(--header-h); -webkit-text-size-adjust: 100%; }
+html, body { overflow-x: clip; }
+body { margin: 0; background: var(--page); font: 400 16px/24px var(--font-sans); -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+/* Resets that the four tool pages (body.app) style for themselves are scoped away from them. */
+:where(body:not(.app)) :where(h1, h2, h3, h4, p, figure, blockquote, dl, dd) { margin: 0; }
+:where(body:not(.app)) :where(svg, img) { max-width: 100%; height: auto; }
+button, input, select, textarea { font: inherit; color: inherit; }
 
-:root{
-  /* surfaces (warm paper) */
-  --bg:#fbfaf8; --surface:#ffffff;
-  --ink:#16181d; --ink-2:#3d4149; --muted:#6b7078; --faint:#9aa0a8;
-  --line:#e8e6e1;                 /* warm hairline */
-  /* accent (the map's observable indigo, used sparingly on prose pages) */
-  --accent:#4f46e5; --accent-2:#4338ca; --accent-soft:#eef2ff;
-  --link:#16181d;                 /* prose links are ink; accent on hover */
-  /* semantic (established by the map; do not change hue) */
-  --simulation:#0f9d6b;
-  /* the one dark surface (the "terminal") */
-  --code-bg:#1f2125; --code-ink:#e6e8ef;
-  /* type */
-  --font-serif:'Source Serif 4',Georgia,'Times New Roman',serif;
-  --font-sans:'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-  --font-mono:'JetBrains Mono',ui-monospace,'SFMono-Regular',SFMono,Menlo,Consolas,'Liberation Mono',monospace;
-  /* shape */
-  --r-2:10px; --r-3:12px;
-  /* the only allowed shadow on prose pages: the sticky header hairline */
-  --shadow-head:0 1px 0 rgba(22,24,29,.04);
-  /* motion */
-  --t:150ms ease;
-}
-
-*{box-sizing:border-box;}
-html{-webkit-text-size-adjust:100%;}
-body{
-  margin:0;
-  font-family:var(--font-sans);
-  font-size:16px; line-height:1.6;
-  color:var(--ink); background:var(--bg);
-  -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
-}
-a{color:var(--link);text-decoration:none;}
-a:hover{text-decoration:underline;}
-code,kbd,samp{font-family:var(--font-mono);font-feature-settings:"zero" 1;}
-/* display headings are serif; body/UI never uses the serif above 20px rule */
-h1,h2,h3,h4{font-family:var(--font-serif);font-weight:700;letter-spacing:-.015em;line-height:1.1;margin:0 0 .4em;}
-
-/* prose links: ink with a 1px underline, accent on hover */
-a.prose-link{
-  color:var(--ink);text-decoration:underline;text-decoration-thickness:1px;
-  text-underline-offset:3px;transition:color var(--t);
-}
-a.prose-link:hover{color:var(--accent);}
-
-/* focus-visible: a consistent, legible ring across the whole site */
-:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px;}
-a:focus-visible{outline-offset:3px;}
-
-/* selection: a soft indigo wash, one definition site-wide */
-::selection{background:var(--accent-soft);color:var(--ink);}
-/* scrollbars: thin and warm, tuned to the paper surface */
-*{scrollbar-width:thin;scrollbar-color:#d8d4cc transparent;}
-::-webkit-scrollbar{width:10px;height:10px;}
-::-webkit-scrollbar-track{background:transparent;}
-::-webkit-scrollbar-thumb{background:#d8d4cc;border-radius:8px;border:2px solid transparent;background-clip:padding-box;}
-::-webkit-scrollbar-thumb:hover{background:#c7c2b8;background-clip:padding-box;}
-
-/* ---- editorial primitives ------------------------------------------------- */
-/* overline: a numbered, uppercase, letterspaced label above a section head */
-.om-overline{
-  display:flex;align-items:baseline;gap:9px;
-  font-family:var(--font-sans);font-weight:600;font-size:.72rem;
-  letter-spacing:.14em;text-transform:uppercase;color:var(--muted);
-  margin:0 0 14px;
-}
-.om-overline .n{
-  font-family:var(--font-mono);font-weight:500;font-feature-settings:"zero" 1;
-  color:var(--accent);letter-spacing:.05em;
-}
-/* a thin top rule to open an editorial column */
-.om-rule{border:0;border-top:1px solid var(--ink);height:0;margin:0 0 18px;opacity:.85;}
-
-/* ---- shared header -------------------------------------------------------- */
-.om-header{
-  position:sticky;top:0;z-index:40;
-  height:60px;display:flex;align-items:center;gap:18px;
-  padding:0 clamp(16px,4vw,32px);
-  background:rgba(255,255,255,.85);backdrop-filter:blur(12px);
-  border-bottom:1px solid var(--line);box-shadow:var(--shadow-head);
-}
-.om-brand{
-  display:inline-flex;align-items:center;gap:7px;
-  font-family:var(--font-serif);font-weight:700;font-size:1.06rem;
-  letter-spacing:-.01em;color:var(--ink);white-space:nowrap;
-}
-.om-brand:hover{text-decoration:none;}
-/* the mark: the addressed-derivation tile before the wordmark */
-.om-brand .om-mark{width:22px;height:22px;border-radius:5px;flex:none;display:block;}
-.om-beta{font-family:var(--font-mono);font-size:.58rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);border:1px solid currentColor;border-radius:999px;padding:1px 7px;flex:none;line-height:1.5;cursor:default;}
-.om-nav{margin-left:auto;display:flex;align-items:center;gap:clamp(12px,2.5vw,24px);}
-.om-nav a{
-  font-family:var(--font-sans);color:var(--ink-2);font-size:.86rem;font-weight:500;
-  white-space:nowrap;padding:6px 0;border-bottom:2px solid transparent;
-  transition:color var(--t),border-color var(--t);
-}
-.om-nav a:hover{color:var(--ink);text-decoration:none;}
-/* active = ink + a 2px accent underline offset to the header's bottom edge */
-.om-nav a.active{color:var(--ink);border-bottom-color:var(--accent);}
-
-/* ---- shared footer -------------------------------------------------------- */
-.om-footer{
-  border-top:1px solid var(--line);
-  background:var(--bg);
-  padding:44px clamp(16px,4vw,32px) 30px;
-  color:var(--muted);font-size:.9rem;
-}
-.om-footer-cols{
-  max-width:1080px;margin:0 auto;
-  display:grid;grid-template-columns:1.5fr 1fr 1.15fr;gap:32px 40px;
-}
-.om-footer h4{
-  font-family:var(--font-serif);font-size:.95rem;font-weight:600;
-  letter-spacing:-.005em;color:var(--ink);margin:0 0 14px;
-}
-.om-footer .om-desc{color:var(--ink-2);max-width:36ch;line-height:1.6;}
-.om-footer ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px;}
-.om-footer ul a{color:var(--ink-2);font-weight:500;}
-.om-footer ul a:hover{color:var(--accent);}
-.om-trust{display:flex;flex-direction:column;gap:8px;font-family:var(--font-mono);font-size:.78rem;font-feature-settings:"zero" 1;color:var(--muted);}
-.om-trust .om-trust-row{display:flex;gap:9px;align-items:baseline;}
-.om-trust .om-trust-k{color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-size:.62rem;font-weight:500;min-width:56px;}
-.om-trust .om-trust-v{color:var(--ink-2);word-break:break-all;cursor:pointer;transition:color var(--t);}
-.om-trust .om-trust-v:hover{color:var(--accent);}
-.om-trust .om-trust-v.copied{color:var(--simulation);}
-.om-smallprint{
-  max-width:1080px;margin:30px auto 0;padding-top:20px;border-top:1px solid var(--line);
-  color:var(--muted);font-size:.82rem;
-}
-.om-smallprint .om-ver{font-family:var(--font-mono);font-feature-settings:"zero" 1;}
-
-@media (max-width:720px){
-  .om-footer-cols{grid-template-columns:1fr;gap:28px;}
-  .om-nav{gap:16px;}
-}
-/* small screens: keep the header on one line and let the nav scroll rather than
-   push the page wider (which used to bleed prose off the right edge). The brand
-   never shrinks; the nav takes the remaining width and scrolls horizontally. */
-@media (max-width:560px){
-  .om-header{gap:10px;padding:0 14px;}
-  .om-brand{flex:none;}
-  .om-nav{
-    margin-left:auto;gap:14px;min-width:0;flex:1;justify-content:flex-end;
-    overflow-x:auto;-webkit-overflow-scrolling:touch;
-    scrollbar-width:none;-ms-overflow-style:none;
-  }
-  .om-nav::-webkit-scrollbar{display:none;}
-  .om-nav a{padding-top:9px;padding-bottom:9px;}
-}
-@media (max-width:410px){
-  /* tighten so all four links clear the wordmark without tucking under it */
-  .om-header{gap:8px;}
-  .om-nav{gap:11px;}
-  .om-nav a{font-size:.8rem;}
+/* 2. Type: weights 400, 450, 500; sentence case; no bold, italic or uppercase */
+h1, h2, h3 { font-weight: 450; color: var(--ink); text-wrap: balance; }
+h1 { font-size: 40px; line-height: 48px; letter-spacing: -0.06em; }
+h2 { font-size: 32px; line-height: 40px; letter-spacing: -0.04em; }
+h3 { font-size: 24px; line-height: 32px; letter-spacing: -0.04em; }
+h4 { font-weight: 500; font-size: 16px; line-height: 24px; }
+b, strong { font-weight: 500; }
+i, em { font-style: normal; }
+.close h2 { font-size: 40px; line-height: 48px; letter-spacing: -0.06em; }
+.title { font-weight: 450; color: var(--ink); }
+.lede { color: var(--ink-2); }
+main p, figcaption { max-width: 50ch; }
+.small { font-size: 14px; line-height: 20px; color: var(--ink-2); }
+.eyebrow { font-size: 14px; line-height: 20px; font-weight: 500; color: var(--ink-2); }
+.mono, .figure, code, kbd, samp, pre { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-feature-settings: "liga" 0; }
+.mono { font-size: 14px; line-height: 20px; overflow-wrap: anywhere; }
+.figure { font-size: 24px; line-height: 32px; font-weight: 400; color: var(--accent); }
+@media (min-width: 601px) { h1 { font-size: 64px; line-height: 64px; } }
+@media (min-width: 961px) {
+  h2 { font-size: 56px; line-height: 56px; letter-spacing: -0.06em; }
+  .close h2 { font-size: 48px; line-height: 56px; }
+  .lede { font-size: 18px; line-height: 28px; }
 }
 
-/* ---- buttons -------------------------------------------------------------- */
-.om-btn{
-  display:inline-flex;align-items:center;gap:8px;
-  border:1px solid var(--line);background:var(--surface);
-  border-radius:var(--r-2);padding:10px 18px;
-  font:600 .95rem/1 var(--font-sans);color:var(--ink);cursor:pointer;
-  transition:background var(--t),border-color var(--t),color var(--t);
-}
-.om-btn:hover{background:#f4f2ee;border-color:#dcd8d1;text-decoration:none;}
-/* primary: accent solid, white text, subtle background-only hover lift */
-.om-btn-primary{background:var(--accent);border-color:var(--accent);color:#fff;}
-.om-btn-primary:hover{background:var(--accent-2);border-color:var(--accent-2);color:#fff;}
-/* compact variant for the app chrome (map/trace top bars): tighter padding */
-.om-btn-sm{padding:9px 15px;font-size:.85rem;border-radius:var(--r-2);color:var(--ink-2);}
+/* 4. Links and focus */
+a { color: inherit; text-decoration: underline 1px; text-underline-offset: 4px; text-decoration-color: var(--ink-2); transition: text-decoration-color var(--dur) var(--ease); }
+a:hover { text-decoration-color: currentColor; }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.skip-link { position: fixed; top: 8px; left: 8px; z-index: 20; padding: 8px 12px; border-radius: var(--radius); background: var(--page); color: var(--ink); box-shadow: 0 0 0 1px var(--line); font: 500 14px/20px var(--font-sans); text-decoration: none; }
+.skip-link:not(:focus) { width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 
-/* Segmented view switcher (the 2D | 3D toggle on the map pages). */
-.om-seg{display:inline-flex;border:2px solid var(--accent);border-radius:999px;overflow:hidden;background:var(--surface);box-shadow:0 1px 4px rgba(79,70,229,.18);}
-.om-seg a{padding:9px 18px;font-size:.9rem;font-weight:700;color:var(--accent);text-decoration:none;line-height:1;display:inline-flex;align-items:center;min-height:40px;letter-spacing:.01em;}
-.om-seg a.on{background:var(--accent);color:#fff;cursor:default;}
-.om-seg a:not(.on):hover,.om-seg a:not(.on):active{background:var(--accent-soft);}
+/* 3. Layout: one 1080 px frame with 1 px guides; each section is one frame row */
+.frame, .site-header .wrap, .site-footer .wrap { width: min(var(--frame), 100% - 2 * var(--margin)); margin-inline: auto; }
+.frame > section { padding: var(--section-y) var(--inset); border-bottom: 1px solid var(--line); }
+@media (min-width: 601px) { main.frame { border-inline: 1px solid var(--line); } }
+.grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 24px; }
+.grid > * { grid-column: 1 / -1; min-width: 0; }
+@media (max-width: 600px) { .at-601 { display: none !important; } }
+@media (max-width: 960px) { .at-961 { display: none !important; } }
+@media (min-width: 601px) { .below-601 { display: none !important; } }
 
-/* ---- app components (promoted from the map's refined local chrome) --------- */
-/* the single definitions consumed by the map, trace, and learn app surfaces.  */
-
-/* search / text input: hairline, 10px radius, accent focus ring */
-.om-input{
-  width:100%;border:1px solid var(--line);border-radius:var(--r-2);
-  padding:9px 12px;font:400 .9rem/1.2 var(--font-sans);color:var(--ink);
-  background:var(--surface);outline:none;
-  transition:border-color var(--t),background var(--t),box-shadow var(--t);
-}
-.om-input::placeholder{color:var(--faint);}
-.om-input:focus{border-color:var(--accent);background:var(--surface);box-shadow:0 0 0 3px rgba(79,70,229,.13);}
-/* a search field is an input with room for a leading icon */
-.om-search{position:relative;display:flex;align-items:center;}
-/* the icon is the leading <svg> itself; pin it to its intrinsic 15px so
-   display:inline-flex cannot stretch it to fill the field (which pushed the
-   glyph into the middle of the input on narrow widths). */
-.om-search .om-search-ic{position:absolute;left:11px;color:var(--faint);pointer-events:none;display:inline-flex;width:15px;height:15px;flex:none;}
-.om-search .om-input{padding-left:34px;}
-
-/* chip: the code-rail pill. hairline pill; active = accent solid white text;
-   the count in .n reads muted. */
-.om-chip{
-  font-size:.82rem;font-weight:600;color:var(--ink-2);
-  background:var(--surface);border:1px solid var(--line);border-radius:999px;
-  padding:5px 12px;cursor:pointer;white-space:nowrap;flex:none;
-  transition:border-color var(--t),color var(--t),background var(--t);
-}
-.om-chip:hover{border-color:var(--accent);color:var(--accent);text-decoration:none;}
-.om-chip.on,.om-chip.active{background:var(--accent);color:#fff;border-color:var(--accent);}
-.om-chip .n{opacity:.55;font-weight:500;margin-left:5px;font-family:var(--font-mono);font-feature-settings:"zero" 1;}
-.om-chip.on .n,.om-chip.active .n{opacity:.85;}
-
-/* panel: a floating surface. white, hairline, radius 16, the one allowed
-   floating shadow. */
-.om-panel{
-  background:var(--surface);border:1px solid var(--line);border-radius:16px;
-  box-shadow:0 16px 44px rgba(22,24,29,.14);padding:20px;
-}
-/* panel-label: the overline treatment for a panel's section labels */
-.om-panel-label{
-  font-family:var(--font-sans);font-size:.66rem;letter-spacing:.14em;
-  text-transform:uppercase;color:var(--muted);font-weight:600;margin:17px 0 7px;
+/* Crosses on the two featured blocks. The sticky header covers the home hero's top-left
+   cross, so on the home page the header draws that one on its bottom line at the left guide. */
+.featured { position: relative; }
+@media (min-width: 601px) {
+  .featured::before, .featured::after, .home .site-header::after { --c: calc((var(--cross-size) - 1px) / 2); content: ""; position: absolute;
+    width: var(--cross-size); height: var(--cross-size); pointer-events: none;
+    background: linear-gradient(var(--cross) 0 0) 50% 0 / 1px 100% no-repeat, linear-gradient(var(--cross) 0 0) 0 50% / 100% 1px no-repeat; }
+  .featured::before { top: calc(-1px - var(--c)); left: calc(-1px - var(--c)); }
+  .featured::after  { bottom: calc(-1px - var(--c)); right: calc(-1px - var(--c)); }
+  .home .site-header::after { bottom: calc(-1px - var(--c)); left: calc(max(var(--margin), (100% - var(--frame)) / 2) - var(--c)); }
 }
 
-/* kv rows: label / value provenance lines, values in mono */
-.om-kv{display:flex;flex-direction:column;}
-.om-kv .om-kv-row{
-  display:flex;justify-content:space-between;gap:10px;
-  padding:6px 0;font-size:.82rem;border-top:1px solid var(--line);
+/* Header (spec 2.3). The mount is the sticky box, since a sticky child cannot leave its
+   parent. The row (mark, wordmark, four links, version pill, GitHub) needs about 690 px,
+   more than the 457 px content box at 601 px, so the menu serves every width below 961 px. */
+[data-site-header] { display: block; position: sticky; top: 0; z-index: 10; min-height: var(--header-h); }
+.site-header { position: relative; height: var(--header-h); background: var(--page); border-bottom: 1px solid var(--line); }
+.site-header .wrap { display: flex; align-items: center; gap: 16px; height: 100%; padding-inline: var(--inset); }
+[data-variant="app"] .site-header .wrap { width: auto; }
+.wordmark { display: inline-flex; align-items: center; gap: 8px; flex: none; font: 500 16px/24px var(--font-sans); letter-spacing: -0.02em; color: var(--ink); text-decoration: none; white-space: nowrap; }
+.om-mark { width: 20px; height: 20px; flex: none; }
+.site-nav, .site-header .wrap > .btn, .site-header .wrap > .theme { display: none; }
+.site-nav a { padding: 6px 8px; border-radius: var(--radius); font: 400 14px/20px var(--font-sans); color: var(--ink-2); text-decoration: none; white-space: nowrap; transition: color var(--dur) var(--ease); }
+.site-nav a:hover, .site-nav a[aria-current="page"] { color: var(--ink); }
+#om-version { flex: none; min-width: 17ch; justify-content: center; }
+.menu { margin-left: auto; }
+.menu > summary { list-style: none; }
+.menu > summary::-webkit-details-marker { display: none; }
+.menu[open] > summary { background: var(--surface-2); }
+.menu > nav { position: absolute; inset: var(--header-h) 0 auto; background: var(--page); border-bottom: 1px solid var(--line); }
+.menu > nav a { display: block; padding: 12px calc(var(--margin) + var(--inset)); color: var(--ink); text-decoration: none; }
+.menu > nav > * + * { border-top: 1px solid var(--line); }
+.menu > nav .theme { display: flex; width: max-content; margin: 12px calc(var(--margin) + var(--inset)); border-top: 0; }
+@media (min-width: 961px) {
+  .site-nav { display: flex; gap: 4px; margin-right: auto; }
+  .site-header .wrap > .btn, .site-header .wrap > .theme { display: inline-flex; }
+  .menu { display: none; }
 }
-.om-kv .om-kv-row:first-child{border-top:none;}
-.om-kv .om-kv-k{color:var(--ink-2);font-weight:500;}
-.om-kv .om-kv-v{font-family:var(--font-mono);font-feature-settings:"zero" 1;color:var(--ink);text-align:right;word-break:break-word;}
 
-@media (prefers-reduced-motion: reduce){
-  *{transition-duration:.001ms !important;animation-duration:.001ms !important;animation-iteration-count:1 !important;}
+/* Buttons. Large is a full pill, small is 6 px; one accent fill per page, at opening and close.
+   The playground's om- buttons are the same rules (spec 2.6). */
+.btn, .om-btn, .om-btn-primary, .om-btn-sm { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 40px; padding: 0 20px; border: 0; border-radius: 9999px;
+  font: 500 16px/24px var(--font-sans); text-decoration: none; white-space: nowrap; cursor: pointer; transition: background-color var(--dur) var(--ease), color var(--dur) var(--ease), box-shadow var(--dur) var(--ease); }
+.btn--sm, .om-btn-sm { height: 32px; padding: 0 12px; border-radius: var(--radius); font-size: 14px; line-height: 20px; }
+.btn--secondary, .om-btn, .om-btn-sm { background: var(--page); color: var(--ink); box-shadow: 0 0 0 1px var(--line); }
+.btn--ghost { background: transparent; color: var(--ink); }
+.btn--secondary:hover, .om-btn:hover, .om-btn-sm:hover, .btn--ghost:hover { background: var(--surface-2); }
+.btn--primary, .om-btn-primary { background: var(--accent); color: var(--on-accent); box-shadow: none; }
+.btn--primary:hover, .om-btn-primary:hover { background: color-mix(in srgb, var(--accent) 88%, var(--ink)); }
+:is(.btn, .om-btn, .om-btn-primary, .om-btn-sm):is(:disabled, [aria-disabled="true"]) { background: var(--surface-2); color: var(--ink-2); box-shadow: none; cursor: not-allowed; }
+.cta-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+/* below 601 a button takes the row and may wrap its label, so a long label never widens the page */
+@media (max-width: 600px) { .cta-row .btn { flex: 1 1 100%; height: auto; min-height: 40px; padding-block: 8px; white-space: normal; text-align: center; } .cta-row .btn--sm { min-height: 32px; padding-block: 6px; } }
+
+/* Section head: optional eyebrow, h2, optional lede; from 961 h2 on columns 1 to 7, lede 8 to 12 */
+.section-head { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 12px 24px; align-items: start; margin-bottom: var(--head-gap); }
+.section-head > * { grid-column: 1 / -1; min-width: 0; }
+@media (min-width: 961px) { .section-head > h2 { grid-column: 1 / 8; } .section-head > .lede { grid-column: 8 / 13; } }
+
+/* Card, pill, ledger: the record components; the map panel's om-kv rows are a ledger */
+.card, .bib-card, .abstract, .thm { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; min-width: 0; }
+.pill, .bib-lic, .thm-kind { display: inline-flex; align-items: center; height: 24px; padding: 0 12px; border-radius: 9999px; background: var(--surface-2); color: var(--ink); font: 500 12px/24px var(--font-sans); white-space: nowrap; text-decoration: none; }
+.pill--mono, .bib-lic { font-family: var(--font-mono); font-weight: 400; }
+.ledger, .om-kv { max-width: 720px; margin: 0; border-top: 1px solid var(--line); }
+.ledger > div, .om-kv > .om-kv-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); column-gap: 24px; align-items: baseline; padding: 12px 0; border-bottom: 1px solid var(--line); }
+.ledger dt, .om-kv-k { font: 400 14px/24px var(--font-sans); color: var(--ink-2); }
+.ledger dd, .om-kv-v { margin: 0; min-width: 0; font: 400 16px/24px var(--font-sans); color: var(--ink); overflow-wrap: anywhere; }
+.ledger .mono, .om-kv-v { font: 400 14px/24px var(--font-mono); font-variant-numeric: tabular-nums; }
+@media (max-width: 600px) { .ledger > div, .om-kv > .om-kv-row { grid-template-columns: minmax(0, 1fr); row-gap: 4px; } }
+/* a card leaves too narrow a value column for hashes beside their labels, so card ledgers stack */
+.card .ledger > div { grid-template-columns: minmax(0, 1fr); row-gap: 4px; }
+
+/* Code: monochrome, wraps instead of scrolling; the copy control is added by site.js */
+.code, .snippet, .recipe { margin: 0; border: 1px solid var(--line); border-radius: var(--radius); background: var(--page); overflow: hidden; min-width: 0; }
+.code > figcaption, .snippet-head, .recipe-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 40px; max-width: none; padding: 4px 4px 4px 16px; background: var(--surface); border-bottom: 1px solid var(--line); font: 400 13px/16px var(--font-sans); color: var(--ink-2); overflow-wrap: anywhere; }
+.snippet-title, .recipe-title { min-width: 0; margin-right: auto; }
+.snippet-lang, .recipe-lang { font: 400 12px/16px var(--font-mono); color: var(--ink-2); }
+.code pre, .snippet pre, .recipe pre { margin: 0; padding: 16px; font: 400 13px/20px var(--font-mono); color: var(--ink); white-space: pre-wrap; overflow-wrap: anywhere; font-feature-settings: "liga" 0; }
+.code .comment { color: var(--ink-2); }
+:where(body:not(.app)) code:not(pre code) { font: 400 0.875em/1 var(--font-mono); padding: 2px 4px; border-radius: 4px; background: var(--surface-2); overflow-wrap: anywhere; }
+
+/* Notice, table, form controls (spec 2.6) */
+.notice, .fig-fallback { padding: 12px 16px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); font: 400 14px/20px var(--font-sans); color: var(--ink); }
+.notice--error { border-color: var(--ink); }
+.table-wrap, .tblwrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); }
+.table, .gtable, .tblwrap table { width: 100%; border-collapse: collapse; font: 400 14px/20px var(--font-sans); }
+:is(.table, .gtable, .tblwrap table) th { height: 36px; padding: 0 12px; text-align: left; font-weight: 500; color: var(--ink-2); border-bottom: 1px solid var(--line); }
+:is(.table, .gtable, .tblwrap table) td { padding: 10px 12px; border-top: 1px solid var(--line); vertical-align: top; }
+/* Below 601 px a table marked .stack becomes a ledger: one block per row, each cell under its
+   column's name (its data-label), so no table scrolls sideways on a phone. */
+@media (max-width: 600px) {
+  .table-wrap:has(> table.stack), .tblwrap:has(> table.stack) { overflow: visible; border: 0; border-radius: 0; }
+  table.stack, table.stack :is(tbody, tr, td) { display: block; width: auto; }
+  table.stack { border-top: 1px solid var(--line); }
+  table.stack thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  table.stack tr { padding: 12px 0; border-bottom: 1px solid var(--line); }
+  table.stack td { padding: 4px 0; border: 0; min-width: 0; max-width: none; }
+  table.stack td, table.stack td * { white-space: normal; overflow-wrap: anywhere; }
+  table.stack td:empty { display: none; }
+  table.stack td[data-label]::before { content: attr(data-label); display: block; font: 400 14px/20px var(--font-sans); color: var(--ink-2); }
+}
+.view-switch { display: inline-flex; gap: 2px; height: 32px; padding: 2px; border-radius: var(--radius); box-shadow: 0 0 0 1px var(--line); }
+.view-switch a { display: inline-flex; align-items: center; padding: 0 10px; border-radius: 4px; font: 500 14px/20px var(--font-sans); color: var(--ink-2); text-decoration: none; }
+.view-switch a:hover { color: var(--ink); }
+.view-switch a[aria-current="page"] { color: var(--ink); background: var(--surface-2); }
+.select { height: 32px; min-width: 0; max-width: 100%; padding: 0 8px; border: 0; border-radius: var(--radius); box-shadow: 0 0 0 1px var(--line); background: var(--page); color: var(--ink); font: 400 14px/20px var(--font-sans); }
+.om-search { position: relative; display: flex; min-width: 0; }
+.om-search-ic { position: absolute; left: 10px; top: 9px; width: 14px; height: 14px; color: var(--ink-2); pointer-events: none; }
+.om-input { width: 100%; height: 32px; padding: 0 12px 0 32px; border: 0; border-radius: var(--radius); box-shadow: 0 0 0 1px var(--line); background: var(--page); color: var(--ink); font: 400 14px/20px var(--font-sans); }
+.om-input::placeholder { color: var(--ink-2); }
+
+/* Content pages (spec 4.1): a page head, then a contents column and the article */
+.page-head { padding: var(--section-y) var(--inset) 48px; border-bottom: 1px solid var(--line); overflow-wrap: break-word; }
+.page-head h1 { font: 450 32px/40px var(--font-sans); letter-spacing: -0.06em; margin: 0; }
+.page-head .eyebrow + h1, .page-head .crumb + h1 { margin-top: 8px; }
+.page-head .lede { margin-top: 16px; }
+.page-head .lede + .lede { margin-top: 12px; }
+.page-head .cta-row { margin-top: 24px; }
+.crumb { margin: 0 0 16px; font: 400 14px/20px var(--font-sans); color: var(--ink-2); }
+@media (min-width: 601px) { .page-head h1 { font-size: 40px; line-height: 48px; } .page-head .lede { font-size: 18px; line-height: 28px; } }
+.page-body { display: grid; grid-template-columns: minmax(0, 1fr); gap: 32px; padding: 48px var(--inset) var(--section-y); }
+@media (min-width: 961px) { .page-body:has(> .toc) { grid-template-columns: 200px minmax(0, 720px); gap: 64px; } }
+.toc { display: flex; flex-wrap: wrap; gap: 4px 16px; font: 400 14px/20px var(--font-sans); }
+.toc a { color: var(--ink-2); text-decoration: none; padding: 4px 0; }
+.toc a:hover, .toc a.active { color: var(--ink); }
+@media (min-width: 961px) { .toc { flex-direction: column; flex-wrap: nowrap; position: sticky; top: calc(var(--header-h) + 24px); align-self: start; } }
+.prose { min-width: 0; max-width: 720px; overflow-wrap: break-word; }
+.prose > section + section { margin-top: 64px; }
+.prose h2 { font: 450 24px/32px var(--font-sans); letter-spacing: -0.04em; margin: 0 0 16px; scroll-margin-top: calc(var(--header-h) + 24px); }
+.prose h3 { font: 450 20px/28px var(--font-sans); letter-spacing: -0.02em; margin: 32px 0 12px; }
+.prose h4 { font: 500 16px/24px var(--font-sans); margin: 24px 0 8px; }
+.prose p, .prose li { max-width: 50ch; }
+.prose p { margin: 0 0 16px; }
+.prose ul, .prose ol { margin: 0 0 16px; padding-left: 20px; }
+.prose li + li { margin-top: 4px; }
+.prose blockquote { margin: 0 0 16px; padding: 0 0 0 16px; border-left: 1px solid var(--line); color: var(--ink-2); }
+.prose :is(.ledger, .code, .snippet, .recipe, .notice, .table-wrap, .card) { margin-block: 24px; }
+.prose :is(.ledger, .code, .snippet, .recipe, .notice, .table-wrap, .card):first-child { margin-top: 0; }
+
+/* Home (spec 3) */
+.hero { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 48px 24px; align-items: start; }
+.hero > * { grid-column: 1 / -1; min-width: 0; }
+.hero .lede { margin-top: 24px; }
+.datum .figure { margin-top: 8px; }
+.datum .unit { color: var(--ink-2); font-size: 16px; }
+.datum .ledger { margin-top: 16px; }
+.datum .cta-row { margin-top: 24px; }
+.split { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 48px 24px; align-items: start; }
+.split > * { grid-column: 1 / -1; min-width: 0; }
+.facts > p { margin-top: 16px; }
+.facts > .ledger + p { margin-top: 32px; }
+.pair { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--head-gap) 24px; }
+.pair > section { grid-column: 1 / -1; min-width: 0; }
+.pair h2 { margin-bottom: 24px; font-size: 32px; line-height: 40px; letter-spacing: -0.04em; }
+.pair .notice { margin-top: 24px; }
+.tools { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 24px; }
+.tools > .card { grid-column: span 12; display: flex; flex-direction: column; align-items: flex-start; }
+.tools > .card h3 { font-size: 20px; line-height: 28px; letter-spacing: -0.02em; }
+.tools > .card p { margin: 8px 0 24px; }
+.tools > .card .btn { margin-top: auto; }
+.links { margin-top: var(--head-gap); }
+.links h3 { margin-bottom: 16px; }
+.links .ledger dt a { color: var(--ink); font-size: 16px; }
+.steps { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+.steps > li { display: grid; grid-template-columns: 32px minmax(0, 1fr); gap: 12px; padding: 16px 0; border-bottom: 1px solid var(--line); }
+.step-index { font: 400 14px/24px var(--font-mono); color: var(--ink-2); }
+.steps-col > .small { margin-top: 24px; }
+.close .hash { font-family: var(--font-mono); letter-spacing: 0; font-size: min(1em, (100vw - 32px) / 7.5); }
+.close .cite-text, .close .code { margin-top: 24px; max-width: 720px; }
+@media (min-width: 601px) { .tools > .card { grid-column: span 6; } }
+@media (min-width: 961px) {
+  .hero-text { grid-column: 1 / 8; }
+  .hero .datum { grid-column: 8 / 13; }
+  .facts { grid-column: 1 / 8; }
+  .links > * { grid-column: span 6; }
+  .steps-col { grid-column: 1 / 6; }
+  .split > .code { grid-column: 6 / 13; }
+  .narrow { grid-column: 1 / 9; }
+  .pair > section { grid-column: span 6; }
+}
+
+/* 404 (spec 2.7): while a short link forwards, only the forwarding line shows */
+.nf-body h1 { margin-top: 16px; }
+.nf-body .lede, .nf-body .small { margin-top: 24px; }
+.nf-forward, .nf-forward [data-for] { display: none; }
+html[data-forward] .nf-body { display: none; }
+html[data-forward] .nf-forward { display: block; }
+html[data-forward="play"] [data-for="play"], html[data-forward="experiment"] [data-for="experiment"] { display: block; }
+
+/* Tool pages (spec 5.1): each page styles its own toolbar, canvas, panel and legend; the
+   shared header is a fixed-height row of its flex column. */
+body.app > [data-site-header] { flex: none; }
+/* A tool page's one-line hint in its toolbar, with key caps; the hint hides below 961 px.
+   The skip link and .sr-only above serve these pages too. */
+body.app .hint { display: flex; gap: 12px; align-items: center; min-width: 0; color: var(--ink-2); white-space: nowrap; }
+kbd { font: 400 12px/16px var(--font-mono); padding: 1px 4px; border-radius: 4px; box-shadow: 0 0 0 1px var(--line); color: var(--ink); }
+@media (max-width: 960px) { body.app .hint { display: none; } }
+
+/* Footer (spec 2.4) and theme toggle */
+.site-footer { padding-block: 40px; font: 400 14px/20px var(--font-sans); color: var(--ink-2); }
+.site-footer .wrap { padding-inline: var(--inset); }
+.footer-dir { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px 24px; }
+.footer-dir > .footer-id { grid-column: 1 / -1; }
+.footer-id p { margin-top: 12px; max-width: 36ch; }
+.footer-dir h2 { margin: 0 0 8px; font: 500 14px/20px var(--font-sans); letter-spacing: 0; color: var(--ink); }
+.footer-dir ul { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.site-footer a { color: var(--ink-2); transition: color var(--dur) var(--ease), text-decoration-color var(--dur) var(--ease); }
+.site-footer a:hover { color: var(--ink); }
+.footer-dir a { text-decoration: none; }
+.footer-id .wordmark { color: var(--ink); }
+.footer-legal { display: grid; gap: 4px; margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--line); }
+.footer-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; margin-top: 24px; }
+#om-stamp { font: 400 13px/20px var(--font-mono); color: var(--ink-2); overflow-wrap: anywhere; }
+@media (min-width: 601px) { .footer-dir { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+@media (min-width: 961px) { .footer-dir { grid-template-columns: 2fr repeat(4, minmax(0, 1fr)); } .footer-dir > .footer-id { grid-column: auto; } }
+.theme { display: inline-flex; margin: 0; padding: 0; border: 0; border-radius: 9999px; box-shadow: 0 0 0 1px var(--line); }
+.theme label { position: relative; display: grid; place-items: center; width: 32px; height: 32px; border-radius: 9999px; color: var(--ink-2); cursor: pointer; }
+.theme input { position: absolute; inset: 0; margin: 0; opacity: 0; cursor: pointer; }
+.theme label:has(:checked) { color: var(--ink); background: var(--surface-2); box-shadow: 0 0 0 1px var(--ink-2); }
+.theme label:has(:focus-visible) { outline: 2px solid var(--focus); outline-offset: 2px; }
+.theme svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.5; }
+
+/* 5. Motion */
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition-duration: 0s !important; transition-delay: 0s !important; animation-duration: 0s !important; } }
+
+/* Print: light ground, no sticky header or controls */
+@media print {
+  :root, :root[data-theme] { color-scheme: light; }
+  html, body { overflow: visible; }
+  [data-site-header], .skip-link, .cta-row, .theme, .copy, .toc { display: none !important; }
+  .ledger, .code, .snippet, .card { break-inside: avoid; }
 }

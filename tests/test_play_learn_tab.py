@@ -2,12 +2,13 @@
 
 The Learn tab is the playground's main item and default: first in the tab
 row, active on landing, carrying the full parser experience (the one
-implementation; the old /learn/ URL redirects here). The top bar carries the
-same navigation as every other page, so moving between Map, Guide, Play,
-Learn, Document, and Source is one consistent gesture site-wide.
+implementation; the old /learn/ URL redirects here). The header is the shared
+one every page mounts, so moving between Map, Playground, Guide, Document, and
+GitHub is one consistent gesture site-wide.
 """
 from __future__ import annotations
 
+import json
 import re
 from pathlib import Path
 
@@ -37,11 +38,13 @@ def test_learn_tab_carries_the_full_parser_experience():
 
 
 def test_playground_navigation_matches_the_site():
-    nav = re.search(r'<nav class="pg-nav"[^>]*>(.*?)</nav>', _PLAY, re.S)
-    assert nav, "no site navigation on the playground top bar"
-    labels = re.findall(r">([A-Za-z]+)</a>", nav.group(1))
-    assert labels == ["Map", "Guide", "Play", "Learn", "Codes", "Document", "Source"], labels
-    assert 'class="active" href="./"' in nav.group(1), "Play must be marked active"
+    """The playground mounts the shared app header (site.js renders the
+    links, marks Playground current, and carries the theme toggle); no
+    inline top bar or nav of its own remains."""
+    assert '<div data-site-header data-variant="app"></div>' in _PLAY
+    assert '<script src="../assets/site.js"></script>' in _PLAY
+    assert 'class="pg-nav"' not in _PLAY and 'class="pg-top"' not in _PLAY
+    assert 'aria-label="Primary"' not in _PLAY, "the nav comes from site.js only"
 
 
 def test_old_learn_url_redirects_to_the_playground():
@@ -118,13 +121,35 @@ def test_tab_strip_survives_the_datasheet():
 def test_tabs_group_by_intent():
     """Learn leads, the record tools follow, the map tools close, with a
     divider between the groups."""
-    tabs = re.findall(r'data-tab="(\w+)"[^>]*>', _PLAY.split('<div class="pg-tabs">', 1)[1].split("</div>", 1)[0])
-    assert tabs == ["learn", "lineage", "distance", "query", "trace", "map"], tabs
+    strip = _PLAY.split('<div class="pg-tabs">', 1)[1].split("</div>", 1)[0]
+    tabs = re.findall(r'data-tab="(\w+)"[^>]*>', strip)
+    assert tabs == ["learn", "lineage", "distance", "query", "map"], tabs
     assert "pg-tabsep" in _PLAY
+    # tracing lives on the tracer, which the map views link; old tab=trace links go there
+    assert "map-trace" not in strip
+    assert "location.replace('../map-trace/'" in _PLAY and 'id="traceFrom"' not in _PLAY
 
 
 def test_canvas_hint_speaks_per_tab():
     assert "var PG_HINTS = {" in _PLAY
-    for key in ("learn:", "lineage:", "distance:", "query:", "trace:", "map:"):
+    for key in ("learn:", "lineage:", "distance:", "query:", "map:"):
         assert key in _PLAY.split("var PG_HINTS = {", 1)[1].split("};", 1)[0], key
     assert "PG_HINTS[tab]) hint.textContent" in _PLAY
+
+
+def test_example_proposal_holds_only_the_checked_claims():
+    """The example a bare /play/ draws carries only the claims checked against
+    the paper (review of 2026-10-04); the caption counts what it draws."""
+    example = json.loads((_DOCS / "play" / "example-proposal.json").read_text())
+    got = [(c["node_id"], c["value_text"]) for c in example["claims"]]
+    assert got == [
+        ("ThermalConductivity[bte_solver=direct_inverse]", "150"),
+        ("ThermalConductivity[bte_solver=direct_inverse]", "7"),
+        ("Temperature", "300"),
+        ("MassDensity", "2.32"),
+        ("AtomCount", "1728"),
+        ("AtomCount", "4096"),
+        ("AtomCount", "13824"),
+        ("ThermalConductivity[transport_model=qhgk]", "2.2"),
+    ], got
+    assert "(nv === 1 ? ' value' : ' values')" in _PLAY and "(nc === 1 ? ' condition' : ' conditions')" in _PLAY, "the caption counts values and conditions"

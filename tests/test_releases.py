@@ -42,7 +42,8 @@ def test_releases_resolve_alike_from_the_source_tree_and_the_registry():
     tree, shipped = code_releases([_DATA_DIR]), code_releases([REGISTRY])
     assert tree == shipped
     assert set(tree) == set(json.loads((_DATA_DIR / "codes.json").read_text()))
-    assert set(release_files(_DATA_DIR)) == {"gpumd", "kaldo", "lammps", "phono3py", "qe"}
+    assert set(release_files(_DATA_DIR)) == {"gpumd", "kaldo", "lammps", "phono3py", "qe",
+                                             "qe-d3q"}
     assert tree["qe"]["aliases"] == ["quantum-espresso"]
     assert tree["xtb"] == {"aliases": [], "releases": []}
 
@@ -74,8 +75,7 @@ def test_every_shipped_vector_row_resolves_or_waits_for_its_representation():
             for r in record.get("execution", {}).get("registry", [])}
     assert rows == {("gpumd", "3.9.5"), ("quantum-espresso", "qe-7.5"),
                     ("qe-d3q", "q-e-7.5")}
-    assert lin.release_check(_rows(*rows)) == [
-        {"id": "qe-d3q", "version": "q-e-7.5", "reason": "not a representation"}]
+    assert lin.release_check(_rows(*rows)) == []
 
 
 def _first(cites):
@@ -86,8 +86,7 @@ def _first(cites):
 
 
 def test_validate_light_reports_unresolved_rows_of_the_served_record():
-    assert _light(_first("qe-d3q"))["unresolved_registry_rows"] == [
-        {"id": "qe-d3q", "version": "q-e-7.5", "reason": "not a representation"}]
+    assert _light(_first("qe-d3q"))["unresolved_registry_rows"] == []
     assert _light(_first("gpumd"))["unresolved_registry_rows"] == []
 
 
@@ -95,7 +94,7 @@ def test_no_writer_refuses_an_unresolved_row(tmp_path):
     node = "ThermalConductivity[transport_model=hnemd]"
     name_to_uid = {node: "e" * 64}
     lineage = {"node": node, "node_uid": "e" * 64, "material": {"name": "Si"}}
-    execution = _rows(("gpumd", "v4.7"), ("qe-d3q", "q-e-7.5"))
+    execution = _rows(("gpumd", "v4.7"), ("qe-d3q", "q-e-7.4"))
     record = lin.record_light(lineage=lineage, execution=execution,
                               name_to_uid=name_to_uid)
     assert len(lin.validate_light(record, name_to_uid=name_to_uid)

@@ -2,204 +2,92 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>openmaterials.ai: experiments</title>
-<meta name="description" content="Every experiment on the map is a link: one source's evidence, grouped, pinned to a map version, shareable by URL.">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Values by source | OpenMaterials</title>
+<meta name="description" content="Committed values are grouped by source reference, with one page and a shareable URL for each.">
+<link rel="canonical" href="https://openmaterials.ai/experiment/">
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="openmaterials.ai">
-<meta property="og:title" content="openmaterials.ai: experiments">
-<meta property="og:description" content="One source's evidence, grouped, pinned to a map version, shareable by URL.">
-<meta name="twitter:card" content="summary">
-<link rel="stylesheet" href="../assets/vendor/inter/inter.css">
-<link rel="stylesheet" href="../assets/vendor/source-serif-4/source-serif-4.css">
-<link rel="stylesheet" href="../assets/vendor/jetbrains-mono/jetbrains-mono.css">
+<meta property="og:title" content="Values by source | OpenMaterials">
+<meta property="og:description" content="Committed values are grouped by source reference, with one page and a shareable URL for each.">
+<meta property="og:url" content="https://openmaterials.ai/experiment/">
+<meta property="og:image" content="https://openmaterials.ai/assets/og.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The openmaterials.ai mark and wordmark above the line &quot;A versioned map of physics.&quot; A smaller line gives the licenses: map data CC BY 4.0 and code Apache 2.0.">
+<meta name="twitter:card" content="summary_large_image">
+<script>try{const t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch{}</script>
+<link rel="preload" href="../assets/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../assets/fonts/GeistMono-Variable.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="../assets/site.css">
+<link rel="stylesheet" href="../assets/vendor/katex/dist/katex.min.css">
 <style>
-  /* Experiments join the light editorial identity: warm-paper ground, indigo
-     for observables and navigation, amber for values, serif headings, mono
-     for refs and ids. Unlike the map and tracer this is a document page: it
-     scrolls. */
-  :root{
-    --font-serif:'Source Serif 4',Georgia,'Times New Roman',serif;
-    --font-sans:'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-    --font-mono:'JetBrains Mono',ui-monospace,'SFMono-Regular',Menlo,Consolas,monospace;
-    --obs:#4f46e5; --obs2:#4338ca; --val:#d98a14;
-    --ink:#16181d; --ink2:#3d4149; --muted:#6b7078; --faint:#9aa0a8;
-    --line:#e8e6e1; --paper:#fdfcfa; --card:#ffffff; --wash:#f4f2ee;
-  }
-  *{box-sizing:border-box;}
-  html,body{margin:0;background:var(--paper);color:var(--ink);
-    font-family:var(--font-sans);-webkit-font-smoothing:antialiased;}
-  #err{position:fixed;top:0;left:0;right:0;background:#7f1d1d;color:#fff;font:13px/1.4 var(--font-mono);padding:8px 12px;z-index:40;display:none;white-space:pre-wrap;}
-
-  .wrap{max-width:960px;margin:0 auto;padding:34px clamp(14px,3vw,22px) 72px;}
-  .crumb{font-size:.82rem;color:var(--muted);margin:0 0 18px;}
-  .crumb a{color:var(--obs);text-decoration:none;}
-  .crumb a:hover{text-decoration:underline;}
-  .eyebrow{font-size:.74rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 10px;}
-  h1{font-family:var(--font-serif);font-weight:700;letter-spacing:-.015em;font-size:clamp(1.5rem,3.4vw,2.1rem);line-height:1.15;margin:0 0 8px;text-wrap:balance;}
-  h1 .ref{font-family:var(--font-mono);font-weight:600;font-size:.72em;color:var(--obs2);word-break:break-all;}
-  .lede{color:var(--ink2);font-size:1.02rem;line-height:1.6;max-width:64ch;margin:0 0 26px;}
-  h2{font-family:var(--font-serif);font-weight:700;font-size:1.18rem;letter-spacing:-.01em;margin:38px 0 12px;}
-
-  .meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:14px 0 6px;}
-  .chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--card);border-radius:999px;padding:4px 11px;font-size:.78rem;font-weight:500;color:var(--ink2);}
-  .chip .k{color:var(--faint);font-weight:600;font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;}
-  .chip.kind-simulation{border-color:#dcd6fb;background:#f5f3ff;color:var(--obs2);}
-  .chip.kind-measurement{border-color:#f3ddba;background:#fdf6ea;color:#8a5a0d;}
-  .chip .mono{font-family:var(--font-mono);font-size:.74rem;}
-  a.chip{text-decoration:none;cursor:pointer;transition:border-color .15s,color .15s;}
-  a.chip:hover{border-color:var(--obs);color:var(--obs2);}
-
-  .actions{display:flex;gap:10px;align-items:center;margin:16px 0 0;}
-  .btn{appearance:none;border:1px solid var(--line);background:var(--card);color:var(--ink2);border-radius:8px;
-    padding:8px 14px;font:600 .84rem var(--font-sans);cursor:pointer;transition:border-color .15s,color .15s,background .15s;}
-  .btn:hover{border-color:var(--obs);color:var(--obs2);}
-  .btn:focus-visible{outline:2px solid var(--obs);outline-offset:2px;}
-  .btn.primary{background:var(--obs);border-color:var(--obs);color:#fff;}
-  .btn.primary:hover{background:var(--obs2);border-color:var(--obs2);}
-  a.btn{display:inline-flex;align-items:center;text-decoration:none;}
-  .copied{color:var(--obs2);font-size:.82rem;font-weight:600;opacity:0;transition:opacity .2s;}
-  .copied.on{opacity:1;}
-
-  /* index list */
-  .xp-list{display:flex;flex-direction:column;border-top:1px solid var(--line);margin-top:8px;}
-  .xp-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 18px;align-items:center;
-    padding:15px 4px;border-bottom:1px solid var(--line);text-decoration:none;color:inherit;transition:background .12s;}
-  .xp-row:hover{background:var(--wash);}
-  .xp-row .ref{font-family:var(--font-mono);font-size:.9rem;font-weight:600;color:var(--obs2);word-break:break-all;}
-  .xp-row .facts{grid-column:1;color:var(--muted);font-size:.8rem;margin-top:2px;}
-  .xp-row .n{grid-column:2;grid-row:1 / span 2;font-family:var(--font-mono);font-variant-numeric:tabular-nums;
-    font-size:.86rem;color:var(--ink2);white-space:nowrap;}
-  .xp-row .n b{color:var(--val);font-weight:700;}
-
-  /* values table */
-  .tbl-scroll{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--card);}
-  table{border-collapse:collapse;width:100%;font-size:.86rem;}
-  th{font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
-    text-align:left;padding:10px 14px;border-bottom:1px solid var(--line);background:var(--wash);white-space:nowrap;}
-  td{padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top;}
-  tr:last-child td{border-bottom:none;}
-  td.var .sym{font-family:var(--font-mono);font-weight:600;color:var(--obs2);}
-  td.var .vid{display:block;font-family:var(--font-mono);font-size:.72rem;color:var(--faint);margin-top:2px;word-break:break-all;text-decoration:none;}
-  td.var a.vid:hover{color:var(--obs2);text-decoration:underline;}
-  td.mat{white-space:nowrap;font-weight:500;}
-  td.cond{color:var(--ink2);font-size:.8rem;max-width:26ch;}
-  td.val{font-family:var(--font-mono);font-variant-numeric:tabular-nums;white-space:nowrap;}
-  td.val b{color:var(--val);font-weight:700;}
-  td.val .u{color:var(--muted);}
-
-  /* provenance quotes */
-  .quote{border:1px solid var(--line);border-left:3px solid var(--val);border-radius:0 10px 10px 0;
-    background:var(--card);padding:14px 16px;margin:0 0 12px;}
-  .quote .q{font-family:var(--font-serif);font-size:.95rem;line-height:1.55;color:var(--ink2);white-space:pre-line;}
-  .quote .who{margin-top:8px;font-size:.76rem;color:var(--muted);}
-
-  .pin{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:.8rem;line-height:1.6;}
-  .pin .mono{font-family:var(--font-mono);font-size:.74rem;color:var(--ink2);word-break:break-all;}
-  .pin a{color:var(--obs);text-decoration:none;}
-  .pin a:hover{text-decoration:underline;}
-  .empty{color:var(--muted);padding:26px 4px;}
-  @media (prefers-reduced-motion: reduce){ *{transition:none !important;} }
-  .om-beta{font-family:var(--font-mono);font-size:.58rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);border:1px solid currentColor;border-radius:999px;padding:1px 7px;flex:none;line-height:1.5;cursor:default;}
+  .page-head h1.ref { font-family: var(--font-mono); letter-spacing: 0; overflow-wrap: anywhere; }
+  .page-head h1.cite { font-size: 24px; line-height: 32px; letter-spacing: -0.02em; }
+  .page-head .cta-row { align-items: center; }
+  .meta { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+  .xp-list > div { grid-template-columns: minmax(0, 1fr); row-gap: 4px; }
+  .xp-list dt { font: 400 16px/24px var(--font-sans); overflow-wrap: anywhere; }
+  .xp-list dt a { color: var(--ink); }
+  .xp-list dd { font-size: 14px; color: var(--ink-2); }
+  td.var .sym, td.val { font-family: var(--font-mono); }
+  td.var .vid { margin-left: 6px; color: var(--ink); overflow-wrap: anywhere; }
+  td.mat, td.val { white-space: nowrap; }
+  td.cond { min-width: 20ch; color: var(--ink-2); }
+  td .u { color: var(--ink-2); }
+  .quote { margin: 0 0 12px; padding: 0 0 0 16px; border-left: 1px solid var(--line); color: var(--ink-2); white-space: pre-line; }
+  .pin { margin-top: 48px; }
+  .pin .mono { font-size: 13px; overflow-wrap: anywhere; }
+  .empty { color: var(--ink-2); }
 </style>
 </head>
 <body>
-<div id="err"></div>
+<a class="skip-link" href="#main">Skip to content</a>
 <div data-site-header></div>
-<main class="wrap" id="main">
-  <noscript><p class="empty">This page renders the evidence store client-side and needs JavaScript.
-    The raw records are plain JSON in <a href="../data/instances.json">../data/instances.json</a>.</p></noscript>
+<main class="frame" id="main">
+  <header class="page-head" id="xp-head">
+    <p class="eyebrow">Evidence</p>
+    <h1>Values by source</h1>
+    <p class="lede">One page per paper or run, with its values, their conditions, and their provenance.</p>
+  </header>
+  <div class="page-body"><div class="prose" id="xp-body">
+    <noscript><p class="empty">This page needs JavaScript. The records are plain JSON in <a href="../data/instances.json">../data/instances.json</a>.</p></noscript>
+  </div></div>
 </main>
+<script src="../assets/vendor/katex/dist/katex.min.js"></script>
+<script src="../assets/map-words.js"></script>
+<script src="../assets/sources.js"></script>
 <script>
 'use strict';
-var ERR = document.getElementById('err');
-function fail(msg){ ERR.textContent = msg; ERR.style.display = 'block'; }
 function esc(s){
   return String(s == null ? '' : s)
     .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
     .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
 
-/* ---- "Run on MaterialsCodeGraph" deep link (#25) --------------------------
-   OPTIONAL, additive, storage-free: for a card whose node MCG can actually run,
-   one more action-row link deep-links MCG's compute wizard at #/new/<node_id>
-   (materialscodegraph#65), prefilled from the lineage. Hidden otherwise: precision
-   over reach, only genuinely runnable nodes get the link, and the card is
-   identical without it. Nothing here touches the store, a record, or identity. */
-var MCG_BASE = 'https://app.materialscodegraph.com';   // one place to change
-
-// The known-computable set: base map nodes MCG has a wired engine for right now.
-// Static by choice (the plan's Q3, YAGNI: no soft capability fetch, no network).
-// MCG's runnable kinds today are its thermal-transport verticals (device_thermal,
-// full_stack, composite_kappa), whose headline output is thermal conductivity, so
-// this is deliberately the ThermalConductivity family and nothing it cannot boot a
-// pod for. It is expected to GROW as MCG wires more kinds; extend this list then.
-var MCG_COMPUTABLE = { 'ThermalConductivity': 1 };
-
-// A variable/node id may carry a bracket qualifier (an estimator/method pin,
-// e.g. ThermalConductivity[bte_solver=direct_inverse]); the runnable KIND is the
-// base node, so computability keys on the base.
-function baseNode(id){ return String(id == null ? '' : id).replace(/\[.*$/, ''); }
-function isComputable(id){ return !!MCG_COMPUTABLE[baseNode(id)]; }
-
-// The material's configuration uid, when a record's material pins one (a pinned
-// atomic configuration): a bare-string material.configuration, or a {uid} /
-// {configuration:{uid}} / {canonical:{uid}} object form. Returns '' otherwise.
-// Kept verbatim (a "sha256:" prefix is passed through; MCG strips it server-side).
-// Mirrors the play page's helper so the two Run links carry the same pin.
-function materialConfigUid(material){
-  if (!material || typeof material !== 'object') return '';
-  var u = (typeof material.configuration === 'string' ? material.configuration : null) ||
-    material.uid || material.config_uid || material.configuration_uid ||
-    (material.configuration && typeof material.configuration === 'object' && material.configuration.uid) ||
-    (material.canonical && typeof material.canonical === 'object' && material.canonical.uid);
-  return u ? String(u) : '';
+// MaterialsCodeGraph runs thermal conductivity today, so a source with a simulated value of it
+// gets the link. It opens the sign-up panel: the app itself ends on a sign-in.
+var MCG_CONNECT = 'https://materialscodegraph.com/?ref=omai-experiment#hero-connect';
+function runnable(recs){
+  return recs.some(function(r){
+    return r.source && r.source.kind === 'simulation' && /^ThermalConductivity(\[|$)/.test(r.variable);
+  });
 }
-
-// The runnable node id for a group of records: the first record whose base node
-// MCG can run (there may be several variables under one source ref). Returns the
-// record so the caller can prefill material/conditions from it, or null when the
-// group has nothing MCG can run (the link then does not render).
-function computableRec(recs){
-  for (var i = 0; i < recs.length; i++) { if (isComputable(recs[i].variable)) return recs[i]; }
-  return null;
+function tex(s){
+  if (!s) return '';
+  try { return katex.renderToString(String(s), { throwOnError: false }); } catch (e) { return esc(s); }
 }
-
-// The MCG compute deep link for a runnable record: #/new/<node_id>, with the
-// base node id (the runnable kind), plus material and conditions passed as query
-// params when trivially in scope so the wizard can prefill. Q1 (the canonical
-// card URL) is the owner's open call; where a back-link to this openmaterials
-// card is wanted, the PORTABLE #x= form is the self-contained shareable identity,
-// so a back-link would carry the lineage in the fragment rather than invent a
-// server route. It is left off the deep link here (the reciprocal seam (c) ships
-// MCG-side and Q1 is undecided); the const and the base node keep it a one-line
-// add if the owner decides to include it.
-function mcgRunUrl(rec){
-  var url = MCG_BASE + '/#/new/' + encodeURIComponent(baseNode(rec.variable));
-  var qs = [];
-  var mat = rec.material;
-  if (mat != null && mat !== '') {
-    qs.push('material=' + encodeURIComponent(typeof mat === 'object' && mat.name != null ? mat.name : mat));
-  }
-  if (rec.conditions && typeof rec.conditions === 'object') {
-    var c = condText(rec.conditions);
-    if (c) qs.push('conditions=' + encodeURIComponent(c));
-  }
-  var cfgUid = materialConfigUid(rec.material);
-  if (cfgUid) qs.push('configuration=' + encodeURIComponent(cfgUid));
-  return qs.length ? url + '?' + qs.join('&') : url;
-}
-function condText(c){
-  if (!c || typeof c !== 'object') return '';
-  return Object.keys(c).map(function(k){ return k + ' = ' + c[k]; }).join(' · ');
+function fail(msg){
+  document.getElementById('xp-body').innerHTML =
+    '<p id="err" class="notice notice--error">' + esc(msg) + '</p>';
 }
 function valText(rec){
-  var v = '<b>' + esc(rec.value) + '</b>';
+  var v = esc(rec.value);
   if (rec.uncertainty != null) v += ' ± ' + esc(rec.uncertainty);
-  if (rec.units) v += ' <span class="u">' + esc(rec.units) + '</span>';
+  if (rec.units) v += ' <span class="u">' + esc(Sources.unit(rec.units)) + '</span>';
   return v;
 }
 function uniq(arr){
@@ -216,35 +104,35 @@ function materialFromHash(){
   return m ? decodeURIComponent(m[1]) : null;
 }
 
-var DATA = null;   // {records, groups, catalog, version}
+var parts = Sources.parts, family = Sources.family;
+var DATA = null;   // {records, groups, catalog, codes, version}
 function load(){
   return Promise.all([
     fetch('../data/instances.json').then(function(r){ return r.json(); }),
     fetch('../data/catalog.json').then(function(r){ return r.json(); }),
-    fetch('../data/version.json').then(function(r){ return r.json(); })
-  ]).then(function(parts){
-    var records = parts[0], catalog = {}, version = parts[2];
-    parts[1].forEach(function(n){ catalog[n.id] = n; });
-    var groups = {};
-    records.forEach(function(rec){
-      var ref = (rec.source && rec.source.ref) || '(unsourced)';
-      (groups[ref] = groups[ref] || []).push(rec);
-    });
-    DATA = { records: records, groups: groups, catalog: catalog, version: version };
+    fetch('../data/version.json').then(function(r){ return r.json(); }),
+    fetch('../data/codes.json').then(function(r){ return r.json(); })
+  ]).then(function(res){
+    var records = res[0], catalog = {}, version = res[2];
+    res[1].forEach(function(n){ catalog[n.id] = n; });
+    DATA = { records: records, groups: Sources.groups(records), catalog: catalog, codes: res[3], version: version };
   });
 }
 
 function pinHtml(){
-  var v = (DATA.version && DATA.version.version) || '';
-  return '<div class="pin">Map version <span class="mono">' + esc(v.slice(0, 12)) + '</span>' +
-    (v ? ' (<span class="mono">' + esc(v) + '</span>)' : '') +
-    '. This link renders the store as published at the current site build; cite the map version with the values.' +
-    '<br>Evidence stays its owner’s: each record is a non-exclusive CC BY 4.0 grant, raw artifacts are never ingested, and reuse must credit the source recorded in its provenance ' +
-    '(<a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/main/GOVERNANCE.md">GOVERNANCE.md, “Data ownership and fairness”</a>).</div>';
+  var v = ((DATA.version && DATA.version.version) || '').slice(0, 12);
+  return v ? '<p class="notice pin"><a href="../#cite">Cite the map version</a>, <span class="mono">' + esc(v) +
+    '</span>, with any value you reuse.</p>' : '';
+}
+// The index head is the static one in the HTML; a detail view swaps in its own head.
+var INDEX_HEAD = document.getElementById('xp-head').innerHTML;
+function page(head, body){
+  document.getElementById('xp-head').innerHTML = head;
+  document.getElementById('xp-body').innerHTML = body + pinHtml();
 }
 
 function renderIndex(material){
-  document.title = 'openmaterials.ai: experiments';
+  document.title = 'Values by source | OpenMaterials';
   var refs = Object.keys(DATA.groups).sort(function(a, b){
     return DATA.groups[b].length - DATA.groups[a].length || a.localeCompare(b);
   });
@@ -261,40 +149,32 @@ function renderIndex(material){
     var mats = uniq(recs.map(function(r){ return r.material; }));
     var kinds = uniq(recs.map(function(r){ return r.source && r.source.kind; }));
     var vars = uniq(recs.map(function(r){ return r.variable; }));
-    return '<a class="xp-row" href="#ref=' + encodeURIComponent(ref) + '">' +
-      '<span class="ref">' + esc(ref) + '</span>' +
-      '<span class="n"><b>' + recs.length + '</b> values</span>' +
-      '<span class="facts">' + esc(kinds.join(', ')) + ' · ' +
+    return '<div class="xp-row"><dt><a class="ref" href="#ref=' + encodeURIComponent(ref) + '">' + esc(Sources.titleOf(recs, DATA.codes) || ref) + '</a></dt>' +
+      '<dd>' + recs.length + (recs.length === 1 ? ' value' : ' values') + ' · ' + esc(kinds.join(', ')) + ' · ' +
         esc(mats.join(', ')) + ' · ' + vars.length +
-        (vars.length === 1 ? ' quantity' : ' quantities') + '</span>' +
-      '</a>';
+        (vars.length === 1 ? ' quantity' : ' quantities') + '</dd></div>';
   }).join('');
-  document.getElementById('main').innerHTML =
-    '<p class="eyebrow">Evidence, grouped by source</p>' +
-    '<h1>Every experiment is a link</h1>' +
-    '<p class="lede">An experiment here is one source’s evidence: the values a single simulation ' +
-    'campaign, measurement, or parsed paper contributed to the map, grouped by its provenance ' +
-    'reference. Open one and share its URL; the link carries the ref, and the page pins the map ' +
-    'version it renders.</p>' +
-    (material ? '<div class="meta"><span class="chip"><span class="k">material</span> ' + esc(material) +
-      '</span><a class="chip" href="#">clear filter</a></div>' : '') +
-    (rows ? '<div class="xp-list">' + rows + '</div>' :
-      '<p class="empty">No experiment in this build of the store matches that filter.</p>') +
-    pinHtml();
+  page(INDEX_HEAD,
+    (material ? '<div class="meta"><span class="pill">Material ' + esc(material) +
+      '</span><a class="pill" href="#">Clear filter</a></div>' : '') +
+    (rows ? '<dl class="ledger xp-list">' + rows + '</dl>' :
+      '<p class="empty">No source matches that material.</p>'));
 }
 
 function renderDetail(ref){
-  var recs = DATA.groups[ref];
-  document.title = 'openmaterials.ai: experiment ' + ref;
+  // an older link may name one member of a numbered family
+  var key = DATA.groups[ref] ? ref : family(ref), recs = DATA.groups[key];
   if (!recs){
-    document.getElementById('main').innerHTML =
-      '<p class="crumb"><a href="#">&larr; All experiments</a></p>' +
-      '<h1>Unknown experiment</h1>' +
-      '<p class="lede">No evidence in this build of the store carries the ref <span class="ref">' +
-      esc(ref) + '</span>. It may live in a newer map version, or the ref may be mistyped.</p>' +
-      pinHtml();
+    document.title = 'Unknown source | OpenMaterials';
+    page(
+      '<p class="crumb"><a href="#">All sources</a></p>' +
+      '<h1>Unknown source</h1>' +
+      '<p class="lede">No committed value carries the reference <span class="mono">' +
+      esc(ref) + '</span>. Check it for a typo.</p>', '');
     return;
   }
+  var title = Sources.titleOf(recs, DATA.codes), cited = recs.some(function(r){ return parts(r.source && r.source.detail).cite; });
+  document.title = (title || key) + ' | OpenMaterials';
   var mats = uniq(recs.map(function(r){ return r.material; }));
   var kinds = uniq(recs.map(function(r){ return r.source && r.source.kind; }));
   var sorted = recs.slice().sort(function(a, b){
@@ -303,50 +183,53 @@ function renderDetail(ref){
   var rows = sorted.map(function(rec){
     var node = DATA.catalog[rec.variable.replace(/\[.*$/, '')] || DATA.catalog[rec.variable] || {};
     return '<tr>' +
-      '<td class="var"><span class="sym">' + esc(node.symbol || '') + '</span>' +
+      '<td class="var" data-label="Quantity">' + (node.symbol && node.symbol !== nodeName(rec.variable) && node.symbol !== rec.variable.replace(/\[.*$/, '') ? '<span class="sym">' + tex(node.symbol) + '</span>' : '') +
       '<a class="vid" href="../map/#node=' + encodeURIComponent(rec.variable) +
-      '" title="Open this quantity on the map">' + esc(rec.variable) + '</a></td>' +
-      '<td class="mat">' + esc(rec.material) + '</td>' +
-      '<td class="cond">' + esc(condText(rec.conditions)) + '</td>' +
-      '<td class="val">' + valText(rec) + '</td>' +
+      '" title="Open this quantity on the map">' + esc(nodeName(rec.variable)) + '</a></td>' +
+      '<td class="mat" data-label="Material">' + esc(rec.material) + '</td>' +
+      '<td class="cond" data-label="Conditions">' + esc(Sources.condText(rec.conditions)) + '</td>' +
+      '<td class="val" data-label="Value">' + valText(rec) + '</td>' +
       '</tr>';
   }).join('');
-  var quotes = uniq(sorted.map(function(r){ return r.source && r.source.detail; }))
-    .map(function(d){
-      return '<figure class="quote"><div class="q">' + esc(d) + '</div></figure>';
-    }).join('');
-  var chips =
-    kinds.map(function(k){ return '<span class="chip kind-' + esc(k) + '">' + esc(k) + '</span>'; }).join('') +
-    '<span class="chip"><span class="k">values</span> ' + recs.length + '</span>' +
-    mats.map(function(m){ return '<a class="chip" href="#material=' + encodeURIComponent(m) +
-      '" title="All experiments touching this material"><span class="k">material</span> ' + esc(m) + '</a>'; }).join('');
-  // Optional "Run on MaterialsCodeGraph" link (#25): shown only when this
-  // group has a node MCG can actually run, deep-linking its compute wizard
-  // prefilled from that record. Absent otherwise (the card is identical).
-  var runRec = computableRec(recs);
-  var runBtn = runRec ? '<a class="btn" href="' + esc(mcgRunUrl(runRec)) +
-    '" target="_blank" rel="noopener" title="Run this lineage as a simulation on MaterialsCodeGraph">Run this lineage as a simulation on MaterialsCodeGraph</a>' : '';
-  document.getElementById('main').innerHTML =
-    '<p class="crumb"><a href="#">&larr; All experiments</a></p>' +
-    '<p class="eyebrow">Experiment</p>' +
-    '<h1><span class="ref">' + esc(ref) + '</span></h1>' +
-    '<div class="meta">' + chips + '</div>' +
-    '<div class="actions"><button class="btn primary" id="copy" type="button">Copy link</button>' +
-    '<a class="btn" href="../map/#experiment=' + encodeURIComponent(ref) + '">View on the map</a>' +
-    runBtn +
-    '<span class="copied" id="copied">Link copied</span></div>' +
+  // A cited source quotes each record's passage with its page (the citation is the title) and
+  // prints any curator method note as plain text; a run prints one method line per distinct
+  // method, never its detail prose.
+  var quotes = uniq(sorted.map(function(r){
+    var p = parts(r.source && r.source.detail);
+    return p.quote ? p.quote + ' (' + p.where + ')' : null;
+  })).map(function(d){ return '<blockquote class="quote">' + esc(d) + '</blockquote>'; }).join('');
+  var methods = uniq(sorted.map(function(r){
+    var p = parts(r.source && r.source.detail);
+    return (cited ? p.method : Sources.methodLine(r, DATA.codes)) || null;
+  })).map(function(m){ return '<li>' + esc(m) + '</li>'; }).join('');
+  var facts =
+    '<dl class="ledger">' +
+    '<div><dt>Kind</dt><dd>' + esc(kinds.join(', ')) + '</dd></div>' +
+    '<div><dt>Values</dt><dd class="mono">' + recs.length + '</dd></div>' +
+    '<div><dt>Materials</dt><dd>' + mats.map(function(m){
+      return '<a href="#material=' + encodeURIComponent(m) + '">' + esc(m) + '</a>'; }).join(', ') + '</dd></div>' +
+    '</dl>';
+  var runBtn = runnable(recs) ? '<a class="btn btn--primary btn--sm" href="' + MCG_CONNECT + '">Run it for your material</a>' : '';
+  page(
+    '<p class="crumb"><a href="#">All sources</a></p>' +
+    '<p class="eyebrow">Source</p>' +
+    '<h1 class="' + (title ? 'cite' : 'ref') + '">' + esc(title || key) + '</h1>' +
+    '<div class="cta-row">' + runBtn + '<button class="btn btn--secondary btn--sm" id="copy" type="button">Copy link</button>' +
+    '<a class="btn btn--secondary btn--sm" href="../map/#experiment=' + encodeURIComponent(key) + '">View on the map</a>' +
+    '<span class="copied small" id="copied" aria-live="polite"></span></div>',
+    facts +
     '<h2>Values</h2>' +
-    '<div class="tbl-scroll"><table><thead><tr>' +
+    '<div class="table-wrap"><table class="table stack"><thead><tr>' +
     '<th>Quantity</th><th>Material</th><th>Conditions</th><th>Value</th>' +
     '</tr></thead><tbody>' + rows + '</tbody></table></div>' +
-    '<h2>Provenance</h2>' + quotes +
-    pinHtml();
+    (quotes ? '<h2>Provenance</h2>' + quotes : '') +
+    (methods ? '<h2>Method</h2><ul>' + methods + '</ul>' : ''));
   document.getElementById('copy').addEventListener('click', function(){
     var url = location.href;
     var done = function(){
       var el = document.getElementById('copied');
-      el.classList.add('on');
-      setTimeout(function(){ el.classList.remove('on'); }, 1600);
+      el.textContent = 'Link copied';
+      setTimeout(function(){ el.textContent = ''; }, 1500);
     };
     if (navigator.clipboard && navigator.clipboard.writeText){
       navigator.clipboard.writeText(url).then(done, function(){ window.prompt('Copy this link:', url); });
@@ -362,7 +245,7 @@ function render(){
   window.scrollTo(0, 0);
 }
 window.addEventListener('hashchange', render);
-load().then(render, function(e){ fail('Failed to load the store: ' + e); });
+load().then(render, function(e){ fail('Could not load the values: ' + e); });
 </script>
 <div data-site-footer></div>
 <script src="../assets/site.js"></script>

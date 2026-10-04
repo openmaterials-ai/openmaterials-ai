@@ -58,7 +58,9 @@ privately without forking it.
   source, version}`, `version` nullable when the code is pinned by digest
   alone. Shipped vectors cite gpumd `3.9.5`; the proof record in
   `omai/vectors/records.json` cites `quantum-espresso` at `qe-7.5` and
-  `qe-d3q` at `q-e-7.5`, row ids that are not representation ids.
+  `qe-d3q` at `q-e-7.5`, row ids that were not representation ids then
+  (`quantum-espresso` now resolves as an alias of `qe`, and `qe-d3q` is the
+  representation of D3Q and thermal2, with `q-e-7.5` registered).
 - `omai.lineages._validate_configuration` refuses a lineage whose
   `material.configuration` is not a committed record.
 - `omai.gates` validates map contributions (log operations against the

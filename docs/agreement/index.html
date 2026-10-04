@@ -2,212 +2,172 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>openmaterials.ai: cross-code agreement</title>
-<meta name="description" content="Where the map's values agree: same observable, same material, same conditions, different method or code. The spread is real method and code disagreement.">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cross-code agreement | OpenMaterials</title>
+<meta name="description" content="The agreement page groups committed values that share a quantity, material, and recorded conditions and come from different methods or codes, and it reports each group's spread.">
+<link rel="canonical" href="https://openmaterials.ai/agreement/">
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="openmaterials.ai">
-<meta property="og:title" content="openmaterials.ai: cross-code agreement">
-<meta property="og:description" content="Same observable, same material, same conditions, different method or code: the spread is real disagreement, not an apples-to-oranges artifact.">
-<meta name="twitter:card" content="summary">
-<link rel="stylesheet" href="../assets/vendor/inter/inter.css">
-<link rel="stylesheet" href="../assets/vendor/source-serif-4/source-serif-4.css">
-<link rel="stylesheet" href="../assets/vendor/jetbrains-mono/jetbrains-mono.css">
+<meta property="og:title" content="Cross-code agreement | OpenMaterials">
+<meta property="og:description" content="The agreement page groups committed values that share a quantity, material, and recorded conditions and come from different methods or codes, and it reports each group's spread.">
+<meta property="og:url" content="https://openmaterials.ai/agreement/">
+<meta property="og:image" content="https://openmaterials.ai/assets/og.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The openmaterials.ai mark and wordmark above the line &quot;A versioned map of physics.&quot; A smaller line gives the licenses: map data CC BY 4.0 and code Apache 2.0.">
+<meta name="twitter:card" content="summary_large_image">
+<script>try{const t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch{}</script>
+<link rel="preload" href="../assets/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../assets/fonts/GeistMono-Variable.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="../assets/site.css">
+<link rel="stylesheet" href="../assets/vendor/katex/dist/katex.min.css">
 <style>
-  /* Agreement joins the light editorial identity of the experiments page:
-     warm-paper ground, indigo for observables and navigation, amber for values,
-     serif headings, mono for refs and ids. A document page: it scrolls. */
-  :root{
-    --font-serif:'Source Serif 4',Georgia,'Times New Roman',serif;
-    --font-sans:'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-    --font-mono:'JetBrains Mono',ui-monospace,'SFMono-Regular',Menlo,Consolas,monospace;
-    --obs:#4f46e5; --obs2:#4338ca; --val:#d98a14;
-    --ink:#16181d; --ink2:#3d4149; --muted:#6b7078; --faint:#9aa0a8;
-    --line:#e8e6e1; --paper:#fdfcfa; --card:#ffffff; --wash:#f4f2ee;
-  }
-  *{box-sizing:border-box;}
-  html,body{margin:0;background:var(--paper);color:var(--ink);
-    font-family:var(--font-sans);-webkit-font-smoothing:antialiased;}
-  #err{position:fixed;top:0;left:0;right:0;background:#7f1d1d;color:#fff;font:13px/1.4 var(--font-mono);padding:8px 12px;z-index:40;display:none;white-space:pre-wrap;}
-
-  .wrap{max-width:960px;margin:0 auto;padding:34px clamp(14px,3vw,22px) 72px;}
-  .crumb{font-size:.82rem;color:var(--muted);margin:0 0 18px;}
-  .crumb a{color:var(--obs);text-decoration:none;}
-  .crumb a:hover{text-decoration:underline;}
-  .eyebrow{font-size:.74rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 10px;}
-  h1{font-family:var(--font-serif);font-weight:700;letter-spacing:-.015em;font-size:clamp(1.5rem,3.4vw,2.1rem);line-height:1.15;margin:0 0 8px;text-wrap:balance;}
-  .lede{color:var(--ink2);font-size:1.02rem;line-height:1.6;max-width:64ch;margin:0 0 8px;}
-  .lede.small{font-size:.9rem;color:var(--muted);max-width:70ch;margin:0 0 26px;}
-
-  .summary{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 26px;}
-  .chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--card);border-radius:999px;padding:4px 11px;font-size:.78rem;font-weight:500;color:var(--ink2);}
-  .chip .k{color:var(--faint);font-weight:600;font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;}
-  .chip .mono{font-family:var(--font-mono);font-size:.74rem;}
-  .chip b{color:var(--val);font-weight:700;}
-
-  /* one card per agreement group */
-  .grp{border:1px solid var(--line);border-radius:12px;background:var(--card);padding:20px 20px 8px;margin:0 0 18px;}
-  .grp-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px 14px;margin:0 0 4px;}
-  .grp-head .obs{font-family:var(--font-serif);font-weight:700;font-size:1.16rem;letter-spacing:-.01em;color:var(--ink);}
-  .grp-head .obs .sym{font-family:var(--font-mono);font-weight:600;font-size:.8em;color:var(--obs2);margin-left:6px;}
-  .grp-head .mat{font-weight:600;color:var(--ink2);font-size:.98rem;}
-  .grp-head .spread{margin-left:auto;font-family:var(--font-mono);font-variant-numeric:tabular-nums;font-size:.86rem;color:var(--ink2);white-space:nowrap;}
-  .grp-head .spread b{color:var(--val);font-weight:700;}
-  .grp-head .spread .lbl{color:var(--faint);font-family:var(--font-sans);font-weight:600;font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;margin-right:6px;}
-
-  .badges{display:flex;flex-wrap:wrap;gap:7px;margin:6px 0 12px;}
-  .badge{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:3px 10px;font-size:.74rem;font-weight:600;letter-spacing:.01em;}
-  .badge.cross{border:1px solid #c9d9f0;background:#eef4fd;color:#1d4e89;}
-  .badge.exp{border:1px solid #f3ddba;background:#fdf6ea;color:#8a5a0d;}
-
-  .cond{color:var(--ink2);font-size:.82rem;line-height:1.5;margin:0 0 14px;}
-  .cond .k{color:var(--faint);font-weight:600;font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;margin-right:6px;}
-  .cond .mono{font-family:var(--font-mono);font-size:.78rem;color:var(--ink2);}
-
-  /* values table */
-  .tbl-scroll{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--card);margin:0 0 14px;}
-  table{border-collapse:collapse;width:100%;font-size:.86rem;}
-  th{font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
-    text-align:left;padding:10px 14px;border-bottom:1px solid var(--line);background:var(--wash);white-space:nowrap;}
-  td{padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top;}
-  tr:last-child td{border-bottom:none;}
-  td.val{font-family:var(--font-mono);font-variant-numeric:tabular-nums;white-space:nowrap;}
-  td.val b{color:var(--val);font-weight:700;}
-  td.val .u{color:var(--muted);}
-  td.est{font-family:var(--font-mono);font-size:.8rem;color:var(--obs2);max-width:30ch;}
-  td.code .mono{font-family:var(--font-mono);font-size:.8rem;color:var(--ink2);word-break:break-all;}
-  td.kind{white-space:nowrap;}
-  .tag{display:inline-flex;align-items:center;border-radius:999px;padding:2px 9px;font-size:.72rem;font-weight:600;}
-  .tag.kind-simulation{border:1px solid #dcd6fb;background:#f5f3ff;color:var(--obs2);}
-  .tag.kind-measurement{border:1px solid #f3ddba;background:#fdf6ea;color:#8a5a0d;}
-
-  .pin{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:.8rem;line-height:1.6;}
-  .pin .mono{font-family:var(--font-mono);font-size:.74rem;color:var(--ink2);word-break:break-all;}
-  .pin a{color:var(--obs);text-decoration:none;}
-  .pin a:hover{text-decoration:underline;}
-  .empty{color:var(--muted);padding:26px 4px;}
-  @media (prefers-reduced-motion: reduce){ *{transition:none !important;} }
-  .om-beta{font-family:var(--font-mono);font-size:.58rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);border:1px solid currentColor;border-radius:999px;padding:1px 7px;flex:none;line-height:1.5;cursor:default;}
+  /* one block per agreement group (spec 4.2) */
+  .grp { margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--line); }
+  .grp-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 16px; }
+  .grp-head .obs { font: 500 16px/24px var(--font-sans); }
+  .grp-head .sym, .grp-head .spread { font: 400 16px/24px var(--font-mono); overflow-wrap: anywhere; }
+  .grp-head .sym { color: var(--ink-2); }
+  .grp-head .spread { margin-left: auto; white-space: nowrap; }
+  .badges { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  .cond { margin: 12px 0 16px; font-size: 14px; line-height: 20px; color: var(--ink-2); }
+  .cond .mono { color: var(--ink); overflow-wrap: anywhere; }
+  td.val { font-family: var(--font-mono); font-size: 13px; }
+  td.val { white-space: nowrap; }
+  td .u { color: var(--ink-2); }
+  .pin { margin-top: 48px; }
+  .pin .mono { font-size: 13px; overflow-wrap: anywhere; }
+  .empty { color: var(--ink-2); }
 </style>
 </head>
 <body>
-<div id="err"></div>
+<a class="skip-link" href="#main">Skip to content</a>
 <div data-site-header></div>
-<main class="wrap" id="main">
-  <noscript><p class="empty">This page renders the agreement layer client-side and needs JavaScript.
-    The raw groups are plain JSON in <a href="../data/agreement.json">../data/agreement.json</a>.</p></noscript>
+<main class="frame" id="main">
+  <header class="page-head">
+    <p class="eyebrow">Evidence</p>
+    <h1>Cross-code agreement</h1>
+    <p class="lede">Each group below holds values of one quantity for one material, recorded under matching conditions. They differ in the method or code that produced them, and possibly in settings the records do not state, so the spread of a group (the range of its values divided by their mean) measures how far its values disagree.</p>
+  </header>
+  <div class="page-body"><div class="prose" id="groups">
+    <noscript><p class="empty">This page renders the groups from the published data and needs JavaScript.
+      The raw groups are plain JSON in <a href="../data/agreement.json">../data/agreement.json</a>.</p></noscript>
+  </div></div>
 </main>
+<script src="../assets/vendor/katex/dist/katex.min.js"></script>
+<script src="../assets/map-words.js"></script>
+<script src="../assets/sources.js"></script>
 <script>
 'use strict';
-var ERR = document.getElementById('err');
-function fail(msg){ ERR.textContent = msg; ERR.style.display = 'block'; }
 function esc(s){
   return String(s == null ? '' : s)
     .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
     .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
-function condText(c){
-  if (!c || typeof c !== 'object') return '';
-  return Object.keys(c).map(function(k){ return k + ' = ' + c[k]; }).join('  ·  ');
+function fail(msg){
+  document.getElementById('groups').innerHTML =
+    '<p id="err" class="notice notice--error">' + esc(msg) + '</p>';
 }
 function pct(x){ return (Number(x) * 100).toFixed(1) + '%'; }
+function tex(s){
+  if (!s) return '';
+  try { return katex.renderToString(String(s), { throwOnError: false }); } catch (e) { return esc(s); }
+}
+// A plain method label from the node the value sits on: the estimator's leading [label]. A value
+// on the method-neutral node has none. The free-text method string never prints.
+var METHOD = { 'bte_solver=direct_inverse': 'Direct inversion', 'bte_solver=rta': 'RTA' };
+function methodLabel(m){
+  var lab = String(m.estimator || '').split(' | ')[0];
+  if (/^(method|scattering)=|^\(/.test(lab)) lab = '';
+  if (lab) return METHOD[lab] || lab.replace(/^[^=]*=/, '').replace(/_/g, ' ');
+  return m.kind === 'measurement' ? 'Measured' : 'Solver not stated';
+}
 
-var DATA = null;   // { summary, groups, catalog }
+var DATA = null;   // { summary, groups, catalog, titles }
 function load(){
   return Promise.all([
     fetch('../data/agreement.json').then(function(r){ return r.json(); }),
-    fetch('../data/catalog.json').then(function(r){ return r.json(); })
-  ]).then(function(parts){
-    var agreement = parts[0], catalog = {};
-    parts[1].forEach(function(n){ catalog[n.id] = n; });
+    fetch('../data/catalog.json').then(function(r){ return r.json(); }),
+    fetch('../data/instances.json').then(function(r){ return r.json(); }),
+    fetch('../data/codes.json').then(function(r){ return r.json(); })
+  ]).then(function(res){
+    var agreement = res[0], catalog = {}, byRef = {}, titles = {};
+    res[1].forEach(function(n){ catalog[n.id] = n; });
+    // each source is titled as the sources page titles it
+    res[2].forEach(function(r){ var ref = r.source && r.source.ref; if (ref) (byRef[ref] = byRef[ref] || []).push(r); });
+    Object.keys(byRef).forEach(function(ref){ titles[ref] = Sources.titleOf(byRef[ref], res[3]); });
     DATA = {
       summary: agreement.summary || {},
       groups: agreement.groups || [],
-      catalog: catalog
+      catalog: catalog,
+      titles: titles
     };
   });
 }
 
 function pinHtml(){
-  var v = (DATA.summary && DATA.summary.version) || '';
-  return '<div class="pin">Map version <span class="mono">' + esc(v.slice(0, 12)) + '</span>' +
-    (v ? ' (<span class="mono">' + esc(v) + '</span>)' : '') +
-    '. Agreement is derived from the committed instances at the current site build; cite the map version with any spread you share.' +
-    '<br>Each value stays its owner’s: the instances behind these comparisons are non-exclusive CC BY 4.0 grants, raw artifacts are never ingested, and reuse must credit the source recorded in each value’s provenance ' +
-    '(<a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/main/GOVERNANCE.md">GOVERNANCE.md, “Data ownership and fairness”</a>).</div>';
+  var v = ((DATA.summary && DATA.summary.version) || '').slice(0, 12);
+  return v ? '<p class="notice pin"><a href="../#cite">Cite the map version</a>, <span class="mono">' + esc(v) +
+    '</span>, with any spread you share.</p>' : '';
 }
 
 function badgesHtml(g){
   var out = '';
   if (g.has_cross_code)
-    out += '<span class="badge cross" title="The same method computed by two different codes, on the same inputs">cross-code</span>';
+    out += '<span class="pill cross">cross-code</span>';
   if (g.has_measurement)
-    out += '<span class="badge exp" title="A measurement and a simulation of the same quantity under the same conditions">theory vs experiment</span>';
+    out += '<span class="pill exp">theory vs. experiment</span>';
   return out ? '<div class="badges">' + out + '</div>' : '';
 }
 
 function groupHtml(g){
   var node = (DATA.catalog[g.observable]) || {};
-  var sym = node.symbol ? '<span class="sym">' + esc(node.symbol) + '</span>' : '';
+  var sym = node.symbol ? '<span class="sym">' + tex(node.symbol) + '</span>' : '';
   var rows = (g.members || []).map(function(m){
     return '<tr>' +
-      '<td class="val"><b>' + esc(m.value) + '</b>' +
-        (m.units ? ' <span class="u">' + esc(m.units) + '</span>' : '') + '</td>' +
-      '<td class="est">' + esc(m.estimator) + '</td>' +
-      '<td class="code"><span class="mono">' + esc(m.ref) + '</span></td>' +
-      '<td class="kind"><span class="tag kind-' + esc(m.kind) + '">' + esc(m.kind) + '</span></td>' +
+      '<td class="val" data-label="Value">' + esc(m.value) +
+        (m.units ? ' <span class="u">' + esc(Sources.unit(m.units)) + '</span>' : '') + '</td>' +
+      '<td class="est" data-label="Method">' + esc(methodLabel(m)) + '</td>' +
+      '<td data-label="Source"><a href="../experiment/#ref=' + encodeURIComponent(m.ref) + '">' +
+        esc(DATA.titles[m.ref] || m.ref) + '</a></td>' +
+      '<td class="kind" data-label="Kind"><span class="pill kind-' + esc(m.kind) + '">' + esc(m.kind) + '</span></td>' +
       '</tr>';
   }).join('');
   return '<section class="grp">' +
     '<div class="grp-head">' +
-      '<span class="obs">' + esc(g.observable) + sym + '</span>' +
+      '<span class="obs">' + esc(nodeName(g.observable)) + '</span>' + sym +
       '<span class="mat">' + esc(g.material) + '</span>' +
-      '<span class="spread"><span class="lbl">spread</span><b>' + esc(pct(g.spread)) + '</b></span>' +
+      '<span class="spread">spread ' + esc(pct(g.spread)) + '</span>' +
     '</div>' +
     badgesHtml(g) +
-    '<p class="cond"><span class="k">conditions</span><span class="mono">' +
-      esc(condText(g.conditions)) + '</span></p>' +
-    '<div class="tbl-scroll"><table><thead><tr>' +
-      '<th>Value</th><th>Estimator</th><th>Code</th><th>Kind</th>' +
+    '<p class="cond">Conditions <span class="mono">' + esc(Sources.condText(g.conditions, '  ·  ')) + '</span></p>' +
+    '<div class="table-wrap"><table class="table stack"><thead><tr>' +
+      '<th>Value</th><th>Method</th><th>Source</th><th>Kind</th>' +
     '</tr></thead><tbody>' + rows + '</tbody></table></div>' +
     '</section>';
 }
 
 function render(){
-  document.title = 'openmaterials.ai: cross-code agreement';
+  document.title = 'Cross-code agreement | OpenMaterials';
   var s = DATA.summary || {};
   var groups = DATA.groups || [];
-  var summaryChips =
-    '<span class="chip"><span class="k">groups</span> <b>' + esc(s.groups || 0) + '</b></span>' +
-    '<span class="chip"><span class="k">cross-code</span> <b>' + esc(s.cross_code || 0) + '</b></span>' +
-    '<span class="chip"><span class="k">theory vs experiment</span> <b>' + esc(s.theory_vs_experiment || 0) + '</b></span>';
+  var summary =
+    '<dl class="ledger">' +
+    '<div><dt>Groups</dt><dd class="mono">' + esc(s.groups || 0) + '</dd></div>' +
+    '<div><dt>Cross-code</dt><dd><span class="mono">' + esc(s.cross_code || 0) + '</span> (the same method computed by different codes under the same recorded conditions)</dd></div>' +
+    '<div><dt>Theory vs. experiment</dt><dd><span class="mono">' + esc(s.theory_vs_experiment || 0) + '</span> (a measurement and a simulation of the same quantity under the same recorded conditions)</dd></div>' +
+    '</dl>';
   var body = groups.length
     ? groups.map(groupHtml).join('')
-    : '<p class="empty">No same-conditions comparison groups in this build of the store yet. ' +
-      'A group needs two values on the same observable and material, under identical physical conditions, ' +
-      'produced by different methods or codes.</p>';
-  document.getElementById('main').innerHTML =
-    '<p class="crumb"><a href="../experiment/">&larr; Experiments</a></p>' +
-    '<p class="eyebrow">Where the values agree</p>' +
-    '<h1>Cross-code agreement</h1>' +
-    '<p class="lede">One observable is produced by many estimators and codes that must agree. ' +
-    'Each group below is the same observable, the same material, and the same physical conditions, ' +
-    'differing only in the method or the code that produced the value. The spread is therefore a ' +
-    'real method or code disagreement.</p>' +
-    '<p class="lede small">Only values that answer the identical physical question are ever placed side by side: ' +
-    'two instances compare only when their base quantity, material, and every physical condition match, and ' +
-    'they differ solely in estimator (the solver label, the method, or the code). The source paper is not a ' +
-    'physical condition, so a spread is never an apples-to-oranges artifact.</p>' +
-    '<div class="summary">' + summaryChips + '</div>' +
-    body +
-    pinHtml();
-  window.scrollTo(0, 0);
+    : '<p class="empty">No comparison groups yet. A group needs values from different methods or codes ' +
+      'for the same observable and material under the same recorded conditions.</p>';
+  document.getElementById('groups').innerHTML = summary + body + pinHtml();
 }
 
-load().then(render, function(e){ fail('Failed to load the agreement layer: ' + e); });
+load().then(render, function(e){ fail('Could not load the agreement data: ' + e); });
 </script>
 <div data-site-footer></div>
 <script src="../assets/site.js"></script>

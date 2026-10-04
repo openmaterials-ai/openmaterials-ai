@@ -293,7 +293,9 @@ def test_mechanics_representation_package_discovery_finds_the_specs():
     (BulkModulus, the EOS Birch-Murnaghan route) and one operator spec
     (compute_bulk_modulus_eos, the Pattern C alternative producer); the lammps
     module gains a MassDensity space spec and a contract_density operator spec
-    (2026-07-10, phonopy/LAMMPS delta scan)."""
+    (2026-07-10, phonopy/LAMMPS delta scan); qe (2026-10-01) one space spec
+    (BulkModulus, the ev.x equation-of-state fit) and one operator spec
+    (compute_bulk_modulus_eos)."""
     import importlib
     import pkgutil
 
@@ -316,11 +318,12 @@ def test_mechanics_representation_package_discovery_finds_the_specs():
             elif isinstance(obj, OperatorRepresentationSpec):
                 op_specs.append((attr, obj))
     # 3 lammps (ElasticConstants, Pressure, MassDensity) + 5 mat-elasticity
-    # + 5 pymatgen + 1 vasp + 5 mp-api + 1 mat_equation_of_state = 20 space
-    # specs; the operator specs gain the EOS Pattern C producer
-    # (compute_bulk_modulus_eos) and the density contraction (contract_density).
-    assert len(space_specs) == 20, [a for a, _ in space_specs]
-    assert len(op_specs) == 7, [a for a, _ in op_specs]
+    # + 5 pymatgen + 1 vasp + 5 mp-api + 1 mat_equation_of_state + 1 qe = 21
+    # space specs; the operator specs gain the EOS Pattern C producer
+    # (compute_bulk_modulus_eos, twice: matcalc and ev.x) and the density
+    # contraction (contract_density).
+    assert len(space_specs) == 21, [a for a, _ in space_specs]
+    assert len(op_specs) == 8, [a for a, _ in op_specs]
     assert sorted({s.operator.name for _, s in op_specs}) == [
         "compute_bulk_modulus_eos", "compute_elastic_constants",
         "contract_density", "contract_poisson_ratio", "contract_youngs_modulus"]

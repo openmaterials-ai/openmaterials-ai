@@ -145,6 +145,8 @@ EV_PER_A3 = Unit("eV_per_A3", ENERGY_PER_LENGTH_CUBED, 1.0)
 # unit string printed in the file; the factor is Ry[eV] / bohr[Å]² (CODATA).
 EV_PER_A2 = Unit("eV_per_A2", ENERGY_PER_LENGTH_SQUARED, 1.0)
 RY_PER_BOHR2 = Unit("Ry_per_bohr2", ENERGY_PER_LENGTH_SQUARED, 13.605693122994 / 0.529177210903**2)
+# D3Q/thermal2 mat3R third-order force constants: Ry/bohr^3; the factor is Ry[eV] / bohr[Å]³ (CODATA).
+RY_PER_BOHR3 = Unit("Ry_per_bohr3", ENERGY_PER_LENGTH_CUBED, 13.605693122994 / 0.529177210903**3)
 # Surface energy shares the M T^-2 exponents with the force constants (energy
 # per area vs force per length: same dimension, different quantities, kept
 # apart by the surface_energy quantity tag). Canonical stays eV/Å² (the map's
@@ -324,6 +326,7 @@ UNITS: dict[str, Unit] = {
         EV_PER_A3,
         EV_PER_A2,
         RY_PER_BOHR2,
+        RY_PER_BOHR3,
         J_PER_M2,
         EV,
         RY,

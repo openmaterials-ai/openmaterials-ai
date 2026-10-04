@@ -1,8 +1,8 @@
 """The codes bibliography page.
 
 One entry per cited code, rendered client-side from the same codes.json
-the map reads; Lean opens the page because it checks reasoning where the
-other codes compute numbers; the license posture is stated plainly. The
+the map reads; Lean follows the bibliography because it checks reasoning
+where the other codes compute numbers; the license posture is stated plainly. The
 page must never hardcode the roster (the data file is the single source)
 and never invent references (the physlib citation carries no DOI because
 none exists).
@@ -21,11 +21,11 @@ FLAT = re.sub(r"\s+", " ", PAGE)
 def test_page_renders_from_the_published_data():
     assert "fetch('../data/codes.json')" in PAGE
     assert "esc(" in PAGE, "JSON strings must be escaped into HTML"
-    assert "could not be loaded" in PAGE, "fetch failure must render honestly"
+    assert "could not be loaded" in PAGE, "a fetch failure must say so on the page"
     assert "<noscript>" in PAGE
 
 
-def test_lean_opens_the_bibliography():
+def test_lean_is_cited():
     assert '<section class="gsec" id="lean">' in PAGE
     assert "10.1007/978-3-030-79876-5_37" in PAGE, "Lean 4 CADE-28 DOI"
     assert "10.1145/3372885.3373824" in PAGE, "mathlib CPP 2020 DOI"
@@ -38,8 +38,7 @@ def test_lean_opens_the_bibliography():
 def test_license_posture_is_stated():
     assert "GPL-3.0" in PAGE and "GPUMD" in PAGE
     assert "Apache 2.0" in PAGE and "CC BY 4.0" in PAGE
-    assert "never vendors or copies" in FLAT
-    assert "test_code_credits.py" in PAGE
+    assert "does not vendor or copy" in FLAT
 
 
 def test_entries_link_the_map_code_filter():
@@ -72,18 +71,20 @@ def test_per_node_citations_are_never_hidden():
 
 NODE_HARNESS = r"""
 const fs = require('fs');
+eval(fs.readFileSync(process.argv[3],'utf8'));   // assets/sources.js: the shared code-name reader
 const page = fs.readFileSync(process.argv[1],'utf8');
-const script = page.match(/<script>([\s\S]*?)<\/script>/)[1];
+const script = [...page.matchAll(/<script>([\s\S]*?)<\/script>/g)]
+  .map(m => m[1]).find(s => s.includes('function card'));
 const body = script.slice(script.indexOf('function esc'), script.indexOf('fetch('));
 const {card} = new Function(body + '; return {esc: esc, card: card};')();
 const codes = JSON.parse(fs.readFileSync(process.argv[2],'utf8'));
 const assert = require('assert');
-assert(!('materialscodegraph' in codes), 'the platform must not be a code rail');
+assert(!('materialscodegraph' in codes), 'the platform must not be a code entry');
 const k = card('kaldo', codes['kaldo']);
 assert(!k.includes('bib-cite-for'));
 assert(k.includes('doi.org/10.1063/5.0020443'));
 // per-node method split: synthetic, since no live code carries one today;
-// the mechanism stays (PER_NODE_CREDITS) and the renderer must keep it honest
+// the mechanism stays (PER_NODE_CREDITS) and the renderer must keep it accurate
 const split = {A:{citation:'Method One 2019',doi:'10.1/a',license:'MIT'},
                B:{citation:'Method One 2019',doi:'10.1/a',license:'MIT'},
                C:{citation:'Method Two 2021',doi:'10.1/b',license:'MIT'}};
@@ -110,7 +111,7 @@ def test_card_renderer_behaves_on_real_data():
         pytest.skip("node not available")
     out = subprocess.run(
         [node, "-e", NODE_HARNESS, str(DOCS / "codes/index.html"),
-         str(DOCS / "data/codes.json")],
+         str(DOCS / "data/codes.json"), str(DOCS / "assets/sources.js")],
         capture_output=True, text=True, timeout=60)
     assert out.returncode == 0, out.stderr
     assert out.stdout.strip() == "ok"

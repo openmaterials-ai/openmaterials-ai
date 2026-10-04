@@ -42,4 +42,6 @@ test("parseRoadmap rejects a corrupted document", () => {
 test("domainLabel prettifies", () => {
   assert.strictEqual(domainLabel("thermal_transport"), "Thermal transport");
   assert.strictEqual(domainLabel("mechanics"), "Mechanics");
+  assert.strictEqual(domainLabel("dft_ground_state"), "DFT ground state");
+  assert.strictEqual(domainLabel("quasiharmonic"), "Quasi-harmonic");
 });
