@@ -67,8 +67,8 @@ function esc(s){
 }
 
 // MaterialsCodeGraph runs thermal conductivity today, so a source with a simulated value of it
-// gets the link. It opens the connect page: the app itself ends on a sign-in.
-var MCG_CONNECT = 'https://materialscodegraph.com/?ref=omai-experiment#connect';
+// gets the link. It opens the sign-up panel: the app itself ends on a sign-in.
+var MCG_CONNECT = 'https://materialscodegraph.com/?ref=omai-experiment#hero-connect';
 function runnable(recs){
   return recs.some(function(r){
     return r.source && r.source.kind === 'simulation' && /^ThermalConductivity(\[|$)/.test(r.variable);

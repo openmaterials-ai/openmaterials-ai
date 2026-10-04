@@ -1,16 +1,18 @@
-"""Run links open the MaterialsCodeGraph connect page.
+"""Run links open the MaterialsCodeGraph sign-up panel.
 
-The app host ends on a sign-in for a first-time visitor, so no page under docs/ links it.
+Each link names its place in ref and lands on #hero-connect, the panel with the add command and the
+sign-up link. The app host ends on a sign-in for a first-time visitor, so no page under docs/ links it.
 """
 from pathlib import Path
 
 _DOCS = Path(__file__).resolve().parents[1] / "docs"
 
 
-def test_run_links_open_the_connect_page():
-    for page, ref in (("play", "omai-datasheet"), ("experiment", "omai-experiment")):
-        html = (_DOCS / page / "index.html").read_text()
-        assert f"https://materialscodegraph.com/?ref={ref}#connect" in html, page
+def test_run_links_open_the_sign_up_panel():
+    for page, ref in (("index.html", "omai-home"), ("index.html", "omai-governance"),
+                      ("experiment/index.html", "omai-experiment"), ("llms.txt", "omai-llms")):
+        assert f"https://materialscodegraph.com/?ref={ref}#hero-connect" in (_DOCS / page).read_text(), ref
+    assert "https://materialscodegraph.com/?ref=omai-datasheet#" in (_DOCS / "play" / "index.html").read_text()
 
 
 def test_no_page_links_the_app_host():

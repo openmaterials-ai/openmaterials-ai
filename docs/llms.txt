@@ -35,3 +35,4 @@ Cite the map version in https://openmaterials.ai/data/version.json with any valu
 - [Map](https://openmaterials.ai/map/) and [Map in 3D](https://openmaterials.ai/map-3d/)
 - [lean_roadmap.json](https://openmaterials.ai/data/lean_roadmap.json): one row per operator, rated by what a Lean proof of its formula would take
 - [agreement.json](https://openmaterials.ai/data/agreement.json): the comparison groups and their spread
+- [Run a calculation](https://materialscodegraph.com/?ref=omai-llms#hero-connect): MaterialsCodeGraph, from Da Vinci Labs, runs these calculations for AI agents over MCP, with a binding token quote before every run and a permanent record after it.
