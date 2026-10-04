@@ -58,7 +58,7 @@ def test_the_datum_card_equals_its_instance():
     who, year = rows["Measured"].split(", ", 1)[1].rsplit(" ", 1)
     assert meas["source"]["detail"].startswith(who) and f"({year})" in meas["source"]["detail"]
     assert f'play/#id={inst["id"]}' in card.group(2) and f'play/#id={mid}' in card.group(2)
-    assert 'href="https://materialscodegraph.com/?ref=omai-home#connect"' in card.group(2)
+    assert 'href="https://materialscodegraph.com/?ref=omai-home#hero-connect"' in card.group(2)
 
 
 def test_the_contribute_block_is_the_committed_file():
