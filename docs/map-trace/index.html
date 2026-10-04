@@ -271,7 +271,8 @@ function trace(id){
 }
 
 function stepHtml(s,t,i,kind){
-  const op=opByEdge[s+'>>'+t]||''; const f=nodeById[t]&&nodeById[t].formula;
+  // the formula of the operator on this edge, not the node's first route
+  const op=opByEdge[s+'>>'+t]||''; const n=nodeById[t]; const fe=n&&(n.formulas||[]).find(x=>x.op===op); const f=fe?fe.latex:(n&&n.formula);
   return '<div class="step"><div class="n">'+i+'</div><div class="body"><div class="rel">'+symHtml[s]+' <span class="arrow">&rarr;</span> '+symHtml[t]+(op?' <span class="op">'+esc(op)+'</span>':'')+'</div>'+(f?'<div class="fx">'+tex(f,false)+'</div>':'')+'</div></div>';
 }
 function orderedEdges(nodeSet){ // edges fully inside nodeSet, ordered by target layer

@@ -553,10 +553,9 @@ function selectNode(node){
   h+='<div class="name">'+esc(node.id)+'<span class="tiertag">'+esc(node.tier||'Other')+'</span>'+(node.uid?('<span class="uid" title="'+attr(node.uid)+'">'+esc((''+node.uid).slice(0,12))+'</span>'):'')+'</div>';
   const fl=(node.formulas&&node.formulas.length)?node.formulas:(node.formula?[{op:'',latex:node.formula}]:[]);
   if(!fl.length){ h+='<div class="om-panel-label">Formula on the producing edge</div><div class="formula"><span class="muted">Input quantity: no edge produces it.</span></div>'; }
-  else if(fl.length===1){ h+='<div class="om-panel-label">Formula on the producing edge</div><div class="formula">'+tex(fl[0].latex,true)+'</div>'; }
-  else{
-    h+='<div class="om-panel-label">'+fl.length+' producing edges (alternative routes)</div>';
-    fl.forEach(f=>{ h+='<div class="fop">'+esc(f.op)+'</div><div class="formula">'+tex(f.latex,true)+'</div>'; });
+  else{   // every formula with the operator that carries it
+    h+='<div class="om-panel-label">'+(fl.length===1?'Formula on the producing edge':fl.length+' producing edges (alternative routes)')+'</div>';
+    fl.forEach(f=>{ h+=(f.op?'<div class="fop">'+esc(f.op)+'</div>':'')+'<div class="formula">'+tex(f.latex,true)+'</div>'; });
   }
   const lv=leanData.nodes&&leanData.nodes[node.id];
   if(lv){ h+='<div class="om-panel-label"><span class="lean-badge">Proven in Lean</span></div><pre class="lean-line">'+esc(lv.lean)+'</pre>'; }
@@ -567,6 +566,8 @@ function selectNode(node){
   syncHash(id);
 }
 function opName(op){ return (op||'').replace(/\[.*?\]/g,'').replace(/_/g,' ').trim() || 'operation'; }
+// The formula of the operator on one edge: a node with several producing routes carries one per operator.
+function edgeFormula(n, op){ const f=(n.formulas||[]).find(x=>x.op===op); return f?f.latex:n.formula; }
 function selectEdge(key, op){
   const [s,t]=key.split('>>'); const tn=nodeById[t], sn=nodeById[s]; if(!tn||!sn) return;
   depth='focused';
@@ -575,7 +576,8 @@ function selectEdge(key, op){
   vp.querySelectorAll('.edge').forEach(el=>{ const on=el.dataset.edge===key; el.classList.toggle('dim', !on); el.classList.toggle('hot', on); });
   let h=closeBtn()+'<div class="om-panel-label">Operator</div><div class="name" style="font-family:inherit;font-weight:500;color:var(--ink,#171717);font-size:16px">'+esc(opName(op))+'</div>';
   h+='<div class="sym" style="margin-top:8px">'+tex(sn.symbol)+' <span class="muted">&rarr;</span> '+tex(tn.symbol)+'</div>';
-  h+='<div class="om-panel-label">Computes</div><div class="formula">'+(tn.formula?tex(tn.formula,true):'<span class="muted">Input quantity: no edge produces it.</span>')+'</div>';
+  const f=edgeFormula(tn, op);
+  h+='<div class="om-panel-label">Computes</div><div class="formula">'+(f?tex(f,true):'<span class="muted">Input quantity: no edge produces it.</span>')+'</div>';
   panelEl.innerHTML=h; panelEl.style.display='block';
 }
 
@@ -654,7 +656,8 @@ svg.addEventListener('keydown', e=>{
 // ---- interaction: edge formula hover ---------------------------------------
 svg.addEventListener('mousemove', e=>{ const ed=e.target.closest('.edge'); if(!ed){ tip.style.display='none'; return; }
   const [s,t]=ed.dataset.edge.split('>>'); const tn=nodeById[t]; if(!tn) return;
-  const body = tn.formula ? tex(tn.formula) : '<span>Input quantity: no edge produces it.</span>';
+  const f=edgeFormula(tn, ed.dataset.op);
+  const body = f ? tex(f) : '<span>Input quantity: no edge produces it.</span>';
   tip.innerHTML='<div class="op">'+esc(opName(ed.dataset.op))+'</div><div class="fx">'+body+'</div>';
   tip.style.display='block';
   let tx=e.clientX+16, ty=e.clientY+16;

@@ -435,10 +435,9 @@ function openPanel(node){
   h+='<div class="traceline">'+(nAnc?('Built from <b class="u">'+nAnc+'</b> upstream quantit'+(nAnc>1?'ies':'y')+'.'):'An input quantity.')+' '+(nDesc?('Feeds <b class="d">'+nDesc+'</b> downstream quantit'+(nDesc>1?'ies':'y')+'.'):'Nothing on the map uses it.')+'</div>';
   const fl=(node.formulas&&node.formulas.length)?node.formulas:(node.formula?[{op:'',latex:node.formula}]:[]);
   if(!fl.length){ h+='<div class="om-panel-label">Formula on the producing edge</div><div class="formula"><span class="muted">Input quantity: no edge produces it.</span></div>'; }
-  else if(fl.length===1){ h+='<div class="om-panel-label">Formula on the producing edge</div><div class="formula">'+tex(fl[0].latex,true)+'</div>'; }
-  else{
-    h+='<div class="om-panel-label">'+fl.length+' producing edges (alternative routes)</div>';
-    fl.forEach(f=>{ h+='<div class="fop">'+esc(f.op)+'</div><div class="formula">'+tex(f.latex,true)+'</div>'; });
+  else{   // every formula with the operator that carries it
+    h+='<div class="om-panel-label">'+(fl.length===1?'Formula on the producing edge':fl.length+' producing edges (alternative routes)')+'</div>';
+    fl.forEach(f=>{ h+=(f.op?'<div class="fop">'+esc(f.op)+'</div>':'')+'<div class="formula">'+tex(f.latex,true)+'</div>'; });
   }
   if(outs.length){ h+='<div class="om-panel-label">Feeds into</div><div class="chips">'+outs.map(id=>chip(id,'down')).join('')+'</div>'; }
   if(ins.length){ h+='<div class="om-panel-label">Computed from</div><div class="chips">'+ins.map(id=>chip(id,'up')).join('')+'</div>'; }
