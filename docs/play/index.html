@@ -32,13 +32,12 @@
   html,body{height:100%;}
   body.app{height:100vh;height:100dvh;margin:0;display:flex;flex-direction:column;overflow:hidden;max-width:100vw;background:var(--page,#FFFFFF);color:var(--ink,#171717);font:400 14px/20px var(--font-sans,"Geist","Geist Fallback",ui-sans-serif,system-ui,sans-serif);-webkit-font-smoothing:antialiased;}
   :focus-visible{outline:2px solid var(--ink,#171717);outline-offset:2px;}
-  /* the tab strip: six tabs and Share; a 3 x 2 grid with Share beside it below 601 px */
+  /* the tab strip: five tabs and Share; a 3 x 2 grid with Share beside it below 601 px */
   .pg-main{flex:1 1 auto;display:flex;flex-direction:column;min-height:0;min-width:0;max-width:100vw;overflow:hidden;}
   .pg-tabs{flex:0 0 auto;display:flex;flex-wrap:wrap;align-items:center;gap:0;padding:0 var(--inset,16px);border-bottom:1px solid var(--line,#EBEBEB);background:var(--page,#FFFFFF);}
   .pg-tab{flex:0 0 auto;padding:12px 16px;border:0;background:none;font:inherit;font-weight:500;font-size:14px;line-height:20px;color:var(--ink-2,#4D4D4D);cursor:pointer;transition:color var(--dur,150ms) var(--ease,ease);}
   .pg-tab:hover{color:var(--ink,#171717);}
   .pg-tab.on{color:var(--ink,#171717);box-shadow:inset 0 -2px 0 var(--ink,#171717);}
-  a.pg-tab{text-decoration:none;}   /* the Trace link opens the tracer */
   .pg-tabsep{width:1px;height:20px;flex:0 0 auto;margin:0 8px;background:var(--line,#EBEBEB);}
   #shareBtn{margin-left:auto;}
   @media (max-width:960px){.pg-tab{padding:12px 10px;}}
@@ -80,9 +79,8 @@
   .pg-results{margin-top:16px;}
   .pg-hit{width:100%;display:flex;align-items:center;gap:8px;margin-bottom:6px;padding:8px 10px;border:1px solid var(--line,#EBEBEB);border-radius:var(--radius,6px);background:var(--page,#FFFFFF);font:inherit;text-align:left;cursor:pointer;}
   .pg-hit:hover{background:var(--surface-2,#F2F2F2);}
-  .pg-hit .k{flex:0 0 auto;font-size:12px;color:var(--ink-2,#4D4D4D);}
-  .pg-hit .id{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);font-size:13px;color:var(--ink,#171717);}
-  .pg-hit .sc{flex:0 0 auto;font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);font-size:12px;color:var(--data-sim,#0C7C55);}
+  .pg-hit .s{flex:0 0 auto;font-size:15px;color:var(--ink,#171717);}
+  .pg-hit .n{flex:1;min-width:0;font-size:14px;line-height:20px;color:var(--ink,#171717);overflow-wrap:anywhere;}
   .pg-empty{padding:12px 16px;border:1px solid var(--line,#EBEBEB);border-radius:var(--radius,6px);background:var(--surface,#FAFAFA);color:var(--ink,#171717);font-size:14px;line-height:20px;overflow-wrap:anywhere;}
   .pg-path{font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);font-size:12px;line-height:18px;color:var(--ink,#171717);overflow-wrap:anywhere;}
   .pg-paper{margin-bottom:10px;font-weight:500;color:var(--ink,#171717);}
@@ -128,7 +126,6 @@
   .pg-node-panel .aka{font-size:13px;color:var(--ink,#171717);}
   .lean-line{margin:4px 0 2px;padding:8px 10px;border:1px solid var(--line,#EBEBEB);border-radius:var(--radius,6px);background:var(--page,#FFFFFF);color:var(--ink,#171717);font:400 12px/16px var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);white-space:pre-wrap;overflow-wrap:anywhere;}
   .lean-badge{color:var(--data-sim,#0C7C55);}
-  .pg-node-panel .uid{font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);font-size:12px;color:var(--ink-2,#4D4D4D);overflow-wrap:anywhere;}
 
   /* ---- the lineage DATA VIEW: a full-width, plain scientific datasheet -------
      A successful light record leaves the tool shell for a full-width typeset
@@ -303,7 +300,6 @@
     <button class="pg-tab" data-tab="distance" type="button">Distance</button>
     <span class="pg-tabsep" aria-hidden="true"></span>
     <button class="pg-tab" data-tab="query" type="button">Resolve</button>
-    <a class="pg-tab" href="../map-trace/">Trace</a>
     <button class="pg-tab" data-tab="map" type="button">Sub-map</button>
     <button class="btn btn--secondary btn--sm" id="shareBtn" type="button">Share</button>
   </div>
@@ -312,12 +308,17 @@
 
     <div class="pg-panel on" data-panel="learn">
       <h3>Learn a paper</h3>
-      <p>Drop a PDF. Your browser extracts the text, and a language model
-        proposes each reported value as a map entry with a verbatim quote and its
-        page number; you accept or reject each one. The text goes to the model
-        through our relay, so you need no account or API key. The relay has a
-        daily budget shared by all visitors and a daily limit per address. The
-        model reads the first 120,000 characters of each paper.</p>
+      <p>Drop a PDF. A language model proposes each value the paper reports as a
+        map entry, with a verbatim quote and its page; you accept or reject each
+        one. No account, no API key.</p>
+      <p class="pg-note">Your paper: the browser extracts its text and sends the
+        first 120,000 characters to a relay the OpenMaterials maintainers run on
+        Cloudflare. The relay passes the text to Anthropic's API (Claude Opus 4.8)
+        and returns the reply. It saves no paper text. It keeps a request count per
+        IP address and the day's total spend, each for two days, and Cloudflare logs
+        each request. Limits: five papers per address a day, and a daily budget
+        shared by all visitors.
+        <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/main/infra/learn-proxy/src/index.js">Relay source</a>.</p>
       <div class="dropzone" id="dropzone">
         <div class="head">Drop one or more PDFs here</div>
         <div class="sub2">Or choose files from your computer.</div>
@@ -334,23 +335,23 @@
       </div>
       <div class="learn-proposal">
         <h4>Already have a proposal?</h4>
-        <p>A proposal lists the map nodes a paper reports. Load the example or
-          paste a proposal, and the page draws the map edges that produce those
-          quantities, here and on the canvas.</p>
+        <p>A proposal lists the map nodes a paper reports. The page draws the map
+          edges that produce them, here and on the canvas.</p>
         <button class="om-btn" id="loadExample" type="button">Load an example</button>
-        <label class="pg-field" for="proposalInput">Or paste a proposal JSON:</label>
-        <textarea class="pg-input" id="proposalInput" rows="4" placeholder='{"claims": [{"node_id": "...", ...}]}'></textarea>
-        <div class="pg-actions"><button class="om-btn om-btn-sm" id="renderProposal" type="button">Draw the dataflow</button></div>
         <div id="parseResult" style="margin-top:14px"></div>
+        <details style="margin-top:14px"><summary>For developers</summary>
+          <label class="pg-field" for="proposalInput">Proposal JSON:</label>
+          <textarea class="pg-input" id="proposalInput" rows="4" placeholder='{"claims": [{"node_id": "...", ...}]}'></textarea>
+          <div class="pg-actions"><button class="om-btn om-btn-sm" id="renderProposal" type="button">Draw the dataflow</button></div>
+          <div class="lin-lab">The mapping, in code</div><pre class="lin-code" id="parseCode"></pre>
+        </details>
       </div>
     </div>
 
     <div class="pg-panel" data-panel="query">
       <h3>Resolve a method</h3>
-      <p>Type a method or quantity as a paper would name it. The resolver matches
-        it against the labels of each node and operator and returns ranked node
-        and operator ids: curated aliases first, then exact labels, then token
-        matches. It runs in your browser
+      <p>Type a method or quantity as a paper names it. The matching quantities and
+        operators on the map appear, best match first. It runs in your browser,
         with no model call.</p>
       <input class="pg-input" id="qInput" placeholder="quasi-harmonic approximation" autocomplete="off" spellcheck="false" aria-label="A method or quantity">
       <div class="pg-examples" id="qExamples"></div>
@@ -378,33 +379,26 @@
       <h3>How far apart are two structures?</h3>
       <p>A content hash tells you whether two configurations are identical. The
         distance layer measures how far apart they are, with named, versioned
-        metrics and one default. The table below is read from the published
-        registry, <a href="../data/distances.json">data/distances.json</a>, which
-        the build writes with the map data.</p>
+        metrics and one default.</p>
       <div id="distRegistry"></div>
       <h3 style="margin-top:18px">Each metric on a set of silicon structures</h3>
       <p id="distZooNote"></p>
       <div id="distZoo"></div>
       <p id="distCommitted" class="pg-note"></p>
       <h3 style="margin-top:18px">Distance between two sources</h3>
-      <p class="pg-note">Pick two committed sources. Each quantity, material, and
-        units key they share is compared with <code>curve@1</code>, the symmetric
-        relative L2 distance over the shared temperature range, computed in this
-        page by the same rule as omdc. Their materials are compared with
-        <code>comp@1</code>, the Element Mover's Distance on the Pettifor scale,
-        when the name parses as a formula (a-Si parses as Si; SWCNT does not
-        parse). Where a source has single points, the page lists them side by
-        side and gives the relative difference at any matching temperature.</p>
+      <p class="pg-note">Pick two sources. Values they share (same quantity, material,
+        and units) are compared with <code>curve@1</code>, the symmetric relative L2
+        distance over the shared temperature range; their materials with
+        <code>comp@1</code>, the Element Mover's Distance on the Pettifor scale.</p>
       <p class="pg-pair">
         <label>Source A <select class="select" id="distPaperA"></select></label>
         <label>Source B <select class="select" id="distPaperB"></select></label>
       </p>
       <div id="distPapers"></div>
       <h3 style="margin-top:18px">How far apart are two materials?</h3>
-      <p class="pg-note">Type two formulas. The page computes <code>comp@1</code>,
-        the Element Mover&#39;s Distance on the Pettifor scale, as you type. A
-        distance of zero means the same composition in any structure: diamond and
-        graphite are both C.</p>
+      <p class="pg-note">Type two formulas for their <code>comp@1</code>, the Element
+        Mover&#39;s Distance on the Pettifor scale. Zero means the same composition
+        in any structure: diamond and graphite are both C.</p>
       <p class="pg-pair">
         <input class="pg-input" id="distTryFa" size="10" value="NaCl" aria-label="Formula A">
         <span>vs.</span>
@@ -494,8 +488,7 @@
 <script>
 /* ============================================================================
    openmaterials playground: a Mermaid-style two-pane shell over the live map.
-   Left: input tabs (query resolves labels, the Trace link opens the tracer, parse links to
-   the parser). Right: one shared sub-map canvas rendered from graph.json with
+   Left: input tabs (Learn parses a paper, Resolve matches labels, Sub-map renders edges). Right: one shared sub-map canvas rendered from graph.json with
    dagre + KaTeX (both degrade: nothing throws when either is missing). The
    resolver mirrors omai/semantics.resolve exactly. Structure-pure: query and
    trace render structure only; values never appear on this canvas.
@@ -691,11 +684,10 @@ function openNode(id){
   var fl = (n.formulas && n.formulas.length) ? n.formulas : (n.formula ? [{ op: '', latex: n.formula }] : []);
   h += '<div class="lb">' + (fl.length > 1 ? fl.length + ' producing edges (alternative routes)' : (fl.length ? 'Formula on the producing edge' : 'Formula')) + '</div>';
   if (!fl.length) h += '<div class="fm pg-note">Input quantity: no edge produces it.</div>';
-  fl.forEach(function(f){ h += (f.op ? '<div class="fop">' + esc(f.op) + '</div>' : '') + '<div class="fm">' + tex(f.latex, true) + '</div>'; });
+  fl.forEach(function(f){ h += (f.op ? '<div class="fop">' + esc(opName(f.op)) + '</div>' : '') + '<div class="fm">' + tex(f.latex, true) + '</div>'; });
   if (fam) h += '<div class="lb">Also known as</div><div class="aka">' + esc(fam) + '</div>';
   var lv = LEAN.nodes && LEAN.nodes[id];
   if (lv) h += '<div class="lb"><span class="lean-badge">Lean dimension</span></div><pre class="lean-line">' + esc(lv.lean) + '</pre>';
-  h += '<div class="lb">uid</div><div class="uid">' + esc(n.uid || '') + '</div>';
   nodePanel.innerHTML = h; nodePanel.style.display = 'block';
   document.getElementById('pgClose').addEventListener('click', function(){ nodePanel.style.display = 'none'; });
 }
@@ -714,8 +706,11 @@ function runQuery(q){
   }
   var nodeHits = hits.filter(function(h){ return h.kind === 'node' && nodeById[h.id]; }).map(function(h){ return h.id; });
   var edgeOps = {}; hits.filter(function(h){ return h.kind === 'edge'; }).forEach(function(h){ edgeOps[h.id] = 1; });
+  // each hit as a reader names it: a quantity's symbol and name, an operator's name
   box.innerHTML = hits.slice(0, 8).map(function(h){
-    return '<button type="button" class="pg-hit" data-id="' + esc(h.id) + '"><span class="k">' + esc(h.kind) + '</span><span class="id">' + esc(h.id) + '</span><span class="sc">' + h.score.toFixed(2) + '</span></button>';
+    var node = h.kind === 'node' && nodeById[h.id];
+    return '<button type="button" class="pg-hit" data-id="' + esc(h.id) + '">' + (node ? '<span class="s">' + (symHtml[h.id] || '') + '</span>' : '') +
+      '<span class="n">' + esc(node ? nodeName(h.id) : opName(h.id)) + '</span></button>';
   }).join('');
   box.querySelectorAll('.pg-hit').forEach(function(el){ el.addEventListener('click', function(){
     var id = el.getAttribute('data-id');
@@ -758,9 +753,8 @@ function renderProposal(proposal){
 
   // the diagram: the paper's dataflow, each edge "from --op--> to" (Mermaid feel)
   var diagram = lin.edges.map(function(e){
-    var op = e.op.replace(/\[.*?\]/g, '').replace(/_/g, ' ');
     return '<div class="lin-row"><span class="lin-n' + (lin.touched[e.from] ? ' hot' : '') + '">' + esc(e.from) + '</span>'
-         + '<span class="lin-op">' + esc(op) + ' &rarr;</span>'
+         + '<span class="lin-op">' + esc(opName(e.op)) + ' &rarr;</span>'
          + '<span class="lin-n' + (lin.touched[e.to] ? ' hot' : '') + '">' + esc(e.to) + '</span></div>';
   }).join('');
   // the mapping in code: each reported value -> its node id and unit
@@ -770,8 +764,8 @@ function renderProposal(proposal){
 
   box.innerHTML =
     (proposal.paper ? '<div class="pg-paper">' + esc(proposal.paper) + '</div>' : '')
-    + '<div class="lin-lab">The paper\'s dataflow</div><div class="lin-diagram">' + (diagram || '<span class="pg-note">No map edge produces the reported quantities.</span>') + '</div>'
-    + '<div class="lin-lab">The mapping, in code</div><pre class="lin-code">' + code + '</pre>';
+    + '<div class="lin-lab">The paper\'s dataflow</div><div class="lin-diagram">' + (diagram || '<span class="pg-note">No map edge produces the reported quantities.</span>') + '</div>';
+  document.getElementById('parseCode').innerHTML = code;   // under For developers
   renderSubmap(lin.nodes.filter(function(n){ return lin.touched[n]; }), eops, lin.nodes);
 }
 
@@ -1163,15 +1157,13 @@ function renderDistanceTab(){
   fetch('../data/distances.json').then(function(r){ return r.json(); }).then(function(d){
     var reg = d.registry || {distances: []};
     var html = '<table class="pg-table stack"><thead><tr><th>Metric</th><th>What it is</th>' +
-      '<th>True metric</th><th>ANN index</th><th>Invariances</th><th>Cost</th></tr></thead><tbody>';
+      '<th>True metric</th><th>Invariances</th></tr></thead><tbody>';
     reg.distances.forEach(function(m){
       var isDefault = reg.default && reg.default.indexOf(m.id) === 0;
       html += '<tr><td data-label="Metric"><code>' + esc(m.key) + '</code>' + (isDefault ? ' (default)' : '') + '</td>' +
         '<td data-label="What it is">' + esc(m.description) + '</td>' +
         '<td data-label="True metric">' + (m.metric ? 'yes' : 'no') + '</td>' +
-        '<td data-label="ANN index">' + (m.ann_indexable ? 'yes' : 'no') + '</td>' +
-        '<td data-label="Invariances">' + esc((m.invariances || []).join(', ')) + '</td>' +
-        '<td data-label="Cost">' + esc(m.cost || '') + '</td></tr>';
+        '<td data-label="Invariances">' + esc((m.invariances || []).join(', ')) + '</td></tr>';
     });
     html += '</tbody></table>';
     document.getElementById('distRegistry').innerHTML = html;
@@ -1197,8 +1189,7 @@ function renderDistanceTab(){
     document.getElementById('distCommitted').textContent = c.pairs && c.pairs.length
       ? 'Committed configurations, pairwise ' + (c.metric || '') + ': ' +
         c.pairs.map(function(p){ return p.a.name + ' to ' + p.b.name + ' = ' + p.distance; }).join('; ')
-      : 'The map holds ' + (c.configurations || 0) + ' committed configuration' +
-        ((c.configurations || 0) === 1 ? '' : 's') + '. Pairwise distances appear here when more are committed.';
+      : '';
   }).catch(function(e){
     document.getElementById('distRegistry').innerHTML =
       '<p class="pg-empty">The distance registry did not load: ' + esc(e.message) + '</p>';
@@ -1269,6 +1260,10 @@ function initPapersCompare(){
     var selB = document.getElementById('distPaperB');
     selA.innerHTML = opts; selB.innerHTML = opts;
     if (refs.length > 1) selB.value = refs[1];
+    // open on the first pair of sources that share a quantity, material and units
+    var S = refs.map(seriesOf);
+    pick: for (var i = 0; i < refs.length; i++) for (var j = i + 1; j < refs.length; j++)
+      if (Object.keys(S[i]).some(function(k){ return k in S[j]; })) { selA.value = refs[i]; selB.value = refs[j]; break pick; }
     selA.addEventListener('change', renderPapersCompare);
     selB.addEventListener('change', renderPapersCompare);
     renderPapersCompare();
@@ -2355,8 +2350,8 @@ function renderMapView(view){
   if (stale) note = '<div class="pg-note" style="margin-bottom:8px">Built against map version ' + esc(view.v.slice(0,12)) + '; the live map version is ' + esc(currentVersion()) + '. Nodes render by id.</div>';
   if (valid.length < edges.length) note += '<div class="pg-note" style="margin-bottom:8px">' + (edges.length - valid.length === 1 ? '1 edge references a node' : (edges.length - valid.length) + ' edges reference nodes') + ' not on this map version.</div>';
   box.innerHTML = note + '<div class="lin-lab">' + valid.length + (valid.length === 1 ? ' edge' : ' edges') + ' rendered</div><div class="lin-diagram">' +
-    valid.map(function(tr){ var op = String(tr[1] || '').replace(/\[.*?\]/g, '').replace(/_/g, ' ');
-      return '<div class="lin-row"><span class="lin-n hot">' + esc(tr[0]) + '</span><span class="lin-op">' + esc(op) + ' &rarr;</span><span class="lin-n hot">' + esc(tr[2]) + '</span></div>'; }).join('') + '</div>';
+    valid.map(function(tr){
+      return '<div class="lin-row"><span class="lin-n hot">' + esc(tr[0]) + '</span><span class="lin-op">' + esc(opName(tr[1])) + ' &rarr;</span><span class="lin-n hot">' + esc(tr[2]) + '</span></div>'; }).join('') + '</div>';
   // any Lean theorems that cover the rendered edges: the dimension proofs, and
   // the algebraic composition proofs (Tier 2) where an identity chains.
   var thms = {};
