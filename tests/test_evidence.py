@@ -132,12 +132,12 @@ def test_the_committed_registry_equals_a_fresh_build():
 
 
 def test_the_registry_resolves_as_the_source_tree_does():
-    from omai.evidence import REGISTRY
+    from omai.evidence import KINDS, REGISTRY
 
     registry = json.loads(REGISTRY.read_text())
     assert registry["configuration"] and registry["model"]
-    for kind, entries in registry.items():
-        for uid, path in entries.items():
+    for kind in KINDS:
+        for uid, path in registry[kind].items():
             assert resolve(kind, uid, [REGISTRY]) == path == resolve(kind, uid)
 
 

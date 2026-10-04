@@ -1,0 +1,19 @@
+{
+ "representation": "xtb",
+ "lineage_version": "f69b18c18fb7637aa6e07dbcc2a037a77c201826ae88ebcc4bfe5b464ffbee7e",
+ "map_version": "9802d9e854c915eb47d867575730a556ab7f4a565e392bf5b29da58338f08434",
+ "covers": [
+  {
+   "node": "MolarHeatCapacity",
+   "uid": "4fa2d8e16bde42f794f150f5d149e5d645d63f7ddaac59cef79bd41771b13c17",
+   "api": "xtb <geom> --ohess --temp <T>  (THERMO block, Cp row)",
+   "unit": "J_per_K_per_mol"
+  },
+  {
+   "node": "ReactionEnergy",
+   "uid": "a5736aa4760c27562f9e189829763a891b6fed83fe4a030a7e306b8d909d825c",
+   "api": "xtb <geom> --ohess --temp 298.15 per species; dH298 = sum(products) - sum(reactants)",
+   "unit": "eV"
+  }
+ ]
+}

@@ -40,10 +40,12 @@ The database is just files in this repo: the versioned map lives in `map/`
 dimension, description), `docs/data/codes.json` (per-code variable coverage),
 `docs/data/instances/` (one file per value), `docs/data/configurations/`
 (one file per atomic structure: the content-addressed home of a `Structure`
-value, bundled to `docs/data/configurations.json`), and `docs/data/models/`
+value, bundled to `docs/data/configurations.json`), `docs/data/models/`
 (one file per model a code reads, such as an interatomic potential: its uid,
 the sha256 of its files, its licence and citation; the files themselves stay
-upstream). Rebuild the generated files with:
+upstream), and `docs/data/releases/` (one file per representation with
+registered releases: each release's version, tag, commit, date and the licence
+read at that tag). Rebuild the generated files with:
 
 ```bash
 CUDA_VISIBLE_DEVICES="" PYTHONPATH=. python -m omai.map_data
@@ -285,6 +287,7 @@ shipped here.
 | `omai.evidence.resolve(kind, uid, roots=None)` | Where a registered configuration or model uid lives; None when no root registers it. |
 | `omai.evidence.model_uid(digests)` | A model's uid: the sha256 of its one evaluated file, or of the sorted manifest of several. |
 | `omai.evidence.model_citations(lineage, roots=None)` | Every model a lineage cites, resolved; a report that refuses nothing. |
+| `omai.evidence.code_releases(roots=None)` | `{representation: {aliases, releases}}` for every representation. |
 
 The schema is a SHAPE gate. That `id` equals `lineage_id(lineage)`, that the
 node resolves against the live map, and the contribution gates in
@@ -437,7 +440,8 @@ omai/
   paper_parser/      # P1 paper parser: PDF -> gated evidence proposal (six stages)
   configurations.py  # structure-valued evidence: content-addressed atomic cells
   evidence.py        # one resolver for content-addressed records (configurations,
-                     #   models); data/registry.json ships their uids in the wheel
+                     #   models) and code releases; data/registry.json ships their
+                     #   uids and the releases in the wheel
   map_data.py        # unified multi-domain export -> docs/data/*.json
   store.py           # log-first store: push/read/diff/verify
 infra/

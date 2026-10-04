@@ -1,0 +1,13 @@
+{
+  "aliases": [],
+  "releases": [
+    {
+      "commit": "302ad205452ee36e57887b10bbf4a0289dd037bb",
+      "license_source": "https://github.com/phonopy/phono3py/tree/v4.4.0 (LICENSE)",
+      "released": "2026-07-18",
+      "spdx": "BSD-3-Clause",
+      "tag": "v4.4.0",
+      "version": "4.4.0"
+    }
+  ]
+}

@@ -51,5 +51,16 @@
    "api": "run.in: compute_dos <Nc> <Nw> <max_omega>  \u2192  mvac.out + dos.out",
    "unit": null
   }
+ ],
+ "aliases": [],
+ "releases": [
+  {
+   "commit": "3f19ea6a7d8c6e82dbdad0abcf30c5775936cb26",
+   "license_source": "https://github.com/brucefan1983/GPUMD/tree/v3.9.5 (LICENCE, GPL version 3; src/main_gpumd/main.cu, version 3 or any later version)",
+   "released": "2024-08-18",
+   "spdx": "GPL-3.0-or-later",
+   "tag": "v3.9.5",
+   "version": "3.9.5"
+  }
  ]
 }

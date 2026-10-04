@@ -1,7 +1,7 @@
-r"""Citation and license credits for every code rail on the openmaterials map.
+r"""Citation and license credits for every code representation on the openmaterials map.
 
 Giuseppe's rule: every code we represent MUST be cited (a paper / DOI) and MUST
-carry its license. A rail that appears on the map without both is a bug, not a
+carry its license. A code representation that appears on the map without both is a bug, not a
 gap: the enforcement test (tests/test_code_credits.py) fails when a discovered
 representation_name has no CODE_CREDITS entry, when its citation or license is
 empty, or when its license is "UNKNOWN" without an explicit ALLOWED_UNKNOWN
