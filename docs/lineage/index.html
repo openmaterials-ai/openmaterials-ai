@@ -25,7 +25,6 @@
 <link rel="stylesheet" href="../assets/site.css">
 <style>
   /* The lineage tour (spec 4.2): data tokens inside the DAG and the record sheet, neutral elsewhere. */
-  .m { font-family: var(--font-mono); font-size: .875em; overflow-wrap: anywhere; }
   .sub { color: var(--ink-2); }
   .legend { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; margin: 0 0 12px; font-size: 14px; line-height: 20px; color: var(--ink-2); }
   .legend .sw { display: inline-block; width: 14px; height: 10px; margin-right: 6px; border: 1.5px solid; border-radius: 3px; vertical-align: -1px; }
@@ -50,10 +49,9 @@
   .arw { fill: var(--edge); }
   .arwv { fill: var(--ink-2); }
   .taglab { font: 500 12px var(--font-sans); fill: var(--ink-2); }
-  .caption { margin-top: 12px; font-size: 14px; line-height: 20px; color: var(--ink-2); }
   .sheet { border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); overflow: hidden; }
   .sheet .hd { display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: baseline; padding: 12px 16px; border-bottom: 1px solid var(--line); }
-  .sheet .hd .nm { font: 400 14px/20px var(--font-mono); color: var(--ink); overflow-wrap: anywhere; }
+  .sheet .hd .nm { font: 500 14px/20px var(--font-sans); color: var(--ink); overflow-wrap: anywhere; }
   .sheet .hd .id { font: 400 12px/16px var(--font-mono); color: var(--ink-2); overflow-wrap: anywhere; }
   .kv { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); column-gap: 24px; padding: 0 16px; }
   .kv > div { padding: 12px 0; border-bottom: 1px solid var(--line); }
@@ -73,10 +71,8 @@
   <header class="page-head">
   <p class="eyebrow">Lineage tour</p>
   <h1>The lineage of one result</h1>
-  <p class="lede">The map derives <span class="m">ThermalConductivity[transport_model=qhgk]</span>
-    through typed edges, a lineage record pins the run that produced one value of it, and each part
-    has its own URL. The graph below is the map's own export from
-    <span class="m">python -m omai.mermaid</span>.</p>
+  <p class="lede">The map derives the QHGK thermal conductivity of amorphous silicon through typed
+    edges, a lineage record pins the run that produced one value of it, and each part has its own URL.</p>
   </header>
   <div class="page-body"><article class="prose">
 
@@ -88,8 +84,7 @@
     illustrates a
     <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/main/omai/operator/learned.py">learned shortcut</a>:
     a surrogate model that produces the same linewidth node without computing the third-order force
-    constants. The map declares no learned edge yet, so the tracer does not show one. The same
-    derivation is live in
+    constants. The same derivation is live in
     <a href="../map-trace/#node=ThermalConductivity[transport_model=qhgk]">the tracer</a>.</p>
   <div class="legend">
     <span class="obs"><span class="sw"></span>Observable</span>
@@ -98,21 +93,16 @@
   </div>
   <div class="dagbox"><svg id="dag" xmlns="http://www.w3.org/2000/svg" width="720" height="536" viewBox="0 0 720 536" role="img" aria-label="Derivation DAG of QHGK thermal conductivity"></svg></div>
   <p class="dag-alt">This screen is too narrow for the diagram; the tracer link above opens the same derivation.</p>
-  <p class="caption">To reproduce this graph wherever Mermaid renders, run
-    <span class="m">python -m omai.mermaid "ThermalConductivity[transport_model=qhgk]"</span>.
-    With the learned edge in place, the third-order force constants and the
-    edge that produces them would be skipped at inference.</p>
 
   <h2>2 · The lineage record</h2>
   <p class="sub">The map stores the quantity and its value; the lineage record pins how the number was
-    made and where the bulk data lives. This is the example
-    <a href="../examples/a-si-kappa-qhgk.json"><span class="m">docs/examples/a-si-kappa-qhgk.json</span></a>,
-    rendered as the playground's Lineage tab renders it. Raw artifacts never enter the store: the
+    made and where the bulk data lives. This is an example record;
+    <a href="../play/#/play?tab=lineage&amp;x=gH4sIAPG8wWoC_yVQTYvbMBD9K0GnFpJWlmxZDvRQQnsp7EJj6GFZzFgaJyay5crS0hDy3ztKToL3pTfvxkbL9qwAofu-5D3XgyoLXmuldGV1JbXtK-yRY1UVVqLEWtRgKqnQNAVX0tYF2IFtmRtnhBOy_Y3N3tLL2jOGCdzBzzaZOH6M8foWA8zr4kPsJhK5b3_Pp8s7uSeIGEZwZIPdcSTkfF0wLBBgQqLWnLsmggy6rCp5ozYQ_bSSdvER5_i0tyT2w8DuW_YBLuHDeYFlAbYXX8SWpXmMBLI_Xz9Nm1-fszDitDhqQGgu1D3l28chXXospBspUJoeLA51CVpoLvpSDrawopJCG1oPVSGVabgdZK-ghKbRWNdDU6m6pzRDQ4xx9POjUkuhwftpkz_HADEFzF1Wn-hGIhcgeA-TD8vZp3UHzvnruhNc8J1Lsz0FnLMB_6FJOTanmuf0F3DWZxJCHAcw-eC3G0XGM7E_X38ffnSH15dj-_2lPVK14F22DZ6-7qjnGmEmz_39_h-1sa4bIQIAAA">open it in the playground</a>. Raw artifacts never enter the store: the
     record carries pointers, and the files stay with their provider.</p>
   <div class="sheet">
     <div class="hd">
-      <span class="nm">ThermalConductivity[transport_model=qhgk]</span>
-      <span class="id">lineage 1a28bb40b08f6410786685d8538db5ebe0e551d3e3e727ac536ec91063d71adf · node_uid 8932e3cbadef74a82802b43fd1d25328cb40e6136c90df3b6a4a998e77f9567b</span>
+      <span class="nm">Thermal conductivity (QHGK)</span>
+      <span class="id">Id 1a28bb40b08f</span>
     </div>
     <div class="kv">
       <div class="k">material</div><div class="v">a-Si</div>
@@ -125,22 +115,20 @@
   </div>
 
   <h2>3 · The share surfaces</h2>
-  <p class="sub">Each public link carries the values and their provenance.</p>
+  <p class="sub">Each source has a public page and a view on the map.</p>
   <div class="tblwrap"><table class="links stack">
     <thead><tr><th>Surface</th><th>Link</th></tr></thead>
     <tbody>
       <tr>
         <td data-label="Surface">Source page<br><span class="why">values, provenance quotes, and the map version</span></td>
-        <td class="u" data-label="Link"><a href="../experiment/#ref=paper:amorphous-alloys-2020-lundgren">experiment/#ref=paper:amorphous-alloys-2020-lundgren</a></td>
+        <td class="u" data-label="Link"><a href="../experiment/#ref=paper:amorphous-alloys-2020-lundgren">Lundgren et al., Phys. Rev. B 103, 024204 (2021)</a></td>
       </tr>
       <tr>
         <td data-label="Surface">Coverage on the map<br><span class="why">marks the quantities that carry this source's values</span></td>
-        <td class="u" data-label="Link"><a href="../map/#experiment=paper:amorphous-alloys-2020-lundgren">map/#experiment=paper:amorphous-alloys-2020-lundgren</a></td>
+        <td class="u" data-label="Link"><a href="../map/#experiment=paper:amorphous-alloys-2020-lundgren">The same source on the map</a></td>
       </tr>
     </tbody>
   </table></div>
-  <p class="caption">Any source works the same way: commit values under one
-    <span class="m">source.ref</span> and both links exist.</p>
 
   </article></div>
 </main>

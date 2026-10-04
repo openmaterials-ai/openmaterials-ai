@@ -237,3 +237,10 @@ def test_sources_take_their_citations_and_print_plain_words():
     assert got["name"] == "Thermal conductivity (direct inverse)"
     assert got["fam"] == ["atomisticskills-chem-bond-dissociation-ethanol", "paper:esfarjani-2011"]
     assert set(got["labels"]) <= {"Direct inversion", "RTA", "Solver not stated", "Measured"}
+
+
+def test_the_lineage_tour_opens_its_example():
+    ex = {e["slug"]: e for e in json.loads((DOCS / "examples/index.json").read_text())}["a-si-kappa-qhgk"]
+    page = (DOCS / "lineage/index.html").read_text()
+    assert '../play/#/play?tab=lineage&amp;x=' + ex["fragment"] + '"' in page
+    assert ">Id " + ex["id"] + "<" in page
