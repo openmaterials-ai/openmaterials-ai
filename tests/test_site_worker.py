@@ -3,8 +3,7 @@ dynamic routes.
 
 infra/site is the edge deployment of the SAME docs/ every browser reads:
 wrangler serves docs/ as assets and the Worker script runs only for
-/l/<id> (the short-link resolver; a value's canonical URL is its /i/<id>/
-page) and /healthz. These tests pin the
+/l/<id> (the canonical permalink resolver) and /healthz. These tests pin the
 contract statically and, where node is available, run the Worker's pure
 resolver logic against the real committed projection.
 """

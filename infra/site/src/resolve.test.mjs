@@ -46,8 +46,6 @@ test("the permalink shell carries real OG metadata and redirects to the datashee
   assert.ok(page.includes('property="og:title"'));
   assert.ok(page.includes(entry.id.slice(0, 12)), "description cites the id prefix");
   assert.ok(page.includes(`/play/#id=${entry.id}`), "redirect targets the one renderer");
-  assert.ok(page.includes(`<link rel="canonical" href="https://openmaterials.ai/i/${entry.id}/">`),
-    "one canonical URL per value: its /i/ page");
   assert.ok(String(page.match(/og:description[^>]*/)).length > 0);
   if (entry.value != null) assert.ok(page.includes(String(entry.value)), "the committed value is on the card");
 });
@@ -100,6 +98,5 @@ test("source-first paths parse and resolve: listing, pair, mismatch honesty", ()
     const mism = sourceMismatchHTML(ref, other, "https://openmaterials.ai");
     assert.ok(mism.includes(other.id.slice(0, 12)));
     assert.ok(mism.includes("does not belong"));
-    assert.ok(mism.includes(`https://openmaterials.ai/i/${other.id}/`), "the mismatch names the canonical /i/ page");
   }
 });
