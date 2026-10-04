@@ -18,4 +18,6 @@ level (per Principle 7):
     BulkModulus (a second estimator distinct from the elastic-tensor VRH
     route); anchored in the matcalc/ASE scan. matcalc is the driver, recorded
     in notes (no separate matcalc rail, the atomate2 ruling).
+  * `qe`: Quantum ESPRESSO's ev.x equation-of-state fit of pw.x total
+    energies (BulkModulus along compute_bulk_modulus_eos).
 """

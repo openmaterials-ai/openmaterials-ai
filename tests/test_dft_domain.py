@@ -171,12 +171,13 @@ def test_new_nodes_validate_against_the_registries():
 # Task 3: the QE representation (pw.x energy, forces, stress, structure).
 # --------------------------------------------------------------------------
 
-def test_build_codes_qe_covers_13_including_the_ground_state():
+def test_build_codes_qe_covers_14_including_the_ground_state():
     from omai.map_data import build_codes
 
     qe = build_codes(DOMAINS)["qe"]
-    assert len(qe) == 13
-    for name in ("Structure", "TotalEnergy", "Forces", "Stress"):
+    # 13 plus the ev.x BulkModulus row of the mechanics domain (2026-10-01).
+    assert len(qe) == 14
+    for name in ("Structure", "TotalEnergy", "Forces", "Stress", "BulkModulus"):
         assert name in qe, f"qe coverage missing {name}"
 
 
