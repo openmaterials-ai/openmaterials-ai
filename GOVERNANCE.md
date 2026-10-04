@@ -42,7 +42,7 @@ provenance. Contributions that cannot cite their source do not enter.
 ## Decision making, today and later
 
 Today the project has a small set of scientific authors and maintainer-led
-review: honest BDFL-with-gates. The
+review behind the gates (a BDFL model). The
 stated intent, in order:
 
 1. Now: public governance (this file), open licenses, the gates as the
@@ -61,7 +61,7 @@ each of these stages, not to any company, including Da Vinci Labs.
 * Map data (`map/`, `docs/data/`, `index/`): **CC BY 4.0** (LICENSE-DATA).
   Reuse freely, cite the map version you used.
 * Code (`omai/`, tests, site source): **Apache 2.0** (LICENSE).
-* Every mapped code's own citation and license is recorded in its rail
+* Every mapped code's own citation and license is recorded in its representation
   (`docs/data/codes.json`); crediting upstream science is a gate, not a
   courtesy.
 
@@ -79,7 +79,7 @@ commitments of the initiative, not courtesies.
   contributing, you grant the initiative a worldwide, non-exclusive,
   royalty-free license to redistribute the record under CC BY 4.0, and
   you keep everything else. There is no copyright assignment and no
-  contributor license agreement: the license in is the license out.
+  contributor license agreement.
 * **Raw artifacts never enter the store.** The map holds derived values
   with conditions, uncertainty, and provenance. It never ingests the
   underlying trajectories, wavefunctions, force sets, lab records, or
@@ -103,7 +103,7 @@ commitments of the initiative, not courtesies.
 * **Attribution flows both ways.** Downstream, reuse of map data must
   credit the map version and, through its provenance, the original
   sources: that is what the BY in CC BY 4.0 means. Upstream, every
-  mapped code's citation and license is recorded in its rail, every
+  mapped code's citation and license is recorded in its representation, every
   parsed paper is cited with verbatim quotes and page anchors, and a
   contribution that cannot cite its source does not enter.
 * **Good open licenses are respected where we meet them.** Values enter
