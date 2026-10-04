@@ -57,9 +57,10 @@
     return { name: name, binders: binders, conclusion: conclusion };
   }
 
-  // An edge theorem, e.g. edge_compute_dos_to_PhononDOS with conclusion
-  // "PhononDOS = Frequency". Returns the output's Lean name and the list of
-  // input Lean names (the factors on the right-hand side).
+  // An edge theorem, e.g. edge_compute_participation_ratio_to_ParticipationRatio
+  // with conclusion "ParticipationRatio = Eigenvectors". Returns the output's
+  // Lean name and the list of input Lean names (the factors on the right-hand
+  // side).
   function parseEdge(lean) {
     var t = parseTheorem(lean);
     var eq = splitTop(t.conclusion, '=');

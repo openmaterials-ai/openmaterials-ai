@@ -2652,7 +2652,9 @@ is full of same-typed distinct quantities:
         \texttt{Molar*} counterparts (two more pairs);
   \item \texttt{Potential} $=$ \texttt{Structure} (both opaque source leaves);
   \item \texttt{BareDynamicalMatrix} $=$ \texttt{DynamicalMatrix};
-  \item \texttt{Gruneisen} $=$ \texttt{PhaseSpace3Phonon}.
+  \item \texttt{Gruneisen} $=$ \texttt{PhaseSpace3Phonon} (a pair while $P_3$ was
+        declared dimensionless; since the third supersede $P_3$ carries
+        1/frequency and the two differ by dimension as well).
 \end{itemize}
 Seven false merges is disqualifying, so the semantic distinction is carried by a
 curated \texttt{quantity\_tag} from the registry, and convergence becomes

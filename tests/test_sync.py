@@ -197,6 +197,32 @@ def test_the_committed_reaction_energy_supersede_is_in_sync():
     assert proposal["re_mint"] == []
 
 
+def test_node_aliases_are_exactly_the_store_uids_superseded_into_them():
+    """A live node's aliases are the store uids whose superseded_by chain ends
+    at its uid: a re-mint keeps every former uid, and no node claims a uid the
+    store did not retire into it."""
+    from omai.map_data import DOMAINS
+
+    nodes = _pristine_current()["nodes"]
+
+    def chain_end(uid):
+        while nodes[uid].get("superseded_by"):
+            uid = nodes[uid]["superseded_by"][0]  # node supersedes are one to one
+        return uid
+
+    retired_into: dict[str, set] = {}
+    for uid, entry in nodes.items():
+        if entry.get("superseded_by"):
+            retired_into.setdefault(chain_end(uid), set()).add(uid)
+    live = {}
+    for d in DOMAINS:
+        for s in d.nodes:
+            live.setdefault(node_id(s), s)
+    assert retired_into and set(retired_into) <= set(live)
+    for uid, s in live.items():
+        assert sorted(s.aliases) == sorted(retired_into.get(uid, ())), s.name
+
+
 # --------------------------------------------------------------------------
 # (e) The CLI dry run on the pristine repo prints "in sync" and exits 0.
 # --------------------------------------------------------------------------

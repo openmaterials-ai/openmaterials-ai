@@ -330,6 +330,18 @@ def test_validate_claim_kills_unit_mismatch():
     assert "unit_dimension_mismatch" in v.kills
 
 
+def test_a_frequency_mapped_to_phonon_dos_dies_as_a_unit_mismatch():
+    # PhononDOS is a density in frequency (1/frequency): a THz or cm^-1 value
+    # is a frequency, which belongs on Frequency, never on the DOS.
+    cat = _catalog_by_id()
+    for unit in ("THz", "cm^-1", "cm-1"):
+        assert validate.unit_check(unit, "PhononDOS", cat)["kind"] == "mismatch", unit
+        assert validate.unit_check(unit, "Frequency", cat)["kind"] == "match", unit
+    v = _validate("PhononDOS", "THz", 15.3, "the DOS peaks at 15.3 THz")
+    assert not v.survives
+    assert "unit_dimension_mismatch" in v.kills
+
+
 def test_validate_claim_kills_nonfinite_value():
     name_to_uid = validate.build_name_to_uid()
     cat = _catalog_by_id()
