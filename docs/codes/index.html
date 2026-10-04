@@ -52,7 +52,7 @@
   <header class="page-head">
     <p class="eyebrow">Bibliography</p>
     <h1>The codes the map cites</h1>
-    <p class="lede">Each code on this page has a representation on the map: a record of which quantities the code computes, through which interface, with a citation, a DOI where one exists, and the code's license. The map cites these codes, and their source is not part of this repository.</p>
+    <p class="lede">Each code on this page has a representation on the map: a record of which quantities the code computes, through which interface, with a citation, a DOI where one exists, and the code's license.</p>
   </header>
 
   <div class="page-body">
@@ -65,7 +65,7 @@
     <article class="prose gwrap">
       <section class="gsec" id="bibliography">
         <h2>The bibliography</h2>
-        <p>Each entry links to the map filtered to that code. Entries are sorted by the number of quantities they serve, then by name.</p>
+        <p>Entries are sorted by the number of quantities they serve, then by name.</p>
         <noscript><p class="empty">This bibliography renders client-side from the
           published data and needs JavaScript. The raw file is plain JSON in
           <a href="../data/codes.json">../data/codes.json</a>.</p></noscript>
@@ -125,8 +125,10 @@
   // can serve nodes through DIFFERENT methods (per-node credits), so the card
   // shows every distinct citation it carries, largest coverage first.
   function card(name, entries) {
-    var nodes = Object.keys(entries);
+    // a code's `name` is its display name, not a served quantity; the key is the fallback
+    var nodes = Object.keys(entries).filter(function (n) { return entries[n] && typeof entries[n] === 'object'; });
     var count = nodes.length;
+    var label = typeof entries.name === 'string' ? entries.name : name;
 
     var license = '', url = '';
     nodes.forEach(function (n) {
@@ -153,8 +155,8 @@
 
     var safeUrl = /^https?:\/\//i.test(url) ? url : '';
     var nameHtml = safeUrl
-      ? '<a class="bib-name" href="' + esc(safeUrl) + '" rel="noopener">' + esc(name) + '</a>'
-      : '<span class="bib-name">' + esc(name) + '</span>';
+      ? '<a class="bib-name" href="' + esc(safeUrl) + '" rel="noopener">' + esc(label) + '</a>'
+      : '<span class="bib-name">' + esc(label) + '</span>';
 
     var top = '<div class="bib-top">' + nameHtml +
       (license ? '<span class="bib-lic">' + esc(license) + '</span>' : '') +
