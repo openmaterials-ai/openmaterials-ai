@@ -81,7 +81,7 @@ MAT_ELASTICITY_YOUNGS_MODULUS = SpaceRepresentationSpec(
     space=YOUNGS_MODULUS,
     representation_name="mat-elasticity",
     observable_units={"E_Y": "GPa"},
-    code_api={"E_Y": "calculate_elasticity.py E = 9BG/(3B+G) over the VRH moduli, GPa"},
+    code_api={"E_Y": "E = 9BG/(3B+G) over the VRH moduli, GPa"},
     notes=(
         "Young's modulus recomputed in GPa from the VRH moduli by the "
         "skill's own closed form E = 9BG/(3B+G) "
@@ -97,7 +97,7 @@ MAT_ELASTICITY_POISSON_RATIO = SpaceRepresentationSpec(
     space=POISSON_RATIO,
     representation_name="mat-elasticity",
     observable_units={"nu": "dimensionless"},
-    code_api={"nu": "calculate_elasticity.py nu = (3B-2G)/(6B+2G) over the VRH moduli"},
+    code_api={"nu": "nu = (3B-2G)/(6B+2G) over the VRH moduli"},
     notes=(
         "Poisson's ratio from the skill's closed form nu = (3B-2G)/(6B+2G) "
         "(calculate_elasticity.py:91-99), the same identity as the map's "

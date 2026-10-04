@@ -105,7 +105,7 @@ ORCA_TOTAL_ENERGY = SpaceRepresentationSpec(
     space=TOTAL_ENERGY,
     representation_name="orca",
     observable_units={"E_tot": "ev"},
-    code_api={"E_tot": "parse_orca_output.py final_energy_eV / run_singlepoint.py results.energy"},
+    code_api={"E_tot": "FINAL SINGLE POINT ENERGY in the ORCA output, Hartree (served in eV)"},
     notes=(
         "The FINAL SINGLE POINT ENERGY of a converged molecular SCF "
         "(parse_orca_output.py:39-43, final_energy_hartree/final_energy_eV; "
@@ -136,7 +136,7 @@ ORCA_FORCES = SpaceRepresentationSpec(
     space=FORCES,
     representation_name="orca",
     observable_units={"F": "eV_per_A"},
-    code_api={"F": "run_singlepoint.py forces_eV_per_Ang (-gradient)"},
+    code_api={"F": "minus the Cartesian energy gradient of an ORCA EnGrad run, Hartree/bohr (served in eV/A)"},
     notes=(
         "Per-atom Cartesian forces from ORCA analytic gradients: F = -gradient * "
         "HARTREE_TO_EV * BOHR_PER_ANGSTROM (run_singlepoint.py:135-143; "
@@ -154,7 +154,7 @@ ORCA_HOMO_LUMO_GAP = SpaceRepresentationSpec(
     space=HOMO_LUMO_GAP,
     representation_name="orca",
     observable_units={"E_gap_mol": "ev"},
-    code_api={"E_gap_mol": "parse_orca_output.py homo_lumo_gap_eV"},
+    code_api={"E_gap_mol": "LUMO minus HOMO energy from the ORBITAL ENERGIES block of the ORCA output, eV"},
     notes=(
         "The molecular HOMO-LUMO gap homo_lumo_gap_eV = lumo_eV - homo_eV, the "
         "difference of the two discrete frontier KS molecular-orbital energies "
@@ -172,7 +172,7 @@ ORCA_REACTION_BARRIER = SpaceRepresentationSpec(
     space=REACTION_BARRIER,
     representation_name="orca",
     observable_units={"E_barrier": "ev"},
-    code_api={"E_barrier": "run_optimization.py tsopt saddle (agent-level E(TS)-E(reactant))"},
+    code_api={"E_barrier": "E(TS) - E(reactant) from two ORCA total energies, the TS a saddle with exactly one imaginary mode"},
     notes=(
         "ORCA's molecular static transition-state route to a reaction barrier: a "
         "single-ended TS optimization (run_optimization.py:141-146, "
@@ -195,7 +195,7 @@ ORCA_MOLECULAR_FREQUENCY = SpaceRepresentationSpec(
     space=MOLECULAR_FREQUENCY,
     representation_name="orca",
     observable_units={"nu_mol": "inverse_cm"},
-    code_api={"nu_mol": "parse_orca_output.py:102 frequencies_cm1 (with n_imaginary; IR intensities km/mol)"},
+    code_api={"nu_mol": "VIBRATIONAL FREQUENCIES block of the ORCA output, cm^-1 (imaginary modes negative; IR intensities in km/mol)"},
     notes=(
         "The 3N-6 (or 3N-5) molecular normal-mode wavenumbers frequencies_cm1 "
         "(parse_orca_output.py:102), the eigenfrequencies of the mass-weighted "

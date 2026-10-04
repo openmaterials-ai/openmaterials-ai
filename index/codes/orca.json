@@ -6,31 +6,31 @@
   {
    "node": "Forces",
    "uid": "9c5a2fdedab6b668ccf5f2043fb4c29a982bcde5063fd6ac8633ee2c7858ecbf",
-   "api": "run_singlepoint.py forces_eV_per_Ang (-gradient)",
+   "api": "minus the Cartesian energy gradient of an ORCA EnGrad run, Hartree/bohr (served in eV/A)",
    "unit": "eV_per_A"
   },
   {
    "node": "HOMOLUMOGap",
    "uid": "8998dd04e7ff8c51679a06f9c40bffb8923fc6d9b8b1f5b3b955999c029a5c5e",
-   "api": "parse_orca_output.py homo_lumo_gap_eV",
+   "api": "LUMO minus HOMO energy from the ORBITAL ENERGIES block of the ORCA output, eV",
    "unit": "ev"
   },
   {
    "node": "MolecularFrequency",
    "uid": "e1270ea9a293c9107226bf831f60985f5525a0c386dca70841743bdc5d082c26",
-   "api": "parse_orca_output.py:102 frequencies_cm1 (with n_imaginary; IR intensities km/mol)",
+   "api": "VIBRATIONAL FREQUENCIES block of the ORCA output, cm^-1 (imaginary modes negative; IR intensities in km/mol)",
    "unit": "inverse_cm"
   },
   {
    "node": "ReactionBarrier[construction=neb_mep]",
    "uid": "c922f2cfe105ec7d7fc5afd8eabcc0cc2e7adde25e2231272a4dd34493b4bd98",
-   "api": "run_optimization.py tsopt saddle (agent-level E(TS)-E(reactant))",
+   "api": "E(TS) - E(reactant) from two ORCA total energies, the TS a saddle with exactly one imaginary mode",
    "unit": "ev"
   },
   {
    "node": "TotalEnergy",
    "uid": "cf5a36298543de2027b173b757d38d80b38b66a85d2d3a56f55097e3da0e9a5e",
-   "api": "parse_orca_output.py final_energy_eV / run_singlepoint.py results.energy",
+   "api": "FINAL SINGLE POINT ENERGY in the ORCA output, Hartree (served in eV)",
    "unit": "ev"
   }
  ]

@@ -34,6 +34,7 @@ THE SOURCING BAR (how each field below was obtained):
 Schema per rail (keyed by representation_name):
 
     {
+      "name": str,              # the code's display name, as its project writes it
       "citation": str,          # one-line human-readable reference
       "doi": str | None,        # verified DOI, else None with a note in citation
       "license": str,           # SPDX-style short name, or a proprietary term
@@ -47,6 +48,7 @@ from __future__ import annotations
 CODE_CREDITS: dict[str, dict] = {
     # --- thermal transport ---------------------------------------------------
     "kaldo": {
+        "name": "kALDo",
         "citation": "G. Barbalinardo, Z. Chen, N. W. Lundgren, D. Donadio, "
         "Efficient anharmonic lattice dynamics calculations of thermal "
         "transport in crystalline and disordered solids, J. Appl. Phys. 128, "
@@ -57,6 +59,7 @@ CODE_CREDITS: dict[str, dict] = {
         "url": "https://github.com/nanotheorygroup/kaldo",
     },
     "mescal": {
+        "name": "MESCAL",
         "citation": "G. Barbalinardo, D. Donadio, MESCAL: differentiable "
         "mode-matching phonon transport with machine-learned potentials "
         "(manuscript in preparation); validated against I. Duchemin, D. Donadio, "
@@ -72,6 +75,7 @@ CODE_CREDITS: dict[str, dict] = {
         "url": "https://github.com/gbarbalinardo/mescal",
     },
     "shengbte": {
+        "name": "ShengBTE",
         "citation": "W. Li, J. Carrete, N. A. Katcho, N. Mingo, ShengBTE: A "
         "solver of the Boltzmann transport equation for phonons, Comput. Phys. "
         "Commun. 185, 1747 (2014)",
@@ -81,6 +85,7 @@ CODE_CREDITS: dict[str, dict] = {
         "url": "https://bitbucket.org/sousaw/shengbte",
     },
     "phonopy": {
+        "name": "phonopy",
         "citation": "A. Togo, L. Chaput, T. Tadano, I. Tanaka, Implementation "
         "strategies in phonopy and phono3py, J. Phys. Condens. Matter 35, "
         "353001 (2023)",
@@ -91,6 +96,7 @@ CODE_CREDITS: dict[str, dict] = {
         "url": "https://phonopy.github.io/phonopy/",
     },
     "phono3py": {
+        "name": "phono3py",
         "citation": "A. Togo, L. Chaput, I. Tanaka, Distributions of phonon "
         "lifetimes in Brillouin zones, Phys. Rev. B 91, 094306 (2015)",
         "doi": "10.1103/PhysRevB.91.094306",
@@ -100,6 +106,7 @@ CODE_CREDITS: dict[str, dict] = {
         "url": "https://phonopy.github.io/phono3py/",
     },
     "gpumd": {
+        "name": "GPUMD",
         "citation": "Z. Fan, W. Chen, V. Vierimaa, A. Harju, Efficient molecular "
         "dynamics simulations with many-body potentials on graphics processing "
         "units, Comput. Phys. Commun. 218, 10 (2017)",
@@ -109,6 +116,7 @@ CODE_CREDITS: dict[str, dict] = {
         "url": "https://github.com/brucefan1983/GPUMD",
     },
     "lammps": {
+        "name": "LAMMPS",
         "citation": "A. P. Thompson, H. M. Aktulga, R. Berger, et al., LAMMPS - "
         "a flexible simulation tool for particle-based materials modeling at "
         "the atomic, meso, and continuum scales, Comput. Phys. Commun. 271, "
@@ -120,6 +128,7 @@ CODE_CREDITS: dict[str, dict] = {
         "url": "https://www.lammps.org",
     },
     "i-pi": {
+        "name": "i-PI",
         "citation": "Y. Litman, V. Kapil, Y. M. Y. Feldman, et al., i-PI 3.0: "
         "a flexible and efficient framework for advanced atomistic simulations, "
         "J. Chem. Phys. 161, 062504 (2024)",
@@ -131,6 +140,7 @@ CODE_CREDITS: dict[str, dict] = {
         "url": "https://ipi-code.org",
     },
     "plumed": {
+        "name": "PLUMED",
         "citation": "G. A. Tribello, M. Bonomi, D. Branduardi, C. Camilloni, "
         "G. Bussi, PLUMED 2: New feathers for an old bird, Comput. Phys. Commun. "
         "185, 604 (2014)",
@@ -142,6 +152,7 @@ CODE_CREDITS: dict[str, dict] = {
     },
     # --- DFT ground state / periodic quantum chemistry -----------------------
     "qe": {
+        "name": "Quantum ESPRESSO",
         "citation": "P. Giannozzi, S. Baroni, N. Bonini, et al., QUANTUM "
         "ESPRESSO: a modular and open-source software project for quantum "
         "simulations of materials, J. Phys. Condens. Matter 21, 395502 (2009)",
@@ -151,6 +162,7 @@ CODE_CREDITS: dict[str, dict] = {
         "url": "https://www.quantum-espresso.org",
     },
     "qe-d3q": {
+        "name": "D3Q",
         "citation": "L. Paulatto, F. Mauri, M. Lazzeri, Anharmonic properties "
         "from a generalized third-order ab initio approach: Theory and "
         "applications to graphite and graphene, Phys. Rev. B 87, 214303 "
@@ -174,6 +186,7 @@ CODE_CREDITS: dict[str, dict] = {
         "url": "https://github.com/anharmonic/d3q",
     },
     "vasp": {
+        "name": "VASP",
         "citation": "G. Kresse, J. Furthmuller, Efficient iterative schemes for "
         "ab initio total-energy calculations using a plane-wave basis set, "
         "Phys. Rev. B 54, 11169 (1996)",
@@ -185,6 +198,7 @@ CODE_CREDITS: dict[str, dict] = {
     },
     # --- machine-learned interatomic potentials (driven via AtomisticSkills) -
     "mace": {
+        "name": "MACE",
         "citation": "I. Batatia, D. P. Kovacs, G. N. C. Simm, C. Ortner, "
         "G. Csanyi, MACE: Higher order equivariant message passing neural "
         "networks for fast and accurate force fields, NeurIPS 35 (2022), "
@@ -196,6 +210,7 @@ CODE_CREDITS: dict[str, dict] = {
         "url": "https://github.com/ACEsuit/mace",
     },
     "matgl": {
+        "name": "MatGL",
         "citation": "C. Chen, S. P. Ong, A universal graph deep learning "
         "interatomic potential for the periodic table (M3GNet), Nat. Comput. "
         "Sci. 2, 718 (2022)",
@@ -206,6 +221,7 @@ CODE_CREDITS: dict[str, dict] = {
         "url": "https://github.com/materialsvirtuallab/matgl",
     },
     "fairchem": {
+        "name": "fairchem",
         "citation": "B. M. Wood, M. Dzamba, X. Fu, et al., UMA: A Family of "
         "Universal Models for Atoms (2025), arXiv:2506.23971",
         "doi": "10.48550/arXiv.2506.23971",
@@ -216,6 +232,7 @@ CODE_CREDITS: dict[str, dict] = {
     },
     # --- electronic transport ------------------------------------------------
     "amset": {
+        "name": "AMSET",
         "citation": "A. M. Ganose, J. Park, A. Faghaninia, R. Woods-Robinson, "
         "K. A. Persson, A. Jain, Efficient calculation of carrier scattering "
         "rates from first principles, Nat. Commun. 12, 2222 (2021)",
@@ -227,6 +244,7 @@ CODE_CREDITS: dict[str, dict] = {
     },
     # --- materials / structure & configuration -------------------------------
     "pymatgen": {
+        "name": "pymatgen",
         "citation": "S. P. Ong, W. D. Richards, A. Jain, et al., Python "
         "Materials Genomics (pymatgen): A robust, open-source python library "
         "for materials analysis, Comput. Mater. Sci. 68, 314 (2013)",
@@ -236,6 +254,7 @@ CODE_CREDITS: dict[str, dict] = {
         "url": "https://pymatgen.org",
     },
     "mp-api": {
+        "name": "Materials Project API",
         "citation": "A. Jain, S. P. Ong, G. Hautier, et al., Commentary: The "
         "Materials Project: A materials genome approach to accelerating "
         "materials innovation, APL Mater. 1, 011002 (2013)",
@@ -245,6 +264,7 @@ CODE_CREDITS: dict[str, dict] = {
         "url": "https://github.com/materialsproject/api",
     },
     "smol": {
+        "name": "smol",
         "citation": "L. Barroso-Luque, J. H. Yang, F. Xie, et al., smol: A Python "
         "package for cluster expansions and beyond, J. Open Source Softw. 7, "
         "4504 (2022)",
@@ -255,6 +275,7 @@ CODE_CREDITS: dict[str, dict] = {
         "url": "https://github.com/CederGroupHub/smol",
     },
     "pymatgen-analysis-diffusion": {
+        "name": "pymatgen-analysis-diffusion",
         "citation": "I.-H. Chu, Z. Deng, H. Nguyen, et al., pymatgen-analysis-"
         "diffusion (pymatgen-diffusion add-on); method: Z. Deng, Z. Zhu, "
         "I.-H. Chu, S. P. Ong, Data-Driven First-Principles Methods for the "
@@ -267,6 +288,7 @@ CODE_CREDITS: dict[str, dict] = {
         "url": "https://github.com/materialsvirtuallab/pymatgen-analysis-diffusion",
     },
     "rxn-network": {
+        "name": "reaction-network",
         "citation": "M. J. McDermott, S. S. Dwaraknath, K. A. Persson, A "
         "graph-based network for predicting chemical reaction pathways in "
         "solid-state materials synthesis, Nat. Commun. 12, 3097 (2021)",
@@ -277,6 +299,7 @@ CODE_CREDITS: dict[str, dict] = {
         "url": "https://github.com/GENESIS-EFRC/reaction-network",
     },
     "diffcsp": {
+        "name": "DiffCSP",
         "citation": "R. Jiao, W. Huang, P. Lin, J. Han, P. Chen, Y. Lu, Y. Liu, "
         "Crystal Structure Prediction by Joint Equivariant Diffusion (DiffCSP), "
         "NeurIPS 36 (2023), arXiv:2309.04475; space-group-constrained variant "
@@ -287,6 +310,7 @@ CODE_CREDITS: dict[str, dict] = {
         "url": "https://github.com/jiaor17/DiffCSP",
     },
     "mattergen": {
+        "name": "MatterGen",
         "citation": "C. Zeni, R. Pinsler, D. Zugner, et al., A generative model "
         "for inorganic materials design (MatterGen), Nature 639, 624 (2025)",
         "doi": "10.1038/s41586-025-08628-5",
@@ -295,6 +319,7 @@ CODE_CREDITS: dict[str, dict] = {
         "url": "https://github.com/microsoft/mattergen",
     },
     "xtb": {
+        "name": "xtb",
         "citation": "C. Bannwarth, E. Caldeweyher, S. Ehlert, et al., Extended "
         "tight-binding quantum chemistry methods, WIREs Comput. Mol. Sci. 11, "
         "e1493 (2020); method: C. Bannwarth, S. Ehlert, S. Grimme, GFN2-xTB, "
@@ -312,6 +337,7 @@ CODE_CREDITS: dict[str, dict] = {
     },
     # --- thermochemistry -----------------------------------------------------
     "pycalphad": {
+        "name": "pycalphad",
         "citation": "R. Otis, Z.-K. Liu, pycalphad: CALPHAD-based Computational "
         "Thermodynamics in Python, J. Open Res. Softw. 5, 1 (2017)",
         "doi": "10.5334/jors.140",
@@ -322,6 +348,7 @@ CODE_CREDITS: dict[str, dict] = {
     },
     # --- molecular -----------------------------------------------------------
     "openmm": {
+        "name": "OpenMM",
         "citation": "P. Eastman, J. Swails, J. D. Chodera, et al., OpenMM 7: "
         "Rapid development of high performance algorithms for molecular "
         "dynamics, PLoS Comput. Biol. 13, e1005659 (2017)",
@@ -332,6 +359,7 @@ CODE_CREDITS: dict[str, dict] = {
         "url": "https://openmm.org",
     },
     "orca": {
+        "name": "ORCA",
         "citation": "F. Neese, Software update: The ORCA program system, "
         "Version 6.0, WIREs Comput. Mol. Sci. 15, e70019 (2025)",
         "doi": "10.1002/wcms.70019",
@@ -343,6 +371,7 @@ CODE_CREDITS: dict[str, dict] = {
     },
     # --- AtomisticSkills skill rails (cite the AtomisticSkills paper) ---------
     "mat-elasticity": {
+        "name": "AtomisticSkills mat-elasticity",
         "citation": "B. Deng, B. Li, M. Cox, et al., Harnessing AtomisticSkills "
         "for Agentic Atomistic Research (2026), arXiv:2605.24002 "
         "(mat-elasticity skill)",
@@ -353,6 +382,7 @@ CODE_CREDITS: dict[str, dict] = {
         "url": "https://github.com/learningmatter-mit/AtomisticSkills",
     },
     "mat-diffusion-analysis": {
+        "name": "AtomisticSkills mat-diffusion-analysis",
         "citation": "B. Deng, B. Li, M. Cox, et al., Harnessing AtomisticSkills "
         "for Agentic Atomistic Research (2026), arXiv:2605.24002 "
         "(mat-diffusion-analysis skill)",
@@ -363,6 +393,7 @@ CODE_CREDITS: dict[str, dict] = {
         "url": "https://github.com/learningmatter-mit/AtomisticSkills",
     },
     "mat-equation-of-state": {
+        "name": "AtomisticSkills mat-equation-of-state",
         "citation": "B. Deng, B. Li, M. Cox, et al., Harnessing AtomisticSkills "
         "for Agentic Atomistic Research (2026), arXiv:2605.24002 "
         "(mat-equation-of-state skill)",
@@ -373,6 +404,7 @@ CODE_CREDITS: dict[str, dict] = {
         "url": "https://github.com/learningmatter-mit/AtomisticSkills",
     },
     "mat-surface-adsorption": {
+        "name": "AtomisticSkills mat-surface-adsorption",
         "citation": "B. Deng, B. Li, M. Cox, et al., Harnessing AtomisticSkills "
         "for Agentic Atomistic Research (2026), arXiv:2605.24002 "
         "(mat-surface-adsorption skill)",
@@ -384,6 +416,7 @@ CODE_CREDITS: dict[str, dict] = {
     },
     # --- foundation library --------------------------------------------------
     "ase": {
+        "name": "ASE",
         "citation": "A. Hjorth Larsen, J. J. Mortensen, J. Blomqvist, et al., The "
         "atomic simulation environment - a Python library for working with "
         "atoms, J. Phys. Condens. Matter 29, 273002 (2017)",
