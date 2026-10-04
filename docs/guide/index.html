@@ -77,7 +77,7 @@ python -m omai.map_data        # regenerate docs/data/*.json from the operator l
         <h2>Resolve a label</h2>
         <p>The resolver maps a method or quantity name, as a paper or an agent writes it, to the ids of typed, content-addressed nodes. The playground's Resolve tab runs the same resolver in the browser.</p>
         <div class="snippet" data-snippet="python">
-          <div class="snippet-head"><span class="snippet-title">Resolve a fuzzy label to node ids</span><span class="snippet-lang">python</span></div>
+          <div class="snippet-head"><span class="snippet-title">Resolve a label to node ids</span><span class="snippet-lang">python</span></div>
           <pre>from omai.map_data import DOMAINS, build_graph_dict
 from omai.semantics import build_semantics, resolve
 
@@ -129,14 +129,14 @@ from omai.operator.identity import node_id
 print(node_id(THERMAL_CONDUCTIVITY)[:12], THERMAL_CONDUCTIVITY.fields[0].dimension.name)
 # a03324d4def5 thermal_conductivity</pre>
         </div>
-        <p>The dimensional layer is verified in Lean. <code>python -m omai.physlean_export</code> writes <code>lean/OpenMaterials.lean</code>, in which each node is a <code>Dimension</code> and each dimension-proven edge is a theorem, and the file compiles against physlib. The map and the playground mark the selected element "Proven in Lean" and show its statement. <code>OpenMaterialsIdentities.lean</code>, also generated, proves that the chained thermodynamic identities (ZT through the power factor, C_P through the molar volume) equal their expanded forms, and <code>OpenMaterialsUnits.lean</code> anchors the map's SI convention to physlib's unit-conversion structure.</p>
+        <p>The dimensional layer is exported to Lean. <code>python -m omai.physlean_export</code> writes <code>lean/OpenMaterials.lean</code>, which declares each exported node's <code>Dimension</code> and states a theorem for each edge whose output dimension is the product of its input dimensions; the file compiles against physlib. The map and the playground show the selected node's Lean dimension, and the playground's sub-map shows each edge theorem. <code>OpenMaterialsIdentities.lean</code>, also generated, proves that the chained thermodynamic identities (ZT through the power factor, C_P through the molar volume) equal their expanded forms, and <code>OpenMaterialsUnits.lean</code> anchors the map's SI convention to physlib's unit-conversion structure.</p>
       </section>
 
       <section class="gsec" id="mermaid">
         <h2>Export a sub-map as Mermaid</h2>
         <p>A derivation or sub-map exports as a Mermaid flowchart, which GitHub renders in Markdown files, issues, and pull requests. The playground's Sub-map tab has a Copy as Mermaid button, and the exporter also runs from Python:</p>
         <div class="snippet" data-snippet="python">
-          <div class="snippet-head"><span class="snippet-title">A node's derivation as a mermaid flowchart</span><span class="snippet-lang">python</span></div>
+          <div class="snippet-head"><span class="snippet-title">A node's derivation as a Mermaid flowchart</span><span class="snippet-lang">python</span></div>
           <pre>from omai.mermaid import mermaid_lineage
 
 print(mermaid_lineage("PhononDOS"))
@@ -168,7 +168,7 @@ python -m omai.paper_parser path/to/paper.pdf --apply --yes</pre>
           <div><dt class="mono"><a href="../data/graph.json">graph.json</a></dt><dd><code>{nodes[], links[], tiers[]}</code><br>The structure: typed quantities and the operators between them.</dd></div>
           <div><dt class="mono"><a href="../data/codes.json">codes.json</a></dt><dd><code>{code: {node: spec}}</code><br>Each code's representation: which quantities it computes, units, citation, license.</dd></div>
           <div><dt class="mono"><a href="../data/semantics.json">semantics.json</a></dt><dd><code>[{id, uid, kind, labels, curated}]</code><br>The label cloud per node and edge, for the resolver.</dd></div>
-          <div><dt class="mono"><a href="../data/instances.json">instances.json</a></dt><dd><code>[{variable, material, value, source}]</code><br>Evidence: measured or computed values attached to nodes.</dd></div>
+          <div><dt class="mono"><a href="../data/instances.json">instances.json</a></dt><dd><code>[{id, variable, material, conditions, value, units, uncertainty, source {kind, ref, detail}, node_uid}]</code><br>Evidence: measured or computed values attached to nodes.</dd></div>
           <div><dt class="mono"><a href="../data/spectra.json">spectra.json</a></dt><dd><code>[{variable, axis, values}]</code><br>Function-valued evidence (densities of states, profiles).</dd></div>
           <div><dt class="mono"><a href="../data/configurations.json">configurations.json</a></dt><dd><code>[{name, structure, canonical}]</code><br>Atomic structures (pymatgen payload), the evaluation points.</dd></div>
           <div><dt class="mono"><a href="../data/version.json">version.json</a></dt><dd><code>{version, graph_version, format_rules_version, genesis}</code><br>The map version, graph version, and genesis hash.</dd></div>
