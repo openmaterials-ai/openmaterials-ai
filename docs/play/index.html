@@ -62,8 +62,8 @@
   @media (max-width:960px){.pg-left{flex-basis:320px;}}
   .pg-panel{flex:1 1 auto;min-height:0;overflow-y:auto;padding:20px;display:none;}
   .pg-panel.on{display:block;}
-  .pg-panel h3{margin:0 0 8px;font-size:12px;line-height:16px;font-weight:500;color:var(--ink-2,#4D4D4D);}
-  .pg-panel h4{margin:24px 0 8px;font-size:14px;line-height:20px;font-weight:500;color:var(--ink,#171717);}
+  .pg-panel h3{margin:0 0 8px;font-family:inherit;font-size:12px;line-height:16px;font-weight:500;letter-spacing:0;color:var(--ink-2,#4D4D4D);}
+  .pg-panel h4{margin:24px 0 8px;font-family:inherit;font-size:14px;line-height:20px;font-weight:500;letter-spacing:0;color:var(--ink,#171717);}
   .pg-panel p{margin:0 0 12px;font-size:14px;line-height:20px;color:var(--ink-2,#4D4D4D);}
   .pg-panel details{margin:0 0 12px;} .pg-panel summary{cursor:pointer;color:var(--ink,#171717);margin-bottom:8px;}
   .pg-panel a,.lin-stage a{color:var(--ink,#171717);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px;text-decoration-color:var(--ink-2,#4D4D4D);}
@@ -117,10 +117,10 @@
   #pglabels{position:absolute;inset:0;pointer-events:none;overflow:hidden;}
   #pglabelsInner{position:absolute;left:0;top:0;transform-origin:0 0;font-size:11px;}
   .plab{position:absolute;transform:translate(-50%,-50%);font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);font-size:1em;color:var(--ink,#171717);white-space:nowrap;pointer-events:none;}
-  .plab.dim{opacity:.16;}
+  .plab.dim{opacity:.35;}
   #pglabelsInner.sparse .plab.dim{display:none;}
   .pg-node circle{transition:opacity var(--dur,150ms) var(--ease,ease);}
-  .pg-node.dim{opacity:.16;}
+  .pg-node.dim{opacity:.35;}
   .pg-edge{fill:none;stroke:var(--edge,#8F8F8F);stroke-width:1;vector-effect:non-scaling-stroke;transition:opacity var(--dur,150ms) var(--ease,ease);}
   .pg-edge.dim{opacity:.1;}
   .pg-edge.hot{stroke:var(--data-obs-line,#4F46E5);stroke-width:2;}
@@ -257,6 +257,7 @@
     .pg-body{flex-direction:column;}
     .pg-left{flex:0 0 auto;max-width:none;max-height:44vh;border-right:none;border-bottom:1px solid var(--line,#EBEBEB);}
     .lin-ingress-row{grid-template-columns:minmax(0,1fr);}
+    .lin-actions{justify-content:flex-start;}
     .rec-head{flex-direction:column;align-items:flex-start;gap:6px;}
     .rec-head-meta{justify-content:flex-start;text-align:left;}
   }
@@ -644,15 +645,18 @@ function seedUI(){
 }
 
 /* ---- rendering a focused sub-map ----------------------------------------- */
-function renderSubmap(nodeIds, hotEdgeOps){
+function renderSubmap(nodeIds, hotEdgeOps, showIds){
   document.getElementById('pgCaption').hidden = true;   // any later drawing clears the example caption
   var set = {}; nodeIds.forEach(function(id){ set[id] = 1; });
   hotEdgeOps = hotEdgeOps || {};
   // the induced neighborhood: the hit nodes plus their direct neighbors, so an
-  // edge has both endpoints to draw against.
+  // edge has both endpoints to draw against; showIds, when given, names the
+  // context nodes instead (a proposal draws only its producing edges).
   var show = {}; nodeIds.forEach(function(id){ show[id] = 1;
+    if (showIds) return;
     (children[id] || []).forEach(function(c){ show[c] = 1; });
     (parents[id] || []).forEach(function(p){ show[p] = 1; }); });
+  (showIds || []).forEach(function(id){ if (nodeById[id]) show[id] = 1; });
   var ids = Object.keys(show);
   if (!ids.length) { svg.innerHTML = ''; labelsInner.innerHTML = ''; hint.style.display = 'block'; return; }
   hint.style.display = 'none';
@@ -672,6 +676,9 @@ function renderSubmap(nodeIds, hotEdgeOps){
   var minx = Math.min.apply(null, xs) - 60, maxx = Math.max.apply(null, xs) + 60;
   var miny = Math.min.apply(null, ys) - 50, maxy = Math.max.apply(null, ys) + 50;
   VB = { x: minx, y: miny, w: Math.max(200, maxx - minx), h: Math.max(150, maxy - miny) };
+  // a small sub-map is never magnified past 1.6x, so circles and labels keep a reading size
+  var cr = svg.getBoundingClientRect(), k = Math.min(cr.width / VB.w, cr.height / VB.h) / 1.6;
+  if (k > 1) { var cx = VB.x + VB.w / 2, cy = VB.y + VB.h / 2; VB.w *= k; VB.h *= k; VB.x = cx - VB.w / 2; VB.y = cy - VB.h / 2; }
   svg.setAttribute('viewBox', VB.x + ' ' + VB.y + ' ' + VB.w + ' ' + VB.h);
 
   var colorOf = function(n){ return n.type === 'observable' ? 'var(--data-obs,#4F46E5)' : (n.type === 'parameter' ? 'var(--edge,#8F8F8F)' : 'var(--ink-2,#4D4D4D)'); };
@@ -832,7 +839,7 @@ function renderProposal(proposal){
     (proposal.paper ? '<div class="pg-paper">' + esc(proposal.paper) + '</div>' : '')
     + '<div class="lin-lab">The paper\'s dataflow</div><div class="lin-diagram">' + (diagram || '<span class="pg-note">No map edge produces the reported quantities.</span>') + '</div>'
     + '<div class="lin-lab">The mapping, in code</div><pre class="lin-code">' + code + '</pre>';
-  renderSubmap(lin.nodes.filter(function(n){ return lin.touched[n]; }), eops);
+  renderSubmap(lin.nodes.filter(function(n){ return lin.touched[n]; }), eops, lin.nodes);
 }
 
 // The example proposal, drawn and captioned. A bare /play/ opens with it, so the
