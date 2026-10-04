@@ -23,14 +23,7 @@
   "artifacts": [
     {
       "path": "FORCE_CONSTANTS_3RD",
-      "role": "force_constants",
-      "url": "https://app.materialscodegraph.com/runs/si-tersoff-rta"
+      "role": "force_constants"
     }
-  ],
-  "mirrors": {
-    "FORCE_CONSTANTS_3RD": {
-      "url": "https://app.materialscodegraph.com/runs/si-tersoff-rta",
-      "provider": "materialscodegraph"
-    }
-  }
+  ]
 }

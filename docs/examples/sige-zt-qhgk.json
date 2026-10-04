@@ -23,14 +23,7 @@
   "artifacts": [
     {
       "path": "FORCE_CONSTANTS",
-      "role": "force_constants",
-      "url": "https://app.materialscodegraph.com/runs/sige-zt"
+      "role": "force_constants"
     }
-  ],
-  "mirrors": {
-    "FORCE_CONSTANTS": {
-      "url": "https://app.materialscodegraph.com/runs/sige-zt",
-      "provider": "materialscodegraph"
-    }
-  }
+  ]
 }
