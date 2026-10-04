@@ -18,7 +18,7 @@
   {
    "node": "PoissonRatio",
    "uid": "e95ba3f5810f8554656c148dae26520cf3258cace0b951dd75e69ee8c552c132",
-   "api": "calculate_elasticity.py nu = (3B-2G)/(6B+2G) over the VRH moduli",
+   "api": "nu = (3B-2G)/(6B+2G) over the VRH moduli",
    "unit": "dimensionless"
   },
   {
@@ -30,7 +30,7 @@
   {
    "node": "YoungsModulus",
    "uid": "022d18213f7d63713ef4fddb484e1ae6d898873ce20377176013f620225637d8",
-   "api": "calculate_elasticity.py E = 9BG/(3B+G) over the VRH moduli, GPa",
+   "api": "E = 9BG/(3B+G) over the VRH moduli, GPa",
    "unit": "GPa"
   }
  ]

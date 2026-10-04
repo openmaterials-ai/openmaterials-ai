@@ -193,7 +193,10 @@ def build_codes(domains: tuple[Domain, ...]) -> dict:
                     cr = PER_NODE_CREDITS.get(
                         (obj.representation_name, obj.space.name),
                         CODE_CREDITS.get(obj.representation_name))
-                    entry = {"api": api, "unit": unit}
+                    # The display name rides on every entry, as the credits do:
+                    # a sibling key beside the node entries would read as a node.
+                    name = (CODE_CREDITS.get(obj.representation_name) or {}).get("name")
+                    entry = {"name": name or obj.representation_name, "api": api, "unit": unit}
                     if cr is not None:
                         entry["citation"] = cr["citation"]
                         entry["doi"] = cr.get("doi")

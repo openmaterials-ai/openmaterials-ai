@@ -103,8 +103,8 @@
 <script>
 /* The codes bibliography. Every entry is read at load from the published
    ../data/codes.json, the same file the map reads. The shape is
-   { codeName: { NodeName: { api, unit, citation, doi, license, url }, ... }, ... };
-   entries within one code share citation, license, and url. Nothing about the
+   { codeName: { NodeName: { name, api, unit, citation, doi, license, url }, ... }, ... };
+   entries within one code share name, citation, license, and url. Nothing about the
    data is assumed: every string is escaped, and doi or url may be absent. */
 (function () {
   'use strict';

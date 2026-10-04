@@ -68,6 +68,7 @@ def test_paper_source_renders_quote_page_citation_and_doi():
 def test_citation_form_drops_the_curator_note():
     (out,) = _rows([_entry("55ee996282a6")])
     assert "<dd>Glassbrenner and Slack, Phys. Rev. 134, A1058 (1964)</dd>" in out
+    assert 'href="https://doi.org/10.1103/PhysRev.134.A1058"' in out
     assert "<dd>steady-state measurement, bulk single crystal, natural isotopic abundance</dd>" in out
     assert "MIGRATED" not in out
 

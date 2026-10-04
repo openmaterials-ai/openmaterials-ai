@@ -130,9 +130,10 @@ and reopens the full datasheet page anywhere, with no URL-length limit.
 Opening the link renders straight into a **full-width, dense, plain datasheet**:
 a lineage is a data container, and OpenMaterials (the static site) is the
 container's viewer, so the view shows the information the record holds, plainly,
-not a dashboard. Opening the Lineage tab without a record lazily loads the
-committed `si-kappa-kaldo-direct` lineage into the same datasheet, with plain
-links to the other nine committed examples. It
+not a dashboard. Opening the Lineage tab without a record loads the committed
+Si diamond thermal conductivity value `f735a05c14db` (147 W/(m K), kALDo direct
+inversion) into the same datasheet, with plain links to the listed examples in
+`docs/examples/index.json`. It
 presents what the record is (the kind, simulation or measurement, the output map
 node, the material, and the short lineage id), the lineage's every field as plain
 labelled key-values and a simple value-and-units table (node, node_uid, material

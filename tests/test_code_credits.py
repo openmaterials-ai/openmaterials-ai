@@ -106,3 +106,11 @@ def test_overrides_reach_the_emitted_data():
         for field in ("citation", "doi", "license", "url"):
             assert entry[field] == cr.get(field), (
                 f"({rail}, {node}) field {field} does not carry the override")
+
+
+def test_every_code_carries_its_display_name_on_every_entry():
+    # The name rides on each node entry (a sibling key would read as a node).
+    for code, spaces in build_codes(DOMAINS).items():
+        name = (CODE_CREDITS[code].get("name") or "").strip()
+        assert name, code
+        assert {e["name"] for e in spaces.values()} == {name}, code

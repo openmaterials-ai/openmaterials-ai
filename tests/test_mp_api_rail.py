@@ -235,4 +235,4 @@ def test_mp_api_instances_follow_the_committed_provenance_convention():
         assert "materials-project" != it["source"]["ref"]
         assert "mp-" in it["material"]  # mp-id in the material field
         assert it["uncertainty"] is None  # MP serves no per-value uncertainty
-        assert "li_s_stable.json" in it["source"]["detail"]
+        assert "mat-db-mp" in it["source"]["detail"]

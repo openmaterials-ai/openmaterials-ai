@@ -87,9 +87,9 @@ def _zoo():
         rows.append({"name": name, "distances": cells})
     return {
         "illustrative": True,
-        "note": ("constructed silicon cells against Si diamond, hist encoder; "
-                 "a demonstration of the channels, not committed evidence"),
-        "reference": "Si diamond (a=5.43 A)",
+        "note": ("Illustrative silicon cells compared with Si diamond "
+                 "(a = 5.43 \u00c5), not committed values."),
+        "reference": "Si diamond (a = 5.43 \u00c5)",
         "encoder": "hist",
         "rows": rows,
     }

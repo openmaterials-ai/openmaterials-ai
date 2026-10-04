@@ -9,7 +9,8 @@
       "units": "W/(m K)"
     },
     "code": "kaldo",
-    "fragment": "gH4sIABq5wWoC_yVRXWvbMBT9K0NPG4ROX5alwB5Gtr0MWmgCeyjFXEtXjagtGVsOLSH_fZKDHoQO93zo3CsJjuyJ8LTxrRcNE6ZxSIV16HgvG4pKUWo475WzVlDumlZa77RHqjhlPQgDXpEdGUJEeEOyv5KYXLnJ6YzzCMMhRbfaHC4hf770GbslDRecf7gwo81diOWx4GuRGCHjHGDYNGCsGsdQcJuiD2_rDDmkWMCm6T3nFjTTSmvVSsrBSosNBS2oN8yBllbTxhhqRWtF78Cj6I0AZZgU5LYj588J5wnmYlNMl2o54nIu6vqjnOI6pYwxb3FKjIc6lbyv3AsMK26Ud5gmIHuuHgzVO7LGkAtO_n3_On75-63OZhynofyroNM5xRS7WsGdt9ua6tZtBSCUcUKgUbIk9bpVqmeMlUW03Erpey8kMAEolfPQC4YMys0sZ9xYMPeeXKgdbdlOZC8ovZUM-IF2vXd3LUPbct5hcKkGhDkHD7bmfrmSCXLt4M_T8-F3d3h6PJ5-Pp6OnXj-VfTnNFSqT7PFrpgtGWLh3V5v_wHLqj2TRwIAAA"
+    "fragment": "gH4sIABq5wWoC_yVRXWvbMBT9K0NPG4ROX5alwB5Gtr0MWmgCeyjFXEtXjagtGVsOLSH_fZKDHoQO93zo3CsJjuyJ8LTxrRcNE6ZxSIV16HgvG4pKUWo475WzVlDumlZa77RHqjhlPQgDXpEdGUJEeEOyv5KYXLnJ6YzzCMMhRbfaHC4hf770GbslDRecf7gwo81diOWx4GuRGCHjHGDYNGCsGsdQcJuiD2_rDDmkWMCm6T3nFjTTSmvVSsrBSosNBS2oN8yBllbTxhhqRWtF78Cj6I0AZZgU5LYj588J5wnmYlNMl2o54nIu6vqjnOI6pYwxb3FKjIc6lbyv3AsMK26Ud5gmIHuuHgzVO7LGkAtO_n3_On75-63OZhynofyroNM5xRS7WsGdt9ua6tZtBSCUcUKgUbIk9bpVqmeMlUW03Erpey8kMAEolfPQC4YMys0sZ9xYMPeeXKgdbdlOZC8ovZUM-IF2vXd3LUPbct5hcKkGhDkHD7bmfrmSCXLt4M_T8-F3d3h6PJ5-Pp6OnXj-VfTnNFSqT7PFrpgtGWLh3V5v_wHLqj2TRwIAAA",
+    "listed": false
   },
   {
     "slug": "si-kappa-kaldo-rta",
@@ -21,7 +22,8 @@
       "units": "W/(m K)"
     },
     "code": "kaldo",
-    "fragment": "gH4sIAPG8wWoC_zWQX2tjIRDFv8ri0y6Erq7ePwb2oWTbl0ILTWAfQrmMOjbSe_VivKEl5Lt3TCk-iGfmN3M8ZxYcWzPbdX0rwLVeCiU6i0JapbR2rdOm4d43ErySpnGNsgZ4I4WXxjjbKdlz07EVG0NEeEW2PrOYHN1sd8A8wbhJ0S22hFMoH3tTcDim8YT5by7wQtwEBXOAkYBtoPfhY8Y8Q4YJqXCs8yY8Hqjcv9OhjjkVjOUbualdyXt2WbETjAtekTeYZ2BroW9Uu2JLDIVk9v_3z-nHw6_aWnCaR1pN6nxIMcWhWvvCVtcfDMs1Gtdp1_eukX_a1grVIfSu5611xknuvORaaK1aLRuBFJuxVnPFQfedatBYRdMsJRBKSPFqbcfWkvMLecB3tEvVq2y_QnuD0aVqEHIJHmz1vT-zGUqN4P7peXM3bJ4et7vbx912kM__aH5OY0V9yhYHWnYsEIm7vFw-AcZdEHPfAQAA"
+    "fragment": "gH4sIAPG8wWoC_zWQX2tjIRDFv8ri0y6Erq7ePwb2oWTbl0ILTWAfQrmMOjbSe_VivKEl5Lt3TCk-iGfmN3M8ZxYcWzPbdX0rwLVeCiU6i0JapbR2rdOm4d43ErySpnGNsgZ4I4WXxjjbKdlz07EVG0NEeEW2PrOYHN1sd8A8wbhJ0S22hFMoH3tTcDim8YT5by7wQtwEBXOAkYBtoPfhY8Y8Q4YJqXCs8yY8Hqjcv9OhjjkVjOUbualdyXt2WbETjAtekTeYZ2BroW9Uu2JLDIVk9v_3z-nHw6_aWnCaR1pN6nxIMcWhWvvCVtcfDMs1Gtdp1_eukX_a1grVIfSu5611xknuvORaaK1aLRuBFJuxVnPFQfedatBYRdMsJRBKSPFqbcfWkvMLecB3tEvVq2y_QnuD0aVqEHIJHmz1vT-zGUqN4P7peXM3bJ4et7vbx912kM__aH5OY0V9yhYHWnYsEIm7vFw-AcZdEHPfAQAA",
+    "listed": false
   },
   {
     "slug": "ge-kappa-kaldo",
@@ -33,7 +35,8 @@
       "units": "W/(m K)"
     },
     "code": "kaldo",
-    "fragment": "gH4sIAPG8wWoC_zVQ0UrsMBD9FcmTFxZNmpi2Cz5c9qoPgoIu-CBSpsnkbrBNSpouyrL_7mQXycMwZ-acOTkH5i1bM4EclTFgVWW5RLQcUfaqEW2lZVMbIThKBM4bh7auW2E1V62ojK5vehCKrdjgA8J_ZOsDC9FSZdsdphGGTQx2Mdnvff5-7zN2cxz2mG6tT2hy5wM1M36QxAgZk4eBuA9I_e57wjRBghFpMBfpEecdjZsverQxxYwh_1KuylZ0jh1XbA_DgifKJ0wTsLW4uapqvWJL8Jlw9nZ9OV48_im7GcdpoNuETrsYYuiKzTNvdfpNt5xiAqlbKyW2Wsm-dU2tdS-EMBbryijleicVCAmotHXQS4ECqApTiao10JKaoTR89jGcvG3ZWnJ-JA_4hWYpeIHNOcBPGGwsBiFl78AU3-8HNkEuGdw_v2zuus3z0-v279P2tZMv_0g_xaFQXUwGOzo2ZwjEO34cfwDHp2gX6wEAAA"
+    "fragment": "gH4sIAPG8wWoC_zVQ0UrsMBD9FcmTFxZNmpi2Cz5c9qoPgoIu-CBSpsnkbrBNSpouyrL_7mQXycMwZ-acOTkH5i1bM4EclTFgVWW5RLQcUfaqEW2lZVMbIThKBM4bh7auW2E1V62ojK5vehCKrdjgA8J_ZOsDC9FSZdsdphGGTQx2Mdnvff5-7zN2cxz2mG6tT2hy5wM1M36QxAgZk4eBuA9I_e57wjRBghFpMBfpEecdjZsverQxxYwh_1KuylZ0jh1XbA_DgifKJ0wTsLW4uapqvWJL8Jlw9nZ9OV48_im7GcdpoNuETrsYYuiKzTNvdfpNt5xiAqlbKyW2Wsm-dU2tdS-EMBbryijleicVCAmotHXQS4ECqApTiao10JKaoTR89jGcvG3ZWnJ-JA_4hWYpeIHNOcBPGGwsBiFl78AU3-8HNkEuGdw_v2zuus3z0-v279P2tZMv_0g_xaFQXUwGOzo2ZwjEO34cfwDHp2gX6wEAAA",
+    "listed": false
   },
   {
     "slug": "si-diamond-kappa-dfpt",
