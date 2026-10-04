@@ -18,7 +18,7 @@
   {
    "node": "MolecularFrequency",
    "uid": "e1270ea9a293c9107226bf831f60985f5525a0c386dca70841743bdc5d082c26",
-   "api": "VIBRATIONAL FREQUENCIES block of the ORCA output, cm^-1 (imaginary modes negative; IR intensities in km/mol)",
+   "api": "VIBRATIONAL FREQUENCIES block of the ORCA output, cm^-1, imaginary modes printed negative, with IR intensities in km/mol from the IR SPECTRUM block",
    "unit": "inverse_cm"
   },
   {

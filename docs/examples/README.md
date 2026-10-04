@@ -40,7 +40,8 @@ format; the reported values are grounded in the map's committed evidence.
 facts (formula, space group, atoms, lattice), and its Run link carries the pin to
 MaterialsCodeGraph.
 
-The three kaldo Tersoff examples (`si-kappa-kaldo-direct`, `si-kappa-kaldo-rta`,
-`ge-kappa-kaldo`) carry under-converged values (8x8x8 mesh) and are marked
+The three kALDo Tersoff examples (`si-kappa-kaldo-direct`, `si-kappa-kaldo-rta`,
+`ge-kappa-kaldo`) carry values far below converged Tersoff conductivities (for Si,
+26.9 and 19.5 W/(m K) against about 250 W/(m K) published) and are marked
 `"listed": false` in `index.json`, so the Lineage tab does not offer them; their
 files and fragments stay valid.

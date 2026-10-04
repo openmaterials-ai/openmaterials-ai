@@ -290,7 +290,7 @@ def test_mescal_bulk_si_golden_evidence_lands_on_phonon_transmission():
         # paper's Fig. 4, and the PRB validation anchor with its DOI.
         detail = it["source"]["detail"]
         assert "MESCAL mode matching" in detail
-        assert "mean deviation 0.013 per atom" in detail
+        assert "mean absolute deviation 0.013 per atom" in detail
         assert "Phys. Rev. B 84, 115423 (2011), Fig. 4" in detail
         assert "doi:10.1103/PhysRevB.84.115423" in detail
         # conditions carry the lead spec and the precision path.

@@ -65,10 +65,13 @@ plausibly attributable to the broadening choice on the scattering-rates
 operation: kaldo defaults to Gaussian, phono3py to tetrahedron. The ~1.25
 RTA-to-direct ratio in both codes confirms internal physics consistency.
 
-These κ values are well below the published Si Tersoff value (~250 W/m·K)
-because of mesh under-convergence (literature uses 16×16×16+). Both codes
-are equally under-converged at 8×8×8; the cross-code ratio is meaningful,
-the absolute value is not.
+These κ values are far below converged Tersoff conductivities (about
+250 W/(m K) published for Si). The mesh does not explain the gap: the pinned
+kALDo conformance run (Tersoff 1989 Si(D) parameters) gives 254 W/(m K) on a
+coarser 5×5×5 mesh. This experiment's `Si.tersoff` carries a different
+parameter set (Tersoff, PRB 37, 6991 (1988)) and a 0.1 THz Gaussian
+broadening; which choice sets the absolute value is not established here.
+At fixed settings the cross-code ratio is meaningful, the absolute value is not.
 
 ## Known cross-code differences exposed by this run
 
@@ -108,8 +111,8 @@ the energy-conservation delta function and/or the Gaussian normalization.
 - Acoustic-sum-rule enforcement. Both codes ran with their respective
   defaults (kaldo: off; phonopy/phono3py: on internally during FC
   production).
-- Mesh convergence. 8×8×8 is too coarse for absolute-κ comparison with
-  literature; we check cross-code agreement at fixed (small) mesh.
+- Absolute κ. The values are not comparable with the literature (see
+  Reference numbers); we check cross-code agreement at fixed settings.
 - Isotopic scattering. Both runs used `is_isotope=False`.
 - Cross-code substrate adapters. Outputs are saved as plain numpy arrays
   in `runs/`; wrapping them as substrate `Representation` objects is the

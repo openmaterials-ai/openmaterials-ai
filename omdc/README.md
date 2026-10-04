@@ -56,7 +56,7 @@ automatically.
 | id       | what it is                                                    | needs        | role |
 |----------|---------------------------------------------------------------|--------------|------|
 | `env-ot` | transport distance between weighted local-environment sets    | `[mace]`*    | default; the trustworthy answer for crystals, glasses, and defects |
-| `latent` | cosine over pooled environment vectors                        | `[mace]`*    | the ANN index key; candidate retrieval |
+| `latent` | one minus the cosine similarity of pooled environment vectors | `[mace]`*    | the ANN index key; candidate retrieval |
 | `comp`   | Element Mover's Distance on the Pettifor scale                | nothing      | chemistry only; a true metric; deterministic forever |
 | `amd`    | Average Minimum Distance (Chebyshev)                          | `[amd]`      | geometry only, species-blind; deterministic forever |
 | `exact`  | pymatgen StructureMatcher RMSD (inf when cells do not match)  | nothing      | re-rank of top-k only |

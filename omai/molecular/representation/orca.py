@@ -195,7 +195,7 @@ ORCA_MOLECULAR_FREQUENCY = SpaceRepresentationSpec(
     space=MOLECULAR_FREQUENCY,
     representation_name="orca",
     observable_units={"nu_mol": "inverse_cm"},
-    code_api={"nu_mol": "VIBRATIONAL FREQUENCIES block of the ORCA output, cm^-1 (imaginary modes negative; IR intensities in km/mol)"},
+    code_api={"nu_mol": "VIBRATIONAL FREQUENCIES block of the ORCA output, cm^-1, imaginary modes printed negative, with IR intensities in km/mol from the IR SPECTRUM block"},
     notes=(
         "The 3N-6 (or 3N-5) molecular normal-mode wavenumbers frequencies_cm1 "
         "(parse_orca_output.py:102), the eigenfrequencies of the mass-weighted "

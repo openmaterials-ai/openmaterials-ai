@@ -8,7 +8,7 @@ constants, Rydberg-atomic-unit masses in text flfrc, non-polar flfrc
 completeness). Optical and LA branches agree to 0.7 cm^-1 or better (Gamma
 optical to 0.4 cm^-1); the worst soft acoustic mode (L-TA) sits at 2.09 cm^-1,
 the expected finite-displacement witness limit for a 2x2x2 supercell, reported
-honestly and not tuned. This run is the precondition evidence for the
+as measured and not tuned. This run is the precondition evidence for the
 dft_ground_state domain entering the store (records 102-108) and for the first
 QE instances (the Si total energy and the Gamma optical frequency).
 
@@ -17,11 +17,11 @@ comparison scripts (final_compare.py, fd/phonopy_freqs.py), and the small text
 files needed to re-run the finite-displacement comparison (fd/ inputs,
 phonopy_disp.yaml, FORCE_SETS). The heavy scratch outputs (SCF/DFPT .out
 files, si.dyn*, si.fc, si.freq, wavefunction/.save dirs) and the UPF
-pseudopotential binary stay on the remote at
-giuseppe@192.168.1.167:/home/giuseppe/Development/openmaterials-ai/experiments/qe_si_crosscheck/scratch/.
+pseudopotential binary stay on the build host, outside the repository.
 
-The remainder of this file is the RESULTS.md written on the remote at the end
-of the run, verbatim.
+The remainder of this file is the RESULTS.md written on the build host at the
+end of the run, verbatim except that the host's address is replaced by a
+neutral description.
 
 ---
 
@@ -34,7 +34,7 @@ on the same material). Non-polar Si is chosen deliberately: Z* = 0, so the
 q2r/matdyn long-range dipole subtraction (flfrc short-range-only trap) is
 absent by design and flfrc is the complete FC2.
 
-Machine: giuseppe@192.168.1.167 (Ubuntu, 32 cores). QE 7.5 binaries in the
+Machine: a Linux build host (Ubuntu, 32 cores). QE 7.5 binaries in the
 conda `qe` env; phonopy 2.43.6 in the conda base env. Nothing committed.
 
 ## 1. Pseudopotential
