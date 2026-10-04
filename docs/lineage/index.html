@@ -32,8 +32,11 @@
   .legend .obs .sw { background: var(--data-obs); border-color: var(--data-obs); }
   .legend .hid .sw { background: var(--surface-2); border-color: var(--edge); }
   .legend .lrn .sw { background: transparent; border-color: var(--ink-2); border-style: dashed; }
-  .dagbox { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); background: var(--page); }
-  #dag { display: block; width: 1250px; max-width: none; height: auto; }
+  .dagbox { border: 1px solid var(--line); border-radius: var(--radius); background: var(--page); }
+  #dag { display: block; width: 720px; max-width: 100%; height: auto; }
+  /* the diagram needs its natural 720 px width for 12 px labels; narrower screens get one sentence instead */
+  @media (max-width: 960px) { .legend, .dagbox { display: none; } }
+  @media (min-width: 961px) { .dag-alt { display: none; } }
   .n rect { stroke-width: 1.4; }
   .n.obs rect { fill: var(--data-obs); stroke: var(--data-obs); }
   .n.hid rect { fill: var(--surface-2); stroke: var(--edge); }
@@ -83,7 +86,7 @@
   <div class="page-body"><article class="prose">
 
   <h2>1 · The derivation</h2>
-  <p class="sub">Read left to right: sources, the DFT chain, harmonic quantities, scattering channels,
+  <p class="sub">Read top to bottom: sources, the DFT chain, harmonic quantities, scattering channels,
     and transport. Observable nodes carry no gauge freedom. Hidden nodes depend on a gauge choice: the
     eigenvectors, group velocities, and linewidths are intermediates, and the QHGK thermal conductivity
     at the right end is an approximation. The dashed edge
@@ -98,7 +101,8 @@
     <span class="hid"><span class="sw"></span>Hidden (gauge-dependent)</span>
     <span class="lrn"><span class="sw"></span>Learned shortcut (illustration)</span>
   </div>
-  <div class="dagbox"><svg id="dag" xmlns="http://www.w3.org/2000/svg" width="1250" height="580" viewBox="0 0 1250 580" role="img" aria-label="Derivation DAG of QHGK thermal conductivity"></svg></div>
+  <div class="dagbox"><svg id="dag" xmlns="http://www.w3.org/2000/svg" width="720" height="536" viewBox="0 0 720 536" role="img" aria-label="Derivation DAG of QHGK thermal conductivity"></svg></div>
+  <p class="dag-alt">This screen is too narrow for the diagram; the tracer link above opens the same derivation.</p>
   <p class="caption">To reproduce this graph wherever Mermaid renders, run
     <span class="m">python -m omai.mermaid "ThermalConductivity[transport_model=qhgk]"</span>
     (output in the appendix). With the learned edge in place, the third-order force constants and the
@@ -275,14 +279,15 @@
     ['TotalEnergy','Forces'],['Structure','Forces'],
     ['Structure','TotalEnergy'],['Potential','TotalEnergy']
   ];
-  var W=1250,H=580,PADX=14,COLW=(W-2*PADX)/L.length,NH=26;
+  // One row per layer, top to bottom, in 720 units drawn at 720 px, so labels stay at 12 px.
+  var W=720,GUT=104,PADR=12,AW=W-GUT-PADR,TOP=16,RH=56,NH=26,H=2*TOP+RH*L.length;
   var pos={};
-  L.forEach(function(col,ci){
-    var gap=H/(col.length+1);
-    col.forEach(function(id,ri){
-      var label=SHORT[id]||id;
-      var w=Math.max(58,label.length*7.2+18);   // Geist Mono advances 0.6 em, 7.2 px at 12 px
-      pos[id]={x:PADX+COLW*ci+(COLW-w)/2,y:gap*(ri+1)-NH/2,w:w,h:NH,label:label};
+  L.forEach(function(row,ri){
+    var ws=row.map(function(id){ return Math.max(58,(SHORT[id]||id).length*7.2+18); });   // Geist Mono: 7.2 px a glyph at 12 px
+    var gap=(AW-ws.reduce(function(a,b){ return a+b; },0))/(row.length+1), x=GUT+gap;
+    row.forEach(function(id,i){
+      pos[id]={x:x,y:TOP+RH*ri+(RH-NH)/2,w:ws[i],h:NH,label:SHORT[id]||id};
+      x+=ws[i]+gap;
     });
   });
   var svg=document.getElementById('dag');
@@ -290,15 +295,15 @@
   function el(t,attrs,parent){var e=document.createElementNS(NS,t);for(var k in attrs)e.setAttribute(k,attrs[k]);(parent||svg).appendChild(e);return e;}
   var tiers=[['Sources',0,0],['DFT chain',1,2],['Harmonic',3,5],['Scattering',6,7],['Transport',8,8]];
   tiers.forEach(function(t,i){
-    var x0=PADX+COLW*t[1], x1=PADX+COLW*(t[2]+1);
-    if(i%2===1){ el('rect',{x:x0,y:0,width:x1-x0,height:H,'class':'band'}); }
-    var lab=el('text',{x:(x0+x1)/2,y:20,'text-anchor':'middle','class':'taglab'}); lab.textContent=t[0];
+    var y0=TOP+RH*t[1], y1=TOP+RH*(t[2]+1);
+    if(i%2===1){ el('rect',{x:0,y:y0,width:W,height:y1-y0,'class':'band'}); }
+    var lab=el('text',{x:12,y:(y0+y1)/2+4,'class':'taglab'}); lab.textContent=t[0];
   });
   function edgePath(a,b){
     var p=pos[a],q=pos[b];
-    var x0=p.x+p.w,y0=p.y+p.h/2,x1=q.x,y1=q.y+q.h/2;
-    var dx=Math.max(30,(x1-x0)/2);
-    return 'M'+x0+' '+y0+' C'+(x0+dx)+' '+y0+' '+(x1-dx)+' '+y1+' '+x1+' '+y1;
+    var x0=p.x+p.w/2,y0=p.y+p.h,x1=q.x+q.w/2,y1=q.y;
+    var dy=Math.max(16,(y1-y0)/2);
+    return 'M'+x0+' '+y0+' C'+x0+' '+(y0+dy)+' '+x1+' '+(y1-dy)+' '+x1+' '+y1;
   }
   el('defs',{}).innerHTML='<marker id="arw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path class="arw" d="M0,0 L10,5 L0,10 z"></path></marker>'+
     '<marker id="arwv" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arwv" d="M0,0 L10,5 L0,10 z"></path></marker>';
