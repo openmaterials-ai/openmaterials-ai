@@ -4,6 +4,9 @@
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage{graphicx}
 \usepackage[hidelinks]{hyperref}
+% ToUnicode maps, so text extracted from the PDF keeps glyphs such as bullets.
+\input{glyphtounicode}
+\pdfgentounicode=1
 \usepackage{booktabs}
 \usepackage{enumitem}
 \usepackage{tikz}
@@ -252,7 +255,7 @@ shape is already here.
 Today the framework is real and growing. It has an operator layer and a
 representation layer, 31 ingested representations (kaldo, phono3py, phonopy,
 pymatgen, ShengBTE, Quantum ESPRESSO, VASP, LAMMPS, GPUMD, i-PI, xtb, the
-machine-learned potentials matgl / MACE / fairchem, the database rail mp-api,
+machine-learned potentials matgl / MACE / fairchem, the database representation mp-api,
 and the CALPHAD, amset, ORCA, OpenMM, and AtomisticSkills mat-* / chem-*
 workflows), and a
 validation engine that executes the graph, composes
@@ -394,7 +397,7 @@ Concept & Canonical term & Notes \\
 \midrule
 A typed quantity on the map    & \textbf{node} & \texttt{Space} is the code class. \\
 A relation producing a node    & \textbf{edge} & \texttt{Operator} is the code class. \\
-A code's mapping onto the map  & \textbf{representation} & its on-map rendering is a \emph{rail}. \\
+A code's mapping onto the map  & \textbf{representation} & its on-map rendering is a \emph{representation}. \\
 A committed value               & \textbf{instance} & the \texttt{\{id, kind, lineage, source\}} record. \\
 A semantic type parameter       & \textbf{label} & e.g.\ \texttt{bte\_solver=rta}, not a ``variant''. \\
 A content hash                  & \textbf{uid} & sha256; a 12-hex prefix is displayed. \\
@@ -2079,7 +2082,7 @@ sense.}
 
 Each adapter is a representation functor over the operator DAG. Fifteen
 adapter modules are now ingested in the thermal-transport domain alone (31
-rails map the whole graph), in three tiers. The four BTE / harmonic codes that consume
+representations map the whole graph), in three tiers. The four BTE / harmonic codes that consume
 force constants:
 
 \begin{itemize}[leftmargin=2em]
