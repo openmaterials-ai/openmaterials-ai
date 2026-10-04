@@ -2346,7 +2346,7 @@ plus one per domain:
             on the map. Coverage renders on the site map (\texttt{docs/map/},
             generated data in \texttt{docs/data/}); the standalone per-code
             pipeline page was retired 2026-07-08 as redundant with the map's
-            code rails. Per-operator scheme and discretization detail lives in
+            code representations. Per-operator scheme and discretization detail lives in
             the representation modules and this document; surfacing it in the
             map's edge panel is an open enhancement.
     \end{itemize}
@@ -2459,9 +2459,9 @@ We have committed to Python for Sprint 1. The trade-offs were:
 
 The operator layer is an architectural commitment, not an implementation. The implementation
 began as a Python skeleton plus adapters for three thermal-transport codes and has since grown
-to the 31-rail map of Part~\ref{part:status}. The
-artifact that motivates the project---a paper-worthy demonstration of cross-code reconciliation
-and decomposed error bounds for lattice thermal conductivity---is downstream of the operator layer but
+to the 31-representation map of Part~\ref{part:status}. The
+artifact that motivates the project, a paper-worthy demonstration of cross-code reconciliation
+and decomposed error bounds for lattice thermal conductivity, is downstream of the operator layer but
 is the operator layer's first proof-of-value.
 
 The project's stewardship follows its architecture (2026-07-12). The map, its
@@ -2475,7 +2475,7 @@ document states data ownership and fairness (2026-07-13): evidence stays its
 owner's (contribution grants a non-exclusive CC~BY~4.0 license, never a
 transfer, with no copyright assignment and no CLA), raw simulation and
 experimental artifacts are never ingested, and attribution is enforced in both
-directions, upstream through code rails and page-anchored quotes as a merge
+directions, upstream through code representations and page-anchored quotes as a merge
 gate, downstream through the map version's provenance.
 
 Four longer-term directions follow naturally from the design:
@@ -3150,13 +3150,14 @@ ORCA are proprietary: VASP under the commercial license at vasp.at, ORCA free
 for academic use with commercial licensing through FACCTs. The mat-* rows are
 AtomisticSkills skills and carry that project's MIT license. The single source
 of truth is \texttt{omai/representation/credits.py}, and an enforcement test
-(\texttt{tests/test\_code\_credits.py}) fails if any mapped rail lacks a
-citation or a license, so no future rail can land uncredited.
+(\texttt{tests/test\_code\_credits.py}) fails if any mapped representation lacks a
+citation or a license, so no future representation can land uncredited.
 
 \subsection{Code citations}
 \label{sec:code-citations}
 
-The principal code rails on the map are cited below (the remaining rails,
+The principal code representations on the map are cited below (the remaining
+representations,
 i-PI, PLUMED, and MESCAL, carry their citations in
 \texttt{omai/representation/credits.py}, the single source of truth the
 enforcement test reads). Where one code serves nodes through different
@@ -3290,7 +3291,7 @@ order from here:
         instances); the AtomisticSkills scans then grew the map through record 182
         (2026-07-10) with the stability, thermochemistry, quasi-harmonic,
         molecular, and electronic-transport domains and the pymatgen, mp-api,
-        CALPHAD, amset, ORCA, and OpenMM rails, and a whole-map physics review
+        CALPHAD, amset, ORCA, and OpenMM representations, and a whole-map physics review
         added the thermodynamic-identities domain and two closed-form supersedes
         (records 183-203).
   \item \textbf{The app}, once the protocol and a rich mother map exist.
