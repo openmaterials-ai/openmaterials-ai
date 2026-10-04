@@ -318,9 +318,11 @@ when its `id` is a representation or one of its aliases (`quantum-espresso`
 for `qe`) and its `version` equals a registered version or tag, each under its
 exact string; a null version resolves only for a code with no registered
 release and an execution that carries `image_digest` or `container_digest`.
-A version is the exact string producers emit; lammps `2025.7.22.4.0` is the
-PyPI lammps wheel version (lammps-wheel), which builds the tag
-`stable_22Jul2025_update4`. A release's `spdx`, read at its tag, is the
+A version is the exact string producers emit; lammps versions spell the
+release banner (`22 Jul 2025 - Update 5` is `2025.7.22.5.0`), the scheme the
+PyPI lammps wheel uses; `tag` and `commit` name the source a wheel or a
+conda-forge build compiles, and the record's image digest names the
+distribution. A release's `spdx`, read at its tag, is the
 licence of that release; `license` in `codes.json` is the representation's
 credit.
 `validate_light` reports unresolved rows under `unresolved_registry_rows`; no
