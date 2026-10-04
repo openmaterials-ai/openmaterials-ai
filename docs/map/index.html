@@ -174,6 +174,7 @@
 <script src="../assets/vendor/dagre.min.js"></script>
 <script src="../assets/vendor/katex/dist/katex.min.js"></script>
 <script src="../assets/map-words.js"></script>
+<script src="../assets/sources.js"></script>
 <script>
 "use strict";
 // ============================================================================
@@ -578,25 +579,11 @@ function loadInstances(){
   return instancesPromise;
 }
 function resolveNodeId(v){ if(nodeById[v]) return v; const b=(''+v).split('[')[0]; return nodeById[b]?b:null; }
-// Citation parsing, as on experiment/index.html: a source is titled by the shortest citation its records carry.
-function parts(detail){
-  var d = String(detail == null ? '' : detail).replace(/\s+/g, ' ').replace(/ ?\[[A-Z]{2,}[^\]]*\]/g, '').trim();
-  var m = /^(.*\([^()]*\bp\. ?\d+[^()]*\))\.? (.+)$/.exec(d);
-  if (m) return { quote: m[1], cite: m[2].replace(/,? (?:doi|arXiv):.*$/, '').replace(/\.$/, '') };
-  m = /^([^;()]*\(\d{4}\))(?:; (.*))?$/.exec(d);
-  if (m) return { quote: m[2] || '', cite: m[1] };
-  return { quote: d, cite: '' };
-}
-function titleOf(recs){
-  var best = '';
-  recs.forEach(function(r){ var c = parts(r.source && r.source.detail).cite; if (c && (!best || c.length < best.length)) best = c; });
-  return best;
-}
 function showExperiment(ref, recs){
   const mine=recs.filter(r=> r.source && r.source.ref===ref);
   const ids=[...new Set(mine.map(r=>resolveNodeId(r.variable)).filter(Boolean))];
   let h=closeBtn()+'<div class="om-panel-label">Source</div>';
-  h+='<div class="name" style="font-weight:500;color:var(--ink,#171717)">'+esc(titleOf(mine)||ref)+'</div>';
+  h+='<div class="name" style="font-weight:500;color:var(--ink,#171717)">'+esc(Sources.titleOf(mine, codesData)||ref)+'</div>';
   if(!ids.length){
     h+='<p>No value on the map cites this source.</p>';
     panelEl.innerHTML=h; panelEl.style.display='block'; return;
@@ -666,9 +653,9 @@ svg.addEventListener('mousemove', e=>{ const ed=e.target.closest('.edge'); if(!e
 svg.addEventListener('mouseleave', ()=>{ tip.style.display='none'; });
 
 // ---- interaction: code filter ----------------------------------------------
-function codeName(code){ const e=Object.values(codesData[code]||{}).find(x=>x && x.name); return e ? e.name : code; }
+function codeName(code){ const e=codesData[code]; return e && typeof e.name==='string' ? e.name : code; }  // codes.json `name` once the commons adds it
 function codeCredit(code){ const sp=codesData[code]||{}; const any=Object.values(sp).find(e=>e && (e.citation||e.license)); if(!any) return ''; const cit=(any.citation||'').trim().replace(/\.$/,''); const lic=(any.license||'').trim(); return cit&&lic?(cit+'. License: '+lic+'.'):(cit||lic); }
-function renderCodeBar(){ Object.keys(codesData).sort().forEach(code=>{ const o=document.createElement('option'); o.value=code; o.textContent=codeName(code)+' ('+Object.keys(codesData[code]||{}).length+')'; const cr=codeCredit(code); if(cr) o.title=cr; codeFilter.appendChild(o); }); }
+function renderCodeBar(){ Object.keys(codesData).sort().forEach(code=>{ const o=document.createElement('option'); o.value=code; o.textContent=codeName(code)+' ('+Object.keys(codesData[code]||{}).filter(k=>k!=='name').length+')'; const cr=codeCredit(code); if(cr) o.title=cr; codeFilter.appendChild(o); }); }
 codeFilter.addEventListener('change', function(){ if(this.value) toggleCode(this.value); else if(activeCode) toggleCode(activeCode); });
 function toggleCode(code){
   if(activeCode===code){ activeCode=null; codeFilter.value=''; depth='expanded'; applyDepth(); return; }

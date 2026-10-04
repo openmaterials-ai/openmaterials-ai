@@ -539,10 +539,12 @@ var mapReady = Promise.all([
   // codes.json: code -> {node id -> {api, url, ...}}; invert to node -> codes
   var codesData = res[6] || {};
   Object.keys(codesData).forEach(function(code){
+    // codes.json `name` (a string beside the node entries) once the commons adds it, else the key
+    CODE_NAMES[code] = typeof (codesData[code] || {}).name === 'string' ? codesData[code].name : code;
     Object.keys(codesData[code] || {}).forEach(function(nid){
+      if (nid === 'name') return;
       (codesByNode[nid] = codesByNode[nid] || []).push(
         { code: code, api: codesData[code][nid].api || '', url: codesData[code][nid].url || '' });
-      CODE_NAMES[code] = codesData[code][nid].name || CODE_NAMES[code] || code;
     });
   });
   Object.keys(codesByNode).forEach(function(nid){
