@@ -1053,7 +1053,7 @@ function renderLineageExampleNav(record){
   }
   // an example that repeats the default's quantity and material is left out
   var others = lineageGallery.filter(function(entry){
-    return entry && entry !== current && entry.fragment &&
+    return entry && entry !== current && entry.fragment && entry.listed !== false &&
       !(fl && entry.node === fl.node && entry.material === materialName(fl.material));
   });
   box.innerHTML = '<p>Paste your own record or open another example:</p>' +
@@ -1163,9 +1163,7 @@ function renderDistanceTab(){
     document.getElementById('distRegistry').innerHTML = html;
 
     var zoo = d.zoo || {rows: []};
-    document.getElementById('distZooNote').textContent =
-      (zoo.illustrative ? 'Illustrative: ' : '') + (zoo.note || '') +
-      (zoo.reference ? '. Reference: ' + zoo.reference + '.' : '');
+    document.getElementById('distZooNote').textContent = zoo.note || '';
     var ids = reg.distances.filter(function(m){ return !m.input || m.input === 'structure'; })
       .map(function(m){ return m.id; });
     var zh = '<table class="pg-table stack"><thead><tr><th>Compared with ' + esc(zoo.reference || 'the reference') + '</th>' +

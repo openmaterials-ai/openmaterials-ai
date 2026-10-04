@@ -21,7 +21,8 @@ var Sources = (function () {
       out.cite = m[3].replace(/,? (?:doi|arXiv):.*$/, '').replace(/\.$/, '');
       return out;
     }
-    m = /^([^;()]*\(\d{4}\))(?:; (.*))?$/.exec(d);
+    // "<citation (year)>, doi:...; <method>": the DOI is out.doi, so it leaves the citation
+    m = /^([^;()]*\(\d{4}\))(?:; (.*))?$/.exec(doi ? d.replace(/,? ?\bdoi:\s*10\.[^\s;,]+[^\s;,.]/i, '') : d);
     if (m) { out.cite = m[1]; out.method = m[2] || ''; }
     return out;
   }

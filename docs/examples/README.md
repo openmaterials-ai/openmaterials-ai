@@ -10,8 +10,8 @@ database: the whole lineage is in the file.
 
 Use them two ways:
 
-- **Open or upload**: the Playground's Lineage tab opens the flagship committed
-  example as a full-width plain datasheet, with links to the listed examples. Use
+- **Open or upload**: the Playground's Lineage tab opens a committed value as a
+  full-width plain datasheet, with links to the listed examples. Use
   **paste another**, or return to the tools, to drop or paste any of these `.json`
   files into the same view: what it is, every lineage field, what it means on the
   map, provenance, and where the data lives. Dashboards and compute live on
