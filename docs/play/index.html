@@ -1398,12 +1398,12 @@ function renderPapersCompare(){
 }
 
 /* ---- the visible lineage identifier (the DOI-like badge) ----------------- */
-// Every datasheet shows its recognizer. A COMMITTED value's badge is the
-// canonical short id, openmaterials.ai/l/<first 12 hex> (deterministic, no
-// registry: the id IS the identity, git-style). An uncommitted record shows
-// its id prefix, labeled as such: committing through a PR is what mints the
-// resolving short link. The href resolves locally (#id=), so the badge works
-// on every host; the copy button copies the canonical URL.
+// Every datasheet shows its recognizer. A COMMITTED value's badge is its value
+// page, openmaterials.ai/i/<full id>/: a static page every host serves, with the
+// title and preview card a crawler reads (the /l/ form needs the site Worker,
+// which the domain does not route). An uncommitted record shows its id prefix,
+// labeled as such: committing it through a PR creates the page. The href opens
+// the value in place (#id=); the copy button copies the value page address.
 function lineageDoiHTML(record){
   var id = record && record.id ? String(record.id).toLowerCase() : '';
   if (!/^[0-9a-f]{64}$/.test(id)) return '';
@@ -1414,16 +1414,17 @@ function lineageDoiHTML(record){
     /^[a-z][a-z0-9+.-]*:.+$/.test(record.lineage.source) ? record.lineage.source : null;
   var chip = srcRef
     ? ' <a class="rec-doi-src" href="../experiment/#ref=' + encodeURIComponent(srcRef) +
-      '" title="Every committed value from this source (also resolves at openmaterials.ai/l/' + esc(srcRef) + ')">' + esc(srcRef) + '</a>'
+      '">' + esc(srcRef) + '</a>'
     : '';
   if (INSTANCE_IDS && INSTANCE_IDS.has(id)) {
-    return '<div class="rec-doi"><span class="rec-doi-lab">lineage id</span>' +
-      '<a href="#id=' + short + '" title="The short id of this committed value: the leading characters of its SHA-256 id.">openmaterials.ai/l/' + short + '</a>' +
-      '<button type="button" class="rec-doi-copy" data-copy="https://openmaterials.ai/l/' + short + '" title="Copy the canonical short link">Copy</button>' +
+    var page = 'openmaterials.ai/i/' + id + '/';
+    return '<div class="rec-doi"><span class="rec-doi-lab">Value page</span>' +
+      '<a href="#id=' + short + '">' + page + '</a>' +
+      '<button type="button" class="rec-doi-copy" data-copy="https://' + page + '">Copy</button>' +
       chip + '</div>';
   }
-  return '<div class="rec-doi"><span class="rec-doi-lab">lineage id</span>' +
-    '<span class="rec-doi-un" title="This lineage is not committed to the map, so it has no short link yet. Committing it through a pull request creates one.">' + short + ' (uncommitted)</span></div>';
+  return '<div class="rec-doi"><span class="rec-doi-lab">Lineage id</span>' +
+    '<span class="rec-doi-un" title="This lineage is not committed to the map, so it has no value page yet. Committing it through a pull request creates one.">' + short + ' (uncommitted)</span></div>';
 }
 // Before a bundle is minted it HAS no short link (the data lives only in the
 // long URL); the badge row says so and offers the mint in place, so the
