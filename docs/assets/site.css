@@ -231,11 +231,12 @@ a:hover { text-decoration-color: currentColor; }
 .datum .cta-row { margin-top: 24px; }
 .split { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 48px 24px; align-items: start; }
 .split > * { grid-column: 1 / -1; min-width: 0; }
-.facts > h3 { margin-top: 48px; }
-.facts > h3:first-child { margin-top: 0; }
-.facts > p { margin-top: 12px; }
-.facts > .ledger { margin-top: 24px; }
-.facts > .ledger + p { margin-top: 24px; }
+.facts > p { margin-top: 16px; }
+.facts > .ledger + p { margin-top: 32px; }
+.pair { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--head-gap) 24px; }
+.pair > section { grid-column: 1 / -1; min-width: 0; }
+.pair h2 { margin-bottom: 24px; }
+.pair .ledger { margin-top: 24px; }
 .miniature { display: none; }
 .miniature .dots { fill: var(--line); }
 .miniature .edges { fill: none; stroke: var(--edge); stroke-width: 1.5; stroke-linecap: round; }
@@ -261,6 +262,7 @@ a:hover { text-decoration-color: currentColor; }
   .tools > .card { grid-column: span 6; }
 }
 @media (min-width: 961px) {
+  .hero { align-items: center; }
   .hero-text { grid-column: 1 / 8; }
   .hero .datum { grid-column: 8 / 13; }
   .facts { grid-column: 1 / 8; }
@@ -269,14 +271,16 @@ a:hover { text-decoration-color: currentColor; }
   .steps-col { grid-column: 1 / 6; }
   .split > .code { grid-column: 6 / 13; }
   .narrow { grid-column: 1 / 9; }
+  .pair > section { grid-column: span 6; }
 }
 
 /* 404 (spec 2.7): while a short link forwards, only the forwarding line shows */
 .nf-body h1 { margin-top: 16px; }
 .nf-body .lede, .nf-body .small { margin-top: 24px; }
-.nf-forward { display: none; }
+.nf-forward, .nf-forward [data-for] { display: none; }
 html[data-forward] .nf-body { display: none; }
-html[data-forward="play"] .nf-forward { display: block; }
+html[data-forward] .nf-forward { display: block; }
+html[data-forward="play"] [data-for="play"], html[data-forward="experiment"] [data-for="experiment"] { display: block; }
 
 /* Tool pages (spec 5.1): each page styles its own toolbar, canvas, panel and legend; the
    shared header is a fixed-height row of its flex column. */
