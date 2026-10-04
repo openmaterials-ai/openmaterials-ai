@@ -734,7 +734,7 @@ const PAN={ArrowLeft:[-1,0],ArrowRight:[1,0],ArrowUp:[0,-1],ArrowDown:[0,1]};
 window.addEventListener('keydown', e=>{
   if(e.key==='Escape'){ if(panelEl.style.display==='block'||depth==='focused'){ clearSel(); } return; }
   const t=e.target;
-  if(e.metaKey||e.ctrlKey||e.altKey||/^(INPUT|SELECT|TEXTAREA)$/.test(t.tagName)||t.isContentEditable||panelEl.contains(t)) return;
+  if(e.metaKey||e.ctrlKey||e.altKey||!(t instanceof Element)||/^(INPUT|SELECT|TEXTAREA)$/.test(t.tagName)||t.isContentEditable||panelEl.contains(t)) return;
   if(e.key==='/'){ e.preventDefault(); qInput.focus(); }
   else if(e.key==='+'||e.key==='='){ zoomBy(0.8); }
   else if(e.key==='-'){ zoomBy(1.25); }
