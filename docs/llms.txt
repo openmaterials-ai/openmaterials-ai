@@ -19,7 +19,15 @@ Cite the map version in https://openmaterials.ai/data/version.json with any valu
 - [Guide](https://openmaterials.ai/guide/): install the omai kernel, resolve a label, load the graph, parse a paper
 - [Document](https://openmaterials.ai/document/): the full specification, also as [PDF](https://openmaterials.ai/openmaterials.pdf)
 - [Codes](https://openmaterials.ai/codes/): the bibliography of the codes the map cites
+- [Data contract](https://openmaterials.ai/guide/#data): the shape of each JSON file under data/
 - [Repository](https://github.com/openmaterials-ai/openmaterials-ai): source, GOVERNANCE.md, and the contribution process
+
+## Values
+
+- A committed value's id is the SHA-256 hash of its lineage object: 64 lowercase hex characters, the id field in instances.json.
+- The datasheet for a value opens at https://openmaterials.ai/play/#id={id}; a prefix of 8 or more hex characters also resolves.
+- https://openmaterials.ai/i/{id}/ is the value's permalink: it carries a preview card for link unfurls and opens the datasheet.
+- https://openmaterials.ai/l/{id} is the short form the site hands out; in a browser it forwards to the datasheet.
 
 ## Optional
 
