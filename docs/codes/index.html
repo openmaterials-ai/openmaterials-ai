@@ -99,6 +99,7 @@
 </main>
 
 <div data-site-footer></div>
+<script src="../assets/sources.js"></script>
 <script>
 /* The codes bibliography. Every entry is read at load from the published
    ../data/codes.json, the same file the map reads. The shape is
@@ -125,10 +126,10 @@
   // can serve nodes through DIFFERENT methods (per-node credits), so the card
   // shows every distinct citation it carries, largest coverage first.
   function card(name, entries) {
-    // a code's `name` is its display name, not a served quantity; the key is the fallback
-    var nodes = Object.keys(entries).filter(function (n) { return entries[n] && typeof entries[n] === 'object'; });
+    var nodes = Object.keys(entries);
     var count = nodes.length;
-    var label = typeof entries.name === 'string' ? entries.name : name;
+    var one = {}; one[name] = entries;
+    var label = Sources.codeName(name, one);   // the shared reader: an entry's `name`, else the key
 
     var license = '', url = '';
     nodes.forEach(function (n) {

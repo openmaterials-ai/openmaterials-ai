@@ -18,15 +18,15 @@ var Sources = (function () {
       out.cite = m[3].replace(/,? (?:doi|arXiv):.*$/, '').replace(/\.$/, '');
       return out;
     }
-    m = /^([^;()]*\(\d{4}\))(?:; (.*))?$/.exec(d.replace(/,? ?\bdoi:\s*[^\s;]+/i, ''));
+    m = /^([^;()]*\(\d{4}\))(?:; (.*))?$/.exec(d);
     if (m) { out.cite = m[1]; out.method = m[2] || ''; }
     return out;
   }
 
-  // A code's display name: codes.json `name` once the commons adds it, else its key.
+  // A code's display name: the `name` its codes.json node entries carry, else its key. Every
+  // code-name read on the site goes through here.
   function codeName(key, codes) {
-    var e = codes && codes[key];
-    return e && typeof e.name === 'string' ? e.name : key;
+    return (Object.values((codes && codes[key]) || {})[0] || {}).name || key;
   }
 
   // A source's title: the shortest citation its records carry (a curator note that precedes a

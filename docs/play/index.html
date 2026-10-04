@@ -541,7 +541,6 @@ var mapReady = Promise.all([
   var codesData = CODES = res[6] || {};
   Object.keys(codesData).forEach(function(code){
     Object.keys(codesData[code] || {}).forEach(function(nid){
-      if (nid === 'name') return;
       (codesByNode[nid] = codesByNode[nid] || []).push(
         { code: code, api: codesData[code][nid].api || '', url: codesData[code][nid].url || '' });
     });

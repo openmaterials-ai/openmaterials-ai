@@ -71,6 +71,7 @@ def test_per_node_citations_are_never_hidden():
 
 NODE_HARNESS = r"""
 const fs = require('fs');
+eval(fs.readFileSync(process.argv[3],'utf8'));   // assets/sources.js: the shared code-name reader
 const page = fs.readFileSync(process.argv[1],'utf8');
 const script = [...page.matchAll(/<script>([\s\S]*?)<\/script>/g)]
   .map(m => m[1]).find(s => s.includes('function card'));
@@ -110,7 +111,7 @@ def test_card_renderer_behaves_on_real_data():
         pytest.skip("node not available")
     out = subprocess.run(
         [node, "-e", NODE_HARNESS, str(DOCS / "codes/index.html"),
-         str(DOCS / "data/codes.json")],
+         str(DOCS / "data/codes.json"), str(DOCS / "assets/sources.js")],
         capture_output=True, text=True, timeout=60)
     assert out.returncode == 0, out.stderr
     assert out.stdout.strip() == "ok"

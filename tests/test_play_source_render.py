@@ -1,7 +1,7 @@
 """The datasheet's Source section reads a record the way a reader needs it.
 
 A paper source renders its verbatim quote with the page, the citation and the
-DOI; the "<citation (year)>; <method>" form its citation, method and any DOI;
+DOI; the "<citation (year)>; <method>" form its citation and method;
 any other source the one Method line assets/sources.js builds from the record's
 fields (code and version, material, potential or model), and no row when they
 name none, so curator prose with repo paths, tags, hashes or field names never
@@ -65,16 +65,11 @@ def test_paper_source_renders_quote_page_citation_and_doi():
     assert 'href="https://doi.org/10.1063/5.0020443"' in out
 
 
-def test_citation_form_drops_the_curator_note_and_reads_a_doi():
-    measured = _entry("55ee996282a6")
-    (out,) = _rows([measured])
+def test_citation_form_drops_the_curator_note():
+    (out,) = _rows([_entry("55ee996282a6")])
     assert "<dd>Glassbrenner and Slack, Phys. Rev. 134, A1058 (1964)</dd>" in out
     assert "<dd>steady-state measurement, bulk single crystal, natural isotopic abundance</dd>" in out
     assert "MIGRATED" not in out
-    with_doi = dict(measured, source=dict(measured["source"], detail=measured["source"]["detail"].replace(
-        "(1964);", "(1964), doi:10.1103/PhysRev.134.A1058;")))
-    (out,) = _rows([with_doi])
-    assert 'href="https://doi.org/10.1103/PhysRev.134.A1058"' in out and "A1058 (1964)</dd>" in out
 
 
 def test_a_run_prints_one_method_line_from_its_fields():

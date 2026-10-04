@@ -385,7 +385,7 @@ function refreshEncoding(){
 window.navTo=function(id){ if(nodeById[id]) selectNode(id); };
 function chip(id, cls){ return '<button type="button" class="chip '+(cls||'')+'" onclick="navTo(\''+attr(id).replace(/'/g,"&#39;")+'\')">'+(symHtml[id]||esc(id))+'</button>'; }
 
-function codeName(code){ const e=codesData[code]; return e && typeof e.name==='string' ? e.name : code; }  // codes.json `name` once the commons adds it
+function codeName(code){ return Sources.codeName(code, codesData); }
 function mappedByHtml(id){
   const rows=Object.keys(codesData).filter(c=> codesData[c] && codesData[c][id]).sort().map(c=>{ const m=codesData[c][id]; return '<div class="om-kv-row"><span class="om-kv-k">'+esc(codeName(c))+'</span><span class="om-kv-v">'+esc(Sources.clean(m.api||''))+(m.unit?(' · '+esc(Sources.unit(m.unit))):'')+'</span></div>'; });
   return rows.length? ('<div class="om-panel-label">Mapped by '+rows.length+' code'+(rows.length>1?'s':'')+'</div><div class="mapby om-kv">'+rows.join('')+'</div>') : '';

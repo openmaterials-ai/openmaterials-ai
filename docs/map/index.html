@@ -654,9 +654,9 @@ svg.addEventListener('mousemove', e=>{ const ed=e.target.closest('.edge'); if(!e
 svg.addEventListener('mouseleave', ()=>{ tip.style.display='none'; });
 
 // ---- interaction: code filter ----------------------------------------------
-function codeName(code){ const e=codesData[code]; return e && typeof e.name==='string' ? e.name : code; }  // codes.json `name` once the commons adds it
+function codeName(code){ return Sources.codeName(code, codesData); }
 function codeCredit(code){ const sp=codesData[code]||{}; const any=Object.values(sp).find(e=>e && (e.citation||e.license)); if(!any) return ''; const cit=(any.citation||'').trim().replace(/\.$/,''); const lic=(any.license||'').trim(); return cit&&lic?(cit+'. License: '+lic+'.'):(cit||lic); }
-function renderCodeBar(){ Object.keys(codesData).sort().forEach(code=>{ const o=document.createElement('option'); o.value=code; o.textContent=codeName(code)+' ('+Object.keys(codesData[code]||{}).filter(k=>k!=='name').length+')'; const cr=codeCredit(code); if(cr) o.title=cr; codeFilter.appendChild(o); }); }
+function renderCodeBar(){ Object.keys(codesData).sort().forEach(code=>{ const o=document.createElement('option'); o.value=code; o.textContent=codeName(code)+' ('+Object.keys(codesData[code]||{}).length+')'; const cr=codeCredit(code); if(cr) o.title=cr; codeFilter.appendChild(o); }); }
 codeFilter.addEventListener('change', function(){ if(this.value) toggleCode(this.value); else if(activeCode) toggleCode(activeCode); });
 function toggleCode(code){
   if(activeCode===code){ activeCode=null; codeFilter.value=''; depth='expanded'; applyDepth(); return; }
