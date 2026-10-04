@@ -11,7 +11,7 @@ database: the whole lineage is in the file.
 Use them two ways:
 
 - **Open or upload**: the Playground's Lineage tab opens the flagship committed
-  example as a full-width plain datasheet, with links to the other nine. Use
+  example as a full-width plain datasheet, with links to the listed examples. Use
   **paste another**, or return to the tools, to drop or paste any of these `.json`
   files into the same view: what it is, every lineage field, what it means on the
   map, provenance, and where the data lives. Dashboards and compute live on
@@ -39,3 +39,8 @@ format; the reported values are grounded in the map's committed evidence.
 (`si-diamond-primitive-mp-149`), so its data view resolves the pin and lists the cell's
 facts (formula, space group, atoms, lattice), and its Run link carries the pin to
 MaterialsCodeGraph.
+
+The three kaldo Tersoff examples (`si-kappa-kaldo-direct`, `si-kappa-kaldo-rta`,
+`ge-kappa-kaldo`) carry under-converged values (8x8x8 mesh) and are marked
+`"listed": false` in `index.json`, so the Lineage tab does not offer them; their
+files and fragments stay valid.
