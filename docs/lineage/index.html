@@ -37,7 +37,7 @@
   .n rect { stroke-width: 1.4; }
   .n.obs rect { fill: var(--data-obs); stroke: var(--data-obs); }
   .n.hid rect { fill: var(--surface-2); stroke: var(--edge); }
-  .n text { font-family: var(--font-mono); font-size: 10.6px; }
+  .n text { font-family: var(--font-mono); font-size: 12px; }
   .n.obs text { fill: #FFFFFF; }
   .n.hid text { fill: var(--ink); }
   .n.amort rect { stroke: var(--data-meas); stroke-dasharray: 4 3; }
@@ -46,8 +46,7 @@
   .e.learned { stroke: var(--data-meas); stroke-width: 1.7; stroke-dasharray: 6 4; }
   .arw { fill: var(--edge); }
   .arwv { fill: var(--data-meas); }
-  .taglab { font: 500 10px var(--font-sans); fill: var(--ink-2); }
-  .lrnlab { font: 500 10.5px var(--font-sans); fill: var(--data-meas); }
+  .taglab { font: 500 12px var(--font-sans); fill: var(--ink-2); }
   .caption { margin-top: 12px; font-size: 14px; line-height: 20px; color: var(--ink-2); }
   .sheet { border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); overflow: hidden; }
   .sheet .hd { display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: baseline; padding: 12px 16px; border-bottom: 1px solid var(--line); }
@@ -75,86 +74,86 @@
 <div data-site-header></div>
 <main class="frame" id="main">
   <header class="page-head">
-  <p class="eyebrow">One result, three layers</p>
+  <p class="eyebrow">Lineage tour</p>
   <h1>The lineage of a shared experiment</h1>
-  <p class="lede">How one QHGK thermal-conductivity result travels: the map derives
-    <span class="m">ThermalConductivity[transport_model=qhgk]</span> through typed edges,
-    a <b>lineage record</b> pins the run that produced the value, and each layer has a URL.
-    The graph below is the map's own export (<span class="m">python -m omai.mermaid</span>),
-    verbatim: 21 quantities, 37 edges.</p>
+  <p class="lede">The map derives <span class="m">ThermalConductivity[transport_model=qhgk]</span>
+    through typed edges, a lineage record pins the run that produced one value of it, and each part
+    has its own URL. The graph below is the map's own export from
+    <span class="m">python -m omai.mermaid</span>, shown verbatim.</p>
   </header>
   <div class="page-body"><article class="prose">
 
   <h2>1 · The derivation</h2>
-  <p class="sub">Left to right: sources, the DFT chain, harmonic objects, scattering channels, transport.
-    Indigo nodes are gauge-invariant observables, slate nodes are gauge-dependent scaffolding.
-    The dashed amber edge is drawn illustratively: it shows what a
-    <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/main/omai/operator/learned.py">learned shortcut</a>
-    would look like here, the generic non-authoritative surrogate pattern producing the same
-    linewidth node while amortizing the third-order force constants away. No learned edge is
-    declared on the map yet, so the tracer does not show it. Explore the same derivation live in
+  <p class="sub">Read left to right: sources, the DFT chain, harmonic quantities, scattering channels,
+    and transport. An observable carries no gauge freedom, so codes given the same inputs should agree
+    on it; a hidden quantity depends on a gauge choice, and codes can differ on it. The dashed edge
+    illustrates a
+    <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/main/omai/operator/learned.py">learned shortcut</a>:
+    a surrogate model that produces the same linewidth node without computing the third-order force
+    constants. The map declares no learned edge yet, so the tracer does not show one. The same
+    derivation is live in
     <a href="../map-trace/#node=ThermalConductivity[transport_model=qhgk]">the tracer</a>.</p>
   <div class="legend">
-    <span class="obs"><span class="sw"></span>observable</span>
-    <span class="hid"><span class="sw"></span>hidden (gauge-dependent)</span>
-    <span class="lrn"><span class="sw"></span>learned shortcut / amortized input</span>
+    <span class="obs"><span class="sw"></span>Observable</span>
+    <span class="hid"><span class="sw"></span>Hidden</span>
+    <span class="lrn"><span class="sw"></span>Learned shortcut (illustration)</span>
   </div>
   <div class="dagbox"><svg id="dag" xmlns="http://www.w3.org/2000/svg" width="1250" height="580" viewBox="0 0 1250 580" role="img" aria-label="Derivation DAG of QHGK thermal conductivity"></svg></div>
-  <p class="caption">Reproduce this exact graph anywhere markdown renders:
+  <p class="caption">To reproduce this graph wherever Mermaid renders, run
     <span class="m">python -m omai.mermaid "ThermalConductivity[transport_model=qhgk]"</span>
-    (source in the appendix). With the learned edge active, Φ₃ and its producing edge are
-    bypassed at inference: the third-order wall, stated as graph topology.</p>
+    (output in the appendix). With the learned edge in place, Φ₃ and the edge that produces it
+    would be skipped at inference.</p>
 
   <h2>2 · The lineage record</h2>
-  <p class="sub">The map stores the claim; the lineage record pins how the number was made and where
-    the bulk bytes live. This is the gallery example
+  <p class="sub">The map stores the quantity and its value; the lineage record pins how the number was
+    made and where the bulk data lives. This is the example
     <a href="../examples/a-si-kappa-qhgk.json"><span class="m">docs/examples/a-si-kappa-qhgk.json</span></a>,
-    rendered the way the playground's Lineage tab reads it. Raw artifacts never enter the store:
-    the record carries pointers, and the bytes stay with their provider.</p>
+    rendered as the playground's Lineage tab renders it. Raw artifacts never enter the store: the
+    record carries pointers, and the files stay with their provider.</p>
   <div class="sheet">
     <div class="hd">
       <span class="nm">ThermalConductivity[transport_model=qhgk]</span>
-      <span class="id">lineage fd750cf110e7…faf8f3 · node_uid 8932e3cbadef…f9567b</span>
+      <span class="id">lineage 1a28bb40b08f…d71adf · node_uid 8932e3cbadef…f9567b</span>
     </div>
     <div class="kv">
-      <div class="k">material</div><div class="v">a-Si (4096-atom cell)</div>
-      <div class="k">value</div><div class="v"><b>κ = 2.2 W/(m K)</b></div>
+      <div class="k">material</div><div class="v">a-Si</div>
+      <div class="k">value</div><div class="v">κ = 2.2 W/(m K)</div>
       <div class="k">conditions</div><div class="v">T = room temperature</div>
       <div class="k">hyperparameters</div><div class="v">potential = Tersoff · supercell = 4096 atoms · template = qhgk_kappa</div>
       <div class="k">execution</div><div class="v">code = kaldo</div>
       <div class="k">artifacts</div><div class="v">FORCE_CONSTANTS <span class="prov">role: force_constants</span></div>
-      <div class="k">mirror</div><div class="v"><a href="https://app.materialscodegraph.com/runs/a-si-qhgk" rel="noopener">app.materialscodegraph.com/runs/a-si-qhgk</a> <span class="prov">provider: materialscodegraph</span></div>
+      <div class="k">mirror</div><div class="v">app.materialscodegraph.com/runs/a-si-qhgk (MaterialsCodeGraph account required) <span class="prov">provider: materialscodegraph</span></div>
     </div>
   </div>
 
   <h2>3 · The share surfaces</h2>
-  <p class="sub">Same experiment, one URL per layer, one audience per URL. Public links carry the claim
-    and its receipts; the provider link carries the bulk artifacts and re-execution, behind the
-    provider's own access control.</p>
+  <p class="sub">Each part has its own URL and audience. The public links carry the values and their
+    provenance; the provider link carries the bulk artifacts and reruns, behind the provider's access
+    control.</p>
   <div class="tblwrap"><table class="links">
     <thead><tr><th>Surface</th><th>Link</th><th>Audience</th></tr></thead>
     <tbody>
       <tr>
-        <td>Experiment permalink<br><span class="why">values + provenance quotes + lineage version</span></td>
-        <td class="u"><a href="../experiment/#ref=paper:qhgk-2019-isaeva">experiment/#ref=paper:qhgk-2019-isaeva</a></td>
+        <td>Experiment permalink<br><span class="why">values, provenance quotes, and the lineage version</span></td>
+        <td class="u"><a href="../experiment/#ref=paper:amorphous-alloys-2020-lundgren">experiment/#ref=paper:amorphous-alloys-2020-lundgren</a></td>
         <td class="who"><span class="pill pub">public</span></td>
       </tr>
       <tr>
-        <td>Coverage on the map<br><span class="why">lights exactly the evidence-bearing quantities</span></td>
-        <td class="u"><a href="../map/#experiment=paper:qhgk-2019-isaeva">map/#experiment=paper:qhgk-2019-isaeva</a></td>
+        <td>Coverage on the map<br><span class="why">marks the quantities that carry this source's values</span></td>
+        <td class="u"><a href="../map/#experiment=paper:amorphous-alloys-2020-lundgren">map/#experiment=paper:amorphous-alloys-2020-lundgren</a></td>
         <td class="who"><span class="pill pub">public</span></td>
       </tr>
       <tr>
-        <td>The run at its provider<br><span class="why">spec, stages, artifacts, re-execution</span></td>
-        <td class="u"><a href="https://app.materialscodegraph.com/runs/a-si-qhgk" rel="noopener">app.materialscodegraph.com/runs/a-si-qhgk</a></td>
+        <td>The run at its provider<br><span class="why">the run specification, stages, artifacts, and reruns</span></td>
+        <td class="u">app.materialscodegraph.com/runs/a-si-qhgk (MaterialsCodeGraph account required)</td>
         <td class="who"><span class="pill gate">provider account</span></td>
       </tr>
     </tbody>
   </table></div>
-  <p class="caption">The pattern generalizes: contribute values under one
-    <span class="m">source.ref</span> and the two public links exist; keep the bulk at any provider
-    and the record's mirror points at it. Unpublished work stays on the gated layer until its
-    owner promotes the values.</p>
+  <p class="caption">Any source works the same way: commit values under one
+    <span class="m">source.ref</span> and both public links exist; keep the bulk data at any provider
+    and point the record's mirror at it. Unpublished work stays with the provider until its owner
+    publishes the values.</p>
 
   <details>
     <summary>Appendix: the verbatim Mermaid export</summary>
@@ -225,8 +224,8 @@
   <p class="pin">The DAG regenerates with <span class="m">python -m omai.mermaid</span>; the lineage
     example is <a href="../examples/a-si-kappa-qhgk.json"><span class="m">docs/examples/a-si-kappa-qhgk.json</span></a>;
     the learned-shortcut layer is <span class="m">omai/operator/learned.py</span>.
-    Evidence stays its owner's: raw artifacts never enter the store
-    (<a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/main/GOVERNANCE.md">GOVERNANCE.md, Data ownership and fairness</a>).</p>
+    Contributors keep the rights to their evidence
+    (<a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/main/GOVERNANCE.md#data-ownership-and-fairness">GOVERNANCE.md, "Data ownership and fairness"</a>).</p>
   </article></div>
 </main>
 <script>
@@ -282,7 +281,7 @@
     var gap=H/(col.length+1);
     col.forEach(function(id,ri){
       var label=SHORT[id]||id;
-      var w=Math.max(58,label.length*6.6+18);
+      var w=Math.max(58,label.length*7.2+18);   // Geist Mono advances 0.6 em, 7.2 px at 12 px
       pos[id]={x:PADX+COLW*ci+(COLW-w)/2,y:gap*(ri+1)-NH/2,w:w,h:NH,label:label};
     });
   });
@@ -305,14 +304,11 @@
     '<marker id="arwv" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arwv" d="M0,0 L10,5 L0,10 z"></path></marker>';
   E.forEach(function(ed){ el('path',{d:edgePath(ed[0],ed[1]),'class':'e','marker-end':'url(#arw)'}); });
   el('path',{d:edgePath('Eigenvectors','Linewidth[channel=anharmonic_3ph]'),'class':'e learned','marker-end':'url(#arwv)'});
-  var lp=pos['ForceConstants[order=3]'];
-  var lab=el('text',{x:lp.x+lp.w/2,y:lp.y-8,'text-anchor':'middle','class':'lrnlab'});
-  lab.textContent='amortized by the learned edge';
   Object.keys(pos).forEach(function(id){
     var p=pos[id];
     var g=el('g',{'class':'n '+(OBS[id]?'obs':'hid')+(id==='ForceConstants[order=3]'?' amort':'')});
     el('rect',{x:p.x,y:p.y,width:p.w,height:p.h,rx:7},g);
-    var t=el('text',{x:p.x+p.w/2,y:p.y+p.h/2+3.6,'text-anchor':'middle'},g);
+    var t=el('text',{x:p.x+p.w/2,y:p.y+p.h/2+4.2,'text-anchor':'middle'},g);
     t.textContent=p.label;
     var tt=el('title',{},g); tt.textContent=id;
   });
