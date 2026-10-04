@@ -48,7 +48,8 @@ def _rows(entries: list) -> list:
         _grab_function(html, n) for n in ("esc", "codeName", "sourceRows", "instanceToRecord"))
     script = src + "\nconsole.log(JSON.stringify(%s.map(function(e){ return sourceRows(instanceToRecord(e)).join(''); })));" \
         % json.dumps(entries)
-    proc = subprocess.run([node, "-e", script], capture_output=True, text=True)
+    # the script carries codes.json and the records, past Linux's per-argument limit: send it on stdin
+    proc = subprocess.run([node, "-"], input=script, capture_output=True, text=True)
     assert proc.returncode == 0, f"node failed: {proc.stderr}"
     return json.loads(proc.stdout)
 
