@@ -1194,6 +1194,16 @@ def test_record_light_accepts_the_committed_si_configuration():
     assert rec["id"] == lin.lineage_id(lineage)
 
 
+def test_record_light_accepts_a_former_si_uid_kept_as_an_alias():
+    """55bf22ca was the Si uid before signed zero was written as 0.0; the
+    record keeps it under canonical.aliases, so lineages pinning it resolve."""
+    lineage = _light_lineage(material={
+        "name": "Si",
+        "configuration": "55bf22ca81868867402ac4ce50a830f91da84c805990c37c3bdafe3b93a69143"})
+    rec = lin.record_light(lineage=lineage, name_to_uid=_NAME_TO_UID)
+    assert rec["id"] == lin.lineage_id(lineage)
+
+
 def test_record_light_bare_material_name_without_configuration_still_passes():
     """The common case: a material with no configuration key at all is not
     affected by the now-default config_dir (no regression). No node either,

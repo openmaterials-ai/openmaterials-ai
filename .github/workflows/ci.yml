@@ -42,3 +42,22 @@ jobs:
         run: pip install -e ".[dev,distance,amd]"
       - name: Test
         run: pytest tests/distance -q
+
+  # Configuration uids hash an spglib-standardized cell; the canonical-JSON
+  # vector runs on both architectures, so a platform-dependent byte fails here.
+  configurations:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-14]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install
+        run: pip install -e ".[dev]" "pymatgen>=2024.1.1"
+      - name: Test
+        run: pytest tests/test_configurations.py -q

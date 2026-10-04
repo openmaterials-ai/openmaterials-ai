@@ -38,10 +38,12 @@ The database is just files in this repo: the versioned map lives in `map/`
 (log-first, content-addressed); the site reads `docs/data/graph.json`
 (variables + formulas), `docs/data/catalog.json` (per-node grounding: symbol,
 dimension, description), `docs/data/codes.json` (per-code variable coverage),
-`docs/data/instances/` (one file per value), and `docs/data/configurations/`
+`docs/data/instances/` (one file per value), `docs/data/configurations/`
 (one file per atomic structure: the content-addressed home of a `Structure`
-value, bundled to `docs/data/configurations.json`). Rebuild the generated files
-with:
+value, bundled to `docs/data/configurations.json`), and `docs/data/models/`
+(one file per model a code reads, such as an interatomic potential: its uid,
+the sha256 of its files, its licence and citation; the files themselves stay
+upstream). Rebuild the generated files with:
 
 ```bash
 CUDA_VISIBLE_DEVICES="" PYTHONPATH=. python -m omai.map_data
@@ -280,6 +282,9 @@ shipped here.
 | `omai.schema.validate_record(record)` | Every schema violation as a readable message; an empty list means valid. |
 | `omai.render.render_kappa / render_molar_cp / render_reaction_energy` | A typed result to a map evidence `Instance`. |
 | `omai.render.provenance(run_ref=None, what, map_version=...)` | The `Source` every rendered instance carries, stamping the map version. |
+| `omai.evidence.resolve(kind, uid, roots=None)` | Where a registered configuration or model uid lives; None when no root registers it. |
+| `omai.evidence.model_uid(digests)` | A model's uid: the sha256 of its one evaluated file, or of the sorted manifest of several. |
+| `omai.evidence.model_citations(lineage, roots=None)` | Every model a lineage cites, resolved; a report that refuses nothing. |
 
 The schema is a SHAPE gate. That `id` equals `lineage_id(lineage)`, that the
 node resolves against the live map, and the contribution gates in
@@ -292,6 +297,15 @@ new records are written in, and widening it would keep the legacy spelling
 alive in every consumer that validates. Normalize such a record before
 validating it (`{**record, "lineage": record_lineage(record)}`, minus the
 `recipe` key); legacy links stay readable through `record_lineage` forever.
+
+A lineage cites a model by its bare uid (64 lowercase hex) under fixed keys,
+the same for every representation so one model compares across codes:
+`conditions.potential_sha256` for the model it evaluates and
+`conditions.base_potential_sha256` for the model a training run starts from.
+Model and configuration uids resolve against `docs/data/` in a source tree
+and against `omai/data/registry.json` in an installed package (written by
+`omai.map_data`, shipped in the wheel); an unregistered uid is reported, not
+refused.
 
 **The vectors.** `omai/vectors/*.json` ship inside the wheel.
 
@@ -313,6 +327,14 @@ validating it (`{**record, "lineage": record_lineage(record)}`, minus the
   Three carry a `run_ref`, the form the committed instances under
   `docs/data/instances/` use (`materialscodegraph-dgeba-cp300-gfn2` and
   friends).
+- `configurations.json`: the committed Si configuration's structure, the
+  canonical JSON its uid hashes, and the uid (`7b5e77b1...`). Python only:
+  computing the canonical JSON needs spglib. The record keeps its former uid,
+  `55bf22ca...`, under `canonical.aliases`, and it still resolves.
+- `models.json`: model uid fixtures with inline bytes: one file (its sha256),
+  two files (the sha256 of the sorted digest manifest, whose bytes are given),
+  and one file with a `training_state` companion, whose uid equals the
+  one-file uid. The NEP89 and Si.tersoff uids are pinned in their records.
 
 Every id in these files is produced by the functions above and equals the id
 its source already pinned. A vector whose id changes is a defect in the
@@ -332,10 +354,13 @@ serves; 0.1.1 fixes that. A result instance may also carry an optional
 **Versioning.** Semantic versioning, with identity treated as the strongest
 promise: a change to `lineage_id`, to the canonical JSON, or to a vector's id
 is breaking and takes a major version, because every id ever minted by this
-library would stop reproducing. Adding a schema field, a renderer, or a vector
-is a minor version. Widening a schema field to accept a shape real producers
-already emit is a patch, since it can only turn a spurious rejection into an
-acceptance. Consumers pin an exact version (`openmaterials-ai==0.1.3`).
+library would stop reproducing. Before 1.0 such a change takes the minor
+version; a record it re-keys keeps its old uid under `aliases`, which every
+resolver accepts, and the release notes list each re-keyed id. Adding a schema
+field, a renderer, or a vector is a minor version. Widening a schema field to
+accept a shape real producers already emit is a patch, since it can only turn a
+spurious rejection into an acceptance. Consumers pin an exact version
+(`openmaterials-ai==0.1.3`).
 
 ## Install
 
@@ -411,6 +436,8 @@ omai/
                      #   together (Gruneisen, kappa_total, molar volume, C_P-C_V, PF, ZT)
   paper_parser/      # P1 paper parser: PDF -> gated evidence proposal (six stages)
   configurations.py  # structure-valued evidence: content-addressed atomic cells
+  evidence.py        # one resolver for content-addressed records (configurations,
+                     #   models); data/registry.json ships their uids in the wheel
   map_data.py        # unified multi-domain export -> docs/data/*.json
   store.py           # log-first store: push/read/diff/verify
 infra/
@@ -449,3 +476,6 @@ through it, the original sources. The full statement is GOVERNANCE.md,
 The architecture is Part III of `docs/openmaterials.pdf`; the implemented kernel
 (dimensions, identity, store, genesis) is Part IV. Read the Principles and the
 two-worlds section first.
+
+The format of model records, code releases and private overlays is specified
+in [docs/specs/models-releases-overlays.md](docs/specs/models-releases-overlays.md).
