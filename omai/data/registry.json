@@ -1,0 +1,10 @@
+{
+ "configuration": {
+  "55bf22ca81868867402ac4ce50a830f91da84c805990c37c3bdafe3b93a69143": "configurations/si-diamond-primitive-mp-149.json",
+  "7b5e77b1062f0997037cb9fd490d9edb8fce8099c4f700db334aa8afb8af22be": "configurations/si-diamond-primitive-mp-149.json"
+ },
+ "model": {
+  "52a93e90596829c57d54eef091de6215f1fac7ca15d57eac7568ddfdda26adfb": "models/si-tersoff.json",
+  "75168ece02e840e4a32644f982b78d43cba697f5b64b4c8134ab66c7a8c28be1": "models/nep89-20250409.json"
+ }
+}

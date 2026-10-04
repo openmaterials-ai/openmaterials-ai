@@ -28,6 +28,10 @@ ids, never retyped:
   of ``tests/fixtures/external_solve/kaldo-direct-bte-si.json`` kept beside
   this script so the generator runs from an installed wheel too.
   ``tests/test_vectors.py`` asserts the two copies are identical.
+- ``configurations``: the committed Si configuration record's structure, the
+  canonical JSON its uid hashes, and the uid. Python only: computing the
+  canonical JSON needs spglib, so the generator checks the hash alone and
+  ``tests/test_configurations.py`` recomputes it.
 
 Each input carries the id it was pinned with; the generator RECOMPUTES the id
 and refuses to write when the two disagree. A changed id is a defect in the
@@ -38,6 +42,7 @@ Run: ``python -m omai.tools.gen_vectors``
 
 from __future__ import annotations
 
+import hashlib
 import json
 from pathlib import Path
 
@@ -343,6 +348,60 @@ def build_render() -> list[dict]:
     return out
 
 
+# Model identity fixtures (omai.evidence.model_uid), with inline bytes so a
+# consumer reproduces every digest. The NEP89 and Si.tersoff uids are pinned in
+# their records under docs/data/models/ instead: the commons holds neither file.
+_MODEL_CASES = [
+    {"name": "one_file",
+     "files": [("model.txt", "model", "fixture model A\n")]},
+    {"name": "two_files",
+     "files": [("model.snapcoeff", "model", "fixture coefficients\n"),
+               ("model.snapparam", "model", "fixture parameters\n")]},
+    # The same model file as one_file plus a companion outside the uid: the
+    # uid must equal one_file's.
+    {"name": "one_file_with_training_state",
+     "files": [("model.txt", "model", "fixture model A\n"),
+               ("model.restart", "training_state", "fixture training state\n")]},
+]
+
+
+def build_models() -> list[dict]:
+    """Model uid vectors: files with inline content, their digests, the uid."""
+    from omai.evidence import model_uid
+
+    out = []
+    for case in _MODEL_CASES:
+        files = [{"path": path, "role": role, "content": content,
+                  "sha256": hashlib.sha256(content.encode("utf-8")).hexdigest(),
+                  "bytes": len(content.encode("utf-8"))}
+                 for path, role, content in case["files"]]
+        digests = [f["sha256"] for f in files if f["role"] == "model"]
+        vector = {"name": case["name"], "files": files, "uid": model_uid(digests)}
+        if len(digests) > 1:
+            # The exact bytes a several-file uid hashes.
+            vector["manifest_json"] = json.dumps(
+                {"files": sorted(digests)}, sort_keys=True, separators=(",", ":"))
+        out.append(vector)
+    return out
+
+
+def build_configurations(inputs: dict) -> list[dict]:
+    """Configuration uid vectors: a structure, its canonical JSON, its uid."""
+    out = []
+    for entry in inputs["configurations"]:
+        uid = hashlib.sha256(entry["canonical_json"].encode("utf-8")).hexdigest()
+        if uid != entry["pinned_uid"]:
+            raise SystemExit(
+                f"{entry['name']}: {entry['source_file']} pins "
+                f"{entry['pinned_uid']}, its canonical JSON hashes to {uid}.")
+        out.append({"name": entry["name"],
+                    "source": entry["source_file"],
+                    "structure": entry["structure"],
+                    "canonical_json": entry["canonical_json"],
+                    "canonical_uid": uid})
+    return out
+
+
 def generate() -> dict[str, str]:
     """The vector files as ``{filename: text}``, without writing anything."""
     inputs = json.loads(_INPUTS.read_text())
@@ -350,6 +409,8 @@ def generate() -> dict[str, str]:
         "lineage_ids.json": _dump(build_lineage_ids(inputs)),
         "records.json": _dump(build_records(inputs)),
         "render.json": _dump(build_render()),
+        "configurations.json": _dump(build_configurations(inputs)),
+        "models.json": _dump(build_models()),
     }
 
 

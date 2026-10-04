@@ -1,8 +1,11 @@
 {
  "canonical": {
+  "aliases": [
+   "55bf22ca81868867402ac4ce50a830f91da84c805990c37c3bdafe3b93a69143"
+  ],
   "natoms_primitive": 2,
   "spacegroup": 227,
-  "uid": "55bf22ca81868867402ac4ce50a830f91da84c805990c37c3bdafe3b93a69143"
+  "uid": "7b5e77b1062f0997037cb9fd490d9edb8fce8099c4f700db334aa8afb8af22be"
  },
  "external_ids": {
   "materials_project": "mp-149"
