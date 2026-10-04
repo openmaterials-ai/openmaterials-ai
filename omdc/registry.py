@@ -112,7 +112,7 @@ DISTANCES: dict[str, DistanceSpec] = {
     s.full_id: s
     for s in [
         DistanceSpec("env-ot", 1, "optimal transport between weighted local-environment sets", True, False, _GEOM, "heavy", "mace", True, _env_ot),
-        DistanceSpec("latent", 1, "cosine over pooled environment vectors, the ANN index key", False, True, _GEOM, "medium", "mace", True, _latent),
+        DistanceSpec("latent", 1, "one minus the cosine similarity of pooled environment vectors", False, True, _GEOM, "medium", "mace", True, _latent),
         DistanceSpec("comp", 1, "Element Mover's Distance on the Pettifor scale, chemistry only", True, True, _GEOM | {"geometry"}, "fast", None, False, _comp),
         DistanceSpec("amd", 1, "Average Minimum Distance, Chebyshev; geometry only, species-blind", True, True, _GEOM, "fast", "amd", False, _amd),
         DistanceSpec("exact", 1, "StructureMatcher RMSD, inf when cells do not match; re-rank only", False, False, _GEOM, "heavy", None, False, _exact),
