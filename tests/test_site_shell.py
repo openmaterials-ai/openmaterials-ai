@@ -101,9 +101,10 @@ def _docs_file(url: str) -> Path:
 
 def test_robots_sitemap_and_llms_point_at_real_files():
     robots = (DOCS / "robots.txt").read_text()
-    assert robots.splitlines()[:2] == ["User-agent: *", "Allow: /"]
+    assert robots.splitlines()[:3] == ["User-agent: *", "Allow: /",
+                                       "Content-Signal: search=yes, ai-input=yes, ai-train=yes"], \
+        "the founder's content signals: search, AI input and AI training all allowed"
     assert "Sitemap: https://openmaterials.ai/sitemap.xml" in robots
-    assert "Content-Signal" not in robots, "content signals are the founder's call"
     locs = re.findall(r"<loc>([^<]+)</loc>", (DOCS / "sitemap.xml").read_text())
     assert locs and not [u for u in locs if "/i/" in u], "value pages stay out while they redirect"
     llms = re.findall(r"\((https://openmaterials\.ai/[^)]*)\)", (DOCS / "llms.txt").read_text())
