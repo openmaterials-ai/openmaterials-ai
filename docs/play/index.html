@@ -551,6 +551,8 @@ var labelsInner = document.getElementById('pglabelsInner');
 var hint = document.getElementById('pgHint');
 var nodePanel = document.getElementById('pgNodePanel');
 var SVGNS = 'http://www.w3.org/2000/svg';
+// scrolls jump instead of glide under reduced motion
+var SCROLL = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
 
 var GRAPH = null, SEM = [], LEAN = {nodes:{},edges:{}}, semById = {}, nodeById = {}, children = {}, parents = {}, symHtml = {};
 var catalogById = {};   // node id -> {id, symbol, description}: the plain-language names for the lineage view
@@ -1470,7 +1472,7 @@ function bundleDoiHTML(code){
 var currentShortCode = null;   // set when the open bundle came from (or minted) /s/<code>
 document.addEventListener('click', function(ev){
   var goBtn = ev.target && ev.target.closest ? ev.target.closest('.rec-complete-go') : null;
-  if (goBtn) { location.hash = '#/play?tab=learn'; window.scrollTo({top: 0, behavior: 'smooth'}); return; }
+  if (goBtn) { location.hash = '#/play?tab=learn'; window.scrollTo({top: 0, behavior: SCROLL}); return; }
   var mintBtn = ev.target && ev.target.closest ? ev.target.closest('.rec-doi-mint') : null;
   if (mintBtn) { mintShortlink(currentBundle, mintBtn); return; }
   var b = ev.target && ev.target.closest ? ev.target.closest('.rec-doi-copy') : null;
@@ -2245,7 +2247,7 @@ function renderBundle(env){
       e.preventDefault();
       // scrollIntoView, never a hash change: the router owns location.hash
       var target = document.getElementById('member-' + a.getAttribute('data-idx'));
-      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (target) target.scrollIntoView({ behavior: SCROLL, block: 'start' });
     });
   });
   var copyBtn = box.querySelector('#bundleCopy');
