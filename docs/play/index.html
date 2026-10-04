@@ -154,7 +154,8 @@
   .lin-examples p{margin:0 0 4px;}
   .lin-example-links{display:flex;flex-wrap:wrap;gap:2px 16px;}
   .rec{display:flex;flex-direction:column;gap:6px;min-width:0;}
-  .rec-head{display:flex;align-items:baseline;justify-content:space-between;gap:24px;min-width:0;}
+  .rec-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:6px 24px;min-width:0;}
+  .rec-head > .rec-doi{flex:1 1 100%;}   /* the value page address takes its own row */
   .rec-head-meta{display:flex;align-items:baseline;justify-content:flex-end;flex-wrap:wrap;gap:4px 12px;margin:0;min-width:0;text-align:right;font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);font-size:12px;line-height:16px;}
   .rec-head-meta>div{display:inline-flex;gap:4px;align-items:baseline;min-width:0;}
   .rec-head-meta dt{color:var(--ink-2,#4D4D4D);}
