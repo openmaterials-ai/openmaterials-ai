@@ -73,7 +73,6 @@ ALIASES: dict[str, tuple[str, ...]] = {
     "conductance-window": ("ConductanceWindow", "contract_conductance_window"),
     "on-off-ratio": ("ConductanceWindow",),
     "resistive-switching-ratio": ("ConductanceWindow",),
-    "memory-window": ("ConductanceWindow",),
     "ltp-window": ("ConductanceWindow",),
     "ltd-window": ("ConductanceWindow",),
     "conductance-drift": ("ConductanceDriftExponent", "apply_conductance_drift"),
