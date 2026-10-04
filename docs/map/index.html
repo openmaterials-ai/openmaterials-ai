@@ -35,7 +35,6 @@
   .toolbar{flex:none;display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:8px var(--inset,16px);border-bottom:1px solid var(--line,#EBEBEB);background:var(--page,#FFFFFF);}
   .toolbar .om-search{flex:1 1 200px;max-width:360px;min-width:0;}
   .toolbar .push{margin-left:auto;}
-  @media (min-width:961px){.toolbar .hint{order:1;flex-basis:100%;}}   /* the hint takes the last row, so no control wraps under it */
   .toolbar .select{max-width:160px;}   /* the open list shows full names */
   @media (max-width:960px){.toolbar .om-search{flex:1 1 100%;max-width:none;}}
   /* phones: every control stays, in three rows: search; view switch, zoom and Fit; Tier, Code and
@@ -51,6 +50,7 @@
   .band .ord{font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);fill:var(--ink-2,#4D4D4D);}
   .band .h{font-weight:450;fill:var(--ink,#171717);}
   .band .sh{fill:var(--ink-2,#4D4D4D);}
+  .band .bh{fill:transparent;cursor:pointer;}   /* the band head opens the tier's full text */
   #svg.far .band .sh,#svg.far .band .ord{display:none;}   /* 16-unit text hides below 12 px */
   /* edges: 1px base; parameter links dashed (data encoding); hot edges observable indigo */
   .edge{fill:none;stroke:var(--edge,#8F8F8F);stroke-width:1;vector-effect:non-scaling-stroke;transition:opacity var(--dur,150ms) var(--ease,ease);}
@@ -81,13 +81,14 @@
   .legend{position:absolute;left:16px;bottom:16px;z-index:4;display:flex;gap:12px;align-items:center;padding:8px 12px;border-radius:var(--radius,6px);background:var(--page,#FFFFFF);box-shadow:var(--shadow-float,0 0 0 1px #EBEBEB,0 4px 8px -4px rgb(0 0 0 / .04),0 16px 24px -8px rgb(0 0 0 / .06));font-size:12px;line-height:16px;color:var(--ink-2,#4D4D4D);}
   .legend span{display:inline-flex;align-items:center;gap:6px;}
   .legend .g{color:var(--ink,#171717);font-weight:500;}
-  .legend .sep{width:1px;height:16px;background:var(--line,#EBEBEB);}
-  .legend .ver{font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);}
   .sw{width:12px;height:12px;border-radius:3px;display:inline-block;}
   .sw.obs{background:var(--data-obs,#4F46E5);}
   .sw.hid{background:var(--surface-2,#F2F2F2);box-shadow:inset 0 0 0 1px var(--edge,#8F8F8F);}
   .sw.param{background:var(--page,#FFFFFF);border:1px dashed var(--edge,#8F8F8F);}
   @media (max-width:960px){.legend{display:none;}}
+  /* the canvas caption, until the first selection */
+  .caption{position:absolute;right:16px;bottom:16px;z-index:3;max-width:min(420px,calc(100% - 32px));margin:0;padding:8px 12px;border-radius:var(--radius,6px);background:var(--page,#FFFFFF);box-shadow:var(--shadow-float,0 0 0 1px #EBEBEB,0 4px 8px -4px rgb(0 0 0 / .04),0 16px 24px -8px rgb(0 0 0 / .06));font-size:14px;line-height:20px;color:var(--ink-2,#4D4D4D);pointer-events:none;}
+  .caption[hidden]{display:none;}
   /* the provenance panel floats top right; below 961 px it is a bottom sheet */
   .om-panel{position:absolute;top:16px;right:16px;z-index:5;width:360px;max-width:calc(100% - 32px);max-height:calc(100% - 32px);overflow:auto;padding:20px;border:0;border-radius:12px;background:var(--page,#FFFFFF);box-shadow:var(--shadow-float,0 0 0 1px #EBEBEB,0 4px 8px -4px rgb(0 0 0 / .04),0 16px 24px -8px rgb(0 0 0 / .06));display:none;}
   @media (max-width:960px){.om-panel{top:auto;left:0;right:0;bottom:0;width:auto;max-width:none;max-height:55%;border-radius:12px 12px 0 0;}}
@@ -97,8 +98,8 @@
   .om-panel .sym{font-size:28px;color:var(--ink,#171717);}
   .om-panel .badge,.om-panel .tiertag{display:inline-flex;align-items:center;height:24px;padding:0 10px;margin-left:8px;border-radius:9999px;background:var(--surface-2,#F2F2F2);color:var(--ink,#171717);font-family:var(--font-sans,"Geist",ui-sans-serif,system-ui,sans-serif);font-size:12px;font-weight:500;vertical-align:middle;}
   .om-panel .tiertag{color:var(--ink-2,#4D4D4D);}
+  .om-panel .tier{margin:0 0 8px;font-size:20px;line-height:28px;font-weight:450;color:var(--ink,#171717);}
   .om-panel .name{font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);color:var(--ink-2,#4D4D4D);font-size:13px;margin:8px 0 0;overflow-wrap:anywhere;}
-  .om-panel .uid{margin-top:4px;font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);font-size:12px;line-height:16px;color:var(--ink-2,#4D4D4D);overflow-wrap:anywhere;}
   .formula{background:var(--surface,#FAFAFA);border:1px solid var(--line,#EBEBEB);border-radius:var(--radius,6px);padding:12px;overflow-x:auto;}
   .formula code{font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);font-size:13px;color:var(--ink,#171717);white-space:pre-wrap;overflow-wrap:anywhere;}
   .fop{font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);font-size:12px;color:var(--ink-2,#4D4D4D);margin:10px 0 4px;}
@@ -136,11 +137,10 @@
 <a class="skip-link" href="#cy">Skip to content</a>
 <div data-site-header data-variant="app"></div>
 <div class="toolbar">
-  <span class="om-search"><svg class="om-search-ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.5" y2="16.5"></line></svg><input class="om-input" id="q" placeholder="Search by name or method" aria-label="Search by name or method" autocomplete="off"></span>
+  <span class="om-search"><svg class="om-search-ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.5" y2="16.5"></line></svg><input class="om-input" id="q" placeholder="Find a quantity" aria-label="Find a quantity" autocomplete="off"></span>
   <nav class="view-switch" aria-label="Map view"><a href="../map/" aria-current="page">2D</a><a href="../map-3d/">3D</a><a href="../map-trace/">Trace</a></nav>
   <select class="select" id="tierJump" aria-label="Jump to a tier"><option value="">Tier</option></select>
   <select class="select" id="codeFilter" aria-label="Codes"><option value="">All codes</option></select>
-  <span class="hint">Select a quantity to see its formula, what it is computed from, what it feeds, and the codes that compute it.</span>
   <span class="push"></span>
   <button class="btn btn--ghost btn--sm" id="zoomOut" type="button" aria-label="Zoom out">&minus;</button>
   <button class="btn btn--ghost btn--sm" id="zoomIn" type="button" aria-label="Zoom in">+</button>
@@ -160,9 +160,8 @@
   <span><i class="sw obs"></i>Observable</span>
   <span><i class="sw hid"></i>Hidden</span>
   <span><i class="sw param"></i>Parameter</span>
-  <span class="sep" id="versep" style="display:none"></span>
-  <span id="mapver" style="display:none"><span class="g">Map version</span>&nbsp;<span class="ver" id="mapverhash"></span></span>
 </div>
+<p class="caption" id="caption">Select a quantity to see its formula, what it is built from, what it feeds, and the codes that compute it.</p>
 <div class="om-panel" id="panel"></div>
 </div>
 <div id="fallback"></div>
@@ -192,7 +191,8 @@
 const svg=document.getElementById('svg'), vp=document.getElementById('vp'),
       bandsG=document.getElementById('bands'), measure=document.getElementById('measure'),
       tip=document.getElementById('tip'), panelEl=document.getElementById('panel'),
-      codeFilter=document.getElementById('codeFilter'), tierJump=document.getElementById('tierJump');
+      codeFilter=document.getElementById('codeFilter'), tierJump=document.getElementById('tierJump'),
+      captionEl=document.getElementById('caption');
 const HAS_KATEX = (typeof katex!=='undefined');
 const HAS_DAGRE = (typeof dagre!=='undefined');
 
@@ -251,7 +251,6 @@ function attr(s){ return (''+s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').rep
 Promise.all([
   fetch('../data/graph.json').then(r=>r.json()),
   fetch('../data/codes.json').then(r=>r.json()).catch(()=>({})),
-  fetch('../data/version.json').then(r=>r.json()).catch(()=>null),
   fetch('../data/semantics.json').then(r=>r.json()).catch(()=>[]),
   fetch('../data/lean.json').then(r=>r.json()).catch(()=>({nodes:{},edges:{}}))
 ]).then(build).catch(e=> err('The map data did not load: '+e));
@@ -278,16 +277,10 @@ function resolveLabel(q){
   return out.sort((a,b)=> b.score-a.score || a.id.localeCompare(b.id));
 }
 
-function build([graph, codes, version, semantics, lean]){
+function build([graph, codes, semantics, lean]){
   leanData = lean || {nodes:{},edges:{}};
   (semantics||[]).forEach(e=>{ semById[e.id]=e; });
   codesData = codes || {};
-  if(version && version.version){
-    const vh=document.getElementById('mapverhash');
-    vh.textContent=(''+version.version).slice(0,12);
-    document.getElementById('mapver').style.display='';
-    document.getElementById('versep').style.display='';
-  }
   graph.nodes.forEach(n=>{ nodeById[n.id]=n; symHtml[n.id]=tex(n.symbol); });
 
   const seen=new Set();
@@ -371,7 +364,9 @@ function renderBands(minY, maxY){
     if(i>0) s+='<line class="bl" x1="'+(x-BAND_GAP/2)+'" y1="'+top+'" x2="'+(x-BAND_GAP/2)+'" y2="'+bottom+'"></line>';
     s+='<text class="ord" x="'+(x+BAND_PADX)+'" y="'+(top+34)+'" font-size="16">'+(t.order===1e6?'*':(t.order+1).toString().padStart(2,'0'))+'</text>';
     s+='<text class="h" x="'+(x+BAND_PADX)+'" y="'+(top+66)+'" font-size="24">'+esc(t.name)+'</text>';
-    s+=wrapText(t.description||'', x+BAND_PADX, top+96, BAND_W-2*BAND_PADX-6, 16, 'sh', 3);
+    // the caption is the description's lead clause; the panel holds the full text
+    s+=wrapText((t.description||'').split(/[:,]/)[0], x+BAND_PADX, top+96, BAND_W-2*BAND_PADX-6, 16, 'sh', 3);
+    s+='<rect class="bh" x="'+(x+4)+'" y="'+top+'" width="'+(BAND_W-8)+'" height="'+(HEAD_SPACE-12)+'"></rect>';
     s+='</g>';
   });
   bandsG.innerHTML=s;
@@ -382,7 +377,8 @@ function wrapText(str, x, y, maxW, size, cls, maxLines){
   words.forEach(w=>{ const test=cur?cur+' '+w:w; if(test.length>cpl && cur){ lines.push(cur); cur=w; } else cur=test; });
   if(cur) lines.push(cur);
   const use=lines.slice(0,maxLines);
-  if(lines.length>maxLines && use.length){ let last=use[use.length-1]; if(last.length>cpl-1) last=last.slice(0,cpl-2); use[use.length-1]=last+'...'; }
+  // past maxLines the last line ends on a whole word, never mid-word
+  if(lines.length>maxLines && use.length){ let last=use[use.length-1]; while(last.length>cpl-1 && last.includes(' ')) last=last.slice(0,last.lastIndexOf(' ')); use[use.length-1]=last.replace(/[,;:]$/,'')+'…'; }
   return use.map((ln,i)=> '<text class="'+cls+'" x="'+x+'" y="'+(y+i*(size+4))+'" font-size="'+size+'">'+esc(ln)+'</text>').join('');
 }
 
@@ -446,7 +442,7 @@ svg.addEventListener('wheel', e=>{ e.preventDefault(); const m=svg.getScreenCTM(
 document.getElementById('zoomIn').addEventListener('click', ()=> zoomBy(0.8));
 document.getElementById('zoomOut').addEventListener('click', ()=> zoomBy(1.25));
 document.getElementById('fitBtn').addEventListener('click', ()=>{ if(lastFocus) fitTo(lastFocus, lastAnchor); else fitDefault(); });
-tierJump.addEventListener('change', function(){ const b=this.value; this.value=''; if(b!=='') fitDefault(+b); });
+tierJump.addEventListener('change', function(){ const b=this.value; this.value=''; if(b!==''){ fitDefault(+b); showTier(+b); } });
 
 // ---- interaction: touch (pan / pinch / tap) --------------------------------
 // Touch is handled independently of the mouse path so desktop behavior is
@@ -501,8 +497,10 @@ svg.addEventListener('touchend', e=>{
     if(tPan && !tMoved && tStart){
       const nd=tStart.target.closest && tStart.target.closest('.node');
       const ed=tStart.target.closest && tStart.target.closest('.edge');
+      const bh=tStart.target.closest && tStart.target.closest('.bh');
       if(nd){ selectNode(nodeById[nd.dataset.id]); }
       else if(ed){ selectEdge(ed.dataset.edge, ed.dataset.op); }
+      else if(bh){ showTier(+bh.parentNode.dataset.band); }
       else { clearSel(); }
     }
     tPan=null; tPinch=null; tStart=null;
@@ -539,31 +537,39 @@ function mappedByHtml(id){
 }
 function selectNode(node){
   if(!node) return;
+  captionEl.hidden=true;
   const id=node.id; focusNode(id);
   const ins=parents[id]||[], outs=children[id]||[];
   let h=closeBtn();
   h+='<div><span class="sym">'+tex(node.symbol)+'</span><span class="badge '+node.type+'">'+esc(node.type)+'</span></div>';
-  h+='<div class="name">'+esc(node.id)+'<span class="tiertag">'+esc(node.tier||'Other')+'</span>'+'</div>'+(node.uid?('<div class="uid">uid '+esc(node.uid)+'</div>'):'');
+  h+='<div class="name">'+esc(node.id)+'<span class="tiertag">'+esc(node.tier||'Other')+'</span>'+'</div>';
   const fl=(node.formulas&&node.formulas.length)?node.formulas:(node.formula?[{op:'',latex:node.formula}]:[]);
   if(!fl.length){ h+='<div class="om-panel-label">Formula</div><div class="formula"><span class="muted">Input quantity: no edge produces it.</span></div>'; }
   else{   // every formula with the operator that carries it
     h+='<div class="om-panel-label">'+(fl.length===1?'Formula on the producing edge':fl.length+' producing edges (alternative routes)')+'</div>';
-    fl.forEach(f=>{ h+=(f.op?'<div class="fop">'+esc(f.op)+'</div>':'')+'<div class="formula">'+tex(f.latex,true)+'</div>'; });
+    fl.forEach(f=>{ h+=(f.op?'<div class="fop">'+esc(opName(f.op))+'</div>':'')+'<div class="formula">'+tex(f.latex,true)+'</div>'; });
   }
   const lv=leanData.nodes&&leanData.nodes[node.id];
   if(lv){ h+='<div class="om-panel-label"><span class="lean-badge">Lean dimension</span></div><pre class="lean-line">'+esc(lv.lean)+'</pre>'; }
-  if(outs.length){ h+='<div class="om-panel-label">Feeds into</div><div class="chips">'+outs.map(chip).join('')+'</div>'; }
-  if(ins.length){ h+='<div class="om-panel-label">Computed from</div><div class="chips">'+ins.map(chip).join('')+'</div>'; }
+  if(ins.length){ h+='<div class="om-panel-label">Built from</div><div class="chips">'+ins.map(chip).join('')+'</div>'; }
+  if(outs.length){ h+='<div class="om-panel-label">Feeds</div><div class="chips">'+outs.map(chip).join('')+'</div>'; }
   h+=mappedByHtml(id);
   panelEl.innerHTML=h; panelEl.style.display='block';
   syncHash(id);
+}
+// A tier's full description, which its band caption shortens.
+function showTier(i){
+  const t=tierList[i]; if(!t) return;
+  clearSel(); captionEl.hidden=true;
+  panelEl.innerHTML=closeBtn()+'<div class="om-panel-label">Tier '+(t.order===1e6?'':String(t.order+1).padStart(2,'0'))+'</div><p class="tier">'+esc(t.name)+'</p><p class="muted">'+esc(t.description||'')+'</p>';
+  panelEl.style.display='block';
 }
 function opName(op){ return (op||'').replace(/\[.*?\]/g,'').replace(/_/g,' ').trim() || 'operation'; }
 // The formula of the operator on one edge: a node with several producing routes carries one per operator.
 function edgeFormula(n, op){ const f=(n.formulas||[]).find(x=>x.op===op); return f?f.latex:n.formula; }
 function selectEdge(key, op){
   const [s,t]=key.split('>>'); const tn=nodeById[t], sn=nodeById[s]; if(!tn||!sn) return;
-  depth='focused';
+  captionEl.hidden=true; depth='focused';
   clearDim();
   vp.querySelectorAll('.node').forEach(el=> el.classList.toggle('dim', !(el.dataset.id===s||el.dataset.id===t)));
   vp.querySelectorAll('.edge').forEach(el=>{ const on=el.dataset.edge===key; el.classList.toggle('dim', !on); el.classList.toggle('hot', on); });
@@ -638,6 +644,7 @@ document.querySelector('.view-switch').addEventListener('click', e=>{
 svg.addEventListener('click', e=>{ if(moved)return;
   const nd=e.target.closest('.node'); if(nd){ selectNode(nodeById[nd.dataset.id]); return; }
   const ed=e.target.closest('.edge'); if(ed){ selectEdge(ed.dataset.edge, ed.dataset.op); return; }
+  const bh=e.target.closest('.bh'); if(bh){ showTier(+bh.parentNode.dataset.band); return; }
   clearSel();
 });
 // a focused node opens with Enter or Space, framed with its neighbors
