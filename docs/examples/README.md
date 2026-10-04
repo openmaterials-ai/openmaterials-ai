@@ -3,8 +3,10 @@
 Ten real OpenMaterials lineage files, each shareable, replayable, and grounded
 in evidence on the map. Each JSON is a light record whose identity is its lineage:
 the X-to-Y path from inputs to a result, with its node, material, hyperparameters,
-values, execution metadata, and pointers to heavy data hosted on MaterialsCodeGraph.
-No input files, no database: the whole lineage is in the file.
+values, execution metadata, and the paths of its heavy artifacts. The artifacts
+themselves have no hosted copies: a pointer names a path and a role, and a record
+gains a url or a mirror only when its bytes are hosted somewhere. No input files, no
+database: the whole lineage is in the file.
 
 Use them two ways:
 
@@ -31,8 +33,8 @@ Use them two ways:
 | si-elastic-c11-pimd | Silicon elastic constant from PIMD plus TDEP, a mechanical property |
 | graphene-kappa-measured | Graphene thermal conductivity, a measurement (Raman optothermal) |
 
-These are curated demonstration lineages. Their hyperparameters and hosted-data URLs are
-illustrative of the format; the reported values are grounded in the map's committed evidence.
+These are curated demonstration lineages. Their hyperparameters are illustrative of the
+format; the reported values are grounded in the map's committed evidence.
 `si-kappa-kaldo-direct` also pins the committed Si diamond configuration
 (`si-diamond-primitive-mp-149`), so its data view resolves the pin and lists the cell's
 facts (formula, space group, atoms, lattice), and its Run link carries the pin to
