@@ -2,149 +2,112 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>openmaterials.ai: guide</title>
-<meta name="description" content="Install, resolve a label, load the map, parse a paper: the task-oriented developer guide to the openmaterials map and the omai kernel.">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Guide | OpenMaterials</title>
+<meta name="description" content="The guide shows how to install the omai kernel, resolve a label to map nodes, load the graph, and parse a paper. CI runs every Python snippet on the page.">
+<link rel="canonical" href="https://openmaterials.ai/guide/">
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="openmaterials.ai">
-<meta property="og:title" content="openmaterials.ai: guide">
-<meta property="og:description" content="Install, resolve a label, load the map, parse a paper: the developer guide.">
-<meta name="twitter:card" content="summary">
+<meta property="og:title" content="Guide | OpenMaterials">
+<meta property="og:description" content="The guide covers the OpenMaterials map and the omai kernel for developers.">
+<meta property="og:url" content="https://openmaterials.ai/guide/">
+<meta property="og:image" content="https://openmaterials.ai/assets/og.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The openmaterials.ai mark and wordmark above the line A versioned map of physics, with the licenses: map data CC BY 4.0, code Apache 2.0.">
+<meta name="twitter:card" content="summary_large_image">
+<script>try{const t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch{}</script>
+<link rel="preload" href="../assets/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../assets/fonts/GeistMono-Variable.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="../assets/site.css">
-<style>
-  .gwrap{max-width:820px;margin:0 auto;padding:2.5rem clamp(16px,4vw,24px) 5rem;overflow-x:hidden;}
-  .glead{font-size:1.15rem;color:var(--ink-2,#3d4149);line-height:1.6;margin:0 0 2.5rem;}
-  .gtoc{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 3rem;padding:1rem 1.2rem;border:1px solid var(--line);border-radius:12px;background:var(--surface);}
-  .gtoc a{font-size:.82rem;color:var(--accent);text-decoration:none;padding:3px 9px;border-radius:7px;}
-  .gtoc a:hover{background:var(--accent-soft);}
-  .gsec{margin:0 0 3rem;}
-  .gsec h2{font-family:var(--font-serif);font-size:1.5rem;font-weight:600;margin:0 0 1rem;scroll-margin-top:72px;}
-  .gsec h3{font-size:1.05rem;font-weight:650;margin:1.8rem 0 .6rem;}
-  .gsec p{line-height:1.7;margin:0 0 1rem;}
-  .gsec ul{line-height:1.7;margin:0 0 1rem 1.2rem;}
-  .gsec a{color:var(--accent);}
-  .snippet{margin:1.2rem 0;border:1px solid var(--line);border-radius:12px;overflow:hidden;}
-  .snippet-head{display:flex;align-items:center;justify-content:space-between;padding:8px 14px;background:var(--surface);border-bottom:1px solid var(--line);}
-  .snippet-title{font-size:.8rem;font-weight:700;color:var(--ink-2,#3d4149);letter-spacing:.01em;}
-  .snippet-lang{font-family:var(--font-mono,monospace);font-size:.68rem;color:var(--faint,#9aa0a8);text-transform:uppercase;letter-spacing:.08em;}
-  .snippet pre{margin:0;padding:14px;overflow-x:auto;font-family:var(--font-mono,ui-monospace,monospace);font-size:.82rem;line-height:1.55;background:#fbfaf7;color:#2a2d33;}
-  .snippet .copy{border:1px solid var(--line);background:#fff;border-radius:6px;font-size:.68rem;padding:2px 9px;cursor:pointer;color:var(--ink-2,#3d4149);}
-  .snippet .copy:active{background:var(--accent-soft);}
-  .gtable{width:100%;border-collapse:collapse;font-size:.85rem;margin:0 0 1rem;display:block;overflow-x:auto;}
-  .gtable th,.gtable td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top;}
-  .gtable th{font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--faint,#9aa0a8);font-weight:700;}
-  .gtable code{font-family:var(--font-mono,monospace);font-size:.8rem;}
-  .gnote{border-left:3px solid var(--accent);padding:.4rem 0 .4rem 1rem;margin:1.2rem 0;color:var(--ink-2,#3d4149);font-size:.92rem;}
-  @media (prefers-color-scheme: dark){ .snippet pre{background:#1a1c1f;color:#d6d9de;} .snippet .copy{background:#24262a;} }
-</style>
 </head>
 <body>
+<a class="skip-link" href="#main">Skip to content</a>
 <div data-site-header></div>
 
-<div class="gwrap">
-  <p class="glead">The task-oriented guide to the openmaterials map and the
-    <span style="font-family:var(--font-mono,monospace)">omai</span> kernel.
-    For the theory and the full specification, read
-    <a href="../openmaterials.pdf">the document</a>; to explore the map, open
-    <a href="../map/">the map</a> or the <a href="../play/">playground</a>.
-    Every code block below is executed in CI, so it stays true to the live map.</p>
+<main class="frame" id="main">
+  <header class="page-head">
+    <h1>Guide</h1>
+    <p class="lede">This guide covers common tasks with the OpenMaterials map and the <code>omai</code> kernel. The <a href="../document/">document</a> has the theory and the full specification; the <a href="../map/">map</a> and the <a href="../play/">playground</a> are the interactive views. CI runs every Python snippet below (<code>tests/test_guide_snippets.py</code>).</p>
+  </header>
 
-  <nav class="gtoc" aria-label="Contents">
-    <a href="#install">Install</a>
-    <a href="#parts">The three parts</a>
-    <a href="#resolve">Resolve a label</a>
-    <a href="#graph">Load the map</a>
-    <a href="#edges">A node's producing edges</a>
-    <a href="#identity">Identity and dimension</a>
-    <a href="#mermaid">Mermaid export</a>
-    <a href="#parse">Parse a paper</a>
-    <a href="#data">Data contract</a>
-    <a href="#cli">CLI reference</a>
-  </nav>
+  <div class="page-body">
+    <nav class="toc gtoc" aria-label="Contents">
+      <a href="#install">Install</a>
+      <a href="#parts">Project structure</a>
+      <a href="#resolve">Resolve a label</a>
+      <a href="#graph">Load the map</a>
+      <a href="#edges">A node's producing edges</a>
+      <a href="#identity">Identity and dimension</a>
+      <a href="#mermaid">Mermaid export</a>
+      <a href="#parse">Parse a paper</a>
+      <a href="#data">Data contract</a>
+      <a href="#cli">CLI reference</a>
+    </nav>
 
-  <section class="gsec" id="install">
-    <h2>Install</h2>
-    <p>The map data is public and needs no install: fetch the JSON under
-      <code>docs/data/</code>. To run the kernel, clone the commons and install
-      the package in editable mode.</p>
-    <div class="snippet" data-snippet="shell">
-      <div class="snippet-head"><span class="snippet-title">Clone and install</span><span class="snippet-lang">shell</span></div>
-      <pre>git clone https://github.com/openmaterials-ai/openmaterials-ai.git
-cd openmaterials
+    <article class="prose gwrap">
+      <section class="gsec" id="install">
+        <h2>Install</h2>
+        <p>The map data is public JSON under <code>docs/data/</code>, so reading it needs no install. The released kernel is on PyPI as openmaterials-ai 0.1.3 (<code>pip install openmaterials-ai</code>). To work on the map itself, clone the repository and install it in editable mode.</p>
+        <div class="snippet" data-snippet="shell">
+          <div class="snippet-head"><span class="snippet-title">Clone and install</span><span class="snippet-lang">shell</span></div>
+          <pre>git clone https://github.com/openmaterials-ai/openmaterials-ai.git
+cd openmaterials-ai
 pip install -e .
-python -m pytest -q            # the suite is the ground truth
+python -m pytest -q            # run the test suite
 python -m omai.map_data        # regenerate docs/data/*.json from the operator layer</pre>
-    </div>
-    <p class="gnote">The kernel is Apache 2.0; the map data is CC BY 4.0. Cite
-      the map version (<code>docs/data/version.json</code>) your work used;
-      see <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/main/CITATION.cff">CITATION.cff</a>.
-      A repository can state its pin as a badge, the way a CI badge states a
-      build: <code>https://openmaterials.ai/badge/&lt;version12&gt;.svg</code>
-      renders the version it names, and <code>/badge.svg</code> always shows
-      the current one.</p>
-    <div class="snippet" data-snippet="markdown">
-      <div class="snippet-head"><span class="snippet-title">Embed the version badge</span><span class="snippet-lang">markdown</span></div>
-      <pre>[![openmaterials map version](https://openmaterials.ai/badge/&lt;version12&gt;.svg)](https://openmaterials.ai/)</pre>
-      <p class="gnote">This repository pins its own README badge the same
-        way; <code>python -m omai.map_data</code> refreshes the pin whenever
-        the version moves, and the suite fails if they ever disagree.</p>
-    </div>
-  </section>
+        </div>
+        <p class="notice gnote">The kernel is Apache 2.0; the map data is CC BY 4.0. Cite the map version (<code>docs/data/version.json</code>) your work used; see <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/main/CITATION.cff">CITATION.cff</a>. A repository can state its pin as a badge, the way a CI badge states a build: <code>https://openmaterials.ai/badge/&lt;version12&gt;.svg</code> renders the version it names, and <code>/badge.svg</code> always shows the current one.</p>
+        <div class="snippet" data-snippet="markdown">
+          <div class="snippet-head"><span class="snippet-title">Embed the version badge</span><span class="snippet-lang">markdown</span></div>
+          <pre>[![openmaterials map version](https://openmaterials.ai/badge/&lt;version12&gt;.svg)](https://openmaterials.ai/)</pre>
+        </div>
+        <p>This repository pins its own README badge the same way; <code>python -m omai.map_data</code> refreshes the pin whenever the version moves, and the suite fails if they ever disagree.</p>
+      </section>
 
-  <section class="gsec" id="parts">
-    <h2>The three parts</h2>
-    <p>openmaterials is one map in three parts. The <b>commons</b> (the
-      versioned graph, its evidence, the protocol, the kernel) is stewarded by
-      the OpenMaterials-AI initiative and licensed for open reuse. The
-      <b>interfaces</b> (the map views, the playground, the
-      <a href="../codes/">codes bibliography</a>)
-      and the <b>improvement engine</b> (the paper parser, the scan agents) are
-      built on top of the commons. The boundary rule: the commons owns the
-      ledger and its laws; tools and products are built on top. See
-      <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/main/GOVERNANCE.md">GOVERNANCE.md</a>.</p>
-  </section>
+      <section class="gsec" id="parts">
+        <h2>Project structure</h2>
+        <p><a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/main/GOVERNANCE.md">GOVERNANCE.md</a> divides the project into the map, the interfaces, and the improvement engine. The map (the versioned graph, its evidence, the protocol, and the kernel) is stewarded by OpenMaterials-AI, a foundation in formation, and licensed for open reuse. Da Vinci Labs builds the interfaces (the map views, the playground, the <a href="../codes/">codes bibliography</a>) and the improvement engine (the paper parser and the scan agents). Anything that decides what is true on the map belongs to the initiative and changes only through the gated contribution process.</p>
+      </section>
 
-  <section class="gsec" id="resolve">
-    <h2>Resolve a label</h2>
-    <p>The semantic layer turns fuzzy natural-language method names into typed,
-      content-addressed identities. This is the loop the playground's query tab
-      renders live.</p>
-    <div class="snippet" data-snippet="python">
-      <div class="snippet-head"><span class="snippet-title">Resolve a fuzzy label to node ids</span><span class="snippet-lang">python</span></div>
-      <pre>from omai.map_data import DOMAINS, build_graph_dict
+      <section class="gsec" id="resolve">
+        <h2>Resolve a label</h2>
+        <p>The resolver maps a method or quantity name, as a paper or an agent writes it, to the ids of typed, content-addressed nodes. The playground's Resolve tab runs the same resolver in the browser.</p>
+        <div class="snippet" data-snippet="python">
+          <div class="snippet-head"><span class="snippet-title">Resolve a fuzzy label to node ids</span><span class="snippet-lang">python</span></div>
+          <pre>from omai.map_data import DOMAINS, build_graph_dict
 from omai.semantics import build_semantics, resolve
 
 sem = build_semantics(build_graph_dict(DOMAINS))
 hits = resolve("quasi-harmonic approximation", sem)
 print([h["id"] for h in hits][:2])
 # ['QHAGibbsEnergy', 'ThermalExpansion']</pre>
-    </div>
-    <p>An empty result is an honest coverage gap, not an error: a phrase the map
-      has no home for feeds the encode queue.</p>
-  </section>
+        </div>
+        <p>An empty result means the map has no node for that phrase yet. The document's appendix "<a href="../document/#app:extend">Extending the DAG</a>" covers adding one.</p>
+      </section>
 
-  <section class="gsec" id="graph">
-    <h2>Load the map</h2>
-    <div class="snippet" data-snippet="python">
-      <div class="snippet-head"><span class="snippet-title">Build the graph and count it</span><span class="snippet-lang">python</span></div>
-      <pre>from omai.map_data import DOMAINS, build_graph_dict
+      <section class="gsec" id="graph">
+        <h2>Load the map</h2>
+        <div class="snippet" data-snippet="python">
+          <div class="snippet-head"><span class="snippet-title">Build the graph and count it</span><span class="snippet-lang">python</span></div>
+          <pre>from omai.map_data import DOMAINS, build_graph_dict
 
 g = build_graph_dict(DOMAINS)
 print(len(g["nodes"]), "nodes,", len(g["links"]), "links")
 # each node: id, type, symbol, formula, tier, uid
 # each link: source, target, op, uid</pre>
-    </div>
-    <p>The same dict is published as <code>docs/data/graph.json</code>, so a
-      browser client reads it with one <code>fetch</code>.</p>
-  </section>
+        </div>
+        <p>The same dict is published as <code>docs/data/graph.json</code>, so a browser client reads it with one <code>fetch</code>.</p>
+      </section>
 
-  <section class="gsec" id="edges">
-    <h2>A node's producing edges</h2>
-    <div class="snippet" data-snippet="python">
-      <div class="snippet-head"><span class="snippet-title">Which operators produce a quantity</span><span class="snippet-lang">python</span></div>
-      <pre>from omai.map_data import DOMAINS, build_graph_dict
+      <section class="gsec" id="edges">
+        <h2>A node's producing edges</h2>
+        <div class="snippet" data-snippet="python">
+          <div class="snippet-head"><span class="snippet-title">Which operators produce a quantity</span><span class="snippet-lang">python</span></div>
+          <pre>from omai.map_data import DOMAINS, build_graph_dict
 
 g = build_graph_dict(DOMAINS)
 node = "ThermalConductivity[transport_model=qhgk]"
@@ -152,57 +115,41 @@ producers = sorted({l["op"] for l in g["links"]
                     if l["target"] == node and l.get("op")})
 print([p for p in producers if p.startswith("compute")])
 # ['compute_kappa[transport_model=qhgk]']</pre>
-    </div>
-  </section>
+        </div>
+      </section>
 
-  <section class="gsec" id="identity">
-    <h2>Identity and dimension</h2>
-    <p>Every node has a content-addressed uid and a dimensional signature. The
-      uid is what evidence pins to, so a value follows its quantity through the
-      whole versioned history.</p>
-    <div class="snippet" data-snippet="python">
-      <div class="snippet-head"><span class="snippet-title">A node's uid and dimension</span><span class="snippet-lang">python</span></div>
-      <pre>from omai.thermal_transport.operator.nodes import THERMAL_CONDUCTIVITY
+      <section class="gsec" id="identity">
+        <h2>Identity and dimension</h2>
+        <p>Every node has a content-addressed uid and a dimensional signature. The uid is what evidence pins to, so a value follows its quantity through the whole versioned history.</p>
+        <div class="snippet" data-snippet="python">
+          <div class="snippet-head"><span class="snippet-title">A node's uid and dimension</span><span class="snippet-lang">python</span></div>
+          <pre>from omai.thermal_transport.operator.nodes import THERMAL_CONDUCTIVITY
 from omai.operator.identity import node_id
 
 print(node_id(THERMAL_CONDUCTIVITY)[:12], THERMAL_CONDUCTIVITY.fields[0].dimension.name)
 # a03324d4def5 thermal_conductivity</pre>
-    </div>
-    <p>The dimensional layer is verified in Lean: <code>python -m
-      omai.physlean_export</code> generates a PhysLean file where each node is a
-      <code>Dimension</code> and each dimension-proven edge is a theorem. It
-      compiles against PhysLean (Lean 4.29.1); the map and playground show the
-      Lean for the element you select (green check). Two further Lean files are
-      generated and compile: <code>OpenMaterialsIdentities.lean</code> proves the
-      chained thermodynamic identities (ZT through the power factor, C_P through
-      the molar volume) equal their expanded forms, and
-      <code>OpenMaterialsUnits.lean</code> anchors the map's SI convention against
-      PhysLean's unit-conversion structure.</p>
-  </section>
+        </div>
+        <p>The dimensional layer is verified in Lean. <code>python -m omai.physlean_export</code> writes <code>lean/OpenMaterials.lean</code>, in which each node is a <code>Dimension</code> and each dimension-proven edge is a theorem, and the file compiles against physlib. The map and the playground mark the selected element "Proven in Lean" and show its statement. <code>OpenMaterialsIdentities.lean</code>, also generated, proves that the chained thermodynamic identities (ZT through the power factor, C_P through the molar volume) equal their expanded forms, and <code>OpenMaterialsUnits.lean</code> anchors the map's SI convention to physlib's unit-conversion structure.</p>
+      </section>
 
-  <section class="gsec" id="mermaid">
-    <h2>Export a sub-map as Mermaid</h2>
-    <p>Any derivation or map view renders natively wherever markdown does (GitHub,
-      issues, PRs): the playground's Map tab has a Copy as Mermaid button, and
-      the exporter runs from Python:</p>
-    <div class="snippet" data-snippet="python">
-      <div class="snippet-head"><span class="snippet-title">A node's derivation as a mermaid flowchart</span><span class="snippet-lang">python</span></div>
-      <pre>from omai.mermaid import mermaid_lineage
+      <section class="gsec" id="mermaid">
+        <h2>Export a sub-map as Mermaid</h2>
+        <p>A derivation or sub-map exports as a Mermaid flowchart, which GitHub renders in Markdown files, issues, and pull requests. The playground's Sub-map tab has a Copy as Mermaid button, and the exporter also runs from Python:</p>
+        <div class="snippet" data-snippet="python">
+          <div class="snippet-head"><span class="snippet-title">A node's derivation as a mermaid flowchart</span><span class="snippet-lang">python</span></div>
+          <pre>from omai.mermaid import mermaid_lineage
 
 print(mermaid_lineage("PhononDOS"))
 # flowchart LR ... Frequency -- "compute dos" --> PhononDOS ...</pre>
-    </div>
-  </section>
+        </div>
+      </section>
 
-  <section class="gsec" id="parse">
-    <h2>Parse a paper</h2>
-    <p>The paper parser reads a PDF and proposes values for the map, each backed
-      by a verbatim quote and a page anchor, validated against the map and
-      adversarially reviewed before a human accepts them. Try it in the browser
-      on the <a href="../play/">playground's Learn tab</a>, or run the CLI:</p>
-    <div class="snippet" data-snippet="shell">
-      <div class="snippet-head"><span class="snippet-title">Parse a PDF into a proposal</span><span class="snippet-lang">shell</span></div>
-      <pre># writes proposals/&lt;slug&gt;.json (dry: no map changes)
+      <section class="gsec" id="parse">
+        <h2>Parse a paper</h2>
+        <p>The command-line parser reads a PDF and proposes values for the map. Each value carries a verbatim quote and a page anchor, is validated against the map, and passes an adversarial review before a person accepts it. The playground's <a href="../play/#tab=learn">Learn tab</a> runs a single-pass version in the browser. The CLI:</p>
+        <div class="snippet" data-snippet="shell">
+          <div class="snippet-head"><span class="snippet-title">Parse a PDF into a proposal</span><span class="snippet-lang">shell</span></div>
+          <pre># writes proposals/&lt;slug&gt;.json (dry: no map changes)
 python -m omai.paper_parser path/to/paper.pdf
 
 # review the proposal
@@ -210,65 +157,41 @@ python -m omai.paper_db --show &lt;slug&gt;
 
 # apply accepted values (writes committed instances)
 python -m omai.paper_parser path/to/paper.pdf --apply --yes</pre>
-    </div>
-    <p class="gnote">The parser needs an Anthropic API key in a repo-root
-      <code>.env</code> (never logged, never committed). The browser Learn tab
-      runs on the project's key behind a cost-gated relay, so no key is needed
-      to try it.</p>
-  </section>
+        </div>
+        <p class="notice gnote">The CLI parser reads an Anthropic API key from a <code>.env</code> file at the repository root, which <code>.gitignore</code> excludes. The Learn tab sends the paper text through our relay, which holds the project's key and enforces a daily budget, so trying it needs no key.</p>
+      </section>
 
-  <section class="gsec" id="data">
-    <h2>Data contract</h2>
-    <p>The published artifacts under <code>docs/data/</code>, all regenerated by
-      <code>python -m omai.map_data</code> from the operator layer:</p>
-    <table class="gtable">
-      <thead><tr><th>File</th><th>Shape</th><th>What it is</th></tr></thead>
-      <tbody>
-        <tr><td><code>graph.json</code></td><td>{nodes[], links[], tiers[]}</td><td>The structure: typed quantities and the operators between them.</td></tr>
-        <tr><td><code>codes.json</code></td><td>{rail: {node: spec}}</td><td>Each code's representation: which quantities it computes, units, citation, license.</td></tr>
-        <tr><td><code>semantics.json</code></td><td>[{id, uid, kind, labels, curated}]</td><td>The label cloud per node and edge, for the resolver.</td></tr>
-        <tr><td><code>instances.json</code></td><td>[{variable, material, value, source}]</td><td>Evidence: measured or computed values attached to nodes.</td></tr>
-        <tr><td><code>spectra.json</code></td><td>[{variable, axis, values}]</td><td>Function-valued evidence (densities of states, profiles).</td></tr>
-        <tr><td><code>configurations.json</code></td><td>[{name, structure, canonical}]</td><td>Atomic structures (pymatgen payload), the evaluation points.</td></tr>
-        <tr><td><code>version.json</code></td><td>{version, genesis}</td><td>The store head and the frozen genesis hash.</td></tr>
-      </tbody>
-    </table>
-  </section>
+      <section class="gsec" id="data">
+        <h2>Data contract</h2>
+        <p>The published artifacts under <code>docs/data/</code>, all regenerated by <code>python -m omai.map_data</code> from the operator layer:</p>
+        <dl class="ledger">
+          <div><dt class="mono"><a href="../data/graph.json">graph.json</a></dt><dd><code>{nodes[], links[], tiers[]}</code><br>The structure: typed quantities and the operators between them.</dd></div>
+          <div><dt class="mono"><a href="../data/codes.json">codes.json</a></dt><dd><code>{code: {node: spec}}</code><br>Each code's representation: which quantities it computes, units, citation, license.</dd></div>
+          <div><dt class="mono"><a href="../data/semantics.json">semantics.json</a></dt><dd><code>[{id, uid, kind, labels, curated}]</code><br>The label cloud per node and edge, for the resolver.</dd></div>
+          <div><dt class="mono"><a href="../data/instances.json">instances.json</a></dt><dd><code>[{variable, material, value, source}]</code><br>Evidence: measured or computed values attached to nodes.</dd></div>
+          <div><dt class="mono"><a href="../data/spectra.json">spectra.json</a></dt><dd><code>[{variable, axis, values}]</code><br>Function-valued evidence (densities of states, profiles).</dd></div>
+          <div><dt class="mono"><a href="../data/configurations.json">configurations.json</a></dt><dd><code>[{name, structure, canonical}]</code><br>Atomic structures (pymatgen payload), the evaluation points.</dd></div>
+          <div><dt class="mono"><a href="../data/version.json">version.json</a></dt><dd><code>{version, graph_version, format_rules_version, genesis}</code><br>The map version, graph version, and genesis hash.</dd></div>
+        </dl>
+      </section>
 
-  <section class="gsec" id="cli">
-    <h2>CLI reference</h2>
-    <p>Each entry runs on invocation (regenerating artifacts or printing a
-      report); none takes flags except the parser.</p>
-    <table class="gtable">
-      <thead><tr><th>Command</th><th>Does</th></tr></thead>
-      <tbody>
-        <tr><td><code>python -m omai.map_data</code></td><td>Regenerate every <code>docs/data/*.json</code> from the operator layer.</td></tr>
-        <tr><td><code>python -m omai.index_data</code></td><td>Regenerate the per-code and per-paper index under <code>index/</code>.</td></tr>
-        <tr><td><code>python -m omai.sync</code></td><td>Show the diff between the Python operator layer and the store; <code>--apply</code> lands it through the gates.</td></tr>
-        <tr><td><code>python -m omai.semantics [label...]</code></td><td>Rebuild <code>semantics.json</code> and demo resolution of the given labels.</td></tr>
-        <tr><td><code>python -m omai.paper_db [--show &lt;slug&gt;]</code></td><td>Rebuild the local bibliography table; <code>--show</code> prints one paper's proposal.</td></tr>
-        <tr><td><code>python -m omai.paper_parser &lt;pdf&gt; [--apply --yes]</code></td><td>Parse a PDF into a proposal; apply accepted values.</td></tr>
-      </tbody>
-    </table>
-  </section>
-</div>
+      <section class="gsec" id="cli">
+        <h2>CLI reference</h2>
+        <p>Each command regenerates artifacts or prints a report. The table shows the flags a command accepts.</p>
+        <dl class="ledger">
+          <div><dt><code>python -m omai.map_data</code></dt><dd>Regenerate every <code>docs/data/*.json</code> from the operator layer.</dd></div>
+          <div><dt><code>python -m omai.index_data</code></dt><dd>Regenerate the per-code and per-paper index under <code>index/</code>.</dd></div>
+          <div><dt><code>python -m omai.sync</code></dt><dd>Show the diff between the Python operator layer and the store; <code>--apply</code> lands it through the gates.</dd></div>
+          <div><dt><code>python -m omai.semantics [label...]</code></dt><dd>Rebuild <code>semantics.json</code> and demo resolution of the given labels.</dd></div>
+          <div><dt><code>python -m omai.paper_db [--show &lt;slug&gt;]</code></dt><dd>Rebuild the local bibliography table; <code>--show</code> prints one paper's proposal.</dd></div>
+          <div><dt><code>python -m omai.paper_parser &lt;pdf&gt; [--apply --yes]</code></dt><dd>Parse a PDF into a proposal; apply accepted values.</dd></div>
+        </dl>
+      </section>
+    </article>
+  </div>
+</main>
 
 <div data-site-footer></div>
 <script src="../assets/site.js"></script>
-<script>
-  // copy buttons on every snippet (progressive: no-op if clipboard is absent)
-  document.querySelectorAll('.snippet').forEach(function(r){
-    var head = r.querySelector('.snippet-head');
-    var pre = r.querySelector('pre');
-    var btn = document.createElement('button');
-    btn.className = 'copy'; btn.type = 'button'; btn.textContent = 'copy';
-    btn.addEventListener('click', function(){
-      var t = pre.textContent;
-      var done = function(){ btn.textContent = 'copied'; setTimeout(function(){ btn.textContent = 'copy'; }, 1200); };
-      if (navigator.clipboard) { navigator.clipboard.writeText(t).then(done, done); } else { done(); }
-    });
-    head.appendChild(btn);
-  });
-</script>
 </body>
 </html>

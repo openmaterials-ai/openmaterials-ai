@@ -2,139 +2,92 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>openmaterials.ai: the document</title>
-<meta name="description" content="The project's single source of truth as readable documentation: vision, product, architecture, kernel, and status, converted from the LaTeX source, with the PDF one click away.">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The document | OpenMaterials</title>
+<meta name="description" content="The full OpenMaterials specification (vision, product, architecture, kernel, and status) is published here as HTML, generated from docs/openmaterials.tex. The typeset PDF is linked at the top.">
+<link rel="canonical" href="https://openmaterials.ai/document/">
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="openmaterials.ai">
-<meta property="og:title" content="openmaterials.ai: the document">
-<meta property="og:description" content="Git for science: a versioned map of physics. The full document as readable HTML.">
-<meta name="twitter:card" content="summary">
-<link rel="stylesheet" href="../assets/vendor/inter/inter.css">
-<link rel="stylesheet" href="../assets/vendor/source-serif-4/source-serif-4.css">
-<link rel="stylesheet" href="../assets/vendor/jetbrains-mono/jetbrains-mono.css">
+<meta property="og:title" content="The document | OpenMaterials">
+<meta property="og:description" content="The full OpenMaterials specification is published here as HTML, with the typeset PDF.">
+<meta property="og:url" content="https://openmaterials.ai/document/">
+<meta property="og:image" content="https://openmaterials.ai/assets/og.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The openmaterials.ai mark and wordmark above the line A versioned map of physics, with the licenses: map data CC BY 4.0, code Apache 2.0.">
+<meta name="twitter:card" content="summary_large_image">
+<script>try{const t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch{}</script>
+<link rel="preload" href="../assets/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../assets/fonts/GeistMono-Variable.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="../assets/vendor/katex/dist/katex.min.css">
 <link rel="stylesheet" href="../assets/site.css">
 <style>
-  .doc-hero{max-width:1240px;margin:0 auto;padding:44px clamp(16px,3vw,26px) 8px;}
-  .doc-hero .om-overline{margin-bottom:12px;}
-  .doc-hero h1{font-size:clamp(1.9rem,4vw,2.6rem);margin:0 0 6px;}
-  .doc-mark{width:46px;height:46px;border-radius:10px;display:block;margin:2px 0 14px;}
-  .doc-tagline{font-family:var(--font-serif);font-size:1.15rem;color:var(--ink-2);margin:0 0 10px;}
-  .doc-byline{color:var(--muted);font-size:.92rem;margin:0 0 20px;}
-  .doc-actions{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:0 0 10px;}
-  .doc-actions .hint{color:var(--faint);font-size:.8rem;}
-
-  .doc-layout{max-width:1240px;margin:0 auto;display:grid;
-    grid-template-columns:280px minmax(0,1fr);gap:44px;align-items:start;
-    padding:12px clamp(16px,3vw,26px) 90px;}
-  .doc-toc{position:sticky;top:72px;max-height:calc(100vh - 96px);
-    overflow-y:auto;border:1px solid var(--line);border-radius:12px;
-    background:var(--surface);padding:14px 16px 18px;font-size:.84rem;}
-  .doc-toc summary{cursor:pointer;font-family:var(--font-serif);font-weight:700;
-    font-size:.95rem;color:var(--ink);list-style:none;}
-  .doc-toc summary::-webkit-details-marker{display:none;}
-  .doc-toc summary::after{content:"contents";margin-left:8px;font-family:var(--font-sans);
-    font-weight:500;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);}
-  .doc-toc ol{list-style:none;margin:0;padding:0;}
-  .toc-parts{margin-top:10px;}
-  .toc-parts > li.toc-part{margin:12px 0 4px;}
-  .toc-part > a{display:block;color:var(--ink);text-decoration:none;font-weight:600;padding:3px 0;}
-  .toc-partno{display:block;font-size:.66rem;font-weight:600;letter-spacing:.12em;
-    text-transform:uppercase;color:var(--accent);}
-  .toc-part-title{font-family:var(--font-serif);font-size:.95rem;}
-  .toc-secs{margin:2px 0 0;}
-  .toc-secs > li > a{display:block;color:var(--ink-2);text-decoration:none;
-    padding:2.5px 6px;border-left:2px solid transparent;border-radius:0 6px 6px 0;line-height:1.45;}
-  .toc-subs > li > a{display:block;color:var(--muted);text-decoration:none;
-    font-size:.78rem;padding:2px 6px 2px 18px;border-left:2px solid transparent;line-height:1.4;}
-  .doc-toc a:hover{color:var(--accent-2);background:var(--accent-soft);}
-  .doc-toc a.active{color:var(--accent-2);border-left-color:var(--accent);background:var(--accent-soft);}
-  .toc-no{display:inline-block;min-width:1.7em;margin-right:.35em;color:var(--faint);
-    font-variant-numeric:tabular-nums;font-size:.9em;}
-
-  .doc-body{max-width:72ch;min-width:0;font-size:1rem;color:var(--ink);}
-  .doc-body [id]{scroll-margin-top:76px;}
-  .doc-body p{line-height:1.72;margin:0 0 1.05em;}
-  .doc-body h1{font-size:1.9rem;margin:2.6em 0 .6em;padding-top:1.2em;border-top:1px solid var(--line);}
-  .doc-body h1:first-child{margin-top:.4em;padding-top:0;border-top:none;}
-  .partno{display:block;font-size:.72rem;font-weight:600;letter-spacing:.16em;
-    text-transform:uppercase;color:var(--accent);font-family:var(--font-sans);margin:0 0 8px;}
-  .doc-body h2{font-size:1.38rem;margin:2.1em 0 .55em;}
-  .doc-body h3{font-size:1.12rem;margin:1.8em 0 .5em;}
-  .doc-body h4{font-family:var(--font-sans);font-size:.98rem;font-weight:650;margin:1.6em 0 .45em;}
-  .doc-body h5{font-family:var(--font-sans);font-size:.92rem;font-weight:650;margin:1.4em 0 .4em;color:var(--ink-2);}
-  .secno{color:var(--faint);font-weight:600;margin-right:.35em;font-variant-numeric:tabular-nums;}
-  .doc-body a{color:var(--accent-2);text-decoration:none;}
-  .doc-body a:hover{text-decoration:underline;}
-  .doc-body ul,.doc-body ol{line-height:1.7;margin:0 0 1.05em;padding-left:1.5em;}
-  .doc-body li{margin:0 0 .35em;}
-  .doc-body li p{margin:0 0 .5em;}
-  .doc-body code{font-family:var(--font-mono);font-size:.86em;background:var(--wash,#f4f2ee);
-    border:1px solid var(--line);border-radius:5px;padding:.08em .32em;word-break:break-word;}
-  .doc-body pre{background:#fbfaf7;border:1px solid var(--line);border-radius:10px;
-    padding:14px 16px;overflow-x:auto;margin:0 0 1.2em;line-height:1.55;}
-  .doc-body pre code{background:none;border:none;padding:0;font-size:.82rem;}
-  .doc-body blockquote{margin:0 0 1.05em;padding:.2em 0 .2em 1em;
-    border-left:3px solid var(--line);color:var(--ink-2);}
-  .doc-body .math.display{display:block;overflow-x:auto;overflow-y:hidden;
-    padding:.35em 0;margin:0 0 1.05em;text-align:center;}
-  .doc-body .math.inline{white-space:nowrap;}
-
-  .tblwrap{overflow-x:auto;margin:0 0 1.2em;border:1px solid var(--line);border-radius:10px;}
-  .tblwrap table{border-collapse:collapse;width:100%;font-size:.9rem;}
-  .tblwrap th,.tblwrap td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top;}
-  .tblwrap thead th{font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;
-    color:var(--muted);font-weight:700;background:var(--surface);}
-  .tblwrap tbody tr:last-child td{border-bottom:none;}
-
-  .abstract{border:1px solid var(--line);border-radius:12px;background:var(--surface);
-    padding:20px 22px 8px;margin:0 0 2.2em;}
-  .abstract .abstract-label{display:block;font-size:.68rem;font-weight:600;letter-spacing:.14em;
-    text-transform:uppercase;color:var(--muted);margin:0 0 10px;}
-  .abstract p{font-size:.95rem;color:var(--ink-2);}
-
-  .fig-fallback{border:1px dashed var(--faint);border-radius:12px;background:var(--surface);
-    padding:16px 18px 6px;margin:0 0 1.4em;}
-  .fig-fallback-label{display:inline-block;font-size:.7rem;font-weight:700;letter-spacing:.1em;
-    text-transform:uppercase;color:var(--muted);margin:0 0 6px;}
-  .fig-fallback-note{display:block;font-size:.85rem;color:var(--muted);margin:0 0 10px;}
-  .fig-fallback p{font-size:.9rem;color:var(--ink-2);}
-
-  @media (max-width:920px){
-    .doc-layout{grid-template-columns:minmax(0,1fr);gap:18px;}
-    .doc-toc{position:static;max-height:none;}
-    .doc-toc:not([open]){padding:12px 16px;}
+  /* the document on the content-page grammar (spec 4.1, 4.2); .page-head, .page-body and .prose come from site.css */
+  .doc-byline { margin-top: 12px; font-size: 14px; line-height: 20px; color: var(--ink-2); }
+  .doc-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 24px; }
+  .doc-actions .hint { font-size: 14px; line-height: 20px; color: var(--ink-2); }
+  .doc-toc { font-size: 14px; line-height: 20px; border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 16px; }
+  .doc-toc summary { cursor: pointer; font-weight: 500; color: var(--ink); }
+  .doc-toc ol { list-style: none; margin: 0; padding: 0; }
+  .toc-parts { margin-top: 12px; }
+  .toc-parts > li.toc-part { margin: 12px 0 4px; }
+  .doc-toc a { display: block; padding: 2px 0; color: var(--ink-2); text-decoration: none; }
+  .toc-part > a { color: var(--ink); }
+  .toc-partno { display: block; font-size: 12px; line-height: 16px; color: var(--ink-2); }
+  .toc-subs > li > a { padding-left: 12px; font-size: 13px; }
+  .doc-toc a:hover, .doc-toc a.active { color: var(--ink); }
+  .toc-no { display: inline-block; min-width: 2.2em; font-variant-numeric: tabular-nums; color: var(--ink-2); }
+  .doc-body [id] { scroll-margin-top: calc(var(--header-h) + 24px); }
+  .doc-body h1 { font: 450 32px/40px var(--font-sans); letter-spacing: -0.04em; margin: 64px 0 16px; padding-top: 32px; border-top: 1px solid var(--line); }
+  .doc-body h1:first-child { margin-top: 0; padding-top: 0; border-top: 0; }
+  .doc-body h2 { margin-top: 48px; }
+  .partno { display: block; margin: 0 0 8px; font: 500 14px/20px var(--font-sans); letter-spacing: 0; color: var(--ink-2); }
+  .doc-body h5 { font: 500 14px/20px var(--font-sans); margin: 20px 0 8px; color: var(--ink-2); }
+  .secno { margin-right: .35em; font-variant-numeric: tabular-nums; color: var(--ink-2); }
+  .doc-body pre { margin: 0 0 16px; padding: 16px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--page); font: 400 13px/20px var(--font-mono); white-space: pre-wrap; overflow-wrap: anywhere; }
+  .doc-body pre code { padding: 0; background: none; font: inherit; }
+  .doc-body .math.display { display: block; overflow-x: auto; overflow-y: hidden; margin: 0 0 16px; padding: 4px 0; text-align: center; }
+  .tblwrap { margin: 0 0 16px; }
+  .abstract { margin-bottom: 32px; }
+  .abstract .abstract-label { display: block; margin: 0 0 8px; font: 500 14px/20px var(--font-sans); color: var(--ink-2); }
+  .fig-fallback { margin: 0 0 24px; }
+  .fig-fallback-label { display: block; font-weight: 500; color: var(--ink-2); }
+  .fig-fallback-note { display: block; margin: 0 0 8px; color: var(--ink-2); }
+  @media (min-width: 961px) {
+    .doc-layout { grid-template-columns: 200px minmax(0, 720px); gap: 64px; }
+    .doc-toc { position: sticky; top: calc(var(--header-h) + 24px); align-self: start; max-height: calc(100vh - var(--header-h) - 48px); overflow-y: auto; padding: 0; border: 0; border-radius: 0; }
   }
 </style>
 </head>
 <body>
+<a class="skip-link" href="#main">Skip to content</a>
 <div data-site-header></div>
 
-<header class="doc-hero">
-  <div class="om-overline"><span>The document</span><span aria-hidden="true">/</span><span>Single source of truth</span></div>
-  <img class="doc-mark" src="../assets/logo.svg" alt="" width="46" height="46">
+<main class="frame" id="main">
+<header class="doc-hero page-head">
+  <p class="eyebrow">Document</p>
   <h1>openmaterials.ai</h1>
-  <p class="doc-tagline">Git for science: a versioned map of physics</p>
-  <p class="doc-byline">The OpenMaterials project &middot; open source: map data
-    <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/main/LICENSE-DATA">CC BY 4.0</a>, code
-    <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/main/LICENSE">Apache 2.0</a></p>
+  <p class="doc-tagline lede">Specification and status of the OpenMaterials map</p>
+  <p class="doc-byline">The OpenMaterials project. Map data is
+    <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/main/LICENSE-DATA">CC BY 4.0</a> and code is
+    <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/main/LICENSE">Apache 2.0</a>.</p>
   <div class="doc-actions">
-    <a class="om-btn" href="../openmaterials.pdf" id="download-pdf">Download the PDF</a>
+    <a class="btn btn--secondary btn--sm" href="../openmaterials.pdf" id="download-pdf">Download the PDF</a>
     <span class="hint">This page is generated from the LaTeX source; the PDF is the typeset original.</span>
   </div>
 </header>
 
-<div class="doc-layout">
+<div class="doc-layout page-body">
   <details class="doc-toc" id="toc">
     <summary>On this page</summary>
     <nav aria-label="Table of contents">
 <ol class="toc-parts"><li class="toc-part"><a href="#part:vision"><span class="toc-partno">Part I</span><span class="toc-part-title">Vision</span></a><ol class="toc-secs"><li><a href="#the-creed">The creed</a><ol class="toc-subs"></ol><li><a href="#the-problem-science-that-does-not-accumulate"><span class="toc-no">1</span>The problem: science that does not accumulate</a><ol class="toc-subs"></ol><li><a href="#the-diagnosis-meaning-is-implicit"><span class="toc-no">2</span>The diagnosis: meaning is implicit</a><ol class="toc-subs"></ol><li><a href="#the-bet-store-the-physics-not-the-printout"><span class="toc-no">3</span>The bet: store the physics, not the printout</a><ol class="toc-subs"></ol><li><a href="#proof-it-is-real"><span class="toc-no">4</span>Proof it is real</a><ol class="toc-subs"></ol><li><a href="#the-payoff-knowledge-that-compounds"><span class="toc-no">5</span>The payoff: knowledge that compounds</a><ol class="toc-subs"></ol><li><a href="#the-horizon-a-semantic-action-space-for-ai"><span class="toc-no">6</span>The horizon: a semantic action space for AI</a><ol class="toc-subs"></ol><li><a href="#where-we-are-and-what-is-next"><span class="toc-no">7</span>Where we are, and what is next</a><ol class="toc-subs"></ol></ol><li class="toc-part"><a href="#part:product"><span class="toc-partno">Part II</span><span class="toc-part-title">The Product</span></a><ol class="toc-secs"><li><a href="#protocol-and-app"><span class="toc-no">8</span>Protocol and app</a><ol class="toc-subs"></ol><li><a href="#structure-and-evidence"><span class="toc-no">9</span>Structure and evidence</a><ol class="toc-subs"></ol><li><a href="#the-map"><span class="toc-no">10</span>The map</a><ol class="toc-subs"></ol><li><a href="#the-semantic-layer"><span class="toc-no">11</span>The semantic layer</a><ol class="toc-subs"></ol><li><a href="#the-parsers"><span class="toc-no">12</span>The parsers</a><ol class="toc-subs"></ol><li><a href="#the-index"><span class="toc-no">13</span>The index</a><ol class="toc-subs"></ol><li><a href="#contracts-for-builders"><span class="toc-no">14</span>Contracts (for builders)</a><ol class="toc-subs"></ol><li><a href="#governance"><span class="toc-no">15</span>Governance</a><ol class="toc-subs"></ol><li><a href="#status-and-build-order"><span class="toc-no">16</span>Status and build order</a><ol class="toc-subs"></ol><li><a href="#see-also">See also</a><ol class="toc-subs"></ol></ol><li class="toc-part"><a href="#part:architecture"><span class="toc-partno">Part III</span><span class="toc-part-title">The Architecture</span></a><ol class="toc-secs"><li><a href="#sec:principles"><span class="toc-no">17</span>Principles</a><ol class="toc-subs"></ol><li><a href="#sec:motivation"><span class="toc-no">18</span>Background and Motivation</a><ol class="toc-subs"></ol><li><a href="#sec:principle"><span class="toc-no">19</span>Architectural Principle: Two Worlds, One Bridge</a><ol class="toc-subs"><li><a href="#ssec:two-layer-chain"><span class="toc-no">19.1</span>The full chain: two layers plus the external codes</a></li></ol><li><a href="#sec:defs"><span class="toc-no">20</span>Formal Definitions</a><ol class="toc-subs"><li><a href="#operator-state"><span class="toc-no">20.1</span>Operator state</a></li><li><a href="#operator-operation"><span class="toc-no">20.2</span>Operator operation</a></li><li><a href="#operator-workflow"><span class="toc-no">20.3</span>Operator workflow</a></li><li><a href="#ssec:dag-extension-rules"><span class="toc-no">20.4</span>DAG extension rules</a></li><li><a href="#discretization-scheme"><span class="toc-no">20.5</span>Discretization scheme</a></li><li><a href="#representation"><span class="toc-no">20.6</span>Representation</a></li><li><a href="#cross-representation-comparison-compare"><span class="toc-no">20.7</span>Cross-representation comparison: compare</a></li><li><a href="#the-validation-engine-execute-compose-cross-check"><span class="toc-no">20.8</span>The validation engine: execute, compose, cross-check</a></li><li><a href="#ssec:gauge-discipline"><span class="toc-no">20.9</span>HiddenSpace discipline and gauge actions</a></li><li><a href="#representation-functor"><span class="toc-no">20.10</span>Representation functor</a></li><li><a href="#total-error"><span class="toc-no">20.11</span>Total error</a></li></ol><li><a href="#sec:lean-disciplines"><span class="toc-no">21</span>Lean-compatibility disciplines</a><ol class="toc-subs"></ol><li><a href="#sec:demo"><span class="toc-no">22</span>First Demonstration: Lattice Thermal Transport</a><ol class="toc-subs"><li><a href="#the-operator-dag"><span class="toc-no">22.1</span>The operator DAG</a></li><li><a href="#representation-functors-codes"><span class="toc-no">22.2</span>Representation functors (codes)</a></li><li><a href="#ssec:silicon-verification"><span class="toc-no">22.3</span>Verification on silicon (Tersoff potential)</a></li><li><a href="#phase-1-scientific-capabilities"><span class="toc-no">22.4</span>Phase 1 scientific capabilities</a></li></ol><li><a href="#sec:layout"><span class="toc-no">23</span>Implementation layout</a><ol class="toc-subs"></ol><li><a href="#sec:open"><span class="toc-no">24</span>Open Questions and Deferred Decisions</a><ol class="toc-subs"><li><a href="#algebra-of-error-composition-deferred-to-phase-2"><span class="toc-no">24.1</span>Algebra of error composition (deferred to Phase 2)</a></li><li><a href="#when-to-lift-to-lean"><span class="toc-no">24.2</span>When to lift to Lean</a></li><li><a href="#provenance-equivalence"><span class="toc-no">24.3</span>Provenance equivalence</a></li><li><a href="#sprint-1-scope"><span class="toc-no">24.4</span>Sprint 1 scope</a></li><li><a href="#implementation-language"><span class="toc-no">24.5</span>Implementation language</a></li></ol><li><a href="#sec:outlook"><span class="toc-no">25</span>Outlook</a><ol class="toc-subs"></ol></ol><li class="toc-part"><a href="#part:kernel"><span class="toc-partno">Part IV</span><span class="toc-part-title">The Kernel</span></a><ol class="toc-secs"><li><a href="#sec:kernel-dimensions"><span class="toc-no">26</span>Dimension algebra and the dimensional gate</a><ol class="toc-subs"></ol><li><a href="#sec:kernel-identity"><span class="toc-no">27</span>Content identity</a><ol class="toc-subs"></ol><li><a href="#sec:kernel-registries"><span class="toc-no">28</span>The protocol registries</a><ol class="toc-subs"></ol><li><a href="#sec:kernel-store"><span class="toc-no">29</span>The log-first store</a><ol class="toc-subs"></ol><li><a href="#sec:kernel-genesis"><span class="toc-no">30</span>Genesis</a><ol class="toc-subs"></ol><li><a href="#sec:kernel-index"><span class="toc-no">31</span>The index</a><ol class="toc-subs"></ol><li><a href="#sec:kernel-decisions"><span class="toc-no">32</span>Resolved decisions and their rationale</a><ol class="toc-subs"></ol><li><a href="#sec:kernel-normalization"><span class="toc-no">33</span>Pre-genesis formula normalization</a><ol class="toc-subs"></ol><li><a href="#sec:kernel-remaining"><span class="toc-no">34</span>What remains</a><ol class="toc-subs"></ol></ol><li class="toc-part"><a href="#part:status"><span class="toc-partno">Part V</span><span class="toc-part-title">Status</span></a><ol class="toc-secs"><li><a href="#sec:status-live"><span class="toc-no">35</span>Where the map is today</a><ol class="toc-subs"><li><a href="#sec:code-citations"><span class="toc-no">35.1</span>Code citations</a></li></ol><li><a href="#sec:status-buildorder"><span class="toc-no">36</span>The build order ahead</a><ol class="toc-subs"></ol></ol><li class="toc-part"><a href="#appendices"><span class="toc-part-title">Appendices</span></a><ol class="toc-secs"><li><a href="#app:ingest"><span class="toc-no">A</span>Ingesting a code</a><ol class="toc-subs"><li><a href="#procedure"><span class="toc-no">A.1</span>Procedure</a></li><li><a href="#pitfalls-observed-during-ingestion"><span class="toc-no">A.2</span>Pitfalls observed during ingestion</a></li><li><a href="#worked-example-shengbte-ingestion-2026-05"><span class="toc-no">A.3</span>Worked example: ShengBTE ingestion (2026-05)</a></li><li><a href="#what-this-skill-explicitly-does-not-do"><span class="toc-no">A.4</span>What this skill explicitly does not do</a></li></ol><li><a href="#app:extend"><span class="toc-no">B</span>Extending the DAG</a><ol class="toc-subs"><li><a href="#the-three-patterns"><span class="toc-no">B.1</span>The three patterns</a></li><li><a href="#decision-flow"><span class="toc-no">B.2</span>Decision flow</a></li><li><a href="#mechanical-steps"><span class="toc-no">B.3</span>Mechanical steps</a></li><li><a href="#pitfalls"><span class="toc-no">B.4</span>Pitfalls</a></li></ol><li><a href="#app:encode"><span class="toc-no">C</span>Encoding a catalog skill</a><ol class="toc-subs"><li><a href="#step-1-produced-quantity-nodes"><span class="toc-no">C.1</span>Step 1: Produced-quantity nodes</a></li><li><a href="#step-2-consumed-quantity-inputs"><span class="toc-no">C.2</span>Step 2: Consumed-quantity inputs</a></li><li><a href="#step-3-operator-edges"><span class="toc-no">C.3</span>Step 3: Operator edges</a></li><li><a href="#step-4-representation-spec"><span class="toc-no">C.4</span>Step 4: Representation spec</a></li><li><a href="#step-5-instance-records"><span class="toc-no">C.5</span>Step 5: Instance records</a></li><li><a href="#step-6-symbols-entry"><span class="toc-no">C.6</span>Step 6: SYMBOLS entry</a></li><li><a href="#step-7-regenerate-and-test"><span class="toc-no">C.7</span>Step 7: Regenerate and test</a></li></ol></ol></ol>
     </nav>
   </details>
-  <article class="doc-body">
+  <article class="doc-body prose">
 <div class="abstract"><span class="abstract-label">Abstract</span>
 <p>openmaterials stores the object a scientific result <em>is</em>, not the printout of it: a typed physical quantity, the executable formula that produces it, its lineage, its units and gauge, and the codes that represent it. The map doubles as a semantic layer for AI: fuzzy natural-language labels resolve to typed, gated, content-addressed identities, so agents ground their language in checkable physics instead of text similarity. This document is the project’s single source of truth. Part I states the vision (why science needs a git-like object model). Part II describes the product (the free protocol and the hosted app, the map, the parsers, the index, the contracts). Part III records the architecture (the operator and representation layers, the two-worlds separation, the formal definitions, and the first thermal-transport demonstration). Part IV documents the implemented kernel (dimension algebra and the dimensional gate, content identity, the log-first store, the frozen genesis, and what remains). Part V reports live status. The appendices carry the working procedures for ingesting a code, extending the DAG, and encoding a catalog skill.</p>
 </div>
@@ -1306,6 +1259,7 @@ python -m pytest tests/test_materials_data.py</code></pre>
 <p>The test suite checks that all domain imports succeed, that the new nodes and edges appear in the unified graph, that the representation spec is discoverable via <code>build_codes</code>, and that <code>record_instance</code> validates the variable name against the live node set.</p>
   </article>
 </div>
+</main>
 
 <div data-site-footer></div>
 <script src="../assets/site.js"></script>
@@ -1341,7 +1295,7 @@ python -m pytest tests/test_materials_data.py</code></pre>
   // The TOC is a <details>: collapsed by default on narrow screens, forced
   // open (with the summary acting as a plain title) on wide ones.
   var toc = document.getElementById('toc');
-  if (toc && window.matchMedia('(min-width: 921px)').matches) {
+  if (toc && window.matchMedia('(min-width: 961px)').matches) {
     toc.open = true;
   }
 

@@ -289,8 +289,8 @@ body.app > [data-site-header] { flex: none; }
 .canvas { position: relative; flex: 1 1 auto; min-height: 0; overflow: hidden; background: var(--canvas-dots), var(--page); }
 .om-panel, .pg-node-panel { position: absolute; top: 16px; right: 16px; width: 360px; max-width: calc(100% - 32px); max-height: calc(100% - 32px); overflow: auto; padding: 20px; border-radius: 12px; background: var(--page); box-shadow: var(--shadow-float); display: none; z-index: 5; }
 @media (max-width: 960px) { .om-panel, .pg-node-panel { top: auto; left: 0; right: 0; bottom: 0; width: auto; max-width: none; max-height: 55%; border-radius: 12px 12px 0 0; } }
-.legend { position: absolute; left: 16px; bottom: 16px; display: flex; gap: 12px; align-items: center; padding: 8px 12px; border-radius: var(--radius); background: var(--page); box-shadow: var(--shadow-float); font: 400 12px/16px var(--font-sans); color: var(--ink-2); }
-@media (max-width: 960px) { .legend { display: none; } }
+body.app .legend { position: absolute; left: 16px; bottom: 16px; display: flex; gap: 12px; align-items: center; padding: 8px 12px; border-radius: var(--radius); background: var(--page); box-shadow: var(--shadow-float); font: 400 12px/16px var(--font-sans); color: var(--ink-2); }
+@media (max-width: 960px) { body.app .legend { display: none; } }
 body.app #tip { position: fixed; z-index: 30; max-width: 420px; padding: 8px 10px; border-radius: var(--radius); background: var(--ink); color: var(--page); font: 400 13px/18px var(--font-sans); box-shadow: var(--shadow-float); }
 body.app #err { position: fixed; left: 16px; right: 16px; bottom: 16px; z-index: 60; }
 
