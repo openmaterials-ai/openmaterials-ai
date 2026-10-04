@@ -157,7 +157,7 @@
   .lin-example-links{display:flex;flex-wrap:wrap;gap:2px 16px;}
   .rec{display:flex;flex-direction:column;gap:6px;min-width:0;}
   .rec-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:6px 24px;min-width:0;}
-  .rec-head > .rec-doi{flex:1 1 100%;}   /* the value page address takes its own row */
+  .rec-head > .rec-doi{flex:1 1 100%;}   /* the short link and the canonical page take their own row */
   .rec-head-meta{display:flex;align-items:baseline;justify-content:flex-end;flex-wrap:wrap;gap:4px 12px;margin:0;min-width:0;text-align:right;font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);font-size:12px;line-height:16px;}
   .rec-head-meta>div{display:inline-flex;gap:4px;align-items:baseline;min-width:0;}
   .rec-head-meta dt{color:var(--ink-2,#4D4D4D);}
@@ -168,6 +168,7 @@
   .rec-doi-copy,.rec-doi-mint{height:24px;padding:0 8px;border:0;border-radius:var(--radius,6px);background:transparent;box-shadow:0 0 0 1px var(--line,#EBEBEB);color:var(--ink,#171717);font-family:var(--font-sans,"Geist",ui-sans-serif,system-ui,sans-serif);font-size:12px;font-weight:500;cursor:pointer;}
   .rec-doi-copy:hover,.rec-doi-mint:hover{background:var(--surface-2,#F2F2F2);}
   .rec-doi-un{color:var(--ink-2,#4D4D4D);}
+  .rec-doi-page{overflow-wrap:anywhere;}
   .rec-doi a.rec-doi-src{padding:0 8px;border-radius:9999px;background:var(--surface-2,#F2F2F2);color:var(--ink,#171717);font-size:12px;text-decoration:none;}
   .rec-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(330px,100%),1fr));gap:8px 32px;align-items:start;}
   .rec-col{min-width:0;}
@@ -1391,12 +1392,12 @@ function renderPapersCompare(){
 }
 
 /* ---- the visible lineage identifier (the DOI-like badge) ----------------- */
-// Every datasheet shows its recognizer. A COMMITTED value's badge is its value
-// page, openmaterials.ai/i/<full id>/: a static page every host serves, with the
-// title and preview card a crawler reads (the /l/ form needs the site Worker,
-// which the domain does not route). An uncommitted record shows its id prefix,
-// labeled as such: committing it through a PR creates the page. The href opens
-// the value in place (#id=); the copy button copies the value page address.
+// Every datasheet shows its recognizer. A COMMITTED value's badge is its short
+// link, openmaterials.ai/l/<first 12 hex>, which the site Worker resolves, with
+// its canonical page, openmaterials.ai/i/<full id>/, printed beside it. An
+// uncommitted record shows its id prefix, labeled as such: committing it through
+// a PR creates both. The href opens the value in place (#id=); the copy button
+// copies the short link.
 function lineageDoiHTML(record){
   var id = record && record.id ? String(record.id).toLowerCase() : '';
   if (!/^[0-9a-f]{64}$/.test(id)) return '';
@@ -1410,14 +1411,15 @@ function lineageDoiHTML(record){
       '">' + esc(srcRef) + '</a>'
     : '';
   if (INSTANCE_IDS && INSTANCE_IDS.has(id)) {
-    var page = 'openmaterials.ai/i/' + id + '/';
-    return '<div class="rec-doi"><span class="rec-doi-lab">Value page</span>' +
-      '<a href="#id=' + short + '">' + page + '</a>' +
-      '<button type="button" class="rec-doi-copy" data-copy="https://' + page + '">Copy</button>' +
-      chip + '</div>';
+    var link = 'openmaterials.ai/l/' + short, page = 'openmaterials.ai/i/' + id + '/';
+    return '<div class="rec-doi"><span class="rec-doi-lab">Short link</span>' +
+      '<a href="#id=' + short + '">' + link + '</a>' +
+      '<button type="button" class="rec-doi-copy" data-copy="https://' + link + '">Copy</button>' +
+      chip +
+      '<span class="rec-doi-lab">Canonical page</span><span class="rec-doi-page">' + page + '</span></div>';
   }
   return '<div class="rec-doi"><span class="rec-doi-lab">Lineage id</span>' +
-    '<span class="rec-doi-un" title="This lineage is not committed to the map, so it has no value page yet. Committing it through a pull request creates one.">' + short + ' (uncommitted)</span></div>';
+    '<span class="rec-doi-un" title="This lineage is not committed to the map, so it has no short link or value page yet. Committing it through a pull request creates both.">' + short + ' (uncommitted)</span></div>';
 }
 // Before a bundle is minted it HAS no short link (the data lives only in the
 // long URL); the badge row says so and offers the mint in place, so the

@@ -340,15 +340,18 @@ def test_prefix_resolves_git_style():
 
 def test_datasheet_shows_the_lineage_badge():
     """Every datasheet carries its visible recognizer (the short
-    id shown like a DOI): committed values show their /i/ value page,
-    uncommitted records their honest prefix, bundles their /s/ code."""
+    id shown like a DOI): committed values show their /l/ short link with
+    the /i/ canonical page beside it, uncommitted records their prefix,
+    bundles their /s/ code."""
     html = _PLAY.read_text()
     assert "function lineageDoiHTML" in html, "no badge builder"
     assert "lineageDoiHTML(record)" in html, "the datasheet header does not show the badge"
     assert "function bundleDoiHTML" in html and "bundleDoi" in html, "no bundle short-link badge"
     assert "bundleDoiPlaceholderHTML" in html and "Create a short link" in html, \
         "an unminted bundle must show the create-one affordance, never a blank row"
-    assert "'openmaterials.ai/i/' + id + '/'" in html, "the value page address is not displayed"
-    assert "openmaterials.ai/l/" not in html, "the /l/ form needs the site Worker; hand out /i/"
+    assert "var link = 'openmaterials.ai/l/' + short" in html, "the short link is not displayed"
+    assert "data-copy=\"https://' + link + '\"" in html, "the copy button must copy the short link"
+    assert "page = 'openmaterials.ai/i/' + id + '/'" in html and "Canonical page" in html, \
+        "the canonical value page is not printed beside the short link"
     assert "(uncommitted)" in html, "no honest uncommitted state"
     assert "INSTANCE_IDS" in html, "committed test set missing"
