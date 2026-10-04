@@ -85,7 +85,7 @@
     <div class="tools">
       <article class="card">
         <h3>Map</h3>
-        <p>Every quantity is laid out by tier. Select one to see its formula, the edges that produce it, the codes that compute it, and its Lean statement where one exists.</p>
+        <p>Every quantity is laid out by tier. Select one to see its formula, what it is built from, what it feeds, the codes that compute it, and its Lean dimension where one exists.</p>
         <a class="btn btn--secondary btn--sm" href="map/">Open the map</a>
       </article>
       <article class="card">
@@ -166,25 +166,26 @@
         <ol class="steps">
           <li><span class="step-index">01</span><span>Write the file by hand, or call <code>omai.map_data.record_instance</code>, which writes it and computes the id.</span></li>
           <li><span class="step-index">02</span><span>Add it under <a href="https://github.com/openmaterials-ai/openmaterials-ai/tree/main/docs/data/instances"><code>docs/data/instances/</code></a> and open a pull request.</span></li>
-          <li><span class="step-index">03</span><span>CI checks that the node exists on the map and that the id recomputes from the lineage, and a maintainer reviews the source. The map version stays the same, because a value attaches to the graph without editing it.</span></li>
+          <li><span class="step-index">03</span><span>Automated checks confirm that the node exists on the map and that the id recomputes from the lineage, and a maintainer reviews the source. The map version does not change.</span></li>
         </ol>
-        <p class="small">The playground's <a href="play/#tab=learn">Learn tab</a> exports the values you accept as JSON; <code>omai.map_data.record_instance</code> writes each one as a file in this shape. The document's <a href="openmaterials.pdf">appendices</a> cover ingesting a code and extending the DAG, including when to add a node and when to add a parameter.</p>
+        <p class="small">The playground's <a href="play/#tab=learn">Learn tab</a> exports the values you accept from a paper as JSON.</p>
       </div>
       <figure class="code" id="contribute-file">
-        <figcaption><a href="data/instances/si-thermalconductivity-bte-solver-rta-kaldo.json">docs/data/instances/si-thermalconductivity-bte-solver-rta-kaldo.json</a></figcaption>
+        <figcaption><a href="data/instances/si-diamond-thermalconductivity-bte-solver-direct-inverse-kaldo-2020-barbalinardo.json">One committed value</a></figcaption>
 <pre>{
-  "id": "04c6dbdb9b046aceefb0c7b44e4219574cb2259280bc6893c0180b620fbcea52",
+  "id": "f735a05c14db39676b46e7f1100c55152afb7bf49cea79c9e1f61b8de075c619",
   "kind": "simulation",
   "lineage": {
-    "node": "ThermalConductivity[bte_solver=rta]",
-    "material": "Si",
-    "conditions": {"T": 300, "mesh": "8x8x8", "potential": "Si.tersoff"},
-    "values": {"value": 19.46, "units": "W/(m K)"}
+    "node": "ThermalConductivity[bte_solver=direct_inverse]",
+    "material": "Si (diamond)",
+    "conditions": {"T": 300, "statistics": "quantum", "method": "direct inversion of scattering matrix", "q-grid": "19x19x19", "potential": "DFPT LDA"},
+    "values": {"value": 147.0, "units": "W/(m K)"},
+    "source": "paper:kaldo-2020-barbalinardo"
   },
   "source": {
     "kind": "simulation",
-    "ref": "kaldo",
-    "detail": "RTA; Tersoff; 8x8x8 mesh (cross-code meaningful, absolute under-converged)"
+    "ref": "paper:kaldo-2020-barbalinardo",
+    "detail": "which gives κQ,Inv = 147 Wm−1K−1 (p. 6). G. Barbalinardo, Z. Chen, N. W. Lundgren, D. Donadio, Efficient anharmonic lattice dynamics calculations of thermal transport in crystalline and disordered solids, J. Appl. Phys. 128, 135104 (2020), doi:10.1063/5.0020443, arXiv:2009.01967."
   }
 }</pre>
       </figure>
@@ -206,7 +207,7 @@
         <div><dt>Credit</dt><dd>Reuse credits the map version and, through each record's provenance, the original source.</dd></div>
         <div><dt>Removal</dt><dd>A rights holder who believes a record entered in error <a href="https://github.com/openmaterials-ai/openmaterials-ai/issues">opens an issue</a>; the record leaves the current view of the map, and the append-only log records the retraction.</dd></div>
         <div><dt>Raw artifacts</dt><dd>The map does not ingest them; a record points to them.</dd></div>
-        <div><dt>Openness</dt><dd>Anyone can clone the repository, rerun the gates and the test suite, and rebuild the Lean proofs.</dd></div>
+        <div><dt>Openness</dt><dd>Anyone can clone the repository, rerun the gates, and rebuild the Lean proofs.</dd></div>
         <div><dt>Tools</dt><dd>Da Vinci Labs builds the site, the map views, the tracer, the playground, the codes bibliography, the paper parser, and the codebase readers. Proposals from the parser and the readers enter the map only after the gates and a maintainer accept them.</dd></div>
         <div><dt>Compute</dt><dd><a href="https://materialscodegraph.com/?ref=omai-governance#hero-connect">MaterialsCodeGraph</a>, from Da Vinci Labs, runs these calculations for AI agents over MCP, with a binding token quote before every run and a permanent record after it.</dd></div>
       </dl>

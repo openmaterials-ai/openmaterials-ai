@@ -63,11 +63,12 @@ def test_the_datum_card_equals_its_instance():
 
 def test_the_contribute_block_is_the_committed_file():
     fig = re.search(r'<figure class="code" id="contribute-file">\s*<figcaption><a href="([^"]+)">'
-                    r'docs/([^<]+)</a></figcaption>\s*<pre>(.*?)</pre>', HOME, re.S)
+                    r'One committed value</a></figcaption>\s*<pre>(.*?)</pre>', HOME, re.S)
     assert fig, "no contribute code block"
-    href, path, body = fig.groups()
-    assert href == path
-    assert json.loads(html.unescape(body)) == json.loads((DOCS / path).read_text())
+    path, body = fig.groups()
+    shown = json.loads(html.unescape(body))
+    assert shown == json.loads((DOCS / path).read_text())
+    assert f'data-instance="{shown["id"]}"' in HOME, "the example is the datum card's record"
 
 
 _FORWARD = r"""
