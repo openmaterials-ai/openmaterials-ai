@@ -8,6 +8,14 @@
       "spdx": "GPL-2.0-only",
       "tag": "stable_22Jul2025_update4",
       "version": "2025.7.22.4.0"
+    },
+    {
+      "commit": "9e42b6f0f2c68a092d5847d4127a053dc50e126a",
+      "license_source": "https://github.com/lammps/lammps/tree/stable_22Jul2025_update5 (LICENSE and README, GPL version 2; CITATION.cff, GPL-2.0-only)",
+      "released": "2026-08-08",
+      "spdx": "GPL-2.0-only",
+      "tag": "stable_22Jul2025_update5",
+      "version": "2025.7.22.5.0"
     }
   ]
 }
