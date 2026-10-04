@@ -1,0 +1,13 @@
+{
+  "aliases": [],
+  "releases": [
+    {
+      "commit": "611ca3b7f8525ba802373b04f9e3d632d515f7e3",
+      "license_source": "https://github.com/lammps/lammps/tree/stable_22Jul2025_update4 (LICENSE and README, GPL version 2)",
+      "released": "2026-04-16",
+      "spdx": "GPL-2.0-only",
+      "tag": "stable_22Jul2025_update4",
+      "version": "2025.7.22.4.0"
+    }
+  ]
+}

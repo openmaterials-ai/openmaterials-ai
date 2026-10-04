@@ -40,10 +40,12 @@ The database is just files in this repo: the versioned map lives in `map/`
 dimension, description), `docs/data/codes.json` (per-code variable coverage),
 `docs/data/instances/` (one file per value), `docs/data/configurations/`
 (one file per atomic structure: the content-addressed home of a `Structure`
-value, bundled to `docs/data/configurations.json`), and `docs/data/models/`
+value, bundled to `docs/data/configurations.json`), `docs/data/models/`
 (one file per model a code reads, such as an interatomic potential: its uid,
 the sha256 of its files, its licence and citation; the files themselves stay
-upstream). Rebuild the generated files with:
+upstream), and `docs/data/releases/` (one file per representation with
+registered releases: each release's version, tag, commit, date and the licence
+read at that tag). Rebuild the generated files with:
 
 ```bash
 CUDA_VISIBLE_DEVICES="" PYTHONPATH=. python -m omai.map_data
@@ -285,6 +287,8 @@ shipped here.
 | `omai.evidence.resolve(kind, uid, roots=None)` | Where a registered configuration or model uid lives; None when no root registers it. |
 | `omai.evidence.model_uid(digests)` | A model's uid: the sha256 of its one evaluated file, or of the sorted manifest of several. |
 | `omai.evidence.model_citations(lineage, roots=None)` | Every model a lineage cites, resolved; a report that refuses nothing. |
+| `omai.evidence.code_releases(roots=None)` | `{representation: {aliases, releases}}` for every representation. |
+| `omai.lineages.release_check(execution, codes=None)` | The `execution.registry` rows that resolve to no registered release, each with its reason; a report that refuses nothing. |
 
 The schema is a SHAPE gate. That `id` equals `lineage_id(lineage)`, that the
 node resolves against the live map, and the contribution gates in
@@ -306,6 +310,19 @@ Model and configuration uids resolve against `docs/data/` in a source tree
 and against `omai/data/registry.json` in an installed package (written by
 `omai.map_data`, shipped in the wheel); an unregistered uid is reported, not
 refused.
+
+A record's `execution.registry` rows name the codes that ran. A row resolves
+when its `id` is a representation or one of its aliases (`quantum-espresso`
+for `qe`) and its `version` equals a registered version or tag, each under its
+exact string; a null version resolves only for a code with no registered
+release and an execution that carries `image_digest` or `container_digest`.
+A version is the exact string producers emit; lammps `2025.7.22.4.0` is the
+PyPI lammps wheel version (lammps-wheel), which builds the tag
+`stable_22Jul2025_update4`. A release's `spdx`, read at its tag, is the
+licence of that release; `license` in `codes.json` is the representation's
+credit.
+`validate_light` reports unresolved rows under `unresolved_registry_rows`; no
+writer refuses them. The registry ships the releases under `code`.
 
 **The vectors.** `omai/vectors/*.json` ship inside the wheel.
 
@@ -335,6 +352,8 @@ refused.
   two files (the sha256 of the sorted digest manifest, whose bytes are given),
   and one file with a `training_state` companion, whose uid equals the
   one-file uid. The NEP89 and Si.tersoff uids are pinned in their records.
+- `releases.json`: release-check cases, each an execution block and the rows
+  it reports, with the registered releases they are checked against.
 
 Every id in these files is produced by the functions above and equals the id
 its source already pinned. A vector whose id changes is a defect in the
@@ -437,7 +456,8 @@ omai/
   paper_parser/      # P1 paper parser: PDF -> gated evidence proposal (six stages)
   configurations.py  # structure-valued evidence: content-addressed atomic cells
   evidence.py        # one resolver for content-addressed records (configurations,
-                     #   models); data/registry.json ships their uids in the wheel
+                     #   models) and code releases; data/registry.json ships their
+                     #   uids and the releases in the wheel
   map_data.py        # unified multi-domain export -> docs/data/*.json
   store.py           # log-first store: push/read/diff/verify
 infra/

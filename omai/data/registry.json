@@ -1,4 +1,177 @@
 {
+ "code": {
+  "amset": {
+   "aliases": [],
+   "releases": []
+  },
+  "ase": {
+   "aliases": [],
+   "releases": []
+  },
+  "diffcsp": {
+   "aliases": [],
+   "releases": []
+  },
+  "fairchem": {
+   "aliases": [],
+   "releases": []
+  },
+  "gpumd": {
+   "aliases": [],
+   "releases": [
+    {
+     "commit": "3f19ea6a7d8c6e82dbdad0abcf30c5775936cb26",
+     "license_source": "https://github.com/brucefan1983/GPUMD/tree/v3.9.5 (LICENCE, GPL version 3; src/main_gpumd/main.cu, version 3 or any later version)",
+     "released": "2024-08-18",
+     "spdx": "GPL-3.0-or-later",
+     "tag": "v3.9.5",
+     "version": "3.9.5"
+    }
+   ]
+  },
+  "i-pi": {
+   "aliases": [],
+   "releases": []
+  },
+  "kaldo": {
+   "aliases": [],
+   "releases": [
+    {
+     "commit": "bcb9f6e1ccd996501bf90f4e2631532946b2770b",
+     "license_source": "https://github.com/nanotheorygroup/kaldo/tree/2.2.1 (LICENSE)",
+     "released": "2026-07-11",
+     "spdx": "BSD-3-Clause",
+     "tag": "2.2.1",
+     "version": "2.2.1"
+    }
+   ]
+  },
+  "lammps": {
+   "aliases": [],
+   "releases": [
+    {
+     "commit": "611ca3b7f8525ba802373b04f9e3d632d515f7e3",
+     "license_source": "https://github.com/lammps/lammps/tree/stable_22Jul2025_update4 (LICENSE and README, GPL version 2)",
+     "released": "2026-04-16",
+     "spdx": "GPL-2.0-only",
+     "tag": "stable_22Jul2025_update4",
+     "version": "2025.7.22.4.0"
+    }
+   ]
+  },
+  "mace": {
+   "aliases": [],
+   "releases": []
+  },
+  "mat-diffusion-analysis": {
+   "aliases": [],
+   "releases": []
+  },
+  "mat-elasticity": {
+   "aliases": [],
+   "releases": []
+  },
+  "mat-equation-of-state": {
+   "aliases": [],
+   "releases": []
+  },
+  "mat-surface-adsorption": {
+   "aliases": [],
+   "releases": []
+  },
+  "matgl": {
+   "aliases": [],
+   "releases": []
+  },
+  "mattergen": {
+   "aliases": [],
+   "releases": []
+  },
+  "mescal": {
+   "aliases": [],
+   "releases": []
+  },
+  "mp-api": {
+   "aliases": [],
+   "releases": []
+  },
+  "openmm": {
+   "aliases": [],
+   "releases": []
+  },
+  "orca": {
+   "aliases": [],
+   "releases": []
+  },
+  "phono3py": {
+   "aliases": [],
+   "releases": [
+    {
+     "commit": "302ad205452ee36e57887b10bbf4a0289dd037bb",
+     "license_source": "https://github.com/phonopy/phono3py/tree/v4.4.0 (LICENSE)",
+     "released": "2026-07-18",
+     "spdx": "BSD-3-Clause",
+     "tag": "v4.4.0",
+     "version": "4.4.0"
+    }
+   ]
+  },
+  "phonopy": {
+   "aliases": [],
+   "releases": []
+  },
+  "plumed": {
+   "aliases": [],
+   "releases": []
+  },
+  "pycalphad": {
+   "aliases": [],
+   "releases": []
+  },
+  "pymatgen": {
+   "aliases": [],
+   "releases": []
+  },
+  "pymatgen-analysis-diffusion": {
+   "aliases": [],
+   "releases": []
+  },
+  "qe": {
+   "aliases": [
+    "quantum-espresso"
+   ],
+   "releases": [
+    {
+     "commit": "770a0b2d12928a67048e2f3da8d10d057e52179e",
+     "license_source": "https://github.com/QEF/q-e/tree/qe-7.5 (License, GPL version 2; README.md, version 2 or any later version)",
+     "released": "2025-08-19",
+     "spdx": "GPL-2.0-or-later",
+     "tag": "qe-7.5",
+     "version": "qe-7.5"
+    }
+   ]
+  },
+  "rxn-network": {
+   "aliases": [],
+   "releases": []
+  },
+  "shengbte": {
+   "aliases": [],
+   "releases": []
+  },
+  "smol": {
+   "aliases": [],
+   "releases": []
+  },
+  "vasp": {
+   "aliases": [],
+   "releases": []
+  },
+  "xtb": {
+   "aliases": [],
+   "releases": []
+  }
+ },
  "configuration": {
   "55bf22ca81868867402ac4ce50a830f91da84c805990c37c3bdafe3b93a69143": "configurations/si-diamond-primitive-mp-149.json",
   "7b5e77b1062f0997037cb9fd490d9edb8fce8099c4f700db334aa8afb8af22be": "configurations/si-diamond-primitive-mp-149.json"

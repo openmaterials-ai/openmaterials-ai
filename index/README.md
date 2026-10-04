@@ -9,6 +9,10 @@ hash at a specific map version.
   lists the nodes the code maps, each carrying the node uid, the code's API
   name, and its declared unit, sorted by node, and `map_version` is the store
   head at generation time (the version the coverage was computed against).
+  A representation with registered releases also carries `aliases` (the
+  registry row ids that name it) and `releases` (`{version, tag, commit,
+  released, spdx, license_source}`, the licence read at the tag), projected
+  from `docs/data/releases/<rep>.json`.
 - `papers/` and `experiments/` arrive with their first entries later.
 
 Files here are generated, never hand-edited: run `python -m omai.index_data`.

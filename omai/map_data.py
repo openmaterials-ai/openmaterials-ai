@@ -204,6 +204,12 @@ def build_codes(domains: tuple[Domain, ...]) -> dict:
                         entry["license"] = "UNKNOWN"
                         entry["url"] = None
                     codes.setdefault(obj.representation_name, {})[obj.space.name] = entry
+    # Registered releases ride on every entry of their representation, as the
+    # credits do, so a reader of codes.json finds them from any of its nodes.
+    from omai.evidence import release_files
+    for rep, doc in release_files(_DOCS / "data").items():
+        for entry in codes.get(rep, {}).values():
+            entry.update(doc)
     return codes
 
 
@@ -837,11 +843,14 @@ def build_registry(data_dir: Path | None = None) -> dict:
     and model record, each alias mapped to its record's path too
     (omai/data/registry.json). The wheel ships no docs/data/, so an installed
     package resolves uids against this file. Each record is checked by its
-    kind (omai.evidence.check); a uid or alias registered twice is refused."""
-    from omai.evidence import KINDS, check, record_uids, records
+    kind (omai.evidence.check); a uid or alias registered twice is refused.
+    ``code`` holds ``{aliases, releases}`` for every representation in
+    codes.json, checked by omai.evidence.check_releases."""
+    from omai.evidence import KINDS, check, check_releases, record_uids, records, release_files
 
     data_dir = data_dir or (_DOCS / "data")
-    registry: dict[str, dict[str, str]] = {}
+    registry: dict[str, dict] = {"code": check_releases(
+        release_files(data_dir), json.loads((data_dir / "codes.json").read_text()))}
     for kind in KINDS:
         entries = registry.setdefault(kind, {})
         for path, record in records(kind, data_dir):
@@ -1056,8 +1065,9 @@ if __name__ == "__main__":
     print("wrote", write_spectra())
     print("wrote", write_simulations())
     print("wrote", write_configurations())
-    print("wrote", write_registry())
     print("wrote", write_codes())
+    # After codes.json: the registry lists every representation's releases.
+    print("wrote", write_registry())
     print("wrote", write_catalog())
     # The version stamp is written BEFORE the exports that cite it (the lean
     # bundle stamps it), so every artifact of one build carries THIS build's

@@ -36,6 +36,16 @@ list of roots, in order: a data directory (``docs/data/`` in a source tree) or
 a registry file (``omai/data/registry.json``, written by ``omai.map_data`` and
 shipped in the wheel). An unregistered uid resolves to None; nothing is
 refused here.
+
+Code releases are not content-addressed: a code's identity is its name and
+release. They are authored in ``releases/<representation>.json`` under the
+data root as ``{aliases, releases}``: ``aliases`` the registry row ids that
+name the representation (``quantum-espresso`` for ``qe``), ``releases`` an
+append-only list of :data:`RELEASE_KEYS`, the licence read at that release's
+tag and ``released`` the tag date in UTC (the tagger date of an annotated tag,
+else the date of the tagged commit). :func:`code_releases` reads them from the same roots and lists every
+representation (``codes.json``), with empty lists where none is registered;
+the registry file holds them under ``code``.
 """
 from __future__ import annotations
 
@@ -185,6 +195,77 @@ def resolve(kind: str, uid: str, roots: list[Path] | None = None) -> str | None:
             if hit is not None:
                 return hit
     return None
+
+
+RELEASE_KEYS = ("version", "tag", "commit", "released", "spdx", "license_source")
+_COMMIT = re.compile(r"[0-9a-f]{40}")
+_DATE = re.compile(r"\d{4}-\d{2}-\d{2}")
+
+
+def release_files(data_dir: Path) -> dict[str, dict]:
+    """``{representation: {aliases, releases}}`` as authored under
+    ``<data_dir>/releases/``."""
+    return {f.stem: json.loads(f.read_text())
+            for f in sorted((Path(data_dir) / "releases").glob("*.json"))}
+
+
+def check_releases(files: dict[str, dict], representations) -> dict[str, dict]:
+    """``{representation: {aliases, releases}}`` for every representation,
+    after checking each release file: it names a representation; each alias
+    is neither a representation nor another's alias; each release is exactly
+    :data:`RELEASE_KEYS`, non-empty strings, ``commit`` 40 lowercase hex,
+    ``released`` YYYY-MM-DD, its ``version`` unique within the file; no
+    version or tag string names two commits."""
+    owner: dict[str, str] = {}
+    for rep, doc in files.items():
+        where = f"releases/{rep}.json"
+        if rep not in representations:
+            raise EvidenceError(f"{where}: {rep!r} is not a representation")
+        if (not isinstance(doc, dict) or set(doc) != {"aliases", "releases"}
+                or not isinstance(doc["aliases"], list)
+                or not isinstance(doc["releases"], list) or not doc["releases"]):
+            raise EvidenceError(f"{where}: must be {{aliases, releases}} with "
+                                f"at least one release")
+        for alias in doc["aliases"]:
+            if (not isinstance(alias, str) or not alias
+                    or alias in representations or alias in owner):
+                raise EvidenceError(f"{where}: alias {alias!r} names a "
+                                    f"representation or is already an alias")
+            owner[alias] = rep
+        seen: dict[str, str] = {}
+        for r in doc["releases"]:
+            if (not isinstance(r, dict) or set(r) != set(RELEASE_KEYS)
+                    or not all(isinstance(r[k], str) and r[k] for k in RELEASE_KEYS)
+                    or not _COMMIT.fullmatch(r["commit"])
+                    or not _DATE.fullmatch(r["released"])):
+                raise EvidenceError(f"{where}: a release is {RELEASE_KEYS}, "
+                                    f"commit 40 hex, released YYYY-MM-DD")
+            for name in {r["version"], r["tag"]}:
+                if seen.setdefault(name, r["commit"]) != r["commit"]:
+                    raise EvidenceError(f"{where}: {name!r} names two commits")
+        versions = [r["version"] for r in doc["releases"]]
+        if len(set(versions)) != len(versions):
+            raise EvidenceError(f"{where}: a version is registered twice")
+    return {rep: files.get(rep) or {"aliases": [], "releases": []}
+            for rep in representations}
+
+
+def code_releases(roots: list[Path] | None = None) -> dict[str, dict]:
+    """``{representation: {aliases, releases}}`` for every representation
+    of the roots, the first root holding a representation winning."""
+    out: dict[str, dict] = {}
+    for root in default_roots() if roots is None else roots:
+        root = Path(root)
+        if root.is_dir():
+            files = release_files(root)
+            reps = json.loads((root / "codes.json").read_text())
+            codes = {rep: files.get(rep) or {"aliases": [], "releases": []}
+                     for rep in reps}
+        else:
+            codes = json.loads(root.read_text()).get("code", {})
+        for rep, entry in codes.items():
+            out.setdefault(rep, entry)
+    return out
 
 
 def model_citations(lineage: dict, roots: list[Path] | None = None) -> list[dict]:

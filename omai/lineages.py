@@ -264,6 +264,7 @@ __all__ = [
     "envelope_to_fragment",
     "envelope_from_fragment",
     "validate_light",
+    "release_check",
     "verify_simulation",
     "verify_bundle_bytes",
     "slugify",
@@ -568,6 +569,47 @@ def _validate_configuration(lineage, *, config_dir: Path, where: str) -> None:
         f"configuration record under {config_dir.name}/")
 
 
+def release_check(execution, codes: dict | None = None) -> list[dict]:
+    """The ``execution.registry`` rows that do not resolve to a registered
+    code release, each ``{id, version, reason}``. A report: nothing refuses.
+
+    A row resolves when its ``id`` is a representation or an alias of one and
+    its ``version`` equals a registered ``version`` or ``tag``. A null version
+    resolves only when the execution carries ``image_digest`` or
+    ``container_digest`` and the code has no registered release. ``codes`` is
+    ``{representation: {aliases, releases}}``, default
+    :func:`omai.evidence.code_releases`. Only object rows are read.
+    """
+    rows = execution.get("registry") if isinstance(execution, dict) else None
+    rows = [r for r in rows if isinstance(r, dict)] if isinstance(rows, list) else []
+    if not rows:
+        return []
+    if codes is None:
+        from omai.evidence import code_releases
+        codes = code_releases()
+    owner = {name: rep for rep, entry in codes.items()
+             for name in (rep, *entry["aliases"])}
+    digest = execution.get("image_digest") or execution.get("container_digest")
+    out = []
+    for row in rows:
+        code, version = row.get("id"), row.get("version")
+        rep = owner.get(code) if isinstance(code, str) else None
+        releases = codes[rep]["releases"] if rep else []
+        if rep is None:
+            reason = "not a representation"
+        elif version is None:
+            reason = ("no version, the code has releases" if releases
+                      else None if digest else "no version and no digest")
+        elif isinstance(version, str) and version in {
+                r[k] for r in releases for k in ("version", "tag")}:
+            reason = None
+        else:
+            reason = "version not registered"
+        if reason:
+            out.append({"id": code, "version": version, "reason": reason})
+    return out
+
+
 def _validate_results(results, record_id, name_to_uid, *, where: str,
                       instances_dir: Path | None = None) -> None:
     """Bundled result instances pass the existing instance checks and backref
@@ -693,9 +735,12 @@ def validate_light(record: dict, *, name_to_uid: dict | None = None,
       unaffected (the common bare-material-name case is still valid).
     - ``execution`` and ``results`` are OPTIONAL enrichment: each is validated
       only when present.
+    - ``execution.registry`` rows that do not resolve to a registered code
+      release are reported (:func:`release_check`), never refused.
 
     Returns a report ``{"id", "node_resolved": bool, "node": <id or None>,
-    "artifact_count": int}``. Raises :class:`LineageError` only on a genuinely
+    "artifact_count": int, "unresolved_registry_rows": [{id, version,
+    reason}]}``. Raises :class:`LineageError` only on a genuinely
     malformed record (bad lineage, stated-id mismatch, a stale node pin, an
     unresolved configuration pin, or a malformed pointer); a node-unresolved
     record is a normal return, not a raise.
@@ -770,6 +815,7 @@ def validate_light(record: dict, *, name_to_uid: dict | None = None,
         "node_resolved": node_resolved,
         "node": node,
         "artifact_count": len(artifacts) if isinstance(artifacts, list) else 0,
+        "unresolved_registry_rows": release_check(record.get("execution")),
     }
 
 
