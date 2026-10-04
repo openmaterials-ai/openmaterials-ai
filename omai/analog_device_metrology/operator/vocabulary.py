@@ -10,4 +10,5 @@ register_space_symbols({
     "ConductanceWindow": {"W_G"},
     "ConductanceDriftExponent": {r"\nu_{drift}"},
     "StateCoefficientOfVariation": {"c_G"},
+    "DotProductError": {r"\epsilon_{dot}"},
 })

@@ -191,6 +191,7 @@ QUANTITY_TAGS: dict[str, str] = {
     "conductance_state": "Conductance state G = I/V of a two-terminal resistive device or a memtransistor channel, the analog state a multilevel cell stores; CONDUCTANCE (the siemens). Read bias, gate bias, temperature, state and time since programming ride in instance conditions. NOT the per-length electrical conductivity (S/m).",
     "conductance_window": "Conductance window W = G_max/G_min of one device under a stated protocol, both read at the same read bias, gate bias and temperature; DIMENSIONLESS. Full SET/RESET switching gives the on/off ratio; incremental programming gives the analog (LTP, LTD) window. A ratio across gate voltages is transistor modulation, not this window.",
     "conductance_drift_exponent": "Drift exponent nu of the power-law relaxation G(t) = G(t0) (t/t0)^(-nu) of a programmed conductance, for t >= t0 > 0 in the fitted range; DIMENSIONLESS.",
+    "dot_product_error": "Error of an analog dot product computed by an array of programmed conductances: the root mean square over the input distribution and programmed arrays of the output error in weight units, over the range of the ideal outputs; DIMENSIONLESS. The architecture, kernel, inputs, read conditions and error sources ride in instance conditions.",
     "state_coefficient_of_variation": "Coefficient of variation c = sigma_G/mu_G of a programmed conductance level across cells or cycles, stated in instance conditions with the target level and protocol; DIMENSIONLESS.",
 }
 

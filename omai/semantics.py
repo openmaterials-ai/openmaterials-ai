@@ -79,6 +79,8 @@ ALIASES: dict[str, tuple[str, ...]] = {
     "drift-exponent": ("ConductanceDriftExponent",),
     "conductance-coefficient-of-variation": ("StateCoefficientOfVariation",),
     "state-variability": ("StateCoefficientOfVariation",),
+    "dot-product-error": ("DotProductError", "propagate_programming_error"),
+    "analog-dot-product-error": ("DotProductError",),
     # Honest NO-HOME markers live in the alignment files, not here: an alias
     # must point at something that exists (the gate below enforces it).
 }

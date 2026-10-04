@@ -157,7 +157,7 @@ def test_no_node_uid_collisions_at_105_nodes():
     # two effective-medium outputs [effective_medium=nan,orientation=random] and
     # [effective_medium=nan,orientation=aligned].
     g = build_graph_dict(DOMAINS)
-    assert len(g["nodes"]) == 118
+    assert len(g["nodes"]) == 119
     uids = [n["uid"] for n in g["nodes"]]
     assert len(set(uids)) == len(uids), "node uid collision"
 

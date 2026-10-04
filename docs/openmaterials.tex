@@ -2897,9 +2897,18 @@ channel with ohmic contacts; for a 2D sheet $A = tW$ with $t$ the thickness
 $\sigma$ was normalized by), the window $G_\mathrm{max}/G_\mathrm{min}$ at
 matched read conditions, the coefficient of variation $\sigma_G/\mu_G$, and the
 drift law $G(t) = G_0 (t/t_0)^{-\nu}$ for $t \ge t_0 > 0$ with $G_0$ a parameter.
-The domain connects to the map through \texttt{contract\_device\_conductance},
-which consumes the electronic-transport
-\texttt{ElectricalConductivity[carrier=electronic]}.
+A fifth node (records 258-259), \texttt{DotProductError}, is the error of an
+analog dot product computed by an array of programmed conductances: the root mean
+square over the input distribution and over programmed arrays of the output error,
+over the range of the ideal outputs, with the architecture, kernel and inputs in
+instance conditions. Its edge from the coefficient of variation and the window is
+the programming-error limit for one architecture (one cell per nonzero weight on
+two column groups, the affine mapping with the largest weight at $G_\mathrm{max}$,
+per-cell nominal offset subtraction, binary inputs, reads at the verify voltage):
+$\epsilon = c \sqrt{\sum_i (1/r + |w_i|)^2 / 2} / \sum |w_i|$ with
+$r = (W - 1)/\max|w|$, written with four power sums of the kernel as parameters. The domain
+connects to the map through \texttt{contract\_device\_conductance}, which consumes
+the electronic-transport \texttt{ElectricalConductivity[carrier=electronic]}.
 
 \paragraph{Instance uid pinning.} Instances are additive JSON that attach a value
 to a node. The uid pin lives in the regenerated projection, not the committed

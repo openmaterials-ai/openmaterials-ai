@@ -1,7 +1,8 @@
-"""Tests for the analog-device-metrology contribution (records 250-257).
+"""Tests for the analog-device-metrology contributions (records 250-257 and 258-259).
 
-A definitional domain: the conductance family of analog resistive devices, four
-nodes and four closed-form edges the dimensional gate proves and apply_edge
+A definitional domain: the conductance family of analog resistive devices and the
+error of an analog dot product, five nodes and five closed-form edges the
+dimensional gate proves and apply_edge
 runs. It connects to the map through ElectricalConductivity[carrier=electronic].
 No code representation and no measured value attach yet.
 """
@@ -26,12 +27,14 @@ _NODES = {
     "ConductanceWindow": "conductance_window",
     "ConductanceDriftExponent": "conductance_drift_exponent",
     "StateCoefficientOfVariation": "state_coefficient_of_variation",
+    "DotProductError": "dot_product_error",
 }
 _EDGES = (
     "contract_device_conductance",
     "contract_conductance_window",
     "contract_state_coefficient_of_variation",
     "apply_conductance_drift",
+    "propagate_programming_error",
 )
 
 
@@ -54,7 +57,7 @@ def _rep(space, symbol, data):
                           observable_name=symbol, data=np.asarray(data), is_operator=True)
 
 
-def test_the_four_nodes_and_four_edges():
+def test_the_five_nodes_and_five_edges():
     from omai.analog_device_metrology.operator import EDGES, NODES
 
     assert [s.name for s in NODES] == list(_NODES)
@@ -62,7 +65,7 @@ def test_the_four_nodes_and_four_edges():
     for s in NODES:
         assert node_identity(s)["quantity"] == _NODES[s.name], s.name
         assert s.labels == {} and "[" not in s.name, s.name
-    assert len({node_id(s) for s in NODES}) == 4
+    assert len({node_id(s) for s in NODES}) == 5
 
 
 def test_conductance_is_the_siemens_and_not_a_conductivity():
@@ -182,6 +185,7 @@ def test_semantic_aliases_resolve_to_the_nodes():
                          "LTP window": "ConductanceWindow",
                          "conductance drift": "ConductanceDriftExponent",
                          "conductance coefficient of variation": "StateCoefficientOfVariation",
+                         "dot product error": "DotProductError",
                          }.items():
         hits = resolve(phrase, sem, limit=3)
         assert any(h["id"] == node for h in hits), (phrase, hits)
@@ -207,7 +211,49 @@ def test_committed_store_holds_records_250_to_257():
     assert len(lines) >= 257
     recs = [json.loads(line) for line in lines[249:257]]
     assert [r["op"] for r in recs] == ["add_node"] * 4 + ["add_edge"] * 4
-    assert [r["payload"]["uid"] for r in recs[:4]] == [node_id(s) for s in NODES]
-    assert [r["payload"]["uid"] for r in recs[4:]] == [edge_id(op, node_id) for op in EDGES]
+    assert [r["payload"]["uid"] for r in recs[:4]] == [node_id(s) for s in NODES[:4]]
+    assert [r["payload"]["uid"] for r in recs[4:]] == [edge_id(op, node_id) for op in EDGES[:4]]
     for op in EDGES:
         assert not m["edges"][edge_id(op, node_id)].get("superseded_by"), op.name
+
+
+def test_dot_product_error_closed_form():
+    """The kernel-moment form equals c sqrt(sum (1/r + |w|)^2 / 2) / sum|w| over the
+    nonzero weights, r = (W - 1) / max|w|: 0.3368, 0.375, 0.5069 for Prewitt,
+    Sobel and Laplacian at W = 7, scaled by c."""
+    from omai.analog_device_metrology.operator.edges import propagate_programming_error
+    from omai.analog_device_metrology.operator.nodes import (
+        CONDUCTANCE_WINDOW,
+        STATE_COEFFICIENT_OF_VARIATION,
+    )
+
+    kernels = {(-1, -1, -1, 1, 1, 1): 0.3368, (-1, -2, -1, 1, 2, 1): 0.375, (1, 1, -4, 1, 1): 0.5069}
+    for w, coef in kernels.items():
+        a = [abs(x) for x in w]
+        out = apply_edge(propagate_programming_error,
+                         _rep(STATE_COEFFICIENT_OF_VARIATION, "c_G", 0.1),
+                         _rep(CONDUCTANCE_WINDOW, "W_G", 7.0),
+                         constants={"n_w": len(a), "w_max": max(a), "S_1": sum(a),
+                                    "S_2": sum(x * x for x in a)})
+        assert out.space.name == "DotProductError"
+        np.testing.assert_allclose(float(out.data), 0.1 * coef, rtol=2e-4)
+
+
+def test_committed_store_holds_records_258_and_259():
+    """Record 258 adds DotProductError and record 259 its edge."""
+    from omai.analog_device_metrology.operator.edges import propagate_programming_error
+    from omai.analog_device_metrology.operator.nodes import DOT_PRODUCT_ERROR
+
+    lines = (_REPO / "map" / "log.jsonl").read_text().splitlines()
+    assert len(lines) >= 259
+    recs = [json.loads(line) for line in lines[257:259]]
+    assert [r["op"] for r in recs] == ["add_node", "add_edge"]
+    assert recs[0]["payload"]["uid"] == node_id(DOT_PRODUCT_ERROR)
+    assert recs[1]["payload"]["uid"] == edge_id(propagate_programming_error, node_id)
+
+
+def test_the_root_in_the_dot_product_edge_is_not_a_rational_identity():
+    from omai.analog_device_metrology.operator.edges import propagate_programming_error
+    from omai.lean_roadmap import _classify
+
+    assert _classify(propagate_programming_error)[0] == "special function"
