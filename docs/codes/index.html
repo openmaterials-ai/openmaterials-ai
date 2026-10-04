@@ -28,6 +28,8 @@
   .bib { display: grid; gap: 16px; margin-top: 24px; }
   .bib-top { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
   .bib-name { font: 400 16px/24px var(--font-mono); color: var(--ink); overflow-wrap: anywhere; }
+  /* some licenses run to 72 characters, so this pill wraps inside the card */
+  .bib-lic { height: auto; min-height: 24px; padding-block: 4px; border-radius: 12px; line-height: 16px; white-space: normal; overflow-wrap: anywhere; }
   .bib-cite { margin: 12px 0 8px; font-size: 14px; line-height: 20px; color: var(--ink-2); max-width: none; }
   .bib-cite-more { margin-top: 0; }
   .bib-cite-for { font: 400 12px/20px var(--font-mono); color: var(--ink-2); }
