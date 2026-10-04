@@ -43,6 +43,10 @@
     .view-switch a[aria-current="page"]{color:var(--ink,#171717);background:var(--surface-2,#F2F2F2);}
     .notice{padding:12px 16px;border:1px solid var(--line,#EBEBEB);border-radius:var(--radius,6px);background:var(--surface,#FAFAFA);font-size:14px;line-height:20px;color:var(--ink,#171717);}
     .notice--error{border-color:var(--ink,#171717);}
+    .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;}
+    .hint{display:flex;gap:12px;align-items:center;color:var(--ink-2,#4D4D4D);white-space:nowrap;}
+    kbd{font:400 12px/16px var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);padding:1px 4px;border-radius:4px;box-shadow:0 0 0 1px var(--line,#EBEBEB);color:var(--ink,#171717);}
+    @media (max-width:960px){.hint{display:none;}}
   }
   *{box-sizing:border-box;}
   html,body{overscroll-behavior:none;}
@@ -92,7 +96,7 @@
   .om-panel .badge,.om-panel .tiertag{display:inline-flex;align-items:center;height:24px;padding:0 10px;margin-left:8px;border-radius:9999px;background:var(--surface-2,#F2F2F2);color:var(--ink,#171717);font-family:var(--font-sans,"Geist",ui-sans-serif,system-ui,sans-serif);font-size:12px;font-weight:500;vertical-align:middle;}
   .om-panel .tiertag{color:var(--ink-2,#4D4D4D);}
   .om-panel .name{font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);color:var(--ink-2,#4D4D4D);font-size:13px;margin:8px 0 0;overflow-wrap:anywhere;}
-  .om-panel .uid{font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);font-size:12px;color:var(--ink-2,#4D4D4D);margin-left:8px;vertical-align:middle;}
+  .om-panel .uid{margin-top:4px;font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);font-size:12px;line-height:16px;color:var(--ink-2,#4D4D4D);overflow-wrap:anywhere;}
   .formula{background:var(--surface,#FAFAFA);border:1px solid var(--line,#EBEBEB);border-radius:var(--radius,6px);padding:12px;overflow-x:auto;}
   .formula code{font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);font-size:13px;color:var(--ink,#171717);white-space:pre-wrap;overflow-wrap:anywhere;}
   .fop{font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);font-size:12px;color:var(--ink-2,#4D4D4D);margin:10px 0 4px;}
@@ -117,11 +121,14 @@
 <div class="toolbar">
   <span class="om-search"><svg class="om-search-ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.5" y2="16.5"></line></svg><input class="om-input" id="q" placeholder="Find a quantity" aria-label="Find a quantity and fly to it" autocomplete="off"></span>
   <nav class="view-switch" aria-label="Map view"><a href="../map/">2D</a><a href="../map-3d/" aria-current="page">3D</a><a href="../map-trace/">Trace</a></nav>
+  <span class="hint">Drag to orbit. Select a quantity to see what it is built from and what it feeds.</span>
   <span class="push"></span>
   <button class="btn btn--secondary btn--sm" id="resetView" type="button">Reset view</button>
 </div>
 <div id="banner" class="notice"></div>
-<div class="canvas" id="stage">
+<noscript><p class="notice" style="margin:8px 16px">This view draws the map with JavaScript and WebGL. The map data is plain JSON at <a href="../data/graph.json">data/graph.json</a>.</p></noscript>
+<div class="canvas" id="stage" role="main">
+  <h1 class="sr-only">Map in 3D</h1>
   <div id="scene"></div>
   <nav id="tiers" aria-label="Tiers, top to bottom"><div class="lad">Tiers</div></nav>
   <div class="legend">
@@ -401,7 +408,7 @@ function openPanel(node){
   const nAnc=ancSet.size, nDesc=descSet.size;
   let h='<button type="button" class="x" aria-label="Close" onclick="clearSel()">&times;</button>';
   h+='<div><span class="sym">'+tex(node.symbol)+'</span><span class="badge '+node.type+'">'+esc(node.type)+'</span></div>';
-  h+='<div class="name">'+esc(node.id)+'<span class="tiertag">'+esc(node.tier||'Other')+'</span>'+(node.uid?('<span class="uid" title="'+attr(node.uid)+'">'+esc((''+node.uid).slice(0,12))+'</span>'):'')+'</div>';
+  h+='<div class="name">'+esc(node.id)+'<span class="tiertag">'+esc(node.tier||'Other')+'</span>'+'</div>'+(node.uid?('<div class="uid">uid '+esc(node.uid)+'</div>'):'');
   const routes=(node.formulas||[]).length;
   h+='<div class="traceline">'+(nAnc?('Built from '+nAnc+' upstream quantit'+(nAnc>1?'ies':'y')+(routes>1?' across '+routes+' routes':'')+'.'):'An input quantity.')+' '+(nDesc?('Feeds '+nDesc+' downstream quantit'+(nDesc>1?'ies':'y')+'.'):'Nothing on the map uses it.')+'</div>';
   const fl=(node.formulas&&node.formulas.length)?node.formulas:(node.formula?[{op:'',latex:node.formula}]:[]);

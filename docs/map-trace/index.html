@@ -46,6 +46,10 @@
     .view-switch a[aria-current="page"]{color:var(--ink,#171717);background:var(--surface-2,#F2F2F2);}
     .notice{padding:12px 16px;border:1px solid var(--line,#EBEBEB);border-radius:var(--radius,6px);background:var(--surface,#FAFAFA);font-size:14px;line-height:20px;color:var(--ink,#171717);}
     .notice--error{border-color:var(--ink,#171717);}
+    .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;}
+    .hint{display:flex;gap:12px;align-items:center;color:var(--ink-2,#4D4D4D);white-space:nowrap;}
+    kbd{font:400 12px/16px var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);padding:1px 4px;border-radius:4px;box-shadow:0 0 0 1px var(--line,#EBEBEB);color:var(--ink,#171717);}
+    @media (max-width:960px){.hint{display:none;}}
   }
   *{box-sizing:border-box;}
   body.app{height:100vh;height:100dvh;margin:0;display:flex;flex-direction:column;overflow:hidden;background:var(--page,#FFFFFF);color:var(--ink,#171717);font:400 14px/20px var(--font-sans,"Geist","Geist Fallback",ui-sans-serif,system-ui,sans-serif);-webkit-font-smoothing:antialiased;}
@@ -54,9 +58,7 @@
   .toolbar{flex:none;display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:8px var(--inset,16px);border-bottom:1px solid var(--line,#EBEBEB);background:var(--page,#FFFFFF);}
   .toolbar .om-search{flex:1 1 200px;max-width:360px;min-width:0;}
   .toolbar .push{margin-left:auto;}
-  .hint{display:flex;gap:12px;align-items:center;color:var(--ink-2,#4D4D4D);white-space:nowrap;}
-  kbd{font:400 12px/16px var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);padding:1px 4px;border-radius:4px;box-shadow:0 0 0 1px var(--line,#EBEBEB);color:var(--ink,#171717);}
-  @media (max-width:960px){.toolbar .om-search{flex:1 1 100%;max-width:none;} .hint{display:none;}}
+  @media (max-width:960px){.toolbar .om-search{flex:1 1 100%;max-width:none;}}
   @media (max-width:600px){#copylink{display:none;}}
   /* canvas */
   .canvas{position:relative;flex:1 1 auto;min-height:0;overflow:hidden;background:var(--canvas-dots,radial-gradient(circle at 1px 1px,var(--line,#EBEBEB) 1px,transparent 0) 0 0/24px 24px),var(--page,#FFFFFF);}
@@ -135,7 +137,8 @@
   <button class="btn btn--secondary btn--sm" type="button" onclick="resetAll()" aria-label="Reset the trace">Reset</button>
   <button class="btn btn--secondary btn--sm" id="copylink" type="button" aria-label="Copy a link to this trace">Copy link</button>
 </div>
-<div id="cy" class="canvas"><svg id="svg" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+<noscript><p class="notice" style="margin:8px 16px">The tracer runs on JavaScript. The map data is plain JSON at <a href="../data/graph.json">data/graph.json</a>.</p></noscript>
+<div id="cy" class="canvas" role="main"><h1 class="sr-only">Tracer</h1><svg id="svg" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
   <defs>
     <marker id="arrU" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--ink,#171717)"></path></marker>
     <marker id="arrD" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--data-obs-line,#4F46E5)"></path></marker>

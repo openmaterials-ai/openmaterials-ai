@@ -43,6 +43,9 @@
     .notice{padding:12px 16px;border:1px solid var(--line,#EBEBEB);border-radius:var(--radius,6px);background:var(--surface,#FAFAFA);font-size:14px;line-height:20px;color:var(--ink,#171717);}
     .notice--error{border-color:var(--ink,#171717);}
     .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;}
+    .hint{display:flex;gap:12px;align-items:center;color:var(--ink-2,#4D4D4D);white-space:nowrap;}
+    kbd{font:400 12px/16px var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);padding:1px 4px;border-radius:4px;box-shadow:0 0 0 1px var(--line,#EBEBEB);color:var(--ink,#171717);}
+    @media (max-width:960px){.hint{display:none;}}
   }
   *{box-sizing:border-box;}
   body.app{height:100vh;height:100dvh;margin:0;display:flex;flex-direction:column;overflow:hidden;background:var(--page,#FFFFFF);color:var(--ink,#171717);font:400 14px/20px var(--font-sans,"Geist","Geist Fallback",ui-sans-serif,system-ui,sans-serif);-webkit-font-smoothing:antialiased;}
@@ -109,7 +112,7 @@
   .om-panel .badge,.om-panel .tiertag{display:inline-flex;align-items:center;height:24px;padding:0 10px;margin-left:8px;border-radius:9999px;background:var(--surface-2,#F2F2F2);color:var(--ink,#171717);font-family:var(--font-sans,"Geist",ui-sans-serif,system-ui,sans-serif);font-size:12px;font-weight:500;vertical-align:middle;}
   .om-panel .tiertag{color:var(--ink-2,#4D4D4D);}
   .om-panel .name{font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);color:var(--ink-2,#4D4D4D);font-size:13px;margin:8px 0 0;overflow-wrap:anywhere;}
-  .om-panel .uid{font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);font-size:12px;color:var(--ink-2,#4D4D4D);margin-left:8px;vertical-align:middle;}
+  .om-panel .uid{margin-top:4px;font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);font-size:12px;line-height:16px;color:var(--ink-2,#4D4D4D);overflow-wrap:anywhere;}
   .formula{background:var(--surface,#FAFAFA);border:1px solid var(--line,#EBEBEB);border-radius:var(--radius,6px);padding:12px;overflow-x:auto;}
   .formula code{font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);font-size:13px;color:var(--ink,#171717);white-space:pre-wrap;overflow-wrap:anywhere;}
   .fop{font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);font-size:12px;color:var(--ink-2,#4D4D4D);margin:10px 0 4px;}
@@ -151,6 +154,7 @@
   <nav class="view-switch" aria-label="Map view"><a href="../map/" aria-current="page">2D</a><a href="../map-3d/">3D</a><a href="../map-trace/">Trace</a></nav>
   <select class="select" id="tierJump" aria-label="Jump to a tier"><option value="">Tier</option></select>
   <select class="select" id="codeFilter" aria-label="Codes"><option value="">All codes</option></select>
+  <span class="hint">Select a quantity to see its formula, what it is computed from, what it feeds, and the codes that compute it.</span>
   <span class="push"></span>
   <button class="btn btn--ghost btn--sm" id="zoomOut" type="button" aria-label="Zoom out">&minus;</button>
   <button class="btn btn--ghost btn--sm" id="zoomIn" type="button" aria-label="Zoom in">+</button>
@@ -158,7 +162,8 @@
   <button class="btn btn--secondary btn--sm" id="copylink" type="button" aria-label="Copy a link to this view">Copy link</button>
 </div>
 <div id="banner" class="notice"></div>
-<div id="cy" class="canvas"><svg id="svg" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+<noscript><p class="notice" style="margin:8px 16px">This view draws the map with JavaScript. The map data is plain JSON at <a href="../data/graph.json">data/graph.json</a>.</p></noscript>
+<div id="cy" class="canvas" role="main"><h1 class="sr-only">Map</h1><svg id="svg" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
   <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--edge,#8F8F8F)"></path></marker>
   <marker id="arrowhot" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--data-obs-line,#4F46E5)"></path></marker></defs>
   <g id="bands"></g>
@@ -294,7 +299,6 @@ function build([graph, codes, version, semantics, lean]){
   if(version && version.version){
     const vh=document.getElementById('mapverhash');
     vh.textContent=(''+version.version).slice(0,12);
-    vh.title='store head '+version.version+(version.genesis?('\ngenesis '+version.genesis):'');
     document.getElementById('mapver').style.display='';
     document.getElementById('versep').style.display='';
   }
@@ -553,7 +557,7 @@ function selectNode(node){
   const ins=parents[id]||[], outs=children[id]||[];
   let h=closeBtn();
   h+='<div><span class="sym">'+tex(node.symbol)+'</span><span class="badge '+node.type+'">'+esc(node.type)+'</span></div>';
-  h+='<div class="name">'+esc(node.id)+'<span class="tiertag">'+esc(node.tier||'Other')+'</span>'+(node.uid?('<span class="uid" title="'+attr(node.uid)+'">'+esc((''+node.uid).slice(0,12))+'</span>'):'')+'</div>';
+  h+='<div class="name">'+esc(node.id)+'<span class="tiertag">'+esc(node.tier||'Other')+'</span>'+'</div>'+(node.uid?('<div class="uid">uid '+esc(node.uid)+'</div>'):'');
   const fl=(node.formulas&&node.formulas.length)?node.formulas:(node.formula?[{op:'',latex:node.formula}]:[]);
   if(!fl.length){ h+='<div class="om-panel-label">Formula on the producing edge</div><div class="formula"><span class="muted">Input quantity: no edge produces it.</span></div>'; }
   else{   // every formula with the operator that carries it
