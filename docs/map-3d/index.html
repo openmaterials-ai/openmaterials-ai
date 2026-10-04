@@ -80,7 +80,7 @@
   .legend .sep{width:1px;height:16px;background:var(--line,#EBEBEB);}
   .sw{width:12px;height:12px;border-radius:50%;display:inline-block;}
   .sw.obs{background:var(--data-obs,#4F46E5);} .sw.hid{background:var(--ink-2,#4D4D4D);} .sw.param{background:var(--edge,#8F8F8F);}
-  .sw.up{background:var(--data-meas,#99610E);} .sw.down{background:var(--data-obs-line,#4F46E5);}
+  .sw.up{background:var(--ink,#171717);} .sw.down{background:var(--data-obs-line,#4F46E5);}
   @media (max-width:960px){.legend{display:none;}}
   /* the provenance panel floats top right; below 961 px it is a bottom sheet */
   .om-panel{position:absolute;top:16px;right:16px;z-index:5;width:360px;max-width:calc(100% - 32px);max-height:calc(100% - 32px);overflow:auto;padding:20px;border:0;border-radius:12px;background:var(--page,#FFFFFF);box-shadow:var(--shadow-float,0 0 0 1px #EBEBEB,0 4px 8px -4px rgb(0 0 0 / .04),0 16px 24px -8px rgb(0 0 0 / .06));display:none;}
@@ -100,13 +100,12 @@
   .chips{display:flex;flex-wrap:wrap;gap:8px;}
   .chip{font:inherit;font-size:18px;border:0;box-shadow:0 0 0 1px var(--line,#EBEBEB);background:var(--page,#FFFFFF);border-radius:var(--radius,6px);padding:4px 10px;color:var(--ink,#171717);cursor:pointer;transition:background-color var(--dur,150ms) var(--ease,ease);}
   .chip:hover{background:var(--surface-2,#F2F2F2);}
-  .chip.up{box-shadow:0 0 0 1px var(--data-meas,#99610E);} .chip.down{box-shadow:0 0 0 1px var(--data-obs-line,#4F46E5);}
+  .chip.up{box-shadow:0 0 0 1px var(--ink,#171717);} .chip.down{box-shadow:0 0 0 1px var(--data-obs-line,#4F46E5);}
   .chip code{font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);font-size:13px;}
   .om-panel .mapby .om-kv-k{font-weight:500;color:var(--ink,#171717);}
   .om-panel .mapby .om-kv-v{font-size:12px;max-width:190px;}
   .om-panel .traceline{margin-top:8px;padding:10px 12px;border:1px solid var(--line,#EBEBEB);border-radius:var(--radius,6px);background:var(--surface,#FAFAFA);color:var(--ink,#171717);}
   .om-panel .traceline b{font-weight:500;}
-  .om-panel .traceline .u{color:var(--data-meas,#99610E);} .om-panel .traceline .d{color:var(--data-obs-line,#4F46E5);}
   .muted{color:var(--ink-2,#4D4D4D);}
   #err{position:fixed;left:16px;right:16px;bottom:16px;z-index:60;display:none;white-space:pre-wrap;}
   @media (prefers-reduced-motion: reduce){*,*::before,*::after{transition-duration:0s !important;animation-duration:0s !important;}}
@@ -153,7 +152,7 @@
 //    - layout     : force in x/z, tier index FIXES the y (height) coordinate
 //    - encoding    : color by type, size by degree, dashed-ish parameter edges
 //    - interaction: orbit/zoom (lib), click -> fly + panel +
-//                   ancestry highlight (upstream amber / downstream indigo),
+//                   ancestry highlight (upstream ink / downstream indigo),
 //                   search -> fly, escape/background clears, #node= deep link
 //    - fallback   : static tier outline when WebGL / the lib is unavailable
 //  Structure-pure: graph.json is the only network read; the instance/spectra
@@ -182,7 +181,7 @@ function rgba(c, a){ const m=c.match(/[\d.]+/g)||[0,0,0]; return 'rgba('+m[0]+',
 let C={};
 function readTokens(){
   C={ observable:token('--data-obs','#4F46E5'), hidden:token('--ink-2','#4D4D4D'), parameter:token('--edge','#8F8F8F'),
-      sel:token('--ink','#171717'), up:token('--data-meas','#99610E'), down:token('--data-obs-line','#4F46E5'), edge:token('--edge','#8F8F8F') };
+      sel:token('--ink','#171717'), up:token('--ink','#171717'), down:token('--data-obs-line','#4F46E5'), edge:token('--edge','#8F8F8F') };
 }
 readTokens();
 function repaint(){ readTokens(); refreshEncoding(); }
@@ -261,7 +260,7 @@ function renderGraph(graph, links){
     .backgroundColor('rgba(0,0,0,0)')
     .showNavInfo(false)
     .nodeRelSize(4)
-    .nodeVal(n=> 1 + Math.min(6, (n.deg||0))*0.7)          // size modestly by degree
+    .nodeVal(n=> (n.id===selId ? 3 : 1) * (1 + Math.min(6, (n.deg||0))*0.7))   // size by degree; the selected node, in ink like its sources, three times larger
     .nodeColor(n=> nodeColorFor(n))
     .nodeOpacity(0.95)
     .nodeResolution(12)
@@ -315,7 +314,7 @@ function sizeToViewport(){
 function nodeColorFor(n){
   if(!selId) return C[n.type] || C.parameter;
   if(n.id===selId) return C.sel;
-  if(ancSet.has(n.id)) return C.up;          // upstream amber
+  if(ancSet.has(n.id)) return C.up;          // upstream ink
   if(descSet.has(n.id)) return C.down;       // downstream indigo
   return rgba(C.edge, 0.22);                 // dimmed
 }
@@ -382,6 +381,7 @@ window.addEventListener('hashchange', ()=>{ const id=hashNode(); if(id&&id!==sel
 function refreshEncoding(){
   if(!Graph) return;
   Graph.nodeColor(Graph.nodeColor())
+       .nodeVal(Graph.nodeVal())
        .linkColor(Graph.linkColor())
        .linkWidth(Graph.linkWidth())
        .linkDirectionalArrowColor(l=> linkColorFor(l));

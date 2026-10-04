@@ -29,10 +29,10 @@
      panel, path bar and legend floating over it. The tracing classes
      (.up/.down/.dest/.sel) are the behavior; colors are the site.css tokens,
      each var() with the light value as its fallback.
-       up   = measurement amber (what it is built from)
+       up   = ink (what it is built from); amber stays for measurements
        down = observable indigo (what it feeds)
        dest = indigo outline (a terminal observable, at rest)
-       sel  = ink ring */
+       sel  = solid ink */
   @layer om-fallback {
     /* Shared components. Unlayered site.css rules win over these once it defines them. */
     .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:40px;padding:0 20px;border:0;border-radius:9999px;font:inherit;font-weight:500;font-size:16px;line-height:24px;text-decoration:none;white-space:nowrap;cursor:pointer;transition:background-color var(--dur,150ms) var(--ease,ease),color var(--dur,150ms) var(--ease,ease);}
@@ -61,9 +61,9 @@
   /* canvas */
   .canvas{position:relative;flex:1 1 auto;min-height:0;overflow:hidden;background:var(--canvas-dots,radial-gradient(circle at 1px 1px,var(--line,#EBEBEB) 1px,transparent 0) 0 0/24px 24px),var(--page,#FFFFFF);}
   #svg{width:100%;height:100%;display:block;cursor:grab;touch-action:none;} #svg.drag{cursor:grabbing;}
-  /* edges: 1px base; lit upstream amber, downstream indigo; the rest fade while a trace is lit */
+  /* edges: 1px base; lit upstream ink, downstream indigo; the rest fade while a trace is lit */
   .edge{fill:none;stroke:var(--edge,#8F8F8F);stroke-width:1;vector-effect:non-scaling-stroke;stroke-linecap:round;transition:stroke var(--dur,150ms) var(--ease,ease),opacity var(--dur,150ms) var(--ease,ease);}
-  .edge.up{stroke:var(--data-meas,#99610E);stroke-width:2;}
+  .edge.up{stroke:var(--ink,#171717);stroke-width:2;}
   .edge.down{stroke:var(--data-obs-line,#4F46E5);stroke-width:2;}
   #vp.lit .edge:not(.up):not(.down){opacity:.15;}
   /* nodes */
@@ -75,9 +75,9 @@
   #labelsInner{position:absolute;left:0;top:0;transform-origin:0 0;will-change:transform;}
   .nlab{position:absolute;display:flex;align-items:center;justify-content:center;font-size:18px;line-height:1;color:var(--ink,#171717);pointer-events:none;}
   .node.dest rect{fill:var(--page,#FFFFFF);stroke:var(--data-obs-line,#4F46E5);stroke-width:2;} .nlab.dest{color:var(--data-obs-line,#4F46E5);}
-  .node.up rect{fill:var(--page,#FFFFFF);stroke:var(--data-meas,#99610E);stroke-width:2;} .nlab.up{color:var(--data-meas,#99610E);}
+  .node.up rect{fill:var(--page,#FFFFFF);stroke:var(--ink,#171717);stroke-width:2;} .nlab.up{color:var(--ink,#171717);}
   .node.down rect{fill:var(--data-obs,#4F46E5);stroke:var(--data-obs,#4F46E5);stroke-width:2;} .nlab.down{color:#FFFFFF;}
-  .node.sel rect{fill:var(--page,#FFFFFF);stroke:var(--ink,#171717);stroke-width:3;} .nlab.sel{color:var(--ink,#171717);}
+  .node.sel rect{fill:var(--ink,#171717);stroke:var(--ink,#171717);stroke-width:3;} .nlab.sel{color:var(--page,#FFFFFF);}   /* the traced node, solid ink */
   .node.dim rect{opacity:.4;} .nlab.dim{opacity:.4;}
   #measure{position:absolute;left:-9999px;top:-9999px;font-size:18px;visibility:hidden;}
   /* the derivation panel floats top right; below 961 px it is a bottom sheet */
@@ -90,7 +90,7 @@
   .om-panel .name{font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);color:var(--ink-2,#4D4D4D);font-size:13px;margin:8px 0 4px;overflow-wrap:anywhere;}
   .lab{margin:16px 0 8px;display:flex;align-items:center;gap:8px;font-size:12px;line-height:16px;font-weight:500;color:var(--ink-2,#4D4D4D);}
   .lab .dot{width:8px;height:8px;border-radius:50%;}
-  .lab .dot.u{background:var(--data-meas,#99610E);} .lab .dot.d{background:var(--data-obs-line,#4F46E5);}
+  .lab .dot.u{background:var(--ink,#171717);} .lab .dot.d{background:var(--data-obs-line,#4F46E5);}
   .step{display:flex;gap:10px;padding:8px 0;border-top:1px solid var(--line,#EBEBEB);}
   .step:first-of-type{border-top:none;}
   .step .n{flex:0 0 24px;height:24px;margin-top:2px;display:flex;align-items:center;justify-content:center;border-radius:var(--radius,6px);background:var(--surface-2,#F2F2F2);color:var(--ink-2,#4D4D4D);font:400 12px/16px var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);}
@@ -114,7 +114,7 @@
   .legend{position:absolute;left:16px;bottom:16px;z-index:4;display:flex;gap:12px;align-items:center;padding:8px 12px;border-radius:var(--radius,6px);background:var(--page,#FFFFFF);box-shadow:var(--shadow-float,0 0 0 1px #EBEBEB,0 4px 8px -4px rgb(0 0 0 / .04),0 16px 24px -8px rgb(0 0 0 / .06));font-size:12px;line-height:16px;color:var(--ink-2,#4D4D4D);}
   .legend span{display:inline-flex;align-items:center;gap:6px;}
   .sw{width:12px;height:12px;border-radius:3px;display:inline-block;}
-  .sw.up{background:var(--data-meas,#99610E);} .sw.down{background:var(--data-obs,#4F46E5);}
+  .sw.up{background:var(--page,#FFFFFF);box-shadow:inset 0 0 0 2px var(--ink,#171717);} .sw.down{background:var(--data-obs,#4F46E5);}
   .sw.obs{background:var(--page,#FFFFFF);box-shadow:inset 0 0 0 2px var(--data-obs-line,#4F46E5);}
   @media (max-width:960px){.legend{display:none;}}
   #err{position:fixed;left:16px;right:16px;bottom:16px;z-index:60;display:none;white-space:pre-wrap;}
@@ -134,7 +134,7 @@
 </div>
 <div id="cy" class="canvas"><svg id="svg" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
   <defs>
-    <marker id="arrU" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--data-meas,#99610E)"></path></marker>
+    <marker id="arrU" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--ink,#171717)"></path></marker>
     <marker id="arrD" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--data-obs-line,#4F46E5)"></path></marker>
   </defs>
   <g id="vp"></g>
