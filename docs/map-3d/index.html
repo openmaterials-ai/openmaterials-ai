@@ -121,8 +121,8 @@
     <span><i class="sw param"></i>Parameter</span>
     <span class="sep"></span>
     <span class="g">Selection</span>
-    <span><i class="sw up"></i>Upstream</span>
-    <span><i class="sw down"></i>Downstream</span>
+    <span><i class="sw up"></i>Built from (upstream)</span>
+    <span><i class="sw down"></i>Feeds (downstream)</span>
   </div>
   <div class="om-panel" id="panel"></div>
 </div>
@@ -133,20 +133,21 @@
 <script>window.onerror=function(m){var e=document.getElementById('err');e.style.display='block';e.textContent='Error: '+m;};</script>
 <script src="../assets/vendor/katex/dist/katex.min.js"></script>
 <script src="../assets/vendor/3d-force-graph/3d-force-graph.min.js"></script>
+<script src="../assets/map-words.js"></script>
 <script>
 "use strict";
 // ============================================================================
 //  openmaterials 3D map: the structure graph lifted off the plane.
 //  Reading order:
 //    - shared     : DOM handles, helpers (tex fallback, esc), token colors
-//    - data       : fetch graph.json ONLY, build adjacency + tier index
+//    - data       : fetch graph, codes and semantics, build adjacency + tier index
 //    - layout     : force in x/z, tier index FIXES the y (height) coordinate
 //    - encoding    : color by type, size by degree, dashed-ish parameter edges
 //    - interaction: orbit/zoom (lib), click -> fly + panel +
 //                   ancestry highlight (upstream ink / downstream indigo),
 //                   search -> fly, escape/background clears, #node= deep link
 //    - fallback   : static tier outline when WebGL / the lib is unavailable
-//  Structure-pure: graph.json is the only network read; the instance/spectra
+//  Structure-pure: only structure files are read; the instance/spectra
 //  evidence layer is never fetched (the standing MVC ruling).
 // ============================================================================
 
@@ -158,7 +159,7 @@ const sceneEl = document.getElementById('scene');
 const panelEl = document.getElementById('panel');
 const tokenProbe = document.getElementById('tokenProbe');
 
-let Graph=null, nodeById={}, parents={}, children={}, symHtml={},
+let Graph=null, nodeById={}, parents={}, children={}, symHtml={}, semById={},
     codesData={}, tierList=[], tierIndex={}, degree={}, selId=null;
 
 // tier -> vertical height. Sources sit lowest; each later tier is one step up.
@@ -188,7 +189,6 @@ function tex(latex,display){
   if(HAS_KATEX){ try{ return katex.renderToString(latex,{throwOnError:false,displayMode:!!display}); }catch(e){ /* fall through */ } }
   return '<code>'+esc(''+latex)+'</code>';
 }
-function opName(op){ return (op||'').replace(/\[.*?\]/g,'').replace(/_/g,' ').trim() || 'operation'; }
 function hashNode(){ const m=location.hash.match(/[#?&]node=([^&]*)/); return m?decodeURIComponent(m[1]):null; }
 
 // ---- data ------------------------------------------------------------------
@@ -198,11 +198,13 @@ function hashNode(){ const m=location.hash.match(/[#?&]node=([^&]*)/); return m?
 // fetches or renders them (see the paper's MVC statement).
 Promise.all([
   fetch('../data/graph.json').then(r=>r.json()),
-  fetch('../data/codes.json').then(r=>r.json()).catch(()=>({}))
+  fetch('../data/codes.json').then(r=>r.json()).catch(()=>({})),
+  fetch('../data/semantics.json').then(r=>r.json()).catch(()=>[])
 ]).then(build).catch(e=> err('The map data did not load: '+e));
 
-function build([graph, codes]){
+function build([graph, codes, semantics]){
   codesData = codes || {};
+  (semantics||[]).forEach(e=>{ semById[e.id]=e; });
   graph.nodes.forEach(n=>{ nodeById[n.id]=n; symHtml[n.id]=tex(n.symbol); degree[n.id]=0; });
 
   const seen=new Set(), links=[];
@@ -326,11 +328,9 @@ function linkWidthFor(l){
 }
 function nodeLabelHtml(n){
   const node=nodeById[n.id]||{};
-  const sym = node.symbol ? esc(node.symbol) : esc(n.id);
   return '<div style="font:500 13px/18px var(--font-sans,sans-serif);color:var(--ink,#171717);background:var(--page,#FFFFFF);'
        + 'border-radius:6px;padding:6px 10px;box-shadow:0 0 0 1px var(--line,#EBEBEB),0 16px 24px -8px rgb(0 0 0 / .06)">'
-       + '<span style="font-family:var(--font-mono,monospace)">'+sym+'</span>'
-       + ' <span style="color:var(--ink-2,#4D4D4D);font-weight:400">'+esc(n.id)+'</span></div>';
+       + (symHtml[n.id] || '') + ' <span style="color:var(--ink-2,#4D4D4D);font-weight:400">'+esc(nodeName(n.id))+'</span></div>';
 }
 
 // ---- interaction: fit / fly ------------------------------------------------
@@ -384,8 +384,9 @@ function refreshEncoding(){
 window.navTo=function(id){ if(nodeById[id]) selectNode(id); };
 function chip(id, cls){ return '<button type="button" class="chip '+(cls||'')+'" onclick="navTo(\''+attr(id).replace(/'/g,"&#39;")+'\')">'+(symHtml[id]||esc(id))+'</button>'; }
 
+function codeName(code){ const e=Object.values(codesData[code]||{}).find(x=>x && x.name); return e ? e.name : code; }
 function mappedByHtml(id){
-  const rows=Object.keys(codesData).filter(c=> codesData[c] && codesData[c][id]).sort().map(c=>{ const m=codesData[c][id]; return '<div class="om-kv-row"><span class="om-kv-k">'+esc(c)+'</span><span class="om-kv-v">'+esc((m.api||''))+(m.unit?(' · '+esc(m.unit)):'')+'</span></div>'; });
+  const rows=Object.keys(codesData).filter(c=> codesData[c] && codesData[c][id]).sort().map(c=>{ const m=codesData[c][id]; return '<div class="om-kv-row"><span class="om-kv-k">'+esc(codeName(c))+'</span><span class="om-kv-v">'+esc((m.api||''))+(m.unit?(' · '+esc(m.unit)):'')+'</span></div>'; });
   return rows.length? ('<div class="om-panel-label">Mapped by '+rows.length+' code'+(rows.length>1?'s':'')+'</div><div class="mapby om-kv">'+rows.join('')+'</div>') : '';
 }
 function openPanel(node){
@@ -420,12 +421,10 @@ document.querySelector('.view-switch').addEventListener('click', e=>{
 const qStatus=document.getElementById('qStatus');
 document.getElementById('q').addEventListener('input', ()=>{ qStatus.textContent=''; });   // a new query clears the old verdict
 document.getElementById('q').addEventListener('change', function(){
-  const v=this.value.trim().toLowerCase(); qStatus.textContent=''; if(!v){ clearSel(); return; }
-  const hits=Object.values(nodeById).filter(n=> (n.id+' '+(n.symbol||'')).toLowerCase().includes(v));
+  const v=this.value.trim(); qStatus.textContent=''; if(!v){ clearSel(); return; }
+  const hits=findNodes(v, semById, nodeById);   // the 2D map's search
   if(!hits.length){ qStatus.textContent='No match'; return; }
-  // exact-ish first: prefer an id/symbol that starts with the query.
-  hits.sort((a,b)=> (a.id.toLowerCase().indexOf(v)) - (b.id.toLowerCase().indexOf(v)));
-  selectNode(hits[0].id);
+  selectNode(hits[0]);
 });
 
 // ---- keyboard: Escape clears ----------------------------------------------

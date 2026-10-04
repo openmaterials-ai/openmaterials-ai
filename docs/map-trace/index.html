@@ -40,6 +40,7 @@
   .toolbar{flex:none;display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:8px var(--inset,16px);border-bottom:1px solid var(--line,#EBEBEB);background:var(--page,#FFFFFF);}
   .toolbar .om-search{flex:1 1 200px;max-width:360px;min-width:0;}
   .toolbar .push{margin-left:auto;}
+  #qStatus{color:var(--ink-2,#4D4D4D);}
   @media (max-width:960px){.toolbar .om-search{flex:1 1 100%;max-width:none;}}
   @media (max-width:600px){#copylink{margin-left:auto;}}   /* phones: Copy link wraps to its own row, right aligned */
   /* canvas */
@@ -112,6 +113,7 @@
 <div data-site-header data-variant="app"></div>
 <div class="toolbar">
   <span class="om-search"><svg class="om-search-ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.5" y2="16.5"></line></svg><input class="om-input" id="q" placeholder="Find a quantity" aria-label="Find a quantity to trace" autocomplete="off"></span>
+  <span id="qStatus" aria-live="polite"></span>
   <nav class="view-switch" aria-label="Map view"><a href="../map/">2D</a><a href="../map-3d/">3D</a><a href="../map-trace/" aria-current="page">Trace</a></nav>
   <span class="hint"><span><kbd>Click</kbd>: trace a quantity.</span><span><kbd>Shift</kbd>-click: path between two.</span></span>
   <span class="push"></span>
@@ -142,10 +144,11 @@
 <script>window.onerror=function(m){var e=document.getElementById('err');e.style.display='block';e.textContent='Error: '+m;};</script>
 <script src="../assets/vendor/dagre.min.js"></script>
 <script src="../assets/vendor/katex/dist/katex.min.js"></script>
+<script src="../assets/map-words.js"></script>
 <script>
 const svg=document.getElementById('svg'), vp=document.getElementById('vp'), measure=document.getElementById('measure');
 let VB={x:0,y:0,w:1000,h:1000}, GW=1000, GH=1000;
-let nodeById={}, parents={}, children={}, pos={}, symHtml={}, opByEdge={};
+let nodeById={}, parents={}, children={}, pos={}, symHtml={}, opByEdge={}, semById={};
 // Labels are LABEL_UNITS tall; no view scales them under 12 px.
 const LABEL_UNITS=18, MIN_SCALE=12/LABEL_UNITS;
 const DEFAULT_NODE='ThermalConductivity[bte_solver=direct_inverse]';   // the quantity of the Si datum on the home page
@@ -171,15 +174,16 @@ function tex(latex,display){ try{ return katex.renderToString(latex,{throwOnErro
 function smooth(pts){ if(!pts||pts.length<2) return ''; if(pts.length===2) return 'M'+pts[0].x+' '+pts[0].y+' L'+pts[1].x+' '+pts[1].y; let d='M'+pts[0].x+' '+pts[0].y; for(let i=1;i<pts.length-1;i++){ const mx=(pts[i].x+pts[i+1].x)/2, my=(pts[i].y+pts[i+1].y)/2; d+=' Q'+pts[i].x+' '+pts[i].y+' '+mx+' '+my; } d+=' L'+pts[pts.length-1].x+' '+pts[pts.length-1].y; return d; }
 function err(m){ var e=document.getElementById('err'); e.style.display='block'; e.textContent='Error: '+m; }
 function esc(s){ return s.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
-function opName(op){ return (op||'').replace(/\[.*?\]/g,'').replace(/_/g,' ').trim() || 'operation'; }
 // the rest caption and the toolbar hint say the same thing, so only one shows
 function showRest(on){ document.getElementById('resthint').hidden=!on; document.querySelector('.toolbar .hint').style.display=on?'none':''; }
 
 if(typeof dagre==='undefined'){ err('The layout library did not load. Check the connection and reload.'); }
-else fetch('../data/graph.json').then(r=>r.json())
+else Promise.all([fetch('../data/graph.json').then(r=>r.json()),
+                  fetch('../data/semantics.json').then(r=>r.json()).catch(()=>[])])
   .then(build).catch(e=> err('The map data did not load: '+e));
 
-function build(graph){
+function build([graph, semantics]){
+  (semantics||[]).forEach(e=>{ semById[e.id]=e; });
   graph.nodes.forEach(n=>{ nodeById[n.id]=n; symHtml[n.id]=tex(n.symbol); });
   const seen=new Set(), edges=[];
   graph.links.forEach(l=>{ const k=l.source+'>>'+l.target; if(!seen.has(k)&&l.source!==l.target){ seen.add(k); edges.push(l); opByEdge[k]=l.op||''; (children[l.source]=children[l.source]||[]).push(l.target); (parents[l.target]=parents[l.target]||[]).push(l.source); } });
@@ -409,11 +413,12 @@ svg.addEventListener('keydown', e=>{
 });
 window.addEventListener('keydown', e=>{ if(e.key==='Escape') resetAll(); });
 window.navTo=function(id){ if(nodeById[id]) trace(id); };
-const qInput=document.getElementById('q');
+const qInput=document.getElementById('q'), qStatus=document.getElementById('qStatus');
 qInput.addEventListener('input', function(){
-  const v=this.value.trim().toLowerCase(); if(!v){ lastHits=[]; resetAll(); return; }
-  const hits=Object.values(nodeById).filter(n=> (n.id+' '+n.symbol).toLowerCase().includes(v)).map(n=>n.id);
+  const v=this.value.trim(); qStatus.textContent=''; if(!v){ lastHits=[]; resetAll(); return; }
+  const hits=findNodes(v, semById, nodeById);   // the 2D map's search
   lastHits=hits;
+  if(!hits.length){ qStatus.textContent='No match'; return; }
   if(hits.length===1){ trace(hits[0]); return; }
   const set=new Set(hits); showRest(false); clearClasses();
   dimAllExcept(set); hits.forEach(h=> vp.querySelector('.node[data-id="'+cssesc(h)+'"]')?.classList.add('sel'));
