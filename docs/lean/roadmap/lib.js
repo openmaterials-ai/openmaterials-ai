@@ -47,8 +47,10 @@ function parseRoadmap(doc) {
   };
 }
 
-// "thermal_transport" -> "Thermal transport"
+// "thermal_transport" -> "Thermal transport"; two domains need their acronym and hyphen.
+const DOMAIN = { dft_ground_state: "DFT ground state", quasiharmonic: "Quasi-harmonic" };
 function domainLabel(name) {
+  if (DOMAIN[name]) return DOMAIN[name];
   const s = String(name).replace(/_/g, " ");
   return s.charAt(0).toUpperCase() + s.slice(1);
 }

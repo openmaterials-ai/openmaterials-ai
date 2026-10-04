@@ -129,10 +129,9 @@
 
       <section class="gsec" id="reproduce">
         <h2>Reproduce this</h2>
-        <p>CI recompiles the full proof against physlib on every pull request that
-          touches the map or the generators, with warnings promoted to errors. The
-          <a href="https://github.com/openmaterials-ai/openmaterials-ai/actions/workflows/lean.yml">Lean CI status</a>
-          page shows each run.</p>
+        <p>Every pull request that touches the map or the generators recompiles the full
+          proof against physlib, with warnings promoted to errors;
+          <a href="https://github.com/openmaterials-ai/openmaterials-ai/actions/workflows/lean.yml">each run is public</a>.</p>
         <p><code>lean/</code> is a standalone lake package (library
           <code>OpenMaterials</code>) on toolchain Lean 4.31.0, depending on
           <a href="https://github.com/leanprover-community/physlib">physlib</a>
