@@ -77,7 +77,7 @@ def test_pdf_download_link_and_homepage_button():
     assert "Download the PDF" in page
 
     home = (doc_html.ROOT / "docs" / "index.html").read_text(encoding="utf-8")
-    m = re.search(r'<a class="om-btn" href="([^"]+)">Read the document</a>',
+    m = re.search(r'<a class="btn btn--secondary" href="([^"]+)">Read the document</a>',
                   home)
     assert m, "homepage is missing the Read the document button"
     assert m.group(1) == "document/", (

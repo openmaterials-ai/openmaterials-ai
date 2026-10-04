@@ -21,7 +21,7 @@ FLAT = re.sub(r"\s+", " ", PAGE)
 def test_page_renders_from_the_published_data():
     assert "fetch('../data/codes.json')" in PAGE
     assert "esc(" in PAGE, "JSON strings must be escaped into HTML"
-    assert "could not be loaded" in PAGE, "fetch failure must render honestly"
+    assert "could not be loaded" in PAGE, "a fetch failure must say so on the page"
     assert "<noscript>" in PAGE
 
 
@@ -38,7 +38,7 @@ def test_lean_opens_the_bibliography():
 def test_license_posture_is_stated():
     assert "GPL-3.0" in PAGE and "GPUMD" in PAGE
     assert "Apache 2.0" in PAGE and "CC BY 4.0" in PAGE
-    assert "never vendors or copies" in FLAT
+    assert "does not vendor or copy" in FLAT
     assert "test_code_credits.py" in PAGE
 
 
@@ -73,17 +73,18 @@ def test_per_node_citations_are_never_hidden():
 NODE_HARNESS = r"""
 const fs = require('fs');
 const page = fs.readFileSync(process.argv[1],'utf8');
-const script = page.match(/<script>([\s\S]*?)<\/script>/)[1];
+const script = [...page.matchAll(/<script>([\s\S]*?)<\/script>/g)]
+  .map(m => m[1]).find(s => s.includes('function card'));
 const body = script.slice(script.indexOf('function esc'), script.indexOf('fetch('));
 const {card} = new Function(body + '; return {esc: esc, card: card};')();
 const codes = JSON.parse(fs.readFileSync(process.argv[2],'utf8'));
 const assert = require('assert');
-assert(!('materialscodegraph' in codes), 'the platform must not be a code rail');
+assert(!('materialscodegraph' in codes), 'the platform must not be a code entry');
 const k = card('kaldo', codes['kaldo']);
 assert(!k.includes('bib-cite-for'));
 assert(k.includes('doi.org/10.1063/5.0020443'));
 // per-node method split: synthetic, since no live code carries one today;
-// the mechanism stays (PER_NODE_CREDITS) and the renderer must keep it honest
+// the mechanism stays (PER_NODE_CREDITS) and the renderer must keep it accurate
 const split = {A:{citation:'Method One 2019',doi:'10.1/a',license:'MIT'},
                B:{citation:'Method One 2019',doi:'10.1/a',license:'MIT'},
                C:{citation:'Method Two 2021',doi:'10.1/b',license:'MIT'}};
