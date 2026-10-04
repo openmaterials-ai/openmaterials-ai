@@ -34,7 +34,7 @@
   .xp-list dt a { color: var(--ink); }
   .xp-list dd { font-size: 14px; color: var(--ink-2); }
   td.var .sym, td.val { font-family: var(--font-mono); }
-  td.var .vid { display: block; margin-top: 2px; font: 400 12px/16px var(--font-mono); color: var(--ink-2); overflow-wrap: anywhere; }
+  td.var .vid { margin-left: 6px; color: var(--ink); overflow-wrap: anywhere; }
   td.mat, td.val { white-space: nowrap; }
   td.cond { min-width: 20ch; color: var(--ink-2); }
   td .u { color: var(--ink-2); }
@@ -58,6 +58,7 @@
   </div></div>
 </main>
 <script src="../assets/vendor/katex/dist/katex.min.js"></script>
+<script src="../assets/sources.js"></script>
 <script>
 'use strict';
 function esc(s){
@@ -74,36 +75,9 @@ function runnable(recs){
     return r.source && r.source.kind === 'simulation' && /^ThermalConductivity(\[|$)/.test(r.variable);
   });
 }
-// A paper record's detail reads "<quote> (p. N). <citation>, doi:..., arXiv:..."; a measurement's
-// may open with its citation ("Glassbrenner and Slack, Phys. Rev. 134, A1058 (1964); ...").
-// Bracketed curator notes never render.
-function parts(detail){
-  var d = String(detail == null ? '' : detail).replace(/\s+/g, ' ').replace(/ ?\[[A-Z]{2,}[^\]]*\]/g, '').trim();
-  var m = /^(.*\([^()]*\bp\. ?\d+[^()]*\))\.? (.+)$/.exec(d);
-  if (m) return { quote: m[1], cite: m[2].replace(/,? (?:doi|arXiv):.*$/, '').replace(/\.$/, '') };
-  m = /^([^;()]*\(\d{4}\))(?:; (.*))?$/.exec(d);
-  if (m) return { quote: m[2] || '', cite: m[1] };
-  return { quote: d, cite: '' };
-}
-// A source is titled by its citation: the shortest one its records carry (a curator note that
-// precedes a citation makes that record's longer). A source without one keeps its ref.
-function titleOf(recs){
-  var best = '';
-  recs.forEach(function(r){
-    var c = parts(r.source && r.source.detail).cite;
-    if (c && (!best || c.length < best.length)) best = c;
-  });
-  return best;
-}
-// Refs that differ only in a numbered suffix (ethanol-bond0 to -bond7) are one source.
-function family(ref){ return String(ref).replace(/-[a-z]+\d+$/i, ''); }
 function tex(s){
   if (!s) return '';
   try { return katex.renderToString(String(s), { throwOnError: false }); } catch (e) { return esc(s); }
-}
-function condText(c){
-  if (!c || typeof c !== 'object') return '';
-  return Object.keys(c).map(function(k){ return k + ' = ' + c[k]; }).join(' · ');
 }
 function fail(msg){
   document.getElementById('xp-body').innerHTML =
@@ -129,12 +103,14 @@ function materialFromHash(){
   return m ? decodeURIComponent(m[1]) : null;
 }
 
-var DATA = null;   // {records, groups, catalog, version}
+var parts = Sources.parts, family = Sources.family;
+var DATA = null;   // {records, groups, catalog, codes, version}
 function load(){
   return Promise.all([
     fetch('../data/instances.json').then(function(r){ return r.json(); }),
     fetch('../data/catalog.json').then(function(r){ return r.json(); }),
-    fetch('../data/version.json').then(function(r){ return r.json(); })
+    fetch('../data/version.json').then(function(r){ return r.json(); }),
+    fetch('../data/codes.json').then(function(r){ return r.json(); })
   ]).then(function(res){
     var records = res[0], catalog = {}, version = res[2];
     res[1].forEach(function(n){ catalog[n.id] = n; });
@@ -149,7 +125,7 @@ function load(){
       if (refs.length === 1) groups[refs[0]] = byRef[refs[0]];
       else groups[f] = [].concat.apply([], refs.map(function(r){ return byRef[r]; }));
     });
-    DATA = { records: records, groups: groups, catalog: catalog, version: version };
+    DATA = { records: records, groups: groups, catalog: catalog, codes: res[3], version: version };
   });
 }
 
@@ -183,7 +159,7 @@ function renderIndex(material){
     var mats = uniq(recs.map(function(r){ return r.material; }));
     var kinds = uniq(recs.map(function(r){ return r.source && r.source.kind; }));
     var vars = uniq(recs.map(function(r){ return r.variable; }));
-    return '<div class="xp-row"><dt><a class="ref" href="#ref=' + encodeURIComponent(ref) + '">' + esc(titleOf(recs) || ref) + '</a></dt>' +
+    return '<div class="xp-row"><dt><a class="ref" href="#ref=' + encodeURIComponent(ref) + '">' + esc(Sources.titleOf(recs, DATA.codes) || ref) + '</a></dt>' +
       '<dd>' + recs.length + (recs.length === 1 ? ' value' : ' values') + ' · ' + esc(kinds.join(', ')) + ' · ' +
         esc(mats.join(', ')) + ' · ' + vars.length +
         (vars.length === 1 ? ' quantity' : ' quantities') + '</dd></div>';
@@ -207,7 +183,7 @@ function renderDetail(ref){
       esc(ref) + '</span>. Check it for a typo.</p>', '');
     return;
   }
-  var title = titleOf(recs);
+  var title = Sources.titleOf(recs, DATA.codes), cited = recs.some(function(r){ return parts(r.source && r.source.detail).cite; });
   document.title = (title || key) + ' | OpenMaterials';
   var mats = uniq(recs.map(function(r){ return r.material; }));
   var kinds = uniq(recs.map(function(r){ return r.source && r.source.kind; }));
@@ -219,15 +195,18 @@ function renderDetail(ref){
     return '<tr>' +
       '<td class="var" data-label="Quantity"><span class="sym">' + tex(node.symbol) + '</span>' +
       '<a class="vid" href="../map/#node=' + encodeURIComponent(rec.variable) +
-      '" title="Open this quantity on the map">' + esc(rec.variable) + '</a></td>' +
+      '" title="Open this quantity on the map">' + esc(Sources.nodeName(rec.variable)) + '</a></td>' +
       '<td class="mat" data-label="Material">' + esc(rec.material) + '</td>' +
-      '<td class="cond" data-label="Conditions">' + esc(condText(rec.conditions)) + '</td>' +
+      '<td class="cond" data-label="Conditions">' + esc(Sources.condText(rec.conditions)) + '</td>' +
       '<td class="val" data-label="Value">' + valText(rec) + '</td>' +
       '</tr>';
   }).join('');
-  // with the citation in the title, each record shows only its quoted passage
-  var quotes = uniq(sorted.map(function(r){ return parts(r.source && r.source.detail).quote || null; }))
-    .map(function(d){ return '<blockquote class="quote">' + esc(d) + '</blockquote>'; }).join('');
+  // A cited source shows each record's quoted passage (the citation is the title); a run shows one
+  // plain method line per record, never its detail prose.
+  var quotes = cited ? uniq(sorted.map(function(r){ return parts(r.source && r.source.detail).quote || null; }))
+    .map(function(d){ return '<blockquote class="quote">' + esc(d) + '</blockquote>'; }).join('') : '';
+  var methods = cited ? '' : uniq(sorted.map(function(r){ return Sources.methodLine(r, DATA.codes) || null; }))
+    .map(function(m){ return '<li>' + esc(m) + '</li>'; }).join('');
   var facts =
     '<dl class="ledger">' +
     '<div><dt>Kind</dt><dd>' + esc(kinds.join(', ')) + '</dd></div>' +
@@ -235,22 +214,22 @@ function renderDetail(ref){
     '<div><dt>Materials</dt><dd>' + mats.map(function(m){
       return '<a href="#material=' + encodeURIComponent(m) + '">' + esc(m) + '</a>'; }).join(', ') + '</dd></div>' +
     '</dl>';
-  var runBtn = runnable(recs) ? '<a class="btn btn--secondary btn--sm" href="' + MCG_CONNECT + '">Run it for your material</a>' : '';
+  var runBtn = runnable(recs) ? '<a class="btn btn--primary btn--sm" href="' + MCG_CONNECT + '">Run it for your material</a>' : '';
   var mapRef = (recs[0].source && recs[0].source.ref) || key;   // the map marks one ref's quantities
   page(
     '<p class="crumb"><a href="#">All sources</a></p>' +
     '<p class="eyebrow">Source</p>' +
     '<h1 class="' + (title ? 'cite' : 'ref') + '">' + esc(title || key) + '</h1>' +
-    '<div class="cta-row"><button class="btn btn--primary btn--sm" id="copy" type="button">Copy link</button>' +
+    '<div class="cta-row">' + runBtn + '<button class="btn btn--secondary btn--sm" id="copy" type="button">Copy link</button>' +
     '<a class="btn btn--secondary btn--sm" href="../map/#experiment=' + encodeURIComponent(mapRef) + '">View on the map</a>' +
-    runBtn +
     '<span class="copied small" id="copied" aria-live="polite"></span></div>',
     facts +
     '<h2>Values</h2>' +
     '<div class="table-wrap"><table class="table stack"><thead><tr>' +
     '<th>Quantity</th><th>Material</th><th>Conditions</th><th>Value</th>' +
     '</tr></thead><tbody>' + rows + '</tbody></table></div>' +
-    (quotes ? '<h2>Provenance</h2>' + quotes : ''));
+    (quotes ? '<h2>Provenance</h2>' + quotes : '') +
+    (methods ? '<h2>Method</h2><ul>' + methods + '</ul>' : ''));
   document.getElementById('copy').addEventListener('click', function(){
     var url = location.href;
     var done = function(){

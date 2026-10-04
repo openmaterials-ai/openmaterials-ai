@@ -28,13 +28,14 @@
   /* one block per agreement group (spec 4.2) */
   .grp { margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--line); }
   .grp-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 16px; }
-  .grp-head .obs, .grp-head .sym, .grp-head .spread { font: 400 16px/24px var(--font-mono); overflow-wrap: anywhere; }
+  .grp-head .obs { font: 500 16px/24px var(--font-sans); }
+  .grp-head .sym, .grp-head .spread { font: 400 16px/24px var(--font-mono); overflow-wrap: anywhere; }
   .grp-head .sym { color: var(--ink-2); }
   .grp-head .spread { margin-left: auto; white-space: nowrap; }
   .badges { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
   .cond { margin: 12px 0 16px; font-size: 14px; line-height: 20px; color: var(--ink-2); }
   .cond .mono { color: var(--ink); overflow-wrap: anywhere; }
-  td.val, td.code { font-family: var(--font-mono); font-size: 13px; }
+  td.val { font-family: var(--font-mono); font-size: 13px; }
   td.val { white-space: nowrap; }
   td .u { color: var(--ink-2); }
   .pin { margin-top: 48px; }
@@ -57,6 +58,7 @@
   </div></div>
 </main>
 <script src="../assets/vendor/katex/dist/katex.min.js"></script>
+<script src="../assets/sources.js"></script>
 <script>
 'use strict';
 function esc(s){
@@ -67,10 +69,6 @@ function esc(s){
 function fail(msg){
   document.getElementById('groups').innerHTML =
     '<p id="err" class="notice notice--error">' + esc(msg) + '</p>';
-}
-function condText(c){
-  if (!c || typeof c !== 'object') return '';
-  return Object.keys(c).map(function(k){ return k + ' = ' + c[k]; }).join('  ·  ');
 }
 function pct(x){ return (Number(x) * 100).toFixed(1) + '%'; }
 function tex(s){
@@ -87,18 +85,24 @@ function methodLabel(m){
   return m.kind === 'measurement' ? 'Measured' : 'Solver not stated';
 }
 
-var DATA = null;   // { summary, groups, catalog }
+var DATA = null;   // { summary, groups, catalog, titles }
 function load(){
   return Promise.all([
     fetch('../data/agreement.json').then(function(r){ return r.json(); }),
-    fetch('../data/catalog.json').then(function(r){ return r.json(); })
-  ]).then(function(parts){
-    var agreement = parts[0], catalog = {};
-    parts[1].forEach(function(n){ catalog[n.id] = n; });
+    fetch('../data/catalog.json').then(function(r){ return r.json(); }),
+    fetch('../data/instances.json').then(function(r){ return r.json(); }),
+    fetch('../data/codes.json').then(function(r){ return r.json(); })
+  ]).then(function(res){
+    var agreement = res[0], catalog = {}, byRef = {}, titles = {};
+    res[1].forEach(function(n){ catalog[n.id] = n; });
+    // each source is titled as the sources page titles it
+    res[2].forEach(function(r){ var ref = r.source && r.source.ref; if (ref) (byRef[ref] = byRef[ref] || []).push(r); });
+    Object.keys(byRef).forEach(function(ref){ titles[ref] = Sources.titleOf(byRef[ref], res[3]); });
     DATA = {
       summary: agreement.summary || {},
       groups: agreement.groups || [],
-      catalog: catalog
+      catalog: catalog,
+      titles: titles
     };
   });
 }
@@ -126,18 +130,19 @@ function groupHtml(g){
       '<td class="val" data-label="Value">' + esc(m.value) +
         (m.units ? ' <span class="u">' + esc(m.units) + '</span>' : '') + '</td>' +
       '<td class="est" data-label="Method">' + esc(methodLabel(m)) + '</td>' +
-      '<td class="code" data-label="Source">' + esc(m.ref) + '</td>' +
+      '<td data-label="Source"><a href="../experiment/#ref=' + encodeURIComponent(m.ref) + '">' +
+        esc(DATA.titles[m.ref] || m.ref) + '</a></td>' +
       '<td class="kind" data-label="Kind"><span class="pill kind-' + esc(m.kind) + '">' + esc(m.kind) + '</span></td>' +
       '</tr>';
   }).join('');
   return '<section class="grp">' +
     '<div class="grp-head">' +
-      '<span class="obs">' + esc(g.observable) + '</span>' + sym +
+      '<span class="obs">' + esc(Sources.nodeName(g.observable)) + '</span>' + sym +
       '<span class="mat">' + esc(g.material) + '</span>' +
       '<span class="spread">spread ' + esc(pct(g.spread)) + '</span>' +
     '</div>' +
     badgesHtml(g) +
-    '<p class="cond">Conditions <span class="mono">' + esc(condText(g.conditions)) + '</span></p>' +
+    '<p class="cond">Conditions <span class="mono">' + esc(Sources.condText(g.conditions, '  ·  ')) + '</span></p>' +
     '<div class="table-wrap"><table class="table stack"><thead><tr>' +
       '<th>Value</th><th>Method</th><th>Source</th><th>Kind</th>' +
     '</tr></thead><tbody>' + rows + '</tbody></table></div>' +

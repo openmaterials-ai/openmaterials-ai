@@ -190,29 +190,34 @@ def test_the_home_jsonld_matches_the_data_and_the_package():
 
 _SOURCES = r"""
 const fs = require('fs');
-const grab = (file, from, to) => { const s = fs.readFileSync(file, 'utf8'); return s.slice(s.indexOf(from), s.indexOf(to)); };
-const xp = new Function(grab(process.argv[1], 'function esc', 'function tex') + '; return {parts, titleOf, family};')();
-const ag = new Function(grab(process.argv[2], 'var METHOD', 'var DATA') + '; return methodLabel;')();
-const recs = JSON.parse(fs.readFileSync(process.argv[3], 'utf8'));
-const agreement = JSON.parse(fs.readFileSync(process.argv[4], 'utf8'));
+eval(fs.readFileSync(process.argv[1], 'utf8'));   // assets/sources.js: var Sources
+const page = fs.readFileSync(process.argv[2], 'utf8');
+const label = new Function(page.slice(page.indexOf('var METHOD'), page.indexOf('var DATA')) + '; return methodLabel;')();
+const [recs, agreement, codes] = process.argv.slice(3).map(f => JSON.parse(fs.readFileSync(f, 'utf8')));
 const byRef = {};
 for (const r of recs) (byRef[r.source.ref] = byRef[r.source.ref] || []).push(r);
 const titles = {};
-for (const ref in byRef) titles[ref] = xp.titleOf(byRef[ref]);
-console.log(JSON.stringify({titles, quotes: recs.map(r => xp.parts(r.source.detail).quote),
-  labels: [].concat(...agreement.groups.map(g => g.members.map(m => ag(m)))),
-  fam: [xp.family('atomisticskills-chem-bond-dissociation-ethanol-bond3'), xp.family('paper:esfarjani-2011')]}));
+for (const ref in byRef) titles[ref] = Sources.titleOf(byRef[ref], codes);
+const one = id => recs.find(r => r.id.startsWith(id));
+console.log(JSON.stringify({titles, quotes: recs.map(r => Sources.parts(r.source.detail).quote),
+  conds: recs.map(r => Sources.condText(r.conditions)), methods: recs.map(r => Sources.methodLine(r, codes)),
+  ptse2: Sources.condText(one('457f936b93d9').conditions), si: Sources.condText(one('f735a05c14db').conditions),
+  conformance: Sources.methodLine(one('f64affbf549a'), codes),
+  name: Sources.nodeName('ThermalConductivity[bte_solver=direct_inverse]'),
+  labels: [].concat(...agreement.groups.map(g => g.members.map(m => label(m)))),
+  fam: [Sources.family('atomisticskills-chem-bond-dissociation-ethanol-bond3'), Sources.family('paper:esfarjani-2011')]}));
 """
 
 
-def test_sources_take_their_citations_and_methods_print_plain():
-    """The sources page titles a source by the citation its records carry, never shows a curator
-    note, and groups numbered refs; the agreement page prints a method label, not the raw string."""
+def test_sources_take_their_citations_and_print_plain_words():
+    """A source is titled by the citation its records carry, or as its code's run; conditions read T in
+    kelvin and drop curator notes and hashes; a run prints one method line from its structured fields;
+    the agreement page prints a method label, never the raw method string."""
     node = shutil.which("node")
     if node is None:
         pytest.skip("node not available")
-    out = subprocess.run([node, "-e", _SOURCES, str(DOCS / "experiment/index.html"), str(DOCS / "agreement/index.html"),
-                          str(DOCS / "data/instances.json"), str(DOCS / "data/agreement.json")],
+    out = subprocess.run([node, "-e", _SOURCES, str(DOCS / "assets/sources.js"), str(DOCS / "agreement/index.html"),
+                          *(str(DOCS / "data" / f) for f in ("instances.json", "agreement.json", "codes.json"))],
                          capture_output=True, text=True, timeout=60)
     assert out.returncode == 0, out.stderr
     got = json.loads(out.stdout)
@@ -221,8 +226,14 @@ def test_sources_take_their_citations_and_methods_print_plain():
     assert kaldo.startswith("G. Barbalinardo, Z. Chen") and kaldo.endswith("J. Appl. Phys. 128, 135104 (2020)")
     assert titles["glassbrenner-slack-1964"] == "Glassbrenner and Slack, Phys. Rev. 134, A1058 (1964)"
     assert all(titles[r] for r in titles if r.startswith("paper:")), "every paper source carries a citation"
-    assert not titles["kaldo"] and not titles["materialscodegraph"], "a run without a citation keeps its ref"
+    assert titles["kaldo"].endswith(" run") and not titles["materialscodegraph"], "a code's run, or the ref"
     assert not [t for t in titles.values() if re.search(r"doi:|arXiv:|\[", t)]
     assert not [q for q in got["quotes"] if "[MIGRATED" in q]
+    assert got["ptse2"].endswith("method = first-principles BTE, solver not stated")
+    assert got["si"].startswith("T 300 K · ")
+    assert not [c for c in got["conds"] if "unstated" in c or re.search(r"\b[0-9a-f]{64}\b", c)]
+    assert got["conformance"].endswith(" 2.2.1 run of Si, Si.tersoff")
+    assert not [m for m in got["methods"] if ".json" in m], "no repo paths in a method line"
+    assert got["name"] == "Thermal conductivity (direct inverse)"
     assert got["fam"] == ["atomisticskills-chem-bond-dissociation-ethanol", "paper:esfarjani-2011"]
     assert set(got["labels"]) <= {"Direct inversion", "RTA", "Solver not stated", "Measured"}
