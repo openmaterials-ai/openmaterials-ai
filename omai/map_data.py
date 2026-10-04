@@ -832,6 +832,36 @@ def write_configurations(path: Path | None = None) -> Path:
     return path
 
 
+def build_registry(data_dir: Path | None = None) -> dict:
+    """``{kind: {uid: record path under docs/data/}}`` for every configuration
+    and model record, each alias mapped to its record's path too
+    (omai/data/registry.json). The wheel ships no docs/data/, so an installed
+    package resolves uids against this file. Each record is checked by its
+    kind (omai.evidence.check); a uid or alias registered twice is refused."""
+    from omai.evidence import KINDS, check, record_uids, records
+
+    data_dir = data_dir or (_DOCS / "data")
+    registry: dict[str, dict[str, str]] = {}
+    for kind in KINDS:
+        entries = registry.setdefault(kind, {})
+        for path, record in records(kind, data_dir):
+            check(kind, record, where=path)
+            for uid in record_uids(kind, record):
+                if uid in entries:
+                    raise ValueError(f"{path}: uid {uid[:12]} is already {entries[uid]}")
+                entries[uid] = path
+    return registry
+
+
+def write_registry(path: Path | None = None) -> Path:
+    from omai.evidence import REGISTRY
+
+    path = path or REGISTRY
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(build_registry(), indent=1, sort_keys=True) + "\n")
+    return path
+
+
 # Source / parameter nodes that carry a value INTO a calculation rather than
 # recording an evidence-worthy result of one. A claim landing on any of these is
 # CONTEXT (a condition), never a minted value instance (spec section 6). Tier is
@@ -1026,6 +1056,7 @@ if __name__ == "__main__":
     print("wrote", write_spectra())
     print("wrote", write_simulations())
     print("wrote", write_configurations())
+    print("wrote", write_registry())
     print("wrote", write_codes())
     print("wrote", write_catalog())
     # The version stamp is written BEFORE the exports that cite it (the lean

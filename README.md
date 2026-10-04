@@ -302,8 +302,10 @@ A lineage cites a model by its bare uid (64 lowercase hex) under fixed keys,
 the same for every representation so one model compares across codes:
 `conditions.potential_sha256` for the model it evaluates and
 `conditions.base_potential_sha256` for the model a training run starts from.
-Model and configuration uids resolve against `docs/data/`; an unregistered
-uid is reported, not refused.
+Model and configuration uids resolve against `docs/data/` in a source tree
+and against `omai/data/registry.json` in an installed package (written by
+`omai.map_data`, shipped in the wheel); an unregistered uid is reported, not
+refused.
 
 **The vectors.** `omai/vectors/*.json` ship inside the wheel.
 

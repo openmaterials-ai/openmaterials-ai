@@ -121,3 +121,39 @@ def test_model_citations_reports_without_refusing():
         {"key": "potential_sha256", "uid": A, "record": None},
         {"key": "base_potential_sha256", "uid": lineage["conditions"]
          ["base_potential_sha256"], "record": "models/si-tersoff.json"}]
+
+
+def test_the_committed_registry_equals_a_fresh_build():
+    from omai.evidence import REGISTRY
+    from omai.map_data import build_registry
+
+    assert json.loads(REGISTRY.read_text()) == build_registry(), (
+        "omai/data/registry.json is stale: rebuild with python -m omai.map_data")
+
+
+def test_the_registry_resolves_as_the_source_tree_does():
+    from omai.evidence import REGISTRY
+
+    registry = json.loads(REGISTRY.read_text())
+    assert registry["configuration"] and registry["model"]
+    for kind, entries in registry.items():
+        for uid, path in entries.items():
+            assert resolve(kind, uid, [REGISTRY]) == path == resolve(kind, uid)
+
+
+def test_the_former_si_uid_resolves_under_both_roots():
+    from omai.evidence import _DATA_DIR, REGISTRY
+
+    alias = "55bf22ca81868867402ac4ce50a830f91da84c805990c37c3bdafe3b93a69143"
+    for root in (_DATA_DIR, REGISTRY):
+        assert (resolve("configuration", alias, [root])
+                == "configurations/si-diamond-primitive-mp-149.json")
+
+
+def test_the_registry_ships_in_the_wheel():
+    import tomllib
+    from pathlib import Path
+
+    pyproject = Path(__file__).resolve().parents[1] / "pyproject.toml"
+    data = tomllib.loads(pyproject.read_text())["tool"]["setuptools"]["package-data"]
+    assert "data/*.json" in data["omai"]
