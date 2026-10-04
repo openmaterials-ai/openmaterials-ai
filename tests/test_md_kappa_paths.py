@@ -264,10 +264,10 @@ def test_mescal_bulk_si_golden_evidence_lands_on_phonon_transmission():
     """The bulk-Si golden values from the frozen MESCAL artifact
     reference/fixtures/level2_bulk_si_n8.npz: the ballistic transmission peak
     and the acoustic staircase anchor. Both instances pin the live
-    PhononTransmission uid, quote the eskm provenance (commit, Tersoff sha256)
-    and the PRB 84, 115423 (2011) validation anchor in detail, carry the lead
-    spec and the precision path in conditions, and stay clear of the
-    duplicate gate (two distinct values on the same node/material)."""
+    PhononTransmission uid, state the method and the PRB 84, 115423 (2011)
+    validation anchor in detail, carry the lead spec, the precision path and
+    the frozen eskm commit in conditions, and stay clear of the duplicate gate
+    (two distinct values on the same node/material)."""
     from omai.map_data import build_instances, build_graph_dict, DOMAINS
     from omai.paper_parser import validate
 
@@ -286,22 +286,20 @@ def test_mescal_bulk_si_golden_evidence_lands_on_phonon_transmission():
         assert it["units"] == "dimensionless"
         assert it["material"] == "Si"
         assert it["source"]["kind"] == "simulation"
-        # detail is verbatim provenance: the artifact path, the frozen eskm
-        # commit, the Tersoff potential hash, the README overlay note, and
-        # the PRB validation anchor.
+        # detail is one plain method sentence: the code, the overlay on the
+        # paper's Fig. 4, and the PRB validation anchor with its DOI.
         detail = it["source"]["detail"]
-        assert "reference/fixtures/level2_bulk_si_n8.npz" in detail
-        assert "cc5a5fc1ddb6589c7b4c8b4a3fdef6ef9bc0d2f7" in detail
-        assert "5fcf6d8fa08f4c024f295c803b9dc2aab2a0b103f4c14d555846f3765f006338" in detail
-        assert "mean |dev| 0.013/atom" in detail
-        assert "Phys. Rev. B 84, 115423" in detail
-        assert "10.1103/PhysRevB.84.115423" in detail
+        assert "MESCAL mode matching" in detail
+        assert "mean deviation 0.013 per atom" in detail
+        assert "Phys. Rev. B 84, 115423 (2011), Fig. 4" in detail
+        assert "doi:10.1103/PhysRevB.84.115423" in detail
         # conditions carry the lead spec and the precision path.
         cond = it["conditions"]
         assert "8x8 conventional cells" in cond["lead"]
         assert "Tersoff" in cond["lead"]
         assert "complex128" in cond["precision"]
         assert "complex64" in cond["precision"]
+        assert "eskm commit cc5a5fc1" in cond["precision"]
         assert cond["nu"].endswith("THz")
 
     # The peak opens 279 lead channels; the staircase sits on the three
