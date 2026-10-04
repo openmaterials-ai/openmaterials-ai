@@ -397,7 +397,7 @@ Concept & Canonical term & Notes \\
 \midrule
 A typed quantity on the map    & \textbf{node} & \texttt{Space} is the code class. \\
 A relation producing a node    & \textbf{edge} & \texttt{Operator} is the code class. \\
-A code's mapping onto the map  & \textbf{representation} & its on-map rendering is a \emph{representation}. \\
+A code's mapping onto the map  & \textbf{representation} & units and conventions per covered node. \\
 A committed value               & \textbf{instance} & the \texttt{\{id, kind, lineage, source\}} record. \\
 A semantic type parameter       & \textbf{label} & e.g.\ \texttt{bte\_solver=rta}, not a ``variant''. \\
 A content hash                  & \textbf{uid} & sha256; a 12-hex prefix is displayed. \\
@@ -2459,7 +2459,7 @@ We have committed to Python for Sprint 1. The trade-offs were:
 
 The operator layer is an architectural commitment, not an implementation. The implementation
 began as a Python skeleton plus adapters for three thermal-transport codes and has since grown
-to the 32-representation map of Part~\ref{part:status}. The
+to the map of Part~\ref{part:status}, which holds 32 representations. The
 artifact that motivates the project (a paper-worthy demonstration of cross-code reconciliation
 and decomposed error bounds for lattice thermal conductivity) is downstream of the operator layer but
 is the operator layer's first proof-of-value.
