@@ -38,7 +38,7 @@ TOOL_PAGES = [
 ]
 
 # Standalone artifacts, deliberately outside the primary navigation.
-EXEMPT_DIRS = {"deck", "slides", "map-lab", "learn", "i"}
+EXEMPT_DIRS = {"map-lab", "learn", "i"}
 
 
 def test_sitejs_nav_is_canonical():
