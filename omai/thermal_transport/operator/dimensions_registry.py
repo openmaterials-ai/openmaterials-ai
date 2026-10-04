@@ -55,6 +55,7 @@ from omai.operator.dimensions import (
     ENERGY_PER_TEMPERATURE_PER_VOLUME,
     ENERGY_TIMES_LENGTH_PER_TIME,
     FREQUENCY,
+    INVERSE_FREQUENCY,
     LENGTH,
     LENGTH_TIMES_FREQUENCY,
     MASS,
@@ -112,7 +113,8 @@ register_symbol_dimensions({
     r"C_V^{mol}": ENERGY_PER_TEMPERATURE_PER_MOLE,
     # Dimensionless derived observables.
     r"\gamma_G": DIMENSIONLESS,
-    "P_3": DIMENSIONLESS,
+    # The three-phonon phase space: a delta sum over frequency.
+    "P_3": INVERSE_FREQUENCY,
     # Lengths and length-scale thresholds.
     r"\Lambda_c": LENGTH,
     "L": LENGTH,

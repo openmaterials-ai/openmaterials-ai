@@ -32,6 +32,7 @@ from omai.operator.dimensions import (
     FORCE,
     FREQUENCY,
     FREQUENCY_SQUARED,
+    INVERSE_FREQUENCY,
     LENGTH,
     LENGTH_TIMES_FREQUENCY,
     MAGNETIC_MOMENT,
@@ -76,6 +77,9 @@ ANGULAR_THZ = Unit("angular_THz", FREQUENCY, 1.0 / (2 * math.pi))
 # Linear wavenumber: 1 cm⁻¹ = c·(100 m⁻¹) = 0.0299792458 linear THz. QE's
 # matdyn.freq / matdyn.dos axis unit (ph.x prints THz and cm⁻¹ side by side).
 INVERSE_CM = Unit("inverse_cm", FREQUENCY, 0.0299792458)
+# Canonical inverse-frequency unit: states per linear THz, the phonon DOS and
+# three-phonon phase-space density (1 /THz = 1e-12 s).
+PER_LINEAR_THZ = Unit("per_linear_THz", INVERSE_FREQUENCY, 1.0, si_scale=1e-12)
 
 
 # Canonical frequency-squared unit: linear_THz². The dynamical-matrix
@@ -309,6 +313,7 @@ UNITS: dict[str, Unit] = {
         LINEAR_THZ,
         ANGULAR_THZ,
         INVERSE_CM,
+        PER_LINEAR_THZ,
         LINEAR_THZ_SQUARED,
         J_PER_K,
         EV_PER_K,

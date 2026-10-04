@@ -809,6 +809,9 @@
    "symbol": "P_{3}",
    "tier": "Scattering"
   },
+  "superseded_by": [
+   "ec483cecbdbfec9e13ce3b2033b03e4581edf7bc0ff935d09ab9c24a7e481080"
+  ],
   "uid": "41a47eada8fee04f0c84f46e2f4e73d50b3a51967fab666636c047cb2ddce0be"
  },
  "41f6c971e70bc42117a79b8ec51039f498280fdd9b77ef433bb602f90f966d93": {
@@ -1519,6 +1522,9 @@
    "symbol": "g(\\omega)",
    "tier": "Harmonic"
   },
+  "superseded_by": [
+   "e14b6cdd007ca3af971aa52880811138606efdb47e30d5a26c2335903ce796f3"
+  ],
   "uid": "9b0af04f9828cfb02e19d5e41ab2c61fbe4759f049258b85c650baf22e43ebf1"
  },
  "9b42f8aebb6099cdcd910a272a92208881b598688bac7830c3ae0a412152473e": {
@@ -2231,6 +2237,28 @@
   },
   "uid": "e1270ea9a293c9107226bf831f60985f5525a0c386dca70841743bdc5d082c26"
  },
+ "e14b6cdd007ca3af971aa52880811138606efdb47e30d5a26c2335903ce796f3": {
+  "identity": {
+   "fields": [
+    {
+     "dimension": "T^1",
+     "indices": [
+      "omega_bin"
+     ]
+    }
+   ],
+   "gauge": "observable",
+   "labels": {},
+   "quantity": "phonon_dos"
+  },
+  "meta": {
+   "description": "Density of states g(\u03c9) = (1/N_q) \u03a3_q\u03bd \u03b4(\u03c9 \u2212 \u03c9_q\u03bd). A 1-D array binned in \u03c9, states per unit frequency (dimension 1/frequency, the \u03b4's). Gauge-invariant: \u03c9_q\u03bd are basis-independent and the sum over (q, \u03bd) is uniformly weighted.",
+   "name": "PhononDOS",
+   "symbol": "g(\\omega)",
+   "tier": "Harmonic"
+  },
+  "uid": "e14b6cdd007ca3af971aa52880811138606efdb47e30d5a26c2335903ce796f3"
+ },
  "e3ba3f3522daaaa0a91c35e0302be3bc11c00c176a6090863c45b3c2664fed37": {
   "identity": {
    "fields": [
@@ -2361,6 +2389,29 @@
    "tier": "Mechanics"
   },
   "uid": "e95ba3f5810f8554656c148dae26520cf3258cace0b951dd75e69ee8c552c132"
+ },
+ "ec483cecbdbfec9e13ce3b2033b03e4581edf7bc0ff935d09ab9c24a7e481080": {
+  "identity": {
+   "fields": [
+    {
+     "dimension": "T^1",
+     "indices": [
+      "qpoint",
+      "branch"
+     ]
+    }
+   ],
+   "gauge": "observable",
+   "labels": {},
+   "quantity": "phase_space3_phonon"
+  },
+  "meta": {
+   "description": "Three-phonon phase space P3_q\u03bd = (1/N) \u03a3_q'\u03bd'\u03bd'' [\u03b4(\u03c9\u2212\u03c9'\u2212\u03c9'') + 2 \u03b4(\u03c9+\u03c9'\u2212\u03c9'')] available for scattering channels involving mode (q, \u03bd). Doesn't include |V\u2083|\u00b2: purely the kinematic volume. Dimension 1/frequency, the \u03b4's.",
+   "name": "PhaseSpace3Phonon",
+   "symbol": "P_{3}",
+   "tier": "Scattering"
+  },
+  "uid": "ec483cecbdbfec9e13ce3b2033b03e4581edf7bc0ff935d09ab9c24a7e481080"
  },
  "f1261195ad64911510ec9839d2e373c5cbda670f65a8a0c4437e37ff0a7838df": {
   "identity": {

@@ -99,6 +99,8 @@ def build_graph_dict(domains: tuple[Domain, ...]) -> dict:
                 "formulas": target_formulas.get(s.name, []),
                 "tier": s.tier,
                 "uid": node_id(s),
+                # former uids of a re-minted node, only where there are any
+                **({"aliases": list(s.aliases)} if s.aliases else {}),
             })
 
     # Content-addressed edge uid per operator name, per domain. Several links

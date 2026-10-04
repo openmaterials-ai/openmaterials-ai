@@ -1245,7 +1245,7 @@ compute_phase_space_3phonon = Operator(
     description=(
         "Three-phonon kinematic phase space: counts the (q',ν',ν'') channels "
         "satisfying energy + crystal-momentum conservation for the given "
-        "(q, ν). |V₃|² is not included — this is purely a measure of "
+        "(q, ν). |V₃|² is not included: this is purely a measure of "
         "scattering availability. delta_broadening records how the energy δ "
         "is realised at finite q-mesh (Gaussian, Lorentzian, tetrahedron)."
     ),
@@ -1457,7 +1457,7 @@ fourier_to_dos = Operator(
         "Classical-MD route to the phonon DOS via the Wiener-Khinchin "
         "theorem: g(ω) = (1/π) ∫₀^∞ Cv(τ) cos(ωτ) dτ. Pattern-C "
         "alternative producer of PhononDOS alongside the harmonic-tier "
-        "compute_dos edge — both target the same PhononDOS state, but the "
+        "compute_dos edge; both target the same PhononDOS state, but the "
         "MD route is anharmonic-inclusive (broadened by lifetime effects) "
         "while compute_dos is the harmonic δ-sum."
     ),

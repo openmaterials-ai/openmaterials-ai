@@ -233,7 +233,9 @@ class Store:
                 continue
             op = rec["op"]
             payload = rec["payload"]
-            reason = f"{reason_prefix}: {op} {str(payload.get('uid', ''))[:12]}"
+            # a supersede names its first old uid, as the records before it do
+            target = payload.get("uid") or next(iter(payload.get("old_uids", [])), "")
+            reason = f"{reason_prefix}: {op} {str(target)[:12]}"
             head = self.push(op, payload, author, date, reason)
         return head
 

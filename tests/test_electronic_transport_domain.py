@@ -449,7 +449,7 @@ def test_electronic_dos_never_false_merges_with_phonon_dos():
     edos_dim = ELECTRONIC_DOS.fields[0].dimension
     pdos_dim = PHONON_DOS.fields[0].dimension
     assert edos_dim.name == "inverse_energy"
-    assert pdos_dim.name == "frequency"
+    assert pdos_dim.name == "inverse_frequency"
     assert edos_dim.exponents != pdos_dim.exponents
     assert node_id(ELECTRONIC_DOS) != node_id(PHONON_DOS)
     # distinct quantity tags too

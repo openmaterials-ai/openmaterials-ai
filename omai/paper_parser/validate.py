@@ -6,8 +6,9 @@ Every surviving MAP claim must clear these gates:
     (uid-pinned via the same name->uid bridge the instance bundler uses);
   - unit sane: the printed unit maps to a registered unit whose dimension
     matches the node's field dimension, OR is a soft note when the printed unit
-    cannot be resolved (many real printed spellings are not in the 47-token
-    registry); a dimensional MISMATCH is a hard kill;
+    cannot be resolved (many real printed spellings are not tokens of the unit
+    registry, omai.representation.units.UNITS); a dimensional MISMATCH is a
+    hard kill;
   - value finite: the numeric value is a real, finite number;
   - quote VERIFIED: the cited_text appears, after normalization, as a substring
     of the extracted PDF text. A claim whose quote is not present DIES here.
@@ -107,7 +108,7 @@ def build_name_to_uid(domains=None) -> dict[str, str]:
 # --------------------------------------------------------------------------
 # Unit sanity
 # --------------------------------------------------------------------------
-# Printed-unit spellings the map's 47-token registry does not carry verbatim.
+# Printed-unit spellings the unit registry (UNITS) does not carry verbatim.
 # Mapping a printed unit to its registered token lets us check the dimension
 # against the node; an unmapped printed unit is a soft note, not a kill.
 _PRINTED_UNIT_ALIASES = {
@@ -178,6 +179,12 @@ _PRINTED_UNIT_ALIASES = {
     "mw/m^2 k": "MW_per_m2_k",
     "mw m^-2 k^-1": "MW_per_m2_k",
     "mw m-2 k-1": "MW_per_m2_k",
+    # Frequencies: a THz or cm^-1 value dimension-checks against the frequency
+    # nodes, and one mis-mapped to the phonon DOS (a density in frequency,
+    # 1/frequency) dies as a hard mismatch.
+    "thz": "linear_THz",
+    "cm^-1": "inverse_cm",
+    "cm-1": "inverse_cm",
 }
 
 
@@ -319,7 +326,7 @@ def is_delta_posing_as_value(cited_text: str, value) -> bool:
 # dynamical matrices: a "below X" on a linewidth or velocity is not the
 # band-edge narrative this gate targets, so keeping the set small avoids
 # killing legitimate values on those nodes.
-_SPECTRAL_NODE_IDS = frozenset({"Frequency", "MolecularFrequency", "PhononDOS"})
+_SPECTRAL_NODE_IDS = frozenset({"Frequency", "MolecularFrequency"})
 # Band-edge / threshold / range-bound / crossover cues in prose.
 _SPECTRAL_MARKERS = ("below", "above", "larger than", "smaller than",
                      "less than", "greater than", "lower than", "higher than",

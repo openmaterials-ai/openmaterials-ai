@@ -1154,6 +1154,19 @@ def test_record_light_rejects_stale_node_pin():
                          name_to_uid=_NAME_TO_UID)
 
 
+def test_a_former_node_uid_pin_still_resolves():
+    """A re-minted node keeps its former uid under aliases (PhononDOS, re-minted
+    when its dimension became 1/frequency): a pin minted before the re-mint
+    resolves, any other stale pin still fails."""
+    name_to_uid = {"PhononDOS": "f" * 64}
+    former = "9b0af04f9828cfb02e19d5e41ab2c61fbe4759f049258b85c650baf22e43ebf1"
+    lin.record_light(lineage=_light_lineage(node="PhononDOS", node_uid=former),
+                     name_to_uid=name_to_uid)
+    with pytest.raises(lin.LineageError, match="node_uid"):
+        lin.record_light(lineage=_light_lineage(node="PhononDOS", node_uid="0" * 64),
+                         name_to_uid=name_to_uid)
+
+
 def test_record_light_pins_live_node_uid_when_absent():
     """A lineage naming a node but no pin gets the live uid attached (so a later
     validation is a real match), pulled from name_to_uid."""

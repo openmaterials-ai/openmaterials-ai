@@ -481,6 +481,9 @@
     "dos_broadening": "gaussian"
    }
   },
+  "superseded_by": [
+   "d6b71066f0cef4182e1d522d30c31326ecc2504428f3c8e6b42f5189b410a6f3"
+  ],
   "uid": "325b66602b582ded28ce13760e5718257c3624d5eccfec041949157ce6a0dbc2"
  },
  "33e0be2a3db8fa86dce200159c6c0a273161ee6d1a49c75a369b1621197e0a1a": {
@@ -830,6 +833,9 @@
     "dos_broadening": "gaussian"
    }
   },
+  "superseded_by": [
+   "c42288d9daf6b41adc999cb7f35f8dc0d46478006f253df31c7aedf2605783bc"
+  ],
   "uid": "5030641f5cd4aa1843e286c35d529ad7956c48a51603b1ae35121f4950cf1985"
  },
  "504b2deeec3553dc90f91bdc0b4136feaf52abcbc585edd65500d5cab9f27cb2": {
@@ -2059,6 +2065,31 @@
   },
   "uid": "c3e43a0416eba1abf7d4cfa1467761af3b7aa7003df592db3a3599c635d58073"
  },
+ "c42288d9daf6b41adc999cb7f35f8dc0d46478006f253df31c7aedf2605783bc": {
+  "identity": {
+   "formula": "Equality(Symbol('g'), Mul(Pow(Symbol('N_q', positive=True, integer=True), Integer(-1)), Sum(Function('\\\\delta')(Add(Symbol('\\\\omega'), Mul(Integer(-1), Indexed(IndexedBase(Symbol('\\\\omega')), Symbol('\\\\mathbf{q}'), Symbol('\\\\nu', integer=True))))), Tuple(Symbol('\\\\mathbf{q}'), Integer(1), Symbol('N_q', positive=True, integer=True)), Tuple(Symbol('\\\\nu', integer=True), Integer(1), Mul(Integer(3), Symbol('N', positive=True, integer=True))))))",
+   "inputs": [
+    "fa262448f625b62f5a8c6934518bb8ddc5d3a5a5ce69203b3e2f6b10b21cc4b8"
+   ],
+   "output": "e14b6cdd007ca3af971aa52880811138606efdb47e30d5a26c2335903ce796f3",
+   "outputs": [
+    "e14b6cdd007ca3af971aa52880811138606efdb47e30d5a26c2335903ce796f3"
+   ],
+   "schemes": {
+    "dos_broadening": "gaussian"
+   }
+  },
+  "meta": {
+   "description": "Histogram / smeared sum of phonon frequencies into a 1-D density of states. The \u03b4 is usually replaced by a Gaussian or tetrahedron weight at finite q-mesh; dos_broadening records the choice. Independent of eigenvectors \u2192 gauge-invariant.",
+   "formula_latex": "g = \\frac{\\sum_{\\substack{1 \\leq \\mathbf{q} \\leq N_{q}\\\\1 \\leq \\nu \\leq 3 N}} \\delta{\\left(\\omega - {\\omega}_{\\mathbf{q},\\nu} \\right)}}{N_{q}}",
+   "formula_srepr": "Equality(Symbol('g'), Mul(Pow(Symbol('N_q', positive=True, integer=True), Integer(-1)), Sum(Function('\\\\delta')(Add(Symbol('\\\\omega'), Mul(Integer(-1), Indexed(IndexedBase(Symbol('\\\\omega')), Symbol('\\\\mathbf{q}'), Symbol('\\\\nu', integer=True))))), Tuple(Symbol('\\\\mathbf{q}'), Integer(1), Symbol('N_q', positive=True, integer=True)), Tuple(Symbol('\\\\nu', integer=True), Integer(1), Mul(Integer(3), Symbol('N', positive=True, integer=True))))))",
+   "name": "compute_dos",
+   "schemes": {
+    "dos_broadening": "gaussian"
+   }
+  },
+  "uid": "c42288d9daf6b41adc999cb7f35f8dc0d46478006f253df31c7aedf2605783bc"
+ },
  "c4f3608ad7e68c033d01ba334a756592961af7f922d496a4cf13c809677ccaf4": {
   "identity": {
    "formula": "Equality(Indexed(IndexedBase(Symbol('g')), Symbol('i', integer=True)), Symbol('g_{provided}'))",
@@ -2246,6 +2277,31 @@
   },
   "uid": "ce9b639e5b88ed7e27cd2e0c879c620c582b0435d01365ea1dc35eb3fafdeeaa"
  },
+ "cff24024635e104959182d2de98186efbc8cd8bf678ea239b1cc5ab24e76ff20": {
+  "identity": {
+   "formula": "Equality(Indexed(IndexedBase(Symbol('P_3')), Symbol('\\\\mathbf{q}'), Symbol('\\\\nu', integer=True)), Mul(Pow(Symbol('N_q', positive=True, integer=True), Integer(-1)), Sum(Add(Function('\\\\delta')(Add(Mul(Integer(-1), Indexed(IndexedBase(Symbol('\\\\omega')), Add(Mul(Integer(-1), Symbol(\"\\\\mathbf{q'}\")), Symbol('\\\\mathbf{q}')), Symbol(\"\\\\nu''\", integer=True))), Mul(Integer(-1), Indexed(IndexedBase(Symbol('\\\\omega')), Symbol(\"\\\\mathbf{q'}\"), Symbol(\"\\\\nu'\", integer=True))), Indexed(IndexedBase(Symbol('\\\\omega')), Symbol('\\\\mathbf{q}'), Symbol('\\\\nu', integer=True)))), Mul(Integer(2), Function('\\\\delta')(Add(Mul(Integer(-1), Indexed(IndexedBase(Symbol('\\\\omega')), Add(Mul(Integer(-1), Symbol(\"\\\\mathbf{q'}\")), Symbol('\\\\mathbf{q}')), Symbol(\"\\\\nu''\", integer=True))), Indexed(IndexedBase(Symbol('\\\\omega')), Symbol(\"\\\\mathbf{q'}\"), Symbol(\"\\\\nu'\", integer=True)), Indexed(IndexedBase(Symbol('\\\\omega')), Symbol('\\\\mathbf{q}'), Symbol('\\\\nu', integer=True)))))), Tuple(Symbol(\"\\\\mathbf{q'}\"), Integer(1), Symbol('N_q', positive=True, integer=True)), Tuple(Symbol(\"\\\\nu'\", integer=True), Integer(1), Mul(Integer(3), Symbol('N', positive=True, integer=True))), Tuple(Symbol(\"\\\\nu''\", integer=True), Integer(1), Mul(Integer(3), Symbol('N', positive=True, integer=True))))))",
+   "inputs": [
+    "fa262448f625b62f5a8c6934518bb8ddc5d3a5a5ce69203b3e2f6b10b21cc4b8"
+   ],
+   "output": "ec483cecbdbfec9e13ce3b2033b03e4581edf7bc0ff935d09ab9c24a7e481080",
+   "outputs": [
+    "ec483cecbdbfec9e13ce3b2033b03e4581edf7bc0ff935d09ab9c24a7e481080"
+   ],
+   "schemes": {
+    "delta_broadening": "gaussian"
+   }
+  },
+  "meta": {
+   "description": "Three-phonon kinematic phase space: counts the (q',\u03bd',\u03bd'') channels satisfying energy + crystal-momentum conservation for the given (q, \u03bd). |V\u2083|\u00b2 is not included: this is purely a measure of scattering availability. delta_broadening records how the energy \u03b4 is realised at finite q-mesh (Gaussian, Lorentzian, tetrahedron).",
+   "formula_latex": "{P_{3}}_{\\mathbf{q},\\nu} = \\frac{\\sum_{\\substack{1 \\leq \\mathbf{q'} \\leq N_{q}\\\\1 \\leq \\nu' \\leq 3 N\\\\1 \\leq \\nu'' \\leq 3 N}} \\left(\\delta{\\left(- {\\omega}_{- \\mathbf{q'} + \\mathbf{q},\\nu''} - {\\omega}_{\\mathbf{q'},\\nu'} + {\\omega}_{\\mathbf{q},\\nu} \\right)} + 2 \\delta{\\left(- {\\omega}_{- \\mathbf{q'} + \\mathbf{q},\\nu''} + {\\omega}_{\\mathbf{q'},\\nu'} + {\\omega}_{\\mathbf{q},\\nu} \\right)}\\right)}{N_{q}}",
+   "formula_srepr": "Equality(Indexed(IndexedBase(Symbol('P_3')), Symbol('\\\\mathbf{q}'), Symbol('\\\\nu', integer=True)), Mul(Pow(Symbol('N_q', positive=True, integer=True), Integer(-1)), Sum(Add(Function('\\\\delta')(Add(Mul(Integer(-1), Indexed(IndexedBase(Symbol('\\\\omega')), Add(Mul(Integer(-1), Symbol(\"\\\\mathbf{q'}\")), Symbol('\\\\mathbf{q}')), Symbol(\"\\\\nu''\", integer=True))), Mul(Integer(-1), Indexed(IndexedBase(Symbol('\\\\omega')), Symbol(\"\\\\mathbf{q'}\"), Symbol(\"\\\\nu'\", integer=True))), Indexed(IndexedBase(Symbol('\\\\omega')), Symbol('\\\\mathbf{q}'), Symbol('\\\\nu', integer=True)))), Mul(Integer(2), Function('\\\\delta')(Add(Mul(Integer(-1), Indexed(IndexedBase(Symbol('\\\\omega')), Add(Mul(Integer(-1), Symbol(\"\\\\mathbf{q'}\")), Symbol('\\\\mathbf{q}')), Symbol(\"\\\\nu''\", integer=True))), Indexed(IndexedBase(Symbol('\\\\omega')), Symbol(\"\\\\mathbf{q'}\"), Symbol(\"\\\\nu'\", integer=True)), Indexed(IndexedBase(Symbol('\\\\omega')), Symbol('\\\\mathbf{q}'), Symbol('\\\\nu', integer=True)))))), Tuple(Symbol(\"\\\\mathbf{q'}\"), Integer(1), Symbol('N_q', positive=True, integer=True)), Tuple(Symbol(\"\\\\nu'\", integer=True), Integer(1), Mul(Integer(3), Symbol('N', positive=True, integer=True))), Tuple(Symbol(\"\\\\nu''\", integer=True), Integer(1), Mul(Integer(3), Symbol('N', positive=True, integer=True))))))",
+   "name": "compute_phase_space_3phonon",
+   "schemes": {
+    "delta_broadening": "gaussian"
+   }
+  },
+  "uid": "cff24024635e104959182d2de98186efbc8cd8bf678ea239b1cc5ab24e76ff20"
+ },
  "d045e62468c78093879b3018bdf73461194929dacbb2ab565319cfe911925c26": {
   "identity": {
    "formula": "Equality(Indexed(IndexedBase(Symbol('P_3')), Symbol('\\\\mathbf{q}'), Symbol('\\\\nu', integer=True)), Mul(Pow(Symbol('N_q', positive=True, integer=True), Integer(-1)), Sum(Add(Function('\\\\delta')(Add(Mul(Integer(-1), Indexed(IndexedBase(Symbol('\\\\omega')), Add(Mul(Integer(-1), Symbol(\"\\\\mathbf{q'}\")), Symbol('\\\\mathbf{q}')), Symbol(\"\\\\nu''\", integer=True))), Mul(Integer(-1), Indexed(IndexedBase(Symbol('\\\\omega')), Symbol(\"\\\\mathbf{q'}\"), Symbol(\"\\\\nu'\", integer=True))), Indexed(IndexedBase(Symbol('\\\\omega')), Symbol('\\\\mathbf{q}'), Symbol('\\\\nu', integer=True)))), Mul(Integer(2), Function('\\\\delta')(Add(Mul(Integer(-1), Indexed(IndexedBase(Symbol('\\\\omega')), Add(Mul(Integer(-1), Symbol(\"\\\\mathbf{q'}\")), Symbol('\\\\mathbf{q}')), Symbol(\"\\\\nu''\", integer=True))), Indexed(IndexedBase(Symbol('\\\\omega')), Symbol(\"\\\\mathbf{q'}\"), Symbol(\"\\\\nu'\", integer=True)), Indexed(IndexedBase(Symbol('\\\\omega')), Symbol('\\\\mathbf{q}'), Symbol('\\\\nu', integer=True)))))), Tuple(Symbol(\"\\\\mathbf{q'}\"), Integer(1), Symbol('N_q', positive=True, integer=True)), Tuple(Symbol(\"\\\\nu'\", integer=True), Integer(1), Mul(Integer(3), Symbol('N', positive=True, integer=True))), Tuple(Symbol(\"\\\\nu''\", integer=True), Integer(1), Mul(Integer(3), Symbol('N', positive=True, integer=True))))))",
@@ -2269,6 +2325,9 @@
     "delta_broadening": "gaussian"
    }
   },
+  "superseded_by": [
+   "cff24024635e104959182d2de98186efbc8cd8bf678ea239b1cc5ab24e76ff20"
+  ],
   "uid": "d045e62468c78093879b3018bdf73461194929dacbb2ab565319cfe911925c26"
  },
  "d1c7da072f801890c5b4d17bff8f196b38823ae46102eb308c2c50438edf8b19": {
@@ -2460,6 +2519,31 @@
    }
   },
   "uid": "d621418b9f5a046b12c5dbaadbb6a83fee0b1a013dc84ab1ccc25423eba06605"
+ },
+ "d6b71066f0cef4182e1d522d30c31326ecc2504428f3c8e6b42f5189b410a6f3": {
+  "identity": {
+   "formula": "Equality(Indexed(IndexedBase(Symbol('g')), Symbol('\\\\omega')), Mul(Pow(pi, Integer(-1)), Integral(Mul(cos(Mul(Symbol('\\\\omega'), Symbol('\\\\tau', positive=True))), Indexed(IndexedBase(Symbol('Cv')), Symbol('\\\\tau', positive=True))), Tuple(Symbol('\\\\tau', positive=True), Integer(0), oo))))",
+   "inputs": [
+    "f8b092359048e5130d56697ca9504bb4740b875aca685a8f760316bfb5e9a661"
+   ],
+   "output": "e14b6cdd007ca3af971aa52880811138606efdb47e30d5a26c2335903ce796f3",
+   "outputs": [
+    "e14b6cdd007ca3af971aa52880811138606efdb47e30d5a26c2335903ce796f3"
+   ],
+   "schemes": {
+    "dos_broadening": "gaussian"
+   }
+  },
+  "meta": {
+   "description": "Classical-MD route to the phonon DOS via the Wiener-Khinchin theorem: g(\u03c9) = (1/\u03c0) \u222b\u2080^\u221e Cv(\u03c4) cos(\u03c9\u03c4) d\u03c4. Pattern-C alternative producer of PhononDOS alongside the harmonic-tier compute_dos edge; both target the same PhononDOS state, but the MD route is anharmonic-inclusive (broadened by lifetime effects) while compute_dos is the harmonic \u03b4-sum.",
+   "formula_latex": "{g}_{\\omega} = \\frac{\\int\\limits_{0}^{\\infty} \\cos{\\left(\\omega \\tau \\right)} {Cv}_{\\tau}\\, d\\tau}{\\pi}",
+   "formula_srepr": "Equality(Indexed(IndexedBase(Symbol('g')), Symbol('\\\\omega')), Mul(Pow(pi, Integer(-1)), Integral(Mul(cos(Mul(Symbol('\\\\omega'), Symbol('\\\\tau', positive=True))), Indexed(IndexedBase(Symbol('Cv')), Symbol('\\\\tau', positive=True))), Tuple(Symbol('\\\\tau', positive=True), Integer(0), oo))))",
+   "name": "fourier_to_dos",
+   "schemes": {
+    "dos_broadening": "gaussian"
+   }
+  },
+  "uid": "d6b71066f0cef4182e1d522d30c31326ecc2504428f3c8e6b42f5189b410a6f3"
  },
  "de67212047d6c2bb08a94d9394adffe1b1cc183b7a1811d838de2dcfb9323235": {
   "identity": {
