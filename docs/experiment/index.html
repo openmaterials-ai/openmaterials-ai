@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Experiments | OpenMaterials</title>
+<title>Values by source | OpenMaterials</title>
 <meta name="description" content="Committed values are grouped by source reference, with one page and a shareable URL for each.">
 <link rel="canonical" href="https://openmaterials.ai/experiment/">
 <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
@@ -12,7 +12,7 @@
 <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="openmaterials.ai">
-<meta property="og:title" content="Experiments | OpenMaterials">
+<meta property="og:title" content="Values by source | OpenMaterials">
 <meta property="og:description" content="Committed values are grouped by source reference, with one page and a shareable URL for each.">
 <meta property="og:url" content="https://openmaterials.ai/experiment/">
 <meta property="og:image" content="https://openmaterials.ai/assets/og.png">
@@ -23,11 +23,14 @@
 <link rel="preload" href="../assets/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../assets/fonts/GeistMono-Variable.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="../assets/site.css">
+<link rel="stylesheet" href="../assets/vendor/katex/dist/katex.min.css">
 <style>
   .page-head h1.ref { font-family: var(--font-mono); letter-spacing: 0; overflow-wrap: anywhere; }
+  .page-head h1.cite { font-size: 24px; line-height: 32px; letter-spacing: -0.02em; }
   .page-head .cta-row { align-items: center; }
   .meta { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
-  .xp-list dt { font: 400 14px/24px var(--font-mono); overflow-wrap: anywhere; }
+  .xp-list > div { grid-template-columns: minmax(0, 1fr); row-gap: 4px; }
+  .xp-list dt { font: 400 16px/24px var(--font-sans); overflow-wrap: anywhere; }
   .xp-list dt a { color: var(--ink); }
   .xp-list dd { font-size: 14px; color: var(--ink-2); }
   td.var .sym, td.val { font-family: var(--font-mono); }
@@ -47,13 +50,14 @@
 <main class="frame" id="main">
   <header class="page-head" id="xp-head">
     <p class="eyebrow">Evidence</p>
-    <h1>Experiments</h1>
-    <p class="lede">Committed values are grouped by source reference, with one page for each. Each page's URL carries the reference, and the page shows the map version it renders.</p>
+    <h1>Values by source</h1>
+    <p class="lede">One page per paper or run, with its values, their conditions, and their provenance.</p>
   </header>
   <div class="page-body"><div class="prose" id="xp-body">
     <noscript><p class="empty">This page needs JavaScript. The records are plain JSON in <a href="../data/instances.json">../data/instances.json</a>.</p></noscript>
   </div></div>
 </main>
+<script src="../assets/vendor/katex/dist/katex.min.js"></script>
 <script>
 'use strict';
 function esc(s){
@@ -62,74 +66,40 @@ function esc(s){
     .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
 
-/* ---- "Run on MaterialsCodeGraph" deep link (#25) --------------------------
-   OPTIONAL, additive, storage-free: for a card whose node MCG can actually run,
-   one more action-row link deep-links MCG's compute wizard at #/new/<node_id>
-   (materialscodegraph#65), prefilled from the lineage. Hidden otherwise: precision
-   over reach, only genuinely runnable nodes get the link, and the card is
-   identical without it. Nothing here touches the store, a record, or identity. */
-var MCG_BASE = 'https://app.materialscodegraph.com';   // one place to change
-
-// The known-computable set: base map nodes MCG has a wired engine for right now.
-// Static by choice (the plan's Q3, YAGNI: no soft capability fetch, no network).
-// MCG's runnable kinds today are its thermal-transport verticals (device_thermal,
-// full_stack, composite_kappa), whose headline output is thermal conductivity, so
-// this is deliberately the ThermalConductivity family and nothing it cannot boot a
-// pod for. It is expected to GROW as MCG wires more kinds; extend this list then.
-var MCG_COMPUTABLE = { 'ThermalConductivity': 1 };
-
-// A variable/node id may carry a bracket qualifier (an estimator/method pin,
-// e.g. ThermalConductivity[bte_solver=direct_inverse]); the runnable KIND is the
-// base node, so computability keys on the base.
-function baseNode(id){ return String(id == null ? '' : id).replace(/\[.*$/, ''); }
-function isComputable(id){ return !!MCG_COMPUTABLE[baseNode(id)]; }
-
-// The material's configuration uid, when a record's material pins one (a pinned
-// atomic configuration): a bare-string material.configuration, or a {uid} /
-// {configuration:{uid}} / {canonical:{uid}} object form. Returns '' otherwise.
-// Kept verbatim (a "sha256:" prefix is passed through; MCG strips it server-side).
-// Mirrors the play page's helper so the two Run links carry the same pin.
-function materialConfigUid(material){
-  if (!material || typeof material !== 'object') return '';
-  var u = (typeof material.configuration === 'string' ? material.configuration : null) ||
-    material.uid || material.config_uid || material.configuration_uid ||
-    (material.configuration && typeof material.configuration === 'object' && material.configuration.uid) ||
-    (material.canonical && typeof material.canonical === 'object' && material.canonical.uid);
-  return u ? String(u) : '';
+// MaterialsCodeGraph runs thermal conductivity today, so a source with a simulated value of it
+// gets the link. It opens the connect page: the app itself ends on a sign-in.
+var MCG_CONNECT = 'https://materialscodegraph.com/?ref=omai-experiment#connect';
+function runnable(recs){
+  return recs.some(function(r){
+    return r.source && r.source.kind === 'simulation' && /^ThermalConductivity(\[|$)/.test(r.variable);
+  });
 }
-
-// The runnable node id for a group of records: the first record whose base node
-// MCG can run (there may be several variables under one source ref). Returns the
-// record so the caller can prefill material/conditions from it, or null when the
-// group has nothing MCG can run (the link then does not render).
-function computableRec(recs){
-  for (var i = 0; i < recs.length; i++) { if (isComputable(recs[i].variable)) return recs[i]; }
-  return null;
+// A paper record's detail reads "<quote> (p. N). <citation>, doi:..., arXiv:..."; a measurement's
+// may open with its citation ("Glassbrenner and Slack, Phys. Rev. 134, A1058 (1964); ...").
+// Bracketed curator notes never render.
+function parts(detail){
+  var d = String(detail == null ? '' : detail).replace(/\s+/g, ' ').replace(/ ?\[[A-Z]{2,}[^\]]*\]/g, '').trim();
+  var m = /^(.*\([^()]*\bp\. ?\d+[^()]*\))\.? (.+)$/.exec(d);
+  if (m) return { quote: m[1], cite: m[2].replace(/,? (?:doi|arXiv):.*$/, '').replace(/\.$/, '') };
+  m = /^([^;()]*\(\d{4}\))(?:; (.*))?$/.exec(d);
+  if (m) return { quote: m[2] || '', cite: m[1] };
+  return { quote: d, cite: '' };
 }
-
-// The MCG compute deep link for a runnable record: #/new/<node_id>, with the
-// base node id (the runnable kind), plus material and conditions passed as query
-// params when trivially in scope so the wizard can prefill. Q1 (the canonical
-// card URL) is the owner's open call; where a back-link to this openmaterials
-// card is wanted, the PORTABLE #x= form is the self-contained shareable identity,
-// so a back-link would carry the lineage in the fragment rather than invent a
-// server route. It is left off the deep link here (the reciprocal seam (c) ships
-// MCG-side and Q1 is undecided); the const and the base node keep it a one-line
-// add if the owner decides to include it.
-function mcgRunUrl(rec){
-  var url = MCG_BASE + '/#/new/' + encodeURIComponent(baseNode(rec.variable));
-  var qs = [];
-  var mat = rec.material;
-  if (mat != null && mat !== '') {
-    qs.push('material=' + encodeURIComponent(typeof mat === 'object' && mat.name != null ? mat.name : mat));
-  }
-  if (rec.conditions && typeof rec.conditions === 'object') {
-    var c = condText(rec.conditions);
-    if (c) qs.push('conditions=' + encodeURIComponent(c));
-  }
-  var cfgUid = materialConfigUid(rec.material);
-  if (cfgUid) qs.push('configuration=' + encodeURIComponent(cfgUid));
-  return qs.length ? url + '?' + qs.join('&') : url;
+// A source is titled by its citation: the shortest one its records carry (a curator note that
+// precedes a citation makes that record's longer). A source without one keeps its ref.
+function titleOf(recs){
+  var best = '';
+  recs.forEach(function(r){
+    var c = parts(r.source && r.source.detail).cite;
+    if (c && (!best || c.length < best.length)) best = c;
+  });
+  return best;
+}
+// Refs that differ only in a numbered suffix (ethanol-bond0 to -bond7) are one source.
+function family(ref){ return String(ref).replace(/-[a-z]+\d+$/i, ''); }
+function tex(s){
+  if (!s) return '';
+  try { return katex.renderToString(String(s), { throwOnError: false }); } catch (e) { return esc(s); }
 }
 function condText(c){
   if (!c || typeof c !== 'object') return '';
@@ -165,25 +135,28 @@ function load(){
     fetch('../data/instances.json').then(function(r){ return r.json(); }),
     fetch('../data/catalog.json').then(function(r){ return r.json(); }),
     fetch('../data/version.json').then(function(r){ return r.json(); })
-  ]).then(function(parts){
-    var records = parts[0], catalog = {}, version = parts[2];
-    parts[1].forEach(function(n){ catalog[n.id] = n; });
-    var groups = {};
+  ]).then(function(res){
+    var records = res[0], catalog = {}, version = res[2];
+    res[1].forEach(function(n){ catalog[n.id] = n; });
+    var byRef = {}, fams = {}, groups = {};
     records.forEach(function(rec){
       var ref = (rec.source && rec.source.ref) || '(unsourced)';
-      (groups[ref] = groups[ref] || []).push(rec);
+      (byRef[ref] = byRef[ref] || []).push(rec);
+    });
+    Object.keys(byRef).forEach(function(ref){ (fams[family(ref)] = fams[family(ref)] || []).push(ref); });
+    Object.keys(fams).forEach(function(f){
+      var refs = fams[f];
+      if (refs.length === 1) groups[refs[0]] = byRef[refs[0]];
+      else groups[f] = [].concat.apply([], refs.map(function(r){ return byRef[r]; }));
     });
     DATA = { records: records, groups: groups, catalog: catalog, version: version };
   });
 }
 
 function pinHtml(){
-  var v = (DATA.version && DATA.version.version) || '';
-  return '<p class="notice pin">Map version <span class="mono">' + esc(v.slice(0, 12)) + '</span>' +
-    (v ? ' (<span class="mono">' + esc(v) + '</span>)' : '') +
-    '. This page shows the values committed in the current site build. Cite the map version with any value you reuse.' +
-    '<br>Contributors grant OpenMaterials-AI a non-exclusive license to redistribute each record under CC BY 4.0 and keep every other right. Raw artifacts are never ingested, and reuse credits the source named in the record\'s provenance ' +
-    '(<a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/main/GOVERNANCE.md#data-ownership-and-fairness">GOVERNANCE.md, "Data ownership and fairness"</a>).</p>';
+  var v = ((DATA.version && DATA.version.version) || '').slice(0, 12);
+  return v ? '<p class="notice pin"><a href="../#cite">Cite the map version</a>, <span class="mono">' + esc(v) +
+    '</span>, with any value you reuse.</p>' : '';
 }
 // The index head is the static one in the HTML; a detail view swaps in its own head.
 var INDEX_HEAD = document.getElementById('xp-head').innerHTML;
@@ -193,7 +166,7 @@ function page(head, body){
 }
 
 function renderIndex(material){
-  document.title = 'Experiments | OpenMaterials';
+  document.title = 'Values by source | OpenMaterials';
   var refs = Object.keys(DATA.groups).sort(function(a, b){
     return DATA.groups[b].length - DATA.groups[a].length || a.localeCompare(b);
   });
@@ -210,7 +183,7 @@ function renderIndex(material){
     var mats = uniq(recs.map(function(r){ return r.material; }));
     var kinds = uniq(recs.map(function(r){ return r.source && r.source.kind; }));
     var vars = uniq(recs.map(function(r){ return r.variable; }));
-    return '<div class="xp-row"><dt><a class="ref" href="#ref=' + encodeURIComponent(ref) + '">' + esc(ref) + '</a></dt>' +
+    return '<div class="xp-row"><dt><a class="ref" href="#ref=' + encodeURIComponent(ref) + '">' + esc(titleOf(recs) || ref) + '</a></dt>' +
       '<dd>' + recs.length + (recs.length === 1 ? ' value' : ' values') + ' · ' + esc(kinds.join(', ')) + ' · ' +
         esc(mats.join(', ')) + ' · ' + vars.length +
         (vars.length === 1 ? ' quantity' : ' quantities') + '</dd></div>';
@@ -219,20 +192,23 @@ function renderIndex(material){
     (material ? '<div class="meta"><span class="pill">Material ' + esc(material) +
       '</span><a class="pill" href="#">Clear filter</a></div>' : '') +
     (rows ? '<dl class="ledger xp-list">' + rows + '</dl>' :
-      '<p class="empty">No experiment in this site build matches that material.</p>'));
+      '<p class="empty">No source matches that material.</p>'));
 }
 
 function renderDetail(ref){
-  var recs = DATA.groups[ref];
-  document.title = 'Experiment ' + ref + ' | OpenMaterials';
+  // an older link may name one member of a numbered family
+  var key = DATA.groups[ref] ? ref : family(ref), recs = DATA.groups[key];
   if (!recs){
+    document.title = 'Unknown source | OpenMaterials';
     page(
-      '<p class="crumb"><a href="#">All experiments</a></p>' +
-      '<h1>Unknown experiment</h1>' +
-      '<p class="lede">No committed value in this site build carries the reference <span class="mono">' +
-      esc(ref) + '</span>. It may belong to a newer build, or the reference may be mistyped.</p>', '');
+      '<p class="crumb"><a href="#">All sources</a></p>' +
+      '<h1>Unknown source</h1>' +
+      '<p class="lede">No committed value carries the reference <span class="mono">' +
+      esc(ref) + '</span>. Check it for a typo.</p>', '');
     return;
   }
+  var title = titleOf(recs);
+  document.title = (title || key) + ' | OpenMaterials';
   var mats = uniq(recs.map(function(r){ return r.material; }));
   var kinds = uniq(recs.map(function(r){ return r.source && r.source.kind; }));
   var sorted = recs.slice().sort(function(a, b){
@@ -241,7 +217,7 @@ function renderDetail(ref){
   var rows = sorted.map(function(rec){
     var node = DATA.catalog[rec.variable.replace(/\[.*$/, '')] || DATA.catalog[rec.variable] || {};
     return '<tr>' +
-      '<td class="var" data-label="Quantity"><span class="sym">' + esc(node.symbol || '') + '</span>' +
+      '<td class="var" data-label="Quantity"><span class="sym">' + tex(node.symbol) + '</span>' +
       '<a class="vid" href="../map/#node=' + encodeURIComponent(rec.variable) +
       '" title="Open this quantity on the map">' + esc(rec.variable) + '</a></td>' +
       '<td class="mat" data-label="Material">' + esc(rec.material) + '</td>' +
@@ -249,7 +225,8 @@ function renderDetail(ref){
       '<td class="val" data-label="Value">' + valText(rec) + '</td>' +
       '</tr>';
   }).join('');
-  var quotes = uniq(sorted.map(function(r){ return r.source && r.source.detail; }))
+  // with the citation in the title, each record shows only its quoted passage
+  var quotes = uniq(sorted.map(function(r){ return parts(r.source && r.source.detail).quote || null; }))
     .map(function(d){ return '<blockquote class="quote">' + esc(d) + '</blockquote>'; }).join('');
   var facts =
     '<dl class="ledger">' +
@@ -258,18 +235,14 @@ function renderDetail(ref){
     '<div><dt>Materials</dt><dd>' + mats.map(function(m){
       return '<a href="#material=' + encodeURIComponent(m) + '">' + esc(m) + '</a>'; }).join(', ') + '</dd></div>' +
     '</dl>';
-  // Optional "Run on MaterialsCodeGraph" link (#25): shown only when this
-  // group has a node MCG can actually run, deep-linking its compute wizard
-  // prefilled from that record. Absent otherwise (the card is identical).
-  var runRec = computableRec(recs);
-  var runBtn = runRec ? '<a class="btn btn--secondary btn--sm" href="' + esc(mcgRunUrl(runRec)) +
-    '" target="_blank" rel="noopener">Run on MaterialsCodeGraph</a>' : '';
+  var runBtn = runnable(recs) ? '<a class="btn btn--secondary btn--sm" href="' + MCG_CONNECT + '">Run it for your material</a>' : '';
+  var mapRef = (recs[0].source && recs[0].source.ref) || key;   // the map marks one ref's quantities
   page(
-    '<p class="crumb"><a href="#">All experiments</a></p>' +
-    '<p class="eyebrow">Experiment</p>' +
-    '<h1 class="ref">' + esc(ref) + '</h1>' +
+    '<p class="crumb"><a href="#">All sources</a></p>' +
+    '<p class="eyebrow">Source</p>' +
+    '<h1 class="' + (title ? 'cite' : 'ref') + '">' + esc(title || key) + '</h1>' +
     '<div class="cta-row"><button class="btn btn--primary btn--sm" id="copy" type="button">Copy link</button>' +
-    '<a class="btn btn--secondary btn--sm" href="../map/#experiment=' + encodeURIComponent(ref) + '">View on the map</a>' +
+    '<a class="btn btn--secondary btn--sm" href="../map/#experiment=' + encodeURIComponent(mapRef) + '">View on the map</a>' +
     runBtn +
     '<span class="copied small" id="copied" aria-live="polite"></span></div>',
     facts +
@@ -277,7 +250,7 @@ function renderDetail(ref){
     '<div class="table-wrap"><table class="table stack"><thead><tr>' +
     '<th>Quantity</th><th>Material</th><th>Conditions</th><th>Value</th>' +
     '</tr></thead><tbody>' + rows + '</tbody></table></div>' +
-    '<h2>Provenance</h2>' + quotes);
+    (quotes ? '<h2>Provenance</h2>' + quotes : ''));
   document.getElementById('copy').addEventListener('click', function(){
     var url = location.href;
     var done = function(){

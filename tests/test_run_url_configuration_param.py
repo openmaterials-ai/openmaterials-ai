@@ -4,12 +4,12 @@ MCG (app.materialscodegraph.com) accepts a ``configuration=<uid>`` query param o
 its ``#/new/<node>`` deep link: it resolves the uid against this repo's public
 configurations bundle, shows the pinned cell on the define form, and the launched
 experiment computes with that exact cell. So when a lineage record pins an atomic
-configuration, both Run-URL builders must append ``configuration=<uid>``; when it
+configuration, the playground's Run-URL builder must append ``configuration=<uid>``; when it
 does not, the URL must be byte-identical to before (no stray param). The uid is
 kept verbatim (a ``sha256:`` prefix is passed through; MCG strips it server-side),
 and an unresolvable uid degrades gracefully MCG-side (it simply falls back).
 
-This pins the builders on BOTH pages by extracting ``mcgRunUrl`` and its helper
+This pins the builder by extracting ``mcgRunUrl`` and its helper
 dependencies from the shipped HTML and running them under Node against crafted
 records: a pin produces the param, no pin produces no param, and a
 ``sha256:``-prefixed pin passes through verbatim. Skipped cleanly when Node is
@@ -26,7 +26,6 @@ import pytest
 
 _REPO = Path(__file__).resolve().parents[1]
 _PLAY = _REPO / "docs" / "play" / "index.html"
-_EXPERIMENT = _REPO / "docs" / "experiment" / "index.html"
 
 
 def _grab_function(html: str, name: str) -> str:
@@ -42,7 +41,7 @@ def _grab_function(html: str, name: str) -> str:
     return html[m.start():i]
 
 
-# The MCG base, declared once per page as `var MCG_BASE = '...';`. Grabbed so the
+# The MCG base, declared once as `var MCG_BASE = '...';`. Grabbed so the
 # extracted builder resolves it standalone under Node.
 def _grab_mcg_base(html: str) -> str:
     m = re.search(r"var MCG_BASE\s*=\s*'[^']*'\s*;", html)
@@ -50,9 +49,8 @@ def _grab_mcg_base(html: str) -> str:
     return m.group(0)
 
 
-# Each page's mcgRunUrl plus the top-level helpers it calls, in dependency order.
+# mcgRunUrl plus the top-level helpers it calls, in dependency order.
 _PLAY_HELPERS = ("baseNode", "materialName", "materialConfigUid", "mcgRunUrl")
-_EXPERIMENT_HELPERS = ("baseNode", "condText", "materialConfigUid", "mcgRunUrl")
 
 
 def _run_builder(page: Path, helpers, call: str) -> str:
@@ -70,13 +68,12 @@ def _run_builder(page: Path, helpers, call: str) -> str:
 
 
 # --------------------------------------------------------------------------
-# Static wiring: both builders append the param. Guards the feature even where
+# Static wiring: the builder appends the param. Guards the feature even where
 # Node is unavailable, and documents the exact query key MCG reads.
 # --------------------------------------------------------------------------
 
-@pytest.mark.parametrize("page", [_PLAY, _EXPERIMENT], ids=["play", "experiment"])
-def test_run_url_builder_appends_the_configuration_param(page):
-    body = _grab_function(page.read_text(), "mcgRunUrl")
+def test_run_url_builder_appends_the_configuration_param():
+    body = _grab_function(_PLAY.read_text(), "mcgRunUrl")
     assert "materialConfigUid(" in body, "the builder does not read the configuration pin"
     assert "'configuration=' + encodeURIComponent(" in body, (
         "the builder does not append configuration=<uid>"
@@ -84,12 +81,10 @@ def test_run_url_builder_appends_the_configuration_param(page):
 
 
 # --------------------------------------------------------------------------
-# Behavior, page by page, under Node against the shipped builder.
+# Behavior under Node against the shipped builder.
 # --------------------------------------------------------------------------
 
-# A lineage whose material carries a pin. mcgRunUrl reads lineage.material, so both
-# pages take the same shape here; the property key differs (node vs variable) but
-# neither affects the configuration param under test.
+# A lineage whose material carries a pin; mcgRunUrl reads lineage.material.
 _UID = "a" * 64
 
 
@@ -117,29 +112,4 @@ def test_play_sha256_pin_passes_through_verbatim():
         "mcgRunUrl({node:'ThermalConductivity', material:{configuration:'sha256:%s'}})" % _UID,
     )
     # verbatim: the sha256: prefix survives (URL-encoded, ':' -> %3A); MCG strips it
-    assert ("configuration=sha256%3A" + _UID) in url, url
-
-
-def test_experiment_pin_produces_configuration_param():
-    url = _run_builder(
-        _EXPERIMENT, _EXPERIMENT_HELPERS,
-        "mcgRunUrl({variable:'ThermalConductivity', material:{name:'Si', configuration:'%s'}})" % _UID,
-    )
-    assert ("configuration=" + _UID) in url, url
-
-
-def test_experiment_no_pin_has_no_configuration_param():
-    url = _run_builder(
-        _EXPERIMENT, _EXPERIMENT_HELPERS,
-        "mcgRunUrl({variable:'ThermalConductivity', material:'Si'})",
-    )
-    assert "configuration=" not in url, url
-    assert url == "https://app.materialscodegraph.com/#/new/ThermalConductivity?material=Si", url
-
-
-def test_experiment_sha256_pin_passes_through_verbatim():
-    url = _run_builder(
-        _EXPERIMENT, _EXPERIMENT_HELPERS,
-        "mcgRunUrl({variable:'ThermalConductivity', material:{configuration:'sha256:%s'}})" % _UID,
-    )
     assert ("configuration=sha256%3A" + _UID) in url, url
