@@ -69,7 +69,7 @@
         <div><dt>Conditions</dt><dd class="mono">T = 300, statistics = quantum, method = direct inversion of scattering matrix, q-grid = 19x19x19, potential = DFPT LDA</dd></div>
         <div><dt>Source</dt><dd class="mono">simulation, paper:kaldo-2020-barbalinardo</dd></div>
         <div><dt>Id</dt><dd class="mono">f735a05c14db39676b46e7f1100c55152afb7bf49cea79c9e1f61b8de075c619</dd></div>
-        <div><dt>Measured</dt><dd class="mono" data-instance="55ee996282a678f8e01cff39eb1973ca18f17440f6aa80662cff5dd6c32ebe1b"><a href="play/#id=55ee996282a678f8e01cff39eb1973ca18f17440f6aa80662cff5dd6c32ebe1b">156 W/(m K)</a>, measurement, glassbrenner-slack-1964</dd></div>
+        <div><dt>Measured</dt><dd class="mono" data-instance="55ee996282a678f8e01cff39eb1973ca18f17440f6aa80662cff5dd6c32ebe1b"><a href="play/#id=55ee996282a678f8e01cff39eb1973ca18f17440f6aa80662cff5dd6c32ebe1b">156 W/(m K)</a>, glassbrenner-slack-1964</dd></div>
       </dl>
       <div class="cta-row">
         <a class="btn btn--secondary btn--sm" href="play/#id=f735a05c14db39676b46e7f1100c55152afb7bf49cea79c9e1f61b8de075c619">Open the datasheet</a>
@@ -96,7 +96,7 @@
       </article>
       <article class="card">
         <h3>Playground</h3>
-        <p>Open a lineage record, resolve a method name to map nodes, trace a path between two quantities, or compare two materials by composition.</p>
+        <p>Open a lineage record, resolve a method name to map nodes, or compare two materials by composition.</p>
         <a class="btn btn--secondary btn--sm" href="play/">Open the playground</a>
       </article>
       <article class="card">
@@ -109,10 +109,10 @@
       <div>
         <h3>Evidence</h3>
         <dl class="ledger">
-          <div><dt><a href="experiment/">Experiments</a></dt><dd>Committed values are grouped by source, with one page for each source reference.</dd></div>
+          <div><dt><a href="experiment/">Experiments</a></dt><dd>Committed values are grouped by source reference, with one page for each.</dd></div>
           <div><dt><a href="agreement/">Cross-code agreement</a></dt><dd>The agreement page groups values for the same observable, material, and recorded conditions from different methods or codes and reports each group's spread.</dd></div>
           <div><dt><a href="lineage/">Lineage tour</a></dt><dd>The tour follows one QHGK thermal conductivity result for amorphous silicon from its derivation on the map to its lineage record and share links.</dd></div>
-          <div><dt><a href="lean/">Verified layer</a></dt><dd>Lean 4 declares the dimensions of <span data-bind="lean-nodes">89</span> nodes and proves <span data-bind="lean-edges">12</span> edge dimension statements against physlib and <span data-bind="lean-idents">13</span> operator identities against Mathlib.</dd></div>
+          <div><dt><a href="lean/">Verified layer</a></dt><dd>In Lean 4, the map declares the dimensions of <span data-bind="lean-nodes">89</span> nodes and proves <span data-bind="lean-edges">12</span> edge dimension statements against physlib and <span data-bind="lean-idents">13</span> operator identities against Mathlib.</dd></div>
           <div><dt><a href="lean/roadmap/">Formalization roadmap</a></dt><dd>The roadmap rates every operator on the map by what a Lean proof of its formula would take: provable, trivial, needs analysis, or nothing to prove.</dd></div>
         </dl>
       </div>
@@ -122,7 +122,7 @@
           <div><dt><a href="guide/">Guide</a></dt><dd>Install the omai kernel, resolve a label, load the graph, and parse a paper. CI runs each Python snippet in the guide.</dd></div>
           <div><dt><a href="document/">Document</a></dt><dd>The full specification is published in HTML and PDF, generated from <code>docs/openmaterials.tex</code>.</dd></div>
           <div><dt><a href="codes/">Codes</a></dt><dd>The bibliography lists the <span data-bind="codes">31</span> codes and workflows the map cites, each with its interface, a citation, a DOI where one exists, and its license.</dd></div>
-          <div><dt><a href="guide/#data">Data files</a></dt><dd>The guide's data contract lists the main JSON files under <code>docs/data</code> with their shapes.</dd></div>
+          <div><dt><a href="guide/#data">Data files</a></dt><dd>The guide's data contract lists the main JSON files under <code>/data/</code> with their shapes.</dd></div>
           <div><dt><a href="llms.txt">llms.txt</a></dt><dd>llms.txt indexes the data files and pages for language models.</dd></div>
         </dl>
       </div>
@@ -132,7 +132,6 @@
   <section class="featured" id="map">
     <div class="section-head">
       <h2>Structure</h2>
-      <p class="lede">The OpenMaterials map lays out every quantity by tier. Select one to see its formula, the edges that produce it, and the codes that compute it.</p>
     </div>
     <div class="split">
       <div class="facts">
@@ -145,7 +144,7 @@
           <div><dt>Lean export</dt><dd><span id="s-lean">89 node dimensions, 12 edge theorems, 13 identities</span><a class="src" href="data/lean.json">lean.json</a></dd></div>
           <div><dt>Values</dt><dd><span id="s-values">91</span> (<span id="s-sim">87</span> from simulations, <span id="s-meas">4</span> from measurements)<a class="src" href="data/instances.json">instances.json</a></dd></div>
         </dl>
-        <p>Each quantity is a typed node. An observable carries no gauge freedom, so codes given the same inputs should agree on it. A hidden quantity depends on a gauge choice, such as an eigenvector phase or the basis inside a degenerate subspace; it is an intermediate, such as the eigenvectors, or an approximation, such as the RTA thermal conductivity, and codes can differ on it. An operator computes a quantity from its inputs: formula links carry its symbolic formula, and parameter links supply inputs such as the cell volume. The nodes are grouped into tiers, such as Sources, Harmonic, Transport, Ground state, and Thermochemistry.</p>
+        <p>Each quantity is a typed node. An observable carries no gauge freedom, so codes given the same inputs should agree on it. A hidden quantity depends on a gauge choice (an eigenvector phase, or the basis inside a degenerate subspace). It is an intermediate, like the eigenvectors, or an approximation, like the RTA thermal conductivity, and codes can differ on it. An operator computes a quantity from its inputs: formula links carry its symbolic formula, and parameter links supply inputs such as the cell volume. The nodes are grouped into tiers, such as Sources, Harmonic, Transport, Ground state, and Thermochemistry.</p>
         <p>A code representation records how one code's outputs map onto these nodes, with units and conventions. Representations exist for kALDo, phono3py, ShengBTE, LAMMPS, GPUMD, Quantum ESPRESSO, VASP, and the other codes on the <a href="codes/">codes page</a>.</p>
       </div>
       <a class="miniature" href="map/" aria-label="Open the map">
@@ -212,7 +211,7 @@
           <li><span class="step-index">02</span><span>Add it under <a href="https://github.com/openmaterials-ai/openmaterials-ai/tree/main/docs/data/instances"><code>docs/data/instances/</code></a> and open a pull request.</span></li>
           <li><span class="step-index">03</span><span>CI checks that the node exists on the map and that the id recomputes from the lineage, and a maintainer reviews the source. The map version stays the same, because a value attaches to the graph without editing it.</span></li>
         </ol>
-        <p class="small">The paper parser on the playground's <a href="play/#tab=learn">Learn tab</a> writes these files from a PDF. The document's <a href="openmaterials.pdf">appendices</a> cover ingesting a code and extending the DAG, including when to add a node and when to add a parameter.</p>
+        <p class="small">The playground's <a href="play/#tab=learn">Learn tab</a> exports the values you accept as JSON; <code>omai.map_data.record_instance</code> writes each one as a file in this shape. The document's <a href="openmaterials.pdf">appendices</a> cover ingesting a code and extending the DAG, including when to add a node and when to add a parameter.</p>
       </div>
       <figure class="code" id="contribute-file">
         <figcaption><a href="data/instances/si-thermalconductivity-bte-solver-rta-kaldo.json">docs/data/instances/si-thermalconductivity-bte-solver-rta-kaldo.json</a></figcaption>
@@ -242,12 +241,12 @@
     </div>
     <div class="grid">
       <dl class="ledger narrow">
-        <div><dt>Decision making</dt><dd>A small set of scientific authors reviews changes behind the gates. As external contributors arrive, GOVERNANCE.md names the next step: a small technical steering group drawn from contributing groups.</dd></div>
+        <div><dt>Decision making</dt><dd>A small set of scientific authors reviews changes behind the gates. GOVERNANCE.md names the next step once external contributors arrive: a technical steering group drawn from contributing groups.</dd></div>
         <div><dt>Map data</dt><dd><a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/main/LICENSE-DATA">CC BY 4.0</a><span class="src">LICENSE-DATA</span></dd></div>
         <div><dt>Code</dt><dd><a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/main/LICENSE">Apache 2.0</a><span class="src">LICENSE</span></dd></div>
         <div><dt>Contributions</dt><dd>Contributors grant OpenMaterials-AI a non-exclusive license to redistribute each record under CC BY 4.0 and keep every other right. There is no copyright assignment and no contributor license agreement.</dd></div>
         <div><dt>Credit</dt><dd>Reuse credits the map version and, through each record's provenance, the original source.</dd></div>
-        <div><dt>Removal</dt><dd>A rights holder who believes a record entered in error opens an issue; the record leaves the current view of the map, and the append-only log records the retraction.</dd></div>
+        <div><dt>Removal</dt><dd>A rights holder who believes a record entered in error <a href="https://github.com/openmaterials-ai/openmaterials-ai/issues">opens an issue</a>; the record leaves the current view of the map, and the append-only log records the retraction.</dd></div>
         <div><dt>Raw artifacts</dt><dd>The map does not ingest them; a record points to them.</dd></div>
         <div><dt>Openness</dt><dd>Anyone can clone the repository, rerun the gates and the test suite, and rebuild the Lean proofs.</dd></div>
         <div><dt>The interfaces</dt><dd>Da Vinci Labs builds the site, the map views, the tracer, the playground, and the codes bibliography.</dd></div>

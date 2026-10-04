@@ -49,7 +49,7 @@ def test_the_datum_card_equals_its_instance():
     meas = by_id[mid]
     assert meas["source"]["kind"] == "measurement"
     assert meas["variable"] == inst["variable"].split("[")[0] and meas["material"] == inst["material"].split(" ")[0]
-    assert rows["Measured"] == f'{meas["value"]:g} {meas["units"]}, measurement, {meas["source"]["ref"]}'
+    assert rows["Measured"] == f'{meas["value"]:g} {meas["units"]}, {meas["source"]["ref"]}'
     assert f'play/#id={inst["id"]}' in card.group(2) and f'play/#id={mid}' in card.group(2)
 
 
