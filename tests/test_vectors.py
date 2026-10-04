@@ -41,12 +41,13 @@ def _load(name: str):
 LINEAGE_VECTORS = _load("lineage_ids.json")
 RECORD_VECTORS = _load("records.json")
 RENDER_VECTORS = _load("render.json")
+CONFIGURATION_VECTORS = _load("configurations.json")
 
 
 # --- 1. the committed files equal a fresh generation ------------------------
 
 @pytest.mark.parametrize("name", ["lineage_ids.json", "records.json",
-                                  "render.json"])
+                                  "render.json", "configurations.json"])
 def test_committed_vectors_equal_a_fresh_generation(name):
     fresh = gen_vectors.generate()[name]
     committed = (VECTORS / name).read_text()
@@ -174,3 +175,17 @@ def test_all_three_pinned_sources_are_represented():
     counts = {s: sum(1 for v in LINEAGE_VECTORS
                      if v["name"].startswith(s + ":")) for s in sources}
     assert counts == {"commons": 4, "mcg": 27, "kaldo": 1}
+
+
+# --- configuration uids (Python only: the canonical JSON needs spglib) ------
+
+@pytest.mark.parametrize("vector", CONFIGURATION_VECTORS,
+                         ids=[v["name"] for v in CONFIGURATION_VECTORS])
+def test_configuration_vector_is_the_committed_record(vector):
+    import hashlib
+
+    record = json.loads((VECTORS.parents[1] / vector["source"]).read_text())
+    assert vector["structure"] == record["structure"]
+    assert vector["canonical_uid"] == record["canonical"]["uid"]
+    digest = hashlib.sha256(vector["canonical_json"].encode("utf-8")).hexdigest()
+    assert digest == vector["canonical_uid"]

@@ -28,6 +28,10 @@ ids, never retyped:
   of ``tests/fixtures/external_solve/kaldo-direct-bte-si.json`` kept beside
   this script so the generator runs from an installed wheel too.
   ``tests/test_vectors.py`` asserts the two copies are identical.
+- ``configurations``: the committed Si configuration record's structure, the
+  canonical JSON its uid hashes, and the uid. Python only: computing the
+  canonical JSON needs spglib, so the generator checks the hash alone and
+  ``tests/test_configurations.py`` recomputes it.
 
 Each input carries the id it was pinned with; the generator RECOMPUTES the id
 and refuses to write when the two disagree. A changed id is a defect in the
@@ -38,6 +42,7 @@ Run: ``python -m omai.tools.gen_vectors``
 
 from __future__ import annotations
 
+import hashlib
 import json
 from pathlib import Path
 
@@ -343,6 +348,23 @@ def build_render() -> list[dict]:
     return out
 
 
+def build_configurations(inputs: dict) -> list[dict]:
+    """Configuration uid vectors: a structure, its canonical JSON, its uid."""
+    out = []
+    for entry in inputs["configurations"]:
+        uid = hashlib.sha256(entry["canonical_json"].encode("utf-8")).hexdigest()
+        if uid != entry["pinned_uid"]:
+            raise SystemExit(
+                f"{entry['name']}: {entry['source_file']} pins "
+                f"{entry['pinned_uid']}, its canonical JSON hashes to {uid}.")
+        out.append({"name": entry["name"],
+                    "source": entry["source_file"],
+                    "structure": entry["structure"],
+                    "canonical_json": entry["canonical_json"],
+                    "canonical_uid": uid})
+    return out
+
+
 def generate() -> dict[str, str]:
     """The vector files as ``{filename: text}``, without writing anything."""
     inputs = json.loads(_INPUTS.read_text())
@@ -350,6 +372,7 @@ def generate() -> dict[str, str]:
         "lineage_ids.json": _dump(build_lineage_ids(inputs)),
         "records.json": _dump(build_records(inputs)),
         "render.json": _dump(build_render()),
+        "configurations.json": _dump(build_configurations(inputs)),
     }
 
 

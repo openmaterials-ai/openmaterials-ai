@@ -545,7 +545,8 @@ def _validate_configuration(lineage, *, config_dir: Path, where: str) -> None:
     """A named configuration uid exists under docs/data/configurations/.
 
     The configuration is optional (a bare material name is legitimate); when
-    the lineage pins one, it must resolve to a committed configuration record.
+    the lineage pins one, it must resolve to a committed configuration record,
+    by its canonical uid or a former uid it keeps under ``canonical.aliases``.
     """
     material = lineage.get("material") or {}
     uid = material.get("configuration") if isinstance(material, dict) else None
@@ -559,7 +560,8 @@ def _validate_configuration(lineage, *, config_dir: Path, where: str) -> None:
                 rec = json.loads(path.read_text())
             except (json.JSONDecodeError, OSError):
                 continue
-            if rec.get("canonical", {}).get("uid") == wanted:
+            canonical = rec.get("canonical", {})
+            if wanted == canonical.get("uid") or wanted in canonical.get("aliases", []):
                 return
     raise LineageError(
         f"{where}: configuration {str(wanted)[:12]} is not a committed "
