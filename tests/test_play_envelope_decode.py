@@ -250,8 +250,8 @@ def test_page_wires_the_id_permalink_resolver():
     assert "function instanceToRecord" in html, "no instance->record normalizer"
     assert "id=([0-9a-fA-F]+)" in html, "the router does not match the #id= fragment"
     assert "renderInstanceById" in html, "the #id= route is not dispatched"
-    assert "instances.json?v=' + Date.now()" in html, \
-        "the resolver does not fetch the projection cache-busted like the map page"
+    assert "fetch('../data/instances.json')" in html, \
+        "the resolver does not fetch the projection the site serves"
     # not-found is an honest empty state, never a fabricated value
     assert "function renderInstanceEmpty" in html, "no empty state for an unresolved id"
     assert "No shared value with this id" in html, "no honest not-found heading"
@@ -340,7 +340,7 @@ def test_prefix_resolves_git_style():
 
 def test_datasheet_shows_the_lineage_badge():
     """Every datasheet carries its visible recognizer (the short
-    id shown like a DOI): committed values show the canonical /l/ short link,
+    id shown like a DOI): committed values show their /i/ value page,
     uncommitted records their honest prefix, bundles their /s/ code."""
     html = _PLAY.read_text()
     assert "function lineageDoiHTML" in html, "no badge builder"
@@ -348,6 +348,7 @@ def test_datasheet_shows_the_lineage_badge():
     assert "function bundleDoiHTML" in html and "bundleDoi" in html, "no bundle short-link badge"
     assert "bundleDoiPlaceholderHTML" in html and "Create a short link" in html, \
         "an unminted bundle must show the create-one affordance, never a blank row"
-    assert "openmaterials.ai/l/" in html, "the canonical short form is not displayed"
+    assert "'openmaterials.ai/i/' + id + '/'" in html, "the value page address is not displayed"
+    assert "openmaterials.ai/l/" not in html, "the /l/ form needs the site Worker; hand out /i/"
     assert "(uncommitted)" in html, "no honest uncommitted state"
     assert "INSTANCE_IDS" in html, "committed test set missing"

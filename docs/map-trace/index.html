@@ -17,7 +17,7 @@
 <meta property="og:url" content="https://openmaterials.ai/map-trace/">
 <meta property="og:image" content="https://openmaterials.ai/assets/og.png">
 <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="The openmaterials.ai mark and wordmark above the line A versioned map of physics, with the licenses: map data CC BY 4.0, code Apache 2.0.">
+<meta property="og:image:alt" content="The openmaterials.ai mark and wordmark above the line &quot;A versioned map of physics.&quot; and the licenses &quot;Map data CC BY 4.0 · Code Apache 2.0&quot;.">
 <meta name="twitter:card" content="summary_large_image">
 <script>try{const t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch{}</script>
 <link rel="preload" href="../assets/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin>
@@ -29,24 +29,10 @@
      panel, path bar and legend floating over it. The tracing classes
      (.up/.down/.dest/.sel) are the behavior; colors are the site.css tokens,
      each var() with the light value as its fallback.
-       up   = measurement amber (what it is built from)
+       up   = ink (what it is built from); amber stays for measurements
        down = observable indigo (what it feeds)
        dest = indigo outline (a terminal observable, at rest)
-       sel  = ink ring */
-  @layer om-fallback {
-    /* Shared components. Unlayered site.css rules win over these once it defines them. */
-    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:40px;padding:0 20px;border:0;border-radius:9999px;font:inherit;font-weight:500;font-size:16px;line-height:24px;text-decoration:none;white-space:nowrap;cursor:pointer;transition:background-color var(--dur,150ms) var(--ease,ease),color var(--dur,150ms) var(--ease,ease);}
-    .btn--sm{height:32px;padding:0 12px;border-radius:var(--radius,6px);font-size:14px;line-height:20px;}
-    .btn--secondary{background:var(--page,#FFFFFF);color:var(--ink,#171717);box-shadow:0 0 0 1px var(--line,#EBEBEB);}
-    .btn--ghost{background:transparent;color:var(--ink,#171717);}
-    .btn--secondary:hover,.btn--ghost:hover{background:var(--surface-2,#F2F2F2);}
-    .view-switch{display:inline-flex;gap:2px;height:32px;padding:2px;border-radius:var(--radius,6px);box-shadow:0 0 0 1px var(--line,#EBEBEB);}
-    .view-switch a{display:inline-flex;align-items:center;padding:0 10px;border-radius:4px;font-weight:500;font-size:14px;line-height:20px;color:var(--ink-2,#4D4D4D);text-decoration:none;}
-    .view-switch a:hover{color:var(--ink,#171717);}
-    .view-switch a[aria-current="page"]{color:var(--ink,#171717);background:var(--surface-2,#F2F2F2);}
-    .notice{padding:12px 16px;border:1px solid var(--line,#EBEBEB);border-radius:var(--radius,6px);background:var(--surface,#FAFAFA);font-size:14px;line-height:20px;color:var(--ink,#171717);}
-    .notice--error{border-color:var(--ink,#171717);}
-  }
+       sel  = solid ink */
   *{box-sizing:border-box;}
   body.app{height:100vh;height:100dvh;margin:0;display:flex;flex-direction:column;overflow:hidden;background:var(--page,#FFFFFF);color:var(--ink,#171717);font:400 14px/20px var(--font-sans,"Geist","Geist Fallback",ui-sans-serif,system-ui,sans-serif);-webkit-font-smoothing:antialiased;}
   :focus-visible{outline:2px solid var(--ink,#171717);outline-offset:2px;}
@@ -54,20 +40,19 @@
   .toolbar{flex:none;display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:8px var(--inset,16px);border-bottom:1px solid var(--line,#EBEBEB);background:var(--page,#FFFFFF);}
   .toolbar .om-search{flex:1 1 200px;max-width:360px;min-width:0;}
   .toolbar .push{margin-left:auto;}
-  .hint{display:flex;gap:12px;align-items:center;color:var(--ink-2,#4D4D4D);white-space:nowrap;}
-  kbd{font:400 12px/16px var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);padding:1px 4px;border-radius:4px;box-shadow:0 0 0 1px var(--line,#EBEBEB);color:var(--ink,#171717);}
-  @media (max-width:960px){.toolbar .om-search{flex:1 1 100%;max-width:none;} .hint{display:none;}}
+  @media (max-width:960px){.toolbar .om-search{flex:1 1 100%;max-width:none;}}
   @media (max-width:600px){#copylink{display:none;}}
   /* canvas */
   .canvas{position:relative;flex:1 1 auto;min-height:0;overflow:hidden;background:var(--canvas-dots,radial-gradient(circle at 1px 1px,var(--line,#EBEBEB) 1px,transparent 0) 0 0/24px 24px),var(--page,#FFFFFF);}
   #svg{width:100%;height:100%;display:block;cursor:grab;touch-action:none;} #svg.drag{cursor:grabbing;}
-  /* edges: 1px base; lit upstream amber, downstream indigo; the rest fade while a trace is lit */
+  /* edges: 1px base; lit upstream ink, downstream indigo; the rest fade while a trace is lit */
   .edge{fill:none;stroke:var(--edge,#8F8F8F);stroke-width:1;vector-effect:non-scaling-stroke;stroke-linecap:round;transition:stroke var(--dur,150ms) var(--ease,ease),opacity var(--dur,150ms) var(--ease,ease);}
-  .edge.up{stroke:var(--data-meas,#99610E);stroke-width:2;}
+  .edge.up{stroke:var(--ink,#171717);stroke-width:2;}
   .edge.down{stroke:var(--data-obs-line,#4F46E5);stroke-width:2;}
   #vp.lit .edge:not(.up):not(.down){opacity:.15;}
   /* nodes */
   .node{cursor:pointer;}
+  .node:focus{outline:none;} .node:focus-visible{outline:2px solid var(--ink,#171717);outline-offset:2px;}
   .node rect{fill:var(--surface-2,#F2F2F2);stroke:var(--edge,#8F8F8F);stroke-width:1;vector-effect:non-scaling-stroke;transition:fill var(--dur,150ms) var(--ease,ease),stroke var(--dur,150ms) var(--ease,ease);}
   /* Symbols live in an HTML overlay synced to the viewBox (foreignObject
      mis-positions under viewBox transforms in WebKit). */
@@ -75,10 +60,11 @@
   #labelsInner{position:absolute;left:0;top:0;transform-origin:0 0;will-change:transform;}
   .nlab{position:absolute;display:flex;align-items:center;justify-content:center;font-size:18px;line-height:1;color:var(--ink,#171717);pointer-events:none;}
   .node.dest rect{fill:var(--page,#FFFFFF);stroke:var(--data-obs-line,#4F46E5);stroke-width:2;} .nlab.dest{color:var(--data-obs-line,#4F46E5);}
-  .node.up rect{fill:var(--page,#FFFFFF);stroke:var(--data-meas,#99610E);stroke-width:2;} .nlab.up{color:var(--data-meas,#99610E);}
+  .node.up rect{fill:var(--page,#FFFFFF);stroke:var(--ink,#171717);stroke-width:2;} .nlab.up{color:var(--ink,#171717);}
   .node.down rect{fill:var(--data-obs,#4F46E5);stroke:var(--data-obs,#4F46E5);stroke-width:2;} .nlab.down{color:#FFFFFF;}
-  .node.sel rect{fill:var(--page,#FFFFFF);stroke:var(--ink,#171717);stroke-width:3;} .nlab.sel{color:var(--ink,#171717);}
-  .node.dim rect{opacity:.4;} .nlab.dim{opacity:.4;}
+  .node.sel rect{fill:var(--ink,#171717);stroke:var(--ink,#171717);stroke-width:3;} .nlab.sel{color:var(--page,#FFFFFF);}   /* the traced node, solid ink */
+  /* dimmed: a lighter fill and ink-2 labels, never low opacity, so labels keep their contrast */
+  .node.dim rect{fill:var(--surface,#FAFAFA);stroke:var(--line,#EBEBEB);stroke-width:1;} .nlab.dim{color:var(--ink-2,#4D4D4D);}
   #measure{position:absolute;left:-9999px;top:-9999px;font-size:18px;visibility:hidden;}
   /* the derivation panel floats top right; below 961 px it is a bottom sheet */
   .om-panel{position:absolute;top:16px;right:16px;z-index:5;width:360px;max-width:calc(100% - 32px);max-height:calc(100% - 32px);overflow:auto;padding:20px;border:0;border-radius:12px;background:var(--page,#FFFFFF);box-shadow:var(--shadow-float,0 0 0 1px #EBEBEB,0 4px 8px -4px rgb(0 0 0 / .04),0 16px 24px -8px rgb(0 0 0 / .06));display:none;}
@@ -90,7 +76,7 @@
   .om-panel .name{font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);color:var(--ink-2,#4D4D4D);font-size:13px;margin:8px 0 4px;overflow-wrap:anywhere;}
   .lab{margin:16px 0 8px;display:flex;align-items:center;gap:8px;font-size:12px;line-height:16px;font-weight:500;color:var(--ink-2,#4D4D4D);}
   .lab .dot{width:8px;height:8px;border-radius:50%;}
-  .lab .dot.u{background:var(--data-meas,#99610E);} .lab .dot.d{background:var(--data-obs-line,#4F46E5);}
+  .lab .dot.u{background:var(--ink,#171717);} .lab .dot.d{background:var(--data-obs-line,#4F46E5);}
   .step{display:flex;gap:10px;padding:8px 0;border-top:1px solid var(--line,#EBEBEB);}
   .step:first-of-type{border-top:none;}
   .step .n{flex:0 0 24px;height:24px;margin-top:2px;display:flex;align-items:center;justify-content:center;border-radius:var(--radius,6px);background:var(--surface-2,#F2F2F2);color:var(--ink-2,#4D4D4D);font:400 12px/16px var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);}
@@ -101,7 +87,6 @@
   .arrow{color:var(--ink-2,#4D4D4D);}
   .empty{color:var(--ink-2,#4D4D4D);padding:4px 0;}
   .summary{margin-top:4px;padding:10px 12px;border:1px solid var(--line,#EBEBEB);border-radius:var(--radius,6px);background:var(--surface,#FAFAFA);color:var(--ink,#171717);}
-  .summary b{font-weight:500;}
   /* the path bar: a notice at the canvas top */
   .pathbar{position:absolute;top:16px;left:16px;z-index:6;max-width:calc(100% - 32px);display:none;align-items:center;flex-wrap:wrap;gap:8px;}
   @media (min-width:961px){.pathbar{max-width:calc(100% - 408px);}}
@@ -114,7 +99,7 @@
   .legend{position:absolute;left:16px;bottom:16px;z-index:4;display:flex;gap:12px;align-items:center;padding:8px 12px;border-radius:var(--radius,6px);background:var(--page,#FFFFFF);box-shadow:var(--shadow-float,0 0 0 1px #EBEBEB,0 4px 8px -4px rgb(0 0 0 / .04),0 16px 24px -8px rgb(0 0 0 / .06));font-size:12px;line-height:16px;color:var(--ink-2,#4D4D4D);}
   .legend span{display:inline-flex;align-items:center;gap:6px;}
   .sw{width:12px;height:12px;border-radius:3px;display:inline-block;}
-  .sw.up{background:var(--data-meas,#99610E);} .sw.down{background:var(--data-obs,#4F46E5);}
+  .sw.up{background:var(--page,#FFFFFF);box-shadow:inset 0 0 0 2px var(--ink,#171717);} .sw.down{background:var(--data-obs,#4F46E5);}
   .sw.obs{background:var(--page,#FFFFFF);box-shadow:inset 0 0 0 2px var(--data-obs-line,#4F46E5);}
   @media (max-width:960px){.legend{display:none;}}
   #err{position:fixed;left:16px;right:16px;bottom:16px;z-index:60;display:none;white-space:pre-wrap;}
@@ -122,6 +107,7 @@
 </style>
 </head>
 <body class="app">
+<a class="skip-link" href="#cy">Skip to content</a>
 <div data-site-header data-variant="app"></div>
 <div class="toolbar">
   <span class="om-search"><svg class="om-search-ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.5" y2="16.5"></line></svg><input class="om-input" id="q" placeholder="Find a quantity" aria-label="Find a quantity to trace" autocomplete="off"></span>
@@ -130,11 +116,12 @@
   <span class="push"></span>
   <button class="btn btn--secondary btn--sm" id="fitBtn" type="button">Fit</button>
   <button class="btn btn--secondary btn--sm" type="button" onclick="resetAll()" aria-label="Reset the trace">Reset</button>
-  <button class="btn btn--secondary btn--sm" id="copylink" type="button" aria-label="Copy a link to this trace">Copy link</button>
+  <button class="btn btn--secondary btn--sm" id="copylink" type="button" aria-label="Copy link to this trace">Copy link</button>
 </div>
-<div id="cy" class="canvas"><svg id="svg" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+<noscript><p class="notice" style="margin:8px 16px">The tracer runs on JavaScript. The map data is plain JSON at <a href="../data/graph.json">data/graph.json</a>.</p></noscript>
+<div id="cy" class="canvas" role="main"><h1 class="sr-only">Tracer</h1><svg id="svg" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
   <defs>
-    <marker id="arrU" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--data-meas,#99610E)"></path></marker>
+    <marker id="arrU" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--ink,#171717)"></path></marker>
     <marker id="arrD" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--data-obs-line,#4F46E5)"></path></marker>
   </defs>
   <g id="vp"></g>
@@ -183,10 +170,11 @@ function tex(latex,display){ try{ return katex.renderToString(latex,{throwOnErro
 function smooth(pts){ if(!pts||pts.length<2) return ''; if(pts.length===2) return 'M'+pts[0].x+' '+pts[0].y+' L'+pts[1].x+' '+pts[1].y; let d='M'+pts[0].x+' '+pts[0].y; for(let i=1;i<pts.length-1;i++){ const mx=(pts[i].x+pts[i+1].x)/2, my=(pts[i].y+pts[i+1].y)/2; d+=' Q'+pts[i].x+' '+pts[i].y+' '+mx+' '+my; } d+=' L'+pts[pts.length-1].x+' '+pts[pts.length-1].y; return d; }
 function err(m){ var e=document.getElementById('err'); e.style.display='block'; e.textContent='Error: '+m; }
 function esc(s){ return s.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
-function showRest(on){ document.getElementById('resthint').hidden=!on; }
+// the rest caption and the toolbar hint say the same thing, so only one shows
+function showRest(on){ document.getElementById('resthint').hidden=!on; document.querySelector('.toolbar .hint').style.display=on?'none':''; }
 
 if(typeof dagre==='undefined'){ err('The layout library did not load. Check the connection and reload.'); }
-else fetch('../data/graph.json?v='+Date.now()).then(r=>r.json())
+else fetch('../data/graph.json').then(r=>r.json())
   .then(build).catch(e=> err('The map data did not load: '+e));
 
 function build(graph){
@@ -204,7 +192,7 @@ function build(graph){
   let s='', lhtml='';
   edges.forEach(e=>{ const ed=g.edge({v:e.source,w:e.target}); if(!ed)return; s+='<path class="edge" data-edge="'+e.source+'>>'+e.target+'" d="'+smooth(ed.points)+'"></path>'; });
   graph.nodes.forEach(n=>{ const p=g.node(n.id); pos[n.id]={x:p.x,y:p.y,w:p.width,h:p.height}; const x=p.x-p.width/2, y=p.y-p.height/2; const dest=(n.type==='observable' && (children[n.id]||[]).length===0)?' dest':'';
-    s+='<g class="node'+dest+'" data-id="'+esc(n.id)+'"><rect x="'+x+'" y="'+y+'" width="'+p.width+'" height="'+p.height+'" rx="8"></rect></g>';
+    s+='<g class="node'+dest+'" data-id="'+esc(n.id)+'" tabindex="0" role="button" aria-label="'+esc(n.id)+'"><rect x="'+x+'" y="'+y+'" width="'+p.width+'" height="'+p.height+'" rx="8"></rect></g>';
     lhtml+='<div class="nlab'+dest+'" data-id="'+esc(n.id)+'" style="left:'+x+'px;top:'+y+'px;width:'+p.width+'px;height:'+p.height+'px">'+symHtml[n.id]+'</div>'; });
   vp.innerHTML=s;
   const inner=document.getElementById('labelsInner');
@@ -271,7 +259,8 @@ function trace(id){
 }
 
 function stepHtml(s,t,i,kind){
-  const op=opByEdge[s+'>>'+t]||''; const f=nodeById[t]&&nodeById[t].formula;
+  // the formula of the operator on this edge, not the node's first route
+  const op=opByEdge[s+'>>'+t]||''; const n=nodeById[t]; const fe=n&&(n.formulas||[]).find(x=>x.op===op); const f=fe?fe.latex:(n&&n.formula);
   return '<div class="step"><div class="n">'+i+'</div><div class="body"><div class="rel">'+symHtml[s]+' <span class="arrow">&rarr;</span> '+symHtml[t]+(op?' <span class="op">'+esc(op)+'</span>':'')+'</div>'+(f?'<div class="fx">'+tex(f,false)+'</div>':'')+'</div></div>';
 }
 function orderedEdges(nodeSet){ // edges fully inside nodeSet, ordered by target layer
@@ -284,8 +273,9 @@ function derivationPanel(id, anc, desc){
   const dests=[...desc].filter(d=> nodeById[d].type==='observable' && (children[d]||[]).length===0);
   let h=closeBtn();
   h+='<div><span class="sym">'+tex(node.symbol)+'</span><span class="badge '+node.type+'">'+node.type+'</span></div><div class="name">'+esc(node.id)+'</div>';
-  h+='<div class="summary">'+(anc.size?('Built from <b>'+anc.size+'</b> upstream quantit'+(anc.size>1?'ies':'y')+'.'):'An input quantity.')+' '
-    +(desc.size?('Feeds <b>'+desc.size+'</b> downstream quantit'+(desc.size>1?'ies':'y')+(dests.length?(', which end at '+dests.map(d=>tex(nodeById[d].symbol)).join(', ')):'')+'.'):'Nothing on the map uses it.')+'</div>';
+  const routes=(node.formulas||[]).length;
+  h+='<div class="summary">'+(anc.size?('Built from '+anc.size+' upstream quantit'+(anc.size>1?'ies':'y')+(routes>1?' across '+routes+' routes':'')+'.'):'An input quantity.')+' '
+    +(desc.size?('Feeds '+desc.size+' downstream quantit'+(desc.size>1?'ies':'y')+(dests.length?(', which end at '+dests.map(d=>tex(nodeById[d].symbol)).join(', ')):'')+'.'):'Nothing on the map uses it.')+'</div>';
   h+='<div class="lab"><span class="dot u"></span>Built from</div>';
   h+= up.length? up.map((e,i)=>stepHtml(e[0],e[1],i+1,'up')).join('') : '<div class="empty">Nothing upstream: this quantity is an input.</div>';
   h+='<div class="lab"><span class="dot d"></span>Feeds</div>';
@@ -334,7 +324,7 @@ function finishPath(a,b){
   for(let i=0;i<path.length-1;i++){ if(opByEdge[path[i]+'>>'+path[i+1]]!==undefined) paintEdge(path[i],path[i+1],'down'); else paintEdge(path[i+1],path[i],'up'); }
   // panel: the linear chain
   let h=closeBtn()+'<div class="lab"><span class="dot d"></span>Derivation path</div>';
-  h+='<div class="summary"><b>'+(path.length-1)+'</b> steps from '+tex(nodeById[a].symbol)+' to '+tex(nodeById[b].symbol)+'.</div>';
+  h+='<div class="summary">'+(path.length-1)+(path.length===2?' step':' steps')+' from '+tex(nodeById[a].symbol)+' to '+tex(nodeById[b].symbol)+'.</div>';
   for(let i=0;i<path.length-1;i++){ const fwd=opByEdge[path[i]+'>>'+path[i+1]]!==undefined; h+= fwd? stepHtml(path[i],path[i+1],i+1,'down') : stepHtml(path[i+1],path[i],i+1,'up'); }
   const p=document.getElementById('panel'); p.innerHTML=h; p.style.display='block';
   const pb=document.getElementById('pathbar'); pb.style.display='flex'; pb.innerHTML='<span class="ep">'+symHtml[a]+'</span><span class="arrow">&rarr;</span><span class="ep">'+symHtml[b]+'</span>'+clearBtn('Clear');
@@ -407,6 +397,15 @@ svg.addEventListener('click', e=>{ if(moved)return; const nd=e.target.closest('.
   if(e.shiftKey){ if(pathMode&&pathMode.a&&pathMode.a!==id){ finishPath(pathMode.a,id); } else { startPath(id); } return; }
   trace(id);
 });
+// keyboard: Enter or Space traces the focused quantity, Shift+Enter picks it
+// for a path, Escape resets
+svg.addEventListener('keydown', e=>{
+  const nd=(e.key==='Enter'||e.key===' ')&&e.target.closest&&e.target.closest('.node'); if(!nd) return;
+  e.preventDefault(); const id=nd.dataset.id;
+  if(e.shiftKey&&e.key==='Enter'){ if(pathMode&&pathMode.a&&pathMode.a!==id) finishPath(pathMode.a,id); else startPath(id); return; }
+  trace(id);
+});
+window.addEventListener('keydown', e=>{ if(e.key==='Escape') resetAll(); });
 window.navTo=function(id){ if(nodeById[id]) trace(id); };
 const qInput=document.getElementById('q');
 qInput.addEventListener('input', function(){

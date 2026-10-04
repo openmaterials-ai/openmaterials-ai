@@ -17,7 +17,7 @@
 <meta property="og:url" content="https://openmaterials.ai/map/">
 <meta property="og:image" content="https://openmaterials.ai/assets/og.png">
 <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="The openmaterials.ai mark and wordmark above the line A versioned map of physics, with the licenses: map data CC BY 4.0, code Apache 2.0.">
+<meta property="og:image:alt" content="The openmaterials.ai mark and wordmark above the line &quot;A versioned map of physics.&quot; and the licenses &quot;Map data CC BY 4.0 · Code Apache 2.0&quot;.">
 <meta name="twitter:card" content="summary_large_image">
 <script>try{const t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch{}</script>
 <link rel="preload" href="../assets/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin>
@@ -28,22 +28,6 @@
   /* The 2D map, an app page: header, toolbar, a full-bleed canvas with the
      panel and legend floating over it. Colors are the site.css tokens; each
      var() carries the light value as its fallback. */
-  @layer om-fallback {
-    /* Shared components. Unlayered site.css rules win over these once it defines them. */
-    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:40px;padding:0 20px;border:0;border-radius:9999px;font:inherit;font-weight:500;font-size:16px;line-height:24px;text-decoration:none;white-space:nowrap;cursor:pointer;transition:background-color var(--dur,150ms) var(--ease,ease),color var(--dur,150ms) var(--ease,ease);}
-    .btn--sm{height:32px;padding:0 12px;border-radius:var(--radius,6px);font-size:14px;line-height:20px;}
-    .btn--secondary{background:var(--page,#FFFFFF);color:var(--ink,#171717);box-shadow:0 0 0 1px var(--line,#EBEBEB);}
-    .btn--ghost{background:transparent;color:var(--ink,#171717);}
-    .btn--secondary:hover,.btn--ghost:hover{background:var(--surface-2,#F2F2F2);}
-    .select{height:32px;min-width:0;max-width:100%;padding:0 8px;border:0;border-radius:var(--radius,6px);box-shadow:0 0 0 1px var(--line,#EBEBEB);background:var(--page,#FFFFFF);color:var(--ink,#171717);font:inherit;font-size:14px;line-height:20px;}
-    .view-switch{display:inline-flex;gap:2px;height:32px;padding:2px;border-radius:var(--radius,6px);box-shadow:0 0 0 1px var(--line,#EBEBEB);}
-    .view-switch a{display:inline-flex;align-items:center;padding:0 10px;border-radius:4px;font-weight:500;font-size:14px;line-height:20px;color:var(--ink-2,#4D4D4D);text-decoration:none;}
-    .view-switch a:hover{color:var(--ink,#171717);}
-    .view-switch a[aria-current="page"]{color:var(--ink,#171717);background:var(--surface-2,#F2F2F2);}
-    .notice{padding:12px 16px;border:1px solid var(--line,#EBEBEB);border-radius:var(--radius,6px);background:var(--surface,#FAFAFA);font-size:14px;line-height:20px;color:var(--ink,#171717);}
-    .notice--error{border-color:var(--ink,#171717);}
-    .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;}
-  }
   *{box-sizing:border-box;}
   body.app{height:100vh;height:100dvh;margin:0;display:flex;flex-direction:column;overflow:hidden;background:var(--page,#FFFFFF);color:var(--ink,#171717);font:400 14px/20px var(--font-sans,"Geist","Geist Fallback",ui-sans-serif,system-ui,sans-serif);-webkit-font-smoothing:antialiased;}
   :focus-visible{outline:2px solid var(--ink,#171717);outline-offset:2px;}
@@ -63,7 +47,7 @@
   .band .ord{font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);fill:var(--ink-2,#4D4D4D);}
   .band .h{font-weight:450;fill:var(--ink,#171717);}
   .band .sh{fill:var(--ink-2,#4D4D4D);}
-  #svg.far .band .sh{display:none;}
+  #svg.far .band .sh,#svg.far .band .ord{display:none;}   /* 16-unit text hides below 12 px */
   /* edges: 1px base; parameter links dashed (data encoding); hot edges observable indigo */
   .edge{fill:none;stroke:var(--edge,#8F8F8F);stroke-width:1;vector-effect:non-scaling-stroke;transition:opacity var(--dur,150ms) var(--ease,ease);}
   .edge.param{stroke-dasharray:3 3;opacity:.6;}
@@ -77,14 +61,15 @@
   .node.hid rect{fill:var(--surface-2,#F2F2F2);stroke:var(--edge,#8F8F8F);}
   .node.param rect{fill:var(--page,#FFFFFF);stroke:var(--edge,#8F8F8F);stroke-dasharray:4 3;}
   .node.sel rect{stroke:var(--ink,#171717);stroke-width:3;}
-  .node.dim{opacity:.45;}
+  /* dimmed: a neutral fill and ink-2 labels, never low opacity, so labels keep their contrast */
+  .node.dim rect{fill:var(--surface-2,#F2F2F2);stroke:var(--line,#EBEBEB);}
   /* Node symbols live in an HTML overlay synced to the SVG viewBox
      (foreignObject positions unreliably under viewBox transforms in WebKit). */
   #labels{position:absolute;inset:0;overflow:hidden;pointer-events:none;}
   #labelsInner{position:absolute;left:0;top:0;transform-origin:0 0;will-change:transform;}
   .nlab{position:absolute;display:flex;align-items:center;justify-content:center;font-size:22px;line-height:1;pointer-events:none;}
   .nlab.obs{color:#FFFFFF;} .nlab.hid{color:var(--ink,#171717);} .nlab.param{color:var(--ink-2,#4D4D4D);}
-  .nlab.dim{opacity:.45;}
+  .nlab.dim{color:var(--ink-2,#4D4D4D);}
   .nlab code,#measure code{font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);font-size:14px;}
   #measure{position:absolute;left:-9999px;top:-9999px;font-size:22px;visibility:hidden;}
   /* legend, floating over the canvas */
@@ -108,7 +93,7 @@
   .om-panel .badge,.om-panel .tiertag{display:inline-flex;align-items:center;height:24px;padding:0 10px;margin-left:8px;border-radius:9999px;background:var(--surface-2,#F2F2F2);color:var(--ink,#171717);font-family:var(--font-sans,"Geist",ui-sans-serif,system-ui,sans-serif);font-size:12px;font-weight:500;vertical-align:middle;}
   .om-panel .tiertag{color:var(--ink-2,#4D4D4D);}
   .om-panel .name{font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);color:var(--ink-2,#4D4D4D);font-size:13px;margin:8px 0 0;overflow-wrap:anywhere;}
-  .om-panel .uid{font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);font-size:12px;color:var(--ink-2,#4D4D4D);margin-left:8px;vertical-align:middle;}
+  .om-panel .uid{margin-top:4px;font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);font-size:12px;line-height:16px;color:var(--ink-2,#4D4D4D);overflow-wrap:anywhere;}
   .formula{background:var(--surface,#FAFAFA);border:1px solid var(--line,#EBEBEB);border-radius:var(--radius,6px);padding:12px;overflow-x:auto;}
   .formula code{font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);font-size:13px;color:var(--ink,#171717);white-space:pre-wrap;overflow-wrap:anywhere;}
   .fop{font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);font-size:12px;color:var(--ink-2,#4D4D4D);margin:10px 0 4px;}
@@ -143,20 +128,23 @@
 </style>
 </head>
 <body class="app">
+<a class="skip-link" href="#cy">Skip to content</a>
 <div data-site-header data-variant="app"></div>
 <div class="toolbar">
-  <span class="om-search"><svg class="om-search-ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.5" y2="16.5"></line></svg><input class="om-input" id="q" placeholder="Search by name or method" aria-label="Find a quantity on the map" autocomplete="off"></span>
+  <span class="om-search"><svg class="om-search-ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.5" y2="16.5"></line></svg><input class="om-input" id="q" placeholder="Search by name or method" aria-label="Search by name or method" autocomplete="off"></span>
   <nav class="view-switch" aria-label="Map view"><a href="../map/" aria-current="page">2D</a><a href="../map-3d/">3D</a><a href="../map-trace/">Trace</a></nav>
   <select class="select" id="tierJump" aria-label="Jump to a tier"><option value="">Tier</option></select>
   <select class="select" id="codeFilter" aria-label="Codes"><option value="">All codes</option></select>
+  <span class="hint">Select a quantity to see its formula, what it is computed from, what it feeds, and the codes that compute it.</span>
   <span class="push"></span>
   <button class="btn btn--ghost btn--sm" id="zoomOut" type="button" aria-label="Zoom out">&minus;</button>
   <button class="btn btn--ghost btn--sm" id="zoomIn" type="button" aria-label="Zoom in">+</button>
   <button class="btn btn--secondary btn--sm" id="fitBtn" type="button">Fit</button>
-  <button class="btn btn--secondary btn--sm" id="copylink" type="button" aria-label="Copy a link to this view">Copy link</button>
+  <button class="btn btn--secondary btn--sm" id="copylink" type="button" aria-label="Copy link to this view">Copy link</button>
 </div>
 <div id="banner" class="notice"></div>
-<div id="cy" class="canvas"><svg id="svg" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+<noscript><p class="notice" style="margin:8px 16px">This view draws the map with JavaScript. The map data is plain JSON at <a href="../data/graph.json">data/graph.json</a>.</p></noscript>
+<div id="cy" class="canvas" role="main"><h1 class="sr-only">Map</h1><svg id="svg" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
   <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--edge,#8F8F8F)"></path></marker>
   <marker id="arrowhot" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--data-obs-line,#4F46E5)"></path></marker></defs>
   <g id="bands"></g>
@@ -168,7 +156,7 @@
   <span><i class="sw hid"></i>Hidden</span>
   <span><i class="sw param"></i>Parameter</span>
   <span class="sep" id="versep" style="display:none"></span>
-  <span id="mapver" style="display:none"><span class="g">Version</span>&nbsp;<span class="ver" id="mapverhash"></span></span>
+  <span id="mapver" style="display:none"><span class="g">Map version</span>&nbsp;<span class="ver" id="mapverhash"></span></span>
 </div>
 <div class="om-panel" id="panel"></div>
 </div>
@@ -221,7 +209,7 @@ function setVB(){
   const k=overFloor(VB);
   if(k>1){ const cx=VB.x+VB.w/2, cy=VB.y+VB.h/2; VB.w/=k; VB.h/=k; VB.x=cx-VB.w/2; VB.y=cy-VB.h/2; }
   svg.setAttribute('viewBox', VB.x+' '+VB.y+' '+VB.w+' '+VB.h);
-  svg.classList.toggle('far', 16*scaleOf()<12);   // band descriptions hide below 12 px
+  svg.classList.toggle('far', 16*scaleOf()<11.99);   // 16-unit band text hides below 12 px (11.99 absorbs rounding)
   syncLabels();
 }
 // A zoom-out factor capped at the floor, for zooms anchored off center (wheel, pinch).
@@ -256,11 +244,11 @@ function attr(s){ return (''+s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').rep
 // separate evidence layer that consumers load against node uids; the map page
 // never fetches or renders them (see the paper's MVC statement).
 Promise.all([
-  fetch('../data/graph.json?v='+Date.now()).then(r=>r.json()),
-  fetch('../data/codes.json?v='+Date.now()).then(r=>r.json()).catch(()=>({})),
-  fetch('../data/version.json?v='+Date.now()).then(r=>r.json()).catch(()=>null),
-  fetch('../data/semantics.json?v='+Date.now()).then(r=>r.json()).catch(()=>[]),
-  fetch('../data/lean.json?v='+Date.now()).then(r=>r.json()).catch(()=>({nodes:{},edges:{}}))
+  fetch('../data/graph.json').then(r=>r.json()),
+  fetch('../data/codes.json').then(r=>r.json()).catch(()=>({})),
+  fetch('../data/version.json').then(r=>r.json()).catch(()=>null),
+  fetch('../data/semantics.json').then(r=>r.json()).catch(()=>[]),
+  fetch('../data/lean.json').then(r=>r.json()).catch(()=>({nodes:{},edges:{}}))
 ]).then(build).catch(e=> err('The map data did not load: '+e));
 
 // The semantic index: a node/edge's surface labels (auto + curated), keyed by
@@ -278,7 +266,8 @@ function resolveLabel(q){
     const e=semById[id]; let score=0;
     if((e.curated||[]).some(c=> normLabel(c)===nq)) score=1.0;
     else if((e.labels||[]).some(l=> normLabel(l)===nq)) score=0.9;
-    else if(qt.size){ const es=tokset((e.labels||[]).join(' ')+' '+id); let all=true; qt.forEach(t=>{ if(!es.has(t)) all=false; }); if(all) score=0.65; }
+    // token containment: 0.6 plus a coverage bonus, rounded as omai/semantics.py rounds it
+    else if(qt.size){ const es=tokset((e.labels||[]).join(' ')+' '+id); let all=true; qt.forEach(t=>{ if(!es.has(t)) all=false; }); if(all) score=Math.round((0.6+Math.min(0.2,0.2*qt.size/Math.max(1,tokset(id).size)))*1000)/1000; }
     if(score) out.push({id, kind:e.kind, score});
   }
   return out.sort((a,b)=> b.score-a.score || a.id.localeCompare(b.id));
@@ -291,7 +280,6 @@ function build([graph, codes, version, semantics, lean]){
   if(version && version.version){
     const vh=document.getElementById('mapverhash');
     vh.textContent=(''+version.version).slice(0,12);
-    vh.title='store head '+version.version+(version.genesis?('\ngenesis '+version.genesis):'');
     document.getElementById('mapver').style.display='';
     document.getElementById('versep').style.display='';
   }
@@ -376,7 +364,7 @@ function renderBands(minY, maxY){
     s+='<g class="band" data-band="'+i+'">';
     s+='<rect x="'+(x+4)+'" y="'+top+'" width="'+(BAND_W-8)+'" height="'+h+'" rx="0"></rect>';
     if(i>0) s+='<line class="bl" x1="'+(x-BAND_GAP/2)+'" y1="'+top+'" x2="'+(x-BAND_GAP/2)+'" y2="'+bottom+'"></line>';
-    s+='<text class="ord" x="'+(x+BAND_PADX)+'" y="'+(top+34)+'" font-size="14">'+(t.order===1e6?'*':(t.order+1).toString().padStart(2,'0'))+'</text>';
+    s+='<text class="ord" x="'+(x+BAND_PADX)+'" y="'+(top+34)+'" font-size="16">'+(t.order===1e6?'*':(t.order+1).toString().padStart(2,'0'))+'</text>';
     s+='<text class="h" x="'+(x+BAND_PADX)+'" y="'+(top+66)+'" font-size="24">'+esc(t.name)+'</text>';
     s+=wrapText(t.description||'', x+BAND_PADX, top+96, BAND_W-2*BAND_PADX-6, 16, 'sh', 3);
     s+='</g>';
@@ -550,13 +538,12 @@ function selectNode(node){
   const ins=parents[id]||[], outs=children[id]||[];
   let h=closeBtn();
   h+='<div><span class="sym">'+tex(node.symbol)+'</span><span class="badge '+node.type+'">'+esc(node.type)+'</span></div>';
-  h+='<div class="name">'+esc(node.id)+'<span class="tiertag">'+esc(node.tier||'Other')+'</span>'+(node.uid?('<span class="uid" title="'+attr(node.uid)+'">'+esc((''+node.uid).slice(0,12))+'</span>'):'')+'</div>';
+  h+='<div class="name">'+esc(node.id)+'<span class="tiertag">'+esc(node.tier||'Other')+'</span>'+'</div>'+(node.uid?('<div class="uid">uid '+esc(node.uid)+'</div>'):'');
   const fl=(node.formulas&&node.formulas.length)?node.formulas:(node.formula?[{op:'',latex:node.formula}]:[]);
   if(!fl.length){ h+='<div class="om-panel-label">Formula on the producing edge</div><div class="formula"><span class="muted">Input quantity: no edge produces it.</span></div>'; }
-  else if(fl.length===1){ h+='<div class="om-panel-label">Formula on the producing edge</div><div class="formula">'+tex(fl[0].latex,true)+'</div>'; }
-  else{
-    h+='<div class="om-panel-label">'+fl.length+' producing edges (alternative routes)</div>';
-    fl.forEach(f=>{ h+='<div class="fop">'+esc(f.op)+'</div><div class="formula">'+tex(f.latex,true)+'</div>'; });
+  else{   // every formula with the operator that carries it
+    h+='<div class="om-panel-label">'+(fl.length===1?'Formula on the producing edge':fl.length+' producing edges (alternative routes)')+'</div>';
+    fl.forEach(f=>{ h+=(f.op?'<div class="fop">'+esc(f.op)+'</div>':'')+'<div class="formula">'+tex(f.latex,true)+'</div>'; });
   }
   const lv=leanData.nodes&&leanData.nodes[node.id];
   if(lv){ h+='<div class="om-panel-label"><span class="lean-badge">Proven in Lean</span></div><pre class="lean-line">'+esc(lv.lean)+'</pre>'; }
@@ -567,6 +554,8 @@ function selectNode(node){
   syncHash(id);
 }
 function opName(op){ return (op||'').replace(/\[.*?\]/g,'').replace(/_/g,' ').trim() || 'operation'; }
+// The formula of the operator on one edge: a node with several producing routes carries one per operator.
+function edgeFormula(n, op){ const f=(n.formulas||[]).find(x=>x.op===op); return f?f.latex:n.formula; }
 function selectEdge(key, op){
   const [s,t]=key.split('>>'); const tn=nodeById[t], sn=nodeById[s]; if(!tn||!sn) return;
   depth='focused';
@@ -575,7 +564,8 @@ function selectEdge(key, op){
   vp.querySelectorAll('.edge').forEach(el=>{ const on=el.dataset.edge===key; el.classList.toggle('dim', !on); el.classList.toggle('hot', on); });
   let h=closeBtn()+'<div class="om-panel-label">Operator</div><div class="name" style="font-family:inherit;font-weight:500;color:var(--ink,#171717);font-size:16px">'+esc(opName(op))+'</div>';
   h+='<div class="sym" style="margin-top:8px">'+tex(sn.symbol)+' <span class="muted">&rarr;</span> '+tex(tn.symbol)+'</div>';
-  h+='<div class="om-panel-label">Computes</div><div class="formula">'+(tn.formula?tex(tn.formula,true):'<span class="muted">Input quantity: no edge produces it.</span>')+'</div>';
+  const f=edgeFormula(tn, op);
+  h+='<div class="om-panel-label">Computes</div><div class="formula">'+(f?tex(f,true):'<span class="muted">Input quantity: no edge produces it.</span>')+'</div>';
   panelEl.innerHTML=h; panelEl.style.display='block';
 }
 
@@ -590,7 +580,7 @@ function syncHash(id){
 function expFromHash(){ const m=location.hash.match(/[#?&]experiment=([^&]*)/); return m?decodeURIComponent(m[1]):null; }
 let instancesPromise=null;
 function loadInstances(){
-  if(!instancesPromise){ instancesPromise=fetch('../data/instances.json?v='+Date.now()).then(r=>r.json()).catch(()=>[]); }
+  if(!instancesPromise){ instancesPromise=fetch('../data/instances.json').then(r=>r.json()).catch(()=>[]); }
   return instancesPromise;
 }
 function resolveNodeId(v){ if(nodeById[v]) return v; const b=(''+v).split('[')[0]; return nodeById[b]?b:null; }
@@ -654,7 +644,8 @@ svg.addEventListener('keydown', e=>{
 // ---- interaction: edge formula hover ---------------------------------------
 svg.addEventListener('mousemove', e=>{ const ed=e.target.closest('.edge'); if(!ed){ tip.style.display='none'; return; }
   const [s,t]=ed.dataset.edge.split('>>'); const tn=nodeById[t]; if(!tn) return;
-  const body = tn.formula ? tex(tn.formula) : '<span>Input quantity: no edge produces it.</span>';
+  const f=edgeFormula(tn, ed.dataset.op);
+  const body = f ? tex(f) : '<span>Input quantity: no edge produces it.</span>';
   tip.innerHTML='<div class="op">'+esc(opName(ed.dataset.op))+'</div><div class="fx">'+body+'</div>';
   tip.style.display='block';
   let tx=e.clientX+16, ty=e.clientY+16;
