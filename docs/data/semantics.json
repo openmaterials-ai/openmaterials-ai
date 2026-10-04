@@ -1259,6 +1259,66 @@
 "uid": "fc292985123b709c76547dc02721e60797cf5693fbad40b874826291314d5dd3"
 },
 {
+"curated": [
+"analog-conductance",
+"conductance-state",
+"electrical-conductance"
+],
+"id": "ConductanceState",
+"kind": "node",
+"labels": [
+"ConductanceState",
+"G_c",
+"conductance state"
+],
+"uid": "325f09352a8872995fe6ab0a40b9df8780a778389fa0fe00ebcbd9ef7758f4a3"
+},
+{
+"curated": [
+"conductance-window",
+"ltd-window",
+"ltp-window",
+"on-off-ratio",
+"resistive-switching-ratio"
+],
+"id": "ConductanceWindow",
+"kind": "node",
+"labels": [
+"ConductanceWindow",
+"W_G",
+"conductance window"
+],
+"uid": "ec3515d40f800b3c58242b644285b045dcfaec8102799a44dea2a61a9783673c"
+},
+{
+"curated": [
+"conductance-drift",
+"drift-exponent"
+],
+"id": "ConductanceDriftExponent",
+"kind": "node",
+"labels": [
+"ConductanceDriftExponent",
+"\\nu_{drift}",
+"conductance drift exponent"
+],
+"uid": "d9c306ec2d77f10a80335d58a2f12a09124ef4a0061ddf1ae18c90c3ef597aef"
+},
+{
+"curated": [
+"conductance-coefficient-of-variation",
+"state-variability"
+],
+"id": "StateCoefficientOfVariation",
+"kind": "node",
+"labels": [
+"StateCoefficientOfVariation",
+"c_G",
+"state coefficient of variation"
+],
+"uid": "165019489c9bfee532b8ff4c164d71f2a16516a933f3f40950554bdc8a0f84a5"
+},
+{
 "curated": [],
 "id": "CellVolume",
 "kind": "node",
@@ -2375,6 +2435,52 @@
 "labels": [
 "resolve effective conductivity",
 "resolve_effective_conductivity"
+],
+"uid": null
+},
+{
+"curated": [
+"conductance-state"
+],
+"id": "contract_device_conductance",
+"kind": "edge",
+"labels": [
+"contract device conductance",
+"contract_device_conductance"
+],
+"uid": null
+},
+{
+"curated": [
+"conductance-window"
+],
+"id": "contract_conductance_window",
+"kind": "edge",
+"labels": [
+"contract conductance window",
+"contract_conductance_window"
+],
+"uid": null
+},
+{
+"curated": [],
+"id": "contract_state_coefficient_of_variation",
+"kind": "edge",
+"labels": [
+"contract state coefficient of variation",
+"contract_state_coefficient_of_variation"
+],
+"uid": null
+},
+{
+"curated": [
+"conductance-drift"
+],
+"id": "apply_conductance_drift",
+"kind": "edge",
+"labels": [
+"apply conductance drift",
+"apply_conductance_drift"
 ],
 "uid": null
 },

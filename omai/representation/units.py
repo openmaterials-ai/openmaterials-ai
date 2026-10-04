@@ -18,6 +18,7 @@ from dataclasses import dataclass
 from omai.operator.dimensions import (
     INVERSE_ENERGY,
     Dimension,
+    CONDUCTANCE,
     DIFFUSIVITY,
     DIMENSIONLESS,
     ENERGY,
@@ -34,6 +35,7 @@ from omai.operator.dimensions import (
     FREQUENCY_SQUARED,
     INVERSE_FREQUENCY,
     LENGTH,
+    LENGTH_SQUARED,
     LENGTH_TIMES_FREQUENCY,
     MAGNETIC_MOMENT,
     MASS_DENSITY,
@@ -210,8 +212,12 @@ PA = Unit("Pa", ENERGY_PER_LENGTH_CUBED, 6.241509074460763e-12)
 ATM = Unit("atm", ENERGY_PER_LENGTH_CUBED, 101325.0 * 6.241509074460763e-12)
 
 
-# Canonical length unit: Å (angstrom). Canonical volume unit: Å³.
+# Canonical length unit: Å (angstrom). Canonical volume unit: Å³. Canonical
+# area unit: Å² (angstrom_squared), si_scale (1e-10)^2 = 1e-20, mirroring the
+# angstrom / angstrom_cubed convention so the executor's dimensional bridge
+# resolves LENGTH_SQUARED (the analog-device geometry area A_g in G = sigma A/L).
 ANGSTROM = Unit("angstrom", LENGTH, 1.0, si_scale=1e-10)
+ANGSTROM_SQUARED = Unit("angstrom_squared", LENGTH_SQUARED, 1.0, si_scale=1e-20)
 ANGSTROM_CUBED = Unit("angstrom_cubed", VOLUME, 1.0, si_scale=1e-30)
 
 
@@ -238,6 +244,13 @@ MU_B = Unit("mu_B", MAGNETIC_MOMENT, 1.0, si_scale=9.2740100783e-24)
 # S/m. (1 S/cm would be 100; the skills report mS/cm.)
 S_PER_M = Unit("s_per_m", ELECTRICAL_CONDUCTIVITY, 1.0, si_scale=1.0)
 MS_PER_CM = Unit("ms_per_cm", ELECTRICAL_CONDUCTIVITY, 0.1)
+
+# Canonical electrical-conductance unit: the SI siemens (S = A/V), the
+# two-terminal device conductance. Distinct from S/m (ELECTRICAL_CONDUCTIVITY):
+# a conductance, not a per-length conductivity. Small conductances need a scaled
+# unit to survive the six-decimal identity rounding; it is added with the first
+# instance that needs it.
+SIEMENS = Unit("siemens", CONDUCTANCE, 1.0, si_scale=1.0)
 
 
 # Canonical Seebeck unit: volt per kelvin (V/K). amset serializes the Seebeck
@@ -349,6 +362,8 @@ UNITS: dict[str, Unit] = {
         MU_B,
         S_PER_M,
         MS_PER_CM,
+        SIEMENS,
+        ANGSTROM_SQUARED,
         V_PER_K,
         MUV_PER_K,
         M2_PER_V_S,

@@ -406,6 +406,27 @@
   },
   "uid": "25e07a60a3f641abc12987675165b1195ea8ed9d7adff7217736c7bdfd824b1a"
  },
+ "28b7ede719aa19690afe0e07efd6fa73c49451f84edb7d126a8b78d07ce48894": {
+  "identity": {
+   "formula": "Equality(Symbol('c_G'), Mul(Pow(Symbol('G_c'), Integer(-1)), Symbol('\\\\sigma_G')))",
+   "inputs": [
+    "325f09352a8872995fe6ab0a40b9df8780a778389fa0fe00ebcbd9ef7758f4a3"
+   ],
+   "output": "165019489c9bfee532b8ff4c164d71f2a16516a933f3f40950554bdc8a0f84a5",
+   "outputs": [
+    "165019489c9bfee532b8ff4c164d71f2a16516a933f3f40950554bdc8a0f84a5"
+   ],
+   "schemes": {}
+  },
+  "meta": {
+   "description": "Coefficient of variation c = sigma_G / mu_G of one programmed level: the level's standard deviation over its mean (the input).",
+   "formula_latex": "c_{G} = \\frac{\\sigma_{G}}{G_{c}}",
+   "formula_srepr": "Equality(Symbol('c_G'), Mul(Pow(Symbol('G_c'), Integer(-1)), Symbol('\\\\sigma_G')))",
+   "name": "contract_state_coefficient_of_variation",
+   "schemes": {}
+  },
+  "uid": "28b7ede719aa19690afe0e07efd6fa73c49451f84edb7d126a8b78d07ce48894"
+ },
  "2dfd344c598d659dbc5e4c8def4cefcb69b1a0bd215a9202f981618b18611b89": {
   "identity": {
    "formula": "Equality(Symbol('G_{qha}'), Function('G^{qha}')(Symbol('E_{tot}'), Symbol('\\\\mathcal{S}'), Symbol('\\\\omega')))",
@@ -1340,6 +1361,27 @@
   },
   "uid": "7e819af4e68ff4465eb8461e12d5d81bd6dbcb395280896a38e5cf4244642737"
  },
+ "7f5e524af6d302713934d4a2bd5901abc64efdad9a5f8822bd19fe28b5b27cdf": {
+  "identity": {
+   "formula": "Equality(Symbol('G_c'), Mul(Symbol('A_g'), Pow(Symbol('L_g'), Integer(-1)), Symbol('\\\\sigma_{el}')))",
+   "inputs": [
+    "c4a81f649b3964aed4d4b3c48dfec4f252958c9560332286e2105b175794144b"
+   ],
+   "output": "325f09352a8872995fe6ab0a40b9df8780a778389fa0fe00ebcbd9ef7758f4a3",
+   "outputs": [
+    "325f09352a8872995fe6ab0a40b9df8780a778389fa0fe00ebcbd9ef7758f4a3"
+   ],
+   "schemes": {}
+  },
+  "meta": {
+   "description": "Channel conductance G = sigma A / L from the electronic conductivity along the channel, the cross-section A and the length L. Valid for diffusive transport (L much longer than the carrier mean free path) in an ohmic, uniform channel with ohmic contacts; short channels approach the Landauer or contact limit. For a 2D sheet A = t W, where t is the thickness sigma was normalized by (for a slab calculation, the cell height, not the layer thickness), so sigma A = sigma_s W with sigma_s the sheet conductance. A contact-limited (Schottky) device is not described by this edge.",
+   "formula_latex": "G_{c} = \\frac{A_{g} \\sigma_{el}}{L_{g}}",
+   "formula_srepr": "Equality(Symbol('G_c'), Mul(Symbol('A_g'), Pow(Symbol('L_g'), Integer(-1)), Symbol('\\\\sigma_{el}')))",
+   "name": "contract_device_conductance",
+   "schemes": {}
+  },
+  "uid": "7f5e524af6d302713934d4a2bd5901abc64efdad9a5f8822bd19fe28b5b27cdf"
+ },
  "8514fb3e8586db31ec55ec353254d206a41722760541644b2b5c08f770716a81": {
   "identity": {
    "formula": "Equality(Symbol('S'), Function('S^{bte}')(Symbol('\\\\mathcal{S}'), Symbol('\\\\varepsilon_0'), Symbol('C'), Symbol('\\\\omega')))",
@@ -1714,6 +1756,27 @@
    }
   },
   "uid": "997206477b90fdde2f7bb2874568ac8509cb3f4b5c382c757a028e94be46fc4f"
+ },
+ "99e6e0bd3c2d868c2c7ce9ebad11cca90df15a0c005c7a362518c7d18ed0bada": {
+  "identity": {
+   "formula": "Equality(Symbol('W_G'), Mul(Symbol('G_c'), Pow(Symbol('G_min'), Integer(-1))))",
+   "inputs": [
+    "325f09352a8872995fe6ab0a40b9df8780a778389fa0fe00ebcbd9ef7758f4a3"
+   ],
+   "output": "ec3515d40f800b3c58242b644285b045dcfaec8102799a44dea2a61a9783673c",
+   "outputs": [
+    "ec3515d40f800b3c58242b644285b045dcfaec8102799a44dea2a61a9783673c"
+   ],
+   "schemes": {}
+  },
+  "meta": {
+   "description": "Conductance window W = G_max / G_min: the device's highest conductance (the input) over its lowest, under one protocol and one set of read conditions (full SET/RESET switching gives the on/off ratio).",
+   "formula_latex": "W_{G} = \\frac{G_{c}}{G_{min}}",
+   "formula_srepr": "Equality(Symbol('W_G'), Mul(Symbol('G_c'), Pow(Symbol('G_min'), Integer(-1))))",
+   "name": "contract_conductance_window",
+   "schemes": {}
+  },
+  "uid": "99e6e0bd3c2d868c2c7ce9ebad11cca90df15a0c005c7a362518c7d18ed0bada"
  },
  "9c182752f0970df148341ff0e66df8e5be8c74744e79d9626847399355dab7a2": {
   "identity": {
@@ -2801,6 +2864,27 @@
    }
   },
   "uid": "ea3c7c5ef2138ad5bc519a723cdd29bf4a098583fdff8f8100a4548904f64863"
+ },
+ "f1e70e363faaf1f396092f32ad11a3807bdc9e0a4a11c95e8479a9d069e4f2ec": {
+  "identity": {
+   "formula": "Equality(Symbol('G_c'), Mul(Symbol('G_0'), Pow(Mul(Symbol('t_d'), Pow(Symbol('t_{d,0}'), Integer(-1))), Mul(Integer(-1), Symbol('\\\\nu_{drift}')))))",
+   "inputs": [
+    "d9c306ec2d77f10a80335d58a2f12a09124ef4a0061ddf1ae18c90c3ef597aef"
+   ],
+   "output": "325f09352a8872995fe6ab0a40b9df8780a778389fa0fe00ebcbd9ef7758f4a3",
+   "outputs": [
+    "325f09352a8872995fe6ab0a40b9df8780a778389fa0fe00ebcbd9ef7758f4a3"
+   ],
+   "schemes": {}
+  },
+  "meta": {
+   "description": "Power-law drift G(t_d) = G_0 (t_d / t_{d,0})^(-nu) of a programmed conductance from its value G_0 at the reference time t_{d,0}, valid for t_d >= t_{d,0} > 0 inside the time range where the exponent was fitted (documented, not enforced). The symbolic exponent is a special-function skip at the Lean algebra tier; the dimension is proven.",
+   "formula_latex": "G_{c} = G_{0} \\left(\\frac{t_{d}}{t_{d,0}}\\right)^{- \\nu_{drift}}",
+   "formula_srepr": "Equality(Symbol('G_c'), Mul(Symbol('G_0'), Pow(Mul(Symbol('t_d'), Pow(Symbol('t_{d,0}'), Integer(-1))), Mul(Integer(-1), Symbol('\\\\nu_{drift}')))))",
+   "name": "apply_conductance_drift",
+   "schemes": {}
+  },
+  "uid": "f1e70e363faaf1f396092f32ad11a3807bdc9e0a4a11c95e8479a9d069e4f2ec"
  },
  "f2e7f20060fc7a467fa60d0dcede02095054636adf260b0f78f1206350524738": {
   "identity": {

@@ -148,6 +148,15 @@ MAGNETIC_MOMENT = Dimension("magnetic_moment", (0, 2, 0, 0, 0, 1, 0))
 # ThermalConductivity (1,1,-3,-1,0,0,0): different L and T signs, an I axis
 # instead of a Theta axis; they share only the English word "conductivity".
 ELECTRICAL_CONDUCTIVITY = Dimension("electrical_conductivity", (-1, -3, 3, 0, 0, 2, 0))
+# Electrical conductance: the siemens, S = A/V = M^-1 L^-2 T^3 I^2
+# (-1,-2,3,0,0,2,0). The two-terminal device conductance G (the reciprocal of a
+# resistance), NOT the per-length ELECTRICAL_CONDUCTIVITY S/m (-1,-3,3,0,0,2,0):
+# they differ by exactly one length axis (G = sigma x A/L, a conductivity times a
+# geometric length factor), the SAME conductance-vs-conductivity split the map
+# already draws for heat (THERMAL_CONDUCTANCE W/K vs THERMAL_CONDUCTIVITY W/(m K)).
+# The conductance a resistive-switching device programs and reads; the analog
+# device-metrology ConductanceState node carries it. Canonical unit the siemens.
+CONDUCTANCE = Dimension("conductance", (-1, -2, 3, 0, 0, 2, 0))
 # Seebeck (thermopower) coefficient: volts per kelvin, V/K =
 # M L^2 T^-3 I^-1 Th^-1. Built from VOLTAGE (M L^2 T^-3 I^-1, the volt) by
 # dividing a temperature (adding Th^-1): S = V/K. The first dimension to carry
@@ -234,6 +243,7 @@ DIMENSIONS: dict[str, Dimension] = {
         VOLTAGE,
         MAGNETIC_MOMENT,
         ELECTRICAL_CONDUCTIVITY,
+        CONDUCTANCE,
         SEEBECK,
         MOBILITY,
         THERMAL_EXPANSIVITY,

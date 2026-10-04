@@ -245,6 +245,10 @@
   "ThermalConductivity[effective_medium=nan,orientation=aligned]": [],
   "CellVolume": [],
   "AtomicMass": [],
-  "AtomCount": []
+  "AtomCount": [],
+  "ConductanceState": [],
+  "ConductanceWindow": [],
+  "ConductanceDriftExponent": [],
+  "StateCoefficientOfVariation": []
  }
 }

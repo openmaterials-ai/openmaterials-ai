@@ -246,6 +246,26 @@
   },
   "uid": "1423a9b16e18881e4388fee44f536891a6295aaa6e0fc3775bbbe89ee480847a"
  },
+ "165019489c9bfee532b8ff4c164d71f2a16516a933f3f40950554bdc8a0f84a5": {
+  "identity": {
+   "fields": [
+    {
+     "dimension": "1",
+     "indices": []
+    }
+   ],
+   "gauge": "observable",
+   "labels": {},
+   "quantity": "state_coefficient_of_variation"
+  },
+  "meta": {
+   "description": "Coefficient of variation c = sigma_G/mu_G of a programmed conductance level across cells (device to device) or across cycles of one cell, which an instance states in its conditions with the target level and the programming protocol. DIMENSIONLESS.",
+   "name": "StateCoefficientOfVariation",
+   "symbol": "c_G",
+   "tier": "Analog device metrology"
+  },
+  "uid": "165019489c9bfee532b8ff4c164d71f2a16516a933f3f40950554bdc8a0f84a5"
+ },
  "183e66d4e443326d2c346a0327cdb125026bd8f6a91a9bb97b61265fcade7e85": {
   "identity": {
    "fields": [
@@ -589,6 +609,26 @@
    "tier": "Molecular dynamics"
   },
   "uid": "3064108b9fe3839c9ca154ba7887f73cd550c02944ddf61dc26fcbdf07cf6fe0"
+ },
+ "325f09352a8872995fe6ab0a40b9df8780a778389fa0fe00ebcbd9ef7758f4a3": {
+  "identity": {
+   "fields": [
+    {
+     "dimension": "M^-1 L^-2 T^3 I^2",
+     "indices": []
+    }
+   ],
+   "gauge": "observable",
+   "labels": {},
+   "quantity": "conductance_state"
+  },
+  "meta": {
+   "description": "Conductance state G = I/V of a two-terminal resistive device or a memtransistor channel: the analog state a multilevel cell stores. CONDUCTANCE (the siemens). For a contact-limited device G depends on the read bias and the gate bias, which ride in instance conditions with the temperature, the state and, for a drifting state, the time since programming. NOT the per-length electrical conductivity (S/m).",
+   "name": "ConductanceState",
+   "symbol": "G_c",
+   "tier": "Analog device metrology"
+  },
+  "uid": "325f09352a8872995fe6ab0a40b9df8780a778389fa0fe00ebcbd9ef7758f4a3"
  },
  "3303dee51d36b5a42bf80aa0ab62bdecd0db34cc77782c5203192ecf3512a91d": {
   "identity": {
@@ -2195,6 +2235,26 @@
   },
   "uid": "d8f44a4cce5e3dfea1ec9329189d49ac70e33d69cab222e2679f7791a30613ac"
  },
+ "d9c306ec2d77f10a80335d58a2f12a09124ef4a0061ddf1ae18c90c3ef597aef": {
+  "identity": {
+   "fields": [
+    {
+     "dimension": "1",
+     "indices": []
+    }
+   ],
+   "gauge": "observable",
+   "labels": {},
+   "quantity": "conductance_drift_exponent"
+  },
+  "meta": {
+   "description": "Drift exponent nu of the power-law relaxation G(t) = G(t0) (t/t0)^(-nu) of a programmed conductance, fitted for t >= t0 > 0 in the time range where the relaxation is a power law. DIMENSIONLESS. The state, the read conditions, the temperature and the fitted time range ride in instance conditions.",
+   "name": "ConductanceDriftExponent",
+   "symbol": "\\nu_{drift}",
+   "tier": "Analog device metrology"
+  },
+  "uid": "d9c306ec2d77f10a80335d58a2f12a09124ef4a0061ddf1ae18c90c3ef597aef"
+ },
  "db1df71467f5a79440f849704ac20a33573ed4e270b5ebba59549272b2475239": {
   "identity": {
    "fields": [
@@ -2389,6 +2449,26 @@
    "tier": "Mechanics"
   },
   "uid": "e95ba3f5810f8554656c148dae26520cf3258cace0b951dd75e69ee8c552c132"
+ },
+ "ec3515d40f800b3c58242b644285b045dcfaec8102799a44dea2a61a9783673c": {
+  "identity": {
+   "fields": [
+    {
+     "dimension": "1",
+     "indices": []
+    }
+   ],
+   "gauge": "observable",
+   "labels": {},
+   "quantity": "conductance_window"
+  },
+  "meta": {
+   "description": "Conductance window W = G_max/G_min of one device: its highest over its lowest conductance under a stated protocol, both read at the same read bias, gate bias and temperature. DIMENSIONLESS. Full SET/RESET switching gives the on/off ratio of a binary switch; incremental programming (potentiation or depression trains, write-verify) gives the analog window, so the on/off ratio and the LTP and LTD windows are this node under three protocols, which ride in instance conditions with the read conditions. A ratio across gate voltages is transistor modulation, not this window.",
+   "name": "ConductanceWindow",
+   "symbol": "W_G",
+   "tier": "Analog device metrology"
+  },
+  "uid": "ec3515d40f800b3c58242b644285b045dcfaec8102799a44dea2a61a9783673c"
  },
  "ec483cecbdbfec9e13ce3b2033b03e4581edf7bc0ff935d09ab9c24a7e481080": {
   "identity": {

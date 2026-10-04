@@ -45,7 +45,7 @@ def test_thermochemistry_domain_between_stability_and_materials():
         "thermal_transport", "dft_ground_state", "mechanics", "stability",
         "thermochemistry", "quasiharmonic", "molecular",
         "electronic_transport", "materials", "thermodynamic_identities",
-        "composites"]
+        "composites", "analog_device_metrology"]
 
 
 def test_thermochemistry_declares_the_single_tier():
@@ -366,8 +366,10 @@ def test_map_has_one_hundred_nodes_and_fifteen_tiers():
     # (2026-07-13, no new tier). +7 for the composites domain's nodes in the new
     # Composite tier (2026-07-13), the 16th tier.
     g = build_graph_dict(DOMAINS)
-    assert len(g["nodes"]) == 114
-    assert len(g["tiers"]) == 16
+    # 118 nodes and 17 tiers with the analog-device-metrology domain's four
+    # conductance-family nodes in the new Analog device metrology tier (2026-10-04).
+    assert len(g["nodes"]) == 118
+    assert len(g["tiers"]) == 17
 
 
 # --------------------------------------------------------------------------
