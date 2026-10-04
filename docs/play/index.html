@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Playground | OpenMaterials</title>
-<meta name="description" content="Parse a paper into proposed values, open a lineage record, resolve a method name to map nodes, trace a derivation, or compare two materials by composition distance.">
+<meta name="description" content="Parse a paper into proposed values, open a lineage record, resolve a method name to map nodes, or compare two materials by composition distance.">
 <link rel="canonical" href="https://openmaterials.ai/play/">
 <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
@@ -490,8 +490,8 @@
    openmaterials playground: a Mermaid-style two-pane shell over the live map.
    Left: input tabs (Learn parses a paper, Resolve matches labels, Sub-map renders edges). Right: one shared sub-map canvas rendered from graph.json with
    dagre + KaTeX (both degrade: nothing throws when either is missing). The
-   resolver mirrors omai/semantics.resolve exactly. Structure-pure: query and
-   trace render structure only; values never appear on this canvas.
+   resolver mirrors omai/semantics.resolve exactly. Structure-pure: Resolve and
+   the sub-map render structure only; values never appear on this canvas.
    ============================================================================ */
 'use strict';
 var HAS_DAGRE = (typeof dagre !== 'undefined');
