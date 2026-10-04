@@ -17,7 +17,7 @@
 <meta property="og:url" content="https://openmaterials.ai/lineage/">
 <meta property="og:image" content="https://openmaterials.ai/assets/og.png">
 <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="The openmaterials.ai mark and wordmark above the line &quot;A versioned map of physics.&quot; and the licenses &quot;Map data CC BY 4.0 · Code Apache 2.0&quot;.">
+<meta property="og:image:alt" content="The openmaterials.ai mark and wordmark above the line &quot;A versioned map of physics.&quot; A smaller line gives the licenses: map data CC BY 4.0 and code Apache 2.0.">
 <meta name="twitter:card" content="summary_large_image">
 <script>try{const t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch{}</script>
 <link rel="preload" href="../assets/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin>
@@ -31,7 +31,7 @@
   .legend .sw { display: inline-block; width: 14px; height: 10px; margin-right: 6px; border: 1.5px solid; border-radius: 3px; vertical-align: -1px; }
   .legend .obs .sw { background: var(--data-obs); border-color: var(--data-obs); }
   .legend .hid .sw { background: var(--surface-2); border-color: var(--edge); }
-  .legend .lrn .sw { background: transparent; border-color: var(--data-meas); border-style: dashed; }
+  .legend .lrn .sw { background: transparent; border-color: var(--ink-2); border-style: dashed; }
   .dagbox { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); background: var(--page); }
   #dag { display: block; width: 1250px; max-width: none; height: auto; }
   .n rect { stroke-width: 1.4; }
@@ -40,12 +40,12 @@
   .n text { font-family: var(--font-mono); font-size: 12px; }
   .n.obs text { fill: #FFFFFF; }
   .n.hid text { fill: var(--ink); }
-  .n.amort rect { stroke: var(--data-meas); stroke-dasharray: 4 3; }
+  .n.amort rect { stroke: var(--ink-2); stroke-dasharray: 4 3; }
   .band { fill: var(--surface); }
   .e { fill: none; stroke: var(--edge); stroke-width: 1.15; }
-  .e.learned { stroke: var(--data-meas); stroke-width: 1.7; stroke-dasharray: 6 4; }
+  .e.learned { stroke: var(--ink-2); stroke-width: 1.7; stroke-dasharray: 6 4; }
   .arw { fill: var(--edge); }
-  .arwv { fill: var(--data-meas); }
+  .arwv { fill: var(--ink-2); }
   .taglab { font: 500 12px var(--font-sans); fill: var(--ink-2); }
   .caption { margin-top: 12px; font-size: 14px; line-height: 20px; color: var(--ink-2); }
   .sheet { border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); overflow: hidden; }
@@ -57,7 +57,6 @@
   .kv > div:nth-last-child(-n+2) { border-bottom: 0; }
   .kv .k { font: 400 14px/24px var(--font-sans); color: var(--ink-2); }
   .kv .v { font: 400 14px/24px var(--font-mono); color: var(--ink); overflow-wrap: anywhere; }
-  .kv .v b { font-weight: 500; color: var(--data-meas); }
   .kv .v .prov { display: inline-flex; height: 24px; align-items: center; margin-left: 6px; padding: 0 10px; border-radius: 9999px; background: var(--surface-2); font: 500 12px/24px var(--font-sans); color: var(--ink); }
   @media (max-width: 600px) { .kv { grid-template-columns: minmax(0, 1fr); } .kv .k { padding-bottom: 0; border-bottom: 0; } .kv .v { padding-top: 4px; } }
   .links td.u { font: 400 12px/18px var(--font-mono); overflow-wrap: anywhere; }
@@ -85,8 +84,9 @@
 
   <h2>1 · The derivation</h2>
   <p class="sub">Read left to right: sources, the DFT chain, harmonic quantities, scattering channels,
-    and transport. An observable carries no gauge freedom, so codes given the same inputs should agree
-    on it; a hidden quantity depends on a gauge choice, and codes can differ on it. The dashed edge
+    and transport. Observable nodes carry no gauge freedom. Hidden nodes depend on a gauge choice: the
+    eigenvectors, group velocities, and linewidths are intermediates, and the QHGK thermal conductivity
+    at the right end is an approximation. The dashed edge
     illustrates a
     <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/main/omai/operator/learned.py">learned shortcut</a>:
     a surrogate model that produces the same linewidth node without computing the third-order force
@@ -95,14 +95,14 @@
     <a href="../map-trace/#node=ThermalConductivity[transport_model=qhgk]">the tracer</a>.</p>
   <div class="legend">
     <span class="obs"><span class="sw"></span>Observable</span>
-    <span class="hid"><span class="sw"></span>Hidden</span>
+    <span class="hid"><span class="sw"></span>Hidden (gauge-dependent)</span>
     <span class="lrn"><span class="sw"></span>Learned shortcut (illustration)</span>
   </div>
   <div class="dagbox"><svg id="dag" xmlns="http://www.w3.org/2000/svg" width="1250" height="580" viewBox="0 0 1250 580" role="img" aria-label="Derivation DAG of QHGK thermal conductivity"></svg></div>
   <p class="caption">To reproduce this graph wherever Mermaid renders, run
     <span class="m">python -m omai.mermaid "ThermalConductivity[transport_model=qhgk]"</span>
-    (output in the appendix). With the learned edge in place, Φ₃ and the edge that produces it
-    would be skipped at inference.</p>
+    (output in the appendix). With the learned edge in place, the third-order force constants and the
+    edge that produces them would be skipped at inference.</p>
 
   <h2>2 · The lineage record</h2>
   <p class="sub">The map stores the quantity and its value; the lineage record pins how the number was
@@ -134,7 +134,7 @@
     <thead><tr><th>Surface</th><th>Link</th><th>Audience</th></tr></thead>
     <tbody>
       <tr>
-        <td>Experiment permalink<br><span class="why">values, provenance quotes, and the lineage version</span></td>
+        <td>Experiment permalink<br><span class="why">values, provenance quotes, and the map version</span></td>
         <td class="u"><a href="../experiment/#ref=paper:amorphous-alloys-2020-lundgren">experiment/#ref=paper:amorphous-alloys-2020-lundgren</a></td>
         <td class="who"><span class="pill pub">public</span></td>
       </tr>
