@@ -13,7 +13,9 @@ Identity (the content-addressing rule, spec section 3):
     change it, species and sites sorted, lattice and fractional coordinates
     rounded to 5 decimals (0.01 mA resolution: collapses refetch-level
     numerical noise, keeps physically distinct cells apart; the matcher gate
-    is the safety net at the boundary), serialized with sorted keys.
+    is the safety net at the boundary), signed zero written as 0.0, a
+    partially occupied site named by its species and occupancies to 5
+    decimals, serialized with sorted keys.
 
 Deterministic: the same cell, its shuffled sites, and a supercell of it hash to
 the same uid; a strained cell hashes differently. Disordered / partial-occupancy
@@ -135,7 +137,7 @@ def _canonical_payload(structure) -> tuple[dict, dict]:
         # translation-anchored on the centroid so a rigid shift is invariant.
         coords = np.array(structure.cart_coords, dtype=float)
         coords = coords - coords.mean(axis=0)
-        rows = sorted([[str(s.specie)] + [float(round(x, 5)) for x in c]
+        rows = sorted([[str(s.specie)] + [float(round(x, 5)) + 0.0 for x in c]
                        for s, c in zip(structure, coords)])
         canonical = {"periodic": False, "sites": rows}
         derived = {"spacegroup": None, "natoms_primitive": len(structure),
@@ -154,7 +156,12 @@ def _canonical_payload(structure) -> tuple[dict, dict]:
         prim = structure
         spacegroup = None
 
-    entries = [(str(s.specie), np.array(s.frac_coords, dtype=float) % 1.0)
+    # A partially occupied site is named by its species and occupancies to 5
+    # decimals, a format omai owns (pymatgen's species_string changed in 2024).
+    entries = [(str(s.specie) if s.is_ordered else ",".join(
+                    f"{sp}:{occ:.5f}" for sp, occ in sorted(
+                        (str(k), v) for k, v in s.species.items())),
+                np.array(s.frac_coords, dtype=float) % 1.0)
                for s in prim]
     # Translation canonicalization: anchor each site at the origin in turn, wrap,
     # round, sort; keep the lexicographically smallest serialization. This makes
@@ -173,7 +180,8 @@ def _canonical_payload(structure) -> tuple[dict, dict]:
         if best is None or blob < best:
             best = blob
 
-    lattice = [[round(v, 5) for v in row]
+    # + 0.0 maps -0.0 to 0.0: a residue's sign is platform noise
+    lattice = [[round(v, 5) + 0.0 for v in row]
                for row in prim.lattice.matrix.tolist()]
     canonical = {"periodic": True, "lattice": lattice, "sites_canonical": best}
     derived = {"spacegroup": spacegroup, "natoms_primitive": len(prim),
@@ -479,7 +487,8 @@ def from_mp(mp_id, *, config_dir=None, api_key=None):
 
 
 def load(uid, *, config_dir=None):
-    """Reconstruct the pymatgen Structure/Molecule for a canonical ``uid``.
+    """Reconstruct the pymatgen Structure/Molecule for a canonical ``uid``, or
+    for a former uid the record keeps under ``canonical.aliases``.
 
     Reads the inline dict; a file-backed (>limit) record whose inline payload is
     reduced metadata only raises, since the full cell lives in the pointed-to
@@ -489,7 +498,8 @@ def load(uid, *, config_dir=None):
 
     config_dir = Path(config_dir) if config_dir else _CONFIG_DIR
     for _path, record in _existing_records(config_dir):
-        if record.get("canonical", {}).get("uid") == uid:
+        canonical = record.get("canonical", {})
+        if uid == canonical.get("uid") or uid in canonical.get("aliases", []):
             payload = record.get("structure")
             if not isinstance(payload, dict) or "@class" not in payload:
                 raise ConfigurationError(

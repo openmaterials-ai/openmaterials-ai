@@ -29,7 +29,11 @@ the applicable license above.
 Credit is part of the infrastructure of this project. When you add or map an
 external code, dataset, or result, include the citation, DOI, license, and
 source URL as the existing entries in `docs/data/codes.json` do. Do not remove
-or alter existing attribution, copyright, or license notices.
+or alter existing attribution, copyright, or license notices. Register a code
+release by appending it to `docs/data/releases/<representation>.json` with its
+tag, commit and date, and the license read at that tag, then run
+`python -m omai.map_data` and `python -m omai.index_data`. A registered release
+is never edited or removed.
 
 ## Change process
 

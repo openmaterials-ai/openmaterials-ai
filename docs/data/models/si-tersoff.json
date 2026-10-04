@@ -1,0 +1,32 @@
+{
+  "citation": "J. Tersoff, Modeling solid-state chemistry: Interatomic potentials for multicomponent systems, Phys. Rev. B 39, 5566 (1989)",
+  "doi": "10.1103/PhysRevB.39.5566",
+  "elements": [
+    "Si"
+  ],
+  "family": "tersoff",
+  "files": [
+    {
+      "bytes": 864,
+      "path": "Si.tersoff",
+      "role": "model",
+      "sha256": "52a93e90596829c57d54eef091de6215f1fac7ca15d57eac7568ddfdda26adfb",
+      "url": "https://raw.githubusercontent.com/nanotheorygroup/kaldo-examples/0dfa41735f67eb0a6f5b87e5b5bc66a9306f6450/empirical_potentials/amorphous_silicon_Tersoff_LAMMPS/forcefields/Si.tersoff"
+    }
+  ],
+  "format": "LAMMPS tersoff",
+  "license": {
+    "license_source": "the file states none; its repository, https://github.com/nanotheorygroup/kaldo-examples, states BSD-3-Clause (LICENSE); its header and parameters are taken from LAMMPS potential files, which LAMMPS distributes under GPL-2.0-only (its LICENSE)",
+    "spdx": "NOASSERTION"
+  },
+  "name": "Si.tersoff",
+  "node": "Potential",
+  "provenance": [
+    {
+      "detail": "empirical_potentials/amorphous_silicon_Tersoff_LAMMPS/forcefields/Si.tersoff at commit 0dfa41735f67eb0a6f5b87e5b5bc66a9306f6450, read 2026-10-03. Its header is LAMMPS potentials/Si.tersoff (DATE 2007-10-25), which cites Tersoff, PRB 37, 6991 (1988); its parameter line is the Si(D) entry of LAMMPS potentials/SiCGe.tersoff, Tersoff, PRB 39, 5566 (1989), which the citation names",
+      "kind": "repository",
+      "ref": "https://github.com/nanotheorygroup/kaldo-examples"
+    }
+  ],
+  "uid": "52a93e90596829c57d54eef091de6215f1fac7ca15d57eac7568ddfdda26adfb"
+}

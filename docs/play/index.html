@@ -534,7 +534,7 @@ var catalogById = {};   // node id -> {id, symbol, description}: the plain-langu
 var INSTANCE_IDS = null; // Set of committed lineage ids: the badge's committed test
 var codesByNode = {};   // node id -> [{code, api, url}]: which codes compute the quantity
 var CONFORMANCE = [];   // conformance/index.json targets: the pinned reproduce runs
-var configByUid = {};   // canonical.uid -> configuration bundle record for a pinned lineage cell
+var configByUid = {};   // canonical.uid and aliases -> configuration bundle record for a pinned lineage cell
 var TIERS = [];         // the map's tiers: [{name, order, description}], for the map-context panel
 var VB = { x: 0, y: 0, w: 1000, h: 700 };
 
@@ -578,10 +578,7 @@ var mapReady = Promise.all([
   if (res[2] && res[2].version) window.__MAP_VERSION__ = res[2].version;
   LEAN = res[3] || {nodes:{},edges:{}};
   (res[4] || []).forEach(function(n){ if (n && n.id) catalogById[n.id] = n; });
-  (Array.isArray(res[5]) ? res[5] : []).forEach(function(c){
-    var uid = c && c.canonical && c.canonical.uid;
-    if (uid) configByUid[String(uid)] = c;
-  });
+  configByUid = indexConfigurations(res[5]);
   TIERS = (GRAPH && Array.isArray(GRAPH.tiers)) ? GRAPH.tiers : [];
   // codes.json: code -> {node id -> {api, url, ...}}; invert to node -> codes
   var codesData = res[6] || {};
@@ -1684,6 +1681,18 @@ function materialConfigUid(material){
     (material.configuration && typeof material.configuration === 'object' && material.configuration.uid) ||
     (material.canonical && typeof material.canonical === 'object' && material.canonical.uid);
   return u ? String(u) : '';
+}
+
+// canonical.uid and each former uid under canonical.aliases -> its record.
+function indexConfigurations(bundle){
+  var byUid = {};
+  (Array.isArray(bundle) ? bundle : []).forEach(function(c){
+    var canon = (c && c.canonical) || {};
+    [canon.uid].concat(canon.aliases || []).forEach(function(uid){
+      if (uid) byUid[String(uid)] = c;
+    });
+  });
+  return byUid;
 }
 
 // Resolve a pinned configuration uid against docs/data/configurations.json.
