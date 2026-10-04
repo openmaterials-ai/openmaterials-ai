@@ -44,7 +44,7 @@
 <main class="frame" id="main">
   <header class="page-head">
     <h1>Verified layer</h1>
-    <p class="lede">This page shows the part of the map that a proof assistant has checked. Tier 1 declares the dimension of each exported node in <a href="https://lean-lang.org/">Lean 4</a> and, wherever an operator's output dimension is the product of its input dimensions, proves an edge theorem against physlib, the community Lean 4 physics library. Tier 2 states the map's operator identities as theorems over the reals, checked against Mathlib. The counts on this page are computed at load from <a href="../data/lean.json">the published export</a>, and every theorem links to its generated source.</p>
+    <p class="lede">This page shows the part of the map that a proof assistant has checked. Tier 1 declares the dimension of each exported node in <a href="https://lean-lang.org/">Lean 4</a> and, wherever an operator's output dimension is the product of its input dimensions, proves an edge theorem against physlib, the community Lean 4 physics library. Tier 2 states the map's operator identities as theorems over the reals, checked against Mathlib. Every theorem links to its generated source.</p>
   </header>
 
   <div class="page-body">
@@ -89,19 +89,17 @@
           omitted from the export. Extending the dimension system upstream is a
           later tier. The coverage counts below state exactly how much of the map
           this leaves in.</p>
-        <p class="notice gnote">Limits: a node's dimension here is declared, and a theorem checks the dimensions of one edge or an algebraic identity. A theorem does not show that a formula is the right physics, that a code implements it correctly, or that a value on the map is accurate. The <a href="../experiment/">experiment</a> and <a href="../agreement/">agreement</a> pages carry the evidence for those questions.</p>
+        <p class="notice gnote">Limits: a node's dimension here is declared, and a theorem checks the dimensions of one edge or an algebraic identity. A theorem does not show that a formula is the right physics, that a code implements it correctly, or that a value on the map is accurate. The <a href="../experiment/">sources</a> and <a href="../agreement/">agreement</a> pages carry the evidence for those questions.</p>
       </section>
 
       <section class="gsec" id="coverage">
         <h2>Coverage</h2>
-        <dl class="ledger" aria-label="Verified-layer coverage, computed from the published export">
+        <dl class="ledger" aria-label="Verified-layer coverage">
           <div><dt>Declared node dimensions</dt><dd class="mono" id="c-nodes">&middot;</dd></div>
           <div><dt>Edge theorems</dt><dd class="mono" id="c-edges">&middot;</dd></div>
           <div><dt>Operator identities</dt><dd class="mono" id="c-idents">&middot;</dd></div>
           <div><dt>Map version</dt><dd class="mono" id="c-version">&middot;</dd></div>
         </dl>
-        <p id="c-sentence" class="empty">Counting from <code>data/lean.json</code>
-          and <code>data/graph.json</code>&hellip;</p>
       </section>
 
       <section class="gsec" id="edges">
@@ -212,9 +210,6 @@ pip install -e . &amp;&amp; python -m pytest tests/test_physlean_export.py tests
       (stats.graphOps ? ' <span class="of">of ' + stats.graphOps + ' operators with a formula link</span>' : '');
     setText('c-idents', String(stats.identities));
     if (stats.version) setText('c-version', String(stats.version).slice(0, 12));
-    var el = document.getElementById('c-sentence');
-    el.className = '';
-    el.innerHTML = 'The counts come from map version <code>' + esc(stats.version || 'unknown') + '</code>.';
   }
 
   function renderEdges(lean, idx) {
