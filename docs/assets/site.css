@@ -161,7 +161,6 @@ a:hover { text-decoration-color: currentColor; }
 .ledger dt, .om-kv-k { font: 400 14px/24px var(--font-sans); color: var(--ink-2); }
 .ledger dd, .om-kv-v { margin: 0; min-width: 0; font: 400 16px/24px var(--font-sans); color: var(--ink); overflow-wrap: anywhere; }
 .ledger .mono, .om-kv-v { font: 400 14px/24px var(--font-mono); font-variant-numeric: tabular-nums; }
-.ledger .src { margin-left: 8px; font: 400 12px/24px var(--font-mono); color: var(--ink-2); }
 @media (max-width: 600px) { .ledger > div, .om-kv > .om-kv-row { grid-template-columns: minmax(0, 1fr); row-gap: 4px; } }
 /* a card leaves too narrow a value column for hashes beside their labels, so card ledgers stack */
 .card .ledger > div { grid-template-columns: minmax(0, 1fr); row-gap: 4px; }
@@ -248,14 +247,7 @@ a:hover { text-decoration-color: currentColor; }
 .pair { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--head-gap) 24px; }
 .pair > section { grid-column: 1 / -1; min-width: 0; }
 .pair h2 { margin-bottom: 24px; font-size: 32px; line-height: 40px; letter-spacing: -0.04em; }
-.pair .ledger { margin-top: 24px; }
-.miniature { display: none; }
-.miniature .dots { fill: var(--line); }
-.miniature .edges { fill: none; stroke: var(--edge); stroke-width: 1.5; stroke-linecap: round; }
-.miniature .params { fill: none; stroke: var(--edge); stroke-width: 1; stroke-dasharray: 3 3; }
-.miniature .arw { fill: var(--edge); }
-.miniature .node { fill: var(--surface-2); stroke: var(--edge); stroke-width: 1.5; }
-.miniature .obs { fill: var(--data-obs); }
+.pair .notice { margin-top: 24px; }
 .tools { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 24px; }
 .tools > .card { grid-column: span 12; display: flex; flex-direction: column; align-items: flex-start; }
 .tools > .card h3 { font-size: 20px; line-height: 28px; letter-spacing: -0.02em; }
@@ -269,15 +261,11 @@ a:hover { text-decoration-color: currentColor; }
 .step-index { font: 400 14px/24px var(--font-mono); color: var(--ink-2); }
 .steps-col > .small { margin-top: 24px; }
 .close .hash { font-family: var(--font-mono); letter-spacing: 0; font-size: min(1em, (100vw - 32px) / 7.5); }
-@media (min-width: 601px) {
-  .miniature { display: block; }
-  .tools > .card { grid-column: span 6; }
-}
+@media (min-width: 601px) { .tools > .card { grid-column: span 6; } }
 @media (min-width: 961px) {
   .hero-text { grid-column: 1 / 8; }
   .hero .datum { grid-column: 8 / 13; }
   .facts { grid-column: 1 / 8; }
-  .miniature { grid-column: 8 / 13; position: sticky; top: calc(var(--header-h) + 24px); }
   .links > * { grid-column: span 6; }
   .steps-col { grid-column: 1 / 6; }
   .split > .code { grid-column: 6 / 13; }

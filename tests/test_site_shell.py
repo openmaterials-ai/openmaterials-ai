@@ -153,15 +153,9 @@ def test_the_home_static_text_equals_the_data():
         "s-links": f"{len(g['links'])} ({len(g['links']) - params} formula, {params} parameter)",
         "s-ops": str(len(roadmap["rows"])),
         "s-tiers": str(len(g["tiers"])),
-        "s-codes": str(len(codes)),
-        "s-lean": f"{len(lean['nodes'])} node dimensions, {len(lean['edges'])} edge theorems, "
-                  f"{len(lean['identities'])} identities",
         "s-values": str(len(inst)),
         "s-sim": str(kinds.count("simulation")),
         "s-meas": str(kinds.count("measurement")),
-        "s-version": ver["version"],
-        "s-graph": ver["graph_version"],
-        "s-genesis": ver["genesis"],
     }
     for el_id, want in expect.items():
         got = re.search(r'id="%s">([^<]*)<' % el_id, HOME)

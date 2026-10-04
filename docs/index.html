@@ -81,7 +81,6 @@
   <section id="tools">
     <div class="section-head">
       <h2>Tools</h2>
-      <p class="lede">Each tool reads the published JSON under <code>/data/</code>, such as <code>graph.json</code>, <code>codes.json</code>, and <code>instances.json</code>.</p>
     </div>
     <div class="tools">
       <article class="card">
@@ -109,20 +108,20 @@
       <div>
         <h3>Evidence</h3>
         <dl class="ledger">
-          <div><dt><a href="experiment/">Experiments</a></dt><dd>Committed values are grouped by source reference, with one page for each.</dd></div>
-          <div><dt><a href="agreement/">Cross-code agreement</a></dt><dd>The agreement page groups values for the same observable, material, and recorded conditions from different methods or codes and reports each group's spread.</dd></div>
-          <div><dt><a href="lineage/">Lineage tour</a></dt><dd>The tour follows one QHGK thermal conductivity result for amorphous silicon from its derivation on the map to its lineage record and share links.</dd></div>
-          <div><dt><a href="lean/">Verified layer</a></dt><dd>In Lean 4, the map declares the dimensions of <span data-bind="lean-nodes">89</span> nodes and proves <span data-bind="lean-edges">12</span> edge dimension statements against physlib and <span data-bind="lean-idents">13</span> operator identities against Mathlib.</dd></div>
-          <div><dt><a href="lean/roadmap/">Formalization roadmap</a></dt><dd>The roadmap rates every operator on the map by what a Lean proof of its formula would take: provable, trivial, needs analysis, or nothing to prove.</dd></div>
+          <div><dt><a href="experiment/">Sources</a></dt><dd>Every committed value, grouped by the paper or run it came from.</dd></div>
+          <div><dt><a href="agreement/">Cross-code agreement</a></dt><dd>Values of one quantity from different methods or codes, with the spread of each group.</dd></div>
+          <div><dt><a href="lineage/">Lineage tour</a></dt><dd>One QHGK thermal conductivity result for amorphous silicon, from its derivation on the map to its lineage record.</dd></div>
+          <div><dt><a href="lean/">Verified layer</a></dt><dd>Dimensions of <span data-bind="lean-nodes">89</span> nodes declared in Lean 4, with <span data-bind="lean-edges">12</span> edge dimension statements proven against physlib and <span data-bind="lean-idents">13</span> operator identities against Mathlib.</dd></div>
+          <div><dt><a href="lean/roadmap/">Formalization roadmap</a></dt><dd>Every operator on the map, rated by what a Lean proof of its formula would take: provable, trivial, needs analysis, or nothing to prove.</dd></div>
         </dl>
       </div>
       <div>
         <h3>Build</h3>
         <dl class="ledger">
-          <div><dt><a href="guide/">Guide</a></dt><dd>Install the omai kernel, resolve a label, load the graph, and parse a paper. CI runs each Python snippet in the guide.</dd></div>
-          <div><dt><a href="document/">Document</a></dt><dd>The full specification is published in HTML and PDF, generated from <code>docs/openmaterials.tex</code>.</dd></div>
-          <div><dt><a href="codes/">Codes</a></dt><dd>The bibliography lists the <span data-bind="codes">31</span> codes and workflows the map cites, each with its interface, a citation, a DOI where one exists, and its license.</dd></div>
-          <div><dt><a href="guide/#data">Data files</a></dt><dd>The guide's data contract lists the main JSON files under <code>/data/</code> with their shapes.</dd></div>
+          <div><dt><a href="guide/">Guide</a></dt><dd>Install the omai kernel, resolve a label, load the graph, and parse a paper.</dd></div>
+          <div><dt><a href="document/">Document</a></dt><dd>The full specification, in HTML and PDF.</dd></div>
+          <div><dt><a href="codes/">Codes</a></dt><dd>Each code and workflow the map cites, with its interface, a citation, a DOI where one exists, and its license.</dd></div>
+          <div><dt><a href="guide/#data">Data files</a></dt><dd>The main JSON files under <code>/data/</code>, with their shapes.</dd></div>
         </dl>
       </div>
     </div>
@@ -130,78 +129,37 @@
 
   <section class="featured" id="map">
     <div class="section-head">
-      <h2>Structure</h2>
+      <h2>The map</h2>
     </div>
     <div class="split">
       <div class="facts">
         <dl class="ledger">
-          <div><dt>Quantities</dt><dd><span id="s-nodes">114 (100 observable, 11 hidden, 3 parameter)</span><a class="src" href="data/graph.json">graph.json</a></dd></div>
-          <div><dt>Links</dt><dd><span id="s-links">274 (235 formula, 39 parameter)</span><a class="src" href="data/graph.json">graph.json</a></dd></div>
-          <div><dt>Operators</dt><dd><span id="s-ops">114</span><a class="src" href="data/lean_roadmap.json">lean_roadmap.json</a></dd></div>
-          <div><dt>Tiers</dt><dd><span id="s-tiers">16</span><a class="src" href="data/graph.json">graph.json</a></dd></div>
-          <div><dt>Code representations</dt><dd><span id="s-codes">31</span><a class="src" href="data/codes.json">codes.json</a></dd></div>
-          <div><dt>Lean export</dt><dd><span id="s-lean">89 node dimensions, 12 edge theorems, 13 identities</span><a class="src" href="data/lean.json">lean.json</a></dd></div>
-          <div><dt>Values</dt><dd><span id="s-values">91</span> (<span id="s-sim">87</span> from simulations, <span id="s-meas">4</span> from measurements)<a class="src" href="data/instances.json">instances.json</a></dd></div>
+          <div><dt>Quantities</dt><dd><span id="s-nodes">114 (100 observable, 11 hidden, 3 parameter)</span></dd></div>
+          <div><dt>Links</dt><dd><span id="s-links">274 (235 formula, 39 parameter)</span></dd></div>
+          <div><dt>Operators</dt><dd><span id="s-ops">114</span></dd></div>
+          <div><dt>Tiers</dt><dd><span id="s-tiers">16</span></dd></div>
         </dl>
         <p>Each quantity is a typed node. An observable carries no gauge freedom, so codes given the same inputs should agree on it. A hidden quantity depends on a gauge choice (an eigenvector phase, or the basis inside a degenerate subspace). It is an intermediate, like the eigenvectors, or an approximation, like the RTA thermal conductivity, and codes can differ on it. An operator computes a quantity from its inputs: formula links carry its symbolic formula, and parameter links supply inputs such as the cell volume. The nodes are grouped into tiers, such as Sources, Harmonic, Transport, Ground state, and Thermochemistry.</p>
         <p>A code representation records how one code's outputs map onto these nodes, with units and conventions. Representations exist for kALDo, phono3py, ShengBTE, LAMMPS, GPUMD, Quantum ESPRESSO, VASP, and the other codes on the <a href="codes/">codes page</a>.</p>
       </div>
-      <a class="miniature" href="map/" aria-label="Open the map">
-        <svg viewBox="0 0 600 380" role="img" aria-label="A schematic of the map: typed quantities as nodes, joined left to right by formula edges." xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <pattern id="mini-dots" width="26" height="26" patternUnits="userSpaceOnUse"><circle class="dots" cx="1.2" cy="1.2" r="1.1"/></pattern>
-            <marker id="mini-arw" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path class="arw" d="M0 1 L9 5 L0 9 z"/></marker>
-          </defs>
-          <rect width="600" height="380" fill="url(#mini-dots)"/>
-          <g class="edges">
-            <path d="M92 74 C126 74 132 104 164 104" marker-end="url(#mini-arw)"/>
-            <path d="M92 74 C128 74 128 250 164 250" marker-end="url(#mini-arw)"/>
-            <path d="M92 300 C126 300 132 250 164 250" marker-end="url(#mini-arw)"/>
-            <path d="M244 104 C286 104 292 140 312 178" marker-end="url(#mini-arw)"/>
-            <path d="M244 250 C286 250 292 202 312 190" marker-end="url(#mini-arw)"/>
-            <path d="M244 250 C286 250 292 300 312 300" marker-end="url(#mini-arw)"/>
-            <path d="M392 182 C430 182 436 108 464 108" marker-end="url(#mini-arw)"/>
-            <path d="M392 300 C430 300 436 250 464 250" marker-end="url(#mini-arw)"/>
-            <path d="M464 108 C498 108 502 166 464 184" marker-end="url(#mini-arw)"/>
-          </g>
-          <g class="params">
-            <path d="M92 300 C126 300 132 104 164 104"/>
-            <path d="M244 104 C286 104 292 300 312 300"/>
-          </g>
-          <rect class="node" x="36" y="56" width="56" height="36" rx="10"/>
-          <rect class="node" x="36" y="282" width="56" height="36" rx="10"/>
-          <rect class="obs" x="164" y="86" width="80" height="36" rx="10"/>
-          <rect class="node" x="164" y="232" width="80" height="36" rx="10"/>
-          <rect class="node" x="312" y="164" width="80" height="36" rx="10"/>
-          <rect class="node" x="312" y="282" width="80" height="36" rx="10"/>
-          <rect class="obs" x="464" y="90" width="80" height="36" rx="10"/>
-          <rect class="node" x="464" y="232" width="80" height="36" rx="10"/>
-          <rect class="obs" x="464" y="172" width="80" height="36" rx="10"/>
-        </svg>
-      </a>
     </div>
   </section>
 
   <section class="pair" id="protocol">
     <section>
-      <h2>Evidence</h2>
+      <h2>Values</h2>
       <p>Values attach to nodes without changing the graph. A value is a small record: the node, the material, the conditions, the number with its units, and the source. Its id is the SHA-256 hash of the record's lineage object, so the same claim always gets the same id. When values from different methods or codes answer the same question, the <a href="agreement/">agreement page</a> reports their spread.</p>
+      <p class="notice">Seed set: <span id="s-values">91</span> values, <span id="s-sim">87</span> from simulations (mostly the maintainers' papers and example runs), <span id="s-meas">4</span> measurements.</p>
     </section>
     <section>
       <h2>Protocol</h2>
-      <p>Every node, formula link, and value has a content hash. A change to the graph is appended to <code>map/log.jsonl</code> after the gates check identity, connectivity, duplicates, and the dimensions of each formula whose symbols are registered, and after a maintainer reviews it. The map version hashes the head of that log together with the record-format rules, so citing a version pins both.</p>
-      <dl class="ledger">
-        <div><dt>Map version</dt><dd class="mono"><span id="s-version">f69b18c18fb7637aa6e07dbcc2a037a77c201826ae88ebcc4bfe5b464ffbee7e</span><a class="src" href="data/version.json">version.json</a></dd></div>
-        <div><dt>Graph version</dt><dd class="mono"><span id="s-graph">9802d9e854c915eb47d867575730a556ab7f4a565e392bf5b29da58338f08434</span></dd></div>
-        <div><dt>Genesis</dt><dd class="mono"><span id="s-genesis">e6e8044e92039696417b53b220b0f3f10559a286b0eaabbe7ea4167ff510f6cd</span></dd></div>
-      </dl>
+      <p>Every node, formula link, and value has a content hash. A change to the graph is appended to <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/main/map/log.jsonl">the map's change log</a> after the gates check identity, connectivity, duplicates, and the dimensions of each formula whose symbols are registered, and after a maintainer reviews it. The map version hashes the head of that log together with the record-format rules, so citing a version pins both.</p>
     </section>
   </section>
 
   <section id="contribute">
     <div class="section-head">
       <h2>Contribute a value</h2>
-      <p class="lede">A value is one JSON file under <code>docs/data/instances/</code>, in the shape shown here.</p>
     </div>
     <div class="split">
       <div class="steps-col">
@@ -267,7 +225,7 @@
 <div data-site-footer></div>
 <script src="assets/site.js"></script>
 <script>
-/* The map ledger: each count is computed at load from the published files. The static text is
+/* Each count and the map version are refreshed at load from the published files. The static text is
    the value at map version f69b18c18fb7 and stays in place if a file cannot be read. */
 (function () {
   function get(p) { return fetch(p).then(function (r) { if (!r.ok) throw new Error(p); return r.json(); }); }
@@ -288,25 +246,18 @@
     put('#s-tiers', g.tiers.length);
   }).catch(skip);
   get('data/lean_roadmap.json').then(function (r) { put('#s-ops', r.rows.length); }).catch(skip);
-  get('data/codes.json').then(function (c) { put('#s-codes, [data-bind="codes"]', Object.keys(c).length); }).catch(skip);
+  get('data/codes.json').then(function (c) { put('[data-bind="codes"]', Object.keys(c).length); }).catch(skip);
   get('data/instances.json').then(function (v) {
     put('#s-values', v.length);
     put('#s-sim', count(v, kind('simulation')));
     put('#s-meas', count(v, kind('measurement')));
   }).catch(skip);
   get('data/lean.json').then(function (l) {
-    var nodes = Object.keys(l.nodes).length, edges = Object.keys(l.edges).length, idents = Object.keys(l.identities).length;
-    put('#s-lean', nodes + ' node dimensions, ' + edges + ' edge theorems, ' + idents + ' identities');
-    put('[data-bind="lean-nodes"]', nodes);
-    put('[data-bind="lean-edges"]', edges);
-    put('[data-bind="lean-idents"]', idents);
+    put('[data-bind="lean-nodes"]', Object.keys(l.nodes).length);
+    put('[data-bind="lean-edges"]', Object.keys(l.edges).length);
+    put('[data-bind="lean-idents"]', Object.keys(l.identities).length);
   }).catch(skip);
-  get('data/version.json').then(function (v) {
-    put('#s-version', v.version);
-    put('#s-graph', v.graph_version);
-    put('#s-genesis', v.genesis);
-    put('[data-bind="version12"]', String(v.version).slice(0, 12));
-  }).catch(skip);
+  get('data/version.json').then(function (v) { put('[data-bind="version12"]', String(v.version).slice(0, 12)); }).catch(skip);
 })();
 </script>
 </body>
