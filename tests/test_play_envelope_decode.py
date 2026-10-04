@@ -129,7 +129,7 @@ def test_page_wires_the_envelope_dispatch():
     assert "renderShared(payload)" in html, "the #x= decode does not dispatch through renderShared"
     assert "function renderBundle" in html, "no bundle (paper) view on the page"
     assert "from the shared document" in html, "no read-time source inheritance label"
-    assert "showLengthFallback" in html and "8000" in html, "no length-honesty rule"
+    assert "showLengthFallback" in html and "8000" in html, "no length rule"
     assert "Download it as JSON" in html, "no JSON download fallback"
 
 
@@ -233,10 +233,10 @@ def test_page_wires_the_id_permalink_resolver():
     assert "renderInstanceById" in html, "the #id= route is not dispatched"
     assert "fetch('../data/instances.json')" in html, \
         "the resolver does not fetch the projection the site serves"
-    # not-found is an honest empty state, never a fabricated value
+    # not-found is a plain empty state, never a fabricated value
     assert "function renderInstanceEmpty" in html, "no empty state for an unresolved id"
-    assert "No shared value with this id" in html, "no honest not-found heading"
-    assert "so it cannot resolve" in html and "the link may be stale" in html, \
+    assert "No shared value with this id" in html, "no plain not-found heading"
+    assert "so no value can open" in html and "The link may be stale" in html, \
         "the empty state must say why the id does not resolve"
 
 
@@ -264,7 +264,7 @@ def test_valid_hash_resolves_the_right_instance():
 
 
 def test_unknown_hash_renders_the_empty_state():
-    """A well-formed hash that names no committed value resolves to the honest
+    """A well-formed hash that names no committed value resolves to the plain
     not-found signal (never a fabricated record)."""
     from omai.map_data import build_instances
 
@@ -323,5 +323,5 @@ def test_datasheet_shows_the_lineage_badge():
     assert "var link = 'openmaterials.ai/l/' + short" in html, "the short link is not built"
     assert "data-copy=\"https://' + link + '\"" in html, "the copy button must copy the short link"
     assert "Copy permalink" not in html and "Permalink" not in html, "one id, one Copy link"
-    assert "(uncommitted)" in html, "no honest uncommitted state"
+    assert "(uncommitted)" in html, "no plain uncommitted state"
     assert "INSTANCE_IDS" in html, "committed test set missing"
