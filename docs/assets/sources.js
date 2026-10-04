@@ -13,7 +13,10 @@ var Sources = (function () {
     var out = { quote: '', where: '', cite: '', method: '', doi: doi ? doi[1] : '', arxiv: arx ? arx[1] : '' };
     var m = /^(.+?) ?\(([^()]*\bp\. ?\d+[^()]*)\)\.? (.+)$/.exec(d);
     if (m) {
-      out.quote = m[1].replace(/^["“]|["”]$/g, '');
+      // one quoted passage loses its marks (the page adds them); several keep theirs, paired and joined by "and"
+      out.marked = !/^["“][^"“”]*["”]$/.test(m[1]) && /["“”]/.test(m[1]);
+      out.quote = out.marked ? m[1].replace(/"([^"]*)"/g, '“$1”').replace(/; [a-z]+: /g, ' and ')
+        : m[1].replace(/^["“]|["”]$/g, '');
       out.where = m[2].split(';')[0].trim();
       out.cite = m[3].replace(/,? (?:doi|arXiv):.*$/, '').replace(/\.$/, '');
       return out;

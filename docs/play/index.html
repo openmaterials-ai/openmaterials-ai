@@ -1682,7 +1682,7 @@ function valuesHTML(lineage, node){
     .concat(picked.rest.filter(function(r){ return !isUnitMeta(r.key); }));
   // the main row names its quantity and symbol ("Thermal conductivity κ"), not its key
   var gnode = nodeById[node] || nodeById[baseNode(node)], prop = displayProp(node, lineage.template);
-  var name = prop ? esc(prop) + (gnode && gnode.symbol ? ' ' + tex(gnode.symbol) : '') : '';
+  var sym = gnode && gnode.symbol, name = prop ? esc(prop) + (sym && sym !== prop && sym !== baseNode(node) ? ' ' + tex(sym) : '') : '';  // no symbol that repeats the name or the id
   return '<div class="rec-sec"><div class="rec-h">Values</div>' +
     '<table class="rec-vtable"><thead><tr><th>Quantity</th><th class="num">Value</th><th>Units</th></tr></thead><tbody>' +
     rows.map(function(row){
@@ -2122,7 +2122,7 @@ function sourceRows(record){
   var row = function(k, v){ return '<dt>' + k + '</dt><dd>' + v + '</dd>'; };
   var a = function(href, text){ return '<a href="' + esc(href) + '" target="_blank" rel="noopener">' + esc(text) + '</a>'; };
   var id = p.doi ? row('DOI', a('https://doi.org/' + p.doi, p.doi)) : (p.arxiv ? row('arXiv', a('https://arxiv.org/abs/' + p.arxiv, p.arxiv)) : '');
-  if (p.quote) return [row('Quote', '“' + esc(p.quote) + '” (' + esc(p.where) + ')'), row('Paper', esc(p.cite)), id];
+  if (p.quote) return [row('Quote', (p.marked ? esc(p.quote) : '“' + esc(p.quote) + '”') + ' (' + esc(p.where) + ')'), row('Paper', esc(p.cite)), id];
   if (p.cite) return [row('Paper', esc(p.cite)), p.method ? row('Method', esc(p.method)) : '', id];
   m = Sources.methodLine(record, CODES);
   return m ? [row('Method', esc(m))] : [];
