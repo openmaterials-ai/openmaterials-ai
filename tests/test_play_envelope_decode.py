@@ -130,7 +130,7 @@ def test_page_wires_the_envelope_dispatch():
     assert "function renderBundle" in html, "no bundle (paper) view on the page"
     assert "from the shared document" in html, "no read-time source inheritance label"
     assert "showLengthFallback" in html and "8000" in html, "no length-honesty rule"
-    assert "Download the envelope as JSON" in html, "no JSON download fallback"
+    assert "Download it as JSON" in html, "no JSON download fallback"
 
 
 def test_bundle_stacks_every_datasheet_on_one_page():
@@ -255,8 +255,8 @@ def test_page_wires_the_id_permalink_resolver():
     # not-found is an honest empty state, never a fabricated value
     assert "function renderInstanceEmpty" in html, "no empty state for an unresolved id"
     assert "No shared value with this id" in html, "no honest not-found heading"
-    assert "nothing is guessed" in html or "Nothing is fabricated" in html, \
-        "the empty state must state that nothing is fabricated"
+    assert "so it cannot resolve" in html and "the link may be stale" in html, \
+        "the empty state must say why the id does not resolve"
     # the copy-permalink affordance: the canonical id AS the link, on every datasheet
     assert "function copyPermalink" in html, "no copy-permalink control"
     assert "'#id=' + String(id)" in html, "the permalink is not the #id= form"
@@ -346,7 +346,7 @@ def test_datasheet_shows_the_lineage_badge():
     assert "function lineageDoiHTML" in html, "no badge builder"
     assert "lineageDoiHTML(record)" in html, "the datasheet header does not show the badge"
     assert "function bundleDoiHTML" in html and "bundleDoi" in html, "no bundle short-link badge"
-    assert "bundleDoiPlaceholderHTML" in html and "none yet" in html, \
+    assert "bundleDoiPlaceholderHTML" in html and "Create a short link" in html, \
         "an unminted bundle must show the create-one affordance, never a blank row"
     assert "openmaterials.ai/l/" in html, "the canonical short form is not displayed"
     assert "(uncommitted)" in html, "no honest uncommitted state"

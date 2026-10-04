@@ -3,94 +3,139 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>openmaterials.ai: playground</title>
-<meta name="description" content="Type a method, trace a derivation, or parse a paper: watch the openmaterials map respond live. Fuzzy language in, checkable identity out.">
+<title>Playground | OpenMaterials</title>
+<meta name="description" content="Parse a paper into proposed values, open a lineage record, resolve a method name to map nodes, trace a derivation, or compare two materials by composition distance.">
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="openmaterials.ai">
-<meta property="og:title" content="openmaterials.ai: playground">
-<meta property="og:description" content="Type a method, trace a derivation, or parse a paper: the map responds live.">
+<meta property="og:title" content="Playground | OpenMaterials">
+<meta property="og:description" content="Parse a paper, open a run record, or resolve a method name against the OpenMaterials map.">
 <meta name="twitter:card" content="summary">
 <link rel="stylesheet" href="../assets/vendor/katex/dist/katex.min.css">
 <link rel="stylesheet" href="../assets/site.css">
 <style>
-  :root{--obs:#4f46e5;--sim:#0f9d6b;--meas:#d98a14;--hidbd:#dde4ee;}
+  /* The playground, an app page: header, the tab strip, the tools column and
+     the sub-map canvas, or the full-width datasheet stage. Colors are the
+     site.css tokens; each var() carries the light value as its fallback. */
+  @layer om-fallback {
+    /* Shared components. Unlayered site.css rules win over these once it defines them. */
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:40px;padding:0 20px;border:0;border-radius:9999px;font:inherit;font-weight:500;font-size:16px;line-height:24px;text-decoration:none;white-space:nowrap;cursor:pointer;transition:background-color var(--dur,150ms) var(--ease,ease),color var(--dur,150ms) var(--ease,ease);}
+    .btn--sm{height:32px;padding:0 12px;border-radius:var(--radius,6px);font-size:14px;line-height:20px;}
+    .btn--secondary{background:var(--page,#FFFFFF);color:var(--ink,#171717);box-shadow:0 0 0 1px var(--line,#EBEBEB);}
+    .btn--secondary:hover{background:var(--surface-2,#F2F2F2);}
+    .select{height:32px;min-width:0;max-width:100%;padding:0 8px;border:0;border-radius:var(--radius,6px);box-shadow:0 0 0 1px var(--line,#EBEBEB);background:var(--page,#FFFFFF);color:var(--ink,#171717);font:inherit;font-size:14px;line-height:20px;}
+  }
+  *{box-sizing:border-box;}
   html,body{height:100%;}
-  body{margin:0;display:flex;flex-direction:column;overflow:hidden;max-width:100vw;}
-  .pg-top{flex:0 0 auto;height:56px;display:flex;align-items:center;gap:13px;padding:0 clamp(14px,3vw,22px);background:rgba(255,255,255,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);z-index:20;}
-  .pg-top .brand{font-family:var(--font-serif);font-weight:700;font-size:1.05rem;color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:7px;}
-  .pg-top .om-mark{width:20px;height:20px;border-radius:4.5px;flex:none;display:block;}
-  .pg-top .sub{font-size:.8rem;color:var(--muted);}
-  .pg-nav{margin-left:auto;display:flex;align-items:center;gap:clamp(10px,2vw,20px);}
-  .pg-nav a{font-size:.82rem;color:var(--muted);text-decoration:none;letter-spacing:.02em;border-bottom:2px solid transparent;padding:2px 0;white-space:nowrap;}
-  .pg-nav a:hover{color:var(--accent);}
-  .pg-nav a.active{color:var(--ink);border-bottom-color:var(--accent);}
+  body.app{height:100vh;height:100dvh;margin:0;display:flex;flex-direction:column;overflow:hidden;max-width:100vw;background:var(--page,#FFFFFF);color:var(--ink,#171717);font:400 14px/20px var(--font-sans,"Geist","Geist Fallback",ui-sans-serif,system-ui,sans-serif);-webkit-font-smoothing:antialiased;}
+  :focus-visible{outline:2px solid var(--ink,#171717);outline-offset:2px;}
+  /* header, until the shared app header replaces it */
+  .pg-top{flex:0 0 auto;height:var(--header-h,64px);display:flex;align-items:center;gap:16px;padding:0 var(--inset,16px);border-bottom:1px solid var(--line,#EBEBEB);background:var(--page,#FFFFFF);overflow:hidden;}
+  .pg-top .brand{display:flex;align-items:center;gap:8px;font-weight:500;font-size:16px;line-height:24px;letter-spacing:-.02em;color:var(--ink,#171717);text-decoration:none;white-space:nowrap;}
+  .pg-top .om-mark{width:20px;height:20px;flex:none;display:block;}
+  .pg-top .sub{color:var(--ink-2,#4D4D4D);white-space:nowrap;}
+  .pg-nav{margin-left:auto;display:flex;align-items:center;gap:4px;}
+  .pg-nav a{padding:6px 8px;color:var(--ink-2,#4D4D4D);text-decoration:none;white-space:nowrap;}
+  .pg-nav a:hover,.pg-nav a.active{color:var(--ink,#171717);}
+  @media (max-width:960px){.pg-top .sub{display:none;}}
+  @media (max-width:768px){.pg-nav{display:none;}}
+  .om-beta{font-family:var(--font-mono);font-size:.58rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);border:1px solid currentColor;border-radius:999px;padding:1px 7px;flex:none;line-height:1.5;cursor:default;}
+  /* the tab strip: six tabs and Share; a 3 x 2 grid with Share beside it below 601 px */
   .pg-main{flex:1 1 auto;display:flex;flex-direction:column;min-height:0;min-width:0;max-width:100vw;overflow:hidden;}
+  .pg-tabs{flex:0 0 auto;display:flex;flex-wrap:wrap;align-items:center;gap:0;padding:0 var(--inset,16px);border-bottom:1px solid var(--line,#EBEBEB);background:var(--page,#FFFFFF);}
+  .pg-tab{flex:0 0 auto;padding:12px 16px;border:0;background:none;font:inherit;font-weight:500;font-size:14px;line-height:20px;color:var(--ink-2,#4D4D4D);cursor:pointer;transition:color var(--dur,150ms) var(--ease,ease);}
+  .pg-tab:hover{color:var(--ink,#171717);}
+  .pg-tab.on{color:var(--ink,#171717);box-shadow:inset 0 -2px 0 var(--ink,#171717);}
+  .pg-tabsep{width:1px;height:20px;flex:0 0 auto;margin:0 8px;background:var(--line,#EBEBEB);}
+  #shareBtn{margin-left:auto;}
+  @media (max-width:960px){.pg-tab{padding:12px 10px;}}
+  @media (max-width:600px){
+    .pg-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr)) auto;gap:0;}
+    .pg-tabsep{display:none;}
+    .pg-tab{padding:10px 4px;text-align:center;}
+    #shareBtn{grid-column:4;grid-row:1 / span 2;align-self:center;margin-left:8px;}
+  }
+  /* the tools column and the canvas */
   .pg-body{flex:1 1 auto;display:flex;min-height:0;min-width:0;overflow:hidden;}
-  .pg-left{flex:0 0 380px;max-width:42vw;display:flex;flex-direction:column;border-right:1px solid var(--line);background:var(--surface);min-height:0;}
-  .pg-tabs{display:flex;align-items:stretch;border-bottom:1px solid var(--line);flex:0 0 auto;overflow-x:auto;background:var(--surface);}
-  .pg-tab{flex:0 0 auto;padding:12px 18px;font-size:.82rem;font-weight:650;color:var(--muted);background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;font-family:inherit;}
-  .pg-tabsep{width:1px;flex:0 0 auto;background:var(--line);margin:9px 6px;}
-  .pg-tab.on{color:var(--accent);border-bottom-color:var(--accent);background:#fff;}
-  .pg-panel{flex:1 1 auto;overflow-y:auto;padding:18px;display:none;min-height:0;}
+  .pg-left{flex:0 0 380px;max-width:42vw;min-width:0;min-height:0;display:flex;flex-direction:column;border-right:1px solid var(--line,#EBEBEB);background:var(--page,#FFFFFF);}
+  @media (max-width:960px){.pg-left{flex-basis:320px;}}
+  .pg-panel{flex:1 1 auto;min-height:0;overflow-y:auto;padding:20px;display:none;}
   .pg-panel.on{display:block;}
-  .pg-panel h3{font-size:.72rem;text-transform:uppercase;letter-spacing:.07em;color:var(--faint,#9aa0a8);margin:0 0 8px;font-weight:700;}
-  .pg-panel p{font-size:.88rem;line-height:1.6;color:var(--ink-2,#3d4149);margin:0 0 12px;}
-  .pg-table{width:100%;border-collapse:collapse;font-size:.8rem;margin:0 0 12px;display:block;overflow-x:auto;}
-  .pg-table th,.pg-table td{text-align:left;padding:6px 9px;border-bottom:1px solid var(--line);white-space:nowrap;}
-  .pg-table th{font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;color:var(--faint,#9aa0a8);}
+  .pg-panel h3{margin:0 0 8px;font-family:inherit;font-size:12px;line-height:16px;font-weight:500;letter-spacing:0;color:var(--ink-2,#4D4D4D);}
+  .pg-panel h4{margin:24px 0 8px;font-family:inherit;font-size:14px;line-height:20px;font-weight:500;letter-spacing:0;color:var(--ink,#171717);}
+  .pg-panel p{margin:0 0 12px;font-size:14px;line-height:20px;color:var(--ink-2,#4D4D4D);}
+  .pg-panel details{margin:0 0 12px;} .pg-panel summary{cursor:pointer;color:var(--ink,#171717);margin-bottom:8px;}
+  .pg-panel a,.lin-stage a{color:var(--ink,#171717);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px;text-decoration-color:var(--ink-2,#4D4D4D);}
+  .pg-panel a:hover,.lin-stage a:hover{text-decoration-color:currentColor;}
+  .pg-panel .pg-field{display:block;margin:12px 0 6px;font-size:12px;line-height:16px;font-weight:500;color:var(--ink-2,#4D4D4D);}
+  .pg-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;}
+  .pg-pair{display:flex;flex-wrap:wrap;align-items:center;gap:8px;}
+  .pg-pair label{display:flex;flex-direction:column;gap:4px;flex:1 1 140px;min-width:0;font-size:12px;color:var(--ink-2,#4D4D4D);}
+  .pg-pair .select{width:100%;}
+  .pg-pair .pg-input{flex:1 1 80px;width:auto;min-width:0;}
+  #distTryComp{font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);font-weight:500;color:var(--ink,#171717);}
+  .pg-table{display:block;width:100%;margin:0 0 12px;overflow-x:auto;border-collapse:collapse;font-size:12px;line-height:16px;}
+  .pg-table th,.pg-table td{padding:6px 8px;border-bottom:1px solid var(--line,#EBEBEB);text-align:left;white-space:nowrap;}
+  .pg-table th{font-weight:500;color:var(--ink-2,#4D4D4D);}
   .pg-table td:nth-child(2){white-space:normal;min-width:22ch;}
-  .pg-note{font-size:.8rem;color:var(--muted);}
-  .pg-input{width:100%;box-sizing:border-box;padding:11px 13px;font-size:.95rem;border:1px solid var(--line);border-radius:9px;font-family:inherit;background:#fff;color:var(--ink);}
-  .pg-input:focus{outline:none;border-color:var(--accent);}
+  .pg-panel .pg-note,.pg-note{font-size:12px;line-height:18px;color:var(--ink-2,#4D4D4D);}
+  .pg-input{width:100%;padding:8px 12px;border:0;border-radius:var(--radius,6px);box-shadow:0 0 0 1px var(--line,#EBEBEB);background:var(--page,#FFFFFF);color:var(--ink,#171717);font:inherit;font-size:14px;line-height:20px;}
+  textarea.pg-input{resize:vertical;font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);font-size:12px;line-height:18px;}
   .pg-examples{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0;}
-  .pg-chip{font-size:.76rem;padding:4px 10px;border:1px solid var(--line);border-radius:999px;background:#fff;color:var(--accent);cursor:pointer;}
-  .pg-chip:hover{background:var(--accent-soft);}
-  .pg-results{margin-top:14px;}
-  .pg-hit{display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;margin-bottom:6px;cursor:pointer;background:#fff;}
-  .pg-hit:hover{border-color:var(--accent);}
-  .pg-hit .k{font-size:.62rem;text-transform:uppercase;letter-spacing:.06em;color:var(--faint,#9aa0a8);flex:0 0 auto;}
-  .pg-hit .id{font-family:var(--font-mono,monospace);font-size:.8rem;color:var(--ink);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-  .pg-hit .sc{font-size:.7rem;color:var(--sim);flex:0 0 auto;}
-  .pg-empty{padding:12px;border:1px dashed var(--line);border-radius:8px;color:var(--muted);font-size:.85rem;text-align:center;}
-  .lin-lab{font-size:.62rem;text-transform:uppercase;letter-spacing:.06em;color:var(--faint,#9aa0a8);margin:14px 0 6px;font-weight:700;}
-  .lin-diagram{border:1px solid var(--line);border-radius:9px;padding:10px 12px;background:#fff;overflow-x:auto;}
-  .lin-row{display:flex;align-items:center;gap:6px;font-size:.72rem;padding:2px 0;white-space:nowrap;}
-  .lin-n{font-family:var(--font-mono,monospace);color:var(--ink-2,#3d4149);}
-  .lin-n.hot{color:var(--accent);font-weight:650;}
-  .lin-op{font-family:var(--font-mono,monospace);color:var(--faint,#9aa0a8);font-size:.66rem;}
-  .lin-code{margin:0;padding:10px 12px;background:#1a1c1f;color:#d6d9de;border-radius:9px;font-family:var(--font-mono,monospace);font-size:.7rem;line-height:1.5;overflow-x:auto;white-space:pre;}
+  .pg-chip{padding:4px 10px;border:0;border-radius:9999px;background:var(--surface-2,#F2F2F2);color:var(--ink,#171717);font:inherit;font-size:12px;line-height:16px;cursor:pointer;}
+  .pg-chip:hover{box-shadow:0 0 0 1px var(--edge,#8F8F8F);}
+  .pg-results{margin-top:16px;}
+  .pg-hit{width:100%;display:flex;align-items:center;gap:8px;margin-bottom:6px;padding:8px 10px;border:1px solid var(--line,#EBEBEB);border-radius:var(--radius,6px);background:var(--page,#FFFFFF);font:inherit;text-align:left;cursor:pointer;}
+  .pg-hit:hover{background:var(--surface-2,#F2F2F2);}
+  .pg-hit .k{flex:0 0 auto;font-size:12px;color:var(--ink-2,#4D4D4D);}
+  .pg-hit .id{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);font-size:13px;color:var(--ink,#171717);}
+  .pg-hit .sc{flex:0 0 auto;font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);font-size:12px;color:var(--data-sim,#0C7C55);}
+  .pg-empty{padding:12px 16px;border:1px solid var(--line,#EBEBEB);border-radius:var(--radius,6px);background:var(--surface,#FAFAFA);color:var(--ink,#171717);font-size:14px;line-height:20px;overflow-wrap:anywhere;}
+  .pg-path{font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);font-size:12px;line-height:18px;color:var(--ink,#171717);overflow-wrap:anywhere;}
+  .pg-paper{margin-bottom:10px;font-weight:500;color:var(--ink,#171717);}
+  .lin-lab{margin:16px 0 6px;font-size:12px;line-height:16px;font-weight:500;color:var(--ink-2,#4D4D4D);}
+  .lin-diagram{padding:10px 12px;border:1px solid var(--line,#EBEBEB);border-radius:var(--radius,6px);background:var(--page,#FFFFFF);}
+  .lin-row{display:flex;align-items:center;flex-wrap:wrap;gap:2px 6px;padding:2px 0;font-size:12px;line-height:16px;}
+  .lin-n{min-width:0;font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);color:var(--ink-2,#4D4D4D);overflow-wrap:anywhere;}
+  .lin-n.hot{color:var(--ink,#171717);font-weight:500;}
+  .lin-op{font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);color:var(--ink-2,#4D4D4D);}
+  .lin-code{margin:0;padding:10px 12px;border:1px solid var(--line,#EBEBEB);border-radius:var(--radius,6px);background:var(--page,#FFFFFF);color:var(--ink,#171717);font:400 12px/18px var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);white-space:pre-wrap;overflow-wrap:anywhere;}
   /* drop-a-record ingress: a paste OR a dropped/chosen .json file, rendered in
      place as a plain data view (no server, no storage). The record's data view
      is the .rec-* block below; these classes style the ingress and its
      client-side validation banners only. */
-  .xp-drop{border:1.5px dashed var(--line);border-radius:9px;padding:12px;text-align:center;font-size:.78rem;color:var(--muted);cursor:pointer;background:#fff;transition:border-color .15s,background .15s;}
-  .xp-drop.drag{border-color:var(--accent);background:var(--accent-soft);color:var(--accent);}
-  .xp-drop b{color:var(--accent);font-weight:650;}
-  .xp-err{border:1px solid #f3c6c6;border-left:3px solid #c0392b;border-radius:0 8px 8px 0;background:#fdf3f3;color:#8a2020;font-size:.78rem;padding:8px 10px;margin-bottom:10px;}
-  .xp-ok{border:1px solid #cbe6d8;border-left:3px solid var(--sim);border-radius:0 8px 8px 0;background:#f2faf6;color:#1c6b4a;font-size:.76rem;padding:7px 10px;margin-bottom:10px;}
+  .xp-drop{padding:12px;border:1px dashed var(--edge,#8F8F8F);border-radius:var(--radius,6px);background:var(--page,#FFFFFF);color:var(--ink-2,#4D4D4D);font-size:12px;line-height:16px;text-align:center;cursor:pointer;transition:background-color var(--dur,150ms) var(--ease,ease);}
+  .xp-drop.drag{background:var(--surface-2,#F2F2F2);color:var(--ink,#171717);}
+  .xp-drop b{font-weight:500;color:var(--ink,#171717);}
+  .xp-err,.xp-ok{margin-bottom:10px;padding:12px 16px;border:1px solid var(--line,#EBEBEB);border-radius:var(--radius,6px);background:var(--surface,#FAFAFA);color:var(--ink,#171717);font-size:14px;line-height:20px;overflow-wrap:anywhere;}
+  .xp-err{border-color:var(--ink,#171717);}
+  .xp-err b,.xp-ok b{font-weight:500;}
   .pg-sel{display:flex;flex-direction:column;gap:8px;margin:8px 0;}
-  .pg-canvas{flex:1 1 auto;position:relative;min-width:0;background:radial-gradient(circle at 50% 34%,#ffffff,#f4f1ea 78%);}
+  .pg-canvas{position:relative;flex:1 1 auto;min-width:0;min-height:0;overflow:hidden;background:var(--canvas-dots,radial-gradient(circle at 1px 1px,var(--line,#EBEBEB) 1px,transparent 0) 0 0/24px 24px),var(--page,#FFFFFF);}
   #pgsvg{width:100%;height:100%;display:block;touch-action:none;}
   #pglabels{position:absolute;inset:0;pointer-events:none;overflow:hidden;}
-  #pglabelsInner{position:absolute;left:0;top:0;transform-origin:0 0;}
-  .plab{position:absolute;transform:translate(-50%,-50%);font-family:var(--font-mono,monospace);font-size:11px;color:#312e81;white-space:nowrap;pointer-events:none;}
-  .plab.dim{opacity:.16;}
-  .pg-node circle{transition:opacity .15s;}
-  .pg-node.dim{opacity:.16;}
-  .pg-edge{fill:none;stroke:#c9d0dc;stroke-width:1.4;transition:opacity .15s,stroke .15s;}
+  #pglabelsInner{position:absolute;left:0;top:0;transform-origin:0 0;font-size:11px;}
+  .plab{position:absolute;transform:translate(-50%,-50%);font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);font-size:1em;color:var(--ink,#171717);white-space:nowrap;pointer-events:none;}
+  .plab.dim{opacity:.35;}
+  #pglabelsInner.sparse .plab.dim{display:none;}
+  .pg-node circle{transition:opacity var(--dur,150ms) var(--ease,ease);}
+  .pg-node.dim{opacity:.35;}
+  .pg-edge{fill:none;stroke:var(--edge,#8F8F8F);stroke-width:1;vector-effect:non-scaling-stroke;transition:opacity var(--dur,150ms) var(--ease,ease);}
   .pg-edge.dim{opacity:.1;}
-  .pg-edge.hot{stroke:var(--accent);stroke-width:2;}
-  .pg-hint{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);color:var(--faint,#9aa0a8);font-size:.9rem;text-align:center;pointer-events:none;max-width:70%;}
-  .pg-node-panel{position:absolute;right:16px;top:16px;width:min(300px,60%);background:rgba(255,255,255,.96);backdrop-filter:blur(8px);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:0 8px 26px rgba(16,24,40,.12);display:none;z-index:8;}
-  .pg-node-panel .x{position:absolute;right:12px;top:10px;cursor:pointer;color:var(--muted);font-size:1.1rem;line-height:1;}
-  .pg-node-panel .nm{font-family:var(--font-mono,monospace);font-size:.85rem;color:var(--ink);margin-bottom:6px;padding-right:16px;word-break:break-word;}
-  .pg-node-panel .lb{font-size:.62rem;text-transform:uppercase;letter-spacing:.06em;color:var(--faint,#9aa0a8);margin:10px 0 3px;}
-  .pg-node-panel .fm{font-size:.9rem;overflow-x:auto;}
-  .lean-line{margin:4px 0 2px;padding:7px 9px;background:#1a1c1f;color:#c8f7d8;border-radius:7px;font-family:var(--font-mono,monospace);font-size:.66rem;line-height:1.4;overflow-x:auto;white-space:pre;}
-  .lean-badge{color:#0f9d6b;font-weight:700;}
-  .pg-node-panel .uid{font-family:var(--font-mono,monospace);font-size:.68rem;color:var(--muted);word-break:break-all;}
+  .pg-edge.hot{stroke:var(--data-obs-line,#4F46E5);stroke-width:2;}
+  .pg-hint{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);max-width:min(420px,80%);color:var(--ink-2,#4D4D4D);font-size:14px;line-height:20px;text-align:center;pointer-events:none;}
+  .pg-caption{position:absolute;left:12px;top:12px;z-index:2;max-width:min(560px,calc(100% - 24px));margin:0;color:var(--ink-2,#4D4D4D);font-size:14px;line-height:20px;pointer-events:none;}
+  .pg-node-panel{position:absolute;right:16px;top:16px;z-index:8;width:min(320px,calc(100% - 32px));max-height:calc(100% - 32px);overflow:auto;padding:16px;border-radius:12px;background:var(--page,#FFFFFF);box-shadow:var(--shadow-float,0 0 0 1px #EBEBEB,0 4px 8px -4px rgb(0 0 0 / .04),0 16px 24px -8px rgb(0 0 0 / .06));display:none;}
+  .pg-node-panel .x{position:absolute;right:8px;top:8px;width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;padding:0;border:0;border-radius:var(--radius,6px);background:transparent;color:var(--ink,#171717);font:inherit;font-size:20px;line-height:1;cursor:pointer;}
+  .pg-node-panel .x:hover{background:var(--surface-2,#F2F2F2);}
+  .pg-node-panel .nm{margin-bottom:6px;padding-right:32px;font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);font-size:13px;color:var(--ink,#171717);overflow-wrap:anywhere;}
+  .pg-node-panel .lb{margin:12px 0 4px;font-size:12px;line-height:16px;font-weight:500;color:var(--ink-2,#4D4D4D);}
+  .pg-node-panel .fm{font-size:15px;overflow-x:auto;}
+  .pg-node-panel .aka{font-size:13px;color:var(--ink,#171717);}
+  .lean-line{margin:4px 0 2px;padding:8px 10px;border:1px solid var(--line,#EBEBEB);border-radius:var(--radius,6px);background:var(--page,#FFFFFF);color:var(--ink,#171717);font:400 12px/16px var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);white-space:pre-wrap;overflow-wrap:anywhere;}
+  .lean-badge{color:var(--data-sim,#0C7C55);}
+  .pg-node-panel .uid{font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);font-size:12px;color:var(--ink-2,#4D4D4D);overflow-wrap:anywhere;}
 
   /* ---- the lineage DATA VIEW: a full-width, plain scientific datasheet -------
      A successful light record leaves the tool shell for a full-width typeset
@@ -100,235 +145,175 @@
      the static map data, with the original ingress waiting behind it. */
   body.lin-open .pg-body{display:none;}
   body.lin-open .pg-main{flex:0 0 auto;}
-  .lin-stage{display:none;flex:1 1 auto;min-height:0;overflow-y:auto;background:var(--surface);}
+  .lin-stage{display:none;flex:1 1 auto;min-height:0;overflow-y:auto;background:var(--page,#FFFFFF);}
   body.lin-open .lin-stage{display:block;}
-  .lin-bar{min-height:40px;display:flex;align-items:center;justify-content:space-between;
-    gap:18px;padding:0 26px;}
-  .lin-bar a,.lin-bar button,.lin-ingress button{font:600 .78rem var(--font-sans);color:var(--accent);
-    background:none;border:0;padding:0;cursor:pointer;text-decoration:none;}
-  .lin-bar a:hover,.lin-bar button:hover,.lin-ingress button:hover{text-decoration:underline;}
-  .lin-actions{display:flex;align-items:baseline;justify-content:flex-end;gap:6px 20px;flex-wrap:wrap;}
-  .lin-ingress{max-width:1240px;margin:0 auto;padding:8px 26px 0;}
+  .lin-bar{min-height:48px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:4px 16px;padding:8px var(--inset,16px);border-bottom:1px solid var(--line,#EBEBEB);}
+  .lin-bar a,.lin-bar button,.lin-ingress button{display:inline-flex;align-items:center;height:32px;padding:0 12px;border:0;border-radius:var(--radius,6px);background:transparent;color:var(--ink,#171717);font:inherit;font-weight:500;font-size:14px;line-height:20px;text-decoration:none;cursor:pointer;}
+  .lin-bar a:hover,.lin-bar button:hover,.lin-ingress button:hover{background:var(--surface-2,#F2F2F2);}
+  .lin-bar a[hidden]{display:none;}
+  .lin-actions{display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:4px 8px;}
+  .lin-ingress{max-width:1240px;margin:0 auto;padding:12px var(--inset,16px) 0;}
   .lin-ingress[hidden]{display:none;}
-  .lin-ingress-row{display:grid;grid-template-columns:minmax(280px,1fr) minmax(220px,.55fr) auto;
-    gap:8px 14px;align-items:center;}
-  .lin-ingress .pg-input{padding:7px 9px;font-size:.72rem;line-height:1.35;}
-  .lin-ingress .xp-drop{padding:7px 10px;font-size:.72rem;}
-  .lin-content{max-width:1240px;margin:0 auto;padding:10px 26px 40px;}
-  .lin-examples{margin:0 0 8px;font-size:.74rem;line-height:1.4;color:var(--muted);}
+  .lin-ingress-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.55fr) auto;gap:8px 12px;align-items:center;}
+  .lin-ingress .pg-input{padding:6px 8px;}
+  .lin-ingress .xp-drop{padding:6px 10px;}
+  .lin-content{max-width:1240px;margin:0 auto;padding:12px var(--inset,16px) 40px;}
+  .lin-examples{margin:0 0 8px;font-size:12px;line-height:16px;color:var(--ink-2,#4D4D4D);}
   .lin-examples[hidden]{display:none;}
-  .lin-examples p{margin:0 0 3px;color:var(--ink-2,#3d4149);}
-  .lin-example-links{display:flex;flex-wrap:wrap;gap:2px 14px;}
-  .lin-example-links a{color:var(--accent);text-decoration:none;}
-  .lin-example-links a:hover{text-decoration:underline;}
-  .rec{display:flex;flex-direction:column;gap:6px;}
+  .lin-examples p{margin:0 0 4px;}
+  .lin-example-links{display:flex;flex-wrap:wrap;gap:2px 16px;}
+  .rec{display:flex;flex-direction:column;gap:6px;min-width:0;}
   .rec-head{display:flex;align-items:baseline;justify-content:space-between;gap:24px;min-width:0;}
-  .rec-head-meta{display:flex;align-items:baseline;justify-content:flex-end;flex-wrap:wrap;
-    gap:3px 12px;margin:0;min-width:0;text-align:right;font-family:var(--font-mono,monospace);
-    font-size:.68rem;line-height:1.35;}
+  .rec-head-meta{display:flex;align-items:baseline;justify-content:flex-end;flex-wrap:wrap;gap:4px 12px;margin:0;min-width:0;text-align:right;font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);font-size:12px;line-height:16px;}
   .rec-head-meta>div{display:inline-flex;gap:4px;align-items:baseline;min-width:0;}
-  .rec-head-meta dt{color:var(--muted);text-transform:uppercase;letter-spacing:.04em;}
-  .rec-head-meta dd{margin:0;color:var(--ink);word-break:break-word;}
-  .rec-head-meta a{color:var(--accent);text-decoration:none;}
+  .rec-head-meta dt{color:var(--ink-2,#4D4D4D);}
+  .rec-head-meta dd{margin:0;color:var(--ink,#171717);overflow-wrap:anywhere;}
   /* the visible lineage identifier, the DOI-like recognizer under every title */
-  .rec-doi{display:flex;gap:8px;align-items:center;flex-wrap:wrap;
-    font-family:var(--font-mono);font-feature-settings:"zero" 1;font-size:.78rem;
-    margin:6px 0 0;color:var(--ink-2,#3d4149);}
-  .rec-doi-lab{font-size:.64rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
-    color:var(--muted);font-family:var(--font-sans,'Inter',sans-serif);}
-  .rec-doi a{color:var(--accent);text-decoration:none;}
-  .rec-doi-copy{font-family:var(--font-sans,'Inter',sans-serif);font-size:.68rem;
-    border:1px solid var(--line);background:none;border-radius:5px;padding:1px 7px;
-    cursor:pointer;color:var(--muted);}
-  .rec-doi-un{color:var(--muted);}
-  .rec-doi-src{color:var(--muted);text-decoration:none;border:1px solid var(--line);
-    border-radius:999px;padding:0 8px;font-size:.7rem;}
-  .rec-doi-src:hover{color:var(--accent);border-color:var(--accent);}
-  .rec-doi-mint{font-family:var(--font-sans,'Inter',sans-serif);font-size:.72rem;
-    border:1px dashed var(--line);background:none;border-radius:5px;padding:1px 8px;
-    cursor:pointer;color:var(--accent);}
-  .rec-head-meta a:hover{text-decoration:underline;}
-  .rec-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));
-    gap:8px 34px;align-items:start;}
+  .rec-doi{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:6px 0 0;font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);font-size:13px;color:var(--ink-2,#4D4D4D);overflow-wrap:anywhere;}
+  .rec-doi-lab{font-family:var(--font-sans,"Geist",ui-sans-serif,system-ui,sans-serif);font-size:12px;font-weight:500;color:var(--ink-2,#4D4D4D);}
+  .rec-doi-copy,.rec-doi-mint{height:24px;padding:0 8px;border:0;border-radius:var(--radius,6px);background:transparent;box-shadow:0 0 0 1px var(--line,#EBEBEB);color:var(--ink,#171717);font-family:var(--font-sans,"Geist",ui-sans-serif,system-ui,sans-serif);font-size:12px;font-weight:500;cursor:pointer;}
+  .rec-doi-copy:hover,.rec-doi-mint:hover{background:var(--surface-2,#F2F2F2);}
+  .rec-doi-un{color:var(--ink-2,#4D4D4D);}
+  .rec-doi a.rec-doi-src{padding:0 8px;border-radius:9999px;background:var(--surface-2,#F2F2F2);color:var(--ink,#171717);font-size:12px;text-decoration:none;}
+  .rec-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(330px,100%),1fr));gap:8px 32px;align-items:start;}
   .rec-col{min-width:0;}
   .rec-col>.rec-sec+.rec-sec{margin-top:8px;}
-  /* a section: a small uppercase eyebrow over plain information, no card chrome */
-  .rec-sec{}
-  .rec-h{font-size:.66rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
-    color:var(--faint,#9aa0a8);margin:10px 0 4px;padding-bottom:3px;border-bottom:1px solid var(--line);}
+  /* a section: a small label over plain information, no card chrome */
+  .rec-h{margin:12px 0 4px;padding-bottom:4px;border-bottom:1px solid var(--line,#EBEBEB);font-size:12px;line-height:16px;font-weight:500;color:var(--ink-2,#4D4D4D);}
   /* the datasheet lede and compact header metadata replace What this is */
-  .rec-lede{font-family:var(--font-serif);font-weight:700;font-size:1.5rem;line-height:1.2;
-    color:var(--ink);margin:0;letter-spacing:-.01em;white-space:nowrap;}
+  .rec-lede{margin:0;font-weight:450;font-size:24px;line-height:32px;letter-spacing:-.04em;color:var(--ink,#171717);overflow-wrap:anywhere;}
   /* the key-value list used throughout: label on the left, value (mono) on the
      right, wrapping cleanly. Plain rows, not product cards. */
-  .rec-kv{display:grid;grid-template-columns:minmax(110px,max-content) 1fr;gap:3px 14px;margin:0;align-items:baseline;}
-  .rec-kv dt{font-size:.78rem;line-height:1.4;color:var(--ink-2,#3d4149);font-weight:500;}
-  .rec-kv dd{margin:0;font-family:var(--font-mono,monospace);font-size:.8rem;line-height:1.4;color:var(--ink);
-    word-break:break-word;min-width:0;}
+  .rec-kv{display:grid;grid-template-columns:minmax(110px,max-content) minmax(0,1fr);gap:4px 16px;margin:0;align-items:baseline;}
+  .rec-kv dt{font-size:13px;line-height:20px;color:var(--ink-2,#4D4D4D);}
+  .rec-kv dd{margin:0;min-width:0;font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);font-size:13px;line-height:20px;color:var(--ink,#171717);overflow-wrap:anywhere;}
   .rec-kv dd.wrap{word-break:break-all;}
-  .rec-kv dd a{color:var(--accent);text-decoration:none;}
-  .rec-kv dd a:hover{text-decoration:underline;}
   /* a labelled sub-group inside a section (Hyperparameters, Conditions, ...) */
-  .rec-grp{margin:0 0 7px;}
+  .rec-grp{margin:0 0 8px;}
   .rec-grp:last-child{margin-bottom:0;}
-  .rec-grp-lab{font-size:.7rem;font-weight:650;color:var(--ink-2,#3d4149);margin:7px 0 3px;}
-  /* the derivation drawn as a map excerpt: LANDSCAPE, its own full row.
-     Scales to fit the row on wide screens (the whole derivation visible at
-     once); keeps a legible minimum and scrolls inside its box on narrow ones.
-     The datasheet's one sanctioned graphic. */
+  .rec-grp-lab{margin:8px 0 4px;font-size:12px;line-height:16px;font-weight:500;color:var(--ink,#171717);}
+  /* the derivation drawn as a map excerpt: its own full row. The svg never
+     renders below its natural size (each svg carries its width as an inline
+     min-width), so a wide derivation scrolls inside .rec-mapbox at full
+     legibility instead of shrinking its labels. */
   .rec-maprow{margin-top:4px;}
-  .rec-mapbox{overflow-x:auto;margin:6px 0 10px;border:1px solid var(--line);border-radius:8px;background:#fdfcf9;}
-  /* the svg never renders below its natural size: a wide derivation scrolls
-     inside .rec-mapbox at full legibility instead of shrinking its labels
-     (each svg carries its natural width as an inline min-width) */
+  .rec-mapbox{margin:6px 0 10px;overflow-x:auto;border:1px solid var(--line,#EBEBEB);border-radius:var(--radius,6px);background:var(--page,#FFFFFF);}
   .rec-map{display:block;width:100%;height:auto;}
-  .rec-explain{font-size:.8rem;color:var(--muted);line-height:1.55;margin:2px 0 8px;max-width:72ch;}
-  .rec-maplegend{display:flex;flex-wrap:wrap;gap:4px 18px;align-items:center;
-    font-size:.78rem;color:var(--muted);margin:2px 0 10px;}
-  .rec-maplegend i{display:inline-block;width:15px;height:11px;border-radius:3px;
-    margin-right:6px;vertical-align:-1px;}
-  .rec-complete{border:1px solid var(--accent);background:var(--accent-soft,#eef2ff);border-radius:9px;padding:12px 16px;margin:12px 0 4px;}
+  .rec-explain{max-width:72ch;margin:2px 0 8px;font-size:13px;line-height:20px;color:var(--ink-2,#4D4D4D);}
+  .rec-maplegend{display:flex;flex-wrap:wrap;gap:4px 16px;align-items:center;margin:2px 0 10px;font-size:12px;line-height:16px;color:var(--ink-2,#4D4D4D);}
+  .rec-maplegend i{display:inline-block;width:16px;height:12px;margin-right:6px;border-radius:3px;vertical-align:-1px;}
+  .lg-this{background:var(--surface-2,#F2F2F2);box-shadow:inset 0 0 0 2px var(--data-obs-line,#4F46E5);}
+  .lg-obs{background:var(--page,#FFFFFF);box-shadow:inset 0 0 0 1px var(--data-obs-line,#4F46E5);}
+  .lg-step{background:var(--page,#FFFFFF);box-shadow:inset 0 0 0 1px var(--edge,#8F8F8F);}
+  .rec-complete{margin:12px 0 4px;padding:12px 16px;border:1px solid var(--ink,#171717);border-radius:var(--radius,6px);background:var(--surface,#FAFAFA);}
   .rec-complete-act{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-top:4px;}
-  .rec-complete-act a{font-size:.8rem;color:var(--accent);min-width:0;overflow-wrap:anywhere;}
-  .rec-complete-go{background:var(--accent);border:1px solid var(--accent);color:#fffdf8;border-radius:7px;padding:5px 14px;font-size:.8rem;font-weight:600;cursor:pointer;font-family:inherit;}
-  .rec-complete-go:hover{background:var(--accent-2,#4338ca);border-color:var(--accent-2,#4338ca);}
-  .rec-conf{font-size:.82rem;color:var(--ink-2,#3d4149);line-height:1.5;margin:6px 0;
-    padding:6px 10px;border:1px solid var(--line);border-radius:6px;background:#fdfcf9;}
-  .rec-conf-exact{border-color:#4f46e5;background:#eef2ff;}
-  .rec-conf-code{font-family:var(--font-mono);font-size:.76rem;font-weight:600;}
-  .rec-conf-mark{font-size:.7rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:#4f46e5;}
-  .lg-this{background:#eef2ff;border:1.6px solid #4f46e5;}
-  .lg-obs{background:#fdfcf9;border:1.6px solid #4f46e5;}
-  .lg-step{background:#fdfcf9;border:1.6px solid #8a8177;}
+  .rec-complete-act a{min-width:0;font-size:13px;overflow-wrap:anywhere;}
+  .rec-complete-go{height:32px;padding:0 12px;border:0;border-radius:var(--radius,6px);background:var(--page,#FFFFFF);box-shadow:0 0 0 1px var(--line,#EBEBEB);color:var(--ink,#171717);font:inherit;font-weight:500;font-size:14px;cursor:pointer;}
+  .rec-complete-go:hover{background:var(--surface-2,#F2F2F2);}
+  .rec-conf{margin:6px 0;padding:6px 10px;border:1px solid var(--line,#EBEBEB);border-radius:var(--radius,6px);background:var(--surface,#FAFAFA);color:var(--ink-2,#4D4D4D);font-size:13px;line-height:20px;overflow-wrap:anywhere;}
+  .rec-conf b{font-weight:500;color:var(--ink,#171717);}
+  .rec-conf-exact{border-color:var(--data-obs-line,#4F46E5);background:var(--surface-2,#F2F2F2);}
+  .rec-conf-code{font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);font-size:12px;font-weight:500;color:var(--ink,#171717);}
+  .rec-conf-mark{font-size:12px;font-weight:500;color:var(--data-obs-line,#4F46E5);}
   /* stacked member datasheets inside a bundle */
-  .bundle-member{border-top:1px solid var(--line);margin-top:22px;padding-top:14px;}
-  .rec-grp-lab .rec-grp-tag{font-family:var(--font-mono,monospace);font-size:.66rem;font-weight:400;
-    color:var(--muted);margin-left:7px;}
-  .rec-none{font-size:.8rem;color:var(--muted);font-style:italic;}
+  .bundle-member{margin-top:24px;padding-top:16px;border-top:1px solid var(--line,#EBEBEB);}
+  .rec-grp-lab .rec-grp-tag{margin-left:8px;font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);font-size:12px;font-weight:400;color:var(--ink-2,#4D4D4D);}
+  .rec-none{font-size:13px;color:var(--ink-2,#4D4D4D);}
   /* the values table: value + units, no chart. A plain two-column table. */
-  .rec-vtable{width:100%;table-layout:fixed;border-collapse:collapse;font-size:.78rem;}
+  .rec-vtable{width:100%;table-layout:fixed;border-collapse:collapse;font-size:13px;line-height:20px;}
   .rec-vtable th:first-child:nth-last-child(3){width:52%;}
-  .rec-vtable th{text-align:left;font-size:.64rem;font-weight:700;letter-spacing:.05em;
-    text-transform:uppercase;color:var(--faint,#9aa0a8);padding:3px 10px;border-bottom:1px solid var(--line);}
+  .rec-vtable th{padding:4px 10px;border-bottom:1px solid var(--line,#EBEBEB);text-align:left;font-size:12px;font-weight:500;color:var(--ink-2,#4D4D4D);}
   .rec-vtable th.num{text-align:right;padding-right:0;}
   .rec-vtable th.num:nth-last-child(2){width:28%;}
   .rec-vtable th:first-child,.rec-vtable td:first-child{padding-left:0;}
   .rec-vtable th:last-child,.rec-vtable td:last-child{padding-right:0;}
-  .rec-vtable td{padding:3px 10px;border-bottom:1px solid var(--line);vertical-align:baseline;}
+  .rec-vtable td{padding:4px 10px;border-bottom:1px solid var(--line,#EBEBEB);vertical-align:baseline;}
   .rec-vtable tr:last-child td{border-bottom:none;}
-  .rec-vtable .rec-vk{color:var(--ink-2,#3d4149);overflow-wrap:anywhere;}
-  .rec-vtable .rec-vc{font-size:.68rem;color:var(--muted);margin-top:2px;}
-  .rec-vtable .rec-vv{font-family:var(--font-mono,monospace);font-variant-numeric:tabular-nums;
-    color:var(--ink);text-align:right;padding-right:0;overflow-wrap:anywhere;}
-  .rec-vtable .rec-vu{font-family:var(--font-mono,monospace);color:var(--muted);white-space:nowrap;}
-  .rec-vtable a{color:var(--accent);text-decoration:none;}
-  .rec-vtable a:hover{text-decoration:underline;}
+  .rec-vtable .rec-vk{color:var(--ink-2,#4D4D4D);overflow-wrap:anywhere;}
+  .rec-vtable .rec-vc{margin-top:2px;font-size:12px;color:var(--ink-2,#4D4D4D);}
+  .rec-vtable .rec-vv{padding-right:0;font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);font-variant-numeric:tabular-nums;color:var(--ink,#171717);text-align:right;overflow-wrap:anywhere;}
+  .rec-vtable .rec-vu{font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);color:var(--ink-2,#4D4D4D);overflow-wrap:anywhere;}
   /* WHAT IT MEANS ON THE MAP: plain descriptive text, not a panel */
-  .rec-desc{font-size:.8rem;line-height:1.45;color:var(--ink-2,#3d4149);margin:0 0 5px;}
-  .rec-meta{font-size:.78rem;color:var(--muted);line-height:1.45;margin:0 0 3px;}
-  .rec-meta b{color:var(--ink-2,#3d4149);font-weight:600;}
-  .rec-lineage{font-size:.8rem;line-height:1.45;color:var(--ink-2,#3d4149);margin:0;}
-  .rec-lineage b{color:var(--ink);font-weight:600;}
-  .rec-lineage a{color:var(--accent);text-decoration:none;}
-  .rec-lineage a:hover{text-decoration:underline;}
+  .rec-desc{margin:0 0 6px;font-size:13px;line-height:20px;color:var(--ink-2,#4D4D4D);}
+  .rec-meta{margin:0 0 4px;font-size:13px;line-height:20px;color:var(--ink-2,#4D4D4D);}
+  .rec-meta b,.rec-lineage b{font-weight:500;color:var(--ink,#171717);}
+  .rec-lineage{margin:0;font-size:13px;line-height:20px;color:var(--ink-2,#4D4D4D);}
   /* ARTIFACTS / where the data lives: a plain list of pointers and links */
-  .rec-arts{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px;}
-  .rec-art{font-size:.78rem;line-height:1.4;}
-  .rec-art .rec-art-role{font-size:.6rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
-    color:var(--muted);margin-right:8px;}
-  .rec-art .rec-art-path{font-family:var(--font-mono,monospace);color:var(--ink-2,#3d4149);word-break:break-all;}
-  .rec-art a{color:var(--accent);text-decoration:none;font-weight:600;margin-left:8px;}
-  .rec-art a:hover{text-decoration:underline;}
-  .rec-art .rec-art-sha{display:block;font-family:var(--font-mono,monospace);font-size:.66rem;
-    color:var(--muted);word-break:break-all;margin-top:2px;}
-  .rec-host{font-size:.78rem;line-height:1.4;color:var(--muted);margin:5px 0 0;}
-  .rec-host a{color:var(--accent);text-decoration:none;font-weight:600;}
-  .rec-host a:hover{text-decoration:underline;}
+  .rec-arts{display:flex;flex-direction:column;gap:4px;margin:0;padding:0;list-style:none;}
+  .rec-art{font-size:13px;line-height:20px;overflow-wrap:anywhere;}
+  .rec-art .rec-art-role{margin-right:8px;font-size:12px;font-weight:500;color:var(--ink-2,#4D4D4D);}
+  .rec-art .rec-art-path{font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);color:var(--ink-2,#4D4D4D);word-break:break-all;}
+  .rec-art a{margin-left:8px;font-weight:500;}
+  .rec-art .rec-art-sha{display:block;margin-top:2px;font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);font-size:12px;color:var(--ink-2,#4D4D4D);word-break:break-all;}
+  .rec-host{margin:6px 0 0;font-size:13px;line-height:20px;color:var(--ink-2,#4D4D4D);}
+  .rec-host a{font-weight:500;}
   /* the plain handoff: a normal link to MCG + a Copy link, NOT product CTAs */
-  .rec-links{display:flex;flex-wrap:wrap;gap:5px 16px;align-items:baseline;
-    margin-top:10px;padding-top:6px;border-top:1px solid var(--line);}
-  .rec-links a,.rec-links button{font:600 .78rem var(--font-sans);color:var(--accent);
-    background:none;border:none;padding:0;cursor:pointer;text-decoration:none;}
-  .rec-links a:hover,.rec-links button:hover{text-decoration:underline;}
-  .rec-links .rec-link-note{font-size:.76rem;color:var(--muted);font-weight:400;}
-  @media (max-width:720px){
-    .pg-left{flex-basis:100%;max-width:none;border-right:none;border-bottom:1px solid var(--line);max-height:44vh;}
+  .rec-links{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;margin-top:10px;padding-top:8px;border-top:1px solid var(--line,#EBEBEB);}
+  .rec-links a{font-size:13px;font-weight:500;}
+  .rec-links button{height:28px;padding:0 10px;border:0;border-radius:var(--radius,6px);background:transparent;box-shadow:0 0 0 1px var(--line,#EBEBEB);color:var(--ink,#171717);font:inherit;font-size:13px;font-weight:500;cursor:pointer;}
+  .rec-links button:hover{background:var(--surface-2,#F2F2F2);}
+  .rec-link-note{font-size:12px;line-height:16px;font-weight:400;color:var(--ink-2,#4D4D4D);}
+  @media (max-width:600px){
     .pg-body{flex-direction:column;}
-    .pg-top{gap:8px;padding:0 12px;}
-    .pg-top .sub{display:none;}
-    .pg-nav{gap:8px;}
-    .pg-nav a{font-size:.74rem;}
-    .pg-top .controls .om-btn{padding:9px 9px;font-size:.78rem;}
-    .lin-bar{align-items:flex-start;padding:9px 16px;}
-    .lin-actions{gap:4px 12px;}
-    .lin-ingress{padding:6px 16px 0;}
-    .lin-ingress-row{grid-template-columns:1fr;}
-    .lin-content{padding:10px 16px 32px;}
-    .rec-head{align-items:flex-start;flex-direction:column;gap:5px;}
+    .pg-left{flex:0 0 auto;max-width:none;max-height:44vh;border-right:none;border-bottom:1px solid var(--line,#EBEBEB);}
+    .lin-ingress-row{grid-template-columns:minmax(0,1fr);}
+    .lin-actions{justify-content:flex-start;}
+    .rec-head{flex-direction:column;align-items:flex-start;gap:6px;}
     .rec-head-meta{justify-content:flex-start;text-align:left;}
-    .rec-lede{white-space:normal;}
-    .rec-grid{grid-template-columns:1fr;}
   }
 
   /* ---- the Learn tab (ported from the standalone learn page; widths fit
-     the tools column, everything else verbatim) ---- */
-  .dropzone{width:100%;border:1.5px dashed #d8d4cc;border-radius:12px;background:var(--surface,#fff);padding:30px 20px 26px;display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center;transition:border-color .15s,background .15s;margin-bottom:12px;}
-  .dropzone.over{border-color:var(--accent);background:var(--accent-soft,#eef2ff);}
-  .dropzone .ico{font-size:2rem;line-height:1;}
-  .dropzone .head{font-family:var(--font-serif);font-size:1.15rem;font-weight:700;color:var(--ink);letter-spacing:-.01em;}
-  .dropzone .sub2{font-size:.85rem;color:var(--muted);}
+     the tools column) ---- */
+  .dropzone{width:100%;display:flex;flex-direction:column;align-items:center;gap:12px;margin-bottom:12px;padding:28px 20px 24px;border:1px dashed var(--edge,#8F8F8F);border-radius:var(--radius,6px);background:var(--page,#FFFFFF);text-align:center;transition:background-color var(--dur,150ms) var(--ease,ease);}
+  .dropzone.over{background:var(--surface-2,#F2F2F2);}
+  .dropzone .head{font-weight:500;font-size:16px;line-height:24px;color:var(--ink,#171717);}
+  .dropzone .sub2{font-size:14px;line-height:20px;color:var(--ink-2,#4D4D4D);}
   .dropzone.busy{opacity:.6;pointer-events:none;}
   #fileInput{display:none;}
   #progressList{display:flex;flex-direction:column;gap:8px;margin-bottom:12px;}
-  .prog-row{background:var(--surface,#fff);border:1px solid var(--line);border-radius:9px;padding:10px 14px;font-size:.84rem;display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
-  .prog-row .prog-name{flex:1;font-weight:600;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:120px;}
-  .prog-row .prog-state{font-size:.76rem;font-weight:600;padding:3px 9px;border-radius:6px;white-space:nowrap;}
-  .prog-state.reading{background:#fef9c3;color:#854d0e;}
-  .prog-state.extracting{background:#dbeafe;color:#1e40af;}
-  .prog-state.done{background:#dcfce7;color:#166534;}
-  .prog-state.error{background:#fee2e2;color:#991b1b;}
-  .prog-row .prog-msg{font-size:.74rem;color:var(--muted);flex-basis:100%;}
-  .om-spinner{width:16px;height:16px;border-radius:50%;flex:0 0 auto;border:2px solid var(--accent-soft,#eef2ff);border-top-color:var(--accent);animation:om-spin .7s linear infinite;}
-  @keyframes om-spin{to{transform:rotate(360deg);}}
-  @media (prefers-reduced-motion:reduce){.om-spinner{border:none;background:var(--accent);animation:om-pulse 1.1s ease-in-out infinite;}@keyframes om-pulse{0%,100%{opacity:.35;}50%{opacity:1;}}}
-  #result{display:none;flex-direction:column;gap:14px;}
-  .summary-bar{background:var(--surface,#fff);border:1px solid var(--line);border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
-  .summary-bar .sum-text{font-size:.88rem;font-weight:600;color:var(--ink);}
-  .sum-badge{background:var(--accent-soft,#eef2ff);color:var(--accent-2,#4338ca);border-radius:7px;padding:2px 9px;font-size:.76rem;font-weight:600;font-family:var(--font-mono);}
-  .cov-section,.review-section,.export-section{background:var(--surface,#fff);border:1px solid var(--line);border-radius:10px;padding:14px 16px;}
-  .cov-section .sec-head,.review-section .sec-head,.export-section .sec-head{font-size:.64rem;font-weight:600;text-transform:uppercase;letter-spacing:.13em;color:var(--muted);margin-bottom:10px;}
-  .chips{display:flex;flex-wrap:wrap;gap:7px;}
-  .chip{display:inline-flex;align-items:center;gap:5px;border-radius:8px;padding:4px 10px;font-size:.8rem;font-weight:500;border:1.5px solid var(--line);background:#f8fafc;color:var(--ink-2,#3d4149);cursor:default;}
-  .chip.has-value{border-color:var(--accent);background:var(--accent-soft,#eef2ff);color:var(--accent-2,#4338ca);font-weight:600;}
-  .chip .chip-count{background:var(--accent);color:#fff;border-radius:5px;padding:1px 6px;font-size:.7rem;font-family:var(--font-mono);}
+  .prog-row{display:flex;align-items:center;flex-wrap:wrap;gap:8px 12px;padding:10px 14px;border:1px solid var(--line,#EBEBEB);border-radius:var(--radius,6px);background:var(--page,#FFFFFF);font-size:13px;line-height:20px;}
+  .prog-row .prog-name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:500;color:var(--ink,#171717);}
+  .prog-row .prog-state{padding:2px 8px;border-radius:9999px;background:var(--surface-2,#F2F2F2);color:var(--ink,#171717);font-size:12px;font-weight:500;white-space:nowrap;}
+  .prog-state.error{box-shadow:inset 0 0 0 1px var(--ink,#171717);}
+  .prog-row .prog-msg{flex-basis:100%;font-size:12px;color:var(--ink-2,#4D4D4D);}
+  /* a still busy marker: no spinning loop */
+  .om-spinner{width:8px;height:8px;flex:0 0 auto;border-radius:50%;background:var(--ink-2,#4D4D4D);}
+  #result{display:none;flex-direction:column;gap:12px;}
+  .summary-bar{display:flex;align-items:center;flex-wrap:wrap;gap:8px;padding:12px 16px;border:1px solid var(--line,#EBEBEB);border-radius:var(--radius,6px);background:var(--surface,#FAFAFA);}
+  .summary-bar .sum-text{font-size:14px;font-weight:500;color:var(--ink,#171717);}
+  .cov-section,.review-section,.export-section{padding:14px 16px;border:1px solid var(--line,#EBEBEB);border-radius:var(--radius,6px);background:var(--page,#FFFFFF);}
+  .cov-section .sec-head,.review-section .sec-head,.export-section .sec-head{margin-bottom:10px;font-size:12px;line-height:16px;font-weight:500;color:var(--ink-2,#4D4D4D);}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;}
+  .chip{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:var(--radius,6px);background:var(--surface-2,#F2F2F2);color:var(--ink,#171717);font-size:13px;cursor:default;}
+  .chip.has-value{box-shadow:inset 0 0 0 1px var(--ink,#171717);font-weight:500;}
+  .chip .chip-count{padding:0 6px;border-radius:9999px;background:var(--page,#FFFFFF);color:var(--ink,#171717);font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);font-size:12px;}
   .paper-group{margin-bottom:16px;}.paper-group:last-child{margin-bottom:0;}
-  .paper-title{font-family:var(--font-serif);font-size:.98rem;font-weight:700;color:var(--ink);margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--line);}
-  .vi-row{border:1px solid var(--line);border-radius:9px;padding:10px 12px;margin-bottom:7px;background:#fbfaf8;transition:background .12s,opacity .12s;}
-  .vi-row.rejected{opacity:.45;background:#f4f2ee;}
+  .paper-title{margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--line,#EBEBEB);font-weight:500;font-size:14px;color:var(--ink,#171717);overflow-wrap:anywhere;}
+  .vi-row{margin-bottom:8px;padding:10px 12px;border:1px solid var(--line,#EBEBEB);border-radius:var(--radius,6px);background:var(--surface,#FAFAFA);transition:opacity var(--dur,150ms) var(--ease,ease);}
+  .vi-row.rejected{opacity:.5;}
   .vi-row-top{display:flex;align-items:flex-start;gap:10px;flex-wrap:wrap;}
-  .vi-sym{font-size:.92rem;min-width:0;}
-  .vi-val{font-size:.88rem;font-weight:700;color:var(--ink);white-space:nowrap;}
-  .vi-mat{font-size:.78rem;color:var(--ink-2,#3d4149);flex:1;min-width:100px;}
-  .vi-status{font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:5px;white-space:nowrap;align-self:flex-start;}
-  .vi-status.mapped{background:#dcfce7;color:#166534;}
-  .vi-status.novel{background:#fef9c3;color:#854d0e;}
-  .vi-quote{font-size:.75rem;color:var(--muted);margin-top:6px;font-style:italic;line-height:1.55;}
+  .vi-sym{min-width:0;font-size:15px;}
+  .vi-val{font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);font-size:13px;font-weight:500;color:var(--ink,#171717);white-space:nowrap;}
+  .vi-mat{flex:1;min-width:100px;font-size:13px;color:var(--ink-2,#4D4D4D);overflow-wrap:anywhere;}
+  .vi-cond{color:var(--ink-2,#4D4D4D);}
+  .vi-status{align-self:flex-start;padding:2px 8px;border-radius:9999px;background:var(--surface-2,#F2F2F2);color:var(--ink,#171717);font-size:12px;font-weight:500;white-space:nowrap;}
+  .vi-status.novel{box-shadow:inset 0 0 0 1px var(--edge,#8F8F8F);}
+  .vi-quote{margin-top:6px;font-size:13px;line-height:20px;color:var(--ink-2,#4D4D4D);overflow-wrap:anywhere;}
   .vi-controls{display:flex;gap:6px;margin-top:8px;align-items:center;flex-wrap:wrap;}
-  .btn-accept{border:1.5px solid #16a34a;background:#dcfce7;color:#166534;border-radius:7px;padding:3px 12px;font-size:.74rem;font-weight:700;cursor:pointer;}
-  .btn-accept:hover,.btn-accept.active{background:#16a34a;color:#fff;}
-  .btn-reject{border:1.5px solid #dc2626;background:#fff;color:#dc2626;border-radius:7px;padding:3px 12px;font-size:.74rem;font-weight:700;cursor:pointer;}
-  .btn-reject:hover,.btn-reject.active{background:#dc2626;color:#fff;}
-  .attention-section{background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:12px 16px;display:none;}
-  .attention-section .sec-head{font-size:.76rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#92400e;margin-bottom:8px;}
-  .attn-item{font-size:.78rem;color:#78350f;margin-bottom:5px;line-height:1.55;padding-left:12px;position:relative;}
-  .attn-item::before{content:'*';position:absolute;left:0;color:#d97706;}
+  .btn-accept,.btn-reject{height:28px;padding:0 12px;border:0;border-radius:var(--radius,6px);background:var(--page,#FFFFFF);box-shadow:0 0 0 1px var(--line,#EBEBEB);color:var(--ink,#171717);font:inherit;font-size:13px;font-weight:500;cursor:pointer;}
+  .btn-accept:hover,.btn-reject:hover{background:var(--surface-2,#F2F2F2);}
+  .btn-accept.active,.btn-reject.active{background:var(--ink,#171717);color:var(--page,#FFFFFF);box-shadow:none;}
+  .attention-section{display:none;padding:12px 16px;border:1px solid var(--ink,#171717);border-radius:var(--radius,6px);background:var(--surface,#FAFAFA);}
+  .attention-section .sec-head{margin-bottom:8px;font-size:12px;font-weight:500;color:var(--ink,#171717);}
+  .attn-item{position:relative;margin-bottom:6px;padding-left:12px;font-size:13px;line-height:20px;color:var(--ink,#171717);overflow-wrap:anywhere;}
+  .attn-item::before{content:'*';position:absolute;left:0;color:var(--ink-2,#4D4D4D);}
   .export-section{display:flex;flex-direction:column;gap:10px;}
   .export-section .om-btn{align-self:flex-start;}
-  .export-note{font-size:.75rem;color:var(--muted);line-height:1.6;}
-  .om-beta{font-family:var(--font-mono);font-size:.58rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);border:1px solid currentColor;border-radius:999px;padding:1px 7px;flex:none;line-height:1.5;cursor:default;}
+  .export-note{font-size:12px;line-height:18px;color:var(--ink-2,#4D4D4D);}
+  @media (prefers-reduced-motion: reduce){*,*::before,*::after{transition-duration:0s !important;animation-duration:0s !important;}}
 </style>
 </head>
-<body>
+<body class="app">
 <div class="pg-top">
   <a class="brand" href="../"><img class="om-mark" src="../assets/logo.svg" alt="" width="20" height="20">openmaterials.ai</a><span class="om-beta" title="Beta: the map and its schema are still growing. Every committed value is content-addressed, so its identifier stays resolvable across versions.">beta</span>
   <span class="sub">playground</span>
@@ -341,7 +326,6 @@
     <a href="../document/">Document</a>
     <a href="https://github.com/openmaterials-ai/openmaterials-ai" target="_blank" rel="noopener">Source</a>
   </nav>
-  <button class="om-btn om-btn-sm" id="shareBtn" type="button">Share</button>
 </div>
 
 <div class="pg-main">
@@ -350,26 +334,25 @@
     <button class="pg-tab" data-tab="lineage" type="button">Lineage</button>
     <button class="pg-tab" data-tab="distance" type="button">Distance</button>
     <span class="pg-tabsep" aria-hidden="true"></span>
-    <button class="pg-tab" data-tab="query" type="button">Query</button>
+    <button class="pg-tab" data-tab="query" type="button">Resolve</button>
     <button class="pg-tab" data-tab="trace" type="button">Trace</button>
-    <button class="pg-tab" data-tab="map" type="button">Map</button>
+    <button class="pg-tab" data-tab="map" type="button">Sub-map</button>
+    <button class="btn btn--secondary btn--sm" id="shareBtn" type="button">Share</button>
   </div>
   <div class="pg-body">
   <div class="pg-left">
 
     <div class="pg-panel on" data-panel="learn">
       <h3>Learn a paper</h3>
-      <p>Drop a PDF and the parser maps its reported quantities onto the map,
-        every value backed by a verbatim, page-located quote you accept or
-        reject. Runs through a cost-contained relay on openmaterials
-        infrastructure; no account or API key needed. The relay has a small
-        daily budget shared by all visitors, so a run may ask you to come back
-        tomorrow.</p>
+      <p>Drop a PDF. Your browser extracts the text, and a language model
+        proposes each reported value as a map entry with a verbatim quote and its
+        page number; you accept or reject each one. The text goes to the model
+        through our relay, so you need no account or API key. The relay has a
+        daily budget shared by all visitors and a daily limit per address.</p>
       <div class="dropzone" id="dropzone">
-        <div class="ico">&#128196;</div>
-        <div class="head">Drop a paper (PDF) or a batch</div>
-        <div class="sub2">Drag and drop one or more PDF files here, or choose a file.</div>
-        <label class="om-btn" id="chooseBtn" for="fileInput">Choose PDF&hellip;</label>
+        <div class="head">Drop one or more PDFs here</div>
+        <div class="sub2">Or choose files from your computer.</div>
+        <button class="om-btn om-btn-primary" id="chooseBtn" type="button">Choose PDFs</button>
         <input type="file" id="fileInput" accept="application/pdf" multiple>
       </div>
       <div id="progressList"></div>
@@ -382,143 +365,143 @@
       </div>
       <div class="learn-proposal">
         <h4>Already have a proposal?</h4>
-        <p>A parsed paper reports quantities; the map knows how each is
-          produced. Load a proposal (or paste one) and its method dataflow
-          draws below, with the same lineage lit on the map.</p>
-        <button class="om-btn om-btn-primary" id="loadExample" type="button" style="display:inline-block">Load an example</button>
-        <p style="margin:14px 0 6px;font-size:.78rem;color:var(--muted)">or paste a proposal JSON:</p>
-        <textarea class="pg-input" id="proposalInput" rows="4" placeholder='{"claims": [{"node_id": "...", ...}]}' style="resize:vertical;font-family:var(--font-mono,monospace);font-size:.78rem"></textarea>
-        <button class="om-btn om-btn-sm" id="renderProposal" type="button" style="margin-top:8px">Draw lineage</button>
+        <p>A proposal lists the map nodes a paper reports. Load the example or
+          paste a proposal, and the page draws the map edges that produce those
+          quantities, here and on the canvas.</p>
+        <button class="om-btn" id="loadExample" type="button">Load an example</button>
+        <label class="pg-field" for="proposalInput">Or paste a proposal JSON:</label>
+        <textarea class="pg-input" id="proposalInput" rows="4" placeholder='{"claims": [{"node_id": "...", ...}]}'></textarea>
+        <div class="pg-actions"><button class="om-btn om-btn-sm" id="renderProposal" type="button">Draw the dataflow</button></div>
         <div id="parseResult" style="margin-top:14px"></div>
       </div>
     </div>
 
     <div class="pg-panel" data-panel="query">
       <h3>Resolve a method</h3>
-      <p>Type a method or quantity in plain language. The semantic resolver
-        grounds it to typed map nodes, live. Fuzzy language in, checkable
-        identity out.</p>
-      <input class="pg-input" id="qInput" placeholder="quasi-harmonic approximation" autocomplete="off" spellcheck="false">
+      <p>Type a method or quantity as a paper would name it. The resolver matches
+        it against each node's labels and returns ranked node ids: curated aliases
+        first, then exact labels, then token matches. It runs in your browser
+        with no model call.</p>
+      <input class="pg-input" id="qInput" placeholder="quasi-harmonic approximation" autocomplete="off" spellcheck="false" aria-label="A method or quantity">
       <div class="pg-examples" id="qExamples"></div>
       <div class="pg-results" id="qResults"></div>
     </div>
 
     <div class="pg-panel" data-panel="trace">
       <h3>Trace a derivation</h3>
-      <p>Pick a source and a target quantity; the canvas draws the derivation
-        path the map knows between them.</p>
+      <p>Pick two quantities, and the canvas draws the shortest derivation path
+        between them in either direction.</p>
       <div class="pg-sel">
-        <input class="pg-input" id="traceFrom" placeholder="from (e.g. Structure)" list="nodeList" autocomplete="off">
-        <input class="pg-input" id="traceTo" placeholder="to (e.g. ThermalConductivity)" list="nodeList" autocomplete="off">
+        <input class="pg-input" id="traceFrom" placeholder="from (e.g. Structure)" list="nodeList" autocomplete="off" aria-label="From">
+        <input class="pg-input" id="traceTo" placeholder="to (e.g. ThermalConductivity)" list="nodeList" autocomplete="off" aria-label="To">
       </div>
       <datalist id="nodeList"></datalist>
       <div class="pg-results" id="traceResult"></div>
     </div>
 
     <div class="pg-panel" data-panel="map">
-      <h3>A map from code</h3>
-      <p>A sub-map is a list of edges plus the map version they came from. Paste
-        that JSON to render it, or build one on the canvas and Share it: the
-        link carries the edges in its fragment, no server. Node symbols and
-        formulas are pulled live from the map by id.</p>
+      <h3>A sub-map from JSON</h3>
+      <p>A sub-map is a list of edges and the map version they came from. Paste
+        the JSON to render it. Share copies a link that carries the edges in its
+        URL fragment, so no server stores them. Node symbols and formulas load
+        from the live map by id.</p>
       <button class="om-btn om-btn-sm" id="loadMapExample" type="button">Load an example</button>
-      <p style="margin:12px 0 6px;font-size:.78rem;color:var(--muted)">the map, as code:</p>
-      <textarea class="pg-input" id="mapInput" rows="7" placeholder='{"v": "8aea09f90c24", "e": [["Structure", "compute_dispersion", "Frequency"]]}' style="resize:vertical;font-family:var(--font-mono,monospace);font-size:.74rem"></textarea>
-      <button class="om-btn om-btn-sm" id="renderMap" type="button" style="margin-top:8px">Render map</button>
-      <button class="om-btn om-btn-sm" id="copyMermaid" type="button" style="margin-top:8px" title="Copy this map as a mermaid flowchart: paste it into any markdown (GitHub renders it natively)">Copy as Mermaid</button>
+      <label class="pg-field" for="mapInput">Sub-map JSON:</label>
+      <textarea class="pg-input" id="mapInput" rows="7" placeholder='{"v": "8aea09f90c24", "e": [["Structure", "compute_dispersion", "Frequency"]]}'></textarea>
+      <div class="pg-actions">
+        <button class="om-btn om-btn-sm" id="renderMap" type="button">Render</button>
+        <button class="om-btn om-btn-sm" id="copyMermaid" type="button" title="Copy this sub-map as a Mermaid flowchart. GitHub renders Mermaid in Markdown files, issues, and pull requests.">Copy as Mermaid</button>
+      </div>
       <div id="mapResult" style="margin-top:12px"></div>
     </div>
 
     <div class="pg-panel" data-panel="distance">
       <h3>How far apart are two structures?</h3>
-      <p>The hash answers <b>same or different</b>; the distance layer answers
-        <b>how far</b>. Named, versioned metrics over atomic configurations,
-        one default, no silent fallbacks: everything below is read live from
-        <a href="../data/distances.json">the published registry</a>, computed
-        by the same build that writes the map data.</p>
+      <p>A content hash tells you whether two configurations are identical. The
+        distance layer measures how far apart they are, with named, versioned
+        metrics and one default. The table below is read from the published
+        registry, <a href="../data/distances.json">data/distances.json</a>, which
+        the build writes with the map data.</p>
       <div id="distRegistry"></div>
-      <h3 style="margin-top:18px">The channels on a silicon zoo</h3>
+      <h3 style="margin-top:18px">Each metric on a set of silicon structures</h3>
       <p id="distZooNote"></p>
       <div id="distZoo"></div>
       <p id="distCommitted" class="pg-note"></p>
       <h3 style="margin-top:18px">Distance between papers</h3>
-      <p class="pg-note">Pick two committed sources: every quantity and material
-        they share compares with <code>curve@1</code> (symmetric relative L2 on
-        the shared temperature range, computed in this page by the same rule as
-        omdc), and their materials compare with <code>comp@1</code> (Element
-        Mover's Distance on the Pettifor scale) where a material name is a
-        parseable formula (a-Si parses to Si; SWCNT honestly refuses). Single
-        shared points list side by side without a distance; nothing is
-        inferred.</p>
-      <p>
-        <label>source A <select id="distPaperA"></select></label>
-        <label style="margin-left:12px">source B <select id="distPaperB"></select></label>
+      <p class="pg-note">Pick two committed sources. Each quantity, material, and
+        units key they share is compared with <code>curve@1</code>, the symmetric
+        relative L2 distance over the shared temperature range, computed in this
+        page by the same rule as omdc. Their materials are compared with
+        <code>comp@1</code>, the Element Mover's Distance on the Pettifor scale,
+        when the name parses as a formula (a-Si parses as Si; SWCNT does not
+        parse). Where a source has single points, the page lists them side by
+        side and gives the relative difference at any matching temperature.</p>
+      <p class="pg-pair">
+        <label>Source A <select class="select" id="distPaperA"></select></label>
+        <label>Source B <select class="select" id="distPaperB"></select></label>
       </p>
       <div id="distPapers"></div>
       <h3 style="margin-top:18px">How far apart are two materials?</h3>
-      <p class="pg-note">Type any two formulas: <code>comp@1</code> (the
-        Element Mover&#39;s Distance on the Pettifor scale, the registry&#39;s
-        chemistry channel) answers instantly, in this page. Zero means the
-        same chemistry in any structure: diamond and graphite are both C.</p>
-      <p>
-        <input id="distTryFa" size="10" value="NaCl">
-        <span style="opacity:.6">vs</span>
-        <input id="distTryFb" size="10" value="KCl">
-        <b id="distTryComp" style="margin-left:10px"></b>
+      <p class="pg-note">Type two formulas. The page computes <code>comp@1</code>,
+        the Element Mover&#39;s Distance on the Pettifor scale, as you type. A
+        distance of zero means the same composition in any structure: diamond and
+        graphite are both C.</p>
+      <p class="pg-pair">
+        <input class="pg-input" id="distTryFa" size="10" value="NaCl" aria-label="Formula A">
+        <span>vs</span>
+        <input class="pg-input" id="distTryFb" size="10" value="KCl" aria-label="Formula B">
+        <b id="distTryComp"></b>
       </p>
-      <div id="distTryBar" style="max-width:420px;height:8px;border:1px solid currentColor;border-radius:4px;overflow:hidden;opacity:.9">
+      <div id="distTryBar" style="max-width:420px;height:8px;border:1px solid currentColor;border-radius:4px;overflow:hidden">
         <div id="distTryFill" style="height:100%;width:0;background:currentColor"></div>
       </div>
       <p class="pg-note" id="distTryWord"></p>
-      <p>Try:
-        <a href="#" class="dist-try-pair" data-a="NaCl" data-b="KCl">salt vs sylvite</a> &middot;
+      <p class="pg-note">Try:
+        <a href="#" class="dist-try-pair" data-a="NaCl" data-b="KCl">NaCl vs KCl</a> &middot;
         <a href="#" class="dist-try-pair" data-a="C" data-b="C">diamond vs graphite</a> &middot;
         <a href="#" class="dist-try-pair" data-a="Si" data-b="Ge">Si vs Ge</a> &middot;
         <a href="#" class="dist-try-pair" data-a="GaAs" data-b="GaP">GaAs vs GaP</a> &middot;
-        <a href="#" class="dist-try-pair" data-a="SiO2" data-b="GeO2">quartz vs its Ge twin</a> &middot;
-        <a href="#" class="dist-try-pair" data-a="Fe" data-b="Au">iron vs gold</a> &middot;
-        <a href="#" class="dist-try-pair" data-a="Si" data-b="C3H8O" data-note="yes, rubbing alcohol is a material">Si vs rubbing alcohol</a>
+        <a href="#" class="dist-try-pair" data-a="SiO2" data-b="GeO2">SiO2 vs GeO2</a> &middot;
+        <a href="#" class="dist-try-pair" data-a="Fe" data-b="Au">Fe vs Au</a> &middot;
+        <a href="#" class="dist-try-pair" data-a="Si" data-b="C3H8O">Si vs C3H8O (isopropanol)</a>
       </p>
     </div>
 
     <div class="pg-panel" data-panel="lineage">
       <h3>A lineage as a link</h3>
-      <p>A lineage is a data container: the X-to-Y path from inputs to a result, and the whole record travels in the link, no server.</p>
+      <p>A lineage record names a result and the inputs and settings that produced it. Copy link puts the whole record in the URL, and the link reopens it here.</p>
       <details><summary>How this works</summary>
-        <p>A lineage record is a data container: light, and identified by its
-          lineage, the X-to-Y path from inputs to a result (a map node when known, else a template with its
-          hyperparameters and setup values) plus optional pointers to heavy
-          artifacts hosted on
-          <a href="https://materialscodegraph.com/">MaterialsCodeGraph</a>. Paste a
-          record, or drop a <code>.json</code> file (an MCG-served record pastes
-          straight in), to open a plain <b>data view</b> of it, then Copy link: the
-          whole record rides in the <code>#x=</code> fragment, no server, and
-          replays here as the same view. Nothing is stored or uploaded, it is a
-          client-side view. The data view shows what the container holds as plain
-          information: what the record is, every field of the lineage, what the
-          output node means on the map, and where the data lives, plus a plain link
-          to run this lineage as a simulation on MaterialsCodeGraph. One link can
-          also carry a whole set of lineages from one paper (a bundle envelope with
-          the publication metadata stated once): it opens as a plain paper view
-          listing each lineage, one click from its full datasheet. Dashboards and compute live on
-          MaterialsCodeGraph, not here.</p>
+        <p>A lineage record is small. Its identity is its lineage: the output node
+          on the map, or, when the map has no node for it, a template with its
+          hyperparameters and setup values. Heavy artifacts stay with their host,
+          such as <a href="https://materialscodegraph.com/">MaterialsCodeGraph</a>,
+          and the record points to them. Paste a record or drop a <code>.json</code>
+          file, including a record served by MaterialsCodeGraph, to open its data
+          view: every field of the lineage, what the output node means on the map,
+          where the data lives, and a link to run the lineage on
+          MaterialsCodeGraph. Copy link writes the whole record into the
+          <code>#x=</code> fragment of the URL, so nothing is uploaded or stored. A
+          link can also carry a set of lineages from one paper, with the
+          publication metadata stated once; it opens as a list with each
+          lineage's datasheet below.</p>
       </details>
       <button class="om-btn om-btn-sm" id="loadXExample" type="button">Load an example</button>
-      <p style="margin:12px 0 6px;font-size:.78rem;color:var(--muted)">the lineage, as a record:</p>
-      <textarea class="pg-input" id="xInput" rows="9" placeholder='{"lineage": {"node": "ThermalConductivity[transport_model=hnemd]", "material": {"name": "Si"}, "hyperparameters": {"nep_cutoff": 8.0}}}' style="resize:vertical;font-family:var(--font-mono,monospace);font-size:.74rem"></textarea>
-      <div class="xp-drop" id="xDrop" style="margin-top:8px">Drop a <b>.json</b> record here, or <b>click to choose a file</b>.
+      <label class="pg-field" for="xInput">Lineage record JSON:</label>
+      <textarea class="pg-input" id="xInput" rows="9" placeholder='{"lineage": {"node": "ThermalConductivity[transport_model=hnemd]", "material": {"name": "Si"}, "hyperparameters": {"nep_cutoff": 8.0}}}'></textarea>
+      <div class="xp-drop" id="xDrop" role="button" tabindex="0" style="margin-top:8px">Drop a <b>.json</b> record here, or <b>click to choose a file</b>.
         <input type="file" id="xFile" accept=".json,application/json" style="display:none"></div>
-      <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
-        <button class="om-btn om-btn-sm" id="renderX" type="button">Render lineage</button>
-        <button class="om-btn om-btn-sm" id="copyXLink" type="button" title="Copy a link that carries this record in its #x= fragment: it reopens this lineage here.">Copy link</button>
+      <div class="pg-actions">
+        <button class="om-btn om-btn-sm" id="renderX" type="button">Open record</button>
+        <button class="om-btn om-btn-sm" id="copyXLink" type="button" title="Copies a link with this record in its #x= fragment. The link reopens the record here.">Copy link</button>
       </div>
       <div id="xResult" style="margin-top:14px"></div>
     </div>
   </div>
 
-  <div class="pg-canvas">
+  <div class="pg-canvas canvas">
     <svg id="pgsvg" preserveAspectRatio="xMidYMid meet" role="img" aria-label="A focused sub-map of the quantities matching the current query or trace."></svg>
     <div id="pglabels"><div id="pglabelsInner"></div></div>
+    <p id="pgCaption" class="pg-caption" hidden></p>
     <div class="pg-hint" id="pgHint">Parse a paper (or draw a proposal below the dropzone) and its claims light up here as the paper's sub-map.</div>
     <div class="pg-node-panel" id="pgNodePanel"></div>
   </div>
@@ -527,19 +510,19 @@
 
 <div id="linStage" class="lin-stage">
   <div class="lin-bar">
-    <a id="linBack" href="#/play?tab=lineage">&#8249; playground tools</a>
+    <a id="linBack" href="#/play?tab=lineage">Back to the playground</a>
     <div class="lin-actions">
       <button id="linCopy" type="button">Copy link</button>
-      <a id="linRun" href="https://app.materialscodegraph.com/" target="_blank" rel="noopener" hidden>Run this lineage as a simulation on MaterialsCodeGraph</a>
-      <button id="linPaste" type="button">paste another</button>
+      <a id="linRun" href="https://app.materialscodegraph.com/" target="_blank" rel="noopener" hidden>Run this lineage on MaterialsCodeGraph</a>
+      <button id="linPaste" type="button">Open another record</button>
     </div>
   </div>
   <div class="lin-ingress" id="linIngress" hidden>
     <div class="lin-ingress-row">
-      <textarea class="pg-input" id="linInput" rows="3" placeholder='{"lineage": {"node": "ThermalConductivity", "material": {"name": "Si"}}}' spellcheck="false"></textarea>
-      <div class="xp-drop" id="linDrop">Drop a <b>.json</b> record here, or <b>click to choose a file</b>.
+      <textarea class="pg-input" id="linInput" rows="3" placeholder='{"lineage": {"node": "ThermalConductivity", "material": {"name": "Si"}}}' spellcheck="false" aria-label="Lineage record JSON"></textarea>
+      <div class="xp-drop" id="linDrop" role="button" tabindex="0">Drop a <b>.json</b> record here, or <b>click to choose a file</b>.
         <input type="file" id="linFile" accept=".json,application/json" style="display:none"></div>
-      <button id="linRender" type="button">Render lineage</button>
+      <button id="linRender" type="button">Open record</button>
     </div>
   </div>
   <div class="lin-content">
@@ -569,6 +552,8 @@ var labelsInner = document.getElementById('pglabelsInner');
 var hint = document.getElementById('pgHint');
 var nodePanel = document.getElementById('pgNodePanel');
 var SVGNS = 'http://www.w3.org/2000/svg';
+// scrolls jump instead of glide under reduced motion
+var SCROLL = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
 
 var GRAPH = null, SEM = [], LEAN = {nodes:{},edges:{}}, semById = {}, nodeById = {}, children = {}, parents = {}, symHtml = {};
 var catalogById = {};   // node id -> {id, symbol, description}: the plain-language names for the lineage view
@@ -648,26 +633,30 @@ var mapReady = Promise.all([
   });
   seedUI();
   return applyHash();
-}).catch(function(e){ hint.textContent = 'Could not load the map: ' + e; });
+}).catch(function(e){ hint.textContent = 'The map data did not load: ' + e; });
 
 function seedUI(){
   var ex = ['quasi-harmonic approximation', 'phonon thermal conductivity', 'electronic density of states', 'kappa'];
   var box = document.getElementById('qExamples');
-  ex.forEach(function(q){ var c = document.createElement('span'); c.className = 'pg-chip'; c.textContent = q;
+  ex.forEach(function(q){ var c = document.createElement('button'); c.type = 'button'; c.className = 'pg-chip'; c.textContent = q;
     c.addEventListener('click', function(){ document.getElementById('qInput').value = q; runQuery(q); }); box.appendChild(c); });
   var dl = document.getElementById('nodeList');
   Object.keys(nodeById).sort().forEach(function(id){ var o = document.createElement('option'); o.value = id; dl.appendChild(o); });
 }
 
 /* ---- rendering a focused sub-map ----------------------------------------- */
-function renderSubmap(nodeIds, hotEdgeOps){
+function renderSubmap(nodeIds, hotEdgeOps, showIds){
+  document.getElementById('pgCaption').hidden = true;   // any later drawing clears the example caption
   var set = {}; nodeIds.forEach(function(id){ set[id] = 1; });
   hotEdgeOps = hotEdgeOps || {};
   // the induced neighborhood: the hit nodes plus their direct neighbors, so an
-  // edge has both endpoints to draw against.
+  // edge has both endpoints to draw against; showIds, when given, names the
+  // context nodes instead (a proposal draws only its producing edges).
   var show = {}; nodeIds.forEach(function(id){ show[id] = 1;
+    if (showIds) return;
     (children[id] || []).forEach(function(c){ show[c] = 1; });
     (parents[id] || []).forEach(function(p){ show[p] = 1; }); });
+  (showIds || []).forEach(function(id){ if (nodeById[id]) show[id] = 1; });
   var ids = Object.keys(show);
   if (!ids.length) { svg.innerHTML = ''; labelsInner.innerHTML = ''; hint.style.display = 'block'; return; }
   hint.style.display = 'none';
@@ -687,9 +676,12 @@ function renderSubmap(nodeIds, hotEdgeOps){
   var minx = Math.min.apply(null, xs) - 60, maxx = Math.max.apply(null, xs) + 60;
   var miny = Math.min.apply(null, ys) - 50, maxy = Math.max.apply(null, ys) + 50;
   VB = { x: minx, y: miny, w: Math.max(200, maxx - minx), h: Math.max(150, maxy - miny) };
+  // a small sub-map is never magnified past 1.6x, so circles and labels keep a reading size
+  var cr = svg.getBoundingClientRect(), k = Math.min(cr.width / VB.w, cr.height / VB.h) / 1.6;
+  if (k > 1) { var cx = VB.x + VB.w / 2, cy = VB.y + VB.h / 2; VB.w *= k; VB.h *= k; VB.x = cx - VB.w / 2; VB.y = cy - VB.h / 2; }
   svg.setAttribute('viewBox', VB.x + ' ' + VB.y + ' ' + VB.w + ' ' + VB.h);
 
-  var colorOf = function(n){ return n.type === 'observable' ? 'var(--obs)' : (n.type === 'parameter' ? '#94a3b8' : '#7c89a0'); };
+  var colorOf = function(n){ return n.type === 'observable' ? 'var(--data-obs,#4F46E5)' : (n.type === 'parameter' ? 'var(--edge,#8F8F8F)' : 'var(--ink-2,#4D4D4D)'); };
   var eStr = '';
   GRAPH.links.forEach(function(l){
     if (!show[l.source] || !show[l.target] || l.source === l.target) return;
@@ -703,7 +695,7 @@ function renderSubmap(nodeIds, hotEdgeOps){
   ids.forEach(function(id){ var n = nodeById[id], p = pos[id];
     var r = set[id] ? 9 : 6;
     var cls = 'pg-node' + (set[id] ? '' : ' dim');
-    nStr += '<g class="' + cls + '" data-id="' + esc(id) + '"><circle cx="' + p.x + '" cy="' + p.y + '" r="' + r + '" fill="' + colorOf(n) + '" stroke="#fff" stroke-width="1.5"></circle></g>';
+    nStr += '<g class="' + cls + '" data-id="' + esc(id) + '"><circle cx="' + p.x + '" cy="' + p.y + '" r="' + r + '" style="fill:' + colorOf(n) + ';stroke:var(--page,#FFFFFF)" stroke-width="1.5"></circle></g>';
   });
   svg.innerHTML = eStr + nStr;
 
@@ -718,6 +710,7 @@ function syncLabels(ids, pos, set){
   var tx = (rect.width - VB.w * sc) / 2 - VB.x * sc;
   var ty = (rect.height - VB.h * sc) / 2 - VB.y * sc;
   labelsInner.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(' + sc + ')';
+  labelFloor(sc);
   var h = '';
   ids.forEach(function(id){ var p = pos[id];
     h += '<div class="plab' + (set[id] ? '' : ' dim') + '" style="left:' + p.x + 'px;top:' + (p.y - 17) + 'px">' + (symHtml[id] || esc(id)) + '</div>';
@@ -725,16 +718,23 @@ function syncLabels(ids, pos, set){
   labelsInner.innerHTML = h;
 }
 
+// Labels never render under 12 px: zoomed out, the font grows to compensate,
+// and the labels of dimmed context nodes hide.
+function labelFloor(sc){
+  if (!(sc > 0)) return;
+  var px = Math.max(11, 12 / sc); labelsInner.style.fontSize = px + 'px'; labelsInner.classList.toggle('sparse', px > 11);
+}
+
 function openNode(id){
   var n = nodeById[id]; if (!n) return;
   var fam = (semById[id] && (semById[id].curated || [])).join(', ');
-  var h = '<span class="x" id="pgClose">&times;</span>';
+  var h = '<button type="button" class="x" id="pgClose" aria-label="Close">&times;</button>';
   h += '<div class="nm">' + esc(id) + '</div>';
-  h += '<div class="lb">symbol</div><div class="fm">' + (symHtml[id] || esc(n.symbol)) + '</div>';
-  if (n.formula) h += '<div class="lb">formula</div><div class="fm">' + tex(n.formula, true) + '</div>';
-  if (fam) h += '<div class="lb">also known as</div><div style="font-size:.78rem;color:var(--ink-2,#3d4149)">' + esc(fam) + '</div>';
+  h += '<div class="lb">Symbol</div><div class="fm">' + (symHtml[id] || esc(n.symbol)) + '</div>';
+  if (n.formula) h += '<div class="lb">Formula</div><div class="fm">' + tex(n.formula, true) + '</div>';
+  if (fam) h += '<div class="lb">Also known as</div><div class="aka">' + esc(fam) + '</div>';
   var lv = LEAN.nodes && LEAN.nodes[id];
-  if (lv) h += '<div class="lb">verified in Lean <span class="lean-badge" title="This node type-checks against PhysLean (Lean 4.29.1).">&#10003;</span></div><pre class="lean-line">' + esc(lv.lean) + '</pre>';
+  if (lv) h += '<div class="lb"><span class="lean-badge">Proven in Lean</span></div><pre class="lean-line">' + esc(lv.lean) + '</pre>';
   h += '<div class="lb">uid</div><div class="uid">' + esc(n.uid || '') + '</div>';
   nodePanel.innerHTML = h; nodePanel.style.display = 'block';
   document.getElementById('pgClose').addEventListener('click', function(){ nodePanel.style.display = 'none'; });
@@ -748,14 +748,14 @@ function runQuery(q){
   if (!q) { box.innerHTML = ''; renderSubmap([], {}); hint.style.display = 'block'; hint.textContent = 'Type a method on the left, or trace a derivation, and the matching part of the map appears here.'; return; }
   var hits = resolveLabel(q);
   if (!hits.length) {
-    box.innerHTML = '<div class="pg-empty">No home on the map yet. An honest gap: this method would feed the encode queue.</div>';
-    renderSubmap([], {}); hint.style.display = 'block'; hint.textContent = '"' + q + '" resolves to nothing: the map has no node for it (yet).';
+    box.innerHTML = '<div class="pg-empty">No node on the map matches this phrase yet.</div>';
+    renderSubmap([], {}); hint.style.display = 'block'; hint.textContent = '"' + q + '" matches no node on the map.';
     return;
   }
   var nodeHits = hits.filter(function(h){ return h.kind === 'node' && nodeById[h.id]; }).map(function(h){ return h.id; });
   var edgeOps = {}; hits.filter(function(h){ return h.kind === 'edge'; }).forEach(function(h){ edgeOps[h.id] = 1; });
   box.innerHTML = hits.slice(0, 8).map(function(h){
-    return '<div class="pg-hit" data-id="' + esc(h.id) + '"><span class="k">' + esc(h.kind) + '</span><span class="id">' + esc(h.id) + '</span><span class="sc">' + h.score.toFixed(2) + '</span></div>';
+    return '<button type="button" class="pg-hit" data-id="' + esc(h.id) + '"><span class="k">' + esc(h.kind) + '</span><span class="id">' + esc(h.id) + '</span><span class="sc">' + h.score.toFixed(2) + '</span></button>';
   }).join('');
   box.querySelectorAll('.pg-hit').forEach(function(el){ el.addEventListener('click', function(){
     var id = el.getAttribute('data-id');
@@ -784,10 +784,10 @@ function runTrace(){
   var from = document.getElementById('traceFrom').value.trim();
   var to = document.getElementById('traceTo').value.trim();
   var out = document.getElementById('traceResult');
-  if (!nodeById[from] || !nodeById[to]) { out.innerHTML = '<div class="pg-empty">Pick two nodes that exist on the map.</div>'; renderSubmap([], {}); return; }
+  if (!nodeById[from] || !nodeById[to]) { out.innerHTML = '<div class="pg-empty">Pick two node ids from the list.</div>'; renderSubmap([], {}); return; }
   var path = bfsPath(from, to) || bfsPath(to, from);
   if (!path) { out.innerHTML = '<div class="pg-empty">No derivation path between these two on the map.</div>'; renderSubmap([from, to], {}); return; }
-  out.innerHTML = '<div style="font-size:.82rem;color:var(--ink-2,#3d4149)">' + path.map(function(id){ return esc(id); }).join(' <span style="color:var(--faint,#9aa0a8)">&rarr;</span> ') + '</div>';
+  out.innerHTML = '<div class="pg-path">' + path.map(function(id){ return esc(id); }).join(' &rarr; ') + '</div>';
   var ops = {};
   for (var i = 0; i < path.length - 1; i++) {
     var l = GRAPH.links.find(function(x){ return x.source === path[i] && x.target === path[i + 1]; });
@@ -827,7 +827,7 @@ function renderProposal(proposal){
   var diagram = lin.edges.map(function(e){
     var op = e.op.replace(/\[.*?\]/g, '').replace(/_/g, ' ');
     return '<div class="lin-row"><span class="lin-n' + (lin.touched[e.from] ? ' hot' : '') + '">' + esc(e.from) + '</span>'
-         + '<span class="lin-op">&mdash;' + esc(op) + '&rarr;</span>'
+         + '<span class="lin-op">' + esc(op) + ' &rarr;</span>'
          + '<span class="lin-n' + (lin.touched[e.to] ? ' hot' : '') + '">' + esc(e.to) + '</span></div>';
   }).join('');
   // the mapping in code: each reported value -> its node id and unit
@@ -836,22 +836,29 @@ function renderProposal(proposal){
   }).join('\n');
 
   box.innerHTML =
-    (proposal.paper ? '<div style="font-size:.82rem;font-weight:650;color:var(--ink);margin-bottom:10px">' + esc(proposal.paper) + '</div>' : '')
-    + '<div class="lin-lab">The paper\'s dataflow</div><div class="lin-diagram">' + (diagram || '<span style="color:var(--muted)">no producing edges among the reported quantities</span>') + '</div>'
+    (proposal.paper ? '<div class="pg-paper">' + esc(proposal.paper) + '</div>' : '')
+    + '<div class="lin-lab">The paper\'s dataflow</div><div class="lin-diagram">' + (diagram || '<span class="pg-note">No map edge produces the reported quantities.</span>') + '</div>'
     + '<div class="lin-lab">The mapping, in code</div><pre class="lin-code">' + code + '</pre>';
-  renderSubmap(lin.nodes.filter(function(n){ return lin.touched[n]; }), eops);
+  renderSubmap(lin.nodes.filter(function(n){ return lin.touched[n]; }), eops, lin.nodes);
 }
 
-document.getElementById('loadExample').addEventListener('click', function(){
-  fetch('example-proposal.json?v=' + Date.now()).then(function(r){ return r.json(); })
-    .then(function(p){ document.getElementById('proposalInput').value = JSON.stringify(p, null, 1); renderProposal(p); })
-    .catch(function(e){ document.getElementById('parseResult').innerHTML = '<div class="pg-empty">Could not load the example: ' + esc(e.message) + '</div>'; });
-});
+// The example proposal, drawn and captioned. A bare /play/ opens with it, so the
+// canvas starts with a drawing; the Load an example button also reports a failure.
+function loadDefaultExample(report){
+  fetch('example-proposal.json?v=' + Date.now()).then(function(r){ return r.json(); }).then(function(p){
+    document.getElementById('proposalInput').value = JSON.stringify(p, null, 1);
+    renderProposal(p);
+    var c = document.getElementById('pgCaption'); if (c) { c.textContent = 'Example: ' + (p.paper || ''); c.hidden = false; }
+  }).catch(function(e){
+    if (report) document.getElementById('parseResult').innerHTML = '<div class="pg-empty">The example did not load: ' + esc(e.message) + '</div>';
+  });
+}
+document.getElementById('loadExample').addEventListener('click', function(){ loadDefaultExample(true); });
 document.getElementById('renderProposal').addEventListener('click', function(){
   var raw = document.getElementById('proposalInput').value.trim();
   if (!raw) return;
   try { renderProposal(JSON.parse(raw)); }
-  catch (e) { document.getElementById('parseResult').innerHTML = '<div class="pg-empty">Not valid JSON: ' + esc(e.message) + '</div>'; }
+  catch (e) { document.getElementById('parseResult').innerHTML = '<div class="pg-empty">The text is not valid JSON: ' + esc(e.message) + '</div>'; }
 });
 
 /* ---- lineage: a light record rendered from #x= or a paste -----------------
@@ -987,7 +994,7 @@ function instanceToRecord(entry){
    {ok:true, record} when the hash is valid and names a committed value,
    {ok:false, reason:'malformed'} when it is not 64 hex characters (rejected,
    never fetched or fabricated), and {ok:false, reason:'not-found', hash} when
-   it is well-formed but matches no value (the honest empty state's signal). A
+   it is well-formed but matches no value (the empty state's signal). A
    pure function of the hash and the projection: no DOM, no fetch, so the wire
    is testable under Node like the envelope decode. */
 function resolveInstanceById(hash, instances){
@@ -1009,7 +1016,7 @@ function resolveInstanceById(hash, instances){
 
 /* A client-side mirror of validate_light's SHAPE checks (omai/lineages.py):
    a convenience for the upload/paste ingress, NOT the authoritative gate (the
-   Python validate_light stays that for git entries). It is honest about gaps
+   Python validate_light stays that for git entries). It states its gaps
    the way validate_light is: lineage present; when a node is named it is checked
    against THIS map version (node-unresolved is a normal, valid state, not an
    error); artifact pointers well-formed ({path, role} required, url/sha256
@@ -1046,7 +1053,7 @@ function validateLightJS(record){
         return { ok: false, error: 'artifact ' + i + ' sha256, when present, must be a 64-hex string.' };
     }
   }
-  // node-unresolved is VALID (the honesty rule): a named-but-off-map node, or no
+  // node-unresolved is VALID (state what we have): a named-but-off-map node, or no
   // node at all, is reported, never rejected. renderLineage shows the flag.
   var nodeResolved = !!(node && nodeById[node]);
   return { ok: true, record: record, node: node || null, nodeResolved: nodeResolved };
@@ -1065,8 +1072,8 @@ function ingestLineage(raw, sourceLabel){
   var record;
   try { record = JSON.parse(text); }
   catch (e) {
-    showLineageError('<div class="xp-err">Not valid JSON' +
-      (sourceLabel ? ' in ' + esc(sourceLabel) : '') + ': ' + esc(e.message) + '</div>');
+    showLineageError('<div class="xp-err">This is not valid JSON' +
+      (sourceLabel ? ' (' + esc(sourceLabel) + ')' : '') + ': ' + esc(e.message) + '</div>');
     renderSubmap([], {}); return;
   }
   // a pasted or dropped ENVELOPE takes the shared-payload dispatch: a
@@ -1082,12 +1089,12 @@ function ingestLineage(raw, sourceLabel){
     showLineageError('<div class="xp-err">' + esc(v.error) + '</div>');
     renderSubmap([], {}); return;
   }
-  // A one-line honest status above the render (client convenience; the Python
+  // A one-line status above the render (client convenience; the Python
   // validate_light is the real gate for anything entering git).
   var status = v.node
     ? (v.nodeResolved ? 'Valid record: node <b>' + esc(v.node) + '</b> resolves on this map version.'
                       : 'Valid record: node <b>' + esc(v.node) + '</b> is not on this map version (node-unresolved, still valid).')
-    : 'Valid record: no map node named (template only, node-unresolved). Whatever we have.';
+    : 'Valid record: it names no map node (template only, node-unresolved).';
   if (!renderLineage(v.record)) return;
   // Prepend the status banner WITHOUT re-parsing the box: insertAdjacentHTML
   // keeps the nodes renderLineage just built (and the Copy-link click handler
@@ -1128,7 +1135,7 @@ function renderLineageExampleNav(record){
   var current = galleryEntryFor(record);
   if (!current) { box.hidden = true; box.innerHTML = ''; return; }
   var others = lineageGallery.filter(function(entry){ return entry && entry !== current && entry.fragment; });
-  box.innerHTML = '<p>Example lineage, real committed evidence. Paste your own, or pick another:</p>' +
+  box.innerHTML = '<p>This example is a committed value. Paste your own record or open another example:</p>' +
     '<div class="lin-example-links">' + others.map(function(entry){
       var label = [entry.material, baseNode(entry.node)].filter(Boolean).join(' ');
       if (entry.code) label += ' (' + entry.code + ')';
@@ -1189,9 +1196,9 @@ function showLengthFallback(obj, len, btn, resetLabel){
   var note = document.createElement('div');
   note.id = 'linLenNote';
   note.className = 'xp-err';
-  note.textContent = 'This share is ' + len + ' characters as a link, longer than the 8000 a link carries reliably, so no link was minted. ';
+  note.textContent = 'This link would be ' + len + ' characters, over the 8000-character limit for reliable links, so none was made. ';
   var a = document.createElement('a');
-  a.textContent = 'Download the envelope as JSON instead';
+  a.textContent = 'Download it as JSON';
   a.download = 'lineage-envelope.json';
   a.href = URL.createObjectURL(new Blob([JSON.stringify(obj, null, 1)], { type: 'application/json' }));
   note.appendChild(a);
@@ -1283,11 +1290,11 @@ function renderDistanceTab(){
     document.getElementById('distCommitted').textContent = c.pairs && c.pairs.length
       ? 'Committed configurations, pairwise ' + (c.metric || '') + ': ' +
         c.pairs.map(function(p){ return p.a.name + ' to ' + p.b.name + ' = ' + p.distance; }).join('; ')
-      : 'The commons holds ' + (c.configurations || 0) + ' committed configuration' +
-        ((c.configurations || 0) === 1 ? '' : 's') + ' today; pairwise committed distances appear here as more land.';
+      : 'The map holds ' + (c.configurations || 0) + ' committed configuration' +
+        ((c.configurations || 0) === 1 ? '' : 's') + '. Pairwise distances appear here when more are committed.';
   }).catch(function(e){
     document.getElementById('distRegistry').innerHTML =
-      '<p>Could not load the distance registry: ' + esc(e.message) + '</p>';
+      '<p class="pg-empty">The distance registry did not load: ' + esc(e.message) + '</p>';
   });
 }
 document.querySelectorAll('.pg-tab[data-tab="distance"]').forEach(function(btn){
@@ -1307,18 +1314,18 @@ function renderTryDistance(){
   if (!fa || !fb) {
     out.textContent = '';
     fill.style.width = '0';
-    word.textContent = 'not a formula I can parse; element symbols only (Si, GaAs, SiO2)';
+    word.textContent = 'Not a parseable formula. Use element symbols, such as Si, GaAs, or SiO2.';
     return;
   }
   var d = window.omdcJS.compElmd(fa, fb);
   out.textContent = 'comp@1 = ' + (d === 0 ? '0' : d.toFixed(2));
   fill.style.width = (Math.min(d, 20) / 20 * 100).toFixed(1) + '%';
   word.textContent =
-    d === 0 ? 'identical chemistry: every polymorph of one is chemistry-twin to the other' :
-    d <= 1 ? 'chemical neighbors: swap an element for the one next door' :
-    d < 4 ? 'same neighborhood of the periodic table' :
-    d < 10 ? 'different chemical families' :
-    'different worlds';
+    d === 0 ? 'Same composition: any polymorph of one matches the other.' :
+    d <= 1 ? 'Neighbors: one element swapped for an adjacent one on the Pettifor scale.' :
+    d < 4 ? 'Same neighborhood of the periodic table' :
+    d < 10 ? 'Different chemical families' :
+    'Unrelated chemistry';
 }
 function initTryDistance(){
   if (tryWired) return;
@@ -1332,8 +1339,6 @@ function initTryDistance(){
       document.getElementById('distTryFa').value = a.getAttribute('data-a');
       document.getElementById('distTryFb').value = a.getAttribute('data-b');
       renderTryDistance();
-      var note = a.getAttribute('data-note');
-      if (note) document.getElementById('distTryWord').textContent += ' (' + note + ')';
     });
   });
   renderTryDistance();
@@ -1361,7 +1366,7 @@ function initPapersCompare(){
     selB.addEventListener('change', renderPapersCompare);
     renderPapersCompare();
   }).catch(function(e){
-    document.getElementById('distPapers').innerHTML = '<p>Could not load instances: ' + esc(e.message) + '</p>';
+    document.getElementById('distPapers').innerHTML = '<p class="pg-empty">The committed values did not load: ' + esc(e.message) + '</p>';
   });
 }
 function seriesOf(ref){
@@ -1407,7 +1412,7 @@ function renderPapersCompare(){
     });
     html += '</tbody></table>';
   } else {
-    html += '<p class="pg-note">These two sources share no (quantity, material, units) key; there is nothing to compare curve-wise.</p>';
+    html += '<p class="pg-note">These sources share no quantity, material, and units key, so there is no curve to compare.</p>';
   }
   var mats = function(S){
     var seen = {};
@@ -1435,7 +1440,7 @@ function renderPapersCompare(){
 // Every datasheet shows its recognizer. A COMMITTED value's badge is the
 // canonical short id, openmaterials.ai/l/<first 12 hex> (deterministic, no
 // registry: the id IS the identity, git-style). An uncommitted record shows
-// its id prefix, honestly labeled: committing through a PR is what mints the
+// its id prefix, labeled as such: committing through a PR is what mints the
 // resolving short link. The href resolves locally (#id=), so the badge works
 // on every host; the copy button copies the canonical URL.
 function lineageDoiHTML(record){
@@ -1452,35 +1457,35 @@ function lineageDoiHTML(record){
     : '';
   if (INSTANCE_IDS && INSTANCE_IDS.has(id)) {
     return '<div class="rec-doi"><span class="rec-doi-lab">lineage id</span>' +
-      '<a href="#id=' + short + '" title="The canonical short id of this committed value: the first 12 characters of its sha256, resolving at openmaterials.ai/l/' + short + '.">openmaterials.ai/l/' + short + '</a>' +
-      '<button type="button" class="rec-doi-copy" data-copy="https://openmaterials.ai/l/' + short + '" title="Copy the canonical short link">copy</button>' +
+      '<a href="#id=' + short + '" title="The short id of this committed value: the leading characters of its SHA-256 id.">openmaterials.ai/l/' + short + '</a>' +
+      '<button type="button" class="rec-doi-copy" data-copy="https://openmaterials.ai/l/' + short + '" title="Copy the canonical short link">Copy</button>' +
       chip + '</div>';
   }
   return '<div class="rec-doi"><span class="rec-doi-lab">lineage id</span>' +
-    '<span class="rec-doi-un" title="The content id of this lineage. It is not committed to the map, so no short link resolves to it yet; landing it through a pull request mints one.">' + short + ' (uncommitted)</span></div>';
+    '<span class="rec-doi-un" title="This lineage is not committed to the map, so it has no short link yet. Committing it through a pull request creates one.">' + short + ' (uncommitted)</span></div>';
 }
 // Before a bundle is minted it HAS no short link (the data lives only in the
 // long URL); the badge row says so and offers the mint in place, so the
 // recognizer is visible-or-creatable at first sight, never silently blank.
 function bundleDoiPlaceholderHTML(){
   return '<span class="rec-doi-lab">short link</span>' +
-    '<button type="button" class="rec-doi-mint" title="Store this bundle and mint its short link (openmaterials.ai/s/...). A stored bundle is public to anyone with the code.">none yet: create one</button>';
+    '<button type="button" class="rec-doi-mint" title="Stores this set and creates its short link, openmaterials.ai/s/ plus a code. Anyone with the code can open a stored set.">Create a short link</button>';
 }
 function bundleDoiHTML(code){
   return '<span class="rec-doi-lab">short link</span>' +
     '<a href="#s=' + code + '" title="The stored short link of this shared set.">openmaterials.ai/s/' + code + '</a>' +
-    '<button type="button" class="rec-doi-copy" data-copy="https://openmaterials.ai/s/' + code + '" title="Copy the short link">copy</button>';
+    '<button type="button" class="rec-doi-copy" data-copy="https://openmaterials.ai/s/' + code + '" title="Copy the short link">Copy</button>';
 }
 var currentShortCode = null;   // set when the open bundle came from (or minted) /s/<code>
 document.addEventListener('click', function(ev){
   var goBtn = ev.target && ev.target.closest ? ev.target.closest('.rec-complete-go') : null;
-  if (goBtn) { location.hash = '#/play?tab=learn'; window.scrollTo({top: 0, behavior: 'smooth'}); return; }
+  if (goBtn) { location.hash = '#/play?tab=learn'; window.scrollTo({top: 0, behavior: SCROLL}); return; }
   var mintBtn = ev.target && ev.target.closest ? ev.target.closest('.rec-doi-mint') : null;
   if (mintBtn) { mintShortlink(currentBundle, mintBtn); return; }
   var b = ev.target && ev.target.closest ? ev.target.closest('.rec-doi-copy') : null;
   if (!b) return;
   navigator.clipboard.writeText(b.getAttribute('data-copy')).then(function(){
-    var t = b.textContent; b.textContent = 'copied';
+    var t = b.textContent; b.textContent = 'Copied';
     setTimeout(function(){ b.textContent = t; }, 1400);
   });
 });
@@ -1497,17 +1502,17 @@ async function fetchShortlink(code){
   for (var i = 0; i < paths.length; i++) {
     try {
       var r = await fetch(paths[i]);
-      if (r.status === 404) throw new Error('no shared set lives at this code');
+      if (r.status === 404) throw new Error('No shared set has this code.');
       if (r.ok) return await r.json();
-      lastErr = new Error('the short-link store answered ' + r.status);
+      lastErr = new Error('The short-link service returned ' + r.status + '.');
     } catch (e) { lastErr = e; }
   }
-  throw lastErr || new Error('the short-link store is unreachable');
+  throw lastErr || new Error('The short-link service is unreachable.');
 }
 async function mintShortlink(env, btn){
   if (!env) return;
   var label = btn ? btn.textContent : '';
-  if (btn) btn.textContent = 'Minting…';
+  if (btn) btn.textContent = 'Creating…';
   try {
     var endpoints = [location.origin + '/s', SHORTLINK_ORIGIN + '/s'];
     var res = null, lastErr = null;
@@ -1637,7 +1642,7 @@ function templateWords(t){
 // The kind: "Measurement" for an experimental value (an explicit measurement
 // marker on the record or in a result's source.kind, the same marker the store
 // uses), else "Simulation" when execution.code names the code that ran. Default
-// Simulation for a code-bearing lineage. Derived honestly from the record.
+// Simulation for a code-bearing lineage. Derived from the record alone.
 function recordKind(record){
   var marker = record && (record.kind || (record.source && record.source.kind));
   if (marker === 'measurement') return 'measurement';
@@ -1816,11 +1821,11 @@ function artifactsHTML(record){
   var arts = (record && record.artifacts) || [];
   var host = heavyHost(record);
   if ((!Array.isArray(arts) || !arts.length) && !host) return '';
-  var body = '<div class="rec-h">Artifacts, where the data lives</div>';
+  var body = '<div class="rec-h">Artifacts</div>';
   if (Array.isArray(arts) && arts.length) {
     body += '<ul class="rec-arts">' + arts.map(function(a){
       if (!a || typeof a !== 'object') return '';
-      var link = a.url ? '<a href="' + esc(a.url) + '" target="_blank" rel="noopener">open &rarr;</a>' : '';
+      var link = a.url ? '<a href="' + esc(a.url) + '" target="_blank" rel="noopener">Open</a>' : '';
       return '<li class="rec-art">' +
         '<span class="rec-art-role">' + esc(a.role || 'artifact') + '</span>' +
         '<span class="rec-art-path">' + esc(a.path || '') + '</span>' +
@@ -1832,8 +1837,8 @@ function artifactsHTML(record){
     body += '<p class="rec-none">No artifact pointers on this record.</p>';
   }
   if (host) {
-    body += '<p class="rec-host">Heavy data hosted on ' + esc(host.provider) +
-      ': <a href="' + esc(host.url) + '" target="_blank" rel="noopener">open &rarr;</a></p>';
+    body += '<p class="rec-host">Bulk data at ' + esc(host.provider) +
+      ': <a href="' + esc(host.url) + '" target="_blank" rel="noopener">Open</a></p>';
   }
   return '<div class="rec-sec">' + body + '</div>';
 }
@@ -1968,8 +1973,8 @@ function valuesHTML(lineage, node){
   var rows = [{ key: picked.primary.key, val: picked.primary.val }]
     .concat(picked.rest.filter(function(r){ return !isUnitMeta(r.key); }));
   return '<div class="rec-sec"><div class="rec-h">Values</div>' +
-    '<p class="rec-explain">What the computation produced, in the units the record itself ' +
-    'declares. The first row is the headline quantity; the rest are companions it shipped with.</p>' +
+    '<p class="rec-explain">The values the computation produced, in the units the record ' +
+    'declares. The first row is the main quantity; the other rows were reported with it.</p>' +
     '<table class="rec-vtable"><thead><tr><th>Quantity</th><th class="num">Value</th><th>Units</th></tr></thead><tbody>' +
     rows.map(function(row){
       var u = row.key === picked.primary.key ? unit : '';
@@ -1997,8 +2002,8 @@ function resultsHTML(record){
   var rows = reportedValues(record);
   if (!rows.length) return '';
   return '<div class="rec-sec"><div class="rec-h">Values</div>' +
-    '<p class="rec-explain">What the run reported, one row per value instance, in the units each declares. ' +
-    'These rows sit outside the lineage id: they are evidence attached to the record, not part of its identity.</p>' +
+    '<p class="rec-explain">One row per reported value, in the units each declares. ' +
+    'These values are attached to the record and are excluded from its lineage id.</p>' +
     '<table class="rec-vtable"><thead><tr><th>Quantity</th><th class="num">Value</th><th>Units</th></tr></thead><tbody>' +
     rows.map(function(r){
       var c = r.conditions && typeof r.conditions === 'object' ? r.conditions : {};
@@ -2012,13 +2017,12 @@ function resultsHTML(record){
 function lineageLinksHTML(lineage, node, known, memberIdx, recordId){
   var h = '<div class="rec-links">';
   if (known && isComputable(node)) {
-    h += '<a href="' + esc(mcgRunUrl(lineage)) + '" target="_blank" rel="noopener"' +
-      ' title="Run this lineage as a simulation on MaterialsCodeGraph">Run this lineage as a simulation on MaterialsCodeGraph &rarr;</a>';
+    h += '<a href="' + esc(mcgRunUrl(lineage)) + '" target="_blank" rel="noopener">Run this lineage on MaterialsCodeGraph</a>';
   }
   // class-based, never an id: a bundle stacks several datasheets on one page
   h += '<button type="button" class="rcCopy"' +
     (memberIdx != null ? ' data-idx="' + memberIdx + '"' : '') +
-    ' title="Copy a link that carries this record in its #x= fragment: it reopens this data view.">Copy link</button>';
+    ' title="Copies a link with this record in its #x= fragment. The link reopens the record here.">Copy link</button>';
   // Copy permalink: the canonical id AS the link, the unfurling stub form
   // (<site>/i/<id>/), which redirects into /play/#id=<id>. Shown only when this
   // record carries a committed 64-hex id (a value the commons holds by id); each
@@ -2026,9 +2030,9 @@ function lineageLinksHTML(lineage, node, known, memberIdx, recordId){
   // no committed id (a pasted lineage) has no permalink.
   if (recordId && SHA256_RE.test(String(recordId))) {
     h += '<button type="button" class="rcPermalink" data-id="' + esc(String(recordId)) + '"' +
-      ' title="Copy this value’s permalink (<site>/i/<id>/): a link that unfurls a card and opens the datasheet.">Copy permalink</button>';
+      ' title="Copies this value\'s permalink, openmaterials.ai/i/' + esc(String(recordId)) + '/, which shows a preview card when shared and opens the datasheet.">Copy permalink</button>';
   }
-  h += '<span class="rec-link-note">Dashboards and compute live on MaterialsCodeGraph; this is the data view.</span>';
+  h += '<span class="rec-link-note">Runs happen on MaterialsCodeGraph. This page shows the record.</span>';
   return h + '</div>';
 }
 
@@ -2096,14 +2100,13 @@ function derivationSVG(nodeId){
     if (!ci) return;
     var xs = PAD + ci * CW - (CW - BW) / 2;
     s += '<line x1="' + xs + '" y1="' + PAD + '" x2="' + xs + '" y2="' + (H - PAD) +
-      '" stroke="#e2ddd2" stroke-width="1" stroke-dasharray="1.5 4"/>';
+      '" style="stroke:var(--line,#EBEBEB)" stroke-width="1"/>';
   });
   colHeads.forEach(function(head, ci){
     if (!head) return;
-    var label = head.length > 30 ? head.slice(0, 29) + '…' : head;
-    s += '<text x="' + (PAD + ci * CW + BW / 2) + '" y="' + (PAD + 9) +
-      '" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" font-weight="700"' +
-      ' letter-spacing="0.08em" fill="#8a8177" style="text-transform:uppercase">' +
+    var label = head.length > 28 ? head.slice(0, 27) + '…' : head;
+    s += '<text x="' + (PAD + ci * CW + BW / 2) + '" y="' + (PAD + 10) +
+      '" text-anchor="middle" font-size="12" style="fill:var(--ink-2,#4D4D4D);font-family:var(--font-sans,sans-serif);font-weight:500">' +
       esc(label) + '</text>';
   });
   // edges first (only those inside the closure)
@@ -2113,24 +2116,24 @@ function derivationSVG(nodeId){
       var x1 = pos[p].x + BW, y1 = pos[p].y + BH / 2, x2 = pos[id].x, y2 = pos[id].y + BH / 2;
       var mx = (x1 + x2) / 2;
       s += '<path d="M' + x1 + ' ' + y1 + ' C' + mx + ' ' + y1 + ' ' + mx + ' ' + y2 + ' ' + x2 + ' ' + y2 +
-        '" fill="none" stroke="#c9c2b6" stroke-width="1.4"/>';
+        '" fill="none" style="stroke:var(--edge,#8F8F8F)" stroke-width="1.25"/>';
     });
   });
   order.forEach(function(id){
     var n = nodeById[id], p = pos[id];
     var terminal = id === start;
     var obs = n.type === 'observable';
-    var stroke = terminal ? '#4f46e5' : (obs ? '#4f46e5' : '#8a8177');
-    var fill = terminal ? '#eef2ff' : '#fdfcf9';
+    var stroke = terminal || obs ? 'var(--data-obs-line,#4F46E5)' : 'var(--edge,#8F8F8F)';
+    var fill = terminal ? 'var(--surface-2,#F2F2F2)' : 'var(--page,#FFFFFF)';
     // a TeX-laden symbol is unreadable as raw text; fall back to the node id
     var sym = n.symbol && n.symbol.indexOf('\\') === -1 ? n.symbol : '';
     var label = sym && sym.length <= 14 ? sym : id;
     if (label.length > 24) label = label.slice(0, 23) + '…';
     s += '<a href="../map/#node=' + encodeURIComponent(id) + '">';
     s += '<rect x="' + p.x + '" y="' + p.y + '" width="' + BW + '" height="' + BH +
-      '" rx="7" fill="' + fill + '" stroke="' + stroke + '" stroke-width="' + (terminal ? 2 : 1.2) + '"/>';
+      '" rx="6" style="fill:' + fill + ';stroke:' + stroke + '" stroke-width="' + (terminal ? 2 : 1.25) + '"/>';
     s += '<text x="' + (p.x + BW / 2) + '" y="' + (p.y + BH / 2 + 4.5) +
-      '" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="12.5" fill="#17130e">' +
+      '" text-anchor="middle" font-size="12.5" style="fill:var(--ink,#171717);font-family:var(--font-mono,monospace)">' +
       esc(label) + '</text></a>';
   });
   s += '</svg>';
@@ -2251,7 +2254,7 @@ function renderBundle(env){
       e.preventDefault();
       // scrollIntoView, never a hash change: the router owns location.hash
       var target = document.getElementById('member-' + a.getAttribute('data-idx'));
-      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (target) target.scrollIntoView({ behavior: SCROLL, block: 'start' });
     });
   });
   var copyBtn = box.querySelector('#bundleCopy');
@@ -2291,9 +2294,9 @@ function reproduceHTML(node, recordId){
   var targets = CONFORMANCE.filter(function(t){ return t.node === node; });
   if (!codes.length && !targets.length) return '';
   var h = '<div class="rec-sec"><div class="rec-h">Reproduce this</div>' +
-    '<p class="rec-explain">The codes the map knows can compute this quantity, and the ' +
-    'committed conformance runs a re-run is expected to reproduce within the stated ' +
-    'tolerance, with every knob pinned in the target’s own lineage.</p>';
+    '<p class="rec-explain">Codes on the map that compute this quantity, and the committed ' +
+    'conformance targets a rerun should reproduce within the stated tolerance. Each ' +
+    'target\'s lineage pins every setting.</p>';
   if (codes.length) {
     h += '<dl class="rec-kv">' + codes.map(function(c){
       var name = c.url
@@ -2354,7 +2357,7 @@ function datasheetHTML(record, valid, opts){
 
   // THE RECOVERY POINT for the sharing loop: a record that arrives with no
   // mapped quantity, no values, and no conditions (the thin handoff, e.g. an
-  // under-parsed export from MCG) must not dead-end as an honest-but-naked
+  // under-parsed export from MCG) must not dead-end as a correct but bare
   // page. Say what is missing and hand over the one-click completion path:
   // the parser lives on the Learn tab of this same page.
   var thinValues = lineage.values && Object.keys(lineage.values).length;
@@ -2376,8 +2379,8 @@ function datasheetHTML(record, valid, opts){
         : (template ? 'only a template' : 'almost nothing')) +
       ', but no mapped quantity, no value, and no conditions, so there is nothing to ' +
       'draw or compare yet. If it comes from a paper, the parser can complete it: drop ' +
-      'the PDF on the Learn tab and every reported value comes back mapped onto the ' +
-      'graph, each backed by a verbatim quote you accept or reject.</p>' +
+      'the PDF on the Learn tab, and the parser proposes each value it finds as a map ' +
+      'entry with a verbatim quote for you to accept or reject.</p>' +
       '<div class="rec-complete-act">' +
       '<button type="button" class="rec-complete-go">Complete it from the paper</button>' +
       (pdfHref ? '<a href="' + esc(pdfHref) + '" target="_blank" rel="noopener">Get the source PDF (' + esc(srcRef) + ')</a>' : '') +
@@ -2426,15 +2429,14 @@ function datasheetHTML(record, valid, opts){
       h += '<div class="rec-sec rec-maprow"><div class="rec-h">The derivation on the map</div>' +
         '<p class="rec-explain">Every quantity this value depends on, drawn from the map itself. ' +
         'Read left to right: the leftmost boxes are the provided inputs, each arrow is an operator ' +
-        'carrying one quantity into the next computation, and the highlighted box at the end is ' +
-        'this record’s quantity. The column headings are the same numbered physics tiers the ' +
-        'full map is organized by. Wide derivations scroll sideways. Click any box to open that ' +
-        'quantity on the full map.</p>' +
+        'carrying one quantity into the next computation, and the box at the right end is ' +
+        'this record\'s quantity. The column headings are the numbered tiers of the full map. ' +
+        'Click any box to open that quantity on the full map.</p>' +
         deriv +
         '<div class="rec-maplegend">' +
-        '<span><i class="lg-this"></i>this record’s quantity</span>' +
-        '<span><i class="lg-obs"></i>observable (measurable) quantity</span>' +
-        '<span><i class="lg-step"></i>internal step of the computation</span>' +
+        '<span><i class="lg-this"></i>This record\'s quantity</span>' +
+        '<span><i class="lg-obs"></i>Observable (measurable) quantity</span>' +
+        '<span><i class="lg-step"></i>Internal step of the computation</span>' +
         '</div></div>';
     }
   }
@@ -2454,7 +2456,7 @@ function datasheetHTML(record, valid, opts){
    dropped, gallery, or default example). A valid record opens the full-width
    stage as a dense scientific datasheet: one compact identity header, then the
    existing sections in three responsive text columns. It is still information,
-   not a dashboard. Node-unresolved and measurement records render honestly,
+   not a dashboard. Node-unresolved and measurement records render as they are,
    without a fabricated map section or Run link. Invalid records stay in the
    Lineage tool panel so their validation banner is visible. */
 function renderLineage(record, opts){
@@ -2481,7 +2483,7 @@ function renderLineage(record, opts){
 
   // a member opened out of a bundle keeps one plain way back to the paper view
   if (opts.fromBundle && currentBundle) {
-    h += '<p class="rec-meta"><a href="#" id="linBundleBack">&#8249; back to the shared bundle</a></p>';
+    h += '<p class="rec-meta"><a href="#" id="linBundleBack">Back to the shared bundle</a></p>';
   }
   h += datasheetHTML(record, valid, opts);
   h += '</div>';
@@ -2547,10 +2549,10 @@ function setInstanceTitle(record){
   var prop = displayProp(lineage.node, lineage.template);
   var mat = materialName(lineage.material);
   var name = prop ? prop + (mat ? ' of ' + mat : '') : (mat || '');
-  document.title = name ? name + ' | openmaterials.ai' : DEFAULT_PLAY_TITLE;
+  document.title = name ? name + ' | OpenMaterials' : DEFAULT_PLAY_TITLE;
 }
 
-/* The honest EMPTY STATE for a hash that resolves to nothing (the honesty rule:
+/* The EMPTY STATE for a hash that resolves to nothing (the no-invention rule:
    name what was asked, fabricate nothing, offer the real next step). A
    well-formed hash that matches no committed value names the hash verbatim and
    links to the map; a malformed hash says so plainly. Nothing is invented: no
@@ -2560,18 +2562,17 @@ function renderInstanceEmpty(reason, hash){
   h += '<p class="rec-lede" style="white-space:normal">No shared value with this id</p>';
   h += '</div><div class="rec-sec">';
   if (reason === 'malformed') {
-    h += '<p class="rec-explain">A shared value opens by its canonical id, a 64-character ' +
-      'hex hash (the sha256 of its lineage). This link’s id is not that shape, so there ' +
-      'is nothing to resolve, and nothing is guessed.</p>';
+    h += '<p class="rec-explain">A shared value opens by its id: the SHA-256 hash of its ' +
+      'lineage in hexadecimal, or a prefix of it. The id in this link has a different form, ' +
+      'so it cannot resolve.</p>';
     h += '<dl class="rec-kv"><dt>id in the link</dt><dd class="wrap">' + esc(String(hash || '')) + '</dd></dl>';
   } else {
-    h += '<p class="rec-explain">This id is well-formed, but no value with it is committed in ' +
-      'this build of the commons. It may live in a newer build, or the link may be stale. ' +
-      'Nothing is fabricated for an id we do not hold.</p>';
+    h += '<p class="rec-explain">This id is well formed, but no committed value has it in ' +
+      'this site build. It may belong to a newer build, or the link may be stale.</p>';
     h += '<dl class="rec-kv"><dt>id</dt><dd class="wrap">' + esc(String(hash || '')) + '</dd></dl>';
   }
-  h += '<p class="rec-explain"><a href="../map/">Open the map of physics</a> to browse the ' +
-    'quantities and values the commons does hold.</p>';
+  h += '<p class="rec-explain"><a href="../map/">Open the map</a> to browse the ' +
+    'quantities and values it holds.</p>';
   h += '</div></div>';
   document.body.classList.remove('lin-open');
   document.getElementById('linIngress').hidden = true;
@@ -2584,7 +2585,7 @@ function renderInstanceEmpty(reason, hash){
 /* #id=<hash>: open the value the canonical hash names, through the SAME
    single-datasheet path a one-element envelope uses. Load the projection, run
    the pure resolver, and either render the resolved record (title set to the
-   value it opens) or the honest empty state (malformed vs not-found). A fetch
+   value it opens) or the empty state (malformed vs not-found). A fetch
    failure is reported plainly, never as a fabricated value. */
 function renderInstanceById(hash){
   return loadPlayInstances().then(function(instances){
@@ -2602,7 +2603,7 @@ function renderInstanceById(hash){
     }
     renderInstanceEmpty(res.reason, res.hash);
   }).catch(function(e){
-    showLineageError('<div class="xp-err">Could not load the shared value: ' + esc(e.message) + '</div>');
+    showLineageError('<div class="xp-err">The shared value did not load: ' + esc(e.message) + '</div>');
   });
 }
 
@@ -2638,7 +2639,7 @@ function provenanceHTML(record, lineage, doc){
   if (!rows.length) return '';
   return '<div class="rec-sec"><div class="rec-h">Provenance</div>' +
     '<p class="rec-explain">Where this claim comes from (the paper, dataset, or code that ' +
-    'produced it) and which schema version checked it. Provenance travels with the record ' +
+    'produced it) and which schema version checked it. Provenance travels with the record, ' +
     'but only a source declared inside the lineage counts toward its id.</p>' +
     '<dl class="rec-kv">' + rows.join('') + '</dl></div>';
 }
@@ -2665,11 +2666,12 @@ function wireLineageDrop(dropId, fileId, inputId){
       ingestLineage(reader.result, f.name);
     };
     reader.onerror = function(){
-      showLineageError('<div class="xp-err">Could not read ' + esc(f.name) + '.</div>');
+      showLineageError('<div class="xp-err">' + esc(f.name) + ' could not be read.</div>');
     };
     reader.readAsText(f);
   }
   drop.addEventListener('click', function(){ file.click(); });
+  drop.addEventListener('keydown', function(e){ if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); file.click(); } });
   file.addEventListener('change', function(){ readFile(file.files && file.files[0]); file.value = ''; });
   ['dragenter', 'dragover'].forEach(function(ev){
     drop.addEventListener(ev, function(e){ e.preventDefault(); e.stopPropagation(); drop.classList.add('drag'); });
@@ -2785,30 +2787,30 @@ function mapViewFromEdges(edges){
 function renderMapView(view){
   var box = document.getElementById('mapResult');
   var edges = (view && view.e) || [];
-  if (!edges.length) { box.innerHTML = '<div class="pg-empty">No edges in this map. Add [from, op, to] triples.</div>'; renderSubmap([], {}); return; }
+  if (!edges.length) { box.innerHTML = '<div class="pg-empty">This sub-map has no edges. Add [from, op, to] triples.</div>'; renderSubmap([], {}); return; }
   var valid = edges.filter(function(tr){ return Array.isArray(tr) && nodeById[tr[0]] && nodeById[tr[2]]; });
   var mv = mapViewFromEdges(valid);
   var stale = view.v && currentVersion() && view.v.slice(0, 12) !== currentVersion();
   var note = '';
-  if (stale) note = '<div style="font-size:.74rem;color:var(--meas);margin-bottom:8px">Built against map ' + esc(view.v.slice(0,12)) + '; the live map is ' + esc(currentVersion()) + '. Rendering by node id.</div>';
-  if (valid.length < edges.length) note += '<div style="font-size:.74rem;color:var(--muted);margin-bottom:8px">' + (edges.length - valid.length) + ' edge(s) reference nodes not on this map version.</div>';
+  if (stale) note = '<div class="pg-note" style="margin-bottom:8px">Built against map ' + esc(view.v.slice(0,12)) + '; the live map is ' + esc(currentVersion()) + '. Rendering by node id.</div>';
+  if (valid.length < edges.length) note += '<div class="pg-note" style="margin-bottom:8px">' + (edges.length - valid.length) + ' edge(s) reference nodes not on this map version.</div>';
   box.innerHTML = note + '<div class="lin-lab">' + valid.length + ' edges rendered</div><div class="lin-diagram">' +
     valid.map(function(tr){ var op = String(tr[1] || '').replace(/\[.*?\]/g, '').replace(/_/g, ' ');
-      return '<div class="lin-row"><span class="lin-n hot">' + esc(tr[0]) + '</span><span class="lin-op">&mdash;' + esc(op) + '&rarr;</span><span class="lin-n hot">' + esc(tr[2]) + '</span></div>'; }).join('') + '</div>';
+      return '<div class="lin-row"><span class="lin-n hot">' + esc(tr[0]) + '</span><span class="lin-op">' + esc(op) + ' &rarr;</span><span class="lin-n hot">' + esc(tr[2]) + '</span></div>'; }).join('') + '</div>';
   // any Lean theorems that cover the rendered edges: the dimension proofs, and
   // the algebraic composition proofs (Tier 2) where an identity chains.
   var thms = {};
   valid.forEach(function(tr){ var lv = LEAN.edges && LEAN.edges[tr[1]]; if (lv) thms[tr[1]] = lv.lean; });
   var thmKeys = Object.keys(thms);
   if (thmKeys.length) {
-    box.innerHTML += '<div class="lin-lab">verified in Lean <span class="lean-badge" title="These theorems compile against PhysLean (Lean 4.29.1).">&#10003;</span></div><pre class="lin-code">' +
+    box.innerHTML += '<div class="lin-lab"><span class="lean-badge">Proven in Lean</span></div><pre class="lin-code">' +
       thmKeys.map(function(k){ return esc(thms[k]); }).join('\n') + '</pre>';
   }
   var ids = {};
   valid.forEach(function(tr){ var iv = LEAN.identities && LEAN.identities[tr[1]]; if (iv) ids[tr[1]] = iv.lean; });
   var idKeys = Object.keys(ids);
   if (idKeys.length) {
-    box.innerHTML += '<div class="lin-lab">algebraic identity, verified in Lean <span class="lean-badge" title="The chained identity compiles against Mathlib (Lean 4.29.1).">&#10003;</span></div><pre class="lin-code">' +
+    box.innerHTML += '<div class="lin-lab"><span class="lean-badge">Algebraic identity, proven in Lean</span></div><pre class="lin-code">' +
       idKeys.map(function(k){ return esc(ids[k]); }).join('\n\n') + '</pre>';
   }
   renderSubmap(mv.nodes, mv.eops);
@@ -2892,7 +2894,7 @@ document.getElementById('copyMermaid').addEventListener('click', function(){
 document.getElementById('renderMap').addEventListener('click', function(){
   var raw = document.getElementById('mapInput').value.trim(); if (!raw) return;
   try { renderMapView(JSON.parse(raw)); }
-  catch (e) { document.getElementById('mapResult').innerHTML = '<div class="pg-empty">Not valid JSON: ' + esc(e.message) + '</div>'; }
+  catch (e) { document.getElementById('mapResult').innerHTML = '<div class="pg-empty">The text is not valid JSON: ' + esc(e.message) + '</div>'; }
 });
 document.getElementById('loadMapExample').addEventListener('click', function(){
   var ex = { v: currentVersion(), e: [
@@ -2940,11 +2942,11 @@ document.getElementById('shareBtn').addEventListener('click', async function(){
   // above so the input box repopulates.)
   else if (svg.querySelector('.pg-node:not(.dim)')) hash += '&m=' + await gzipToB64url(currentMapViewJSON());
   var url = location.origin + location.pathname + hash;
-  // a lineage share that would exceed a reliable URL is refused honestly: no
+  // a lineage share that would exceed a reliable URL is refused plainly: no
   // hash is set (no broken links) and the envelope is offered as a download
   if (sharedObj && url.length > 8000) { showLengthFallback(sharedObj, url.length, btn, 'Share'); return; }
   if (location.hash !== hash) { skipNextHashApply = hash; location.hash = hash; }
-  if (url.length > 8000) { btn.textContent = 'Too large to link'; setTimeout(function(){ btn.textContent = 'Share'; }, 1600); return; }
+  if (url.length > 8000) { btn.textContent = 'Too long to link'; setTimeout(function(){ btn.textContent = 'Share'; }, 1600); return; }
   var done = function(){ btn.textContent = 'Copied'; setTimeout(function(){ btn.textContent = 'Share'; }, 1200); };
   if (navigator.clipboard) navigator.clipboard.writeText(url).then(done, done); else done();
 });
@@ -2973,17 +2975,19 @@ async function applyHash(){
       currentShortCode = sm[1];
       renderShared(sPayload);
     } catch (e) {
-      showLineageError('<div class="xp-err">Could not open the short link: ' + esc(e.message) + '</div>');
+      showLineageError('<div class="xp-err">The short link did not open. ' + esc(e.message) + '</div>');
     }
     return;
   }
-  var m = location.hash.match(/[#?&]tab=([a-z]+)/); if (!m) return;
+  // a bare /play/ opens on Learn with the example proposal drawn
+  var m = location.hash.match(/[#?&]tab=([a-z]+)/); if (!m) { if (!location.hash) loadDefaultExample(false); return; }
   // Legacy tab=experiment is an alias; the UI and every newly minted link use lineage.
   // Legacy tab=parse folded into the Learn tab, which owns proposals now.
   var tab = m[1] === 'experiment' ? 'lineage' : (m[1] === 'parse' ? 'learn' : m[1]);
   var xm = location.hash.match(/[#?&]x=([^&]*)/);
   if (tab !== 'lineage' || !xm) document.body.classList.remove('lin-open');
   var tabBtn = document.querySelector('.pg-tab[data-tab="' + tab + '"]'); if (tabBtn) tabBtn.click();
+  if (tab === 'learn' && !/[#?&]m=/.test(location.hash) && !svg.querySelector('.pg-node')) loadDefaultExample(false);
   var q = location.hash.match(/[#?&]q=([^&]*)/);
   if (q) { var v = decodeURIComponent(q[1]); document.getElementById('qInput').value = v; runQuery(v); }
   var f = location.hash.match(/[#?&]from=([^&]*)/), t = location.hash.match(/[#?&]to=([^&]*)/);
@@ -2994,14 +2998,14 @@ async function applyHash(){
   if (mm) { try { var view = await b64urlToObj(mm[1]);
       if (tab === 'map') { document.getElementById('mapInput').value = JSON.stringify(view, null, 1); renderMapView(view); }
       else { var mv = mapViewFromEdges((view.e || []).filter(function(tr){ return Array.isArray(tr) && nodeById[tr[0]] && nodeById[tr[2]]; })); renderSubmap(mv.nodes, mv.eops); }
-    } catch (e) { hint.style.display = 'block'; hint.textContent = 'Could not open the shared map: ' + e.message; } }
+    } catch (e) { hint.style.display = 'block'; hint.textContent = 'The shared sub-map did not open: ' + e.message; } }
   // the #x= payload: a bare record (every legacy link) or an envelope, both
   // decoded by the one dual-read dispatch. Same gzip fragment scheme as #m=.
   if (xm) { try { var payload = await b64urlToObj(xm[1]);
       currentShortCode = null;
       renderShared(payload);
     } catch (e) {
-      showLineageError('<div class="xp-err">Could not open the shared lineage: ' + esc(e.message) + '</div>');
+      showLineageError('<div class="xp-err">The shared lineage did not open: ' + esc(e.message) + '</div>');
     } }
 }
 window.addEventListener('hashchange', function(){
@@ -3016,7 +3020,7 @@ window.addEventListener('resize', function(){ if (svg.querySelector('.pg-node'))
   // cheap re-sync: recompute label transform against current viewBox (positions unchanged)
   var rect = svg.getBoundingClientRect(); var sc = Math.min(rect.width / VB.w, rect.height / VB.h);
   var tx = (rect.width - VB.w * sc) / 2 - VB.x * sc, ty = (rect.height - VB.h * sc) / 2 - VB.y * sc;
-  labelsInner.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(' + sc + ')'; } });
+  labelsInner.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(' + sc + ')'; labelFloor(sc); } });
 </script>
 
 <script>
@@ -3033,6 +3037,7 @@ window.addEventListener('resize', function(){ if (svg.querySelector('.pg-node'))
     if (!HAS_KATEX) return escHtml(latex);
     try { return katex.renderToString(latex, {throwOnError:false}); } catch(e){ return escHtml(latex); }
   }
+  function plural(n, one, many){ return n + ' ' + (n === 1 ? one : many); }
   function slugify(x){ return String(x).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,''); }
 
   async function extractPdfText(file){
@@ -3068,11 +3073,11 @@ window.addEventListener('resize', function(){ if (svg.querySelector('.pg-node'))
       const t = (msg.error && msg.error.type) || '';
       if (t === 'budget_exhausted') throw new Error('The shared daily budget is spent; please try again tomorrow.');
       if (t === 'rate_limit_error') throw new Error('Daily limit reached for your address; please try again tomorrow.');
-      throw new Error((msg.error && msg.error.message) || ('relay error ' + resp.status));
+      throw new Error((msg.error && msg.error.message) || ('The relay returned status ' + resp.status + '.'));
     }
     const txt = msg.content.map(function(b){ return b.text || ''; }).join('');
     const m = txt.match(/\{[\s\S]*\}/);
-    if (!m) throw new Error('no JSON in model reply');
+    if (!m) throw new Error('The model reply contained no JSON. Try again.');
     return JSON.parse(m[0]);
   }
 
@@ -3115,14 +3120,14 @@ window.addEventListener('resize', function(){ if (svg.querySelector('.pg-node'))
         if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) continue;
         var row = makeProgressRow(file.name);
         try {
-          row.setState('reading', 'reading PDF...');
+          row.setState('reading', 'Reading the PDF.');
           var textResult = await extractPdfText(file);
-          row.setState('extracting', textResult.pages + ' pages read; extracting values (this takes about a minute)...');
+          row.setState('extracting', textResult.pages + ' pages read. Extracting values takes about a minute.');
           var raw = await extractWithLLM(textResult.text);
           var validated = LearnLib.validateExtraction(raw, KNOWN);
           validated.paper = {title: file.name, ref: slugify(file.name)};
           papers.push(validated);
-          row.setState('done', validated.value_instances.length + ' value(s) extracted');
+          row.setState('done', plural(validated.value_instances.length, 'value', 'values') + ' extracted.');
         } catch(e) {
           row.setState('error', String(e && e.message || e));
         }
@@ -3159,12 +3164,12 @@ window.addEventListener('resize', function(){ if (svg.querySelector('.pg-node'))
     if (!n) { expEl.innerHTML = ''; expEl.style.display = 'none'; return; }
     expEl.style.display = 'flex';
     expEl.innerHTML = '<div class="sec-head">' + n + ' value' + (n === 1 ? '' : 's') + ' accepted</div>';
-    var dlAll = document.createElement('button'); dlAll.className = 'om-btn om-btn-primary';
+    var dlAll = document.createElement('button'); dlAll.className = 'om-btn';
     dlAll.textContent = 'Download all';
     dlAll.addEventListener('click', downloadAllInstances);
     expEl.appendChild(dlAll);
     var note = document.createElement('div'); note.className = 'export-note';
-    note.textContent = 'Each value enters the map only through review: download the JSON and open a pull request adding it under docs/data/instances/.';
+    note.textContent = 'To add accepted values to the map, open a pull request that adds the JSON files under docs/data/instances/. A maintainer reviews each one.';
     expEl.appendChild(note);
   }
 
@@ -3175,12 +3180,12 @@ window.addEventListener('resize', function(){ if (svg.querySelector('.pg-node'))
     var totalNovel = papers.reduce(function(a, p){ return a + p.novel_quantities.length; }, 0);
 
     var sumEl = document.getElementById('resultSummary');
-    sumEl.innerHTML = '<span class="sum-text">Touches <span class="sum-badge">' + agg.touched.size + ' nodes</span> '
-      + '&nbsp;<span class="sum-badge">' + totalInstances + ' value-instances</span> '
-      + '&nbsp;<span class="sum-badge">' + totalNovel + ' novel</span></span>';
+    sumEl.innerHTML = '<span class="sum-text">' + plural(agg.touched.size, 'node', 'nodes') + ', '
+      + plural(totalInstances, 'value', 'values') + ', '
+      + plural(totalNovel, 'quantity', 'quantities') + ' not on the map</span>';
 
     var covEl = document.getElementById('resultCoverage');
-    covEl.innerHTML = '<div class="sec-head">Coverage overlay</div>';
+    covEl.innerHTML = '<div class="sec-head">Nodes the paper touches</div>';
     var chipsDiv = document.createElement('div'); chipsDiv.className = 'chips';
     agg.touched.forEach(function(id){
       var cnt = agg.instanceCount[id] || 0;
@@ -3195,7 +3200,7 @@ window.addEventListener('resize', function(){ if (svg.querySelector('.pg-node'))
     covEl.appendChild(chipsDiv);
 
     var revEl = document.getElementById('resultReview');
-    revEl.innerHTML = '<div class="sec-head">Review: accept or reject each instance</div>';
+    revEl.innerHTML = '<div class="sec-head">Accept or reject each value</div>';
     papers.forEach(function(p){
       var grp = document.createElement('div'); grp.className = 'paper-group';
       var ptitle = document.createElement('div'); ptitle.className = 'paper-title';
@@ -3212,25 +3217,25 @@ window.addEventListener('resize', function(){ if (svg.querySelector('.pg-node'))
         var symHtml;
         if (vi.node_id && node && node.symbol) symHtml = lnTex(node.symbol);
         else if (vi.node_id && !node) symHtml = '<code>' + escHtml(vi.node_id) + '</code>';
-        else symHtml = '<em>novel</em>';
+        else symHtml = '';
 
         var valStr = String(vi.value);
         if (vi.uncertainty !== null && vi.uncertainty !== undefined) valStr += ' &plusmn; ' + vi.uncertainty;
         valStr += ' ' + escHtml(vi.units);
         var matStr = escHtml(vi.material);
-        if (vi.conditions) matStr += '<span style="color:var(--faint,#9aa0a8);"> &bull; ' + escHtml(vi.conditions) + '</span>';
+        if (vi.conditions) matStr += '<span class="vi-cond"> &bull; ' + escHtml(vi.conditions) + '</span>';
         var statusCls = vi.node_id ? 'mapped' : 'novel';
 
         var topDiv = document.createElement('div'); topDiv.className = 'vi-row-top';
         topDiv.innerHTML = '<span class="vi-sym">' + symHtml + '</span>'
           + '<span class="vi-val">' + valStr + '</span>'
           + '<span class="vi-mat">' + matStr + '</span>'
-          + '<span class="vi-status ' + statusCls + '">' + statusCls + '</span>';
+          + '<span class="vi-status ' + statusCls + '">' + (vi.node_id ? 'on the map' : 'not on the map') + '</span>';
         rowEl.appendChild(topDiv);
 
         var quoteDiv = document.createElement('div'); quoteDiv.className = 'vi-quote';
-        quoteDiv.innerHTML = '&#8220;' + escHtml(vi.quote) + '&#8221;';
-        if (vi.page) quoteDiv.innerHTML += ' <span style="color:var(--faint,#9aa0a8);">[p.' + vi.page + ']</span>';
+        quoteDiv.innerHTML = '&quot;' + escHtml(vi.quote) + '&quot;';
+        if (vi.page) quoteDiv.innerHTML += ' <span class="vi-cond">[p.' + vi.page + ']</span>';
         rowEl.appendChild(quoteDiv);
 
         var ctrlDiv = document.createElement('div'); ctrlDiv.className = 'vi-controls';
@@ -3239,7 +3244,7 @@ window.addEventListener('resize', function(){ if (svg.querySelector('.pg-node'))
         var btnR = document.createElement('button'); btnR.className = 'btn-reject';
         btnR.textContent = 'Reject';
         if (!vi.node_id) {
-          btnA.disabled = true; btnA.title = 'Novel quantities cannot map onto a known variable';
+          btnA.disabled = true; btnA.title = 'This quantity has no node on the map, so it cannot be accepted yet.';
           btnA.style.opacity = '0.45'; btnA.style.cursor = 'default';
         }
 
@@ -3297,7 +3302,7 @@ window.addEventListener('resize', function(){ if (svg.querySelector('.pg-node'))
     attnEl.innerHTML = '';
     var attnItems = [];
     papers.forEach(function(p){
-      (p.novel_quantities || []).forEach(function(nq){ attnItems.push('Novel quantity: ' + (nq.description || JSON.stringify(nq))); });
+      (p.novel_quantities || []).forEach(function(nq){ attnItems.push('Not on the map: ' + (nq.description || JSON.stringify(nq))); });
       (p.warnings || []).forEach(function(w){ attnItems.push('Warning: ' + w); });
     });
     if (attnItems.length) {
@@ -3316,6 +3321,7 @@ window.addEventListener('resize', function(){ if (svg.querySelector('.pg-node'))
   }
 
   var dz = document.getElementById('dropzone');
+  document.getElementById('chooseBtn').addEventListener('click', function(){ document.getElementById('fileInput').click(); });
   dz.addEventListener('dragover', function(ev){ ev.preventDefault(); dz.classList.add('over'); });
   dz.addEventListener('dragleave', function(){ dz.classList.remove('over'); });
   dz.addEventListener('drop', function(ev){

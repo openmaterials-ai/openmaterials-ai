@@ -3,147 +3,123 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>openmaterials.ai: the map in 3D</title>
-<meta name="description" content="The whole openmaterials graph as a rotating 3D structure: typed quantities as nodes, dependencies as edges, height for tier progression.">
+<title>Map in 3D | OpenMaterials</title>
+<meta name="description" content="The OpenMaterials graph is drawn in 3D, with height set by tier. Select a quantity to show what it is computed from and what it feeds.">
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="openmaterials.ai">
-<meta property="og:title" content="openmaterials.ai: the map in 3D">
-<meta property="og:description" content="The whole graph as a rotating structure: nodes by type, edges for dependencies, height for tier. Tap a node to trace everything upstream.">
+<meta property="og:title" content="Map in 3D | OpenMaterials">
+<meta property="og:description" content="The OpenMaterials graph is drawn in 3D, with height set by tier.">
 <meta name="twitter:card" content="summary">
 <link rel="stylesheet" href="../assets/vendor/katex/dist/katex.min.css">
-<link rel="stylesheet" href="../assets/vendor/inter/inter.css">
-<link rel="stylesheet" href="../assets/vendor/source-serif-4/source-serif-4.css">
-<link rel="stylesheet" href="../assets/vendor/jetbrains-mono/jetbrains-mono.css">
 <link rel="stylesheet" href="../assets/site.css">
 <style>
   /* The 3D map is the same structure VIEW as the 2D map, lifted off the plane:
      nodes are the typed quantities, edges are the producing dependencies, and
-     HEIGHT encodes tier progression (Sources lowest, later tiers higher). It
-     reuses the site's semantic hues (observable indigo, hidden slate, parameter
-     gray), the compact header, and the .om-* component library (search input,
-     floating panel, section labels, kv rows, code chips). It is structure-pure:
-     it loads graph.json only, never the instance/spectra evidence layer. */
-  :root{
-    --ink:#16181d; --ink2:#3d4149; --muted:#6b7078; --faint:#9aa0a8; --line:#e8e6e1;
-    --obs:#4f46e5; --obs2:#4338ca;
-    --up:#d98a14;            /* upstream / how it is built (value amber) */
-    --down:#4f46e5;          /* downstream / where it flows (observable indigo) */
-    --font-serif:'Source Serif 4',Georgia,'Times New Roman',serif;
-    --font-sans:'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-    --font-mono:'JetBrains Mono',ui-monospace,'SFMono-Regular',Menlo,Consolas,monospace;
-    --r-3:16px;
+     HEIGHT encodes tier progression (Sources lowest, later tiers higher). An app
+     page: header, toolbar, the scene with the tier list, legend and panel
+     floating over it. Colors are the site.css tokens (each var() carries the
+     light value as its fallback); the scene reads them through #tokenProbe. */
+  @layer om-fallback {
+    /* Shared components. Unlayered site.css rules win over these once it defines them. */
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:40px;padding:0 20px;border:0;border-radius:9999px;font:inherit;font-weight:500;font-size:16px;line-height:24px;text-decoration:none;white-space:nowrap;cursor:pointer;transition:background-color var(--dur,150ms) var(--ease,ease),color var(--dur,150ms) var(--ease,ease);}
+    .btn--sm{height:32px;padding:0 12px;border-radius:var(--radius,6px);font-size:14px;line-height:20px;}
+    .btn--secondary{background:var(--page,#FFFFFF);color:var(--ink,#171717);box-shadow:0 0 0 1px var(--line,#EBEBEB);}
+    .btn--secondary:hover{background:var(--surface-2,#F2F2F2);}
+    .view-switch{display:inline-flex;gap:2px;height:32px;padding:2px;border-radius:var(--radius,6px);box-shadow:0 0 0 1px var(--line,#EBEBEB);}
+    .view-switch a{display:inline-flex;align-items:center;padding:0 10px;border-radius:4px;font-weight:500;font-size:14px;line-height:20px;color:var(--ink-2,#4D4D4D);text-decoration:none;}
+    .view-switch a:hover{color:var(--ink,#171717);}
+    .view-switch a[aria-current="page"]{color:var(--ink,#171717);background:var(--surface-2,#F2F2F2);}
+    .notice{padding:12px 16px;border:1px solid var(--line,#EBEBEB);border-radius:var(--radius,6px);background:var(--surface,#FAFAFA);font-size:14px;line-height:20px;color:var(--ink,#171717);}
+    .notice--error{border-color:var(--ink,#171717);}
   }
   *{box-sizing:border-box;}
-  html,body{margin:0;height:100%;overflow:hidden;
-    font-family:'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-    color:var(--ink);-webkit-font-smoothing:antialiased;
-    /* the canvas owns all gestures: the page itself never scroll-traps */
-    overscroll-behavior:none;touch-action:none;}
-  #err{position:fixed;top:0;left:0;right:0;background:#7f1d1d;color:#fff;font:13px/1.4 monospace;padding:8px 12px;z-index:60;display:none;white-space:pre-wrap;}
-  /* compact header, the map's treatment: light, hairline, serif wordmark + dot */
-  .top{position:fixed;top:0;left:0;right:0;height:56px;display:flex;align-items:center;gap:13px;padding:0 clamp(14px,3vw,22px);
-    background:rgba(255,255,255,.82);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);z-index:20;}
-  .top .brand{display:inline-flex;align-items:center;gap:7px;font-family:var(--font-serif);font-weight:700;font-size:1.06rem;letter-spacing:-.01em;white-space:nowrap;color:var(--ink);text-decoration:none;}
-  .top .brand .om-mark{width:20px;height:20px;border-radius:4.5px;flex:none;display:block;}
-  .top .sub{color:var(--faint);font-size:.82rem;font-weight:500;white-space:nowrap;}
-  .top .om-search{margin-left:16px;flex:1;max-width:320px;}
-  .top .nav{display:flex;align-items:center;gap:16px;margin-left:6px;}
-  .top .nav a{font-family:'Inter',sans-serif;color:var(--ink2);font-size:.86rem;font-weight:500;white-space:nowrap;text-decoration:none;padding:6px 0;border-bottom:2px solid transparent;transition:color .15s,border-color .15s;}
-  .top .nav a:hover{color:var(--ink);}
-  .top .nav a.active{color:var(--ink);border-bottom-color:var(--obs);}
-  .top .controls{margin-left:auto;display:flex;gap:9px;align-items:center;}
-  @media (max-width:480px){
-    .top .brand span{display:none;}
-    .top .brand{gap:0;}
-    .top .brand .om-mark{width:22px;height:22px;}
-    .top .controls{gap:7px;}
-    .top .controls .om-btn{padding:11px 10px;}
-  }
-  /* the WebGL viewport fills everything under the header */
-  #scene{position:fixed;top:56px;left:0;right:0;bottom:0;
-    background:radial-gradient(circle at 50% 30%,#ffffff,#f2efe9 78%);touch-action:none;}
-  #scene canvas{display:block;outline:none;}
-  /* The tier ladder: height decoded. Top tier first (highest altitude). */
-  #tiers{position:fixed;left:14px;top:50%;transform:translateY(-50%);z-index:6;display:flex;flex-direction:column;gap:2px;max-height:78vh;overflow-y:auto;}
-  #tiers button{border:0;background:none;text-align:left;font:600 .72rem/1.9 var(--font-ui,Inter,sans-serif);letter-spacing:.02em;color:var(--muted);cursor:pointer;padding:1px 8px;border-radius:8px;white-space:nowrap;}
-  #tiers button:hover,#tiers button:active{color:var(--accent);background:var(--accent-soft);}
-  #tiers .lad{font-size:.6rem;text-transform:uppercase;letter-spacing:.12em;color:var(--faint);padding:0 8px 4px;}
-  @media (max-width:768px){ #tiers{display:none;} }
-  /* graph-missing / no-webgl fallback: a static readable outline of the tiers */
-  #fallback{position:fixed;top:56px;left:0;right:0;bottom:0;overflow:auto;padding:22px clamp(16px,4vw,40px) 60px;display:none;background:var(--bg);}
-  #fallback .ft{font-family:var(--font-serif);font-size:1.2rem;font-weight:700;color:#312e81;margin:22px 0 4px;letter-spacing:-.01em;}
-  #fallback .fd{color:#6b7796;font-size:.9rem;margin-bottom:12px;}
-  #fallback .fn{border:1px solid var(--line);border-radius:12px;padding:11px 14px;margin:8px 0;background:#fff;}
-  #fallback .fn .fs{font-weight:700;color:#0b1220;}
-  #fallback .fn .fk{font-size:.64rem;text-transform:uppercase;letter-spacing:.05em;font-weight:700;padding:2px 8px;border-radius:999px;margin-left:8px;vertical-align:middle;}
-  #fallback .fn .fk.observable{background:#eef2ff;color:#4338ca;} #fallback .fn .fk.hidden{background:#f1f5f9;color:#64748b;} #fallback .fn .fk.parameter{background:#f1f5f9;color:#64748b;}
-  #fallback .fn .fe{color:#475569;font-size:.83rem;margin-top:6px;}
-  #fallback .fn .fe .arw{color:#a3aec0;}
-  /* offline / status banner */
-  #banner{position:fixed;top:56px;left:0;right:0;background:#fef3c7;color:#8a5a09;font:13px/1.4 'Inter',sans-serif;font-weight:600;padding:8px 14px;z-index:15;display:none;border-bottom:1px solid #f4dfa0;}
-  /* legend */
-  .legend{position:fixed;left:18px;bottom:16px;z-index:8;display:flex;gap:12px;align-items:center;flex-wrap:wrap;
-    background:rgba(255,255,255,.9);backdrop-filter:blur(8px);border:1px solid var(--line);border-radius:12px;padding:9px 14px;font-size:.78rem;color:var(--muted);box-shadow:0 4px 18px rgba(16,24,40,.06);}
-  .legend span{display:inline-flex;align-items:center;gap:6px;}
-  .legend .legend-title{font-family:var(--font-serif);font-weight:700;font-size:.92rem;color:var(--ink);letter-spacing:-.005em;}
-  .legend .g{color:var(--ink2);font-weight:700;text-transform:uppercase;font-size:.66rem;letter-spacing:.06em;}
-  .legend .sep{width:1px;height:16px;background:var(--line);}
-  .sw{width:12px;height:12px;border-radius:50%;display:inline-block;}
-  /* provenance panel: the shared .om-panel; placement + content styles here */
-  .om-panel{position:fixed;top:72px;right:18px;width:360px;max-height:calc(100vh - 92px);overflow:auto;z-index:18;display:none;}
-  .om-panel .x{float:right;cursor:pointer;color:#cbd5e1;font-size:1.6rem;line-height:1;padding:2px 8px;margin:-4px -6px 0 0;transition:.12s;} .om-panel .x:hover,.om-panel .x:active{color:#64748b;}
-  .om-panel .sym{font-size:1.8rem;color:#312e81;}
-  .om-panel .badge{display:inline-block;font-size:.58rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:#fff;border-radius:999px;padding:3px 9px;margin-left:10px;vertical-align:middle;}
-  .om-panel .badge.observable{background:var(--obs);} .om-panel .badge.hidden{background:#94a3b8;} .om-panel .badge.parameter{background:#64748b;}
-  .om-panel .tiertag{display:inline-block;font-size:.62rem;font-weight:700;color:var(--muted);background:#f4f2ee;border:1px solid #e3ded5;border-radius:999px;padding:3px 9px;margin-left:8px;vertical-align:middle;}
-  .om-panel .name{font-family:var(--font-mono);font-feature-settings:"zero" 1;color:#64748b;font-size:.78rem;margin:.55em 0 .1em;word-break:break-word;}
-  .om-panel .name .tiertag{font-family:var(--font-sans,'Inter',sans-serif);}
-  .om-panel .uid{font-family:var(--font-mono);font-feature-settings:"zero" 1;font-size:.66rem;color:#a3aec0;margin-left:8px;vertical-align:middle;}
-  .formula{background:linear-gradient(180deg,#fbfaf8,#f5f3ef);border:1px solid var(--line);border-radius:12px;padding:13px 12px;overflow-x:auto;}
-  .formula code{font-family:'SFMono-Regular',ui-monospace,Menlo,Consolas,monospace;font-size:.82rem;color:#334155;white-space:pre-wrap;word-break:break-word;}
-  .fop{font-size:.72rem;font-weight:700;color:#64748b;margin:10px 0 4px;font-family:'SFMono-Regular',ui-monospace,Menlo,Consolas,monospace;}
-  .fop:first-of-type{margin-top:2px;}
-  .chips{display:flex;flex-wrap:wrap;gap:7px;}
-  .chip{font-size:1.15rem;border:1px solid var(--line);background:#fff;border-radius:10px;padding:4px 11px;color:#312e81;cursor:pointer;transition:.12s;box-shadow:0 1px 2px rgba(16,24,40,.05);}
-  .chip:hover,.chip:active,.chip:focus{border-color:var(--obs);box-shadow:0 2px 9px rgba(79,70,229,.16);outline:none;}
-  .chip.up{border-color:var(--up);color:#a9690f;} .chip.down{border-color:var(--down);}
-  .chip code{font-family:'SFMono-Regular',ui-monospace,Menlo,Consolas,monospace;font-size:.86rem;}
-  .om-panel .mapby .om-kv-k{font-weight:700;color:#312e81;}
-  .om-panel .mapby .om-kv-v{font-size:.76rem;max-width:190px;}
-  .om-panel .traceline{font-size:.8rem;color:var(--ink2);background:#f4f2ee;border:1px solid var(--line);border-radius:11px;padding:9px 12px;margin-top:4px;line-height:1.5;}
-  .om-panel .traceline b{color:var(--ink);}
-  .om-panel .traceline .u{color:#a9690f;} .om-panel .traceline .d{color:var(--obs2);}
-  .muted{color:#94a3b8;}
-  /* rest hint, centered until the first interaction */
-  /* mobile: full-viewport canvas, panel as a bottom sheet, >=40px touch targets */
-  @media (max-width:768px){
-    .top{gap:9px;padding:0 12px;}
-    .top .sub{display:none;}
-    .top .nav{display:none;}
-    .top .om-search{margin-left:10px;max-width:none;}
-    .top .om-btn{padding:11px 13px;font-size:.8rem;min-height:40px;}
-    .top .om-input{padding-top:11px;padding-bottom:11px;min-height:40px;}
-    .om-panel{top:auto;left:0;right:0;bottom:0;width:auto;max-width:none;
-      max-height:55vh;border-radius:var(--r-3) var(--r-3) 0 0;
-      box-shadow:0 -12px 36px rgba(22,24,29,.20);border-bottom:none;padding:18px 18px 22px;}
-    .legend{display:none;}
-  }
-  a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--obs);outline-offset:2px;}
-  @media (prefers-reduced-motion: reduce){ *{transition-duration:.001ms !important;} }
+  html,body{overscroll-behavior:none;}
+  body.app{height:100vh;height:100dvh;margin:0;display:flex;flex-direction:column;overflow:hidden;background:var(--page,#FFFFFF);color:var(--ink,#171717);font:400 14px/20px var(--font-sans,"Geist","Geist Fallback",ui-sans-serif,system-ui,sans-serif);-webkit-font-smoothing:antialiased;}
+  :focus-visible{outline:2px solid var(--ink,#171717);outline-offset:2px;}
+  /* header, until the shared app header replaces it */
+  .top{flex:none;height:var(--header-h,64px);display:flex;align-items:center;gap:16px;padding:0 var(--inset,16px);border-bottom:1px solid var(--line,#EBEBEB);background:var(--page,#FFFFFF);overflow:hidden;}
+  .top .brand{display:inline-flex;align-items:center;gap:8px;font-weight:500;font-size:16px;line-height:24px;letter-spacing:-.02em;color:var(--ink,#171717);text-decoration:none;white-space:nowrap;}
+  .top .brand .om-mark{width:20px;height:20px;flex:none;display:block;}
+  .top .sub{color:var(--ink-2,#4D4D4D);white-space:nowrap;}
+  .top .nav{display:flex;align-items:center;gap:4px;margin-left:auto;}
+  .top .nav a{padding:6px 8px;color:var(--ink-2,#4D4D4D);text-decoration:none;white-space:nowrap;}
+  .top .nav a:hover,.top .nav a.active{color:var(--ink,#171717);}
+  @media (max-width:960px){.top .sub{display:none;}}
+  @media (max-width:768px){.top .nav{display:none;}}
   .om-beta{font-family:var(--font-mono);font-size:.58rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);border:1px solid currentColor;border-radius:999px;padding:1px 7px;flex:none;line-height:1.5;cursor:default;}
+  /* toolbar */
+  .toolbar{flex:none;display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:8px var(--inset,16px);border-bottom:1px solid var(--line,#EBEBEB);background:var(--page,#FFFFFF);}
+  .toolbar .om-search{flex:1 1 200px;max-width:360px;min-width:0;}
+  .toolbar .push{margin-left:auto;}
+  @media (max-width:960px){.toolbar .om-search{flex:1 1 100%;max-width:none;}}
+  /* the stage: the WebGL scene fills it; the library empties #scene, so the
+     overlays are its siblings */
+  .canvas{position:relative;flex:1 1 auto;min-height:0;overflow:hidden;background:var(--canvas-dots,radial-gradient(circle at 1px 1px,var(--line,#EBEBEB) 1px,transparent 0) 0 0/24px 24px),var(--page,#FFFFFF);}
+  #scene{position:absolute;inset:0;touch-action:none;}
+  #scene canvas{display:block;outline:none;}
+  /* The tier list: height decoded, top tier first (highest altitude). */
+  #tiers{position:absolute;left:16px;top:16px;z-index:3;max-height:calc(100% - 96px);overflow-y:auto;display:flex;flex-direction:column;}
+  #tiers .lad{padding:4px 8px;font-size:12px;line-height:16px;font-weight:500;color:var(--ink-2,#4D4D4D);}
+  #tiers button{padding:4px 8px;border:0;border-radius:var(--radius,6px);background:none;color:var(--ink-2,#4D4D4D);font:inherit;font-size:14px;line-height:20px;text-align:left;white-space:nowrap;cursor:pointer;transition:color var(--dur,150ms) var(--ease,ease);}
+  #tiers button:hover{color:var(--ink,#171717);}
+  @media (max-width:960px){#tiers{display:none;}}
+  /* the static outline, shown when WebGL or the library is unavailable */
+  #fallback{flex:1 1 auto;min-height:0;overflow:auto;padding:24px var(--inset,16px) 48px;display:none;}
+  #fallback .ft{font-size:20px;line-height:28px;font-weight:450;color:var(--ink,#171717);margin:24px 0 4px;}
+  #fallback .fd{color:var(--ink-2,#4D4D4D);margin-bottom:12px;}
+  #fallback .fn{border:1px solid var(--line,#EBEBEB);border-radius:var(--radius,6px);padding:12px 16px;margin:8px 0;background:var(--surface,#FAFAFA);}
+  #fallback .fn .fs{font-weight:500;color:var(--ink,#171717);}
+  #fallback .fn .fk{display:inline-flex;align-items:center;height:24px;padding:0 10px;margin-left:8px;border-radius:9999px;background:var(--surface-2,#F2F2F2);color:var(--ink,#171717);font-size:12px;font-weight:500;vertical-align:middle;}
+  #fallback .fn .fe{color:var(--ink-2,#4D4D4D);margin-top:6px;}
+  #banner{flex:none;margin:8px var(--inset,16px) 0;display:none;}
+  /* legend, floating over the scene */
+  .legend{position:absolute;left:16px;bottom:16px;z-index:4;display:flex;flex-wrap:wrap;gap:12px;align-items:center;padding:8px 12px;border-radius:var(--radius,6px);background:var(--page,#FFFFFF);box-shadow:var(--shadow-float,0 0 0 1px #EBEBEB,0 4px 8px -4px rgb(0 0 0 / .04),0 16px 24px -8px rgb(0 0 0 / .06));font-size:12px;line-height:16px;color:var(--ink-2,#4D4D4D);}
+  .legend span{display:inline-flex;align-items:center;gap:6px;}
+  .legend .g{color:var(--ink,#171717);font-weight:500;}
+  .legend .sep{width:1px;height:16px;background:var(--line,#EBEBEB);}
+  .sw{width:12px;height:12px;border-radius:50%;display:inline-block;}
+  .sw.obs{background:var(--data-obs,#4F46E5);} .sw.hid{background:var(--ink-2,#4D4D4D);} .sw.param{background:var(--edge,#8F8F8F);}
+  .sw.up{background:var(--data-meas,#99610E);} .sw.down{background:var(--data-obs-line,#4F46E5);}
+  @media (max-width:960px){.legend{display:none;}}
+  /* the provenance panel floats top right; below 961 px it is a bottom sheet */
+  .om-panel{position:absolute;top:16px;right:16px;z-index:5;width:360px;max-width:calc(100% - 32px);max-height:calc(100% - 32px);overflow:auto;padding:20px;border:0;border-radius:12px;background:var(--page,#FFFFFF);box-shadow:var(--shadow-float,0 0 0 1px #EBEBEB,0 4px 8px -4px rgb(0 0 0 / .04),0 16px 24px -8px rgb(0 0 0 / .06));display:none;}
+  @media (max-width:960px){.om-panel{top:auto;left:0;right:0;bottom:0;width:auto;max-width:none;max-height:55%;border-radius:12px 12px 0 0;}}
+  .om-panel .x{float:right;width:32px;height:32px;margin:-8px -8px 0 8px;display:inline-flex;align-items:center;justify-content:center;padding:0;border:0;border-radius:var(--radius,6px);background:transparent;color:var(--ink,#171717);font:inherit;font-size:20px;line-height:1;cursor:pointer;}
+  .om-panel .x:hover{background:var(--surface-2,#F2F2F2);}
+  .om-panel-label{margin:16px 0 8px;font-size:12px;line-height:16px;font-weight:500;letter-spacing:0;text-transform:none;color:var(--ink-2,#4D4D4D);}
+  .om-panel .sym{font-size:28px;color:var(--ink,#171717);}
+  .om-panel .badge,.om-panel .tiertag{display:inline-flex;align-items:center;height:24px;padding:0 10px;margin-left:8px;border-radius:9999px;background:var(--surface-2,#F2F2F2);color:var(--ink,#171717);font-family:var(--font-sans,"Geist",ui-sans-serif,system-ui,sans-serif);font-size:12px;font-weight:500;vertical-align:middle;}
+  .om-panel .tiertag{color:var(--ink-2,#4D4D4D);}
+  .om-panel .name{font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);color:var(--ink-2,#4D4D4D);font-size:13px;margin:8px 0 0;overflow-wrap:anywhere;}
+  .om-panel .uid{font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);font-size:12px;color:var(--ink-2,#4D4D4D);margin-left:8px;vertical-align:middle;}
+  .formula{background:var(--surface,#FAFAFA);border:1px solid var(--line,#EBEBEB);border-radius:var(--radius,6px);padding:12px;overflow-x:auto;}
+  .formula code{font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);font-size:13px;color:var(--ink,#171717);white-space:pre-wrap;overflow-wrap:anywhere;}
+  .fop{font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);font-size:12px;color:var(--ink-2,#4D4D4D);margin:10px 0 4px;}
+  .fop:first-of-type{margin-top:2px;}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;}
+  .chip{font:inherit;font-size:18px;border:0;box-shadow:0 0 0 1px var(--line,#EBEBEB);background:var(--page,#FFFFFF);border-radius:var(--radius,6px);padding:4px 10px;color:var(--ink,#171717);cursor:pointer;transition:background-color var(--dur,150ms) var(--ease,ease);}
+  .chip:hover{background:var(--surface-2,#F2F2F2);}
+  .chip.up{box-shadow:0 0 0 1px var(--data-meas,#99610E);} .chip.down{box-shadow:0 0 0 1px var(--data-obs-line,#4F46E5);}
+  .chip code{font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);font-size:13px;}
+  .om-panel .mapby .om-kv-k{font-weight:500;color:var(--ink,#171717);}
+  .om-panel .mapby .om-kv-v{font-size:12px;max-width:190px;}
+  .om-panel .traceline{margin-top:8px;padding:10px 12px;border:1px solid var(--line,#EBEBEB);border-radius:var(--radius,6px);background:var(--surface,#FAFAFA);color:var(--ink,#171717);}
+  .om-panel .traceline b{font-weight:500;}
+  .om-panel .traceline .u{color:var(--data-meas,#99610E);} .om-panel .traceline .d{color:var(--data-obs-line,#4F46E5);}
+  .muted{color:var(--ink-2,#4D4D4D);}
+  #err{position:fixed;left:16px;right:16px;bottom:16px;z-index:60;display:none;white-space:pre-wrap;}
+  @media (prefers-reduced-motion: reduce){*,*::before,*::after{transition-duration:0s !important;animation-duration:0s !important;}}
 </style>
 </head>
-<body>
-<div id="err"></div>
+<body class="app">
 <div class="top">
   <a class="brand" href="../index.html" aria-label="openmaterials home">
     <img class="om-mark" src="../assets/logo.svg" alt="" width="20" height="20"><span>openmaterials.ai</span>
   </a>
   <span class="om-beta" title="Beta: the map and its schema are still growing. Every committed value is content-addressed, so its identifier stays resolvable across versions.">beta</span>
   <span class="sub">the map in 3D</span>
-  <span class="om-search"><svg class="om-search-ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.5" y2="16.5"></line></svg><input class="om-input" id="q" placeholder="Find a quantity" aria-label="Find a quantity and fly to it"></span>
   <nav class="nav" aria-label="Primary">
     <a href="../map/" class="active" aria-current="page">Map</a>
     <a href="../guide/">Guide</a>
@@ -153,30 +129,32 @@
     <a href="../document/">Document</a>
     <a href="https://github.com/openmaterials-ai/openmaterials-ai" target="_blank" rel="noopener">Source</a>
   </nav>
-  <span class="controls">
-    <span class="om-seg" role="group" aria-label="Map view">
-      <a href="../map/" aria-label="Switch to the 2D view">2D</a>
-      <a class="on" href="./" aria-current="page">3D</a>
-    </span>
-  </span>
 </div>
-<div id="banner"></div>
-<nav id="tiers" aria-label="Tiers by altitude"><div class="lad">Tiers &darr;</div></nav>
-<div id="scene"></div>
-<div class="legend">
-  <span class="legend-title">3D map</span>
-  <span class="sep"></span>
-  <span class="g">type</span>
-  <span><i class="sw" style="background:var(--obs)"></i>observable</span>
-  <span><i class="sw" style="background:#c3ccdb"></i>hidden</span>
-  <span><i class="sw" style="background:#94a3b8"></i>parameter</span>
-  <span class="sep"></span>
-  <span class="g">trace</span>
-  <span><i class="sw" style="background:var(--up)"></i>upstream</span>
-  <span><i class="sw" style="background:var(--down)"></i>downstream</span>
+<div class="toolbar">
+  <span class="om-search"><svg class="om-search-ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.5" y2="16.5"></line></svg><input class="om-input" id="q" placeholder="Find a quantity" aria-label="Find a quantity and fly to it" autocomplete="off"></span>
+  <nav class="view-switch" aria-label="Map view"><a href="../map/">2D</a><a href="../map-3d/" aria-current="page">3D</a><a href="../map-trace/">Trace</a></nav>
+  <span class="push"></span>
+  <button class="btn btn--secondary btn--sm" id="resetView" type="button">Reset view</button>
 </div>
-<div class="om-panel" id="panel"></div>
+<div id="banner" class="notice"></div>
+<div class="canvas" id="stage">
+  <div id="scene"></div>
+  <nav id="tiers" aria-label="Tiers, top to bottom"><div class="lad">Tiers</div></nav>
+  <div class="legend">
+    <span class="g">Type</span>
+    <span><i class="sw obs"></i>Observable</span>
+    <span><i class="sw hid"></i>Hidden</span>
+    <span><i class="sw param"></i>Parameter</span>
+    <span class="sep"></span>
+    <span class="g">Selection</span>
+    <span><i class="sw up"></i>Upstream</span>
+    <span><i class="sw down"></i>Downstream</span>
+  </div>
+  <div class="om-panel" id="panel"></div>
+</div>
 <div id="fallback"></div>
+<span id="tokenProbe" hidden></span>
+<div id="err" class="notice notice--error"></div>
 
 <script>window.onerror=function(m){var e=document.getElementById('err');e.style.display='block';e.textContent='Error: '+m;};</script>
 <script src="../assets/vendor/katex/dist/katex.min.js"></script>
@@ -186,13 +164,13 @@
 // ============================================================================
 //  openmaterials 3D map: the structure graph lifted off the plane.
 //  Reading order:
-//    - shared     : DOM handles, helpers (tex fallback, esc)
+//    - shared     : DOM handles, helpers (tex fallback, esc), token colors
 //    - data       : fetch graph.json ONLY, build adjacency + tier index
 //    - layout     : force in x/z, tier index FIXES the y (height) coordinate
 //    - encoding    : color by type, size by degree, dashed-ish parameter edges
 //    - interaction: orbit/zoom (lib), auto-rotate, click -> fly + panel +
 //                   ancestry highlight (upstream amber / downstream indigo),
-//                   search -> fly, escape/background clears
+//                   search -> fly, escape/background clears, #node= deep link
 //    - fallback   : static tier outline when WebGL / the lib is unavailable
 //  Structure-pure: graph.json is the only network read; the instance/spectra
 //  evidence layer is never fetched (the standing MVC ruling).
@@ -201,8 +179,10 @@
 // ---- shared ----------------------------------------------------------------
 const HAS_KATEX = (typeof katex!=='undefined');
 const HAS_LIB   = (typeof ForceGraph3D!=='undefined');
+const REDUCE = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
 const sceneEl = document.getElementById('scene');
 const panelEl = document.getElementById('panel');
+const tokenProbe = document.getElementById('tokenProbe');
 
 let Graph=null, nodeById={}, parents={}, children={}, symHtml={},
     codesData={}, tierList=[], tierIndex={}, degree={}, selId=null,
@@ -212,8 +192,19 @@ let Graph=null, nodeById={}, parents={}, children={}, symHtml={},
 // three.js has +y up, so higher tier index maps to a larger y.
 const TIER_STEP = 60;
 
-// type -> node color (the semantic trio), rest state.
-const TYPE_COLOR = { observable:'#4f46e5', hidden:'#c3ccdb', parameter:'#94a3b8' };
+// Scene colors are the site tokens, read through a probe element (WebGL cannot
+// read CSS variables), and re-read when the color scheme changes.
+function token(n, fallback){ tokenProbe.style.color='var('+n+','+fallback+')'; return getComputedStyle(tokenProbe).color; }
+function rgba(c, a){ const m=c.match(/[\d.]+/g)||[0,0,0]; return 'rgba('+m[0]+','+m[1]+','+m[2]+','+a+')'; }
+let C={};
+function readTokens(){
+  C={ observable:token('--data-obs','#4F46E5'), hidden:token('--ink-2','#4D4D4D'), parameter:token('--edge','#8F8F8F'),
+      sel:token('--ink','#171717'), up:token('--data-meas','#99610E'), down:token('--data-obs-line','#4F46E5'), edge:token('--edge','#8F8F8F') };
+}
+readTokens();
+function repaint(){ readTokens(); refreshEncoding(); }
+if(window.matchMedia) window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', repaint);
+new MutationObserver(repaint).observe(document.documentElement, {attributes:true, attributeFilter:['data-theme']});
 
 function err(m){ const e=document.getElementById('err'); e.style.display='block'; e.textContent='Error: '+m; }
 function banner(m){ const b=document.getElementById('banner'); b.style.display='block'; b.textContent=m; }
@@ -225,6 +216,7 @@ function tex(latex,display){
   return '<code>'+esc(''+latex)+'</code>';
 }
 function opName(op){ return (op||'').replace(/\[.*?\]/g,'').replace(/_/g,' ').trim() || 'operation'; }
+function hashNode(){ const m=location.hash.match(/[#?&]node=([^&]*)/); return m?decodeURIComponent(m[1]):null; }
 
 // ---- data ------------------------------------------------------------------
 // The 3D map is the VIEW of the structure MODEL: nodes, edges, formulas, and the
@@ -234,7 +226,7 @@ function opName(op){ return (op||'').replace(/\[.*?\]/g,'').replace(/_/g,' ').tr
 Promise.all([
   fetch('../data/graph.json?v='+Date.now()).then(r=>r.json()),
   fetch('../data/codes.json?v='+Date.now()).then(r=>r.json()).catch(()=>({}))
-]).then(build).catch(e=> err('data: '+e));
+]).then(build).catch(e=> err('The map data did not load: '+e));
 
 function build([graph, codes]){
   codesData = codes || {};
@@ -258,7 +250,7 @@ function build([graph, codes]){
 
   if(!HAS_LIB){ renderFallback(graph); return; }
   try{ renderGraph(graph, links); }
-  catch(e){ renderFallback(graph); banner('The 3D view could not start (WebGL may be unavailable): showing a static outline of the physics tiers.'); }
+  catch(e){ renderFallback(graph); banner('The 3D view could not start, possibly because WebGL is unavailable. The tiers are listed as text.'); }
 }
 
 function tierOf(n){ return (n.tier in tierIndex) ? tierIndex[n.tier] : tierIndex['Other']; }
@@ -281,6 +273,7 @@ function renderGraph(graph, links){
   };
 
   Graph = new ForceGraph3D(sceneEl)
+    .warmupTicks(100)                 // lay out before the first frame
     .graphData(gData)
     .backgroundColor('rgba(0,0,0,0)')
     .showNavInfo(false)
@@ -289,7 +282,7 @@ function renderGraph(graph, links){
     .nodeColor(n=> nodeColorFor(n))
     .nodeOpacity(0.95)
     .nodeResolution(12)
-    // hover symbol: the plain node symbol string (KaTeX-free, honest, legible)
+    // hover symbol: the plain node symbol string (KaTeX-free, plain, legible)
     .nodeLabel(n=> nodeLabelHtml(n))
     .linkColor(l=> linkColorFor(l))
     .linkWidth(l=> linkWidthFor(l))
@@ -301,17 +294,17 @@ function renderGraph(graph, links){
     .onBackgroundClick(()=>{ interact(); clearSel(); })
     .onNodeHover(node=>{ sceneEl.style.cursor = node ? 'pointer' : 'grab'; });
 
-  // The tier ladder: one entry per tier, top altitude first; click flies
+  // The tier list: one entry per tier, top altitude first; click flies
   // the camera to that tier's plane so its nodes (e.g. Sources: Structure,
   // Potential, Temperature) are in front of you.
   (function(){
     const rail=document.getElementById('tiers'); if(!rail) return;
     tierList.slice().reverse().forEach(t=>{
       const b=document.createElement('button');
-      b.textContent=t.name; b.setAttribute('aria-label','Fly to the '+t.name+' tier');
+      b.type='button'; b.textContent=t.name; b.setAttribute('aria-label','Fly to the '+t.name+' tier');
       b.onclick=()=>{ interact(); const ti=tierIndex[t.name];
         const y=(ti-(nTiers-1)/2)*TIER_STEP;
-        Graph.cameraPosition({x:0,y:y+TIER_STEP*0.6,z:420},{x:0,y:y,z:0},900); };
+        Graph.cameraPosition({x:0,y:y+TIER_STEP*0.6,z:420},{x:0,y:y,z:0},REDUCE?0:900); };
       rail.appendChild(b);
     });
   })();
@@ -324,14 +317,15 @@ function renderGraph(graph, links){
   sizeToViewport();
   window.addEventListener('resize', sizeToViewport);
 
-  // gentle auto-rotate (the Marble vibe) until the first interaction; honor
-  // prefers-reduced-motion (no auto-rotate at all).
-  const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if(reduce){ autoRotate=false; syncRotBtn(); }
+  // gentle auto-rotate until the first interaction; none under reduced motion.
+  if(REDUCE){ autoRotate=false; syncRotBtn(); }
   else { startAutoRotate(); }
 
-  // frame the whole graph once the force layout has had a moment to settle.
-  setTimeout(fitAll, 600);
+  // A #node= link selects its quantity now and flies to it once the layout has
+  // run a few ticks; otherwise the whole graph is framed.
+  let deep=hashNode(), ticks=0;
+  if(deep&&nodeById[deep]){ interact(); selectNode(deep, true); } else { deep=null; setTimeout(fitAll, 600); }
+  Graph.onEngineTick(()=>{ if(deep && ++ticks===20){ flyTo(deep); deep=null; } });
 
   // stop auto-rotate on any pointer / wheel / key input over the canvas.
   ['pointerdown','wheel','touchstart'].forEach(ev=>
@@ -344,18 +338,18 @@ function sizeToViewport(){
 }
 
 function nodeColorFor(n){
-  if(!selId) return TYPE_COLOR[n.type] || '#94a3b8';
-  if(n.id===selId) return '#0b1220';
-  if(ancSet.has(n.id)) return '#d98a14';       // upstream amber
-  if(descSet.has(n.id)) return '#4f46e5';      // downstream indigo
-  return 'rgba(150,155,165,0.22)';             // dimmed
+  if(!selId) return C[n.type] || C.parameter;
+  if(n.id===selId) return C.sel;
+  if(ancSet.has(n.id)) return C.up;          // upstream amber
+  if(descSet.has(n.id)) return C.down;       // downstream indigo
+  return rgba(C.edge, 0.22);                 // dimmed
 }
 function linkColorFor(l){
   const s=(l.source&&l.source.id)||l.source, t=(l.target&&l.target.id)||l.target;
-  if(!selId){ return l.kind==='param' ? 'rgba(160,155,148,0.28)' : 'rgba(120,116,108,0.5)'; }
-  if(upSet.has(s)&&upSet.has(t)) return 'rgba(217,138,20,0.9)';
-  if(dnSet.has(s)&&dnSet.has(t)) return 'rgba(79,70,229,0.85)';
-  return 'rgba(150,155,165,0.06)';
+  if(!selId){ return rgba(C.edge, l.kind==='param' ? 0.28 : 0.5); }
+  if(upSet.has(s)&&upSet.has(t)) return rgba(C.up, 0.9);
+  if(dnSet.has(s)&&dnSet.has(t)) return rgba(C.down, 0.85);
+  return rgba(C.edge, 0.06);
 }
 function linkWidthFor(l){
   const s=(l.source&&l.source.id)||l.source, t=(l.target&&l.target.id)||l.target;
@@ -365,10 +359,10 @@ function linkWidthFor(l){
 function nodeLabelHtml(n){
   const node=nodeById[n.id]||{};
   const sym = node.symbol ? esc(node.symbol) : esc(n.id);
-  return '<div style="font:600 13px/1.2 Inter,sans-serif;color:#0b1220;background:rgba(255,255,255,.95);'
-       + 'border:1px solid #e8e6e1;border-radius:8px;padding:5px 9px;box-shadow:0 4px 14px rgba(16,24,40,.14)">'
-       + '<span style="font-family:JetBrains Mono,monospace">'+sym+'</span>'
-       + ' <span style="color:#9aa0a8;font-weight:500">'+esc(n.id)+'</span></div>';
+  return '<div style="font:500 13px/18px var(--font-sans,sans-serif);color:var(--ink,#171717);background:var(--page,#FFFFFF);'
+       + 'border-radius:6px;padding:6px 10px;box-shadow:0 0 0 1px var(--line,#EBEBEB),0 16px 24px -8px rgb(0 0 0 / .06)">'
+       + '<span style="font-family:var(--font-mono,monospace)">'+sym+'</span>'
+       + ' <span style="color:var(--ink-2,#4D4D4D);font-weight:400">'+esc(n.id)+'</span></div>';
 }
 
 // ---- interaction: auto-rotate ----------------------------------------------
@@ -394,7 +388,8 @@ function syncRotBtn(){ }
 function interact(){ if(!interacted){ interacted=true; } if(autoRotate) stopAutoRotate(); }
 
 // ---- interaction: fit / fly ------------------------------------------------
-function fitAll(){ if(Graph && Graph.zoomToFit) Graph.zoomToFit(600, 40); }
+function fitAll(){ if(Graph && Graph.zoomToFit) Graph.zoomToFit(REDUCE?0:600, 40); }
+document.getElementById('resetView').addEventListener('click', ()=>{ interact(); fitAll(); });
 function flyTo(id){
   if(!Graph) return;
   const n=(Graph.graphData().nodes||[]).find(x=>x.id===id);
@@ -405,7 +400,7 @@ function flyTo(id){
   Graph.cameraPosition(
     { x:(n.x||0)*ratio, y:(n.y||0), z:(n.z||0)*ratio },
     { x:n.x||0, y:n.y||0, z:n.z||0 },
-    900
+    REDUCE?0:900
   );
 }
 
@@ -413,20 +408,23 @@ function flyTo(id){
 let ancSet=new Set(), descSet=new Set(), upSet=new Set(), dnSet=new Set();
 function reach(id, adj){ const out=new Set(), dq=[id]; while(dq.length){ const x=dq.pop(); (adj[x]||[]).forEach(y=>{ if(!out.has(y)){ out.add(y); dq.push(y);} }); } return out; }
 
-function selectNode(id){
+function selectNode(id, noFly){
   const node=nodeById[id]; if(!node) return;
   selId=id;
   ancSet=reach(id,parents); descSet=reach(id,children);
   upSet=new Set([id, ...ancSet]); dnSet=new Set([id, ...descSet]);
   refreshEncoding();
-  flyTo(id);
+  if(!noFly) flyTo(id);
   openPanel(node);
+  history.replaceState(null,'','#node='+encodeURIComponent(id));
 }
 function clearSel(){
   selId=null; ancSet=new Set(); descSet=new Set(); upSet=new Set(); dnSet=new Set();
   refreshEncoding();
   panelEl.style.display='none';
+  if(location.hash) history.replaceState(null,'',location.pathname+location.search);
 }
+window.addEventListener('hashchange', ()=>{ const id=hashNode(); if(id&&id!==selId&&nodeById[id]){ interact(); selectNode(id); } });
 // re-evaluate the color/width accessors so the highlight repaints.
 function refreshEncoding(){
   if(!Graph) return;
@@ -437,32 +435,38 @@ function refreshEncoding(){
 }
 
 window.navTo=function(id){ if(nodeById[id]){ interact(); selectNode(id); } };
-function chip(id, cls){ return '<span class="chip '+(cls||'')+'" onclick="navTo(\''+attr(id).replace(/'/g,"&#39;")+'\')">'+(symHtml[id]||esc(id))+'</span>'; }
+function chip(id, cls){ return '<button type="button" class="chip '+(cls||'')+'" onclick="navTo(\''+attr(id).replace(/'/g,"&#39;")+'\')">'+(symHtml[id]||esc(id))+'</button>'; }
 
 function mappedByHtml(id){
   const rows=Object.keys(codesData).filter(c=> codesData[c] && codesData[c][id]).sort().map(c=>{ const m=codesData[c][id]; return '<div class="om-kv-row"><span class="om-kv-k">'+esc(c)+'</span><span class="om-kv-v">'+esc((m.api||''))+(m.unit?(' · '+esc(m.unit)):'')+'</span></div>'; });
-  return rows.length? ('<div class="om-panel-label">mapped by '+rows.length+' code'+(rows.length>1?'s':'')+'</div><div class="mapby om-kv">'+rows.join('')+'</div>') : '';
+  return rows.length? ('<div class="om-panel-label">Mapped by '+rows.length+' code'+(rows.length>1?'s':'')+'</div><div class="mapby om-kv">'+rows.join('')+'</div>') : '';
 }
 function openPanel(node){
   const id=node.id;
   const ins=parents[id]||[], outs=children[id]||[];
   const nAnc=ancSet.size, nDesc=descSet.size;
-  let h='<span class="x" onclick="clearSel()">×</span>';
+  let h='<button type="button" class="x" aria-label="Close" onclick="clearSel()">&times;</button>';
   h+='<div><span class="sym">'+tex(node.symbol)+'</span><span class="badge '+node.type+'">'+esc(node.type)+'</span></div>';
   h+='<div class="name">'+esc(node.id)+'<span class="tiertag">'+esc(node.tier||'Other')+'</span>'+(node.uid?('<span class="uid" title="'+attr(node.uid)+'">'+esc((''+node.uid).slice(0,12))+'</span>'):'')+'</div>';
-  h+='<div class="traceline">'+(nAnc?('Built from <b class="u">'+nAnc+'</b> upstream quantit'+(nAnc>1?'ies':'y')):'A <b>source</b> quantity')+'. '+(nDesc?('Flows into <b class="d">'+nDesc+'</b> downstream.'):'A terminal observable.')+'</div>';
+  h+='<div class="traceline">'+(nAnc?('Built from <b class="u">'+nAnc+'</b> upstream quantit'+(nAnc>1?'ies':'y')+'.'):'An input quantity.')+' '+(nDesc?('Feeds <b class="d">'+nDesc+'</b> downstream quantit'+(nDesc>1?'ies':'y')+'.'):'Nothing on the map uses it.')+'</div>';
   const fl=(node.formulas&&node.formulas.length)?node.formulas:(node.formula?[{op:'',latex:node.formula}]:[]);
-  if(!fl.length){ h+='<div class="om-panel-label">formula on the producing edge</div><div class="formula"><span class="muted">source (provided value)</span></div>'; }
-  else if(fl.length===1){ h+='<div class="om-panel-label">formula on the producing edge</div><div class="formula">'+tex(fl[0].latex,true)+'</div>'; }
+  if(!fl.length){ h+='<div class="om-panel-label">Formula on the producing edge</div><div class="formula"><span class="muted">Input quantity: no edge produces it.</span></div>'; }
+  else if(fl.length===1){ h+='<div class="om-panel-label">Formula on the producing edge</div><div class="formula">'+tex(fl[0].latex,true)+'</div>'; }
   else{
     h+='<div class="om-panel-label">'+fl.length+' producing edges (alternative routes)</div>';
     fl.forEach(f=>{ h+='<div class="fop">'+esc(f.op)+'</div><div class="formula">'+tex(f.latex,true)+'</div>'; });
   }
-  if(outs.length){ h+='<div class="om-panel-label">produces &rarr;</div><div class="chips">'+outs.map(id=>chip(id,'down')).join('')+'</div>'; }
-  if(ins.length){ h+='<div class="om-panel-label">&larr; from</div><div class="chips">'+ins.map(id=>chip(id,'up')).join('')+'</div>'; }
+  if(outs.length){ h+='<div class="om-panel-label">Feeds into</div><div class="chips">'+outs.map(id=>chip(id,'down')).join('')+'</div>'; }
+  if(ins.length){ h+='<div class="om-panel-label">Computed from</div><div class="chips">'+ins.map(id=>chip(id,'up')).join('')+'</div>'; }
   h+=mappedByHtml(id);
   panelEl.innerHTML=h; panelEl.style.display='block';
 }
+
+// The view switch carries the selection: the current #node= rides along to the other view.
+document.querySelector('.view-switch').addEventListener('click', e=>{
+  const a=e.target.closest('a'), m=location.hash.match(/[#?&]node=([^&]*)/);
+  if(a&&m) a.hash='node='+m[1];
+});
 
 // ---- interaction: search (fly to the match) --------------------------------
 document.getElementById('q').addEventListener('input', function(){
@@ -481,9 +485,8 @@ window.addEventListener('keydown', e=>{
 
 // ---- fallback: static readable tier outline --------------------------------
 function renderFallback(graph){
-  banner('The interactive 3D view is unavailable here: showing a static outline of the physics tiers.');
-  sceneEl.style.display='none';
-  document.querySelector('.legend').style.display='none';
+  banner('The 3D library did not load, so the tiers are listed as text.');
+  document.getElementById('stage').style.display='none';
   const fb=document.getElementById('fallback'); fb.style.display='block';
   const byTier={};
   graph.nodes.forEach(n=>{ const t=(n.tier in tierIndex)?n.tier:'Other'; (byTier[t]=byTier[t]||[]).push(n); });
@@ -495,7 +498,7 @@ function renderFallback(graph){
       const outs=(children[n.id]||[]);
       s+='<div class="fn"><span class="fs">'+(symHtml[n.id]||'')+' '+esc(n.id)+'</span><span class="fk '+n.type+'">'+esc(n.type)+'</span>';
       if(outs.length){
-        const edg=outs.map(t2=>'<span class="arw">&rarr;</span> '+esc(t2));
+        const edg=outs.map(t2=>'<span>&rarr;</span> '+esc(t2));
         s+='<div class="fe">'+edg.join('<br>')+'</div>';
       }
       s+='</div>';

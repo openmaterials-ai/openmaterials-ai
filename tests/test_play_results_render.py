@@ -67,7 +67,7 @@ def test_results_render_as_a_values_table():
     assert "W/(m K)" in out
     assert "temperature_K = 300" in out and "code = MESKAL" in out
     assert "Bogus" in out and "not a number" in out, "a stated value renders even when not numeric"
-    assert "outside the lineage id" in out
+    assert "excluded from its lineage id" in out
 
 
 def test_values_display_six_significant_digits():
