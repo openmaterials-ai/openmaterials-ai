@@ -32,6 +32,9 @@ ids, never retyped:
   canonical JSON its uid hashes, and the uid. Python only: computing the
   canonical JSON needs spglib, so the generator checks the hash alone and
   ``tests/test_configurations.py`` recomputes it.
+- ``release_codes``: frozen releases, fixture data: the registered releases of
+  the representations the release-check cases name, as the registry held them
+  when the cases were cut, copied into the vector beside them.
 
 Each input carries the id it was pinned with; the generator RECOMPUTES the id
 and refuses to write when the two disagree. A changed id is a defect in the
@@ -402,6 +405,43 @@ def build_configurations(inputs: dict) -> list[dict]:
     return out
 
 
+# Release-check report cases (omai.lineages.release_check): execution blocks
+# whose registry rows the check reads, by id and version only.
+_DIGEST = "sha256:" + "0" * 64
+_RELEASE_CASES = [
+    ("registered_version", {"registry": [{"id": "gpumd", "version": "3.9.5"}]}),
+    ("registered_tag", {"registry": [{"id": "gpumd", "version": "v3.9.5"}]}),
+    ("alias_of_a_representation",
+     {"registry": [{"id": "quantum-espresso", "version": "qe-7.5"}]}),
+    ("exact_string_only", {"registry": [
+        {"id": "lammps", "version": "2025.7.22.4.0"},
+        {"id": "lammps", "version": "2025.7.22"}]}),
+    ("unregistered_version", {"registry": [{"id": "gpumd", "version": "v4.7"}]}),
+    ("not_a_representation",
+     {"registry": [{"id": "qe-d3q", "version": "q-e-7.5"}]}),
+    ("no_version_with_image_digest",
+     {"image_digest": _DIGEST, "registry": [{"id": "xtb", "version": None}]}),
+    ("no_version_with_container_digest",
+     {"container_digest": _DIGEST, "registry": [{"id": "xtb", "version": None}]}),
+    ("no_version_without_digest", {"registry": [{"id": "xtb", "version": None}]}),
+    ("no_version_for_a_code_with_releases",
+     {"image_digest": _DIGEST, "registry": [{"id": "kaldo", "version": None}]}),
+]
+
+
+def build_releases(inputs: dict) -> dict:
+    """Release-check cases with the frozen releases they are checked against."""
+    from omai.lineages import release_check
+
+    codes = inputs["release_codes"]
+    cases = []
+    for name, execution in _RELEASE_CASES:
+        execution = {"code": "fixture", **execution}
+        cases.append({"name": name, "execution": execution,
+                      "unresolved": release_check(execution, codes)})
+    return {"codes": codes, "cases": cases}
+
+
 def generate() -> dict[str, str]:
     """The vector files as ``{filename: text}``, without writing anything."""
     inputs = json.loads(_INPUTS.read_text())
@@ -411,6 +451,7 @@ def generate() -> dict[str, str]:
         "render.json": _dump(build_render()),
         "configurations.json": _dump(build_configurations(inputs)),
         "models.json": _dump(build_models()),
+        "releases.json": _dump(build_releases(inputs)),
     }
 
 

@@ -43,13 +43,14 @@ RECORD_VECTORS = _load("records.json")
 RENDER_VECTORS = _load("render.json")
 CONFIGURATION_VECTORS = _load("configurations.json")
 MODEL_VECTORS = {v["name"]: v for v in _load("models.json")}
+RELEASE_VECTORS = _load("releases.json")
 
 
 # --- 1. the committed files equal a fresh generation ------------------------
 
 @pytest.mark.parametrize("name", ["lineage_ids.json", "records.json",
                                   "render.json", "configurations.json",
-                                  "models.json"])
+                                  "models.json", "releases.json"])
 def test_committed_vectors_equal_a_fresh_generation(name):
     fresh = gen_vectors.generate()[name]
     committed = (VECTORS / name).read_text()
@@ -219,3 +220,25 @@ def test_a_training_state_companion_leaves_the_model_uid_unchanged():
     companion = MODEL_VECTORS["one_file_with_training_state"]
     assert {f["role"] for f in companion["files"]} == {"model", "training_state"}
     assert companion["uid"] == one["uid"]
+
+
+# --- the release check -------------------------------------------------------
+
+@pytest.mark.parametrize("case", RELEASE_VECTORS["cases"],
+                         ids=[c["name"] for c in RELEASE_VECTORS["cases"]])
+def test_release_case_reproduces_through_release_check(case):
+    from omai.lineages import release_check
+
+    assert release_check(case["execution"], RELEASE_VECTORS["codes"]) == case["unresolved"]
+
+
+def test_registered_releases_are_append_only():
+    # The frozen release_codes are a past state of the registry: every
+    # release and alias they hold is still registered, in the same order.
+    from omai.evidence import _DATA_DIR, code_releases
+
+    live = code_releases([_DATA_DIR])
+    frozen = json.loads(gen_vectors._INPUTS.read_text())["release_codes"]
+    for code, entry in frozen.items():
+        assert live[code]["releases"][:len(entry["releases"])] == entry["releases"], code
+        assert set(entry["aliases"]) <= set(live[code]["aliases"]), code

@@ -352,6 +352,8 @@ writer refuses them. The registry ships the releases under `code`.
   two files (the sha256 of the sorted digest manifest, whose bytes are given),
   and one file with a `training_state` companion, whose uid equals the
   one-file uid. The NEP89 and Si.tersoff uids are pinned in their records.
+- `releases.json`: release-check cases, each an execution block and the rows
+  it reports, with the registered releases they are checked against.
 
 Every id in these files is produced by the functions above and equals the id
 its source already pinned. A vector whose id changes is a defect in the
