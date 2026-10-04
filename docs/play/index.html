@@ -335,7 +335,8 @@
         proposes each reported value as a map entry with a verbatim quote and its
         page number; you accept or reject each one. The text goes to the model
         through our relay, so you need no account or API key. The relay has a
-        daily budget shared by all visitors and a daily limit per address.</p>
+        daily budget shared by all visitors and a daily limit per address. The
+        model reads the first 120,000 characters of each paper.</p>
       <div class="dropzone" id="dropzone">
         <div class="head">Drop one or more PDFs here</div>
         <div class="sub2">Or choose files from your computer.</div>
@@ -3025,6 +3026,8 @@ window.addEventListener('resize', function(){ if (svg.querySelector('.pg-node'))
     try { return katex.renderToString(latex, {throwOnError:false}); } catch(e){ return escHtml(latex); }
   }
   function plural(n, one, many){ return n + ' ' + (n === 1 ? one : many); }
+  // quote matching ignores Unicode presentation forms, whitespace and case
+  function squash(x){ return String(x || '').normalize('NFKC').replace(/\s+/g, '').toLowerCase(); }
   function slugify(x){ return String(x).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,''); }
 
   async function extractPdfText(file){
@@ -3112,6 +3115,12 @@ window.addEventListener('resize', function(){ if (svg.querySelector('.pg-node'))
           row.setState('extracting', textResult.pages + ' pages read. Extracting values takes about a minute.');
           var raw = await extractWithLLM(textResult.text);
           var validated = LearnLib.validateExtraction(raw, KNOWN);
+          // a value stays only when its quote occurs in the extracted text
+          var hay = squash(textResult.text);
+          var quoted = validated.value_instances.filter(function(vi){ return hay.indexOf(squash(vi.quote)) !== -1; });
+          var unquoted = validated.value_instances.length - quoted.length;
+          if (unquoted) validated.warnings.push(plural(unquoted, 'value was', 'values were') + ' dropped because its quote does not occur in the paper text.');
+          validated.value_instances = quoted;
           validated.paper = {title: file.name, ref: slugify(file.name)};
           papers.push(validated);
           row.setState('done', plural(validated.value_instances.length, 'value', 'values') + ' extracted.');
@@ -3156,7 +3165,7 @@ window.addEventListener('resize', function(){ if (svg.querySelector('.pg-node'))
     dlAll.addEventListener('click', downloadAllInstances);
     expEl.appendChild(dlAll);
     var note = document.createElement('div'); note.className = 'export-note';
-    note.textContent = 'To add accepted values to the map, open a pull request that adds the JSON files under docs/data/instances/. A maintainer reviews each one.';
+    note.textContent = 'To add accepted values to the map, write each one with omai.map_data.record_instance and open a pull request with the files it creates under docs/data/instances/.';
     expEl.appendChild(note);
   }
 
@@ -3197,7 +3206,6 @@ window.addEventListener('resize', function(){ if (svg.querySelector('.pg-node'))
 
       p.value_instances.forEach(function(vi, idx){
         var rowKey = 'row_' + (paperRef || 'p') + '_' + idx;
-        if (vi.node_id) ACCEPTED.push({vi: vi, paper: p.paper, _key: rowKey});
 
         var rowEl = document.createElement('div'); rowEl.className = 'vi-row'; rowEl.id = rowKey;
         var node = vi.node_id ? nodeById[vi.node_id] : null;
@@ -3226,7 +3234,7 @@ window.addEventListener('resize', function(){ if (svg.querySelector('.pg-node'))
         rowEl.appendChild(quoteDiv);
 
         var ctrlDiv = document.createElement('div'); ctrlDiv.className = 'vi-controls';
-        var btnA = document.createElement('button'); btnA.className = 'btn-accept' + (vi.node_id ? ' active' : '');
+        var btnA = document.createElement('button'); btnA.className = 'btn-accept';
         btnA.textContent = 'Accept';
         var btnR = document.createElement('button'); btnR.className = 'btn-reject';
         btnR.textContent = 'Reject';
@@ -3236,7 +3244,7 @@ window.addEventListener('resize', function(){ if (svg.querySelector('.pg-node'))
         }
 
         var actDiv = document.createElement('div'); actDiv.className = 'vi-controls';
-        actDiv.style.display = vi.node_id ? 'flex' : 'none';
+        actDiv.style.display = 'none';
         function buildActions(localVi, localPaper){
           actDiv.innerHTML = '';
           var inst = LearnLib.buildInstance(localVi, localPaper);
@@ -3246,15 +3254,6 @@ window.addEventListener('resize', function(){ if (svg.querySelector('.pg-node'))
           dl.textContent = 'Download JSON';
           dl.addEventListener('click', function(){ downloadJson(slug + '.json', json); });
           actDiv.appendChild(dl);
-          var encoded = encodeURIComponent(json);
-          if (encoded.length <= 7000) {
-            var gh = document.createElement('a'); gh.className = 'om-btn om-btn-sm';
-            gh.textContent = 'Propose on GitHub';
-            gh.href = 'https://github.com/openmaterials-ai/openmaterials-ai/new/main?filename='
-              + encodeURIComponent('docs/data/instances/' + slug + '.json') + '&value=' + encoded;
-            gh.target = '_blank'; gh.rel = 'noopener';
-            actDiv.appendChild(gh);
-          }
         }
         if (vi.node_id) buildActions(vi, p.paper);
 
