@@ -71,3 +71,13 @@ def test_resolve_matches_a_former_uid_kept_as_an_alias(tmp_path):
 def test_a_missing_root_raises(tmp_path):
     with pytest.raises(FileNotFoundError):
         resolve("model", A, [tmp_path / "registry.json"])
+
+
+def test_committed_model_records_reproduce_their_uids():
+    from omai.evidence import _DATA_DIR, records
+
+    uids = {check("model", r, where=p) for p, r in records("model", _DATA_DIR)}
+    # NEP89 (GPUMD v4.7) and Si.tersoff (the committed kaldo and phono3py
+    # instances), re-read from the upstream files at registration.
+    assert {"75168ece02e840e4a32644f982b78d43cba697f5b64b4c8134ab66c7a8c28be1",
+            "52a93e90596829c57d54eef091de6215f1fac7ca15d57eac7568ddfdda26adfb"} <= uids

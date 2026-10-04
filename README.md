@@ -38,10 +38,12 @@ The database is just files in this repo: the versioned map lives in `map/`
 (log-first, content-addressed); the site reads `docs/data/graph.json`
 (variables + formulas), `docs/data/catalog.json` (per-node grounding: symbol,
 dimension, description), `docs/data/codes.json` (per-code variable coverage),
-`docs/data/instances/` (one file per value), and `docs/data/configurations/`
+`docs/data/instances/` (one file per value), `docs/data/configurations/`
 (one file per atomic structure: the content-addressed home of a `Structure`
-value, bundled to `docs/data/configurations.json`). Rebuild the generated files
-with:
+value, bundled to `docs/data/configurations.json`), and `docs/data/models/`
+(one file per model a code reads, such as an interatomic potential: its uid,
+the sha256 of its files, its licence and citation; the files themselves stay
+upstream). Rebuild the generated files with:
 
 ```bash
 CUDA_VISIBLE_DEVICES="" PYTHONPATH=. python -m omai.map_data
