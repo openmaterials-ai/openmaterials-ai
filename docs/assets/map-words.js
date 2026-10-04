@@ -16,7 +16,8 @@ var PHRASES = [
   [/\bGreen Kubo\b/g, 'Green-Kubo'], [/\bHOMO LUMO\b/g, 'HOMO-LUMO'], [/\bHasselman Johnson\b/g, 'Hasselman-Johnson'],
   [/\bNan effective kappa\b/g, 'Nan effective-medium kappa'], [/\bNan, /g, 'Nan effective medium, '],
   [/\bphase space 3phonon\b/g, 'three-phonon phase space'], [/\bheat capacity p\b/g, 'heat capacity at constant pressure'],
-  [/ (QHA|EOS)$/, ' ($1)']
+  [/ (QHA|EOS)$/, ' ($1)'], [/\bidentity dm\b/g, 'identity (dynamical matrix)'], [/\bforces HF\b/g, 'forces (Hellmann-Feynman)'],
+  [/\bGibbs hts\b/g, 'Gibbs energy (G = H - TS)'], [/\bNAC correction\b/g, 'non-analytic correction']
 ];
 function plainWords(s){
   s = String(s).replace(/[A-Za-z0-9]+/g, function(w){ return WORDS[w.toLowerCase()] || w; });
@@ -42,7 +43,7 @@ var HUMAN_PROP = {
   'PhaseSpace3Phonon': 'Three-phonon phase space',
   'Frequency': 'Phonon frequencies',
   'BandGap': 'Band gap',
-  'Structure': 'Relaxed structure'
+  'Structure': 'Atomic structure'
 };
 // De-camelCase an id, acronyms kept: MolarGibbsEnergy -> "Molar Gibbs energy".
 function humanizeId(id){
