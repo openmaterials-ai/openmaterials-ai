@@ -21,8 +21,8 @@ citations, and the values attached to it with their provenance. OpenMaterials is
 stewarded by OpenMaterials-AI, a foundation in formation.
 
 At map version f69b18c18fb7 the map has 114 typed quantities (100 observable, 11
-hidden, 3 parameter), 274 links (235 formula, 39 parameter), and 109 distinct
-operators in 16 tiers. It holds representations for 31 codes, listed with their
+hidden, 3 parameter), 274 links (235 formula, 39 parameter), and 114 operators
+in 16 tiers. It holds representations for 31 codes, listed with their
 interfaces, citations, and licenses in the [codes
 bibliography](https://openmaterials.ai/codes/), and 91 committed values: 87 from
 simulations and 4 from measurements. Browse it in 2D at
@@ -149,7 +149,7 @@ another** in the datasheet, or return to the Lineage tools, to paste a record JS
 or drop a `.json` file (a record MCG serves pastes straight in) and open a
 datasheet of your own; the paste/drop ingress validates the record
 client-side against the same light shape checks as `validate_light` (lineage
-present, artifact pointers well-formed) and is honest about gaps (a
+present, artifact pointers well-formed) and states its gaps (a
 node-unresolved or measurement record still shows its data plainly, without a
 fabricated lineage and without a Run link, and says so). It is a view only,
 nothing is uploaded or stored, and every reference file it reads (graph, catalog)
@@ -226,7 +226,7 @@ against Mathlib. `lean/` is a standalone lake package; `cd lean && lake exe
 cache get && lake build` reproduces the proof, and CI recompiles it on every
 change with warnings promoted to errors. The
 [verified layer](https://openmaterials.ai/lean/) page renders what is proven
-with honest coverage counts, and the
+with coverage counts from the published export, and the
 [formalization roadmap](https://openmaterials.ai/lean/roadmap/) rates every
 operator on the map by what a proof of its formula would take, from
 generator-provable algebra to the open analysis frontier (Brillouin-zone
@@ -440,7 +440,7 @@ non-exclusive CC BY 4.0 license and transfers nothing; there is no copyright
 assignment and no CLA; raw simulation and experimental artifacts are never
 ingested and remain under their owners' own terms. Attribution is enforced
 in both directions: upstream, every mapped code's citation and license is
-recorded in its rail and every parsed paper is quoted verbatim with page
+recorded in its representation and every parsed paper is quoted verbatim with page
 anchors as a merge gate; downstream, reuse must credit the map version and,
 through it, the original sources. The full statement is GOVERNANCE.md,
 "Data ownership and fairness".

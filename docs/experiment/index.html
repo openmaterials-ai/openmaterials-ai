@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Experiments | OpenMaterials</title>
-<meta name="description" content="Committed values are grouped by source, with one page and a shareable URL for each simulation campaign, measurement, or parsed paper.">
+<meta name="description" content="Committed values are grouped by source, with one page and a shareable URL for each source reference.">
 <link rel="canonical" href="https://openmaterials.ai/experiment/">
 <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
@@ -13,11 +13,11 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="openmaterials.ai">
 <meta property="og:title" content="Experiments | OpenMaterials">
-<meta property="og:description" content="Committed values are grouped by source, with one page and a shareable URL for each simulation campaign, measurement, or parsed paper.">
+<meta property="og:description" content="Committed values are grouped by source, with one page and a shareable URL for each source reference.">
 <meta property="og:url" content="https://openmaterials.ai/experiment/">
 <meta property="og:image" content="https://openmaterials.ai/assets/og.png">
 <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="The openmaterials.ai mark and wordmark above the line A versioned map of physics, with the licenses: map data CC BY 4.0, code Apache 2.0.">
+<meta property="og:image:alt" content="The openmaterials.ai mark and wordmark above the line &quot;A versioned map of physics.&quot; and the licenses &quot;Map data CC BY 4.0 · Code Apache 2.0&quot;.">
 <meta name="twitter:card" content="summary_large_image">
 <script>try{const t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch{}</script>
 <link rel="preload" href="../assets/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin>
@@ -45,7 +45,14 @@
 <a class="skip-link" href="#main">Skip to content</a>
 <div data-site-header></div>
 <main class="frame" id="main">
-  <noscript><div class="page-body"><p class="empty">This page needs JavaScript. The records are plain JSON in <a href="../data/instances.json">../data/instances.json</a>.</p></div></noscript>
+  <header class="page-head" id="xp-head">
+    <p class="eyebrow">Evidence</p>
+    <h1>Experiments</h1>
+    <p class="lede">Committed values are grouped by their source reference, with one page for each source reference. Each page's URL carries the reference, and the page shows the map version it renders.</p>
+  </header>
+  <div class="page-body"><div class="prose" id="xp-body">
+    <noscript><p class="empty">This page needs JavaScript. The records are plain JSON in <a href="../data/instances.json">../data/instances.json</a>.</p></noscript>
+  </div></div>
 </main>
 <script>
 'use strict';
@@ -129,8 +136,8 @@ function condText(c){
   return Object.keys(c).map(function(k){ return k + ' = ' + c[k]; }).join(' · ');
 }
 function fail(msg){
-  document.getElementById('main').innerHTML =
-    '<div class="page-body"><p id="err" class="notice notice--error">' + esc(msg) + '</p></div>';
+  document.getElementById('xp-body').innerHTML =
+    '<p id="err" class="notice notice--error">' + esc(msg) + '</p>';
 }
 function valText(rec){
   var v = esc(rec.value);
@@ -175,13 +182,14 @@ function pinHtml(){
   return '<p class="notice pin">Map version <span class="mono">' + esc(v.slice(0, 12)) + '</span>' +
     (v ? ' (<span class="mono">' + esc(v) + '</span>)' : '') +
     '. This page shows the values committed in the current site build. Cite the map version with any value you reuse.' +
-    '<br>Contributors grant the initiative a non-exclusive license to redistribute each record under CC BY 4.0 and keep every other right. Raw artifacts are never ingested, and reuse credits the source named in the record\'s provenance ' +
-    '(<a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/main/GOVERNANCE.md">GOVERNANCE.md, "Data ownership and fairness"</a>).</p>';
+    '<br>Contributors grant OpenMaterials-AI a non-exclusive license to redistribute each record under CC BY 4.0 and keep every other right. Raw artifacts are never ingested, and reuse credits the source named in the record\'s provenance ' +
+    '(<a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/main/GOVERNANCE.md#data-ownership-and-fairness">GOVERNANCE.md, "Data ownership and fairness"</a>).</p>';
 }
-// The page head, then the body column, rendered into #main.
+// The index head is the static one in the HTML; a detail view swaps in its own head.
+var INDEX_HEAD = document.getElementById('xp-head').innerHTML;
 function page(head, body){
-  return '<header class="page-head">' + head + '</header>' +
-    '<div class="page-body"><div class="prose">' + body + pinHtml() + '</div></div>';
+  document.getElementById('xp-head').innerHTML = head;
+  document.getElementById('xp-body').innerHTML = body + pinHtml();
 }
 
 function renderIndex(material){
@@ -203,16 +211,11 @@ function renderIndex(material){
     var kinds = uniq(recs.map(function(r){ return r.source && r.source.kind; }));
     var vars = uniq(recs.map(function(r){ return r.variable; }));
     return '<div class="xp-row"><dt><a class="ref" href="#ref=' + encodeURIComponent(ref) + '">' + esc(ref) + '</a></dt>' +
-      '<dd>' + recs.length + ' values · ' + esc(kinds.join(', ')) + ' · ' +
+      '<dd>' + recs.length + (recs.length === 1 ? ' value' : ' values') + ' · ' + esc(kinds.join(', ')) + ' · ' +
         esc(mats.join(', ')) + ' · ' + vars.length +
         (vars.length === 1 ? ' quantity' : ' quantities') + '</dd></div>';
   }).join('');
-  document.getElementById('main').innerHTML = page(
-    '<p class="eyebrow">Evidence</p>' +
-    '<h1>Experiments</h1>' +
-    '<p class="lede">An experiment is the set of values one source contributed to the map: a simulation ' +
-    'campaign, a measurement, or a parsed paper, grouped by its provenance reference. Each experiment has ' +
-    'a URL that carries the reference, and the page shows the map version it renders.</p>',
+  page(INDEX_HEAD,
     (material ? '<div class="meta"><span class="pill">Material ' + esc(material) +
       '</span><a class="pill" href="#">Clear filter</a></div>' : '') +
     (rows ? '<dl class="ledger xp-list">' + rows + '</dl>' :
@@ -223,7 +226,7 @@ function renderDetail(ref){
   var recs = DATA.groups[ref];
   document.title = 'Experiment ' + ref + ' | OpenMaterials';
   if (!recs){
-    document.getElementById('main').innerHTML = page(
+    page(
       '<p class="crumb"><a href="#">All experiments</a></p>' +
       '<h1>Unknown experiment</h1>' +
       '<p class="lede">No committed value in this site build carries the reference <span class="mono">' +
@@ -260,8 +263,8 @@ function renderDetail(ref){
   // prefilled from that record. Absent otherwise (the card is identical).
   var runRec = computableRec(recs);
   var runBtn = runRec ? '<a class="btn btn--secondary btn--sm" href="' + esc(mcgRunUrl(runRec)) +
-    '" target="_blank" rel="noopener">Run this lineage on MaterialsCodeGraph</a>' : '';
-  document.getElementById('main').innerHTML = page(
+    '" target="_blank" rel="noopener">Run on MaterialsCodeGraph</a>' : '';
+  page(
     '<p class="crumb"><a href="#">All experiments</a></p>' +
     '<p class="eyebrow">Experiment</p>' +
     '<h1 class="ref">' + esc(ref) + '</h1>' +
