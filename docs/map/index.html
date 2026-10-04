@@ -256,11 +256,11 @@ function attr(s){ return (''+s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').rep
 // separate evidence layer that consumers load against node uids; the map page
 // never fetches or renders them (see the paper's MVC statement).
 Promise.all([
-  fetch('../data/graph.json?v='+Date.now()).then(r=>r.json()),
-  fetch('../data/codes.json?v='+Date.now()).then(r=>r.json()).catch(()=>({})),
-  fetch('../data/version.json?v='+Date.now()).then(r=>r.json()).catch(()=>null),
-  fetch('../data/semantics.json?v='+Date.now()).then(r=>r.json()).catch(()=>[]),
-  fetch('../data/lean.json?v='+Date.now()).then(r=>r.json()).catch(()=>({nodes:{},edges:{}}))
+  fetch('../data/graph.json').then(r=>r.json()),
+  fetch('../data/codes.json').then(r=>r.json()).catch(()=>({})),
+  fetch('../data/version.json').then(r=>r.json()).catch(()=>null),
+  fetch('../data/semantics.json').then(r=>r.json()).catch(()=>[]),
+  fetch('../data/lean.json').then(r=>r.json()).catch(()=>({nodes:{},edges:{}}))
 ]).then(build).catch(e=> err('The map data did not load: '+e));
 
 // The semantic index: a node/edge's surface labels (auto + curated), keyed by
@@ -593,7 +593,7 @@ function syncHash(id){
 function expFromHash(){ const m=location.hash.match(/[#?&]experiment=([^&]*)/); return m?decodeURIComponent(m[1]):null; }
 let instancesPromise=null;
 function loadInstances(){
-  if(!instancesPromise){ instancesPromise=fetch('../data/instances.json?v='+Date.now()).then(r=>r.json()).catch(()=>[]); }
+  if(!instancesPromise){ instancesPromise=fetch('../data/instances.json').then(r=>r.json()).catch(()=>[]); }
   return instancesPromise;
 }
 function resolveNodeId(v){ if(nodeById[v]) return v; const b=(''+v).split('[')[0]; return nodeById[b]?b:null; }

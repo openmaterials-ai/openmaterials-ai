@@ -250,8 +250,8 @@ def test_page_wires_the_id_permalink_resolver():
     assert "function instanceToRecord" in html, "no instance->record normalizer"
     assert "id=([0-9a-fA-F]+)" in html, "the router does not match the #id= fragment"
     assert "renderInstanceById" in html, "the #id= route is not dispatched"
-    assert "instances.json?v=' + Date.now()" in html, \
-        "the resolver does not fetch the projection cache-busted like the map page"
+    assert "fetch('../data/instances.json')" in html, \
+        "the resolver does not fetch the projection the site serves"
     # not-found is an honest empty state, never a fabricated value
     assert "function renderInstanceEmpty" in html, "no empty state for an unresolved id"
     assert "No shared value with this id" in html, "no honest not-found heading"

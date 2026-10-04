@@ -186,7 +186,7 @@ function esc(s){ return s.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/
 function showRest(on){ document.getElementById('resthint').hidden=!on; }
 
 if(typeof dagre==='undefined'){ err('The layout library did not load. Check the connection and reload.'); }
-else fetch('../data/graph.json?v='+Date.now()).then(r=>r.json())
+else fetch('../data/graph.json').then(r=>r.json())
   .then(build).catch(e=> err('The map data did not load: '+e));
 
 function build(graph){

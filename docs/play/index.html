@@ -568,14 +568,14 @@ function resolveLabel(q){
 
 /* ---- data load ----------------------------------------------------------- */
 var mapReady = Promise.all([
-  fetch('../data/graph.json?v=' + Date.now()).then(function(r){ return r.json(); }),
-  fetch('../data/semantics.json?v=' + Date.now()).then(function(r){ return r.json(); }).catch(function(){ return []; }),
-  fetch('../data/version.json?v=' + Date.now()).then(function(r){ return r.json(); }).catch(function(){ return null; }),
-  fetch('../data/lean.json?v=' + Date.now()).then(function(r){ return r.json(); }).catch(function(){ return {nodes:{},edges:{}}; }),
-  fetch('../data/catalog.json?v=' + Date.now()).then(function(r){ return r.json(); }).catch(function(){ return []; }),
-  fetch('../data/configurations.json?v=' + Date.now()).then(function(r){ return r.json(); }).catch(function(){ return null; }),
-  fetch('../data/codes.json?v=' + Date.now()).then(function(r){ return r.json(); }).catch(function(){ return {}; }),
-  fetch('../data/conformance/index.json?v=' + Date.now()).then(function(r){ return r.json(); }).catch(function(){ return {targets:[]}; }),
+  fetch('../data/graph.json').then(function(r){ return r.json(); }),
+  fetch('../data/semantics.json').then(function(r){ return r.json(); }).catch(function(){ return []; }),
+  fetch('../data/version.json').then(function(r){ return r.json(); }).catch(function(){ return null; }),
+  fetch('../data/lean.json').then(function(r){ return r.json(); }).catch(function(){ return {nodes:{},edges:{}}; }),
+  fetch('../data/catalog.json').then(function(r){ return r.json(); }).catch(function(){ return []; }),
+  fetch('../data/configurations.json').then(function(r){ return r.json(); }).catch(function(){ return null; }),
+  fetch('../data/codes.json').then(function(r){ return r.json(); }).catch(function(){ return {}; }),
+  fetch('../data/conformance/index.json').then(function(r){ return r.json(); }).catch(function(){ return {targets:[]}; }),
   loadPlayInstances().catch(function(){ return []; })
 ]).then(function(res){
   GRAPH = res[0]; SEM = res[1] || [];
@@ -795,7 +795,7 @@ function renderProposal(proposal){
 // The example proposal, drawn and captioned. A bare /play/ opens with it, so the
 // canvas starts with a drawing; the Load an example button also reports a failure.
 function loadDefaultExample(report){
-  fetch('example-proposal.json?v=' + Date.now()).then(function(r){ return r.json(); }).then(function(p){
+  fetch('example-proposal.json').then(function(r){ return r.json(); }).then(function(p){
     document.getElementById('proposalInput').value = JSON.stringify(p, null, 1);
     renderProposal(p);
     var n = (p.claims || []).length;
@@ -1098,13 +1098,12 @@ function renderLineageExampleNav(record){
 
 function loadLineageExamples(){
   if (lineageExamplesPromise) return lineageExamplesPromise;
-  var stamp = '?v=' + Date.now();
   lineageExamplesPromise = Promise.all([
-    fetch('../examples/si-kappa-kaldo-direct.json' + stamp).then(function(r){
+    fetch('../examples/si-kappa-kaldo-direct.json').then(function(r){
       if (!r.ok) throw new Error('flagship example unavailable');
       return r.json();
     }).catch(function(){ return null; }),
-    fetch('../examples/index.json' + stamp).then(function(r){
+    fetch('../examples/index.json').then(function(r){
       if (!r.ok) throw new Error('example index unavailable');
       return r.json();
     }).catch(function(){ return null; })
@@ -1204,7 +1203,7 @@ var distLoaded = false;
 function renderDistanceTab(){
   if (distLoaded) return;
   distLoaded = true;
-  fetch('../data/distances.json?v=' + Date.now()).then(function(r){ return r.json(); }).then(function(d){
+  fetch('../data/distances.json').then(function(r){ return r.json(); }).then(function(d){
     var reg = d.registry || {distances: []};
     var html = '<table class="pg-table"><thead><tr><th>metric</th><th>what it is</th>' +
       '<th>true metric</th><th>ANN index</th><th>invariances</th><th>cost</th></tr></thead><tbody>';
@@ -1300,7 +1299,7 @@ var papersRows = null;
 function initPapersCompare(){
   if (papersRows) return;
   papersRows = [];
-  fetch('../data/instances.json?v=' + Date.now()).then(function(r){ return r.json(); }).then(function(rows){
+  fetch('../data/instances.json').then(function(r){ return r.json(); }).then(function(rows){
     papersRows = rows.filter(function(r){ return r && r.source && r.source.ref; });
     var refs = Array.from(new Set(papersRows.map(function(r){ return r.source.ref; })));
     refs.sort(function(a, b){
@@ -2476,14 +2475,14 @@ function renderLineage(record, opts){
   return true;
 }
 
-/* The instances projection, fetched once, cache-busted exactly like the map
-   page reads it (../data/instances.json?v=Date.now()): the resolver reads the
-   same same-origin view the site already serves. The promise is memoized so a
+/* The instances projection, fetched once, the same file the map page reads
+   (../data/instances.json): the resolver reads the same same-origin view the
+   site already serves. The promise is memoized so a
    second #id= navigation does not refetch. */
 var playInstancesPromise = null;
 function loadPlayInstances(){
   if (!playInstancesPromise) {
-    playInstancesPromise = fetch('../data/instances.json?v=' + Date.now())
+    playInstancesPromise = fetch('../data/instances.json')
       .then(function(r){ return r.json(); });
   }
   return playInstancesPromise;

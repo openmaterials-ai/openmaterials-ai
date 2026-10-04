@@ -206,8 +206,8 @@ function hashNode(){ const m=location.hash.match(/[#?&]node=([^&]*)/); return m?
 // separate evidence layer that consumers load against node uids; this page never
 // fetches or renders them (see the paper's MVC statement).
 Promise.all([
-  fetch('../data/graph.json?v='+Date.now()).then(r=>r.json()),
-  fetch('../data/codes.json?v='+Date.now()).then(r=>r.json()).catch(()=>({}))
+  fetch('../data/graph.json').then(r=>r.json()),
+  fetch('../data/codes.json').then(r=>r.json()).catch(()=>({}))
 ]).then(build).catch(e=> err('The map data did not load: '+e));
 
 function build([graph, codes]){
