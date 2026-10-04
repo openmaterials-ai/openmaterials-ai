@@ -53,6 +53,7 @@
   /* nodes */
   .node{cursor:pointer;}
   .node:focus{outline:none;} .node:focus-visible{outline:2px solid var(--ink,#171717);outline-offset:2px;}
+  .node:focus-visible rect{stroke:var(--ink,#171717);stroke-width:3;}   /* WebKit paints no outline on SVG */
   .node rect{fill:var(--surface-2,#F2F2F2);stroke:var(--edge,#8F8F8F);stroke-width:1;vector-effect:non-scaling-stroke;transition:fill var(--dur,150ms) var(--ease,ease),stroke var(--dur,150ms) var(--ease,ease);}
   /* Symbols live in an HTML overlay synced to the viewBox (foreignObject
      mis-positions under viewBox transforms in WebKit). */
@@ -147,7 +148,7 @@ let VB={x:0,y:0,w:1000,h:1000}, GW=1000, GH=1000;
 let nodeById={}, parents={}, children={}, pos={}, symHtml={}, opByEdge={};
 // Labels are LABEL_UNITS tall; no view scales them under 12 px.
 const LABEL_UNITS=18, MIN_SCALE=12/LABEL_UNITS;
-const DEFAULT_NODE='ThermalConductivity[bte_solver=direct_inverse]';   // the Ge datum on the home page
+const DEFAULT_NODE='ThermalConductivity[bte_solver=direct_inverse]';   // the quantity of the Si datum on the home page
 let lastFocus=null, lastAnchor=null, lastHits=[];
 // Above 1, a view box is larger than the 12 px label floor allows.
 function overFloor(vb){ const r=svg.getBoundingClientRect(); return r.width&&r.height ? Math.max(vb.w*MIN_SCALE/r.width, vb.h*MIN_SCALE/r.height) : 0; }
@@ -289,7 +290,7 @@ function syncHash(h){
   if(location.hash===h||(!h&&!location.hash)) return;
   history.replaceState(null,'',h||location.pathname+location.search);
 }
-// An empty hash traces the Ge datum, so the first view is a trace, not a blank prompt.
+// An empty hash traces the Si datum's quantity, so the first view is a trace, not a blank prompt.
 function applyHash(){
   const a=hashParam('from'), b=hashParam('to');
   if(a&&b&&nodeById[a]&&nodeById[b]){ finishPath(a,b); return; }

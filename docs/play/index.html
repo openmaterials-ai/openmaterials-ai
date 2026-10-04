@@ -112,6 +112,7 @@
   .pg-node circle{transition:opacity var(--dur,150ms) var(--ease,ease);}
   .pg-node{cursor:pointer;}
   .pg-node:focus{outline:none;} .pg-node:focus-visible{outline:2px solid var(--ink,#171717);outline-offset:2px;}
+  .pg-node:focus-visible circle{stroke:var(--ink,#171717) !important;stroke-width:3;}   /* WebKit paints no outline on SVG; the inline stroke needs !important */
   .pg-edge{fill:none;stroke:var(--edge,#8F8F8F);stroke-width:1;vector-effect:non-scaling-stroke;transition:opacity var(--dur,150ms) var(--ease,ease);}
   .pg-edge.dim{opacity:.1;}
   .pg-edge.hot{stroke:var(--data-obs-line,#4F46E5);stroke-width:2;}
@@ -123,6 +124,7 @@
   .pg-node-panel .nm{margin-bottom:6px;padding-right:32px;font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);font-size:13px;color:var(--ink,#171717);overflow-wrap:anywhere;}
   .pg-node-panel .lb{margin:12px 0 4px;font-size:12px;line-height:16px;font-weight:500;color:var(--ink-2,#4D4D4D);}
   .pg-node-panel .fm{font-size:15px;overflow-x:auto;}
+  .pg-node-panel .fop{margin:8px 0 2px;font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);font-size:12px;color:var(--ink-2,#4D4D4D);overflow-wrap:anywhere;}
   .pg-node-panel .aka{font-size:13px;color:var(--ink,#171717);}
   .lean-line{margin:4px 0 2px;padding:8px 10px;border:1px solid var(--line,#EBEBEB);border-radius:var(--radius,6px);background:var(--page,#FFFFFF);color:var(--ink,#171717);font:400 12px/16px var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);white-space:pre-wrap;overflow-wrap:anywhere;}
   .lean-badge{color:var(--data-sim,#0C7C55);}
@@ -189,6 +191,9 @@
      min-width), so a wide derivation scrolls inside .rec-mapbox at full
      legibility instead of shrinking its labels. */
   .rec-maprow{margin-top:4px;}
+  /* the drawing keeps its natural width, so it shows only where the page is wide; narrower screens get the sentence */
+  @media (max-width:960px){.rec-maprow{display:none;}}
+  @media (min-width:961px){.rec-mapnote{display:none;}}
   .rec-mapbox{margin:6px 0 10px;overflow-x:auto;border:1px solid var(--line,#EBEBEB);border-radius:var(--radius,6px);background:var(--page,#FFFFFF);}
   .rec-map{display:block;width:100%;height:auto;}
   .rec-explain{max-width:72ch;margin:2px 0 8px;font-size:13px;line-height:20px;color:var(--ink-2,#4D4D4D);}
@@ -709,10 +714,13 @@ function openNode(id){
   var h = '<button type="button" class="x" id="pgClose" aria-label="Close">&times;</button>';
   h += '<div class="nm">' + esc(id) + '</div>';
   h += '<div class="lb">Symbol</div><div class="fm">' + (symHtml[id] || esc(n.symbol)) + '</div>';
-  if (n.formula) h += '<div class="lb">Formula</div><div class="fm">' + tex(n.formula, true) + '</div>';
+  var fl = (n.formulas && n.formulas.length) ? n.formulas : (n.formula ? [{ op: '', latex: n.formula }] : []);
+  h += '<div class="lb">' + (fl.length > 1 ? fl.length + ' producing edges (alternative routes)' : 'Formula on the producing edge') + '</div>';
+  if (!fl.length) h += '<div class="fm pg-note">Input quantity: no edge produces it.</div>';
+  fl.forEach(function(f){ h += (f.op ? '<div class="fop">' + esc(f.op) + '</div>' : '') + '<div class="fm">' + tex(f.latex, true) + '</div>'; });
   if (fam) h += '<div class="lb">Also known as</div><div class="aka">' + esc(fam) + '</div>';
   var lv = LEAN.nodes && LEAN.nodes[id];
-  if (lv) h += '<div class="lb"><span class="lean-badge">Proven in Lean</span></div><pre class="lean-line">' + esc(lv.lean) + '</pre>';
+  if (lv) h += '<div class="lb"><span class="lean-badge">Lean dimension</span></div><pre class="lean-line">' + esc(lv.lean) + '</pre>';
   h += '<div class="lb">uid</div><div class="uid">' + esc(n.uid || '') + '</div>';
   nodePanel.innerHTML = h; nodePanel.style.display = 'block';
   document.getElementById('pgClose').addEventListener('click', function(){ nodePanel.style.display = 'none'; });
@@ -800,7 +808,7 @@ function loadDefaultExample(report){
     document.getElementById('proposalInput').value = JSON.stringify(p, null, 1);
     renderProposal(p);
     var n = (p.claims || []).length;
-    var c = document.getElementById('pgCaption'); if (c) { c.textContent = 'Example: ' + n + (n === 1 ? ' claim' : ' claims') + ' from ' + (p.paper || 'a paper'); c.hidden = false; }
+    var c = document.getElementById('pgCaption'); if (c) { c.textContent = 'Example: ' + n + (n === 1 ? ' value' : ' values') + ' from ' + (p.paper || 'a paper'); c.hidden = false; }
   }).catch(function(e){
     if (report) document.getElementById('parseResult').innerHTML = '<div class="pg-empty">The example did not load: ' + esc(e.message) + '</div>';
   });
@@ -1100,7 +1108,7 @@ function renderLineageExampleNav(record){
 function loadLineageExamples(){
   if (lineageExamplesPromise) return lineageExamplesPromise;
   lineageExamplesPromise = Promise.all([
-    fetch('../examples/si-kappa-kaldo-direct.json').then(function(r){
+    fetch('../examples/si-diamond-kappa-dfpt.json').then(function(r){
       if (!r.ok) throw new Error('flagship example unavailable');
       return r.json();
     }).catch(function(){ return null; }),
@@ -1206,16 +1214,16 @@ function renderDistanceTab(){
   distLoaded = true;
   fetch('../data/distances.json').then(function(r){ return r.json(); }).then(function(d){
     var reg = d.registry || {distances: []};
-    var html = '<table class="pg-table"><thead><tr><th>Metric</th><th>What it is</th>' +
+    var html = '<table class="pg-table stack"><thead><tr><th>Metric</th><th>What it is</th>' +
       '<th>True metric</th><th>ANN index</th><th>Invariances</th><th>Cost</th></tr></thead><tbody>';
     reg.distances.forEach(function(m){
       var isDefault = reg.default && reg.default.indexOf(m.id) === 0;
-      html += '<tr><td><code>' + esc(m.key) + '</code>' + (isDefault ? ' (default)' : '') + '</td>' +
-        '<td>' + esc(m.description) + '</td>' +
-        '<td>' + (m.metric ? 'yes' : 'no') + '</td>' +
-        '<td>' + (m.ann_indexable ? 'yes' : 'no') + '</td>' +
-        '<td>' + esc((m.invariances || []).join(', ')) + '</td>' +
-        '<td>' + esc(m.cost || '') + '</td></tr>';
+      html += '<tr><td data-label="Metric"><code>' + esc(m.key) + '</code>' + (isDefault ? ' (default)' : '') + '</td>' +
+        '<td data-label="What it is">' + esc(m.description) + '</td>' +
+        '<td data-label="True metric">' + (m.metric ? 'yes' : 'no') + '</td>' +
+        '<td data-label="ANN index">' + (m.ann_indexable ? 'yes' : 'no') + '</td>' +
+        '<td data-label="Invariances">' + esc((m.invariances || []).join(', ')) + '</td>' +
+        '<td data-label="Cost">' + esc(m.cost || '') + '</td></tr>';
     });
     html += '</tbody></table>';
     document.getElementById('distRegistry').innerHTML = html;
@@ -1226,12 +1234,12 @@ function renderDistanceTab(){
       (zoo.reference ? '. Reference: ' + zoo.reference + '.' : '');
     var ids = reg.distances.filter(function(m){ return !m.input || m.input === 'structure'; })
       .map(function(m){ return m.id; });
-    var zh = '<table class="pg-table"><thead><tr><th>Compared with ' + esc(zoo.reference || 'the reference') + '</th>' +
+    var zh = '<table class="pg-table stack"><thead><tr><th>Compared with ' + esc(zoo.reference || 'the reference') + '</th>' +
       ids.map(function(id){ return '<th>' + esc(id) + '</th>'; }).join('') + '</tr></thead><tbody>';
     (zoo.rows || []).forEach(function(row){
-      zh += '<tr><td>' + esc(row.name) + '</td>' + ids.map(function(id){
+      zh += '<tr><td data-label="Compared with ' + esc(zoo.reference || 'the reference') + '">' + esc(row.name) + '</td>' + ids.map(function(id){
         var v = row.distances ? row.distances[id] : null;
-        return '<td>' + (v == null ? '∞' : esc(String(v))) + '</td>';
+        return '<td data-label="' + esc(id) + '">' + (v == null ? '∞' : esc(String(v))) + '</td>';
       }).join('') + '</tr>';
     });
     zh += '</tbody></table>';
@@ -1339,7 +1347,7 @@ function renderPapersCompare(){
   var shared = Object.keys(A).filter(function(k){ return k in B; });
   var html = '';
   if (shared.length) {
-    html += '<table class="pg-table"><thead><tr><th>Shared quantity | material | units</th>' +
+    html += '<table class="pg-table stack"><thead><tr><th>Shared quantity | material | units</th>' +
       '<th>' + esc(refA) + '</th><th>' + esc(refB) + '</th><th>curve@1</th></tr></thead><tbody>';
     shared.forEach(function(k){
       var pa = A[k].pts.filter(function(p){ return p.x !== null; });
@@ -1358,8 +1366,8 @@ function renderPapersCompare(){
                                        pb.map(function(p){ return p.x; }), pb.map(function(p){ return p.y; }));
         cell = d === null ? 'No shared T range' : d.toFixed(4);
       }
-      html += '<tr><td>' + esc(k) + '</td><td>' + A[k].pts.length + ' value' + (A[k].pts.length === 1 ? '' : 's') + '</td>' +
-        '<td>' + B[k].pts.length + ' value' + (B[k].pts.length === 1 ? '' : 's') + '</td><td>' + cell + '</td></tr>';
+      html += '<tr><td data-label="Shared quantity | material | units">' + esc(k) + '</td><td data-label="' + esc(refA) + '">' + A[k].pts.length + ' value' + (A[k].pts.length === 1 ? '' : 's') + '</td>' +
+        '<td data-label="' + esc(refB) + '">' + B[k].pts.length + ' value' + (B[k].pts.length === 1 ? '' : 's') + '</td><td data-label="curve@1">' + cell + '</td></tr>';
     });
     html += '</tbody></table>';
   } else {
@@ -1380,8 +1388,8 @@ function renderPapersCompare(){
   });
   if (rows.length) {
     var cap = 12;
-    html += '<table class="pg-table" style="margin-top:10px"><thead><tr><th>Material of A</th><th>Material of B</th><th>comp@1</th></tr></thead><tbody>' +
-      rows.slice(0, cap).map(function(r){ return '<tr><td>' + esc(r[0]) + '</td><td>' + esc(r[1]) + '</td><td>' + esc(r[2]) + '</td></tr>'; }).join('') +
+    html += '<table class="pg-table stack" style="margin-top:10px"><thead><tr><th>Material of A</th><th>Material of B</th><th>comp@1</th></tr></thead><tbody>' +
+      rows.slice(0, cap).map(function(r){ return '<tr><td data-label="Material of A">' + esc(r[0]) + '</td><td data-label="Material of B">' + esc(r[1]) + '</td><td data-label="comp@1">' + esc(r[2]) + '</td></tr>'; }).join('') +
       '</tbody></table>' + (rows.length > cap ? '<p class="pg-note">Showing ' + cap + ' of ' + rows.length + ' material pairs.</p>' : '');
   }
   document.getElementById('distPapers').innerHTML = html;
@@ -2389,7 +2397,9 @@ function datasheetHTML(record, valid, opts){
         '<span><i class="lg-this"></i>This record\'s quantity</span>' +
         '<span><i class="lg-obs"></i>Observable (measurable) quantity</span>' +
         '<span><i class="lg-step"></i>Internal step of the computation</span>' +
-        '</div></div>';
+        '</div></div>' +
+        '<p class="rec-explain rec-mapnote">This screen is too narrow for the derivation drawing; ' +
+        '<a href="../map-trace/#node=' + encodeURIComponent(node) + '">the tracer</a> shows the same derivation at any width.</p>';
     }
   }
 
@@ -3080,7 +3090,8 @@ window.addEventListener('resize', function(){ if (svg.querySelector('.pg-node'))
           var hay = squash(textResult.text);
           var quoted = validated.value_instances.filter(function(vi){ return hay.indexOf(squash(vi.quote)) !== -1; });
           var unquoted = validated.value_instances.length - quoted.length;
-          if (unquoted) validated.warnings.push(plural(unquoted, 'value was', 'values were') + ' dropped because its quote does not occur in the paper text.');
+          if (unquoted) validated.warnings.push(unquoted === 1 ? '1 value was dropped because its quote does not occur in the paper text.'
+            : unquoted + ' values were dropped because their quotes do not occur in the paper text.');
           validated.value_instances = quoted;
           validated.paper = {title: file.name, ref: slugify(file.name)};
           papers.push(validated);
