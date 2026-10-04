@@ -191,9 +191,6 @@
      min-width), so a wide derivation scrolls inside .rec-mapbox at full
      legibility instead of shrinking its labels. */
   .rec-maprow{margin-top:4px;}
-  /* the drawing keeps its natural width, so it shows only where the page is wide; narrower screens get the sentence */
-  @media (max-width:960px){.rec-maprow{display:none;}}
-  @media (min-width:961px){.rec-mapnote{display:none;}}
   .rec-mapbox{margin:6px 0 10px;overflow-x:auto;border:1px solid var(--line,#EBEBEB);border-radius:var(--radius,6px);background:var(--page,#FFFFFF);}
   .rec-map{display:block;width:100%;height:auto;}
   .rec-explain{max-width:72ch;margin:2px 0 8px;font-size:13px;line-height:20px;color:var(--ink-2,#4D4D4D);}
@@ -2208,6 +2205,7 @@ function renderBundle(env){
   runLink.removeAttribute('href');
   document.getElementById('linIngress').hidden = true;
   document.body.classList.add('lin-open');
+  fitDerivations();
   document.getElementById('linStage').scrollTop = 0;
   box.querySelectorAll('.rec-member').forEach(function(a){
     a.addEventListener('click', function(e){
@@ -2284,6 +2282,20 @@ function reproduceHTML(node, recordId){
   h += '</div>';
   return h;
 }
+
+// The derivation drawing keeps its natural width, so its labels stay at 12 px. It shows
+// only where that width fits the datasheet; elsewhere the sentence beside it points at
+// the tracer, so the page never scrolls sideways. Runs after each render and on resize.
+function fitDerivations(){
+  document.querySelectorAll('.rec-maprow').forEach(function(row){
+    var drawing = row.querySelector('svg.rec-map'), note = row.nextElementSibling;
+    if (!drawing) return;
+    var fits = Number(drawing.getAttribute('width')) + 2 <= row.parentElement.clientWidth;   // + the box border
+    row.hidden = !fits;
+    if (note && note.classList.contains('rec-mapnote')) note.hidden = fits;
+  });
+}
+window.addEventListener('resize', fitDerivations);
 
 function datasheetHTML(record, valid, opts){
   opts = opts || {};
@@ -2398,7 +2410,7 @@ function datasheetHTML(record, valid, opts){
         '<span><i class="lg-obs"></i>Observable (measurable) quantity</span>' +
         '<span><i class="lg-step"></i>Internal step of the computation</span>' +
         '</div></div>' +
-        '<p class="rec-explain rec-mapnote">This screen is too narrow for the derivation drawing; ' +
+        '<p class="rec-explain rec-mapnote" hidden>This screen is too narrow for the derivation drawing; ' +
         '<a href="../map-trace/#node=' + encodeURIComponent(node) + '">the tracer</a> shows the same derivation at any width.</p>';
     }
   }
@@ -2469,6 +2481,7 @@ function renderLineage(record, opts){
   }
   document.getElementById('linIngress').hidden = true;
   document.body.classList.add('lin-open');
+  fitDerivations();
   document.getElementById('linStage').scrollTop = 0;
 
   var copyBtn = box.querySelector('.rcCopy');
