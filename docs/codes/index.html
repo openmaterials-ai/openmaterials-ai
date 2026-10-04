@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Codes | OpenMaterials</title>
-<meta name="description" content="The bibliography lists the codes the map cites, rendered from docs/data/codes.json, each with the quantities it serves, its interface, a citation, a DOI where one exists, and its license.">
+<meta name="description" content="The bibliography lists the codes the map cites, each with the quantities it serves, its interface, a citation, a DOI where one exists, and its license.">
 <link rel="canonical" href="https://openmaterials.ai/codes/">
 <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
@@ -52,17 +52,26 @@
   <header class="page-head">
     <p class="eyebrow">Bibliography</p>
     <h1>The codes the map cites</h1>
-    <p class="lede">Each code on this page has a representation on the map: a record of which quantities the code computes, through which interface, with a citation, a DOI where one exists, and the code's license. The map cites these codes, and their source is not part of this repository. This page renders the bibliography from <a href="../data/codes.json"><code>docs/data/codes.json</code></a>, the file the map reads.</p>
+    <p class="lede">Each code on this page has a representation on the map: a record of which quantities the code computes, through which interface, with a citation, a DOI where one exists, and the code's license. The map cites these codes, and their source is not part of this repository.</p>
   </header>
 
   <div class="page-body">
     <nav class="toc gtoc" aria-label="Contents">
-      <a href="#lean">Lean, the prover behind the verified layer</a>
       <a href="#bibliography">The bibliography</a>
+      <a href="#lean">Lean, the prover behind the verified layer</a>
       <a href="#posture">What the map takes from a code</a>
     </nav>
 
     <article class="prose gwrap">
+      <section class="gsec" id="bibliography">
+        <h2>The bibliography</h2>
+        <p>Each entry links to the map filtered to that code. Entries are sorted by the number of quantities they serve, then by name.</p>
+        <noscript><p class="empty">This bibliography renders client-side from the
+          published data and needs JavaScript. The raw file is plain JSON in
+          <a href="../data/codes.json">../data/codes.json</a>.</p></noscript>
+        <div id="bib" class="bib"><p class="empty" id="bib-loading">Loading the bibliography&hellip;</p></div>
+      </section>
+
       <section class="gsec" id="lean">
         <h2>Lean, the prover behind the verified layer</h2>
         <p><a href="https://lean-lang.org/">Lean 4</a> is a proof assistant. The map's node dimensions are declared in Lean, its edge dimension statements and operator identities are proven against physlib and Mathlib, and the build has no <code>sorry</code> placeholders. The <a href="../lean/">verified layer</a> page lists the tiers and the limits of the proofs.</p>
@@ -80,19 +89,10 @@
         </ul>
       </section>
 
-      <section class="gsec" id="bibliography">
-        <h2>The bibliography</h2>
-        <p>Each entry is one code, read from <code>codes.json</code>. The number after each name is how many quantities the code serves on the map, and each entry links to the map filtered to that code. Entries are sorted by that number, then by name.</p>
-        <noscript><p class="empty">This bibliography renders client-side from the
-          published data and needs JavaScript. The raw file is plain JSON in
-          <a href="../data/codes.json">../data/codes.json</a>.</p></noscript>
-        <div id="bib" class="bib"><p class="empty" id="bib-loading">Loading the bibliography from <code>../data/codes.json</code>&hellip;</p></div>
-      </section>
-
       <section class="gsec" id="posture">
         <h2>What the map takes from a code</h2>
         <p>A representation records interface facts (keywords, file formats, units), citations, and published equations, written in our own words. The map does not vendor or copy any code's source, so no code's license applies to this repository: the kernel is Apache 2.0 and the map data is CC BY 4.0. Copyleft codes, such as GPUMD under GPL-3.0, are cited and described the same way as permissively licensed ones. The GPL does not restrict describing an interface for interoperability or citing a paper.</p>
-        <p>Running a code remains under that code's own license, on the side of whoever runs it. CI checks every representation's recorded license: <code>tests/test_code_credits.py</code> reads <code>omai/representation/credits.py</code>, each license comes from the code's own <code>LICENSE</code> file, and a DOI is recorded only when one can be verified.</p>
+        <p>Running a code remains under that code's own license, on the side of whoever runs it. Each recorded license comes from the code's own <code>LICENSE</code> file, and a DOI is recorded only when one can be verified.</p>
       </section>
     </article>
   </div>
@@ -157,7 +157,6 @@
       : '<span class="bib-name">' + esc(name) + '</span>';
 
     var top = '<div class="bib-top">' + nameHtml +
-      '<span class="bib-count">' + count + ' quantit' + (count === 1 ? 'y' : 'ies') + '</span>' +
       (license ? '<span class="bib-lic">' + esc(license) + '</span>' : '') +
       '</div>';
 

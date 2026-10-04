@@ -1,8 +1,8 @@
 """The codes bibliography page.
 
 One entry per cited code, rendered client-side from the same codes.json
-the map reads; Lean opens the page because it checks reasoning where the
-other codes compute numbers; the license posture is stated plainly. The
+the map reads; Lean follows the bibliography because it checks reasoning
+where the other codes compute numbers; the license posture is stated plainly. The
 page must never hardcode the roster (the data file is the single source)
 and never invent references (the physlib citation carries no DOI because
 none exists).
@@ -25,7 +25,7 @@ def test_page_renders_from_the_published_data():
     assert "<noscript>" in PAGE
 
 
-def test_lean_opens_the_bibliography():
+def test_lean_is_cited():
     assert '<section class="gsec" id="lean">' in PAGE
     assert "10.1007/978-3-030-79876-5_37" in PAGE, "Lean 4 CADE-28 DOI"
     assert "10.1145/3372885.3373824" in PAGE, "mathlib CPP 2020 DOI"
@@ -39,7 +39,6 @@ def test_license_posture_is_stated():
     assert "GPL-3.0" in PAGE and "GPUMD" in PAGE
     assert "Apache 2.0" in PAGE and "CC BY 4.0" in PAGE
     assert "does not vendor or copy" in FLAT
-    assert "test_code_credits.py" in PAGE
 
 
 def test_entries_link_the_map_code_filter():
