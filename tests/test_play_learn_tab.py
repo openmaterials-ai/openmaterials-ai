@@ -125,8 +125,8 @@ def test_tabs_group_by_intent():
     tabs = re.findall(r'data-tab="(\w+)"[^>]*>', strip)
     assert tabs == ["learn", "lineage", "distance", "query", "map"], tabs
     assert "pg-tabsep" in _PLAY
-    # tracing lives on the tracer: the strip links it, and old tab=trace links go there
-    assert '<a class="pg-tab" href="../map-trace/">Trace</a>' in strip
+    # tracing lives on the tracer, which the map views link; old tab=trace links go there
+    assert "map-trace" not in strip
     assert "location.replace('../map-trace/'" in _PLAY and 'id="traceFrom"' not in _PLAY
 
 

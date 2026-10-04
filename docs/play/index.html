@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Playground | OpenMaterials</title>
-<meta name="description" content="Parse a paper into proposed values, open a lineage record, resolve a method name to map nodes, trace a derivation, or compare two materials by composition distance.">
+<meta name="description" content="Parse a paper into proposed values, open a lineage record, resolve a method name to map nodes, or compare two materials by composition distance.">
 <link rel="canonical" href="https://openmaterials.ai/play/">
 <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
@@ -32,13 +32,12 @@
   html,body{height:100%;}
   body.app{height:100vh;height:100dvh;margin:0;display:flex;flex-direction:column;overflow:hidden;max-width:100vw;background:var(--page,#FFFFFF);color:var(--ink,#171717);font:400 14px/20px var(--font-sans,"Geist","Geist Fallback",ui-sans-serif,system-ui,sans-serif);-webkit-font-smoothing:antialiased;}
   :focus-visible{outline:2px solid var(--ink,#171717);outline-offset:2px;}
-  /* the tab strip: six tabs and Share; a 3 x 2 grid with Share beside it below 601 px */
+  /* the tab strip: five tabs and Share; a 3 x 2 grid with Share beside it below 601 px */
   .pg-main{flex:1 1 auto;display:flex;flex-direction:column;min-height:0;min-width:0;max-width:100vw;overflow:hidden;}
   .pg-tabs{flex:0 0 auto;display:flex;flex-wrap:wrap;align-items:center;gap:0;padding:0 var(--inset,16px);border-bottom:1px solid var(--line,#EBEBEB);background:var(--page,#FFFFFF);}
   .pg-tab{flex:0 0 auto;padding:12px 16px;border:0;background:none;font:inherit;font-weight:500;font-size:14px;line-height:20px;color:var(--ink-2,#4D4D4D);cursor:pointer;transition:color var(--dur,150ms) var(--ease,ease);}
   .pg-tab:hover{color:var(--ink,#171717);}
   .pg-tab.on{color:var(--ink,#171717);box-shadow:inset 0 -2px 0 var(--ink,#171717);}
-  a.pg-tab{text-decoration:none;}   /* the Trace link opens the tracer */
   .pg-tabsep{width:1px;height:20px;flex:0 0 auto;margin:0 8px;background:var(--line,#EBEBEB);}
   #shareBtn{margin-left:auto;}
   @media (max-width:960px){.pg-tab{padding:12px 10px;}}
@@ -80,9 +79,8 @@
   .pg-results{margin-top:16px;}
   .pg-hit{width:100%;display:flex;align-items:center;gap:8px;margin-bottom:6px;padding:8px 10px;border:1px solid var(--line,#EBEBEB);border-radius:var(--radius,6px);background:var(--page,#FFFFFF);font:inherit;text-align:left;cursor:pointer;}
   .pg-hit:hover{background:var(--surface-2,#F2F2F2);}
-  .pg-hit .k{flex:0 0 auto;font-size:12px;color:var(--ink-2,#4D4D4D);}
-  .pg-hit .id{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);font-size:13px;color:var(--ink,#171717);}
-  .pg-hit .sc{flex:0 0 auto;font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);font-size:12px;color:var(--data-sim,#0C7C55);}
+  .pg-hit .s{flex:0 0 auto;font-size:15px;color:var(--ink,#171717);}
+  .pg-hit .n{flex:1;min-width:0;font-size:14px;line-height:20px;color:var(--ink,#171717);overflow-wrap:anywhere;}
   .pg-empty{padding:12px 16px;border:1px solid var(--line,#EBEBEB);border-radius:var(--radius,6px);background:var(--surface,#FAFAFA);color:var(--ink,#171717);font-size:14px;line-height:20px;overflow-wrap:anywhere;}
   .pg-path{font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);font-size:12px;line-height:18px;color:var(--ink,#171717);overflow-wrap:anywhere;}
   .pg-paper{margin-bottom:10px;font-weight:500;color:var(--ink,#171717);}
@@ -128,7 +126,6 @@
   .pg-node-panel .aka{font-size:13px;color:var(--ink,#171717);}
   .lean-line{margin:4px 0 2px;padding:8px 10px;border:1px solid var(--line,#EBEBEB);border-radius:var(--radius,6px);background:var(--page,#FFFFFF);color:var(--ink,#171717);font:400 12px/16px var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);white-space:pre-wrap;overflow-wrap:anywhere;}
   .lean-badge{color:var(--data-sim,#0C7C55);}
-  .pg-node-panel .uid{font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);font-size:12px;color:var(--ink-2,#4D4D4D);overflow-wrap:anywhere;}
 
   /* ---- the lineage DATA VIEW: a full-width, plain scientific datasheet -------
      A successful light record leaves the tool shell for a full-width typeset
@@ -144,6 +141,9 @@
   .lin-bar a,.lin-bar button,.lin-ingress button{display:inline-flex;align-items:center;height:32px;padding:0 12px;border:0;border-radius:var(--radius,6px);background:transparent;color:var(--ink,#171717);font:inherit;font-weight:500;font-size:14px;line-height:20px;text-decoration:none;cursor:pointer;}
   .lin-bar a:hover,.lin-bar button:hover,.lin-ingress button:hover{background:var(--surface-2,#F2F2F2);}
   .lin-bar a[hidden]{display:none;}
+  .lin-bar a.btn--primary{background:var(--accent,#4F46E5);color:var(--on-accent,#FFFFFF);}   /* Run, the sheet's one primary action */
+  .lin-bar a.btn--primary:hover{background:color-mix(in srgb,var(--accent,#4F46E5) 88%,var(--ink,#171717));}
+  body.lin-open #shareBtn{display:none;}   /* the sheet shares through its id's Copy link */
   .lin-actions{display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:4px 8px;}
   .lin-ingress{max-width:1240px;margin:0 auto;padding:12px var(--inset,16px) 0;}
   .lin-ingress[hidden]{display:none;}
@@ -157,19 +157,17 @@
   .lin-example-links{display:flex;flex-wrap:wrap;gap:2px 16px;}
   .rec{display:flex;flex-direction:column;gap:6px;min-width:0;}
   .rec-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:6px 24px;min-width:0;}
-  .rec-head > .rec-doi{flex:1 1 100%;}   /* the short link and the canonical page take their own row */
+  .rec-head > .rec-doi{flex:1 1 100%;}   /* the id and its links take their own row */
   .rec-head-meta{display:flex;align-items:baseline;justify-content:flex-end;flex-wrap:wrap;gap:4px 12px;margin:0;min-width:0;text-align:right;font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);font-size:12px;line-height:16px;}
   .rec-head-meta>div{display:inline-flex;gap:4px;align-items:baseline;min-width:0;}
   .rec-head-meta dt{color:var(--ink-2,#4D4D4D);}
   .rec-head-meta dd{margin:0;color:var(--ink,#171717);overflow-wrap:anywhere;}
-  /* the visible lineage identifier, the DOI-like recognizer under every title */
+  /* the one id under every title, its Copy link and the tracer link */
   .rec-doi{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:6px 0 0;font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);font-size:13px;color:var(--ink-2,#4D4D4D);overflow-wrap:anywhere;}
   .rec-doi-lab{font-family:var(--font-sans,"Geist",ui-sans-serif,system-ui,sans-serif);font-size:12px;font-weight:500;color:var(--ink-2,#4D4D4D);}
-  .rec-doi-copy,.rec-doi-mint{height:24px;padding:0 8px;border:0;border-radius:var(--radius,6px);background:transparent;box-shadow:0 0 0 1px var(--line,#EBEBEB);color:var(--ink,#171717);font-family:var(--font-sans,"Geist",ui-sans-serif,system-ui,sans-serif);font-size:12px;font-weight:500;cursor:pointer;}
-  .rec-doi-copy:hover,.rec-doi-mint:hover{background:var(--surface-2,#F2F2F2);}
-  .rec-doi-un{color:var(--ink-2,#4D4D4D);}
-  .rec-doi-page{overflow-wrap:anywhere;}
-  .rec-doi a.rec-doi-src{padding:0 8px;border-radius:9999px;background:var(--surface-2,#F2F2F2);color:var(--ink,#171717);font-size:12px;text-decoration:none;}
+  .rec-doi-copy{height:24px;padding:0 8px;border:0;border-radius:var(--radius,6px);background:transparent;box-shadow:0 0 0 1px var(--line,#EBEBEB);color:var(--ink,#171717);font-family:var(--font-sans,"Geist",ui-sans-serif,system-ui,sans-serif);font-size:12px;font-weight:500;cursor:pointer;}
+  .rec-doi-copy:hover{background:var(--surface-2,#F2F2F2);}
+  .rec-doi a{font-family:var(--font-sans,"Geist",ui-sans-serif,system-ui,sans-serif);font-size:13px;}
   .rec-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(330px,100%),1fr));gap:8px 32px;align-items:start;}
   .rec-col{min-width:0;}
   .rec-col>.rec-sec+.rec-sec{margin-top:8px;}
@@ -183,32 +181,19 @@
   .rec-kv dt{font-size:13px;line-height:20px;color:var(--ink-2,#4D4D4D);}
   .rec-kv dd{margin:0;min-width:0;font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);font-size:13px;line-height:20px;color:var(--ink,#171717);overflow-wrap:anywhere;}
   .rec-kv dd.wrap{word-break:break-all;}
+  .rec-src dd{font-family:var(--font-sans,"Geist",ui-sans-serif,system-ui,sans-serif);}   /* quotes and citations are prose, not values */
   /* a labelled sub-group inside a section (Hyperparameters, Conditions, ...) */
   .rec-grp{margin:0 0 8px;}
   .rec-grp:last-child{margin-bottom:0;}
   .rec-grp-lab{margin:8px 0 4px;font-size:12px;line-height:16px;font-weight:500;color:var(--ink,#171717);}
-  /* the derivation drawn as a map excerpt: its own full row. The svg never
-     renders below its natural size (each svg carries its width as an inline
-     min-width), so a wide derivation scrolls inside .rec-mapbox at full
-     legibility instead of shrinking its labels. */
-  .rec-maprow{margin-top:4px;}
-  .rec-mapbox{margin:6px 0 10px;overflow-x:auto;border:1px solid var(--line,#EBEBEB);border-radius:var(--radius,6px);background:var(--page,#FFFFFF);}
-  .rec-map{display:block;width:100%;height:auto;}
   .rec-explain{max-width:72ch;margin:2px 0 8px;font-size:13px;line-height:20px;color:var(--ink-2,#4D4D4D);}
-  .rec-maplegend{display:flex;flex-wrap:wrap;gap:4px 16px;align-items:center;margin:2px 0 10px;font-size:12px;line-height:16px;color:var(--ink-2,#4D4D4D);}
-  .rec-maplegend i{display:inline-block;width:16px;height:12px;margin-right:6px;border-radius:3px;vertical-align:-1px;}
-  .lg-this{background:var(--surface-2,#F2F2F2);box-shadow:inset 0 0 0 2px var(--data-obs-line,#4F46E5);}
-  .lg-obs{background:var(--page,#FFFFFF);box-shadow:inset 0 0 0 1px var(--data-obs-line,#4F46E5);}
-  .lg-step{background:var(--page,#FFFFFF);box-shadow:inset 0 0 0 1px var(--edge,#8F8F8F);}
   .rec-complete{margin:12px 0 4px;padding:12px 16px;border:1px solid var(--ink,#171717);border-radius:var(--radius,6px);background:var(--surface,#FAFAFA);}
   .rec-complete-act{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-top:4px;}
   .rec-complete-act a{min-width:0;font-size:13px;overflow-wrap:anywhere;}
   .rec-complete-go{height:32px;padding:0 12px;border:0;border-radius:var(--radius,6px);background:var(--page,#FFFFFF);box-shadow:0 0 0 1px var(--line,#EBEBEB);color:var(--ink,#171717);font:inherit;font-weight:500;font-size:14px;cursor:pointer;}
   .rec-complete-go:hover{background:var(--surface-2,#F2F2F2);}
   .rec-conf{margin:6px 0;padding:6px 10px;border:1px solid var(--line,#EBEBEB);border-radius:var(--radius,6px);background:var(--surface,#FAFAFA);color:var(--ink-2,#4D4D4D);font-size:13px;line-height:20px;overflow-wrap:anywhere;}
-  .rec-conf-exact{border-color:var(--data-obs-line,#4F46E5);background:var(--surface-2,#F2F2F2);}
   .rec-conf-code{font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);font-size:12px;font-weight:500;color:var(--ink,#171717);}
-  .rec-conf-mark{font-size:12px;font-weight:500;color:var(--data-obs-line,#4F46E5);}
   /* stacked member datasheets inside a bundle */
   .bundle-member{margin-top:24px;padding-top:16px;border-top:1px solid var(--line,#EBEBEB);}
   .rec-grp-lab .rec-grp-tag{margin-left:8px;font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);font-size:12px;font-weight:400;color:var(--ink-2,#4D4D4D);}
@@ -227,10 +212,7 @@
   .rec-vtable .rec-vc{margin-top:2px;font-size:12px;color:var(--ink-2,#4D4D4D);}
   .rec-vtable .rec-vv{padding-right:0;font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);font-variant-numeric:tabular-nums;color:var(--ink,#171717);text-align:right;overflow-wrap:anywhere;}
   .rec-vtable .rec-vu{font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);color:var(--ink-2,#4D4D4D);overflow-wrap:anywhere;}
-  /* WHAT IT MEANS ON THE MAP: plain descriptive text, not a panel */
-  .rec-desc{margin:0 0 6px;font-size:13px;line-height:20px;color:var(--ink-2,#4D4D4D);}
   .rec-meta{margin:0 0 4px;font-size:13px;line-height:20px;color:var(--ink-2,#4D4D4D);}
-  .rec-lineage{margin:0;font-size:13px;line-height:20px;color:var(--ink-2,#4D4D4D);}
   /* ARTIFACTS / where the data lives: a plain list of pointers and links */
   .rec-arts{display:flex;flex-direction:column;gap:4px;margin:0;padding:0;list-style:none;}
   .rec-art{font-size:13px;line-height:20px;overflow-wrap:anywhere;}
@@ -240,9 +222,8 @@
   .rec-art .rec-art-sha{display:block;margin-top:2px;font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);font-size:12px;color:var(--ink-2,#4D4D4D);word-break:break-all;}
   .rec-host{margin:6px 0 0;font-size:13px;line-height:20px;color:var(--ink-2,#4D4D4D);}
   .rec-host a{font-weight:500;}
-  /* the plain handoff: a normal link to MCG + a Copy link, NOT product CTAs */
+  /* the shared set's one share control and its note */
   .rec-links{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;margin-top:10px;padding-top:8px;border-top:1px solid var(--line,#EBEBEB);}
-  .rec-links a{font-size:13px;font-weight:500;}
   .rec-links button{height:28px;padding:0 10px;border:0;border-radius:var(--radius,6px);background:transparent;box-shadow:0 0 0 1px var(--line,#EBEBEB);color:var(--ink,#171717);font:inherit;font-size:13px;font-weight:500;cursor:pointer;}
   .rec-links button:hover{background:var(--surface-2,#F2F2F2);}
   .rec-link-note{font-size:12px;line-height:16px;font-weight:400;color:var(--ink-2,#4D4D4D);}
@@ -319,7 +300,6 @@
     <button class="pg-tab" data-tab="distance" type="button">Distance</button>
     <span class="pg-tabsep" aria-hidden="true"></span>
     <button class="pg-tab" data-tab="query" type="button">Resolve</button>
-    <a class="pg-tab" href="../map-trace/">Trace</a>
     <button class="pg-tab" data-tab="map" type="button">Sub-map</button>
     <button class="btn btn--secondary btn--sm" id="shareBtn" type="button">Share</button>
   </div>
@@ -328,12 +308,17 @@
 
     <div class="pg-panel on" data-panel="learn">
       <h3>Learn a paper</h3>
-      <p>Drop a PDF. Your browser extracts the text, and a language model
-        proposes each reported value as a map entry with a verbatim quote and its
-        page number; you accept or reject each one. The text goes to the model
-        through our relay, so you need no account or API key. The relay has a
-        daily budget shared by all visitors and a daily limit per address. The
-        model reads the first 120,000 characters of each paper.</p>
+      <p>Drop a PDF. A language model proposes each value the paper reports as a
+        map entry, with a verbatim quote and its page; you accept or reject each
+        one. No account, no API key.</p>
+      <p class="pg-note">Your paper: the browser extracts its text and sends the
+        first 120,000 characters to a relay the OpenMaterials maintainers run on
+        Cloudflare. The relay passes the text to Anthropic's API (Claude Opus 4.8)
+        and returns the reply. It saves no paper text. It keeps a request count per
+        IP address and the day's total spend, each for two days, and Cloudflare logs
+        each request. Limits: five papers per address a day, and a daily budget
+        shared by all visitors.
+        <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/main/infra/learn-proxy/src/index.js">Relay source</a>.</p>
       <div class="dropzone" id="dropzone">
         <div class="head">Drop one or more PDFs here</div>
         <div class="sub2">Or choose files from your computer.</div>
@@ -350,23 +335,23 @@
       </div>
       <div class="learn-proposal">
         <h4>Already have a proposal?</h4>
-        <p>A proposal lists the map nodes a paper reports. Load the example or
-          paste a proposal, and the page draws the map edges that produce those
-          quantities, here and on the canvas.</p>
+        <p>A proposal lists the map nodes a paper reports. The page draws the map
+          edges that produce them, here and on the canvas.</p>
         <button class="om-btn" id="loadExample" type="button">Load an example</button>
-        <label class="pg-field" for="proposalInput">Or paste a proposal JSON:</label>
-        <textarea class="pg-input" id="proposalInput" rows="4" placeholder='{"claims": [{"node_id": "...", ...}]}'></textarea>
-        <div class="pg-actions"><button class="om-btn om-btn-sm" id="renderProposal" type="button">Draw the dataflow</button></div>
         <div id="parseResult" style="margin-top:14px"></div>
+        <details style="margin-top:14px"><summary>For developers</summary>
+          <label class="pg-field" for="proposalInput">Proposal JSON:</label>
+          <textarea class="pg-input" id="proposalInput" rows="4" placeholder='{"claims": [{"node_id": "...", ...}]}'></textarea>
+          <div class="pg-actions"><button class="om-btn om-btn-sm" id="renderProposal" type="button">Draw the dataflow</button></div>
+          <div class="lin-lab">The mapping, in code</div><pre class="lin-code" id="parseCode"></pre>
+        </details>
       </div>
     </div>
 
     <div class="pg-panel" data-panel="query">
       <h3>Resolve a method</h3>
-      <p>Type a method or quantity as a paper would name it. The resolver matches
-        it against the labels of each node and operator and returns ranked node
-        and operator ids: curated aliases first, then exact labels, then token
-        matches. It runs in your browser
+      <p>Type a method or quantity as a paper names it. The matching quantities and
+        operators on the map appear, best match first. It runs in your browser,
         with no model call.</p>
       <input class="pg-input" id="qInput" placeholder="quasi-harmonic approximation" autocomplete="off" spellcheck="false" aria-label="A method or quantity">
       <div class="pg-examples" id="qExamples"></div>
@@ -394,33 +379,26 @@
       <h3>How far apart are two structures?</h3>
       <p>A content hash tells you whether two configurations are identical. The
         distance layer measures how far apart they are, with named, versioned
-        metrics and one default. The table below is read from the published
-        registry, <a href="../data/distances.json">data/distances.json</a>, which
-        the build writes with the map data.</p>
+        metrics and one default.</p>
       <div id="distRegistry"></div>
       <h3 style="margin-top:18px">Each metric on a set of silicon structures</h3>
       <p id="distZooNote"></p>
       <div id="distZoo"></div>
       <p id="distCommitted" class="pg-note"></p>
       <h3 style="margin-top:18px">Distance between two sources</h3>
-      <p class="pg-note">Pick two committed sources. Each quantity, material, and
-        units key they share is compared with <code>curve@1</code>, the symmetric
-        relative L2 distance over the shared temperature range, computed in this
-        page by the same rule as omdc. Their materials are compared with
-        <code>comp@1</code>, the Element Mover's Distance on the Pettifor scale,
-        when the name parses as a formula (a-Si parses as Si; SWCNT does not
-        parse). Where a source has single points, the page lists them side by
-        side and gives the relative difference at any matching temperature.</p>
+      <p class="pg-note">Pick two sources. Values they share (same quantity, material,
+        and units) are compared with <code>curve@1</code>, the symmetric relative L2
+        distance over the shared temperature range; their materials with
+        <code>comp@1</code>, the Element Mover's Distance on the Pettifor scale.</p>
       <p class="pg-pair">
         <label>Source A <select class="select" id="distPaperA"></select></label>
         <label>Source B <select class="select" id="distPaperB"></select></label>
       </p>
       <div id="distPapers"></div>
       <h3 style="margin-top:18px">How far apart are two materials?</h3>
-      <p class="pg-note">Type two formulas. The page computes <code>comp@1</code>,
-        the Element Mover&#39;s Distance on the Pettifor scale, as you type. A
-        distance of zero means the same composition in any structure: diamond and
-        graphite are both C.</p>
+      <p class="pg-note">Type two formulas for their <code>comp@1</code>, the Element
+        Mover&#39;s Distance on the Pettifor scale. Zero means the same composition
+        in any structure: diamond and graphite are both C.</p>
       <p class="pg-pair">
         <input class="pg-input" id="distTryFa" size="10" value="NaCl" aria-label="Formula A">
         <span>vs.</span>
@@ -444,17 +422,16 @@
 
     <div class="pg-panel" data-panel="lineage">
       <h3>A lineage as a link</h3>
-      <p>A lineage record names a result and the inputs and settings that produced it. Copy link puts the whole record in the URL, and the link reopens it here.</p>
+      <p>A lineage record names a result and the inputs and settings that produced it. Share puts the whole record in the URL, and the link reopens it here.</p>
       <details><summary>How this works</summary>
         <p>A lineage record is small. Its identity is its lineage: the output node
           on the map, or, when the map has no node for it, a template with its
           hyperparameters and setup values. Heavy artifacts stay with their host,
-          such as <a href="https://materialscodegraph.com/">MaterialsCodeGraph</a>,
+          such as <a href="https://materialscodegraph.com/?ref=omai-playground#connect">MaterialsCodeGraph</a>,
           and the record points to them. Paste a record or drop a <code>.json</code>
           file, including a record served by MaterialsCodeGraph, to open its data
-          view: every field of the lineage, what the output node means on the map,
-          where the data lives, and a link to run the lineage on
-          MaterialsCodeGraph. Copy link writes the whole record into the
+          view: every field of the lineage, its source, where the data lives, and
+          a link to run it on MaterialsCodeGraph. Share writes the whole record into the
           <code>#x=</code> fragment of the URL, so nothing is uploaded or stored. A
           link can also carry a set of lineages from one paper, with the
           publication metadata stated once; it opens as a list with each
@@ -467,7 +444,6 @@
         <input type="file" id="xFile" accept=".json,application/json" style="display:none"></div>
       <div class="pg-actions">
         <button class="om-btn om-btn-sm" id="renderX" type="button">Open record</button>
-        <button class="om-btn om-btn-sm" id="copyXLink" type="button" title="Copies a link with this record in its #x= fragment. The link reopens the record here.">Copy link</button>
       </div>
       <div id="xResult" style="margin-top:14px"></div>
     </div>
@@ -487,8 +463,7 @@
   <div class="lin-bar">
     <a id="linBack" href="#/play?tab=lineage">Back to the playground</a>
     <div class="lin-actions">
-      <button id="linCopy" type="button">Copy link</button>
-      <a id="linRun" href="https://app.materialscodegraph.com/" target="_blank" rel="noopener" hidden>Run this lineage on MaterialsCodeGraph</a>
+      <a id="linRun" class="btn--primary" href="https://materialscodegraph.com/?ref=omai-datasheet#connect" target="_blank" rel="noopener" hidden>Run it for your material</a>
       <button id="linPaste" type="button">Open another record</button>
     </div>
   </div>
@@ -513,11 +488,10 @@
 <script>
 /* ============================================================================
    openmaterials playground: a Mermaid-style two-pane shell over the live map.
-   Left: input tabs (query resolves labels, the Trace link opens the tracer, parse links to
-   the parser). Right: one shared sub-map canvas rendered from graph.json with
+   Left: input tabs (Learn parses a paper, Resolve matches labels, Sub-map renders edges). Right: one shared sub-map canvas rendered from graph.json with
    dagre + KaTeX (both degrade: nothing throws when either is missing). The
-   resolver mirrors omai/semantics.resolve exactly. Structure-pure: query and
-   trace render structure only; values never appear on this canvas.
+   resolver mirrors omai/semantics.resolve exactly. Structure-pure: Resolve and
+   the sub-map render structure only; values never appear on this canvas.
    ============================================================================ */
 'use strict';
 var HAS_DAGRE = (typeof dagre !== 'undefined');
@@ -536,7 +510,6 @@ var INSTANCE_IDS = null; // Set of committed lineage ids: the badge's committed 
 var codesByNode = {};   // node id -> [{code, api, url}]: which codes compute the quantity
 var CONFORMANCE = [];   // conformance/index.json targets: the pinned reproduce runs
 var configByUid = {};   // canonical.uid and aliases -> configuration bundle record for a pinned lineage cell
-var TIERS = [];         // the map's tiers: [{name, order, description}], for the map-context panel
 var VB = { x: 0, y: 0, w: 1000, h: 700 };
 
 function esc(s){ return String(s == null ? '' : s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
@@ -580,7 +553,6 @@ var mapReady = Promise.all([
   LEAN = res[3] || {nodes:{},edges:{}};
   (res[4] || []).forEach(function(n){ if (n && n.id) catalogById[n.id] = n; });
   configByUid = indexConfigurations(res[5]);
-  TIERS = (GRAPH && Array.isArray(GRAPH.tiers)) ? GRAPH.tiers : [];
   // codes.json: code -> {node id -> {api, url, ...}}; invert to node -> codes
   var codesData = res[6] || {};
   Object.keys(codesData).forEach(function(code){
@@ -712,11 +684,10 @@ function openNode(id){
   var fl = (n.formulas && n.formulas.length) ? n.formulas : (n.formula ? [{ op: '', latex: n.formula }] : []);
   h += '<div class="lb">' + (fl.length > 1 ? fl.length + ' producing edges (alternative routes)' : (fl.length ? 'Formula on the producing edge' : 'Formula')) + '</div>';
   if (!fl.length) h += '<div class="fm pg-note">Input quantity: no edge produces it.</div>';
-  fl.forEach(function(f){ h += (f.op ? '<div class="fop">' + esc(f.op) + '</div>' : '') + '<div class="fm">' + tex(f.latex, true) + '</div>'; });
+  fl.forEach(function(f){ h += (f.op ? '<div class="fop">' + esc(opName(f.op)) + '</div>' : '') + '<div class="fm">' + tex(f.latex, true) + '</div>'; });
   if (fam) h += '<div class="lb">Also known as</div><div class="aka">' + esc(fam) + '</div>';
   var lv = LEAN.nodes && LEAN.nodes[id];
   if (lv) h += '<div class="lb"><span class="lean-badge">Lean dimension</span></div><pre class="lean-line">' + esc(lv.lean) + '</pre>';
-  h += '<div class="lb">uid</div><div class="uid">' + esc(n.uid || '') + '</div>';
   nodePanel.innerHTML = h; nodePanel.style.display = 'block';
   document.getElementById('pgClose').addEventListener('click', function(){ nodePanel.style.display = 'none'; });
 }
@@ -735,8 +706,11 @@ function runQuery(q){
   }
   var nodeHits = hits.filter(function(h){ return h.kind === 'node' && nodeById[h.id]; }).map(function(h){ return h.id; });
   var edgeOps = {}; hits.filter(function(h){ return h.kind === 'edge'; }).forEach(function(h){ edgeOps[h.id] = 1; });
+  // each hit as a reader names it: a quantity's symbol and name, an operator's name
   box.innerHTML = hits.slice(0, 8).map(function(h){
-    return '<button type="button" class="pg-hit" data-id="' + esc(h.id) + '"><span class="k">' + esc(h.kind) + '</span><span class="id">' + esc(h.id) + '</span><span class="sc">' + h.score.toFixed(2) + '</span></button>';
+    var node = h.kind === 'node' && nodeById[h.id];
+    return '<button type="button" class="pg-hit" data-id="' + esc(h.id) + '">' + (node ? '<span class="s">' + (symHtml[h.id] || '') + '</span>' : '') +
+      '<span class="n">' + esc(node ? nodeName(h.id) : opName(h.id)) + '</span></button>';
   }).join('');
   box.querySelectorAll('.pg-hit').forEach(function(el){ el.addEventListener('click', function(){
     var id = el.getAttribute('data-id');
@@ -779,9 +753,8 @@ function renderProposal(proposal){
 
   // the diagram: the paper's dataflow, each edge "from --op--> to" (Mermaid feel)
   var diagram = lin.edges.map(function(e){
-    var op = e.op.replace(/\[.*?\]/g, '').replace(/_/g, ' ');
     return '<div class="lin-row"><span class="lin-n' + (lin.touched[e.from] ? ' hot' : '') + '">' + esc(e.from) + '</span>'
-         + '<span class="lin-op">' + esc(op) + ' &rarr;</span>'
+         + '<span class="lin-op">' + esc(opName(e.op)) + ' &rarr;</span>'
          + '<span class="lin-n' + (lin.touched[e.to] ? ' hot' : '') + '">' + esc(e.to) + '</span></div>';
   }).join('');
   // the mapping in code: each reported value -> its node id and unit
@@ -791,8 +764,8 @@ function renderProposal(proposal){
 
   box.innerHTML =
     (proposal.paper ? '<div class="pg-paper">' + esc(proposal.paper) + '</div>' : '')
-    + '<div class="lin-lab">The paper\'s dataflow</div><div class="lin-diagram">' + (diagram || '<span class="pg-note">No map edge produces the reported quantities.</span>') + '</div>'
-    + '<div class="lin-lab">The mapping, in code</div><pre class="lin-code">' + code + '</pre>';
+    + '<div class="lin-lab">The paper\'s dataflow</div><div class="lin-diagram">' + (diagram || '<span class="pg-note">No map edge produces the reported quantities.</span>') + '</div>';
+  document.getElementById('parseCode').innerHTML = code;   // under For developers
   renderSubmap(lin.nodes.filter(function(n){ return lin.touched[n]; }), eops, lin.nodes);
 }
 
@@ -824,10 +797,7 @@ document.getElementById('renderProposal').addEventListener('click', function(){
    the full-width datasheet stage; the original panel remains the ingress and the
    visible home for validation errors. */
 var currentLineageRecord = null;
-var currentLineageDoc = null;        // the shared doc a single-lineage envelope carried, for re-minting
-var currentLineageFromBundle = false; // true when the open datasheet is a member of currentBundle
 var currentBundle = null;            // the normalized envelope behind the open bundle or member view
-var bundleViewOpen = false;          // true while the paper (bundle) view is the visible stage
 var lineageHasRendered = false;
 var lineageGallery = null;
 var lineageFlagship = null;
@@ -1034,9 +1004,11 @@ function ingestLineage(raw, sourceLabel){
   }
   // a pasted or dropped ENVELOPE takes the shared-payload dispatch: a
   // multi-lineage bundle opens the paper view, a one-element envelope the
-  // ordinary datasheet (renderShared banners its own errors)
+  // ordinary datasheet (renderShared banners its own errors); a pasted set has
+  // no short link until it is stored
   if (record && typeof record === 'object' && !Array.isArray(record) &&
       Object.prototype.hasOwnProperty.call(record, 'lineages')) {
+    currentShortCode = null;
     renderShared(record);
     return;
   }
@@ -1170,37 +1142,11 @@ async function copySharedLink(obj, btn){
   if (navigator.clipboard) navigator.clipboard.writeText(url).then(done, done); else done();
 }
 
-/* Copy link on a datasheet mints THAT record (as a one-element envelope; the
-   shared doc rides along only per shareEnvelopeFor's rule). Copy link on a
-   bundle re-mints the WHOLE envelope. */
+/* Copy link on an uncommitted datasheet mints THAT record (as a one-element
+   envelope; the shared doc rides along only per shareEnvelopeFor's rule). */
 async function copyLineageLink(record, btn, opts){
   if (!record) return;
   await copySharedLink(shareEnvelopeFor(record, opts), btn);
-}
-
-/* Copy PERMALINK: the canonical id IS the link. The SHARED url is the static
-   unfurl stub the build emits per value, <site>/i/<that member's id>/: a crawler
-   (Slack, a social card) reads its OG metadata and a human is redirected on into
-   the live datasheet. That stub redirects to /play/#id=<id>, so #id= stays the
-   resolver, unchanged; the stub is just the crawlable front door to it. Each
-   bundle member carries its OWN id, so a member's permalink names that member,
-   never the bundle. Clicking Copy also opens the value in place: it sets
-   location.hash to #id=<id> (guarded, so the router does not re-render) while
-   copying the /i/<id>/ url. */
-function permalinkFor(id){
-  return location.origin + '/i/' + String(id) + '/';
-}
-async function copyPermalink(id, btn){
-  if (!id) return;
-  var hash = '#id=' + String(id);
-  var url = permalinkFor(id);
-  if (location.hash !== hash) { skipNextHashApply = hash; location.hash = hash; }
-  var done = function(){ btn.textContent = 'Copied'; setTimeout(function(){ btn.textContent = 'Copy permalink'; }, 1200); };
-  if (navigator.clipboard) navigator.clipboard.writeText(url).then(done, done); else done();
-}
-function copyBundleLink(env, btn){
-  if (!env) return;
-  return copySharedLink(mintEnvelope(env), btn);
 }
 
 /* ---- the Distance tab: the omdc layer, read from its published data ------ */
@@ -1211,15 +1157,13 @@ function renderDistanceTab(){
   fetch('../data/distances.json').then(function(r){ return r.json(); }).then(function(d){
     var reg = d.registry || {distances: []};
     var html = '<table class="pg-table stack"><thead><tr><th>Metric</th><th>What it is</th>' +
-      '<th>True metric</th><th>ANN index</th><th>Invariances</th><th>Cost</th></tr></thead><tbody>';
+      '<th>True metric</th><th>Invariances</th></tr></thead><tbody>';
     reg.distances.forEach(function(m){
       var isDefault = reg.default && reg.default.indexOf(m.id) === 0;
       html += '<tr><td data-label="Metric"><code>' + esc(m.key) + '</code>' + (isDefault ? ' (default)' : '') + '</td>' +
         '<td data-label="What it is">' + esc(m.description) + '</td>' +
         '<td data-label="True metric">' + (m.metric ? 'yes' : 'no') + '</td>' +
-        '<td data-label="ANN index">' + (m.ann_indexable ? 'yes' : 'no') + '</td>' +
-        '<td data-label="Invariances">' + esc((m.invariances || []).join(', ')) + '</td>' +
-        '<td data-label="Cost">' + esc(m.cost || '') + '</td></tr>';
+        '<td data-label="Invariances">' + esc((m.invariances || []).join(', ')) + '</td></tr>';
     });
     html += '</tbody></table>';
     document.getElementById('distRegistry').innerHTML = html;
@@ -1245,8 +1189,7 @@ function renderDistanceTab(){
     document.getElementById('distCommitted').textContent = c.pairs && c.pairs.length
       ? 'Committed configurations, pairwise ' + (c.metric || '') + ': ' +
         c.pairs.map(function(p){ return p.a.name + ' to ' + p.b.name + ' = ' + p.distance; }).join('; ')
-      : 'The map holds ' + (c.configurations || 0) + ' committed configuration' +
-        ((c.configurations || 0) === 1 ? '' : 's') + '. Pairwise distances appear here when more are committed.';
+      : '';
   }).catch(function(e){
     document.getElementById('distRegistry').innerHTML =
       '<p class="pg-empty">The distance registry did not load: ' + esc(e.message) + '</p>';
@@ -1317,6 +1260,10 @@ function initPapersCompare(){
     var selB = document.getElementById('distPaperB');
     selA.innerHTML = opts; selB.innerHTML = opts;
     if (refs.length > 1) selB.value = refs[1];
+    // open on the first pair of sources that share a quantity, material and units
+    var S = refs.map(seriesOf);
+    pick: for (var i = 0; i < refs.length; i++) for (var j = i + 1; j < refs.length; j++)
+      if (Object.keys(S[i]).some(function(k){ return k in S[j]; })) { selA.value = refs[i]; selB.value = refs[j]; break pick; }
     selA.addEventListener('change', renderPapersCompare);
     selB.addEventListener('change', renderPapersCompare);
     renderPapersCompare();
@@ -1391,55 +1338,33 @@ function renderPapersCompare(){
   document.getElementById('distPapers').innerHTML = html;
 }
 
-/* ---- the visible lineage identifier (the DOI-like badge) ----------------- */
-// Every datasheet shows its recognizer. A COMMITTED value's badge is its short
-// link, openmaterials.ai/l/<first 12 hex>, which the site Worker resolves, with
-// its canonical page, openmaterials.ai/i/<full id>/, printed beside it. An
-// uncommitted record shows its id prefix, labeled as such: committing it through
-// a PR creates both. The href opens the value in place (#id=); the copy button
-// copies the short link.
-function lineageDoiHTML(record){
+/* ---- the datasheet's one id --------------------------------------------- */
+// 12 hex with one Copy link. A COMMITTED value copies its short link,
+// openmaterials.ai/l/<12 hex>; any other record copies a link that carries the
+// record in its #x= fragment (wired by class: a bundle stacks several sheets).
+// `tail` is appended inside the row.
+function lineageDoiHTML(record, memberIdx, tail){
   var id = record && record.id ? String(record.id).toLowerCase() : '';
-  if (!/^[0-9a-f]{64}$/.test(id)) return '';
-  var short = id.slice(0, 12);
-  // the in-hash source is the value's namespace: shown paper-first beside the
-  // hash, linking to the source's whole committed family
-  var srcRef = record.lineage && typeof record.lineage.source === 'string' &&
-    /^[a-z][a-z0-9+.-]*:.+$/.test(record.lineage.source) ? record.lineage.source : null;
-  var chip = srcRef
-    ? ' <a class="rec-doi-src" href="../experiment/#ref=' + encodeURIComponent(srcRef) +
-      '">' + esc(srcRef) + '</a>'
-    : '';
+  var short = /^[0-9a-f]{12,64}$/.test(id) ? id.slice(0, 12) : '';
+  var h = '<div class="rec-doi">' + (short ? '<span class="rec-doi-lab">Id</span>' + short : '');
   if (INSTANCE_IDS && INSTANCE_IDS.has(id)) {
-    var link = 'openmaterials.ai/l/' + short, page = 'openmaterials.ai/i/' + id + '/';
-    return '<div class="rec-doi"><span class="rec-doi-lab">Short link</span>' +
-      '<a href="#id=' + short + '">' + link + '</a>' +
-      '<button type="button" class="rec-doi-copy" data-copy="https://' + link + '">Copy</button>' +
-      chip +
-      '<span class="rec-doi-lab">Permalink</span><span class="rec-doi-page">' + page + '</span></div>';
+    var link = 'openmaterials.ai/l/' + short;
+    h += '<button type="button" class="rec-doi-copy" data-copy="https://' + link + '">Copy link</button>';
+  } else {
+    h += (short ? ' (uncommitted)' : '') + '<button type="button" class="rec-doi-copy rcCopy"' +
+      (memberIdx != null ? ' data-idx="' + memberIdx + '"' : '') + '>Copy link</button>';
   }
-  return '<div class="rec-doi"><span class="rec-doi-lab">Lineage id</span>' +
-    '<span class="rec-doi-un" title="This lineage is not committed to the map, so it has no short link or permalink yet. Committing it through a pull request creates both.">' + short + ' (uncommitted)</span></div>';
+  return h + (tail || '') + '</div>';
 }
-// Before a bundle is minted it HAS no short link (the data lives only in the
-// long URL); the badge row says so and offers the mint in place, so the
-// recognizer is visible-or-creatable at first sight, never silently blank.
-function bundleDoiPlaceholderHTML(){
-  return '<span class="rec-doi-lab">short link</span>' +
-    '<button type="button" class="rec-doi-mint" title="Stores this set and creates its short link, openmaterials.ai/s/ plus a code. Anyone with the code can open a stored set.">Create a short link</button>';
-}
+// A stored set's short link, once it has one (opened from /s/ or minted here).
 function bundleDoiHTML(code){
-  return '<span class="rec-doi-lab">short link</span>' +
-    '<a href="#s=' + code + '" title="The stored short link of this shared set.">openmaterials.ai/s/' + code + '</a>' +
-    '<button type="button" class="rec-doi-copy" data-copy="https://openmaterials.ai/s/' + code + '" title="Copy the short link">Copy</button>';
+  return '<span class="rec-doi-lab">Short link</span><a href="#s=' + code + '">openmaterials.ai/s/' + code + '</a>';
 }
 var currentShortCode = null;   // set when the open bundle came from (or minted) /s/<code>
 document.addEventListener('click', function(ev){
   var goBtn = ev.target && ev.target.closest ? ev.target.closest('.rec-complete-go') : null;
   if (goBtn) { location.hash = '#/play?tab=learn'; window.scrollTo({top: 0, behavior: SCROLL}); return; }
-  var mintBtn = ev.target && ev.target.closest ? ev.target.closest('.rec-doi-mint') : null;
-  if (mintBtn) { mintShortlink(currentBundle, mintBtn); return; }
-  var b = ev.target && ev.target.closest ? ev.target.closest('.rec-doi-copy') : null;
+  var b = ev.target && ev.target.closest ? ev.target.closest('.rec-doi-copy[data-copy]') : null;
   if (!b) return;
   navigator.clipboard.writeText(b.getAttribute('data-copy')).then(function(){
     var t = b.textContent; b.textContent = 'Copied';
@@ -1471,7 +1396,8 @@ async function mintShortlink(env, btn){
   var label = btn ? btn.textContent : '';
   if (btn) btn.textContent = 'Creating…';
   try {
-    var endpoints = [location.origin + '/s', SHORTLINK_ORIGIN + '/s'];
+    // a set opened from (or already given) a short link keeps its code
+    var endpoints = currentShortCode ? [] : [location.origin + '/s', SHORTLINK_ORIGIN + '/s'];
     var res = null, lastErr = null;
     for (var i = 0; i < endpoints.length && !res; i++) {
       try {
@@ -1483,11 +1409,11 @@ async function mintShortlink(env, btn){
         else lastErr = new Error('The short-link service returned ' + r.status + '.');
       } catch (e) { lastErr = e; }
     }
-    if (!res) throw lastErr || new Error('The short-link service is unreachable.');
-    currentShortCode = res.code;
+    if (res) currentShortCode = res.code;
+    if (!currentShortCode) throw lastErr || new Error('The short-link service is unreachable.');
     var doiRow = document.getElementById('bundleDoi');
-    if (doiRow) doiRow.innerHTML = bundleDoiHTML(res.code);
-    await navigator.clipboard.writeText(res.url);
+    if (doiRow) doiRow.innerHTML = bundleDoiHTML(currentShortCode);
+    await navigator.clipboard.writeText('https://openmaterials.ai/s/' + currentShortCode);
     if (btn) { btn.textContent = 'Short link copied'; setTimeout(function(){ btn.textContent = label; }, 1600); }
   } catch (e) {
     if (btn) { btn.textContent = String(e.message || 'Failed.').slice(0, 40); setTimeout(function(){ btn.textContent = label; }, 2500); }
@@ -1496,10 +1422,8 @@ async function mintShortlink(env, btn){
 
 // The MCG-computable set, mirrored from docs/experiment/index.html (the shipped
 // allowlist): the base map nodes MCG has a wired engine for right now, so the
-// "Run on MaterialsCodeGraph" button appears only for a genuinely runnable node
-// and is simply absent otherwise. Static by choice (no capability fetch, no
-// network); it is expected to GROW as MCG wires more kinds, extend the list then.
-var MCG_BASE = 'https://app.materialscodegraph.com';
+// Run button (to the MaterialsCodeGraph connect page) shows only for a runnable
+// node. Static by choice; extend it as MCG wires more kinds.
 var MCG_COMPUTABLE = { 'ThermalConductivity': 1 };
 function isComputable(id){ return !!MCG_COMPUTABLE[baseNode(id)]; }
 
@@ -1534,12 +1458,23 @@ function propFromDescription(desc){
   if (!s || s.length > 48) return '';
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
-// De-camelCase a node id as a last resort: ThermalConductivity -> "Thermal conductivity".
+// De-camelCase a node id, acronyms kept: ThermalConductivity -> "Thermal conductivity",
+// HOMOLUMOGap -> "HOMOLUMO gap".
 function humanizeId(id){
-  var s = String(id).replace(/([a-z0-9])([A-Z])/g, '$1 $2').replace(/[_-]+/g, ' ').trim();
-  if (!s) return 'Property';
-  return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
+  var w = String(id).replace(/([a-z0-9])([A-Z])/g, '$1 $2').replace(/([A-Z]+)([A-Z][a-z])/g, '$1 $2')
+    .replace(/[_-]+/g, ' ').trim().split(/\s+/).map(function(x, i){
+      return /^[A-Z0-9]{2,}$/.test(x) ? x : (i ? x.toLowerCase() : x.charAt(0).toUpperCase() + x.slice(1).toLowerCase());
+    }).join(' ');
+  return w || 'Property';
 }
+// A node's plain name, its route in words: ThermalConductivity[bte_solver=rta] -> "Thermal conductivity (rta)".
+function nodeName(id){
+  var q = /\[(.*)\]$/.exec(id || '');
+  return (HUMAN_PROP[baseNode(id)] || humanizeId(baseNode(id))) +
+    (q ? ' (' + q[1].replace(/\w+=/g, '').replace(/_/g, ' ').replace(/,/g, ', ') + ')' : '');
+}
+// An operator's plain name: compute_dispersion -> "compute dispersion".
+function opName(op){ return (op || '').replace(/\[.*?\]/g, '').replace(/_/g, ' ').trim() || 'operation'; }
 function humanProperty(node, template){
   var base = baseNode(node);
   if (base && HUMAN_PROP[base]) return HUMAN_PROP[base];
@@ -1556,16 +1491,6 @@ function humanProperty(node, template){
 function displayProp(node, template){
   if (!node && (!template || String(template) === 'other')) return '';
   return humanProperty(node, template);
-}
-// The trailing unit a catalog description ends with (many end in the SI unit,
-// e.g. "W/(m K)."): a fallback when lineage.values carries no unit of its own.
-function unitFromDescription(desc){
-  if (!desc) return '';
-  var m = String(desc).replace(/\s+$/, '').replace(/\.$/, '')
-    .match(/([A-Za-z()·∙/0-9\^\-]+(?:\s*\/\s*\([^)]*\))?)\s*$/);
-  var u = m ? m[1].trim() : '';
-  // guard against grabbing a plain word; a real unit has a slash, a dot, or a cap
-  return /[\/·∙]/.test(u) ? u : '';
 }
 // Render a unit string cleanly: a middle dot for spacing between factors is fine,
 // but a stray long dash never belongs in a unit, so map U+2014/U+2013 to a space.
@@ -1652,24 +1577,6 @@ function heavyHost(record){
   var arts = record.artifacts || [];
   for (var j = 0; j < arts.length; j++) { if (arts[j] && arts[j].url) return { provider: 'MaterialsCodeGraph', url: arts[j].url }; }
   return null;
-}
-
-// The MCG compute deep link for a runnable lineage: #/new/<base node>, prefilled
-// with material and the temperature condition as query params so the wizard can
-// pre-populate. Mirrors the shipped experiment-page pattern.
-function mcgRunUrl(lineage){
-  var url = MCG_BASE + '/#/new/' + encodeURIComponent(baseNode(lineage.node));
-  var qs = [];
-  var mat = materialName(lineage.material);
-  if (mat) qs.push('material=' + encodeURIComponent(mat));
-  var cond = [];
-  [lineage.conditions, lineage.hyperparameters].forEach(function(o){
-    if (o && typeof o === 'object' && o.T != null && cond.indexOf('T = ' + o.T) === -1) cond.push('T = ' + o.T);
-  });
-  if (cond.length) qs.push('conditions=' + encodeURIComponent(cond.join(' · ')));
-  var cfgUid = materialConfigUid(lineage.material);
-  if (cfgUid) qs.push('configuration=' + encodeURIComponent(cfgUid));
-  return qs.length ? url + '?' + qs.join('&') : url;
 }
 
 // The material's configuration uid, when lineage.material carries one (a pinned
@@ -1812,128 +1719,6 @@ function artifactsHTML(record){
   return '<div class="rec-sec">' + body + '</div>';
 }
 
-/* ---- the X -> Y path: a lineage is a typed path on the map -----------------
-   A lineage goes from input node(s) X to a result node Y through the map's
-   operators. The lineage is already in graph.json: walking the PRODUCING edges
-   upstream from Y (links whose op does NOT start with provide_, exactly as
-   omai/mermaid.py mermaid_lineage does) reaches the true inputs. This block
-   derives, from a lineage's output node, (a) the true input leaves X, (b) a short
-   chain of milestone quantities the physics passes through, and (c) the full
-   producing-edge lineage for the expander. All against the page's live GRAPH. */
-
-// The producing edges of the map, indexed by target: target -> [[source, op], ...].
-// Producing means op present and NOT a provide_ (a source injection). Built once,
-// lazily, from the same links the canvas uses. Mirrors mermaid_lineage's filter.
-var _producers = null;
-function producersOf(){
-  if (_producers) return _producers;
-  _producers = {};
-  if (GRAPH && GRAPH.links) GRAPH.links.forEach(function(l){
-    if (l.op && String(l.op).indexOf('provide_') !== 0 && l.source !== l.target)
-      (_producers[l.target] = _producers[l.target] || []).push([l.source, l.op]);
-  });
-  return _producers;
-}
-
-// Walk producing edges upstream from a node, capped (like mermaid_lineage's
-// max_edges). Returns {edges:[[from,op,to],...], visited:{id:1}, leaves:[ids]}.
-// A LEAF is a reached node with no producing edge of its own: the true input X
-// of the lineage (Potential, ForceConstants, Structure, Temperature...).
-function upstreamLineage(nodeId, maxEdges){
-  maxEdges = maxEdges || 60;
-  var prod = producersOf();
-  var edges = [], queue = [nodeId], visited = {}, leafSet = {};
-  while (queue.length && edges.length < maxEdges){
-    var cur = queue.shift();
-    if (visited[cur]) continue;
-    visited[cur] = 1;
-    var ps = prod[cur] || [];
-    if (!ps.length && cur !== nodeId) leafSet[cur] = 1;   // no producer: a source
-    ps.forEach(function(p){
-      edges.push([p[0], p[1], cur]);
-      if (!visited[p[0]]) queue.push(p[0]);
-    });
-  }
-  // any source that was an edge-tail but never expanded is also a leaf
-  edges.forEach(function(e){ if (!(prod[e[0]] && prod[e[0]].length)) leafSet[e[0]] = 1; });
-  // stable, readable order for the input chips: by node layer then id
-  var leaves = Object.keys(leafSet).sort(function(a, b){
-    var la = (nodeById[a] && nodeById[a].layer) || 0, lb = (nodeById[b] && nodeById[b].layer) || 0;
-    return la - lb || a.localeCompare(b);
-  });
-  return { edges: edges, visited: visited, leaves: leaves };
-}
-
-// The X -> Y lineage as PLAIN INFORMATION: a simple inline statement of the true
-// input nodes and the output, derived from the map's producing edges (never a
-// graphic path or chip flow, that visualization is MCG's). Returns '' when the
-// output node is off-map or has no producing lineage (a source node, or a
-// measurement): the caller then shows no lineage, never a fabricated one. Each
-// named node links the full map by id, as a quiet inline reference.
-function lineageStatement(node){
-  if (!node || !nodeById[node]) return '';           // node-unresolved: no lineage
-  var lineage = upstreamLineage(node);
-  if (!lineage.edges.length) return '';              // a source / no computation: no lineage
-  var linkName = function(id){
-    var human = humanProperty(id, null);
-    if (nodeById[id] || nodeById[baseNode(id)]) {
-      return '<a href="../map/#node=' + encodeURIComponent(id) + '" title="' + esc(id) + ': view on the full map">' + esc(human) + '</a>';
-    }
-    return esc(human);
-  };
-  var inputs = lineage.leaves.map(linkName).join(', ');
-  var out = linkName(node);
-  var s = '<p class="rec-lineage">';
-  if (inputs) s += 'Inputs: ' + inputs + '. ';
-  s += 'Output: ' + out + '.</p>';
-  return s;
-}
-
-// The map-context info for the lineage's output node, PLAIN: the node's
-// plain-language description and units from catalog.json, and its tier and
-// position on the map. This is descriptive info about what the data means, not a
-// dashboard panel (no agreement plot, no fact cards). Returns '' when there is
-// genuinely nothing to say (no catalog entry and no map node).
-function mapContextHTML(node, material){
-  var base = baseNode(node);
-  var cat = base && catalogById[base];
-  var gnode = (node && nodeById[node]) || (base && nodeById[base]);
-  if (!cat && !gnode) return '';
-  var body = '<div class="rec-h">What it means on the map</div>';
-
-  // the plain-language description, trimmed of the trailing bare SI unit the
-  // catalog appends (that unit is reported on its own line below).
-  var desc = cat && cat.description ? String(cat.description).trim() : '';
-  if (desc) {
-    var descClean = desc.replace(/\s*[A-Za-z()·∙\/0-9\^\-]+(?:\s*\/\s*\([^)]*\))?\s*\.?\s*$/, function(m){
-      return /[\/·∙]/.test(m) ? '' : m;   // drop only a trailing real unit, keep normal words
-    }).trim();
-    body += '<p class="rec-desc">' + esc(descClean || desc) + '</p>';
-  }
-
-  var facts = [];
-  var sym = (gnode && gnode.symbol) || (cat && cat.symbol);
-  if (sym) facts.push('<dt>Symbol</dt><dd>' + tex(sym) + '</dd>');
-  var unit = cleanUnit((cat && unitFromDescription(cat.description)) || '');
-  if (unit) facts.push('<dt>Units</dt><dd>' + esc(unit) + '</dd>');
-  var dim = (gnode && gnode.dimension) || (cat && cat.dimension);
-  if (dim && dim !== 'opaque') facts.push('<dt>Dimension</dt><dd>' + esc(String(dim).replace(/_/g, ' ')) + '</dd>');
-  if (facts.length) body += '<dl class="rec-kv">' + facts.join('') + '</dl>';
-
-  // where on the map: the tier, its position, and its plain description
-  if (gnode && gnode.tier) {
-    var ti = TIERS.filter(function(t){ return t.name === gnode.tier; })[0];
-    var pos = ti ? ('tier ' + (ti.order + 1) + ' of ' + TIERS.length) : '';
-    body += '<p class="rec-meta">Position: ' + esc(gnode.tier) + ' tier' + (pos ? ' (' + pos + ')' : '') +
-      (ti && ti.description ? '. ' + esc(ti.description) : '') + '</p>';
-  }
-
-  // the X -> Y lineage, as plain inline info (inputs + output), when the node has one
-  body += lineageStatement(node);
-
-  return '<div class="rec-sec">' + body + '</div>';
-}
-
 function valuesHTML(lineage, node){
   var picked = pickValues(lineage.values, node);
   var isUnitMeta = function(k){ return k === 'units' || k === 'unit'; };
@@ -1941,13 +1726,14 @@ function valuesHTML(lineage, node){
   var unit = cleanUnit((lineage.units) || (lineage.values && lineage.values.units) || '');
   var rows = [{ key: picked.primary.key, val: picked.primary.val }]
     .concat(picked.rest.filter(function(r){ return !isUnitMeta(r.key); }));
+  // the main row names its quantity and symbol ("Thermal conductivity κ"), not its key
+  var gnode = nodeById[node] || nodeById[baseNode(node)], prop = displayProp(node, lineage.template);
+  var name = prop ? esc(prop) + (gnode && gnode.symbol ? ' ' + tex(gnode.symbol) : '') : '';
   return '<div class="rec-sec"><div class="rec-h">Values</div>' +
-    '<p class="rec-explain">The values the computation produced, in the units the record ' +
-    'declares. The first row is the main quantity; the other rows were reported with it.</p>' +
     '<table class="rec-vtable"><thead><tr><th>Quantity</th><th class="num">Value</th><th>Units</th></tr></thead><tbody>' +
     rows.map(function(row){
-      var u = row.key === picked.primary.key ? unit : '';
-      return '<tr><td class="rec-vk">' + esc(row.key) + '</td>' +
+      var main = row.key === picked.primary.key, u = main ? unit : '';
+      return '<tr><td class="rec-vk">' + (main && name ? name : esc(row.key)) + '</td>' +
         '<td class="rec-vv">' + esc(fmtSig(row.val)) + '</td>' +
         '<td class="rec-vu">' + esc(u) + '</td></tr>';
     }).join('') + '</tbody></table></div>';
@@ -1971,8 +1757,7 @@ function resultsHTML(record){
   var rows = reportedValues(record);
   if (!rows.length) return '';
   return '<div class="rec-sec"><div class="rec-h">Values</div>' +
-    '<p class="rec-explain">One row per reported value, in the units each declares. ' +
-    'These values are attached to the record and are excluded from its lineage id.</p>' +
+    '<p class="rec-explain">Reported with the record, so excluded from its lineage id.</p>' +
     '<table class="rec-vtable"><thead><tr><th>Quantity</th><th class="num">Value</th><th>Units</th></tr></thead><tbody>' +
     rows.map(function(r){
       var c = r.conditions && typeof r.conditions === 'object' ? r.conditions : {};
@@ -1981,132 +1766,6 @@ function resultsHTML(record){
       return '<tr><td class="rec-vk">' + esc(r.variable) + (conds ? '<div class="rec-vc">' + esc(conds) + '</div>' : '') + '</td>' +
         '<td class="rec-vv">' + esc(val) + '</td><td class="rec-vu">' + esc(cleanUnit(r.units)) + '</td></tr>';
     }).join('') + '</tbody></table></div>';
-}
-
-function lineageLinksHTML(lineage, node, known, memberIdx, recordId){
-  var h = '<div class="rec-links">';
-  if (known && isComputable(node)) {
-    h += '<a href="' + esc(mcgRunUrl(lineage)) + '" target="_blank" rel="noopener">Run this lineage on MaterialsCodeGraph</a>';
-  }
-  // class-based, never an id: a bundle stacks several datasheets on one page
-  h += '<button type="button" class="rcCopy"' +
-    (memberIdx != null ? ' data-idx="' + memberIdx + '"' : '') +
-    ' title="Copies a link with this record in its #x= fragment. The link reopens the record here.">Copy link</button>';
-  // Copy permalink: the canonical id AS the link, the unfurling stub form
-  // (<site>/i/<id>/), which redirects into /play/#id=<id>. Shown only when this
-  // record carries a committed 64-hex id (a value the commons holds by id); each
-  // bundle member carries its own, so data-id names THAT member. A record with
-  // no committed id (a pasted lineage) has no permalink.
-  if (recordId && SHA256_RE.test(String(recordId))) {
-    h += '<button type="button" class="rcPermalink" data-id="' + esc(String(recordId)) + '"' +
-      ' title="Copies this value\'s permalink, openmaterials.ai/i/' + esc(String(recordId)) + '/, which shows a preview card when shared and opens the datasheet.">Copy permalink</button>';
-  }
-  h += '<span class="rec-link-note">Runs happen on MaterialsCodeGraph. This page shows the record.</span>';
-  return h + '</div>';
-}
-
-/* The derivation drawn as a compact map excerpt: the record's upstream graph
-   (the DERIVATION, in the glossary's sense) laid out in layer columns, in the
-   map's own colors. Map-family visualization is the sanctioned visual on the
-   datasheet; value charts stay on MaterialsCodeGraph. Returns '' when the node
-   is unknown (node-unresolved records never get a fabricated drawing) or the
-   closure is degenerate. */
-function derivationSVG(nodeId){
-  if (!nodeId) return '';
-  var start = nodeById[nodeId] ? nodeId : baseNode(nodeId);
-  if (!nodeById[start]) return '';
-  // upstream closure over the parents adjacency the page already built
-  var seen = {}, order = [], queue = [start];
-  while (queue.length) {
-    var id = queue.shift();
-    if (seen[id]) continue;
-    seen[id] = true; order.push(id);
-    (parents[id] || []).forEach(function(p){ if (!seen[p]) queue.push(p); });
-    if (order.length > 60) return '';   // safety: fall back to the text statement
-  }
-  if (order.length < 2) return '';
-  // columns from the node layer, compacted to the layers actually present
-  var layers = {};
-  order.forEach(function(id){ layers[nodeById[id].layer] = true; });
-  var cols = Object.keys(layers).map(Number).sort(function(a, b){ return a - b; });
-  var colOf = {}; cols.forEach(function(l, i){ colOf[l] = i; });
-  var byCol = cols.map(function(){ return []; });
-  order.slice().sort().forEach(function(id){ byCol[colOf[nodeById[id].layer]].push(id); });
-  var CW = 216, RH = 46, PAD = 16, BW = 196, BH = 34, HH = 26;
-  var maxRows = Math.max.apply(null, byCol.map(function(c){ return c.length; }));
-  var W = PAD * 2 + cols.length * CW - (CW - BW);
-  var H = PAD * 2 + HH + maxRows * RH - (RH - BH);
-  var pos = {};
-  byCol.forEach(function(colIds, ci){
-    var offset = (maxRows - colIds.length) * RH / 2;
-    colIds.forEach(function(id, ri){
-      pos[id] = { x: PAD + ci * CW, y: PAD + HH + offset + ri * RH };
-    });
-  });
-  // column headings: the same numbered tier names the full map uses for its
-  // bands, taken from each column's own nodes (a column with nodes from two
-  // tiers names both)
-  var tierNo = {};
-  (TIERS || []).slice().sort(function(a, b){ return a.order - b.order; })
-    .forEach(function(t, i){ tierNo[t.name] = (i + 1 < 10 ? '0' : '') + (i + 1); });
-  var colHeads = byCol.map(function(colIds){
-    var seen = {}, names = [];
-    colIds.forEach(function(id){
-      var t = nodeById[id].tier;
-      if (t && !seen[t]) { seen[t] = true; names.push(t); }
-    });
-    names.sort(function(a, b){ return (tierNo[a] || '99') < (tierNo[b] || '99') ? -1 : 1; });
-    var parts = names.slice(0, 2).map(function(t){
-      return (tierNo[t] ? tierNo[t] + ' ' : '') + t;
-    });
-    if (names.length > 2) parts.push('…');
-    return parts.join(' · ');
-  });
-  var s = '<svg class="rec-map" viewBox="0 0 ' + W + ' ' + H + '" width="' + W + '" height="' + H +
-    '" style="min-width:' + W + 'px" role="img" aria-label="Derivation of ' + esc(start) + ' on the map">';
-  // dotted column separators (the full map's band rules, miniaturized)
-  cols.forEach(function(_, ci){
-    if (!ci) return;
-    var xs = PAD + ci * CW - (CW - BW) / 2;
-    s += '<line x1="' + xs + '" y1="' + PAD + '" x2="' + xs + '" y2="' + (H - PAD) +
-      '" style="stroke:var(--line,#EBEBEB)" stroke-width="1"/>';
-  });
-  colHeads.forEach(function(head, ci){
-    if (!head) return;
-    var label = head.length > 28 ? head.slice(0, 27) + '…' : head;
-    s += '<text x="' + (PAD + ci * CW + BW / 2) + '" y="' + (PAD + 10) +
-      '" text-anchor="middle" font-size="12" style="fill:var(--ink-2,#4D4D4D);font-family:var(--font-sans,sans-serif);font-weight:500">' +
-      esc(label) + '</text>';
-  });
-  // edges first (only those inside the closure)
-  order.forEach(function(id){
-    (parents[id] || []).forEach(function(p){
-      if (!pos[p] || !pos[id]) return;
-      var x1 = pos[p].x + BW, y1 = pos[p].y + BH / 2, x2 = pos[id].x, y2 = pos[id].y + BH / 2;
-      var mx = (x1 + x2) / 2;
-      s += '<path d="M' + x1 + ' ' + y1 + ' C' + mx + ' ' + y1 + ' ' + mx + ' ' + y2 + ' ' + x2 + ' ' + y2 +
-        '" fill="none" style="stroke:var(--edge,#8F8F8F)" stroke-width="1.25"/>';
-    });
-  });
-  order.forEach(function(id){
-    var n = nodeById[id], p = pos[id];
-    var terminal = id === start;
-    var obs = n.type === 'observable';
-    var stroke = terminal || obs ? 'var(--data-obs-line,#4F46E5)' : 'var(--edge,#8F8F8F)';
-    var fill = terminal ? 'var(--surface-2,#F2F2F2)' : 'var(--page,#FFFFFF)';
-    // a TeX-laden symbol is unreadable as raw text; fall back to the node id
-    var sym = n.symbol && n.symbol.indexOf('\\') === -1 ? n.symbol : '';
-    var label = sym && sym.length <= 14 ? sym : id;
-    if (label.length > 24) label = label.slice(0, 23) + '…';
-    s += '<a href="../map/#node=' + encodeURIComponent(id) + '">';
-    s += '<rect x="' + p.x + '" y="' + p.y + '" width="' + BW + '" height="' + BH +
-      '" rx="6" style="fill:' + fill + ';stroke:' + stroke + '" stroke-width="' + (terminal ? 2 : 1.25) + '"/>';
-    s += '<text x="' + (p.x + BW / 2) + '" y="' + (p.y + BH / 2 + 4.5) +
-      '" text-anchor="middle" font-size="12.5" style="fill:var(--ink,#171717);font-family:var(--font-mono,monospace)">' +
-      esc(label) + '</text></a>';
-  });
-  s += '</svg>';
-  return '<div class="rec-mapbox">' + s + '</div>';
 }
 
 /* renderShared: the one decode dispatch for anything the #x= fragment (or a
@@ -2158,7 +1817,7 @@ function renderBundle(env){
   h += '<div><dt>Kind</dt><dd>Lineage set</dd></div>';
   h += '<div><dt>Lineages</dt><dd>' + env.lineages.length + '</dd></div>';
   h += '</dl><div class="rec-doi" id="bundleDoi">' +
-    (currentShortCode ? bundleDoiHTML(currentShortCode) : bundleDoiPlaceholderHTML()) + '</div></div>';
+    (currentShortCode ? bundleDoiHTML(currentShortCode) : '') + '</div></div>';
 
   var rows = [];
   if (doc) {
@@ -2169,9 +1828,7 @@ function renderBundle(env){
   }
   if (rows.length) h += '<div class="rec-sec"><div class="rec-h">The shared document</div><dl class="rec-kv">' + rows.join('') + '</dl></div>';
 
-  h += '<div class="rec-sec"><div class="rec-h">The lineages in this set</div>' +
-    '<p class="rec-explain">This document carries the lineages below; each has a full ' +
-    'datasheet on this page. The rows here jump to the matching datasheet.</p>';
+  h += '<div class="rec-sec"><div class="rec-h">The lineages in this set</div>';
   h += '<table class="rec-vtable"><thead><tr><th>Lineage</th><th class="num">Value</th><th>Units</th><th>Id</th></tr></thead><tbody>';
   env.lineages.forEach(function(member, idx){
     var lineage = member.lineage || {};
@@ -2189,9 +1846,8 @@ function renderBundle(env){
       '<td class="rec-vu">' + esc(short) + '</td></tr>';
   });
   h += '</tbody></table></div>';
-  h += '<div class="rec-links"><button id="bundleCopy" type="button" title="Copy a link that carries this whole set in its #x= fragment.">Copy link</button>' +
-    '<button id="bundleShort" type="button" title="Stores this set and copies its short link, openmaterials.ai/s/ plus a code. Anyone with the code can open a stored set.">Copy short link</button>' +
-       '<span class="rec-link-note">Each lineage keeps its own id, and every datasheet is on this page. A stored set is public to anyone with the code.</span></div>';
+  h += '<div class="rec-links"><button id="bundleShort" type="button">Copy short link</button>' +
+    '<span class="rec-link-note">A stored set is public to anyone with the code.</span></div>';
   h += '</div>';
 
   // ---- every member's FULL datasheet, stacked on this same page --------------
@@ -2205,19 +1861,13 @@ function renderBundle(env){
   panelBox.innerHTML = '';
   box.innerHTML = h;
   currentBundle = env;
-  bundleViewOpen = true;
   currentLineageRecord = null;
-  currentLineageDoc = null;
-  currentLineageFromBundle = false;
   lineageHasRendered = true;
   setLineageInputs(mintEnvelope(env));
   renderLineageExampleNav(null);
-  var runLink = document.getElementById('linRun');
-  runLink.hidden = true;
-  runLink.removeAttribute('href');
+  document.getElementById('linRun').hidden = true;
   document.getElementById('linIngress').hidden = true;
   document.body.classList.add('lin-open');
-  fitDerivations();
   document.getElementById('linStage').scrollTop = 0;
   box.querySelectorAll('.rec-member').forEach(function(a){
     a.addEventListener('click', function(e){
@@ -2227,8 +1877,6 @@ function renderBundle(env){
       if (target) target.scrollIntoView({ behavior: SCROLL, block: 'start' });
     });
   });
-  var copyBtn = box.querySelector('#bundleCopy');
-  if (copyBtn) copyBtn.addEventListener('click', function(){ copyBundleLink(currentBundle, this); });
   var shortBtn = box.querySelector('#bundleShort');
   if (shortBtn) shortBtn.addEventListener('click', function(){ mintShortlink(currentBundle, this); });
   // per-member Copy link: mints THAT record alone (each keeps its own id)
@@ -2238,35 +1886,21 @@ function renderBundle(env){
                       btn, { fromBundle: true });
     });
   });
-  // per-member Copy permalink: the member's OWN canonical id as the link, the
-  // unfurling stub form (<site>/i/<member id>/). Members carry their own ids;
-  // data-id names the member, so a stacked bundle mints one permalink per value.
-  box.querySelectorAll('.rcPermalink[data-id]').forEach(function(btn){
-    btn.addEventListener('click', function(){ copyPermalink(btn.getAttribute('data-id'), btn); });
-  });
   renderSubmap([], {});
   return true;
 }
 
-/* datasheetHTML: ONE lineage's dense datasheet (header + three-column grid),
-   shared by the single view and the stacked bundle view so the two can never
-   drift. opts: {doc} for read-time source inheritance, {memberIdx} to make the
-   copy button addressable inside a stacked bundle. Still information, not a
-   dashboard; the only graphic is the derivation drawn as a map excerpt. */
-/* reproduceHTML: the simulation-facing section. Which codes
-   on the map compute this record's quantity (from codes.json, the same
-   coverage layer the full map shows), and any pinned conformance runs for the
-   node: committed targets a re-run must reproduce within a stated tolerance.
-   A target whose id equals this record's id IS this exact lineage. */
+/* reproduceHTML: the codes on the map that compute this record's quantity
+   (codes.json, the coverage the full map shows) and the conformance target that
+   pins THIS lineage: a target counts only when its id equals the record's, so
+   its conditions are the record's own. */
+function fmt4(v){ return typeof v === 'number' && isFinite(v) ? String(Number(v.toPrecision(4))) : fmtValue(v); }
 function reproduceHTML(node, recordId){
   if (!node) return '';
   var codes = codesByNode[node] || codesByNode[baseNode(node)] || [];
-  var targets = CONFORMANCE.filter(function(t){ return t.node === node; });
+  var targets = CONFORMANCE.filter(function(t){ return recordId && t.id === recordId; });
   if (!codes.length && !targets.length) return '';
-  var h = '<div class="rec-sec"><div class="rec-h">Reproduce this</div>' +
-    '<p class="rec-explain">Codes on the map that compute this quantity, and the committed ' +
-    'conformance targets a rerun should reproduce within the stated tolerance. Each ' +
-    'target\'s lineage pins every setting.</p>';
+  var h = '<div class="rec-sec"><div class="rec-h">Reproduce this</div>';
   if (codes.length) {
     h += '<dl class="rec-kv">' + codes.map(function(c){
       var name = c.url
@@ -2276,39 +1910,21 @@ function reproduceHTML(node, recordId){
     }).join('') + '</dl>';
   }
   targets.forEach(function(t){
-    var exact = recordId && t.id === recordId;
     var exp = t.expected || {};
     var tol = t.tolerance || {};
     var tolText = tol.kind === 'relative'
-      ? 'within ' + fmtValue((tol.value || 0) * 100) + '%'
-      : 'within ±' + fmtValue(tol.value) + (exp.units ? ' ' + exp.units : '');
-    h += '<div class="rec-conf' + (exact ? ' rec-conf-exact' : '') + '">' +
-      '<span class="rec-conf-code">' + esc(t.code || '?') + '</span> pinned run: ' +
-      esc(fmtValue(exp.value)) + (exp.units ? ' ' + esc(exp.units) : '') +
-      ', ' + esc(tolText) +
-      (exact ? ' <span class="rec-conf-mark">this exact lineage</span>'
-             : (t.material ? ' <span class="rec-link-note">(' + esc(t.material) + ')</span>' : '')) +
-      ' <a href="../data/conformance/' + esc(t.file) + '" title="The committed conformance target, which cites the value\'s id.">Open the target file</a>' +
-      '</div>';
+      ? 'within ' + fmt4((tol.value || 0) * 100) + '%'
+      : 'within ±' + fmt4(tol.value) + (exp.units ? ' ' + exp.units : '');
+    h += '<div class="rec-conf"><span class="rec-conf-code">' + esc(t.code || '?') + '</span> conformance target: ' +
+      esc(fmt4(exp.value)) + (exp.units ? ' ' + esc(exp.units) : '') + ', ' + esc(tolText) + '</div>';
   });
-  h += '</div>';
-  return h;
+  return h + '</div>';
 }
 
-// The derivation drawing keeps its natural width, so its labels stay at 12 px. It shows
-// only where that width fits the datasheet; elsewhere the sentence beside it points at
-// the tracer, so the page never scrolls sideways. Runs after each render and on resize.
-function fitDerivations(){
-  document.querySelectorAll('.rec-maprow').forEach(function(row){
-    var drawing = row.querySelector('svg.rec-map'), note = row.nextElementSibling;
-    if (!drawing) return;
-    var fits = Number(drawing.getAttribute('width')) + 2 <= row.parentElement.clientWidth;   // + the box border
-    row.hidden = !fits;
-    if (note && note.classList.contains('rec-mapnote')) note.hidden = fits;
-  });
-}
-window.addEventListener('resize', fitDerivations);
-
+/* datasheetHTML: ONE lineage's datasheet (header + three-column grid), shared
+   by the single view and the stacked bundle view so the two can never drift.
+   opts: {doc} for read-time source inheritance, {memberIdx} to make the copy
+   button addressable inside a stacked bundle. */
 function datasheetHTML(record, valid, opts){
   opts = opts || {};
   var lineage = record.lineage;
@@ -2318,26 +1934,20 @@ function datasheetHTML(record, valid, opts){
   var prop = displayProp(node, template);
   var mat = materialName(lineage.material);
   var kind = recordKind(record);
-  var shortId = record.id ? String(record.id).slice(0, 12) : 'not supplied';
   var mapVersion = currentVersion() || 'not loaded';
-  var output = node
-    ? (known
-      ? '<a href="../map/#node=' + encodeURIComponent(node) + '" title="View this quantity on the full map">' + esc(node) + '</a>'
-      : esc(node) + ' (not on this map version)')
-    : 'node-unresolved (template only)';
+  // the tracer draws the derivation at any width; a measurement has none
+  var trace = known && kind !== 'measurement' && (parents[node] || []).length
+    ? '<a href="../map-trace/#node=' + encodeURIComponent(node) + '">Trace this derivation</a>' : '';
 
   var h = '';
-  // ---- COMPACT HEADER: lede + the merged What-this-is metadata ---------------
+  // ---- COMPACT HEADER: lede, kind and map version, the one id ----------------
   h += '<div class="rec-head">';
   h += '<p class="rec-lede">' + (prop ? esc(prop) + (mat ? ' of ' + esc(mat) : '')
     : esc(mat || 'A lineage record')) + '</p>';
   h += '<dl class="rec-head-meta">';
   h += '<div><dt>Kind</dt><dd>' + (kind === 'measurement' ? 'Measurement' : 'Simulation') + '</dd></div>';
-  h += '<div><dt>Output node</dt><dd>' + output + '</dd></div>';
-  h += '<div><dt>Material</dt><dd>' + esc(mat || 'not supplied') + '</dd></div>';
-  h += '<div><dt>Lineage id</dt><dd>' + esc(shortId) + '</dd></div>';
   h += '<div><dt>Map version</dt><dd>' + esc(mapVersion) + '</dd></div>';
-  h += '</dl>' + lineageDoiHTML(record) + '</div>';
+  h += '</dl>' + lineageDoiHTML(record, opts.memberIdx, trace) + '</div>';
 
   // THE RECOVERY POINT for the sharing loop: a record that arrives with no
   // mapped quantity, no values, and no conditions (the thin handoff, e.g. an
@@ -2373,27 +1983,21 @@ function datasheetHTML(record, valid, opts){
 
   // ---- THE LINEAGE: every field, as plain labelled information ---------------
   var lineageHTML = '<div class="rec-sec"><div class="rec-h">The lineage</div>' +
-    '<p class="rec-explain">The lineage is the complete computational identity of this value: the output ' +
-    'quantity, the material, and every condition that determines the number. These fields, ' +
-    'and nothing else, are hashed into the lineage id, so two records with the same id are ' +
-    'the same computation.</p>';
+    '<p class="rec-explain">These fields, and only these, are hashed into the id, so two records ' +
+    'with the same id are the same computation.</p>';
   var idRows = [];
-  if (node) idRows.push('<dt>node</dt><dd class="wrap">' + esc(node) + '</dd>');
+  if (node) idRows.push('<dt>node</dt><dd class="wrap">' + esc(node) + (known ? '' : ' (not on this map version)') + '</dd>');
   var cfgUid = materialConfigUid(lineage.material);
   var cfg = resolveConfiguration(cfgUid);
   var matLabel = mat || (cfg && cfg.name) || '';
   if (matLabel) idRows.push('<dt>material</dt><dd>' + esc(matLabel) + '</dd>');
-  if (cfgUid) {
-    idRows.push('<dt>configuration uid</dt><dd class="wrap">' + esc(cfgUid) + '</dd>');
-    var cfgRows = configSummaryHTML(cfg);
-    if (cfgRows) idRows.push(cfgRows);
-  }
+  var cfgRows = configSummaryHTML(cfg);
+  if (cfgRows) idRows.push(cfgRows);
   if (lineage.template != null && lineage.template !== '') {
     var tw = templateWords(lineage.template);
     idRows.push('<dt>template</dt><dd>' + esc(String(lineage.template)) +
       (tw && tw !== String(lineage.template) ? ' <span class="rec-link-note">(' + esc(tw) + ')</span>' : '') + '</dd>');
   }
-  if (lineage.node_uid) idRows.push('<dt>node_uid</dt><dd class="wrap">' + esc(String(lineage.node_uid)) + '</dd>');
   if (idRows.length) lineageHTML += '<div class="rec-grp"><dl class="rec-kv">' + idRows.join('') + '</dl></div>';
   detailGroups(record, lineage).forEach(function(group){
     if (group.label === 'Template') return;
@@ -2405,34 +2009,11 @@ function datasheetHTML(record, valid, opts){
   });
   lineageHTML += '</div>';
 
-  // the derivation drawn as a map excerpt: landscape, its own FULL row above
-  // the columns, never squeezed into a column
-  if (known) {
-    var deriv = derivationSVG(node);
-    if (deriv) {
-      h += '<div class="rec-sec rec-maprow"><div class="rec-h">The derivation on the map</div>' +
-        '<p class="rec-explain">The drawing shows every quantity this value depends on, taken from the map itself. ' +
-        'Read left to right: the leftmost boxes are the provided inputs, each arrow is an operator ' +
-        'carrying one quantity into the next computation, and the box at the right end is ' +
-        'this record\'s quantity. The column headings are the numbered tiers of the full map. ' +
-        'Click any box to open that quantity on the full map.</p>' +
-        deriv +
-        '<div class="rec-maplegend">' +
-        '<span><i class="lg-this"></i>This record\'s quantity</span>' +
-        '<span><i class="lg-obs"></i>Observable (measurable) quantity</span>' +
-        '<span><i class="lg-step"></i>Internal step of the computation</span>' +
-        '</div></div>' +
-        '<p class="rec-explain rec-mapnote" hidden>This screen is too narrow for the derivation drawing; ' +
-        '<a href="../map-trace/#node=' + encodeURIComponent(node) + '">the tracer</a> shows the same derivation at any width.</p>';
-    }
-  }
-
-  var valueAndMap = (valuesHTML(lineage, node) || resultsHTML(record)) + (known ? mapContextHTML(node, lineage.material) : '');
+  var values = valuesHTML(lineage, node) || resultsHTML(record);
   var recordTail = provenanceHTML(record, lineage, opts.doc) + artifactsHTML(record) +
-    (known ? reproduceHTML(node, record.id) : '') +
-    lineageLinksHTML(lineage, node, known, opts.memberIdx, record.id);
+    (known ? reproduceHTML(node, record.id) : '');
   h += '<div class="rec-grid"><div class="rec-col">' + lineageHTML + '</div>';
-  if (valueAndMap) h += '<div class="rec-col">' + valueAndMap + '</div>';
+  if (values) h += '<div class="rec-col">' + values + '</div>';
   if (recordTail) h += '<div class="rec-col">' + recordTail + '</div>';
   h += '</div>';
   return h;
@@ -2458,9 +2039,6 @@ function renderLineage(record, opts){
   }
   record = valid.record;
   if (!opts.fromBundle) { currentBundle = null; }
-  bundleViewOpen = false;
-  currentLineageDoc = opts.doc || null;
-  currentLineageFromBundle = !!opts.fromBundle;
   var lineage = record.lineage;
   var node = lineage.node;
   var known = valid.nodeResolved;
@@ -2483,23 +2061,14 @@ function renderLineage(record, opts){
   setLineageInputs(opts.doc && !opts.fromBundle ? shareEnvelopeFor(record, opts) : record);
   renderLineageExampleNav(record);
 
-  var runLink = document.getElementById('linRun');
-  if (known && isComputable(node)) {
-    runLink.href = mcgRunUrl(lineage);
-    runLink.hidden = false;
-  } else {
-    runLink.hidden = true;
-    runLink.removeAttribute('href');
-  }
+  // Run goes to the MaterialsCodeGraph connect page; a measurement has nothing to run
+  document.getElementById('linRun').hidden = !(known && isComputable(node) && recordKind(record) !== 'measurement');
   document.getElementById('linIngress').hidden = true;
   document.body.classList.add('lin-open');
-  fitDerivations();
   document.getElementById('linStage').scrollTop = 0;
 
   var copyBtn = box.querySelector('.rcCopy');
   if (copyBtn) copyBtn.addEventListener('click', function(){ copyLineageLink(record, this, opts); });
-  var permaBtn = box.querySelector('.rcPermalink');
-  if (permaBtn) permaBtn.addEventListener('click', function(){ copyPermalink(this.getAttribute('data-id'), this); });
   var backBtn = box.querySelector('#linBundleBack');
   if (backBtn) backBtn.addEventListener('click', function(e){
     e.preventDefault();
@@ -2594,41 +2163,70 @@ function renderInstanceById(hash){
   });
 }
 
-// The PROVENANCE section: the source ref, the map version the record was checked
-// against, and, for a parsed-paper lineage, the paper info, all plainly. Returns
-// '' when there is nothing to say.
+// A repo path in a curator's detail: a/b/c, a/b_c or a/b.ext (units such as W/mK, ratios and DOIs never match).
+var REPO_PATH = /(?:[.\w-]+\/){2,}[\w.-]*\w(?::\d+)?|[\w-]+\/[\w-]*_[\w.-]*\w|[\w-]+\/[\w-]+\.[a-z]{1,5}\b/.source;
+// source.detail as a reader sees it: curator notes such as [MIGRATED ...] and repo paths
+// (with the parenthesis or "recorded in" around them) are cut at render time; the hashed record keeps them.
+function readerDetail(s){
+  return String(s == null ? '' : s)
+    .replace(/\s*\[[A-Z]{2,}[^\]]*\]/g, '')
+    .replace(new RegExp('\\s*\\((?:[^()]|\\([^()]*\\))*?(?:' + REPO_PATH + ')(?:[^()]|\\([^()]*\\))*\\)', 'g'), '')
+    .replace(new RegExp(',?\\s*(?:recorded in\\s+)?(?:' + REPO_PATH + ')', 'g'), '')
+    .replace(/\s+/g, ' ').replace(/\s+([,.;])/g, '$1').trim();
+}
+// A paper's detail reads '<verbatim quote> (<where, with p. N>). <citation>, doi:..., arXiv:...'.
+function paperParts(d){
+  var m = /^(.+?)\s*\(([^()]*\bp\.\s*\d+[^()]*)\)\.\s+(.+)$/.exec(d);
+  if (!m) return null;
+  var cut = m[3].search(/,?\s*\b(?:doi|arXiv):/i);
+  var doi = /\bdoi:\s*(10\.\S+?)[.,;]?(?=\s|$)/i.exec(m[3]), arx = /\barXiv:\s*(\S+?)[.,;]?(?=\s|$)/i.exec(m[3]);
+  return { quote: m[1].replace(/^["“]|["”]$/g, ''), where: m[2].split(';')[0].trim(),
+    citation: (cut < 0 ? m[3] : m[3].slice(0, cut)).replace(/[\s.,]+$/, ''), doi: doi && doi[1], arxiv: arx && arx[1] };
+}
+// The source rows: the quote with its page, the citation and its DOI for a paper;
+// citation and method for '<citation (year)>; <method>'; otherwise the method alone.
+function sourceRows(detail){
+  var d = readerDetail(detail), p = paperParts(d), c;
+  var row = function(k, v){ return '<dt>' + k + '</dt><dd>' + v + '</dd>'; };
+  var a = function(href, text){ return '<a href="' + esc(href) + '" target="_blank" rel="noopener">' + esc(text) + '</a>'; };
+  if (p) return [row('Quote', '“' + esc(p.quote) + '” (' + esc(p.where) + ')'), row('Paper', esc(p.citation)),
+    p.doi ? row('DOI', a('https://doi.org/' + p.doi, p.doi)) : (p.arxiv ? row('arXiv', a('https://arxiv.org/abs/' + p.arxiv, p.arxiv)) : '')];
+  if ((c = /^([^;:]{1,120}\(\d{4}\));\s*(.+)$/.exec(d))) return [row('Paper', esc(c[1])), row('Method', esc(c[2]))];
+  return d ? [row('Method', esc(d))] : [];
+}
+
+// The SOURCE section: what the record's source says (sourceRows), its source ref when
+// it has no readable detail, any paper metadata it carries, and, for a committed value,
+// the page of every value from the same source.
 function provenanceHTML(record, lineage, doc){
-  var rows = [];
   // The identity-bearing form is lineage.source, a "scheme:ref" string; the
   // legacy top-level record.source object (outside the hash) stays readable.
   var linSrc = lineage && typeof lineage.source === 'string' ? lineage.source : null;
   var src = record.source || null;
   var ref = linSrc || (src && src.ref);
-  if (ref) rows.push('<dt>source ref</dt><dd class="wrap">' + esc(String(ref)) + '</dd>');
+  var rows = sourceRows(src && src.detail);
+  if (!rows.length && ref) rows.push('<dt>Ref</dt><dd class="wrap">' + esc(String(ref)) + '</dd>');
   // Read-time inheritance: a member with no source of its own shows the shared
   // document's source, labelled plainly. DISPLAY ONLY: nothing is written onto
   // the record and its id is untouched (identity is the member's own lineage).
-  else if (doc && typeof doc.source === 'string' && doc.source) {
-    rows.push('<dt>source ref</dt><dd class="wrap">' + esc(doc.source) +
+  else if (!ref && doc && typeof doc.source === 'string' && doc.source) {
+    rows.push('<dt>Ref</dt><dd class="wrap">' + esc(doc.source) +
       ' <span class="rec-link-note">(from the shared document)</span></dd>');
   }
   // paper info for a parsed-paper lineage: title / doi / authors / year, wherever present
   var paper = record.paper || (src && src.paper) || (lineage && lineage.paper) || null;
   if (paper && typeof paper === 'object') {
-    if (paper.title) rows.push('<dt>paper</dt><dd>' + esc(String(paper.title)) + '</dd>');
-    if (paper.authors) rows.push('<dt>authors</dt><dd>' + esc(Array.isArray(paper.authors) ? paper.authors.join(', ') : String(paper.authors)) + '</dd>');
-    if (paper.year != null) rows.push('<dt>year</dt><dd>' + esc(String(paper.year)) + '</dd>');
-    if (paper.doi) rows.push('<dt>doi</dt><dd class="wrap"><a href="https://doi.org/' + esc(String(paper.doi)) + '" target="_blank" rel="noopener">' + esc(String(paper.doi)) + '</a></dd>');
+    if (paper.title) rows.push('<dt>Paper</dt><dd>' + esc(String(paper.title)) + '</dd>');
+    if (paper.authors) rows.push('<dt>Authors</dt><dd>' + esc(Array.isArray(paper.authors) ? paper.authors.join(', ') : String(paper.authors)) + '</dd>');
+    if (paper.year != null) rows.push('<dt>Year</dt><dd>' + esc(String(paper.year)) + '</dd>');
+    if (paper.doi) rows.push('<dt>DOI</dt><dd class="wrap"><a href="https://doi.org/' + esc(String(paper.doi)) + '" target="_blank" rel="noopener">' + esc(String(paper.doi)) + '</a></dd>');
   } else if (typeof paper === 'string' && paper) {
-    rows.push('<dt>paper</dt><dd>' + esc(paper) + '</dd>');
+    rows.push('<dt>Paper</dt><dd>' + esc(paper) + '</dd>');
   }
-  if (window.__MAP_VERSION__) rows.push('<dt>Map version</dt><dd class="wrap">' + esc(String(window.__MAP_VERSION__).slice(0, 12)) + '</dd>');
   if (!rows.length) return '';
-  return '<div class="rec-sec"><div class="rec-h">Provenance</div>' +
-    '<p class="rec-explain">This section names where the value comes from (the paper, dataset, ' +
-    'or code that produced it) and the map version that checked it. Provenance travels with the record, ' +
-    'but only a source declared inside the lineage counts toward its id.</p>' +
-    '<dl class="rec-kv">' + rows.join('') + '</dl></div>';
+  var family = ref && INSTANCE_IDS && INSTANCE_IDS.has(String(record.id || '').toLowerCase())
+    ? '<p class="rec-meta"><a class="rec-doi-src" href="../experiment/#ref=' + encodeURIComponent(ref) + '">All values from this source</a></p>' : '';
+  return '<div class="rec-sec"><div class="rec-h">Source</div><dl class="rec-kv rec-src">' + rows.join('') + '</dl>' + family + '</div>';
 }
 document.getElementById('renderX').addEventListener('click', function(){
   ingestLineage(document.getElementById('xInput').value, null);
@@ -2677,33 +2275,6 @@ wireLineageDrop('xDrop', 'xFile', 'xInput');
 wireLineageDrop('linDrop', 'linFile', 'linInput');
 
 document.getElementById('loadXExample').addEventListener('click', openFlagshipLineage);
-document.getElementById('copyXLink').addEventListener('click', async function(){
-  var btn = this, raw = document.getElementById('xInput').value.trim();
-  if (!raw) { btn.textContent = 'Nothing to copy'; setTimeout(function(){ btn.textContent = 'Copy link'; }, 1200); return; }
-  // envelope-aware: a bare record wraps to a one-element envelope, an envelope
-  // ships whole; every member is held to the same light shape check
-  var env;
-  try { env = normalizeEnvelope(JSON.parse(raw)); }
-  catch (e) {
-    showLineageError('<div class="xp-err">' + esc(e.message) + '</div>');
-    btn.textContent = 'Invalid record'; setTimeout(function(){ btn.textContent = 'Copy link'; }, 1400); return;
-  }
-  for (var i = 0; i < env.lineages.length; i++) {
-    var v = validateLightJS(env.lineages[i]);
-    if (!v.ok) {
-      showLineageError('<div class="xp-err">' + esc(v.error) + '</div>');
-      btn.textContent = 'Invalid record'; setTimeout(function(){ btn.textContent = 'Copy link'; }, 1400); return;
-    }
-    env.lineages[i] = v.record;
-  }
-  await copySharedLink(mintEnvelope(env), btn);
-});
-
-document.getElementById('linCopy').addEventListener('click', function(){
-  if (bundleViewOpen) { copyBundleLink(currentBundle, this); return; }
-  copyLineageLink(currentLineageRecord, this,
-    { doc: currentLineageDoc, fromBundle: currentLineageFromBundle });
-});
 document.getElementById('linPaste').addEventListener('click', function(){
   var ingress = document.getElementById('linIngress');
   ingress.hidden = !ingress.hidden;
@@ -2779,8 +2350,8 @@ function renderMapView(view){
   if (stale) note = '<div class="pg-note" style="margin-bottom:8px">Built against map version ' + esc(view.v.slice(0,12)) + '; the live map version is ' + esc(currentVersion()) + '. Nodes render by id.</div>';
   if (valid.length < edges.length) note += '<div class="pg-note" style="margin-bottom:8px">' + (edges.length - valid.length === 1 ? '1 edge references a node' : (edges.length - valid.length) + ' edges reference nodes') + ' not on this map version.</div>';
   box.innerHTML = note + '<div class="lin-lab">' + valid.length + (valid.length === 1 ? ' edge' : ' edges') + ' rendered</div><div class="lin-diagram">' +
-    valid.map(function(tr){ var op = String(tr[1] || '').replace(/\[.*?\]/g, '').replace(/_/g, ' ');
-      return '<div class="lin-row"><span class="lin-n hot">' + esc(tr[0]) + '</span><span class="lin-op">' + esc(op) + ' &rarr;</span><span class="lin-n hot">' + esc(tr[2]) + '</span></div>'; }).join('') + '</div>';
+    valid.map(function(tr){
+      return '<div class="lin-row"><span class="lin-n hot">' + esc(tr[0]) + '</span><span class="lin-op">' + esc(opName(tr[1])) + ' &rarr;</span><span class="lin-n hot">' + esc(tr[2]) + '</span></div>'; }).join('') + '</div>';
   // any Lean theorems that cover the rendered edges: the dimension proofs, and
   // the algebraic composition proofs (Tier 2) where an identity chains.
   var thms = {};

@@ -8,16 +8,12 @@ an instant redirect into the SAME #id= resolver the playground already speaks.
 
 These pin the stub the way test_play_envelope_decode.py pins the resolver: the
 build's real output (build_share_stubs / write_share_stubs) against the committed
-instances, plus the page's real permalinkFor driven under Node so the Copy
-control and the emitted stub agree on the /i/<id>/ shape. Node-driven checks skip
-cleanly where node is absent; the tree checks guard the feature regardless.
+instances. The datasheet's one Copy link hands out the /l/ short link; the stubs
+stay the crawlable front door to the same #id= resolver.
 """
 from __future__ import annotations
 
-import json
 import re
-import shutil
-import subprocess
 from pathlib import Path
 
 import pytest
@@ -29,39 +25,6 @@ _PLAY = _REPO / "docs" / "play" / "index.html"
 _SHARE_DIR = _REPO / "docs" / "i"
 _TITLE_RE = re.compile(r'<meta property="og:title" content="([^"]*)">')
 _REDIRECT_RE = re.compile(r'location\.replace\("(/play/#id=[0-9a-f]{64})"\)')
-
-
-def _grab_function(html: str, name: str) -> str:
-    """Extract a top-level `function name(...) { ... }` body by brace matching."""
-    m = re.search(r"(?:async )?function %s\s*\([^)]*\)\s*\{" % re.escape(name), html)
-    assert m, f"could not find function {name}"
-    i, depth = m.end(), 1
-    while i < len(html) and depth:
-        c = html[i]
-        depth += c == "{"
-        depth -= c == "}"
-        i += 1
-    return html[m.start():i]
-
-
-def _node_or_skip() -> str:
-    node = shutil.which("node")
-    if not node:
-        pytest.skip("node not available; permalink shape checked where present")
-    return node
-
-
-def _permalink_on_page(rid: str) -> str:
-    """Run the page's real permalinkFor under Node for a canonical id, with a
-    stub location so origin/pathname resolve, returning the emitted url."""
-    node = _node_or_skip()
-    src = _grab_function(_PLAY.read_text(), "permalinkFor")
-    script = ("var location = { origin: 'https://openmaterials.ai',"
-              " pathname: '/play/' };\n" + src +
-              "\nconsole.log(permalinkFor(%s));" % json.dumps(rid))
-    proc = subprocess.run([node, "-e", script], capture_output=True, text=True)
-    assert proc.returncode == 0, f"node failed: {proc.stderr}"
-    return proc.stdout.strip().splitlines()[-1]
 
 
 # --------------------------------------------------------------------------
@@ -183,28 +146,12 @@ def test_the_committed_stub_tree_is_up_to_date():
 
 
 # --------------------------------------------------------------------------
-# The Copy-permalink control emits the /i/<id>/ unfurling url (not #id=), while
 # #id= stays the resolver the stub redirects into.
 # --------------------------------------------------------------------------
 
-def test_copy_permalink_emits_the_unfurling_stub_url():
-    """The page's real permalinkFor returns the /i/<id>/ form: the shareable url
-    is the crawlable stub, not the client-side #id= fragment."""
-    rid = "b" * 64
-    url = _permalink_on_page(rid)
-    assert url == f"https://openmaterials.ai/i/{rid}/", url
-    assert "#id=" not in url, "the copied permalink must not be the raw #id= fragment"
-
-
 def test_id_fragment_remains_the_resolver():
-    """Switching the shared url does not touch the resolver: the page still routes
-    #id=<hash> and copyPermalink still sets that hash locally, so a stub's
-    redirect into /play/#id=<id> opens the datasheet exactly as before."""
+    """A stub's redirect into /play/#id=<id> opens the datasheet: the page still
+    routes #id=<hash> through the resolver."""
     html = _PLAY.read_text()
-    assert "function permalinkFor" in html
-    assert "'/i/' + String(id) + '/'" in html, "permalinkFor is not the /i/ form"
-    # the resolver and its local hash-set are untouched
     assert "function resolveInstanceById" in html
     assert "id=([0-9a-fA-F]+)" in html, "the #id= router is gone"
-    assert "var hash = '#id=' + String(id);" in html, \
-        "copyPermalink no longer opens the value in place via #id="

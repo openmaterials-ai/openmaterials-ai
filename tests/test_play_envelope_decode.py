@@ -136,54 +136,35 @@ def test_page_wires_the_envelope_dispatch():
 def test_bundle_stacks_every_datasheet_on_one_page():
     """A bundle shows every member's FULL datasheet on the same page (the
     same-page rule), built by the one shared datasheetHTML so the single and
-    stacked views can never drift, with the derivation drawn as a map excerpt
-    (the only sanctioned graphic; value charts stay on MCG)."""
+    stacked views can never drift."""
     html = _PLAY.read_text()
     assert "function datasheetHTML" in html, "no shared datasheet builder"
     assert 'class="rec bundle-member"' in html, "bundle does not stack member datasheets"
     assert "datasheetHTML(mvalid.record, mvalid" in html, \
         "the stacked members do not reuse the shared builder"
-    assert "function derivationSVG" in html, "no derivation map excerpt"
-    assert 'class="rec-map"' in html, "the derivation svg is not class-marked"
     assert "scrollIntoView" in html, "member rows must jump on-page, not re-render"
-    # the only svg the datasheet may emit is the sanctioned map excerpt
-    import re
-    svgs = re.findall(r"<svg[^>]*class=\\?\"([^\"\\]*)", html)
-    assert all("rec-map" in c for c in svgs), f"unsanctioned svg classes: {svgs}"
 
 
-def test_derivation_map_is_legible_and_explained():
-    """The derivation excerpt must never shrink below its natural size (a wide
-    closure scrolls at full label legibility instead of compressing), and the
-    drawing carries its own explanation: a how-to-read caption and a color
-    legend (2026-07-18: the maps were too small and unexplained)."""
+def test_datasheet_hands_the_derivation_to_the_tracer():
+    """The derivation drawing never fit the sheet (2026-10-04): the sheet links
+    the tracer, which draws the same derivation at any width."""
     html = _PLAY.read_text()
-    deriv = _grab_function(html, "derivationSVG")
-    # natural-size floor: the svg pins its own width as an inline min-width
-    assert "min-width:' + W + 'px" in deriv, "svg does not pin its natural width"
-    assert "min-width:820px" not in html, "stale fixed min-width would re-shrink wide maps"
-    # legible geometry: the node-label font is a real UI size, not a thumbnail's
-    sizes = [float(x) for x in re.findall(r'font-size="([\d.]+)"', deriv)]
-    assert sizes and max(sizes) >= 12, f"map label font too small: {sizes}"
-    # every column is headed by the full map's numbered tier names
-    assert "tierNo" in deriv and "colHeads" in deriv, "no tier column headings"
-    # the drawing explains itself where it is rendered
-    assert "rec-maplegend" in html, "no color legend for the derivation drawing"
-    assert "Read left to right" in html, "no how-to-read caption"
-    # the datasheet sections carry plain-language explainers
-    assert html.count("rec-explain") >= 6, "section explainers missing"
+    assert "function derivationSVG" not in html and "rec-map" not in html
+    assert "Trace this derivation" in html
+    assert "../map-trace/#node=' + encodeURIComponent(node)" in html
 
 
 def test_datasheet_reproduce_section_names_codes_and_pinned_runs():
     """A known-node datasheet must say how to reproduce the result: the codes
-    that compute the quantity (codes.json coverage) and the committed
-    conformance targets for the node, marking a target whose id equals the
-    record's id as this exact lineage (2026-07-18)."""
+    that compute the quantity (codes.json coverage) and the conformance target
+    that pins this exact lineage (its id equals the record's, so its
+    conditions match the value), at 4 significant figures."""
     html = _PLAY.read_text()
     assert "function reproduceHTML" in html, "no reproduce section builder"
     assert "data/codes.json" in html, "the page does not load code coverage"
     assert "data/conformance/index.json" in html, "the page does not load the conformance index"
-    assert "this exact lineage" in html, "no exact-lineage mark on matching targets"
+    assert "t.id === recordId" in html, "targets must match the record's own lineage"
+    assert "toPrecision(4)" in html and "Open the target file" not in html
     assert "reproduceHTML(node, record.id)" in html, "the datasheet does not wire the section"
     # the index the page reads is committed and non-empty
     idx = json.loads((_REPO / "docs" / "data" / "conformance" / "index.json").read_text())
@@ -257,14 +238,6 @@ def test_page_wires_the_id_permalink_resolver():
     assert "No shared value with this id" in html, "no honest not-found heading"
     assert "so it cannot resolve" in html and "the link may be stale" in html, \
         "the empty state must say why the id does not resolve"
-    # the copy-permalink affordance: the canonical id AS the link, on every datasheet
-    assert "function copyPermalink" in html, "no copy-permalink control"
-    assert "'#id=' + String(id)" in html, "the permalink is not the #id= form"
-    assert "Copy permalink" in html, "no Copy permalink button label"
-    assert "rcPermalink" in html, "the permalink button is not class-marked"
-    # members carry their own ids: the per-member permalink is wired in the bundle
-    assert ".rcPermalink[data-id]" in html, \
-        "the stacked bundle does not wire a per-member permalink"
 
 
 def test_valid_hash_resolves_the_right_instance():
@@ -339,19 +312,16 @@ def test_prefix_resolves_git_style():
 
 
 def test_datasheet_shows_the_lineage_badge():
-    """Every datasheet carries its visible recognizer (the short
-    id shown like a DOI): committed values show their /l/ short link with
-    the /i/ canonical page beside it, uncommitted records their prefix,
-    bundles their /s/ code."""
+    """Every datasheet carries one id (12 hex) with one Copy link: a committed
+    value copies its /l/ short link, any other record a link that carries it
+    in #x=; a stored set shows its /s/ code."""
     html = _PLAY.read_text()
     assert "function lineageDoiHTML" in html, "no badge builder"
-    assert "lineageDoiHTML(record)" in html, "the datasheet header does not show the badge"
+    assert "lineageDoiHTML(record, opts.memberIdx, trace)" in html, \
+        "the datasheet header does not show the badge"
     assert "function bundleDoiHTML" in html and "bundleDoi" in html, "no bundle short-link badge"
-    assert "bundleDoiPlaceholderHTML" in html and "Create a short link" in html, \
-        "an unminted bundle must show the create-one affordance, never a blank row"
-    assert "var link = 'openmaterials.ai/l/' + short" in html, "the short link is not displayed"
+    assert "var link = 'openmaterials.ai/l/' + short" in html, "the short link is not built"
     assert "data-copy=\"https://' + link + '\"" in html, "the copy button must copy the short link"
-    assert "page = 'openmaterials.ai/i/' + id + '/'" in html and "Permalink" in html, \
-        "the canonical value page is not printed beside the short link"
+    assert "Copy permalink" not in html and "Permalink" not in html, "one id, one Copy link"
     assert "(uncommitted)" in html, "no honest uncommitted state"
     assert "INSTANCE_IDS" in html, "committed test set missing"

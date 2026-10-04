@@ -171,6 +171,7 @@ function tex(latex,display){ try{ return katex.renderToString(latex,{throwOnErro
 function smooth(pts){ if(!pts||pts.length<2) return ''; if(pts.length===2) return 'M'+pts[0].x+' '+pts[0].y+' L'+pts[1].x+' '+pts[1].y; let d='M'+pts[0].x+' '+pts[0].y; for(let i=1;i<pts.length-1;i++){ const mx=(pts[i].x+pts[i+1].x)/2, my=(pts[i].y+pts[i+1].y)/2; d+=' Q'+pts[i].x+' '+pts[i].y+' '+mx+' '+my; } d+=' L'+pts[pts.length-1].x+' '+pts[pts.length-1].y; return d; }
 function err(m){ var e=document.getElementById('err'); e.style.display='block'; e.textContent='Error: '+m; }
 function esc(s){ return s.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+function opName(op){ return (op||'').replace(/\[.*?\]/g,'').replace(/_/g,' ').trim() || 'operation'; }
 // the rest caption and the toolbar hint say the same thing, so only one shows
 function showRest(on){ document.getElementById('resthint').hidden=!on; document.querySelector('.toolbar .hint').style.display=on?'none':''; }
 
@@ -262,7 +263,7 @@ function trace(id){
 function stepHtml(s,t,i,kind){
   // the formula of the operator on this edge, not the node's first route
   const op=opByEdge[s+'>>'+t]||''; const n=nodeById[t]; const fe=n&&(n.formulas||[]).find(x=>x.op===op); const f=fe?fe.latex:(n&&n.formula);
-  return '<div class="step"><div class="n">'+i+'</div><div class="body"><div class="rel">'+symHtml[s]+' <span class="arrow">&rarr;</span> '+symHtml[t]+(op?' <span class="op">'+esc(op)+'</span>':'')+'</div>'+(f?'<div class="fx">'+tex(f,false)+'</div>':'')+'</div></div>';
+  return '<div class="step"><div class="n">'+i+'</div><div class="body"><div class="rel">'+symHtml[s]+' <span class="arrow">&rarr;</span> '+symHtml[t]+(op?' <span class="op">'+esc(opName(op))+'</span>':'')+'</div>'+(f?'<div class="fx">'+tex(f,false)+'</div>':'')+'</div></div>';
 }
 function orderedEdges(nodeSet){ // edges fully inside nodeSet, ordered by target layer
   const es=[]; Object.keys(opByEdge).forEach(k=>{ const [s,t]=k.split('>>'); if(nodeSet.has(s)&&nodeSet.has(t)) es.push([s,t]); });
