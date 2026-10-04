@@ -68,6 +68,7 @@
   #vp.lit .edge:not(.up):not(.down){opacity:.15;}
   /* nodes */
   .node{cursor:pointer;}
+  .node:focus{outline:none;} .node:focus-visible{outline:2px solid var(--ink,#171717);outline-offset:2px;}
   .node rect{fill:var(--surface-2,#F2F2F2);stroke:var(--edge,#8F8F8F);stroke-width:1;vector-effect:non-scaling-stroke;transition:fill var(--dur,150ms) var(--ease,ease),stroke var(--dur,150ms) var(--ease,ease);}
   /* Symbols live in an HTML overlay synced to the viewBox (foreignObject
      mis-positions under viewBox transforms in WebKit). */
@@ -78,7 +79,8 @@
   .node.up rect{fill:var(--page,#FFFFFF);stroke:var(--ink,#171717);stroke-width:2;} .nlab.up{color:var(--ink,#171717);}
   .node.down rect{fill:var(--data-obs,#4F46E5);stroke:var(--data-obs,#4F46E5);stroke-width:2;} .nlab.down{color:#FFFFFF;}
   .node.sel rect{fill:var(--ink,#171717);stroke:var(--ink,#171717);stroke-width:3;} .nlab.sel{color:var(--page,#FFFFFF);}   /* the traced node, solid ink */
-  .node.dim rect{opacity:.4;} .nlab.dim{opacity:.4;}
+  /* dimmed: a lighter fill and ink-2 labels, never low opacity, so labels keep their contrast */
+  .node.dim rect{fill:var(--surface,#FAFAFA);stroke:var(--line,#EBEBEB);stroke-width:1;} .nlab.dim{color:var(--ink-2,#4D4D4D);}
   #measure{position:absolute;left:-9999px;top:-9999px;font-size:18px;visibility:hidden;}
   /* the derivation panel floats top right; below 961 px it is a bottom sheet */
   .om-panel{position:absolute;top:16px;right:16px;z-index:5;width:360px;max-width:calc(100% - 32px);max-height:calc(100% - 32px);overflow:auto;padding:20px;border:0;border-radius:12px;background:var(--page,#FFFFFF);box-shadow:var(--shadow-float,0 0 0 1px #EBEBEB,0 4px 8px -4px rgb(0 0 0 / .04),0 16px 24px -8px rgb(0 0 0 / .06));display:none;}
@@ -122,6 +124,7 @@
 </style>
 </head>
 <body class="app">
+<a class="skip-link" href="#cy">Skip to content</a>
 <div data-site-header data-variant="app"></div>
 <div class="toolbar">
   <span class="om-search"><svg class="om-search-ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.5" y2="16.5"></line></svg><input class="om-input" id="q" placeholder="Find a quantity" aria-label="Find a quantity to trace" autocomplete="off"></span>
@@ -204,7 +207,7 @@ function build(graph){
   let s='', lhtml='';
   edges.forEach(e=>{ const ed=g.edge({v:e.source,w:e.target}); if(!ed)return; s+='<path class="edge" data-edge="'+e.source+'>>'+e.target+'" d="'+smooth(ed.points)+'"></path>'; });
   graph.nodes.forEach(n=>{ const p=g.node(n.id); pos[n.id]={x:p.x,y:p.y,w:p.width,h:p.height}; const x=p.x-p.width/2, y=p.y-p.height/2; const dest=(n.type==='observable' && (children[n.id]||[]).length===0)?' dest':'';
-    s+='<g class="node'+dest+'" data-id="'+esc(n.id)+'"><rect x="'+x+'" y="'+y+'" width="'+p.width+'" height="'+p.height+'" rx="8"></rect></g>';
+    s+='<g class="node'+dest+'" data-id="'+esc(n.id)+'" tabindex="0" role="button" aria-label="'+esc(n.id)+'"><rect x="'+x+'" y="'+y+'" width="'+p.width+'" height="'+p.height+'" rx="8"></rect></g>';
     lhtml+='<div class="nlab'+dest+'" data-id="'+esc(n.id)+'" style="left:'+x+'px;top:'+y+'px;width:'+p.width+'px;height:'+p.height+'px">'+symHtml[n.id]+'</div>'; });
   vp.innerHTML=s;
   const inner=document.getElementById('labelsInner');
@@ -409,6 +412,15 @@ svg.addEventListener('click', e=>{ if(moved)return; const nd=e.target.closest('.
   if(e.shiftKey){ if(pathMode&&pathMode.a&&pathMode.a!==id){ finishPath(pathMode.a,id); } else { startPath(id); } return; }
   trace(id);
 });
+// keyboard: Enter or Space traces the focused quantity, Shift+Enter picks it
+// for a path, Escape resets
+svg.addEventListener('keydown', e=>{
+  const nd=(e.key==='Enter'||e.key===' ')&&e.target.closest&&e.target.closest('.node'); if(!nd) return;
+  e.preventDefault(); const id=nd.dataset.id;
+  if(e.shiftKey&&e.key==='Enter'){ if(pathMode&&pathMode.a&&pathMode.a!==id) finishPath(pathMode.a,id); else startPath(id); return; }
+  trace(id);
+});
+window.addEventListener('keydown', e=>{ if(e.key==='Escape') resetAll(); });
 window.navTo=function(id){ if(nodeById[id]) trace(id); };
 const qInput=document.getElementById('q');
 qInput.addEventListener('input', function(){

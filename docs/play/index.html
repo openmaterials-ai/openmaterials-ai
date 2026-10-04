@@ -117,10 +117,11 @@
   #pglabels{position:absolute;inset:0;pointer-events:none;overflow:hidden;}
   #pglabelsInner{position:absolute;left:0;top:0;transform-origin:0 0;font-size:11px;}
   .plab{position:absolute;transform:translate(-50%,-50%);font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);font-size:1em;color:var(--ink,#171717);white-space:nowrap;pointer-events:none;}
-  .plab.dim{opacity:.35;}
+  .plab.dim{color:var(--ink-2,#4D4D4D);}   /* dimmed context: ink-2 labels, never low opacity */
   #pglabelsInner.sparse .plab.dim{display:none;}
   .pg-node circle{transition:opacity var(--dur,150ms) var(--ease,ease);}
-  .pg-node.dim{opacity:.35;}
+  .pg-node{cursor:pointer;}
+  .pg-node:focus{outline:none;} .pg-node:focus-visible{outline:2px solid var(--ink,#171717);outline-offset:2px;}
   .pg-edge{fill:none;stroke:var(--edge,#8F8F8F);stroke-width:1;vector-effect:non-scaling-stroke;transition:opacity var(--dur,150ms) var(--ease,ease);}
   .pg-edge.dim{opacity:.1;}
   .pg-edge.hot{stroke:var(--data-obs-line,#4F46E5);stroke-width:2;}
@@ -314,11 +315,12 @@
 </style>
 </head>
 <body class="app">
+<a class="skip-link" href="#main">Skip to content</a>
 <div data-site-header data-variant="app"></div>
 
-<div class="pg-main">
+<div class="pg-main" id="main">
   <div class="pg-tabs">
-    <button class="pg-tab on" data-tab="learn" type="button">Learn</button>
+    <button class="pg-tab on" data-tab="learn" type="button" aria-current="true">Learn</button>
     <button class="pg-tab" data-tab="lineage" type="button">Lineage</button>
     <button class="pg-tab" data-tab="distance" type="button">Distance</button>
     <span class="pg-tabsep" aria-hidden="true"></span>
@@ -477,7 +479,7 @@
   </div>
 
   <div class="pg-canvas canvas">
-    <svg id="pgsvg" preserveAspectRatio="xMidYMid meet" role="img" aria-label="A focused sub-map of the quantities the current tab draws."></svg>
+    <svg id="pgsvg" preserveAspectRatio="xMidYMid meet" role="group" aria-label="A focused sub-map of the quantities the current tab draws."></svg>
     <div id="pglabels"><div id="pglabelsInner"></div></div>
     <p id="pgCaption" class="pg-caption" hidden></p>
     <div class="pg-hint" id="pgHint">Parse a paper (or draw a proposal below the dropzone) and its claims light up here as the paper's sub-map.</div>
@@ -672,14 +674,21 @@ function renderSubmap(nodeIds, hotEdgeOps, showIds){
   ids.forEach(function(id){ var n = nodeById[id], p = pos[id];
     var r = set[id] ? 9 : 6;
     var cls = 'pg-node' + (set[id] ? '' : ' dim');
-    nStr += '<g class="' + cls + '" data-id="' + esc(id) + '"><circle cx="' + p.x + '" cy="' + p.y + '" r="' + r + '" style="fill:' + colorOf(n) + ';stroke:var(--page,#FFFFFF)" stroke-width="1.5"></circle></g>';
+    // a context node draws as a neutral disc, not a faded colour
+    var paint = set[id] ? 'fill:' + colorOf(n) + ';stroke:var(--page,#FFFFFF)' : 'fill:var(--surface-2,#F2F2F2);stroke:var(--edge,#8F8F8F)';
+    nStr += '<g class="' + cls + '" data-id="' + esc(id) + '" tabindex="0" role="button" aria-label="' + esc(id) + '"><circle cx="' + p.x + '" cy="' + p.y + '" r="' + r + '" style="' + paint + '" stroke-width="1.5"></circle></g>';
   });
   svg.innerHTML = eStr + nStr;
 
   // label overlay, synced to the viewBox (never foreignObject: Safari bug)
   syncLabels(ids, pos, set);
-  svg.querySelectorAll('.pg-node').forEach(function(el){ el.addEventListener('click', function(){ openNode(el.getAttribute('data-id')); }); el.style.cursor = 'pointer'; });
+  svg.querySelectorAll('.pg-node').forEach(function(el){ el.addEventListener('click', function(){ openNode(el.getAttribute('data-id')); }); });
 }
+// a focused canvas node opens with Enter or Space
+svg.addEventListener('keydown', function(e){
+  var nd = (e.key === 'Enter' || e.key === ' ') && e.target.closest && e.target.closest('.pg-node');
+  if (nd) { e.preventDefault(); openNode(nd.getAttribute('data-id')); }
+});
 
 function syncLabels(ids, pos, set){
   var rect = svg.getBoundingClientRect();
@@ -2693,11 +2702,11 @@ var PG_HINTS = {
   map: 'A shared sub-map renders here; paste a view code or follow a shared link.'
 };
 function selectPlaygroundTab(tab){
-  document.querySelectorAll('.pg-tab').forEach(function(x){ x.classList.remove('on'); });
+  document.querySelectorAll('.pg-tab').forEach(function(x){ x.classList.remove('on'); x.removeAttribute('aria-current'); });
   document.querySelectorAll('.pg-panel').forEach(function(x){ x.classList.remove('on'); });
   var tabButton = document.querySelector('.pg-tab[data-tab="' + tab + '"]');
   var panel = document.querySelector('.pg-panel[data-panel="' + tab + '"]');
-  if (tabButton) tabButton.classList.add('on');
+  if (tabButton) { tabButton.classList.add('on'); tabButton.setAttribute('aria-current', 'true'); }   // the selected tab, for assistive tech
   if (panel) panel.classList.add('on');
   var hint = document.getElementById('pgHint');
   if (hint && PG_HINTS[tab]) hint.textContent = PG_HINTS[tab];
