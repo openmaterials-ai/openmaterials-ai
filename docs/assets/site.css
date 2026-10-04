@@ -281,6 +281,11 @@ html[data-forward="play"] .nf-forward { display: block; }
 /* Tool pages (spec 5.1): each page styles its own toolbar, canvas, panel and legend; the
    shared header is a fixed-height row of its flex column. */
 body.app > [data-site-header] { flex: none; }
+/* A tool page's one-line hint in its toolbar, with key caps; the hint hides below 961 px.
+   The skip link and .sr-only above serve these pages too. */
+.hint { display: flex; gap: 12px; align-items: center; min-width: 0; color: var(--ink-2); white-space: nowrap; }
+kbd { font: 400 12px/16px var(--font-mono); padding: 1px 4px; border-radius: 4px; box-shadow: 0 0 0 1px var(--line); color: var(--ink); }
+@media (max-width: 960px) { .hint { display: none; } }
 
 /* Footer (spec 2.4) and theme toggle */
 .site-footer { padding-block: 40px; font: 400 14px/20px var(--font-sans); color: var(--ink-2); }
