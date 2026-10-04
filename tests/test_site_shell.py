@@ -39,18 +39,26 @@ def test_the_datum_card_equals_its_instance():
     figure = re.search(r'<p class="figure">([^<]+)<span class="unit">([^<]+)</span></p>', card.group(2))
     assert float(figure.group(1)) == inst["value"] and figure.group(2) == inst["units"]
     rows = _ledger(card.group(2))
-    assert rows["Quantity"] == inst["variable"]
+    # rows use names: the quantity in words, conditions with units, sources by author and year
+    base = inst["variable"].split("[")[0]
+    assert rows["Quantity"] == re.sub(r"(?<=[a-z])(?=[A-Z])", " ", base).capitalize()
     assert rows["Material"] == inst["material"]
-    assert rows["Conditions"] == ", ".join(f"{k} = {v}" for k, v in inst["conditions"].items())
-    assert rows["Source"] == f'{inst["source"]["kind"]}, {inst["source"]["ref"]}'
+    cond = inst["conditions"]
+    assert rows["Conditions"].startswith(f'{cond["T"]} K, ')
+    assert all(str(v) in rows["Conditions"] for k, v in cond.items() if k != "T")
+    who, year = rows["Source"].split(", ")[0].rsplit(" ", 1)
+    assert who.replace(" et al.", "") in inst["source"]["detail"] and f"({year})" in inst["source"]["detail"]
     assert rows["Id"] == inst["id"]
     # the measurement shown beside it is the committed one, on the same quantity and material
-    mid = re.search(r'<dd class="mono" data-instance="([0-9a-f]{64})">', card.group(2)).group(1)
+    mid = re.search(r'<dd data-instance="([0-9a-f]{64})">', card.group(2)).group(1)
     meas = by_id[mid]
     assert meas["source"]["kind"] == "measurement"
-    assert meas["variable"] == inst["variable"].split("[")[0] and meas["material"] == inst["material"].split(" ")[0]
-    assert rows["Measured"] == f'{meas["value"]:g} {meas["units"]}, {meas["source"]["ref"]}'
+    assert meas["variable"] == base and meas["material"] == inst["material"].split(" ")[0]
+    assert rows["Measured"].startswith(f'{meas["value"]:g} {meas["units"]}, ')
+    who, year = rows["Measured"].split(", ", 1)[1].rsplit(" ", 1)
+    assert meas["source"]["detail"].startswith(who) and f"({year})" in meas["source"]["detail"]
     assert f'play/#id={inst["id"]}' in card.group(2) and f'play/#id={mid}' in card.group(2)
+    assert 'href="https://materialscodegraph.com/?ref=omai-home#connect"' in card.group(2)
 
 
 def test_the_contribute_block_is_the_committed_file():

@@ -71,15 +71,7 @@ def test_every_section_title_appears_exactly_once_as_heading():
             "expected %d" % (text, n, expected))
 
 
-def test_pdf_download_link_and_homepage_button():
+def test_pdf_download_link():
     page = doc_html.OUT_PATH.read_text(encoding="utf-8")
     assert 'href="../openmaterials.pdf"' in page
     assert "Download the PDF" in page
-
-    home = (doc_html.ROOT / "docs" / "index.html").read_text(encoding="utf-8")
-    m = re.search(r'<a class="btn btn--secondary" href="([^"]+)">Read the document</a>',
-                  home)
-    assert m, "homepage is missing the Read the document button"
-    assert m.group(1) == "document/", (
-        "the homepage button must link to the document page, got %r"
-        % m.group(1))

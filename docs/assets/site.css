@@ -236,7 +236,6 @@ a:hover { text-decoration-color: currentColor; }
 /* Home (spec 3) */
 .hero { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 48px 24px; align-items: start; }
 .hero > * { grid-column: 1 / -1; min-width: 0; }
-.hero h1 { margin-top: 16px; }
 .hero .lede { margin-top: 24px; }
 .datum .figure { margin-top: 8px; }
 .datum .unit { color: var(--ink-2); font-size: 16px; }
