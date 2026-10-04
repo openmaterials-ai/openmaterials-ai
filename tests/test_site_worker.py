@@ -35,6 +35,14 @@ def test_worker_is_additive_over_the_static_site():
     assert cfg["name"] == "openmaterials-site"
 
 
+def test_worker_routes_on_the_domain_match_the_dynamic_paths():
+    """On openmaterials.ai the Worker is routed for exactly the paths it runs
+    first; everything else stays with the static host."""
+    cfg = _wrangler_config()
+    routes = {(r["pattern"], r["zone_name"]) for r in cfg["routes"]}
+    assert routes == {("openmaterials.ai" + p, "openmaterials.ai") for p in cfg["assets"]["run_worker_first"]}
+
+
 def test_worker_script_falls_through_to_assets():
     src = (_SITE / "src" / "index.js").read_text()
     assert "env.ASSETS.fetch(request)" in src, "no static fallthrough"

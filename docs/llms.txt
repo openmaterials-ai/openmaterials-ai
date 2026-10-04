@@ -1,0 +1,38 @@
+# OpenMaterials
+
+> OpenMaterials is a versioned, content-addressed map of physical quantities and formulas. Simulated and measured values attach to it with their provenance. Data is CC BY 4.0 and code is Apache 2.0. OpenMaterials is stewarded by OpenMaterials-AI, a foundation in formation.
+
+Cite the map version in https://openmaterials.ai/data/version.json with any value you reuse.
+
+## Data
+
+- [graph.json](https://openmaterials.ai/data/graph.json): typed quantities, the links between them with operators and formulas, and the tiers
+- [catalog.json](https://openmaterials.ai/data/catalog.json): symbol, dimension, and description per node
+- [codes.json](https://openmaterials.ai/data/codes.json): each code's representation, citation, and license
+- [semantics.json](https://openmaterials.ai/data/semantics.json): the labels per node and edge that the resolver matches
+- [instances.json](https://openmaterials.ai/data/instances.json): committed values with their provenance
+- [lean.json](https://openmaterials.ai/data/lean.json): the Lean export of dimension nodes, edge theorems, and operator identities
+- [version.json](https://openmaterials.ai/data/version.json): map version, graph version, and genesis hash
+
+## Docs
+
+- [Guide](https://openmaterials.ai/guide/): install the omai kernel, resolve a label, load the graph, and parse a paper
+- [Document](https://openmaterials.ai/document/): the full specification, also as [PDF](https://openmaterials.ai/openmaterials.pdf)
+- [Codes](https://openmaterials.ai/codes/): the bibliography of the codes the map cites
+- [Data contract](https://openmaterials.ai/guide/#data): the shapes of the main JSON files under data/
+- [Repository](https://github.com/openmaterials-ai/openmaterials-ai): source, GOVERNANCE.md, and the contribution process
+
+## Values
+
+- A committed value's id is the SHA-256 hash of its lineage object: 64 lowercase hex characters, the id field in instances.json.
+- The datasheet for a value opens at https://openmaterials.ai/play/#id={id}; a prefix of 8 or more hex characters also resolves.
+- https://openmaterials.ai/i/{id}/ is the value's permalink: it carries a preview card for link unfurls and opens the datasheet.
+- Short links of the form https://openmaterials.ai/l/{prefix} open the same datasheet; the prefix is 8 or more hex characters of the id, and the site prints 12.
+
+## Optional
+
+- [Playground](https://openmaterials.ai/play/): parse a paper, open a lineage record, or resolve a method name
+- [Map](https://openmaterials.ai/map/) and [Map in 3D](https://openmaterials.ai/map-3d/)
+- [lean_roadmap.json](https://openmaterials.ai/data/lean_roadmap.json): one row per operator, rated by what a Lean proof of its formula would take
+- [agreement.json](https://openmaterials.ai/data/agreement.json): the comparison groups and their spread
+- [Run a calculation](https://materialscodegraph.com/?ref=omai-llms#hero-connect): MaterialsCodeGraph, from Da Vinci Labs, runs these calculations for AI agents over MCP, with a binding token quote before every run and a permanent record after it.

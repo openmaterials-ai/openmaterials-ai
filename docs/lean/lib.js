@@ -79,7 +79,8 @@
     return idx;
   }
 
-  // Honest counts, straight from the published files; never hardcoded.
+  // Counts straight from the published files; never hardcoded. Parameter links
+  // (kind "param") carry no operator of their own, so they are left out.
   function computeStats(lean, graph) {
     var stats = {
       nodes: Object.keys((lean && lean.nodes) || {}).length,
@@ -92,7 +93,7 @@
     if (graph && Array.isArray(graph.nodes)) stats.graphNodes = graph.nodes.length;
     if (graph && Array.isArray(graph.links)) {
       var ops = {};
-      graph.links.forEach(function (l) { if (l && l.op) ops[l.op] = 1; });
+      graph.links.forEach(function (l) { if (l && l.op && l.kind !== 'param') ops[l.op] = 1; });
       stats.graphOps = Object.keys(ops).length;
     }
     return stats;

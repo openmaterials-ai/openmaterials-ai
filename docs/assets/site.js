@@ -1,183 +1,160 @@
-/* ============================================================================
-   openmaterials shared chrome. No build step, no dependencies.
-   A page opts in by placing empty mount points anywhere in its body:
-       <div data-site-header></div>
-       <div data-site-footer></div>
-   and loading this script (path-relative), e.g. <script src="../assets/site.js">.
-
-   All links are resolved relative to the assets/ directory (derived from this
-   script's own src), so the same file works from any page depth. The footer's
-   trust mark is read at runtime from data/version.json.
-   ============================================================================ */
+/* openmaterials.ai shell (spec 2.3 to 2.5): header, footer, theme toggle, version stamp, copy
+   buttons. A page places <div data-site-header></div> (data-variant="app" on the four tool pages)
+   and <div data-site-footer></div>, then loads this script. Links resolve against the assets/
+   directory the script lives in, so one file serves every page depth. */
 (function () {
   'use strict';
 
-  // ---- resolve paths relative to this script (assets/site.js) --------------
-  var self = document.currentScript;
-  if (!self) {
-    var ss = document.getElementsByTagName('script');
-    self = ss[ss.length - 1];
-  }
-  // assetsBase ends with ".../assets/"; siteBase is its parent (".../docs/").
-  var assetsBase = new URL('.', self.src).href;          // .../assets/
-  var siteBase = new URL('..', assetsBase).href;         // .../ (docs root)
-
-  function site(p) { return new URL(p, siteBase).href; }
+  var self = document.currentScript || document.querySelector('script[src*="assets/site.js"]');
+  var assets = new URL('.', self.src).href;   // .../assets/
+  var root = new URL('..', assets).href;      // the site root
+  function site(p) { return /^https?:/.test(p) ? p : new URL(p, root).href; }
 
   var REPO = 'https://github.com/openmaterials-ai/openmaterials-ai';
+  var BLOB = REPO + '/blob/main/';
+  // Static fallback, shown until data/version.json answers (or if it cannot be read).
+  var VERSION = 'f69b18c18fb7';
 
-  // Nav items: [label, href, matchPrefix, isExternal]. The GitHub item is an
-  // icon-less text link "Source".
-  var NAV = [
-    ['Map', site('map/'), 'map/', false],
-    ['Guide', site('guide/'), 'guide/', false],
-    ['Play', site('play/'), 'play/', false],
-    ['Learn', site('learn/'), 'learn/', false],
-    ['Codes', site('codes/'), 'codes/', false],
-    ['Document', site('document/'), 'document/', false],
-    ['Source', REPO, null, true]
+  var NAV = [['Map', 'map/'], ['Playground', 'play/'], ['Guide', 'guide/'], ['Document', 'document/']];
+  // The nav item each section marks with aria-current: Map covers the three map views.
+  var ACTIVE = { 'map/': 'map/', 'map-3d/': 'map/', 'map-trace/': 'map/', 'play/': 'play/', 'guide/': 'guide/', 'document/': 'document/' };
+  var FOOTER = [
+    ['Map', [['Map', 'map/'], ['Map in 3D', 'map-3d/'], ['Tracer', 'map-trace/'], ['Playground', 'play/'], ['Learn a paper', 'play/#tab=learn']]],
+    ['Evidence', [['Sources', 'experiment/'], ['Cross-code agreement', 'agreement/'], ['Lineage tour', 'lineage/'], ['Verified layer', 'lean/'], ['Formalization roadmap', 'lean/roadmap/']]],
+    ['Reference', [['Guide', 'guide/'], ['Document', 'document/'], ['PDF', 'openmaterials.pdf'], ['Codes', 'codes/']]],
+    ['Project', [['GitHub', REPO], ['Contribute a value', '#contribute'], ['Contribution guide', BLOB + 'CONTRIBUTING.md'], ['Governance', BLOB + 'GOVERNANCE.md'], ['Citation', '#cite']]]
+  ];
+  var THEMES = [
+    ['system', 'System', '<rect x="2" y="3" width="12" height="8" rx="1"/><path d="M6 14h4M8 11v3"/>'],
+    ['light', 'Light', '<circle cx="8" cy="8" r="3"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3 3l1.5 1.5M11.5 11.5 13 13M3 13l1.5-1.5M11.5 4.5 13 3"/>'],
+    ['dark', 'Dark', '<path d="M13 9.5A5.5 5.5 0 1 1 6.5 3 4.5 4.5 0 0 0 13 9.5z"/>']
   ];
 
-  // Which page are we on, relative to the site root (e.g. "map/", "index.html").
-  function currentRel() {
-    var here = window.location.href;
-    if (here.indexOf(siteBase) === 0) {
-      var rel = here.slice(siteBase.length);
-      // strip query/hash
-      rel = rel.split('#')[0].split('?')[0];
-      return rel;
-    }
-    return '';
+  function section() {
+    var here = location.href.split('#')[0].split('?')[0];
+    return here.indexOf(root) === 0 ? here.slice(root.length).split('/')[0] + '/' : '';
+  }
+  function mark() {
+    return '<img class="om-mark" src="' + assets + 'logo.svg" alt="" width="20" height="20">openmaterials.ai';
+  }
+  // Radios that share a name form one group, so each fieldset gets its own name.
+  function themeField(name) {
+    return '<fieldset class="theme"><legend class="sr-only">Theme</legend>' + THEMES.map(function (t) {
+      return '<label><input type="radio" name="' + name + '" value="' + t[0] + '">' +
+        '<svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">' + t[2] + '</svg>' +
+        '<span class="sr-only">' + t[1] + '</span></label>';
+    }).join('') + '</fieldset>';
   }
 
-  function buildHeader() {
-    var rel = currentRel();
+  function header(app) {
+    var cur = ACTIVE[section()];
     var links = NAV.map(function (n) {
-      var label = n[0], href = n[1], prefix = n[2], ext = n[3];
-      var cls = 'om-nav-link';
-      var active = '';
-      if (prefix && rel.indexOf(prefix) === 0) active = ' active';
-      var attrs = ext ? ' target="_blank" rel="noopener"' : '';
-      var aria = active ? ' aria-current="page"' : '';
-      return '<a class="' + cls + active + '" href="' + href + '"' + attrs + aria + '>' + label + '</a>';
+      return '<a href="' + site(n[1]) + '"' + (n[1] === cur ? ' aria-current="page"' : '') + '>' + n[0] + '</a>';
     }).join('');
-    // Wordmark in Source Serif 4 with a 6px indigo brand node after it; no ".ai".
-    return (
-      '<header class="om-header">' +
-      '<a class="om-brand" href="' + site('index.html') + '" aria-label="openmaterials home">' +
-      '<img class="om-mark" src="' + new URL('logo.svg', assetsBase).href + '" alt="" width="22" height="22">' +
-      '<span>openmaterials.ai</span></a>' +
-      '<span class="om-beta" title="Beta: the map and its schema are still growing. Every committed value is content-addressed, so its identifier stays resolvable across versions.">beta</span>' +
-      '<nav class="om-nav" aria-label="Primary">' + links + '</nav>' +
-      '</header>'
-    );
+    return '<header class="site-header"><div class="wrap">' +
+      '<a class="wordmark" href="' + root + '" aria-label="OpenMaterials home">' + mark() + '</a>' +
+      '<nav class="site-nav" aria-label="Primary">' + links + '</nav>' +
+      '<a class="pill pill--mono at-961" id="om-version" href="' + site('#cite') + '">map ' + VERSION + '</a>' +
+      (app ? themeField('theme') : '') +
+      '<a class="btn btn--secondary btn--sm" href="' + REPO + '">GitHub</a>' +
+      '<details class="menu"><summary class="btn btn--ghost btn--sm">Menu</summary>' +
+      '<nav aria-label="Menu">' + links + '<a href="' + REPO + '">GitHub</a>' + (app ? themeField('theme-menu') : '') + '</nav></details>' +
+      '</div></header>';
   }
 
-  function buildFooter() {
-    var year = new Date().getFullYear();
-    return (
-      '<footer class="om-footer">' +
-      '<div class="om-footer-cols">' +
-      '<div><h4>About</h4>' +
-      '<p class="om-desc">A versioned map of physics: typed quantities as nodes, executable formulas as edges, every element content-addressed.</p></div>' +
-      '<div><h4>Explore</h4><ul>' +
-      '<li><a href="' + site('map/') + '">The map</a></li>' +
-      '<li><a href="' + site('codes/') + '">The codes bibliography</a></li>' +
-      '<li><a href="' + site('lean/') + '">The verified layer</a></li>' +
-      '<li><a href="' + site('openmaterials.pdf') + '">The document (PDF)</a></li>' +
-      '<li><a href="' + site('map-lab/') + '">Labs</a></li>' +
-      '<li><a href="' + REPO + '" target="_blank" rel="noopener">Source</a></li>' +
-      '</ul></div>' +
-      '<div><h4>Trust mark</h4>' +
-      '<div class="om-trust" id="om-trust">' +
-      '<div class="om-trust-row"><span class="om-trust-k">genesis</span><span class="om-trust-v" id="om-genesis" role="button" tabindex="0" title="click to copy">e6e8044e9203</span></div>' +
-      '<div class="om-trust-row"><span class="om-trust-k">version</span><span class="om-trust-v" id="om-version" role="button" tabindex="0" title="click to copy">loading…</span></div>' +
-      '</div></div>' +
-      '</div>' +
-      '<div class="om-smallprint">openmaterials.ai, a versioned map of physics. ' +
-      'Map data CC BY 4.0, stewarded by the OpenMaterials-AI initiative; interfaces by Da Vinci Labs. <span class="om-ver">' + year + '</span></div>' +
-      '</footer>'
-    );
+  function footer() {
+    var groups = FOOTER.map(function (g) {
+      return '<div><h2>' + g[0] + '</h2><ul>' + g[1].map(function (l) {
+        return '<li><a href="' + site(l[1]) + '">' + l[0] + '</a></li>';
+      }).join('') + '</ul></div>';
+    }).join('');
+    return '<footer class="site-footer"><div class="wrap">' +
+      '<div class="footer-dir"><div class="footer-id"><a class="wordmark" href="' + root + '">' + mark() + '</a>' +
+      '<p>OpenMaterials is a versioned, content-addressed map of physical quantities and formulas.</p></div>' + groups + '</div>' +
+      '<div class="footer-legal">' +
+      '<p>OpenMaterials is stewarded by OpenMaterials-AI, a foundation in formation.</p>' +
+      '<p>Map data is <a href="' + BLOB + 'LICENSE-DATA">CC BY 4.0</a> and code is <a href="' + BLOB + 'LICENSE">Apache 2.0</a>.</p>' +
+      '<p>The site and its tools are built by <a href="https://dvnclabs.com">Da Vinci Labs</a>, Berkeley.</p></div>' +
+      '<div class="footer-row"><span id="om-stamp" class="mono">' + stampHtml(VERSION) + '</span>' + themeField('theme') + '</div>' +
+      '</div></footer>';
+  }
+  function stampHtml(v) {
+    return 'map <a href="' + site('#cite') + '">' + v + '</a>';
   }
 
-  // Copy a trust-mark hash to the clipboard on click, with a brief confirm tint.
-  function wireCopy(el) {
-    if (!el) return;
-    function doCopy() {
-      var full = el.dataset.full || el.textContent;
-      var done = function () {
-        el.classList.add('copied');
-        setTimeout(function () { el.classList.remove('copied'); }, 1100);
-      };
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(full).then(done, function () {});
-      } else {
-        try {
-          var ta = document.createElement('textarea');
-          ta.value = full; document.body.appendChild(ta); ta.select();
-          document.execCommand('copy'); document.body.removeChild(ta); done();
-        } catch (e) { /* clipboard unavailable */ }
-      }
+  function wireTheme() {
+    var html = document.documentElement;
+    var inputs = document.querySelectorAll('.theme input');
+    function sync() {
+      var cur = html.dataset.theme || 'system';
+      for (var i = 0; i < inputs.length; i++) inputs[i].checked = inputs[i].value === cur;
     }
-    el.addEventListener('click', doCopy);
-    el.addEventListener('keydown', function (e) {
-      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); doCopy(); }
+    for (var i = 0; i < inputs.length; i++) {
+      inputs[i].addEventListener('change', function (e) {
+        var v = e.target.value;
+        if (v === 'system') delete html.dataset.theme; else html.dataset.theme = v;
+        try { if (v === 'system') localStorage.removeItem('theme'); else localStorage.setItem('theme', v); } catch (err) { /* storage blocked: the choice lasts for this view */ }
+        sync();
+      });
+    }
+    sync();
+  }
+
+  // One fetch of data/version.json fills the header pill and the footer stamp.
+  function loadVersion() {
+    fetch(site('data/version.json')).then(function (r) { return r.json(); }).then(function (v) {
+      var hex = /^[0-9a-f]{12,64}$/;
+      if (!v || !hex.test(v.version)) return;
+      var v12 = v.version.slice(0, 12);
+      var pill = document.getElementById('om-version');
+      if (pill) pill.textContent = 'map ' + v12;
+      var st = document.getElementById('om-stamp');
+      if (st) st.innerHTML = stampHtml(v12);
+      bustDocumentLinks(v12);
+    }).catch(function () { /* keep the static stamp */ });
+  }
+
+  // The PDF sits behind a long edge cache; stamping the map version onto its links makes every
+  // new version fetch a fresh copy.
+  function bustDocumentLinks(v) {
+    var links = document.querySelectorAll('a[href$="openmaterials.pdf"]');
+    for (var i = 0; i < links.length; i++) links[i].href += '?v=' + v;
+  }
+
+  // A Copy button on every code block head; it reads "Copied" for 1.5 s.
+  function wireCopy() {
+    var heads = document.querySelectorAll('.code > figcaption, .snippet-head, .recipe-head');
+    Array.prototype.forEach.call(heads, function (head) {
+      var pre = head.parentNode.querySelector('pre');
+      if (!pre || head.querySelector('.copy')) return;
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'btn btn--ghost btn--sm copy';
+      b.setAttribute('aria-live', 'polite');
+      b.textContent = 'Copy';
+      b.addEventListener('click', function () {
+        if (!navigator.clipboard) return;
+        navigator.clipboard.writeText(pre.textContent).then(function () {
+          b.textContent = 'Copied';
+          setTimeout(function () { b.textContent = 'Copy'; }, 1500);
+        }, function () {});
+      });
+      head.appendChild(b);
     });
   }
 
   function mount() {
     var h = document.querySelector('[data-site-header]');
-    if (h) h.innerHTML = buildHeader();
+    if (h) h.innerHTML = header(h.getAttribute('data-variant') === 'app');
     var f = document.querySelector('[data-site-footer]');
-    if (f) {
-      f.innerHTML = buildFooter();
-      loadTrust();
-    }
+    if (f) f.innerHTML = footer();
+    var menu = document.querySelector('.menu');
+    if (menu) menu.addEventListener('click', function (e) { if (e.target.closest('a')) menu.open = false; });
+    wireTheme();
+    wireCopy();
+    loadVersion();
   }
 
-  // Trust mark: read genesis + version from data/version.json at runtime.
-  function loadTrust() {
-    var gEl = document.getElementById('om-genesis');
-    var vEl = document.getElementById('om-version');
-    if (gEl) { gEl.dataset.full = gEl.textContent; wireCopy(gEl); }
-    if (vEl) wireCopy(vEl);
-    fetch(site('data/version.json'))
-      .then(function (r) { return r.json(); })
-      .then(function (v) {
-        if (!v) return;
-        if (gEl && v.genesis) {
-          gEl.textContent = ('' + v.genesis).slice(0, 12);
-          gEl.dataset.full = '' + v.genesis;
-          gEl.title = 'genesis ' + v.genesis + ' (click to copy)';
-        }
-        if (v.version) bustDocumentLinks('' + v.version);
-        if (vEl && v.version) {
-          vEl.textContent = ('' + v.version).slice(0, 12);
-          vEl.dataset.full = '' + v.version;
-          vEl.title = 'store head ' + v.version + ' (click to copy)';
-        } else if (vEl) {
-          vEl.textContent = 'unversioned';
-        }
-      })
-      .catch(function () {
-        if (vEl) vEl.textContent = 'unversioned';
-      });
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', mount);
-  } else {
-    mount();
-  }
-
-  // The PDF sits behind a long edge cache; stamping the live version onto
-  // Document links makes every new map version fetch a fresh copy.
-  function bustDocumentLinks(v) {
-    if (!v) return;
-    var links = document.querySelectorAll('a[href$="openmaterials.pdf"]');
-    for (var i = 0; i < links.length; i++) {
-      links[i].href = links[i].href + '?v=' + v.slice(0, 12);
-    }
-  }
-
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', mount);
+  else mount();
 })();

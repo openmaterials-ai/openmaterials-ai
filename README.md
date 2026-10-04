@@ -1,60 +1,62 @@
-<p align="center"><img src="docs/assets/logo.svg" width="72" alt="the openmaterials mark"></p>
+<p align="center"><img src="docs/assets/logo.svg" width="72" alt="the OpenMaterials mark"></p>
 
 # openmaterials-ai
 
-[![openmaterials map version](https://openmaterials.ai/badge/f69b18c18fb7.svg)](https://openmaterials.ai/)
+[![OpenMaterials map version](https://openmaterials.ai/badge/f69b18c18fb7.svg)](https://openmaterials.ai/)
 
 
-A typed substrate for computational materials science. Workflows are directed
-acyclic graphs of typed physics *spaces* connected by *operators* that carry
-symbolic (sympy) formulas. Each external code (kaldo, phono3py, phonopy,
-ShengBTE, LAMMPS, GPUMD) is a *representation*: a per-code mapping of its
-numerical output onto the shared operator layer. Because every quantity is typed
-and every edge carries its formula, the framework reconciles results across codes
-mechanically, runs calculations itself, and validates them. This is the best
-semantics for AI: the semantic layer (omai/semantics.py, docs/data/semantics.json)
-resolves the fuzzy language of papers and LLMs ("quasi-harmonic-approximation",
-"phonon-thermal-conductivity") to typed, gated, content-addressed identities,
-so an agent that grounds its phrase through resolve() inherits the formula, the
-dimensional proof, the producing codes with citations, and the evidence with
-provenance. Fuzzy language in, checkable identity out.
+OpenMaterials is a versioned, content-addressed map of physics. Physical
+quantities are typed nodes, and operators that carry symbolic (sympy) formulas
+connect them. Each external code (kALDo, phono3py, phonopy, ShengBTE, LAMMPS,
+GPUMD, and others) has a *representation*: a mapping of its numerical output
+onto the shared nodes, with units and conventions. Because every quantity is
+typed and every formula is executable, the kernel can evaluate the formulas on
+numerical arrays and cross-check two inputs at a gauge-invariant observable
+(examples/quickstart.py does both). The resolver (omai/semantics.py, with labels
+in docs/data/semantics.json) maps a method name as a paper or a language model
+writes it, such as "quasi-harmonic approximation", to typed, content-addressed
+node ids. An agent that resolves a phrase this way gets the node's formula, its
+Lean dimensional proof where one exists, the codes that produce it with their
+citations, and the values attached to it with their provenance. OpenMaterials is
+stewarded by OpenMaterials-AI, a foundation in formation.
 
-Browse the map as an interactive [3D view](https://openmaterials.ai/map/). The
-map spans eleven physics domains (thermal transport, DFT ground state,
-mechanics, stability, thermochemistry, quasi-harmonic, molecular, electronic
-transport, materials, composites, and the thermodynamic identities that close
-its formulas together), holding 114 typed quantities and 114 operators mapped
-across [32 cited codes](https://openmaterials.ai/codes/) (the codes
-bibliography lists each one with its interface, citation, and license). The
-project's single source of truth (vision, product, architecture, kernel, status,
-and the ingest/extend/encode procedures) is
-[docs/openmaterials.pdf](docs/openmaterials.pdf) (LaTeX source alongside it).
-The same document is readable as HTML at
-[openmaterials.ai/document/](https://openmaterials.ai/document/), with the PDF
-downloadable there; the page is generated from the LaTeX source by
-`PYTHONPATH=. python -m omai.doc_html`.
+At map version f69b18c18fb7 the map has 114 typed quantities (100 observable, 11
+hidden, 3 parameter), 274 links (235 formula, 39 parameter), and 114 operators
+in 16 tiers. It holds representations for 32 codes and 91 committed values (87
+from simulations, 4 from measurements). The [codes
+bibliography](https://openmaterials.ai/codes/) lists each code with its
+interface, citation, and license. Browse it in 2D at
+[openmaterials.ai/map/](https://openmaterials.ai/map/) or in 3D at
+[openmaterials.ai/map-3d/](https://openmaterials.ai/map-3d/). The full
+specification (vision, product, architecture, kernel, status, and the procedures
+for ingesting a code, extending the DAG, and encoding a catalog skill) is
+[docs/openmaterials.pdf](docs/openmaterials.pdf), with its LaTeX source
+alongside. The same document is readable as HTML at
+[openmaterials.ai/document/](https://openmaterials.ai/document/);
+`PYTHONPATH=. python -m omai.doc_html` generates that page from the LaTeX
+source.
 
-The database is just files in this repo: the versioned map lives in `map/`
-(log-first, content-addressed); the site reads `docs/data/graph.json`
-(variables + formulas), `docs/data/catalog.json` (per-node grounding: symbol,
-dimension, description), `docs/data/codes.json` (per-code variable coverage),
-`docs/data/instances/` (one file per value), `docs/data/configurations/`
-(one file per atomic structure: the content-addressed home of a `Structure`
-value, bundled to `docs/data/configurations.json`), `docs/data/models/`
-(one file per model a code reads, such as an interatomic potential: its uid,
-the sha256 of its files, its licence and citation; the files themselves stay
-upstream), and `docs/data/releases/` (one file per representation with
-registered releases: each release's version, tag, commit, date and the licence
-read at that tag). Rebuild the generated files with:
+The database is plain files in this repository. The versioned map lives in
+`map/`, an append-only log of content-addressed records. The site reads the
+generated files under `docs/data/`: `graph.json` (quantities and formulas),
+`catalog.json` (symbol, dimension, and description per node), `codes.json` (each
+code's representation), `instances/` (one file per value), `configurations/`
+(one file per atomic structure, the content-addressed home of a `Structure`
+value, bundled into `configurations.json`), `models/` (one file per model a code
+reads, such as an interatomic potential: its uid, the sha256 of its files, its
+license and citation; the files themselves stay upstream), and `releases/` (one
+file per representation with registered releases: each release's version, tag,
+commit, date, and the license read at that tag). Rebuild the generated files
+with:
 
 ```bash
 CUDA_VISIBLE_DEVICES="" PYTHONPATH=. python -m omai.map_data
 ```
 
-To append a value, add a JSON file under `docs/data/instances/` and open a pull
-request. What you contribute stays yours: appending grants the map a
-non-exclusive CC BY 4.0 license, never a transfer, and the raw simulation or
-experimental artifacts behind a value are never ingested (GOVERNANCE.md, "Data
+To add a value, put a JSON file under `docs/data/instances/` and open a pull
+request. Contributors keep their rights: adding a value grants the initiative a
+non-exclusive license to redistribute it under CC BY 4.0, and the raw simulation
+or experimental artifacts behind it are never ingested (GOVERNANCE.md, "Data
 ownership and fairness").
 
 ## Share an experiment with a link
@@ -152,7 +154,7 @@ another** in the datasheet, or return to the Lineage tools, to paste a record JS
 or drop a `.json` file (a record MCG serves pastes straight in) and open a
 datasheet of your own; the paste/drop ingress validates the record
 client-side against the same light shape checks as `validate_light` (lineage
-present, artifact pointers well-formed) and is honest about gaps (a
+present, artifact pointers well-formed) and states its gaps (a
 node-unresolved or measurement record still shows its data plainly, without a
 fabricated lineage and without a Run link, and says so). It is a view only,
 nothing is uploaded or stored, and every reference file it reads (graph, catalog)
@@ -229,7 +231,7 @@ against Mathlib. `lean/` is a standalone lake package; `cd lean && lake exe
 cache get && lake build` reproduces the proof, and CI recompiles it on every
 change with warnings promoted to errors. The
 [verified layer](https://openmaterials.ai/lean/) page renders what is proven
-with honest coverage counts, and the
+with coverage counts from the published export, and the
 [formalization roadmap](https://openmaterials.ai/lean/roadmap/) rates every
 operator on the map by what a proof of its formula would take, from
 generator-provable algebra to the open analysis frontier (Brillouin-zone
@@ -486,7 +488,7 @@ non-exclusive CC BY 4.0 license and transfers nothing; there is no copyright
 assignment and no CLA; raw simulation and experimental artifacts are never
 ingested and remain under their owners' own terms. Attribution is enforced
 in both directions: upstream, every mapped code's citation and license is
-recorded in its rail and every parsed paper is quoted verbatim with page
+recorded in its representation and every parsed paper is quoted verbatim with page
 anchors as a merge gate; downstream, reuse must credit the map version and,
 through it, the original sources. The full statement is GOVERNANCE.md,
 "Data ownership and fairness".

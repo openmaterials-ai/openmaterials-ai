@@ -1,33 +1,36 @@
 """One navigation, everywhere.
 
-The site had three nav generations at once: the canonical bar, a stale
-bar (Tracer / Experiments / Playground) on the evidence pages, and no
-bar at all. This contract pins a single canonical link set across every
-primary page, whether the header is injected by site.js or inlined by
-an app page that needs its own toolbar.
+site.js renders the one header into a data-site-header mount: the links Map,
+Playground, Guide and Document, and the GitHub button. Every content page
+mounts it, and the four tool pages mount its app variant (data-variant="app"),
+which adds the theme toggle. No page inlines a nav of its own.
 """
 
 import re
 from pathlib import Path
 
 DOCS = Path(__file__).resolve().parents[1] / "docs"
+SITE_JS = (DOCS / "assets/site.js").read_text()
 
-CANONICAL = ["Map", "Guide", "Play", "Learn", "Codes", "Document", "Source"]
+CANONICAL = ["Map", "Playground", "Guide", "Document"]
+GITHUB = "https://github.com/openmaterials-ai/openmaterials-ai"
 
 # Pages whose header is injected by site.js (mount point + script include).
 INJECTED = [
     "index.html",
+    "404.html",
     "guide/index.html",
     "document/index.html",
     "lean/index.html",
+    "lean/roadmap/index.html",
     "lineage/index.html",
     "experiment/index.html",
     "agreement/index.html",
     "codes/index.html",
 ]
 
-# App pages that inline the header because they carry their own controls.
-INLINE = [
+# The tool pages mount the app variant of the same header (spec 2.3, 5.1).
+TOOL_PAGES = [
     "map/index.html",
     "map-3d/index.html",
     "map-trace/index.html",
@@ -35,21 +38,16 @@ INLINE = [
 ]
 
 # Standalone artifacts, deliberately outside the primary navigation.
-EXEMPT_DIRS = {"deck", "slides", "map-lab", "learn", "i"}
-
-
-def _nav_labels(page_text):
-    """Anchor labels of the page's primary nav block, in order."""
-    m = re.search(r'<nav[^>]*(?:class="(?:nav|pg-nav)"|aria-label="Primary")[^>]*>(.*?)</nav>',
-                  page_text, re.S)
-    assert m, "no primary nav block found"
-    return re.findall(r"<a[^>]*>([^<]+)</a>", m.group(1))
+EXEMPT_DIRS = {"map-lab", "learn", "i"}
 
 
 def test_sitejs_nav_is_canonical():
-    s = (DOCS / "assets/site.js").read_text()
-    labels = re.findall(r"\['(\w+)', ", s)
-    assert labels == CANONICAL, labels
+    nav = re.search(r"var NAV = \[(.*?)\];", SITE_JS, re.S)
+    assert nav, "site.js has no NAV list"
+    assert re.findall(r"\['([^']+)', '[^']*'\]", nav.group(1)) == CANONICAL
+    assert "var REPO = '" + GITHUB + "';" in SITE_JS
+    assert "btn btn--secondary btn--sm\" href=\"' + REPO + '\">GitHub</a>" in SITE_JS, \
+        "the header's GitHub button"
 
 
 def test_injected_pages_mount_the_shared_header():
@@ -57,19 +55,22 @@ def test_injected_pages_mount_the_shared_header():
         s = (DOCS / rel).read_text()
         assert "data-site-header" in s, rel + " lacks the header mount"
         assert "assets/site.js" in s, rel + " lacks the site.js include"
-        assert '<header class="top">' not in s, rel + " still inlines a header"
+        assert 'aria-label="Primary"' not in s, rel + " still inlines a nav"
 
 
-def test_inline_navs_match_the_canonical_links():
-    for rel in INLINE:
+def test_tool_pages_mount_the_app_header():
+    for rel in TOOL_PAGES:
         s = (DOCS / rel).read_text()
-        assert _nav_labels(s) == CANONICAL, rel
+        assert '<div data-site-header data-variant="app"></div>' in s, rel
+        assert '<script src="../assets/site.js"></script>' in s, rel
+        assert 'aria-label="Primary"' not in s, rel + " still inlines a nav"
+        assert 'class="top"' not in s and 'class="pg-top"' not in s, rel + " still inlines a header"
 
 
-def test_inline_navs_point_document_at_the_document_page():
-    for rel in INLINE:
-        nav = re.search(r"<nav[^>]*>(.*?)</nav>", (DOCS / rel).read_text(), re.S).group(1)
-        assert "openmaterials.pdf" not in nav, rel + " nav still links the raw PDF"
+def test_every_page_marks_its_own_nav_item():
+    for section, current in (("map/", "map/"), ("map-3d/", "map/"), ("map-trace/", "map/"),
+                             ("play/", "play/"), ("guide/", "guide/"), ("document/", "document/")):
+        assert "'" + section + "': '" + current + "'" in SITE_JS, section
 
 
 def test_no_page_is_headerless():
@@ -78,21 +79,13 @@ def test_no_page_is_headerless():
         if rel.parts[0] in EXEMPT_DIRS:
             continue
         s = page.read_text()
-        assert "data-site-header" in s or 'aria-label="Primary"' in s, str(rel)
-
-
-def test_stale_nav_generation_is_gone():
-    for page in DOCS.glob("**/index.html"):
-        s = page.read_text()
-        assert ">Tracer</a>" not in s, str(page)
-        assert ">Experiments</a>" not in s, str(page)
-        assert ">Playground</a>" not in s, str(page)
+        assert "data-site-header" in s and "assets/site.js" in s, str(rel)
 
 
 def test_footer_links_codes_and_lean():
-    s = (DOCS / "assets/site.js").read_text()
-    assert "The codes bibliography" in s
-    assert "The verified layer" in s
+    footer = re.search(r"var FOOTER = \[(.*?)\];", SITE_JS, re.S).group(1)
+    assert "['Codes', 'codes/']" in footer
+    assert "['Verified layer', 'lean/']" in footer
 
 
 def test_map_supports_the_code_hash_filter():

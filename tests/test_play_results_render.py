@@ -67,7 +67,7 @@ def test_results_render_as_a_values_table():
     assert "W/(m K)" in out
     assert "temperature_K = 300" in out and "code = MESKAL" in out
     assert "Bogus" in out and "not a number" in out, "a stated value renders even when not numeric"
-    assert "outside the lineage id" in out
+    assert "excluded from its lineage id" in out
 
 
 def test_values_display_six_significant_digits():
@@ -91,5 +91,5 @@ def test_no_results_renders_nothing():
 def test_page_wires_results_after_lineage_values():
     html = _PLAY.read_text()
     assert "function resultsHTML" in html
-    assert "(valuesHTML(lineage, node) || resultsHTML(record))" in html
+    assert "valuesHTML(lineage, node) || resultsHTML(record)" in html
     assert ".rec-vtable{width:100%;table-layout:fixed;" in html
