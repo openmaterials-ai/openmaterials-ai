@@ -63,12 +63,7 @@
   .kv .v .prov { display: inline-flex; height: 24px; align-items: center; margin-left: 6px; padding: 0 10px; border-radius: 9999px; background: var(--surface-2); font: 500 12px/24px var(--font-sans); color: var(--ink); }
   @media (max-width: 600px) { .kv { grid-template-columns: minmax(0, 1fr); } .kv .k { padding-bottom: 0; border-bottom: 0; } .kv .v { padding-top: 4px; } }
   .links td.u { font: 400 12px/18px var(--font-mono); overflow-wrap: anywhere; }
-  .links td.who { white-space: nowrap; }
   .links td .why { font-size: 12px; line-height: 16px; color: var(--ink-2); }
-  details { margin-top: 24px; border: 1px solid var(--line); border-radius: var(--radius); }
-  summary { padding: 12px 16px; font: 500 14px/20px var(--font-sans); color: var(--ink-2); cursor: pointer; }
-  details pre { margin: 0; padding: 16px; border-top: 1px solid var(--line); font: 400 12px/18px var(--font-mono); color: var(--ink); white-space: pre-wrap; overflow-wrap: anywhere; }
-  .pin { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 14px; line-height: 20px; color: var(--ink-2); }
 </style>
 </head>
 <body>
@@ -77,11 +72,11 @@
 <main class="frame" id="main">
   <header class="page-head">
   <p class="eyebrow">Lineage tour</p>
-  <h1>The lineage of a shared experiment</h1>
+  <h1>The lineage of one result</h1>
   <p class="lede">The map derives <span class="m">ThermalConductivity[transport_model=qhgk]</span>
     through typed edges, a lineage record pins the run that produced one value of it, and each part
     has its own URL. The graph below is the map's own export from
-    <span class="m">python -m omai.mermaid</span>, shown verbatim.</p>
+    <span class="m">python -m omai.mermaid</span>.</p>
   </header>
   <div class="page-body"><article class="prose">
 
@@ -104,8 +99,8 @@
   <div class="dagbox"><svg id="dag" xmlns="http://www.w3.org/2000/svg" width="720" height="536" viewBox="0 0 720 536" role="img" aria-label="Derivation DAG of QHGK thermal conductivity"></svg></div>
   <p class="dag-alt">This screen is too narrow for the diagram; the tracer link above opens the same derivation.</p>
   <p class="caption">To reproduce this graph wherever Mermaid renders, run
-    <span class="m">python -m omai.mermaid "ThermalConductivity[transport_model=qhgk]"</span>
-    (output in the appendix). With the learned edge in place, the third-order force constants and the
+    <span class="m">python -m omai.mermaid "ThermalConductivity[transport_model=qhgk]"</span>.
+    With the learned edge in place, the third-order force constants and the
     edge that produces them would be skipped at inference.</p>
 
   <h2>2 · The lineage record</h2>
@@ -126,110 +121,27 @@
       <div class="k">hyperparameters</div><div class="v">potential = Tersoff · supercell = 4096 atoms · template = qhgk_kappa</div>
       <div class="k">execution</div><div class="v">code = kaldo</div>
       <div class="k">artifacts</div><div class="v">FORCE_CONSTANTS <span class="prov">role: force_constants</span></div>
-      <div class="k">mirror</div><div class="v">none <span class="prov">a record names one when its bulk data is hosted</span></div>
     </div>
   </div>
 
   <h2>3 · The share surfaces</h2>
-  <p class="sub">Each part has its own URL and audience. The public links carry the values and their
-    provenance; the provider link carries the bulk artifacts and reruns, behind the provider's access
-    control.</p>
+  <p class="sub">Each public link carries the values and their provenance.</p>
   <div class="tblwrap"><table class="links stack">
-    <thead><tr><th>Surface</th><th>Link</th><th>Audience</th></tr></thead>
+    <thead><tr><th>Surface</th><th>Link</th></tr></thead>
     <tbody>
       <tr>
-        <td data-label="Surface">Experiment permalink<br><span class="why">values, provenance quotes, and the map version</span></td>
+        <td data-label="Surface">Source page<br><span class="why">values, provenance quotes, and the map version</span></td>
         <td class="u" data-label="Link"><a href="../experiment/#ref=paper:amorphous-alloys-2020-lundgren">experiment/#ref=paper:amorphous-alloys-2020-lundgren</a></td>
-        <td class="who" data-label="Audience"><span class="pill pub">public</span></td>
       </tr>
       <tr>
         <td data-label="Surface">Coverage on the map<br><span class="why">marks the quantities that carry this source's values</span></td>
         <td class="u" data-label="Link"><a href="../map/#experiment=paper:amorphous-alloys-2020-lundgren">map/#experiment=paper:amorphous-alloys-2020-lundgren</a></td>
-        <td class="who" data-label="Audience"><span class="pill pub">public</span></td>
-      </tr>
-      <tr>
-        <td data-label="Surface">The run at its provider<br><span class="why">the run specification, stages, artifacts, and reruns</span></td>
-        <td class="u" data-label="Link">the URL in the record's mirror, when it has one</td>
-        <td class="who" data-label="Audience"><span class="pill gate">provider account</span></td>
       </tr>
     </tbody>
   </table></div>
   <p class="caption">Any source works the same way: commit values under one
-    <span class="m">source.ref</span> and both public links exist; keep the bulk data at any provider
-    and point the record's mirror at it. Unpublished work stays with the provider until its owner
-    publishes the values.</p>
+    <span class="m">source.ref</span> and both links exist.</p>
 
-  <details>
-    <summary>Appendix: the verbatim Mermaid export</summary>
-    <pre>flowchart LR
-  HeatCapacity["HeatCapacity"]:::observable
-  ThermalConductivity_transport_model_qhgk["ThermalConductivity[transport_model=qhgk]"]:::hidden
-  Frequency["Frequency"]:::observable
-  GroupVelocity["GroupVelocity"]:::hidden
-  Linewidth_channel_total["Linewidth[channel=total]"]:::hidden
-  Temperature["Temperature"]:::observable
-  DynamicalMatrix["DynamicalMatrix"]:::observable
-  Eigenvectors["Eigenvectors"]:::hidden
-  Linewidth_channel_anharmonic_3ph["Linewidth[channel=anharmonic_3ph]"]:::hidden
-  Linewidth_channel_isotope["Linewidth[channel=isotope]"]:::hidden
-  Linewidth_channel_boundary["Linewidth[channel=boundary]"]:::hidden
-  BareDynamicalMatrix["BareDynamicalMatrix"]:::observable
-  BornCharges["BornCharges"]:::observable
-  DielectricTensor["DielectricTensor"]:::observable
-  ForceConstants_order_3["ForceConstants[order=3]"]:::observable
-  IsotopeAbundances["IsotopeAbundances"]:::observable
-  ForceConstants_order_2["ForceConstants[order=2]"]:::observable
-  Potential["Potential"]:::observable
-  Forces["Forces"]:::observable
-  Structure["Structure"]:::observable
-  TotalEnergy["TotalEnergy"]:::observable
-  HeatCapacity -- "compute kappa transport model qhgk" --> ThermalConductivity_transport_model_qhgk
-  Frequency -- "compute kappa transport model qhgk" --> ThermalConductivity_transport_model_qhgk
-  GroupVelocity -- "compute kappa transport model qhgk" --> ThermalConductivity_transport_model_qhgk
-  Linewidth_channel_total -- "compute kappa transport model qhgk" --> ThermalConductivity_transport_model_qhgk
-  Temperature -- "compute kappa transport model qhgk" --> ThermalConductivity_transport_model_qhgk
-  Frequency -- "compute heat capacity" --> HeatCapacity
-  Temperature -- "compute heat capacity" --> HeatCapacity
-  DynamicalMatrix -- "compute dispersion" --> Frequency
-  DynamicalMatrix -- "compute group velocity" --> GroupVelocity
-  Frequency -- "compute group velocity" --> GroupVelocity
-  Eigenvectors -- "compute group velocity" --> GroupVelocity
-  Linewidth_channel_anharmonic_3ph -- "sum linewidths" --> Linewidth_channel_total
-  Linewidth_channel_isotope -- "sum linewidths" --> Linewidth_channel_total
-  Linewidth_channel_boundary -- "sum linewidths" --> Linewidth_channel_total
-  BareDynamicalMatrix -- "identity dm" --> DynamicalMatrix
-  BareDynamicalMatrix -- "apply nac correction" --> DynamicalMatrix
-  BornCharges -- "apply nac correction" --> DynamicalMatrix
-  DielectricTensor -- "apply nac correction" --> DynamicalMatrix
-  DynamicalMatrix -- "compute dispersion" --> Eigenvectors
-  Frequency -- "compute linewidth channel anharmonic 3ph" --> Linewidth_channel_anharmonic_3ph
-  Eigenvectors -- "compute linewidth channel anharmonic 3ph" --> Linewidth_channel_anharmonic_3ph
-  ForceConstants_order_3 -- "compute linewidth channel anharmonic 3ph" --> Linewidth_channel_anharmonic_3ph
-  Temperature -- "compute linewidth channel anharmonic 3ph" --> Linewidth_channel_anharmonic_3ph
-  Frequency -- "compute isotope scattering" --> Linewidth_channel_isotope
-  Eigenvectors -- "compute isotope scattering" --> Linewidth_channel_isotope
-  IsotopeAbundances -- "compute isotope scattering" --> Linewidth_channel_isotope
-  Frequency -- "compute boundary scattering" --> Linewidth_channel_boundary
-  GroupVelocity -- "compute boundary scattering" --> Linewidth_channel_boundary
-  ForceConstants_order_2 -- "compute dynamical matrix" --> BareDynamicalMatrix
-  Potential -- "compute force constants order 3" --> ForceConstants_order_3
-  Potential -- "compute force constants order 2" --> ForceConstants_order_2
-  Forces -- "compute fc2 finite displacement" --> ForceConstants_order_2
-  Structure -- "compute fc2 finite displacement" --> ForceConstants_order_2
-  TotalEnergy -- "compute forces hf" --> Forces
-  Structure -- "compute forces hf" --> Forces
-  Structure -- "solve ground state" --> TotalEnergy
-  Potential -- "solve ground state" --> TotalEnergy
-  classDef observable fill:#eef2ff,stroke:#4f46e5,color:#312e81;
-  classDef hidden fill:#f4f6fa,stroke:#7c89a0,color:#3d4149;
-  classDef parameter fill:#f6f7f9,stroke:#94a3b8,color:#475569;</pre>
-  </details>
-
-  <p class="pin">The DAG regenerates with <span class="m">python -m omai.mermaid</span>; the lineage
-    example is <a href="../examples/a-si-kappa-qhgk.json"><span class="m">docs/examples/a-si-kappa-qhgk.json</span></a>;
-    the learned-shortcut layer is <span class="m">omai/operator/learned.py</span>.
-    Contributors keep the rights to their evidence
-    (<a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/main/GOVERNANCE.md#data-ownership-and-fairness">GOVERNANCE.md, "Data ownership and fairness"</a>).</p>
   </article></div>
 </main>
 <script>
