@@ -222,15 +222,15 @@ pip install -e . &amp;&amp; python -m pytest tests/test_physlean_export.py tests
       var e = L.parseEdge(lean.edges[op].lean);
       var inputs = e.inputs.map(function (n) { return nodeRef(n, idx); }).join(' &middot; ');
       return '<tr>' +
-        '<td><code>' + esc(op) + '</code></td>' +
-        '<td>' + nodeRef(e.output, idx) + '</td>' +
-        '<td>' + inputs + '</td>' +
-        '<td class="stmt">' + esc(e.statement) + '</td>' +
-        '<td><a class="nid" href="' + REPO + 'OpenMaterials.lean">' + esc(e.name) + '</a></td>' +
+        '<td data-label="Edge"><code>' + esc(op) + '</code></td>' +
+        '<td data-label="Output">' + nodeRef(e.output, idx) + '</td>' +
+        '<td data-label="Inputs">' + inputs + '</td>' +
+        '<td class="stmt" data-label="Dimension statement">' + esc(e.statement) + '</td>' +
+        '<td data-label="Theorem"><a class="nid" href="' + REPO + 'OpenMaterials.lean">' + esc(e.name) + '</a></td>' +
         '</tr>';
     }).join('');
     document.getElementById('edge-list').innerHTML =
-      '<div class="table-wrap"><table class="gtable"><thead><tr>' +
+      '<div class="table-wrap"><table class="gtable stack"><thead><tr>' +
       '<th>Edge</th><th>Output</th><th>Inputs</th><th>Dimension statement</th><th>Theorem</th>' +
       '</tr></thead><tbody>' + rows + '</tbody></table></div>';
   }
@@ -280,13 +280,13 @@ pip install -e . &amp;&amp; python -m pytest tests/test_physlean_export.py tests
       var exps = n.exponents ? n.exponents.map(esc).join(', ') : '';
       var extra = xwalk[id] ? xwalkHtml(xwalk[id]) : '';
       return '<tr>' +
-        '<td>' + mapLink(id) + extra + '</td>' +
-        '<td class="stmt">&#10216;' + exps + '&#10217;</td>' +
-        '<td><code>' + esc(n.leanName || '') + '</code></td>' +
+        '<td data-label="Map node">' + mapLink(id) + extra + '</td>' +
+        '<td class="stmt" data-label="Dimension (L, T, M, Q, &Theta;)">&#10216;' + exps + '&#10217;</td>' +
+        '<td data-label="Lean name"><code>' + esc(n.leanName || '') + '</code></td>' +
         '</tr>';
     }).join('');
     document.getElementById('node-list').innerHTML =
-      '<div class="table-wrap"><table class="gtable"><thead><tr>' +
+      '<div class="table-wrap"><table class="gtable stack"><thead><tr>' +
       '<th>Map node</th><th>Dimension (L, T, M, Q, &Theta;)</th><th>Lean name</th>' +
       '</tr></thead><tbody>' + rows + '</tbody></table></div>';
   }

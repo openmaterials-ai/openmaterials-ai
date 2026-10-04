@@ -82,13 +82,13 @@
     let html = "";
     for (const [dom, rows] of r.domains) {
       html += "<h3>" + esc(domainLabel(dom)) + " (" + rows.length + ")</h3>";
-      html += '<div class="table-wrap"><table class="gtable"><thead><tr><th>Operator</th><th>Formula class</th><th>Difficulty</th><th>Status</th><th>Why</th></tr></thead><tbody>';
+      html += '<div class="table-wrap"><table class="gtable stack"><thead><tr><th>Operator</th><th>Formula class</th><th>Difficulty</th><th>Status</th><th>Why</th></tr></thead><tbody>';
       for (const row of rows) {
-        html += "<tr><td class=\"opcell\">" + esc(row.op) + "</td>" +
-          "<td>" + esc(row["class"]) + "</td>" +
-          '<td><span class="diff ' + row.difficulty + '">' + DIFF_LABEL[row.difficulty] + "</span></td>" +
-          "<td>" + (row.proven ? '<span class="proven-mark">proven</span>' : "") + "</td>" +
-          '<td class="why">' + esc(row.reason) + "</td></tr>";
+        html += '<tr><td class="opcell" data-label="Operator">' + esc(row.op) + "</td>" +
+          '<td data-label="Formula class">' + esc(row["class"]) + "</td>" +
+          '<td data-label="Difficulty"><span class="diff ' + row.difficulty + '">' + DIFF_LABEL[row.difficulty] + "</span></td>" +
+          '<td data-label="Status">' + (row.proven ? '<span class="proven-mark">proven</span>' : "") + "</td>" +
+          '<td class="why" data-label="Why">' + esc(row.reason) + "</td></tr>";
       }
       html += "</tbody></table></div>";
     }
