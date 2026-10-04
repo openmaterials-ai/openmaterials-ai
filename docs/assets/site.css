@@ -46,10 +46,10 @@
 html { background: var(--page); color: var(--ink); scroll-padding-top: var(--header-h); -webkit-text-size-adjust: 100%; }
 html, body { overflow-x: clip; }
 body { margin: 0; background: var(--page); font: 400 16px/24px var(--font-sans); -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
-h1, h2, h3, h4, p, figure, blockquote, dl, dd { margin: 0; }
+/* Resets that the four tool pages (body.app) style for themselves are scoped away from them. */
+:where(body:not(.app)) :where(h1, h2, h3, h4, p, figure, blockquote, dl, dd) { margin: 0; }
+:where(body:not(.app)) :where(svg, img) { max-width: 100%; height: auto; }
 button, input, select, textarea { font: inherit; color: inherit; }
-svg, img { max-width: 100%; height: auto; }
-[hidden] { display: none !important; }
 
 /* 2. Type: weights 400, 450, 500; sentence case; no bold, italic or uppercase */
 h1, h2, h3 { font-weight: 450; color: var(--ink); text-wrap: balance; }
@@ -84,7 +84,7 @@ a:hover { text-decoration-color: currentColor; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 
 /* 3. Layout: one 1080 px frame with 1 px guides; each section is one frame row */
-.frame, .wrap { width: min(var(--frame), 100% - 2 * var(--margin)); margin-inline: auto; }
+.frame, .site-header .wrap, .site-footer .wrap { width: min(var(--frame), 100% - 2 * var(--margin)); margin-inline: auto; }
 .frame > section { padding: var(--section-y) var(--inset); border-bottom: 1px solid var(--line); }
 @media (min-width: 601px) { main.frame { border-inline: 1px solid var(--line); } }
 .grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 24px; }
@@ -133,30 +133,28 @@ a:hover { text-decoration-color: currentColor; }
 }
 
 /* Buttons. Large is a full pill, small is 6 px; one accent fill per page, at opening and close.
-   The om- names and the playground's small controls are the same rules (spec 2.6). */
-.btn, .om-btn, .om-btn-primary, .om-btn-sm, .lin-bar a, .lin-bar button, .rec-doi-copy { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 40px; padding: 0 20px; border: 0; border-radius: 9999px;
+   The playground's om- buttons are the same rules (spec 2.6). */
+.btn, .om-btn, .om-btn-primary, .om-btn-sm { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 40px; padding: 0 20px; border: 0; border-radius: 9999px;
   font: 500 16px/24px var(--font-sans); text-decoration: none; white-space: nowrap; cursor: pointer; transition: background-color var(--dur) var(--ease), color var(--dur) var(--ease), box-shadow var(--dur) var(--ease); }
-.btn--sm, .om-btn-sm, .lin-bar a, .lin-bar button, .rec-doi-copy { height: 32px; padding: 0 12px; border-radius: var(--radius); font-size: 14px; line-height: 20px; }
+.btn--sm, .om-btn-sm { height: 32px; padding: 0 12px; border-radius: var(--radius); font-size: 14px; line-height: 20px; }
 .btn--secondary, .om-btn, .om-btn-sm { background: var(--page); color: var(--ink); box-shadow: 0 0 0 1px var(--line); }
-.btn--ghost, .lin-bar a, .lin-bar button, .rec-doi-copy { background: transparent; color: var(--ink); }
-.btn--secondary:hover, .om-btn:hover, .om-btn-sm:hover, .btn--ghost:hover, .lin-bar a:hover, .lin-bar button:hover, .rec-doi-copy:hover { background: var(--surface-2); }
+.btn--ghost { background: transparent; color: var(--ink); }
+.btn--secondary:hover, .om-btn:hover, .om-btn-sm:hover, .btn--ghost:hover { background: var(--surface-2); }
 .btn--primary, .om-btn-primary { background: var(--accent); color: var(--on-accent); box-shadow: none; }
 .btn--primary:hover, .om-btn-primary:hover { background: color-mix(in srgb, var(--accent) 88%, var(--ink)); }
-:is(.btn, .om-btn, .om-btn-primary, .om-btn-sm, .lin-bar button, .rec-doi-copy):is(:disabled, [aria-disabled="true"]) { background: var(--surface-2); color: var(--ink-2); box-shadow: none; cursor: not-allowed; }
+:is(.btn, .om-btn, .om-btn-primary, .om-btn-sm):is(:disabled, [aria-disabled="true"]) { background: var(--surface-2); color: var(--ink-2); box-shadow: none; cursor: not-allowed; }
 .cta-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
 /* below 601 a button takes the row and may wrap its label, so a long label never widens the page */
 @media (max-width: 600px) { .cta-row .btn { flex: 1 1 100%; height: auto; min-height: 40px; padding-block: 8px; white-space: normal; text-align: center; } .cta-row .btn--sm { min-height: 32px; padding-block: 6px; } }
-button.x, #pgClose { width: 32px; height: 32px; padding: 0; border: 0; border-radius: var(--radius); background: transparent; color: var(--ink); font-size: 20px; line-height: 1; cursor: pointer; }
-button.x:hover, #pgClose:hover { background: var(--surface-2); }
 
 /* Section head: optional eyebrow, h2, optional lede; from 961 h2 on columns 1 to 7, lede 8 to 12 */
 .section-head { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 12px 24px; align-items: start; margin-bottom: var(--head-gap); }
 .section-head > * { grid-column: 1 / -1; min-width: 0; }
 @media (min-width: 961px) { .section-head > h2 { grid-column: 1 / 8; } .section-head > .lede { grid-column: 8 / 13; } }
 
-/* Card, pill, ledger: the record components (spec 2.6 lists the extra names) */
-.card, .bib-card, .lab, .abstract, .formula, .thm { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; min-width: 0; }
-.pill, .chip, .badge, .tag, .pg-chip, .bib-count, .bib-lic, .thm-kind { display: inline-flex; align-items: center; height: 24px; padding: 0 12px; border-radius: 9999px; background: var(--surface-2); color: var(--ink); font: 500 12px/24px var(--font-sans); white-space: nowrap; text-decoration: none; }
+/* Card, pill, ledger: the record components; the map panel's om-kv rows are a ledger */
+.card, .bib-card, .abstract, .thm { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; min-width: 0; }
+.pill, .bib-count, .bib-lic, .thm-kind { display: inline-flex; align-items: center; height: 24px; padding: 0 12px; border-radius: 9999px; background: var(--surface-2); color: var(--ink); font: 500 12px/24px var(--font-sans); white-space: nowrap; text-decoration: none; }
 .pill--mono, .bib-count, .bib-lic { font-family: var(--font-mono); font-weight: 400; }
 .ledger, .om-kv { max-width: 720px; margin: 0; border-top: 1px solid var(--line); }
 .ledger > div, .om-kv > .om-kv-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); column-gap: 24px; align-items: baseline; padding: 12px 0; border-bottom: 1px solid var(--line); }
@@ -169,22 +167,21 @@ button.x:hover, #pgClose:hover { background: var(--surface-2); }
 .card .ledger > div { grid-template-columns: minmax(0, 1fr); row-gap: 4px; }
 
 /* Code: monochrome, wraps instead of scrolling; the copy control is added by site.js */
-.code, .snippet, .recipe, .codepanel { margin: 0; border: 1px solid var(--line); border-radius: var(--radius); background: var(--page); overflow: hidden; min-width: 0; }
+.code, .snippet, .recipe { margin: 0; border: 1px solid var(--line); border-radius: var(--radius); background: var(--page); overflow: hidden; min-width: 0; }
 .code > figcaption, .snippet-head, .recipe-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 40px; max-width: none; padding: 4px 4px 4px 16px; background: var(--surface); border-bottom: 1px solid var(--line); font: 400 13px/16px var(--font-sans); color: var(--ink-2); overflow-wrap: anywhere; }
 .snippet-title, .recipe-title { min-width: 0; margin-right: auto; }
 .snippet-lang, .recipe-lang { font: 400 12px/16px var(--font-mono); color: var(--ink-2); }
-.code pre, .snippet pre, .recipe pre, .codepanel pre, .lin-code, .lean-line { margin: 0; padding: 16px; font: 400 13px/20px var(--font-mono); color: var(--ink); white-space: pre-wrap; overflow-wrap: anywhere; font-feature-settings: "liga" 0; }
+.code pre, .snippet pre, .recipe pre { margin: 0; padding: 16px; font: 400 13px/20px var(--font-mono); color: var(--ink); white-space: pre-wrap; overflow-wrap: anywhere; font-feature-settings: "liga" 0; }
 .code .comment { color: var(--ink-2); }
-code:not(pre code) { font: 400 0.875em/1 var(--font-mono); padding: 2px 4px; border-radius: 4px; background: var(--surface-2); overflow-wrap: anywhere; }
-kbd { font: 400 12px/16px var(--font-mono); padding: 1px 4px; border-radius: 4px; box-shadow: 0 0 0 1px var(--line); }
+:where(body:not(.app)) code:not(pre code) { font: 400 0.875em/1 var(--font-mono); padding: 2px 4px; border-radius: 4px; background: var(--surface-2); overflow-wrap: anywhere; }
 
 /* Notice, table, form controls (spec 2.6) */
-.notice, .gnote, .xp-err, .xp-ok, .pg-empty, .fig-fallback, #banner, #biberr { padding: 12px 16px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); font: 400 14px/20px var(--font-sans); color: var(--ink); }
-.notice--error, .xp-err, #biberr { border-color: var(--ink); }
-.table-wrap, .tblwrap, .tbl-scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); }
-.table, .gtable, .pg-table, .tblwrap table, .tbl-scroll table, .rec-vtable { width: 100%; border-collapse: collapse; font: 400 14px/20px var(--font-sans); }
-:is(.table, .gtable, .pg-table, .tblwrap table, .tbl-scroll table, .rec-vtable) th { height: 36px; padding: 0 12px; text-align: left; font-weight: 500; color: var(--ink-2); border-bottom: 1px solid var(--line); }
-:is(.table, .gtable, .pg-table, .tblwrap table, .tbl-scroll table, .rec-vtable) td { padding: 10px 12px; border-top: 1px solid var(--line); vertical-align: top; }
+.notice, .fig-fallback { padding: 12px 16px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); font: 400 14px/20px var(--font-sans); color: var(--ink); }
+.notice--error { border-color: var(--ink); }
+.table-wrap, .tblwrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); }
+.table, .gtable, .tblwrap table { width: 100%; border-collapse: collapse; font: 400 14px/20px var(--font-sans); }
+:is(.table, .gtable, .tblwrap table) th { height: 36px; padding: 0 12px; text-align: left; font-weight: 500; color: var(--ink-2); border-bottom: 1px solid var(--line); }
+:is(.table, .gtable, .tblwrap table) td { padding: 10px 12px; border-top: 1px solid var(--line); vertical-align: top; }
 .view-switch { display: inline-flex; gap: 2px; height: 32px; padding: 2px; border-radius: var(--radius); box-shadow: 0 0 0 1px var(--line); }
 .view-switch a { display: inline-flex; align-items: center; padding: 0 10px; border-radius: 4px; font: 500 14px/20px var(--font-sans); color: var(--ink-2); text-decoration: none; }
 .view-switch a:hover { color: var(--ink); }
@@ -194,7 +191,6 @@ kbd { font: 400 12px/16px var(--font-mono); padding: 1px 4px; border-radius: 4px
 .om-search-ic { position: absolute; left: 10px; top: 9px; width: 14px; height: 14px; color: var(--ink-2); pointer-events: none; }
 .om-input { width: 100%; height: 32px; padding: 0 12px 0 32px; border: 0; border-radius: var(--radius); box-shadow: 0 0 0 1px var(--line); background: var(--page); color: var(--ink); font: 400 14px/20px var(--font-sans); }
 .om-input::placeholder { color: var(--ink-2); }
-.om-panel-label, .lb, .lin-lab, .pg-panel h3 { margin: 16px 0 8px; font: 500 12px/16px var(--font-sans); letter-spacing: 0; text-transform: none; color: var(--ink-2); }
 
 /* Content pages (spec 4.1): a page head, then a contents column and the article */
 .page-head { padding: var(--section-y) var(--inset) 48px; border-bottom: 1px solid var(--line); overflow-wrap: break-word; }
@@ -221,8 +217,8 @@ kbd { font: 400 12px/16px var(--font-mono); padding: 1px 4px; border-radius: 4px
 .prose ul, .prose ol { margin: 0 0 16px; padding-left: 20px; }
 .prose li + li { margin-top: 4px; }
 .prose blockquote { margin: 0 0 16px; padding: 0 0 0 16px; border-left: 1px solid var(--line); color: var(--ink-2); }
-.prose :is(.ledger, .code, .snippet, .recipe, .notice, .gnote, .table-wrap, .card) { margin-block: 24px; }
-.prose :is(.ledger, .code, .snippet, .recipe, .notice, .gnote, .table-wrap, .card):first-child { margin-top: 0; }
+.prose :is(.ledger, .code, .snippet, .recipe, .notice, .table-wrap, .card) { margin-block: 24px; }
+.prose :is(.ledger, .code, .snippet, .recipe, .notice, .table-wrap, .card):first-child { margin-top: 0; }
 
 /* Home (spec 3) */
 .hero { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 48px 24px; align-items: start; }
@@ -282,20 +278,9 @@ kbd { font: 400 12px/16px var(--font-mono); padding: 1px 4px; border-radius: 4px
 html[data-forward] .nf-body { display: none; }
 html[data-forward="play"] .nf-forward { display: block; }
 
-/* Tool pages (spec 5.1): header, toolbar, full-bleed canvas, side panel, legend; no page scroll */
-body.app { height: 100dvh; margin: 0; display: flex; flex-direction: column; overflow: hidden; background: var(--page); }
+/* Tool pages (spec 5.1): each page styles its own toolbar, canvas, panel and legend; the
+   shared header is a fixed-height row of its flex column. */
 body.app > [data-site-header] { flex: none; }
-.toolbar, .pg-tabs { flex: none; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px var(--inset); border-bottom: 1px solid var(--line); background: var(--page); }
-.toolbar .om-search { flex: 1 1 200px; max-width: 360px; }
-.toolbar .push { margin-left: auto; }
-@media (max-width: 960px) { .toolbar .om-search { flex: 1 1 100%; max-width: none; } }
-.canvas { position: relative; flex: 1 1 auto; min-height: 0; overflow: hidden; background: var(--canvas-dots), var(--page); }
-.om-panel, .pg-node-panel { position: absolute; top: 16px; right: 16px; width: 360px; max-width: calc(100% - 32px); max-height: calc(100% - 32px); overflow: auto; padding: 20px; border-radius: 12px; background: var(--page); box-shadow: var(--shadow-float); display: none; z-index: 5; }
-@media (max-width: 960px) { .om-panel, .pg-node-panel { top: auto; left: 0; right: 0; bottom: 0; width: auto; max-width: none; max-height: 55%; border-radius: 12px 12px 0 0; } }
-body.app .legend { position: absolute; left: 16px; bottom: 16px; display: flex; gap: 12px; align-items: center; padding: 8px 12px; border-radius: var(--radius); background: var(--page); box-shadow: var(--shadow-float); font: 400 12px/16px var(--font-sans); color: var(--ink-2); }
-@media (max-width: 960px) { body.app .legend { display: none; } }
-body.app #tip { position: fixed; z-index: 30; max-width: 420px; padding: 8px 10px; border-radius: var(--radius); background: var(--ink); color: var(--page); font: 400 13px/18px var(--font-sans); box-shadow: var(--shadow-float); }
-body.app #err { position: fixed; left: 16px; right: 16px; bottom: 16px; z-index: 60; }
 
 /* Footer (spec 2.4) and theme toggle */
 .site-footer { padding-block: 40px; font: 400 14px/20px var(--font-sans); color: var(--ink-2); }

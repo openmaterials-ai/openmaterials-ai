@@ -213,8 +213,8 @@ function renderIndex(material){
     '<p class="lede">An experiment is the set of values one source contributed to the map: a simulation ' +
     'campaign, a measurement, or a parsed paper, grouped by its provenance reference. Each experiment has ' +
     'a URL that carries the reference, and the page shows the map version it renders.</p>',
-    (material ? '<div class="meta"><span class="chip">Material ' + esc(material) +
-      '</span><a class="chip" href="#">Clear filter</a></div>' : '') +
+    (material ? '<div class="meta"><span class="pill">Material ' + esc(material) +
+      '</span><a class="pill" href="#">Clear filter</a></div>' : '') +
     (rows ? '<dl class="ledger xp-list">' + rows + '</dl>' :
       '<p class="empty">No experiment in this site build matches that material.</p>'));
 }

@@ -2,10 +2,8 @@
 
 site.js renders the one header into a data-site-header mount: the links Map,
 Playground, Guide and Document, and the GitHub button. Every content page
-mounts it. The four tool pages are pending the final shell pass: they still
-inline their own header and nav, and move to the mount with
-data-variant="app" when the shell lands there. Until then this contract
-accepts either form on those four pages.
+mounts it, and the four tool pages mount its app variant (data-variant="app"),
+which adds the theme toggle. No page inlines a nav of its own.
 """
 
 import re
@@ -31,7 +29,7 @@ INJECTED = [
     "codes/index.html",
 ]
 
-# Pending the final shell pass (spec 5.1): inline header now, the app mount later.
+# The tool pages mount the app variant of the same header (spec 2.3, 5.1).
 TOOL_PAGES = [
     "map/index.html",
     "map-3d/index.html",
@@ -60,15 +58,19 @@ def test_injected_pages_mount_the_shared_header():
         assert 'aria-label="Primary"' not in s, rel + " still inlines a nav"
 
 
-def test_tool_pages_carry_a_header_pending_the_shell_pass():
+def test_tool_pages_mount_the_app_header():
     for rel in TOOL_PAGES:
         s = (DOCS / rel).read_text()
-        if "data-site-header" in s:
-            assert 'data-variant="app"' in s and "assets/site.js" in s, rel
-            continue
-        nav = re.search(r'<nav[^>]*aria-label="Primary"[^>]*>(.*?)</nav>', s, re.S)
-        assert nav, rel + " has neither the app mount nor its inline nav"
-        assert "openmaterials.pdf" not in nav.group(1), rel + " nav links the raw PDF"
+        assert '<div data-site-header data-variant="app"></div>' in s, rel
+        assert '<script src="../assets/site.js"></script>' in s, rel
+        assert 'aria-label="Primary"' not in s, rel + " still inlines a nav"
+        assert 'class="top"' not in s and 'class="pg-top"' not in s, rel + " still inlines a header"
+
+
+def test_every_page_marks_its_own_nav_item():
+    for section, current in (("map/", "map/"), ("map-3d/", "map/"), ("map-trace/", "map/"),
+                             ("play/", "play/"), ("guide/", "guide/"), ("document/", "document/")):
+        assert "'" + section + "': '" + current + "'" in SITE_JS, section
 
 
 def test_no_page_is_headerless():
@@ -77,7 +79,7 @@ def test_no_page_is_headerless():
         if rel.parts[0] in EXEMPT_DIRS:
             continue
         s = page.read_text()
-        assert "data-site-header" in s or 'aria-label="Primary"' in s, str(rel)
+        assert "data-site-header" in s and "assets/site.js" in s, str(rel)
 
 
 def test_footer_links_codes_and_lean():

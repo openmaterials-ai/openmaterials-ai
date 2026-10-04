@@ -2,9 +2,9 @@
 
 The Learn tab is the playground's main item and default: first in the tab
 row, active on landing, carrying the full parser experience (the one
-implementation; the old /learn/ URL redirects here). The top bar carries the
-same navigation as every other page, so moving between Map, Guide, Play,
-Learn, Document, and Source is one consistent gesture site-wide.
+implementation; the old /learn/ URL redirects here). The header is the shared
+one every page mounts, so moving between Map, Playground, Guide, Document, and
+GitHub is one consistent gesture site-wide.
 """
 from __future__ import annotations
 
@@ -37,11 +37,13 @@ def test_learn_tab_carries_the_full_parser_experience():
 
 
 def test_playground_navigation_matches_the_site():
-    nav = re.search(r'<nav class="pg-nav"[^>]*>(.*?)</nav>', _PLAY, re.S)
-    assert nav, "no site navigation on the playground top bar"
-    labels = re.findall(r">([A-Za-z]+)</a>", nav.group(1))
-    assert labels == ["Map", "Guide", "Play", "Learn", "Codes", "Document", "Source"], labels
-    assert 'class="active" href="./"' in nav.group(1), "Play must be marked active"
+    """The playground mounts the shared app header (site.js renders the
+    links, marks Playground current, and carries the theme toggle); no
+    inline top bar or nav of its own remains."""
+    assert '<div data-site-header data-variant="app"></div>' in _PLAY
+    assert '<script src="../assets/site.js"></script>' in _PLAY
+    assert 'class="pg-nav"' not in _PLAY and 'class="pg-top"' not in _PLAY
+    assert 'aria-label="Primary"' not in _PLAY, "the nav comes from site.js only"
 
 
 def test_old_learn_url_redirects_to_the_playground():

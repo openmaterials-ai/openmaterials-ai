@@ -93,9 +93,9 @@ function pinHtml(){
 function badgesHtml(g){
   var out = '';
   if (g.has_cross_code)
-    out += '<span class="badge cross" title="The same method computed by different codes on the same inputs">cross-code</span>';
+    out += '<span class="pill cross" title="The same method computed by different codes on the same inputs">cross-code</span>';
   if (g.has_measurement)
-    out += '<span class="badge exp" title="A measurement and a simulation of the same quantity under the same conditions">theory vs experiment</span>';
+    out += '<span class="pill exp" title="A measurement and a simulation of the same quantity under the same conditions">theory vs experiment</span>';
   return out ? '<div class="badges">' + out + '</div>' : '';
 }
 
@@ -108,7 +108,7 @@ function groupHtml(g){
         (m.units ? ' <span class="u">' + esc(m.units) + '</span>' : '') + '</td>' +
       '<td class="est">' + esc(m.estimator) + '</td>' +
       '<td class="code">' + esc(m.ref) + '</td>' +
-      '<td class="kind"><span class="tag kind-' + esc(m.kind) + '">' + esc(m.kind) + '</span></td>' +
+      '<td class="kind"><span class="pill kind-' + esc(m.kind) + '">' + esc(m.kind) + '</span></td>' +
       '</tr>';
   }).join('');
   return '<section class="grp">' +

@@ -2,16 +2,26 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Playground | OpenMaterials</title>
 <meta name="description" content="Parse a paper into proposed values, open a lineage record, resolve a method name to map nodes, trace a derivation, or compare two materials by composition distance.">
+<link rel="canonical" href="https://openmaterials.ai/play/">
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="openmaterials.ai">
 <meta property="og:title" content="Playground | OpenMaterials">
 <meta property="og:description" content="Parse a paper, open a run record, or resolve a method name against the OpenMaterials map.">
-<meta name="twitter:card" content="summary">
+<meta property="og:url" content="https://openmaterials.ai/play/">
+<meta property="og:image" content="https://openmaterials.ai/assets/og.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The openmaterials.ai mark and wordmark above the line A versioned map of physics, with the licenses: map data CC BY 4.0, code Apache 2.0.">
+<meta name="twitter:card" content="summary_large_image">
+<script>try{const t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch{}</script>
+<link rel="preload" href="../assets/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../assets/fonts/GeistMono-Variable.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="../assets/vendor/katex/dist/katex.min.css">
 <link rel="stylesheet" href="../assets/site.css">
 <style>
@@ -30,17 +40,6 @@
   html,body{height:100%;}
   body.app{height:100vh;height:100dvh;margin:0;display:flex;flex-direction:column;overflow:hidden;max-width:100vw;background:var(--page,#FFFFFF);color:var(--ink,#171717);font:400 14px/20px var(--font-sans,"Geist","Geist Fallback",ui-sans-serif,system-ui,sans-serif);-webkit-font-smoothing:antialiased;}
   :focus-visible{outline:2px solid var(--ink,#171717);outline-offset:2px;}
-  /* header, until the shared app header replaces it */
-  .pg-top{flex:0 0 auto;height:var(--header-h,64px);display:flex;align-items:center;gap:16px;padding:0 var(--inset,16px);border-bottom:1px solid var(--line,#EBEBEB);background:var(--page,#FFFFFF);overflow:hidden;}
-  .pg-top .brand{display:flex;align-items:center;gap:8px;font-weight:500;font-size:16px;line-height:24px;letter-spacing:-.02em;color:var(--ink,#171717);text-decoration:none;white-space:nowrap;}
-  .pg-top .om-mark{width:20px;height:20px;flex:none;display:block;}
-  .pg-top .sub{color:var(--ink-2,#4D4D4D);white-space:nowrap;}
-  .pg-nav{margin-left:auto;display:flex;align-items:center;gap:4px;}
-  .pg-nav a{padding:6px 8px;color:var(--ink-2,#4D4D4D);text-decoration:none;white-space:nowrap;}
-  .pg-nav a:hover,.pg-nav a.active{color:var(--ink,#171717);}
-  @media (max-width:960px){.pg-top .sub{display:none;}}
-  @media (max-width:768px){.pg-nav{display:none;}}
-  .om-beta{font-family:var(--font-mono);font-size:.58rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);border:1px solid currentColor;border-radius:999px;padding:1px 7px;flex:none;line-height:1.5;cursor:default;}
   /* the tab strip: six tabs and Share; a 3 x 2 grid with Share beside it below 601 px */
   .pg-main{flex:1 1 auto;display:flex;flex-direction:column;min-height:0;min-width:0;max-width:100vw;overflow:hidden;}
   .pg-tabs{flex:0 0 auto;display:flex;flex-wrap:wrap;align-items:center;gap:0;padding:0 var(--inset,16px);border-bottom:1px solid var(--line,#EBEBEB);background:var(--page,#FFFFFF);}
@@ -314,19 +313,7 @@
 </style>
 </head>
 <body class="app">
-<div class="pg-top">
-  <a class="brand" href="../"><img class="om-mark" src="../assets/logo.svg" alt="" width="20" height="20">openmaterials.ai</a><span class="om-beta" title="Beta: the map and its schema are still growing. Every committed value is content-addressed, so its identifier stays resolvable across versions.">beta</span>
-  <span class="sub">playground</span>
-  <nav class="pg-nav" aria-label="Primary">
-    <a href="../map/">Map</a>
-    <a href="../guide/">Guide</a>
-    <a class="active" href="./">Play</a>
-    <a href="#tab=learn">Learn</a>
-    <a href="../codes/">Codes</a>
-    <a href="../document/">Document</a>
-    <a href="https://github.com/openmaterials-ai/openmaterials-ai" target="_blank" rel="noopener">Source</a>
-  </nav>
-</div>
+<div data-site-header data-variant="app"></div>
 
 <div class="pg-main">
   <div class="pg-tabs">
@@ -3333,5 +3320,6 @@ window.addEventListener('resize', function(){ if (svg.querySelector('.pg-node'))
   });
 })();
 </script>
+<script src="../assets/site.js"></script>
 </body>
 </html>

@@ -2,16 +2,26 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Map | OpenMaterials</title>
 <meta name="description" content="The OpenMaterials map lays out every quantity by tier. Select one to see its formula, the edges that produce it, and the codes that compute it.">
+<link rel="canonical" href="https://openmaterials.ai/map/">
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="openmaterials.ai">
 <meta property="og:title" content="Map | OpenMaterials">
 <meta property="og:description" content="Every quantity on the OpenMaterials map is laid out by tier, with its formula and the codes that compute it.">
-<meta name="twitter:card" content="summary">
+<meta property="og:url" content="https://openmaterials.ai/map/">
+<meta property="og:image" content="https://openmaterials.ai/assets/og.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The openmaterials.ai mark and wordmark above the line A versioned map of physics, with the licenses: map data CC BY 4.0, code Apache 2.0.">
+<meta name="twitter:card" content="summary_large_image">
+<script>try{const t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch{}</script>
+<link rel="preload" href="../assets/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../assets/fonts/GeistMono-Variable.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="../assets/vendor/katex/dist/katex.min.css">
 <link rel="stylesheet" href="../assets/site.css">
 <style>
@@ -37,15 +47,6 @@
   *{box-sizing:border-box;}
   body.app{height:100vh;height:100dvh;margin:0;display:flex;flex-direction:column;overflow:hidden;background:var(--page,#FFFFFF);color:var(--ink,#171717);font:400 14px/20px var(--font-sans,"Geist","Geist Fallback",ui-sans-serif,system-ui,sans-serif);-webkit-font-smoothing:antialiased;}
   :focus-visible{outline:2px solid var(--ink,#171717);outline-offset:2px;}
-  /* header, until the shared app header replaces it */
-  .top{flex:none;height:var(--header-h,64px);display:flex;align-items:center;gap:16px;padding:0 var(--inset,16px);border-bottom:1px solid var(--line,#EBEBEB);background:var(--page,#FFFFFF);overflow:hidden;}
-  .top .brand{display:inline-flex;align-items:center;gap:8px;font-weight:500;font-size:16px;line-height:24px;letter-spacing:-.02em;color:var(--ink,#171717);text-decoration:none;white-space:nowrap;}
-  .top .brand .om-mark{width:20px;height:20px;flex:none;display:block;}
-  .top .nav{display:flex;align-items:center;gap:4px;margin-left:auto;}
-  .top .nav a{padding:6px 8px;color:var(--ink-2,#4D4D4D);text-decoration:none;white-space:nowrap;}
-  .top .nav a:hover,.top .nav a.active{color:var(--ink,#171717);}
-  @media (max-width:768px){.top .nav{display:none;}}
-  .om-beta{font-family:var(--font-mono);font-size:.58rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);border:1px solid currentColor;border-radius:999px;padding:1px 7px;flex:none;line-height:1.5;cursor:default;}
   /* toolbar */
   .toolbar{flex:none;display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:8px var(--inset,16px);border-bottom:1px solid var(--line,#EBEBEB);background:var(--page,#FFFFFF);}
   .toolbar .om-search{flex:1 1 200px;max-width:360px;min-width:0;}
@@ -142,21 +143,7 @@
 </style>
 </head>
 <body class="app">
-<div class="top">
-  <a class="brand" href="../index.html" aria-label="openmaterials home">
-    <img class="om-mark" src="../assets/logo.svg" alt="" width="20" height="20"><span>openmaterials.ai</span>
-  </a>
-  <span class="om-beta" title="Beta: the map and its schema are still growing. Every committed value is content-addressed, so its identifier stays resolvable across versions.">beta</span>
-  <nav class="nav" aria-label="Primary">
-    <a href="../map/" class="active" aria-current="page">Map</a>
-    <a href="../guide/">Guide</a>
-    <a href="../play/">Play</a>
-    <a href="../learn/">Learn</a>
-    <a href="../codes/">Codes</a>
-    <a href="../document/">Document</a>
-    <a href="https://github.com/openmaterials-ai/openmaterials-ai" target="_blank" rel="noopener">Source</a>
-  </nav>
-</div>
+<div data-site-header data-variant="app"></div>
 <div class="toolbar">
   <span class="om-search"><svg class="om-search-ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.5" y2="16.5"></line></svg><input class="om-input" id="q" placeholder="Search by name or method" aria-label="Find a quantity on the map" autocomplete="off"></span>
   <nav class="view-switch" aria-label="Map view"><a href="../map/" aria-current="page">2D</a><a href="../map-3d/">3D</a><a href="../map-trace/">Trace</a></nav>
@@ -768,5 +755,6 @@ function renderFallback(graph, bandOf){
   fb.innerHTML=s;
 }
 </script>
+<script src="../assets/site.js"></script>
 </body>
 </html>

@@ -155,13 +155,6 @@
     loadVersion();
   }
 
-  // The map views carry the selection: a view-switch link takes the current node= along.
-  document.addEventListener('click', function (e) {
-    var a = e.target.closest && e.target.closest('.view-switch a');
-    var m = a && location.hash.match(/[#&]node=([^&]*)/);
-    if (m) a.href = a.href.split('#')[0] + '#node=' + m[1];
-  });
-
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', mount);
   else mount();
 })();

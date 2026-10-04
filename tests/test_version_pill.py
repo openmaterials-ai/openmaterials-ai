@@ -19,12 +19,12 @@ import pytest
 _DOCS = Path(__file__).resolve().parents[1] / "docs"
 _SITE_JS = _DOCS / "assets" / "site.js"
 
-# Pages on the shared shell. The four tool pages keep their inline header,
-# beta chip included, until the final shell pass moves them to the mount.
+# Every page on the shell: the content pages and the four tool pages.
 _SHELL_PAGES = ["index.html", "guide/index.html", "document/index.html",
                 "codes/index.html", "lean/index.html", "lean/roadmap/index.html",
                 "agreement/index.html", "experiment/index.html",
-                "lineage/index.html", "404.html"]
+                "lineage/index.html", "404.html", "map/index.html",
+                "map-3d/index.html", "map-trace/index.html", "play/index.html"]
 
 _RENDER = r"""
 const fs = require('fs');
@@ -76,21 +76,26 @@ def test_the_pill_and_stamp_carry_the_map_version():
 
 
 def test_the_header_links_and_marks_the_current_view():
-    got = _render("https://openmaterials.ai/map-3d/", "app")
-    nav = re.search(r'<nav class="site-nav" aria-label="Primary">(.*?)</nav>', got["header"]).group(1)
-    assert re.findall(r">([^<]+)</a>", nav) == ["Map", "Playground", "Guide", "Document"]
-    assert re.findall(r'<a href="[^"]*" aria-current="page">([^<]+)</a>', nav) == ["Map"]
-    assert '<fieldset class="theme">' in got["header"], "the app header carries the theme toggle"
-    assert 'href="https://github.com/openmaterials-ai/openmaterials-ai">GitHub</a>' in got["header"]
+    for page, current in (("map/", "Map"), ("map-3d/", "Map"), ("map-trace/", "Map"), ("play/", "Playground")):
+        got = _render("https://openmaterials.ai/" + page, "app")
+        nav = re.search(r'<nav class="site-nav" aria-label="Primary">(.*?)</nav>', got["header"]).group(1)
+        assert re.findall(r">([^<]+)</a>", nav) == ["Map", "Playground", "Guide", "Document"], page
+        assert re.findall(r'<a href="[^"]*" aria-current="page">([^<]+)</a>', nav) == [current], page
+        assert '<fieldset class="theme">' in got["header"], "the app header carries the theme toggle"
+        assert 'href="https://github.com/openmaterials-ai/openmaterials-ai">GitHub</a>' in got["header"]
     content = _render("https://openmaterials.ai/guide/")
     assert '<fieldset class="theme">' not in content["header"]
     assert '<fieldset class="theme">' in content["footer"]
 
 
-def test_the_beta_chip_is_gone_from_the_shell():
+def test_every_page_gets_the_pill_and_no_beta_chip():
+    """The pill lives in the one header site.js renders, so every page that
+    mounts the header shows it; no page carries the beta chip."""
     css = (_DOCS / "assets" / "site.css").read_text()
     assert "om-beta" not in _SITE_JS.read_text() and "om-beta" not in css
     for rel in _SHELL_PAGES:
         s = (_DOCS / rel).read_text()
         assert "om-beta" not in s, rel
         assert "data-site-header" in s and "assets/site.js" in s, rel
+    for page in _DOCS.glob("**/*.html"):
+        assert "om-beta" not in page.read_text(), str(page.relative_to(_DOCS))
