@@ -23,6 +23,7 @@
 <link rel="preload" href="../assets/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../assets/fonts/GeistMono-Variable.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="../assets/site.css">
+<link rel="stylesheet" href="../assets/vendor/katex/dist/katex.min.css">
 <style>
   /* one block per agreement group (spec 4.2) */
   .grp { margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--line); }
@@ -33,7 +34,7 @@
   .badges { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
   .cond { margin: 12px 0 16px; font-size: 14px; line-height: 20px; color: var(--ink-2); }
   .cond .mono { color: var(--ink); overflow-wrap: anywhere; }
-  td.val, td.est, td.code { font-family: var(--font-mono); font-size: 13px; }
+  td.val, td.code { font-family: var(--font-mono); font-size: 13px; }
   td.val { white-space: nowrap; }
   td .u { color: var(--ink-2); }
   .pin { margin-top: 48px; }
@@ -46,7 +47,6 @@
 <div data-site-header></div>
 <main class="frame" id="main">
   <header class="page-head">
-    <p class="crumb"><a href="../experiment/">Experiments</a></p>
     <p class="eyebrow">Evidence</p>
     <h1>Cross-code agreement</h1>
     <p class="lede">Each group below holds values of one quantity for one material, recorded under matching conditions. They differ in the method or code that produced them, and possibly in settings the records do not state, so the spread of a group (the range of its values divided by their mean) measures how far its values disagree.</p>
@@ -56,6 +56,7 @@
       The raw groups are plain JSON in <a href="../data/agreement.json">../data/agreement.json</a>.</p></noscript>
   </div></div>
 </main>
+<script src="../assets/vendor/katex/dist/katex.min.js"></script>
 <script>
 'use strict';
 function esc(s){
@@ -72,6 +73,19 @@ function condText(c){
   return Object.keys(c).map(function(k){ return k + ' = ' + c[k]; }).join('  ·  ');
 }
 function pct(x){ return (Number(x) * 100).toFixed(1) + '%'; }
+function tex(s){
+  if (!s) return '';
+  try { return katex.renderToString(String(s), { throwOnError: false }); } catch (e) { return esc(s); }
+}
+// A plain method label from the node the value sits on: the estimator's leading [label]. A value
+// on the method-neutral node has none. The free-text method string never prints.
+var METHOD = { 'bte_solver=direct_inverse': 'Direct inversion', 'bte_solver=rta': 'RTA' };
+function methodLabel(m){
+  var lab = String(m.estimator || '').split(' | ')[0];
+  if (/^(method|scattering)=|^\(/.test(lab)) lab = '';
+  if (lab) return METHOD[lab] || lab.replace(/^[^=]*=/, '').replace(/_/g, ' ');
+  return m.kind === 'measurement' ? 'Measured' : 'Solver not stated';
+}
 
 var DATA = null;   // { summary, groups, catalog }
 function load(){
@@ -90,12 +104,9 @@ function load(){
 }
 
 function pinHtml(){
-  var v = (DATA.summary && DATA.summary.version) || '';
-  return '<p class="notice pin">Map version <span class="mono">' + esc(v.slice(0, 12)) + '</span>' +
-    (v ? ' (<span class="mono">' + esc(v) + '</span>)' : '') +
-    '. The groups are derived from the values committed in the current site build. Cite the map version with any spread you share.' +
-    '<br>Contributors grant OpenMaterials-AI a non-exclusive license to redistribute each value under CC BY 4.0 and keep every other right. Raw artifacts are never ingested, and reuse credits the source named in each value\'s provenance ' +
-    '(<a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/main/GOVERNANCE.md#data-ownership-and-fairness">GOVERNANCE.md, "Data ownership and fairness"</a>).</p>';
+  var v = ((DATA.summary && DATA.summary.version) || '').slice(0, 12);
+  return v ? '<p class="notice pin"><a href="../#cite">Cite the map version</a>, <span class="mono">' + esc(v) +
+    '</span>, with any spread you share.</p>' : '';
 }
 
 function badgesHtml(g){
@@ -109,12 +120,12 @@ function badgesHtml(g){
 
 function groupHtml(g){
   var node = (DATA.catalog[g.observable]) || {};
-  var sym = node.symbol ? '<span class="sym">' + esc(node.symbol) + '</span>' : '';
+  var sym = node.symbol ? '<span class="sym">' + tex(node.symbol) + '</span>' : '';
   var rows = (g.members || []).map(function(m){
     return '<tr>' +
       '<td class="val" data-label="Value">' + esc(m.value) +
         (m.units ? ' <span class="u">' + esc(m.units) + '</span>' : '') + '</td>' +
-      '<td class="est" data-label="Estimator">' + esc(m.estimator) + '</td>' +
+      '<td class="est" data-label="Method">' + esc(methodLabel(m)) + '</td>' +
       '<td class="code" data-label="Source">' + esc(m.ref) + '</td>' +
       '<td class="kind" data-label="Kind"><span class="pill kind-' + esc(m.kind) + '">' + esc(m.kind) + '</span></td>' +
       '</tr>';
@@ -128,7 +139,7 @@ function groupHtml(g){
     badgesHtml(g) +
     '<p class="cond">Conditions <span class="mono">' + esc(condText(g.conditions)) + '</span></p>' +
     '<div class="table-wrap"><table class="table stack"><thead><tr>' +
-      '<th>Value</th><th>Estimator</th><th>Source</th><th>Kind</th>' +
+      '<th>Value</th><th>Method</th><th>Source</th><th>Kind</th>' +
     '</tr></thead><tbody>' + rows + '</tbody></table></div>' +
     '</section>';
 }
@@ -145,7 +156,7 @@ function render(){
     '</dl>';
   var body = groups.length
     ? groups.map(groupHtml).join('')
-    : '<p class="empty">No comparison groups in this site build yet. A group needs values from different methods or codes ' +
+    : '<p class="empty">No comparison groups yet. A group needs values from different methods or codes ' +
       'for the same observable and material under the same recorded conditions.</p>';
   document.getElementById('groups').innerHTML = summary + body + pinHtml();
 }
