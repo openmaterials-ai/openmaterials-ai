@@ -78,9 +78,11 @@ def title_to_text(title: str) -> str:
     t = re.sub(r"\\texttt\{([^{}]*)\}", r"\1", title)
     t = re.sub(r"\\emph\{([^{}]*)\}", r"\1", t)
     t = t.replace(r"\_", "_").replace(r"\&", "&").replace("~", " ")
-    t = t.replace("''", "”").replace("``", "“")
-    t = t.replace("'", "’").replace("`", "‘")
+    t = t.replace("``", '"').replace("''", '"').replace("`", "'")
     return re.sub(r"\s+", " ", t).strip()
+
+
+STRAIGHT_QUOTES = str.maketrans({"“": '"', "”": '"', "‘": "'", "’": "'"})
 
 
 # ---------------------------------------------------------------------------
@@ -542,14 +544,14 @@ PAGE_TEMPLATE = """<!DOCTYPE html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>openmaterials.ai: the document</title>
-<meta name="description" content="The project's single source of truth as readable documentation: vision, product, architecture, kernel, and status, converted from the LaTeX source, with the PDF one click away.">
+<title>The document | OpenMaterials</title>
+<meta name="description" content="The full OpenMaterials specification (vision, product, architecture, kernel, and status) is published here as HTML, generated from docs/openmaterials.tex. The typeset PDF is linked at the top.">
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="openmaterials.ai">
-<meta property="og:title" content="openmaterials.ai: the document">
-<meta property="og:description" content="Git for science: a versioned map of physics. The full document as readable HTML.">
+<meta property="og:title" content="The document | OpenMaterials">
+<meta property="og:description" content="The full OpenMaterials specification is published here as HTML, with the typeset PDF.">
 <meta name="twitter:card" content="summary">
 <link rel="stylesheet" href="../assets/vendor/inter/inter.css">
 <link rel="stylesheet" href="../assets/vendor/source-serif-4/source-serif-4.css">
@@ -562,13 +564,13 @@ PAGE_TEMPLATE = """<!DOCTYPE html>
 <div data-site-header></div>
 
 <header class="doc-hero">
-  <div class="om-overline"><span>The document</span><span aria-hidden="true">/</span><span>Single source of truth</span></div>
+  <div class="om-overline"><span>Document</span></div>
   <img class="doc-mark" src="../assets/logo.svg" alt="" width="46" height="46">
   <h1>openmaterials.ai</h1>
-  <p class="doc-tagline">Git for science: a versioned map of physics</p>
-  <p class="doc-byline">The OpenMaterials project &middot; open source: map data
-    <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/main/LICENSE-DATA">CC BY 4.0</a>, code
-    <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/main/LICENSE">Apache 2.0</a></p>
+  <p class="doc-tagline">Specification and status of the OpenMaterials map</p>
+  <p class="doc-byline">The OpenMaterials project. Map data is
+    <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/main/LICENSE-DATA">CC BY 4.0</a> and code is
+    <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/main/LICENSE">Apache 2.0</a>.</p>
   <div class="doc-actions">
     <a class="om-btn" href="../openmaterials.pdf" id="download-pdf">Download the PDF</a>
     <span class="hint">This page is generated from the LaTeX source; the PDF is the typeset original.</span>
@@ -604,6 +606,8 @@ def build_page(tex: str, pandoc: str) -> tuple[str, list[str]]:
     """Full pipeline: LaTeX source text to the final page HTML."""
     pre, notes = preprocess_tex(tex)
     body = run_pandoc(pre, pandoc)
+    # straight quotes in the HTML; the PDF keeps TeX's curly quotes
+    body = body.translate(STRAIGHT_QUOTES)
     body = dedupe_class_attr(body)
     body = remap_heading_levels(body)
     headings = collect_headings(body)
