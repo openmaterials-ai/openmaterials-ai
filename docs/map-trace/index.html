@@ -301,7 +301,7 @@ function derivationPanel(id, anc, desc){
   let h=closeBtn();
   h+='<div><span class="sym">'+tex(node.symbol)+'</span><span class="badge '+node.type+'">'+node.type+'</span></div><div class="name">'+esc(node.id)+'</div>';
   h+='<div class="summary">'+(anc.size?('Built from <b>'+anc.size+'</b> upstream quantit'+(anc.size>1?'ies':'y')+'.'):'An input quantity.')+' '
-    +(desc.size?('Feeds <b>'+desc.size+'</b> downstream quantit'+(desc.size>1?'ies':'y')+(dests.length?(', which end at '+dests.map(d=>tex(nodeById[d].symbol)).join(' ')):'')+'.'):'Nothing on the map uses it.')+'</div>';
+    +(desc.size?('Feeds <b>'+desc.size+'</b> downstream quantit'+(desc.size>1?'ies':'y')+(dests.length?(', which end at '+dests.map(d=>tex(nodeById[d].symbol)).join(', ')):'')+'.'):'Nothing on the map uses it.')+'</div>';
   h+='<div class="lab"><span class="dot u"></span>Built from</div>';
   h+= up.length? up.map((e,i)=>stepHtml(e[0],e[1],i+1,'up')).join('') : '<div class="empty">Nothing upstream: this quantity is an input.</div>';
   h+='<div class="lab"><span class="dot d"></span>Feeds</div>';
