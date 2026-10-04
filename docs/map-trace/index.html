@@ -105,7 +105,6 @@
   .arrow{color:var(--ink-2,#4D4D4D);}
   .empty{color:var(--ink-2,#4D4D4D);padding:4px 0;}
   .summary{margin-top:4px;padding:10px 12px;border:1px solid var(--line,#EBEBEB);border-radius:var(--radius,6px);background:var(--surface,#FAFAFA);color:var(--ink,#171717);}
-  .summary b{font-weight:500;}
   /* the path bar: a notice at the canvas top */
   .pathbar{position:absolute;top:16px;left:16px;z-index:6;max-width:calc(100% - 32px);display:none;align-items:center;flex-wrap:wrap;gap:8px;}
   @media (min-width:961px){.pathbar{max-width:calc(100% - 408px);}}
@@ -113,6 +112,7 @@
   .pathbar .clear{height:28px;padding:0 10px;border:0;border-radius:var(--radius,6px);background:transparent;color:var(--ink,#171717);box-shadow:0 0 0 1px var(--line,#EBEBEB);font:inherit;font-weight:500;cursor:pointer;}
   .pathbar .clear:hover{background:var(--surface-2,#F2F2F2);}
   /* the caption shown after Reset */
+  @media (min-width:961px){.rest-hint{display:none;}}   /* the toolbar hint says it there */
   .rest-hint{position:absolute;left:16px;top:16px;z-index:2;max-width:min(560px,calc(100% - 32px));margin:0;color:var(--ink-2,#4D4D4D);pointer-events:none;}
   /* legend, floating over the canvas */
   .legend{position:absolute;left:16px;bottom:16px;z-index:4;display:flex;gap:12px;align-items:center;padding:8px 12px;border-radius:var(--radius,6px);background:var(--page,#FFFFFF);box-shadow:var(--shadow-float,0 0 0 1px #EBEBEB,0 4px 8px -4px rgb(0 0 0 / .04),0 16px 24px -8px rgb(0 0 0 / .06));font-size:12px;line-height:16px;color:var(--ink-2,#4D4D4D);}
@@ -135,7 +135,7 @@
   <span class="push"></span>
   <button class="btn btn--secondary btn--sm" id="fitBtn" type="button">Fit</button>
   <button class="btn btn--secondary btn--sm" type="button" onclick="resetAll()" aria-label="Reset the trace">Reset</button>
-  <button class="btn btn--secondary btn--sm" id="copylink" type="button" aria-label="Copy a link to this trace">Copy link</button>
+  <button class="btn btn--secondary btn--sm" id="copylink" type="button" aria-label="Copy link to this trace">Copy link</button>
 </div>
 <noscript><p class="notice" style="margin:8px 16px">The tracer runs on JavaScript. The map data is plain JSON at <a href="../data/graph.json">data/graph.json</a>.</p></noscript>
 <div id="cy" class="canvas" role="main"><h1 class="sr-only">Tracer</h1><svg id="svg" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
@@ -342,7 +342,7 @@ function finishPath(a,b){
   for(let i=0;i<path.length-1;i++){ if(opByEdge[path[i]+'>>'+path[i+1]]!==undefined) paintEdge(path[i],path[i+1],'down'); else paintEdge(path[i+1],path[i],'up'); }
   // panel: the linear chain
   let h=closeBtn()+'<div class="lab"><span class="dot d"></span>Derivation path</div>';
-  h+='<div class="summary"><b>'+(path.length-1)+'</b> steps from '+tex(nodeById[a].symbol)+' to '+tex(nodeById[b].symbol)+'.</div>';
+  h+='<div class="summary">'+(path.length-1)+(path.length===2?' step':' steps')+' from '+tex(nodeById[a].symbol)+' to '+tex(nodeById[b].symbol)+'.</div>';
   for(let i=0;i<path.length-1;i++){ const fwd=opByEdge[path[i]+'>>'+path[i+1]]!==undefined; h+= fwd? stepHtml(path[i],path[i+1],i+1,'down') : stepHtml(path[i+1],path[i],i+1,'up'); }
   const p=document.getElementById('panel'); p.innerHTML=h; p.style.display='block';
   const pb=document.getElementById('pathbar'); pb.style.display='flex'; pb.innerHTML='<span class="ep">'+symHtml[a]+'</span><span class="arrow">&rarr;</span><span class="ep">'+symHtml[b]+'</span>'+clearBtn('Clear');

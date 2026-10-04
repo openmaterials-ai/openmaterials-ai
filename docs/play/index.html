@@ -74,7 +74,7 @@
   .pg-pair label{display:flex;flex-direction:column;gap:4px;flex:1 1 140px;min-width:0;font-size:12px;color:var(--ink-2,#4D4D4D);}
   .pg-pair .select{width:100%;}
   .pg-pair .pg-input{flex:1 1 80px;width:auto;min-width:0;}
-  #distTryComp{font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);font-weight:500;color:var(--ink,#171717);}
+  #distTryComp{font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);color:var(--ink,#171717);}
   .pg-table{display:block;width:100%;margin:0 0 12px;overflow-x:auto;border-collapse:collapse;font-size:12px;line-height:16px;}
   .pg-table th,.pg-table td{padding:6px 8px;border-bottom:1px solid var(--line,#EBEBEB);text-align:left;white-space:nowrap;}
   .pg-table th{font-weight:500;color:var(--ink-2,#4D4D4D);}
@@ -107,10 +107,8 @@
      client-side validation banners only. */
   .xp-drop{padding:12px;border:1px dashed var(--edge,#8F8F8F);border-radius:var(--radius,6px);background:var(--page,#FFFFFF);color:var(--ink-2,#4D4D4D);font-size:12px;line-height:16px;text-align:center;cursor:pointer;transition:background-color var(--dur,150ms) var(--ease,ease);}
   .xp-drop.drag{background:var(--surface-2,#F2F2F2);color:var(--ink,#171717);}
-  .xp-drop b{font-weight:500;color:var(--ink,#171717);}
   .xp-err,.xp-ok{margin-bottom:10px;padding:12px 16px;border:1px solid var(--line,#EBEBEB);border-radius:var(--radius,6px);background:var(--surface,#FAFAFA);color:var(--ink,#171717);font-size:14px;line-height:20px;overflow-wrap:anywhere;}
   .xp-err{border-color:var(--ink,#171717);}
-  .xp-err b,.xp-ok b{font-weight:500;}
   .pg-sel{display:flex;flex-direction:column;gap:8px;margin:8px 0;}
   .pg-canvas{position:relative;flex:1 1 auto;min-width:0;min-height:0;overflow:hidden;background:var(--canvas-dots,radial-gradient(circle at 1px 1px,var(--line,#EBEBEB) 1px,transparent 0) 0 0/24px 24px),var(--page,#FFFFFF);}
   #pgsvg{width:100%;height:100%;display:block;touch-action:none;}
@@ -212,7 +210,6 @@
   .rec-complete-go{height:32px;padding:0 12px;border:0;border-radius:var(--radius,6px);background:var(--page,#FFFFFF);box-shadow:0 0 0 1px var(--line,#EBEBEB);color:var(--ink,#171717);font:inherit;font-weight:500;font-size:14px;cursor:pointer;}
   .rec-complete-go:hover{background:var(--surface-2,#F2F2F2);}
   .rec-conf{margin:6px 0;padding:6px 10px;border:1px solid var(--line,#EBEBEB);border-radius:var(--radius,6px);background:var(--surface,#FAFAFA);color:var(--ink-2,#4D4D4D);font-size:13px;line-height:20px;overflow-wrap:anywhere;}
-  .rec-conf b{font-weight:500;color:var(--ink,#171717);}
   .rec-conf-exact{border-color:var(--data-obs-line,#4F46E5);background:var(--surface-2,#F2F2F2);}
   .rec-conf-code{font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);font-size:12px;font-weight:500;color:var(--ink,#171717);}
   .rec-conf-mark{font-size:12px;font-weight:500;color:var(--data-obs-line,#4F46E5);}
@@ -237,7 +234,6 @@
   /* WHAT IT MEANS ON THE MAP: plain descriptive text, not a panel */
   .rec-desc{margin:0 0 6px;font-size:13px;line-height:20px;color:var(--ink-2,#4D4D4D);}
   .rec-meta{margin:0 0 4px;font-size:13px;line-height:20px;color:var(--ink-2,#4D4D4D);}
-  .rec-meta b,.rec-lineage b{font-weight:500;color:var(--ink,#171717);}
   .rec-lineage{margin:0;font-size:13px;line-height:20px;color:var(--ink-2,#4D4D4D);}
   /* ARTIFACTS / where the data lives: a plain list of pointers and links */
   .rec-arts{display:flex;flex-direction:column;gap:4px;margin:0;padding:0;list-style:none;}
@@ -432,7 +428,7 @@
         <input class="pg-input" id="distTryFa" size="10" value="NaCl" aria-label="Formula A">
         <span>vs</span>
         <input class="pg-input" id="distTryFb" size="10" value="KCl" aria-label="Formula B">
-        <b id="distTryComp"></b>
+        <span id="distTryComp"></span>
       </p>
       <div id="distTryBar" style="max-width:420px;height:8px;border:1px solid currentColor;border-radius:4px;overflow:hidden">
         <div id="distTryFill" style="height:100%;width:0;background:currentColor"></div>
@@ -470,7 +466,7 @@
       <button class="om-btn om-btn-sm" id="loadXExample" type="button">Load an example</button>
       <label class="pg-field" for="xInput">Lineage record JSON:</label>
       <textarea class="pg-input" id="xInput" rows="9" placeholder='{"lineage": {"node": "ThermalConductivity[transport_model=hnemd]", "material": {"name": "Si"}, "hyperparameters": {"nep_cutoff": 8.0}}}'></textarea>
-      <div class="xp-drop" id="xDrop" role="button" tabindex="0" style="margin-top:8px">Drop a <b>.json</b> record here, or <b>click to choose a file</b>.
+      <div class="xp-drop" id="xDrop" role="button" tabindex="0" style="margin-top:8px">Drop a .json record here, or click to choose a file.
         <input type="file" id="xFile" accept=".json,application/json" style="display:none"></div>
       <div class="pg-actions">
         <button class="om-btn om-btn-sm" id="renderX" type="button">Open record</button>
@@ -502,7 +498,7 @@
   <div class="lin-ingress" id="linIngress" hidden>
     <div class="lin-ingress-row">
       <textarea class="pg-input" id="linInput" rows="3" placeholder='{"lineage": {"node": "ThermalConductivity", "material": {"name": "Si"}}}' spellcheck="false" aria-label="Lineage record JSON"></textarea>
-      <div class="xp-drop" id="linDrop" role="button" tabindex="0">Drop a <b>.json</b> record here, or <b>click to choose a file</b>.
+      <div class="xp-drop" id="linDrop" role="button" tabindex="0">Drop a .json record here, or click to choose a file.
         <input type="file" id="linFile" accept=".json,application/json" style="display:none"></div>
       <button id="linRender" type="button">Open record</button>
     </div>
@@ -852,7 +848,7 @@ function normalizeLineageRecord(record){
   var hasLineage = Object.prototype.hasOwnProperty.call(record, 'lineage');
   var hasRecipe = Object.prototype.hasOwnProperty.call(record, 'recipe');
   if (hasLineage && hasRecipe)
-    throw new Error('Invalid record: both "lineage" and legacy "recipe" keys are present.');
+    throw new Error('This record carries both a "lineage" key and the legacy "recipe" key, so its identity is ambiguous.');
   if (hasLineage || !hasRecipe) return record;
   var normalized = {};
   Object.keys(record).forEach(function(key){ if (key !== 'recipe') normalized[key] = record[key]; });
@@ -871,16 +867,16 @@ function normalizeLineageRecord(record){
    record's key is ambiguous and rejected, like the lineage+recipe pair. */
 function normalizeEnvelope(payload){
   if (!payload || typeof payload !== 'object' || Array.isArray(payload))
-    throw new Error('Not an object: a shared payload is a JSON object.');
+    throw new Error('A shared payload is a JSON object, and this is not one.');
   var hasLineages = Object.prototype.hasOwnProperty.call(payload, 'lineages');
   var hasBare = Object.prototype.hasOwnProperty.call(payload, 'lineage') ||
                 Object.prototype.hasOwnProperty.call(payload, 'recipe');
   if (hasLineages && hasBare)
-    throw new Error('Ambiguous payload: it carries both an envelope "lineages" list and a bare record key.');
+    throw new Error('This payload carries both an envelope "lineages" list and a bare record key, so it is ambiguous.');
   if (!hasLineages)
     return { v: 1, doc: null, lineages: [normalizeLineageRecord(payload)] };
   if (payload.v !== 1)
-    throw new Error('Unknown envelope version ' + JSON.stringify(payload.v) + ' (this page speaks v=1).');
+    throw new Error('This page reads envelope version 1, and this envelope is version ' + JSON.stringify(payload.v) + '.');
   if (!Array.isArray(payload.lineages) || !payload.lineages.length)
     throw new Error('An envelope needs a non-empty "lineages" list.');
   var doc = payload.doc;
@@ -988,31 +984,31 @@ function resolveInstanceById(hash, instances){
 var SHA256_RE = /^[0-9a-f]{64}$/;
 function validateLightJS(record){
   if (!record || typeof record !== 'object' || Array.isArray(record))
-    return { ok: false, error: 'Not an object: a lineage record is a JSON object.' };
+    return { ok: false, error: 'A lineage record is a JSON object, and this is not one.' };
   try { record = normalizeLineageRecord(record); }
   catch (e) { return { ok: false, error: e.message }; }
   var lineage = record.lineage;
   if (!lineage || typeof lineage !== 'object' || Array.isArray(lineage))
-    return { ok: false, error: 'No lineage: identity is the lineage, so a record needs a "lineage" object. Legacy "recipe" records still open.' };
+    return { ok: false, error: 'This record has no "lineage" object, and a record is identified by its lineage. Legacy "recipe" records still open.' };
   var node = lineage.node;
   if (node != null && typeof node !== 'string')
-    return { ok: false, error: 'lineage.node, when present, must be a string (a map node id).' };
+    return { ok: false, error: 'The lineage.node field, when present, must be a string (a map node id).' };
   var arts = record.artifacts;
   if (arts != null) {
     if (!Array.isArray(arts))
-      return { ok: false, error: 'artifacts, when present, must be a list of pointers.' };
+      return { ok: false, error: 'The artifacts field, when present, must be a list of pointers.' };
     for (var i = 0; i < arts.length; i++) {
       var a = arts[i];
       if (!a || typeof a !== 'object' || Array.isArray(a))
-        return { ok: false, error: 'artifact ' + i + ' must be an object {path, role, url?, sha256?}.' };
+        return { ok: false, error: 'Artifact ' + i + ' must be an object {path, role, url?, sha256?}.' };
       if (typeof a.path !== 'string' || !a.path)
-        return { ok: false, error: 'artifact ' + i + ' path must be a non-empty string.' };
+        return { ok: false, error: 'The path of artifact ' + i + ' must be a non-empty string.' };
       if (typeof a.role !== 'string' || !a.role)
-        return { ok: false, error: 'artifact ' + i + ' role must be a non-empty string.' };
+        return { ok: false, error: 'The role of artifact ' + i + ' must be a non-empty string.' };
       if (a.url != null && typeof a.url !== 'string')
-        return { ok: false, error: 'artifact ' + i + ' url, when present, must be a string.' };
+        return { ok: false, error: 'The url of artifact ' + i + ', when present, must be a string.' };
       if (a.sha256 != null && (typeof a.sha256 !== 'string' || !SHA256_RE.test(a.sha256)))
-        return { ok: false, error: 'artifact ' + i + ' sha256, when present, must be a 64-hex string.' };
+        return { ok: false, error: 'The sha256 of artifact ' + i + ', when present, must be a 64-hex string.' };
     }
   }
   // node-unresolved is VALID (state what we have): a named-but-off-map node, or no
@@ -1054,8 +1050,8 @@ function ingestLineage(raw, sourceLabel){
   // A one-line status above the render (client convenience; the Python
   // validate_light is the real gate for anything entering git).
   var status = v.node
-    ? (v.nodeResolved ? 'Valid record: node <b>' + esc(v.node) + '</b> resolves on this map version.'
-                      : 'Valid record: node <b>' + esc(v.node) + '</b> is not on this map version (node-unresolved, still valid).')
+    ? (v.nodeResolved ? 'Valid record: node ' + esc(v.node) + ' resolves on this map version.'
+                      : 'Valid record: node ' + esc(v.node) + ' is not on this map version (node-unresolved, still valid).')
     : 'Valid record: it names no map node (template only, node-unresolved).';
   if (!renderLineage(v.record)) return;
   // Prepend the status banner WITHOUT re-parsing the box: insertAdjacentHTML
@@ -1216,11 +1212,11 @@ function renderDistanceTab(){
   distLoaded = true;
   fetch('../data/distances.json').then(function(r){ return r.json(); }).then(function(d){
     var reg = d.registry || {distances: []};
-    var html = '<table class="pg-table"><thead><tr><th>metric</th><th>what it is</th>' +
-      '<th>true metric</th><th>ANN index</th><th>invariances</th><th>cost</th></tr></thead><tbody>';
+    var html = '<table class="pg-table"><thead><tr><th>Metric</th><th>What it is</th>' +
+      '<th>True metric</th><th>ANN index</th><th>Invariances</th><th>Cost</th></tr></thead><tbody>';
     reg.distances.forEach(function(m){
       var isDefault = reg.default && reg.default.indexOf(m.id) === 0;
-      html += '<tr><td><code>' + esc(m.key) + '</code>' + (isDefault ? ' <b>(default)</b>' : '') + '</td>' +
+      html += '<tr><td><code>' + esc(m.key) + '</code>' + (isDefault ? ' (default)' : '') + '</td>' +
         '<td>' + esc(m.description) + '</td>' +
         '<td>' + (m.metric ? 'yes' : 'no') + '</td>' +
         '<td>' + (m.ann_indexable ? 'yes' : 'no') + '</td>' +
@@ -1232,11 +1228,11 @@ function renderDistanceTab(){
 
     var zoo = d.zoo || {rows: []};
     document.getElementById('distZooNote').textContent =
-      (zoo.illustrative ? 'ILLUSTRATIVE: ' : '') + (zoo.note || '') +
+      (zoo.illustrative ? 'Illustrative: ' : '') + (zoo.note || '') +
       (zoo.reference ? ' Reference: ' + zoo.reference + '.' : '');
     var ids = reg.distances.filter(function(m){ return !m.input || m.input === 'structure'; })
       .map(function(m){ return m.id; });
-    var zh = '<table class="pg-table"><thead><tr><th>vs ' + esc(zoo.reference || 'reference') + '</th>' +
+    var zh = '<table class="pg-table"><thead><tr><th>Compared with ' + esc(zoo.reference || 'the reference') + '</th>' +
       ids.map(function(id){ return '<th>' + esc(id) + '</th>'; }).join('') + '</tr></thead><tbody>';
     (zoo.rows || []).forEach(function(row){
       zh += '<tr><td>' + esc(row.name) + '</td>' + ids.map(function(id){
@@ -1349,12 +1345,12 @@ function renderPapersCompare(){
   var shared = Object.keys(A).filter(function(k){ return k in B; });
   var html = '';
   if (shared.length) {
-    html += '<table class="pg-table"><thead><tr><th>shared quantity | material | units</th>' +
+    html += '<table class="pg-table"><thead><tr><th>Shared quantity | material | units</th>' +
       '<th>' + esc(refA) + '</th><th>' + esc(refB) + '</th><th>curve@1</th></tr></thead><tbody>';
     shared.forEach(function(k){
       var pa = A[k].pts.filter(function(p){ return p.x !== null; });
       var pb = B[k].pts.filter(function(p){ return p.x !== null; });
-      var cell = 'single points: shown side by side';
+      var cell = 'Single points, shown side by side';
       var matches = [];
       pa.forEach(function(pp){ pb.forEach(function(q){ if (pp.x === q.x) matches.push([pp.x, pp.y, q.y]); }); });
       if (matches.length && !(pa.length > 1 && pb.length > 1)) {
@@ -1366,7 +1362,7 @@ function renderPapersCompare(){
       if (pa.length > 1 && pb.length > 1) {
         var d = window.omdcJS.curveRel(pa.map(function(p){ return p.x; }), pa.map(function(p){ return p.y; }),
                                        pb.map(function(p){ return p.x; }), pb.map(function(p){ return p.y; }));
-        cell = d === null ? 'no shared T range' : d.toFixed(4);
+        cell = d === null ? 'No shared T range' : d.toFixed(4);
       }
       html += '<tr><td>' + esc(k) + '</td><td>' + A[k].pts.length + ' value' + (A[k].pts.length === 1 ? '' : 's') + '</td>' +
         '<td>' + B[k].pts.length + ' value' + (B[k].pts.length === 1 ? '' : 's') + '</td><td>' + cell + '</td></tr>';
@@ -1385,12 +1381,12 @@ function renderPapersCompare(){
   Object.keys(ma).forEach(function(a){
     Object.keys(mb).forEach(function(b){
       if (ma[a] && mb[b]) rows.push([a, b, window.omdcJS.compElmd(ma[a], mb[b]).toFixed(3)]);
-      else rows.push([a, b, 'not a parseable formula']);
+      else rows.push([a, b, 'Not a parseable formula']);
     });
   });
   if (rows.length) {
     var cap = 12;
-    html += '<table class="pg-table" style="margin-top:10px"><thead><tr><th>material of A</th><th>material of B</th><th>comp@1</th></tr></thead><tbody>' +
+    html += '<table class="pg-table" style="margin-top:10px"><thead><tr><th>Material of A</th><th>Material of B</th><th>comp@1</th></tr></thead><tbody>' +
       rows.slice(0, cap).map(function(r){ return '<tr><td>' + esc(r[0]) + '</td><td>' + esc(r[1]) + '</td><td>' + esc(r[2]) + '</td></tr>'; }).join('') +
       '</tbody></table>' + (rows.length > cap ? '<p class="pg-note">Showing ' + cap + ' of ' + rows.length + ' material pairs.</p>' : '');
   }
@@ -1484,11 +1480,11 @@ async function mintShortlink(env, btn){
           headers: { 'content-type': 'application/json' },
           body: JSON.stringify(mintEnvelope(env)) });
         if (r.ok) res = await r.json();
-        else if (r.status === 429) throw new Error('daily short-link limit reached');
-        else lastErr = new Error('the store answered ' + r.status);
+        else if (r.status === 429) throw new Error('The daily short-link limit is reached.');
+        else lastErr = new Error('The short-link service returned ' + r.status + '.');
       } catch (e) { lastErr = e; }
     }
-    if (!res) throw lastErr || new Error('unreachable');
+    if (!res) throw lastErr || new Error('The short-link service is unreachable.');
     currentShortCode = res.code;
     var doiRow = document.getElementById('bundleDoi');
     if (doiRow) doiRow.innerHTML = bundleDoiHTML(res.code);
@@ -1764,11 +1760,11 @@ function detailGroups(record, lineage){
   }
   return groups;
 }
-// A detail value formatted for the grid: a list reads "8 x 8 x 8", an object is
+// A detail value formatted for the grid: a list reads "8 × 8 × 8", an object is
 // JSON, a long hex is a hash we mark for break-anywhere wrapping.
 function detailVal(v){
   if (v == null) return { text: '', wrap: false };
-  if (Array.isArray(v)) return { text: v.map(function(x){ return fmtScalar(x); }).join(' x '), wrap: false };
+  if (Array.isArray(v)) return { text: v.map(function(x){ return fmtScalar(x); }).join(' × '), wrap: false };
   if (typeof v === 'object') return { text: JSON.stringify(v), wrap: true };
   var s = String(v);
   return { text: s, wrap: /^[0-9a-f]{16,}$/i.test(s) || s.length > 28 };
@@ -1877,8 +1873,8 @@ function lineageStatement(node){
   var inputs = lineage.leaves.map(linkName).join(', ');
   var out = linkName(node);
   var s = '<p class="rec-lineage">';
-  if (inputs) s += '<b>Inputs:</b> ' + inputs + '. ';
-  s += '<b>Output:</b> ' + out + '.</p>';
+  if (inputs) s += 'Inputs: ' + inputs + '. ';
+  s += 'Output: ' + out + '.</p>';
   return s;
 }
 
@@ -1917,7 +1913,7 @@ function mapContextHTML(node, material){
   if (gnode && gnode.tier) {
     var ti = TIERS.filter(function(t){ return t.name === gnode.tier; })[0];
     var pos = ti ? ('tier ' + (ti.order + 1) + ' of ' + TIERS.length) : '';
-    body += '<p class="rec-meta">Position: <b>' + esc(gnode.tier) + '</b> tier' + (pos ? ' (' + pos + ')' : '') +
+    body += '<p class="rec-meta">Position: ' + esc(gnode.tier) + ' tier' + (pos ? ' (' + pos + ')' : '') +
       (ti && ti.description ? '. ' + esc(ti.description) : '') + '</p>';
   }
 
@@ -2135,7 +2131,7 @@ function renderBundle(env){
   for (var i = 0; i < env.lineages.length; i++) {
     var chk = validateLightJS(env.lineages[i]);
     if (!chk.ok) {
-      showLineageError('<div class="xp-err">Lineage ' + (i + 1) + ' of the bundle: ' + esc(chk.error) + '</div>');
+      showLineageError('<div class="xp-err">Lineage ' + (i + 1) + ' of the set: ' + esc(chk.error) + '</div>');
       renderSubmap([], {});
       return false;
     }
@@ -2148,7 +2144,7 @@ function renderBundle(env){
   h += '<div class="rec-head">';
   h += '<p class="rec-lede" style="white-space:normal">' + esc(title) + '</p>';
   h += '<dl class="rec-head-meta">';
-  h += '<div><dt>Kind</dt><dd>Lineage bundle</dd></div>';
+  h += '<div><dt>Kind</dt><dd>Lineage set</dd></div>';
   h += '<div><dt>Lineages</dt><dd>' + env.lineages.length + '</dd></div>';
   h += '</dl><div class="rec-doi" id="bundleDoi">' +
     (currentShortCode ? bundleDoiHTML(currentShortCode) : bundleDoiPlaceholderHTML()) + '</div></div>';
@@ -2162,7 +2158,7 @@ function renderBundle(env){
   }
   if (rows.length) h += '<div class="rec-sec"><div class="rec-h">The shared document</div><dl class="rec-kv">' + rows.join('') + '</dl></div>';
 
-  h += '<div class="rec-sec"><div class="rec-h">The lineages in this bundle</div>' +
+  h += '<div class="rec-sec"><div class="rec-h">The lineages in this set</div>' +
     '<p class="rec-explain">Every lineage this document carries, each rendered below as a ' +
     'full datasheet on this same page. The rows here jump to the matching datasheet.</p>';
   h += '<table class="rec-vtable"><thead><tr><th>Lineage</th><th class="num">Value</th><th>Units</th><th>Id</th></tr></thead><tbody>';
@@ -2182,8 +2178,8 @@ function renderBundle(env){
       '<td class="rec-vu">' + esc(short) + '</td></tr>';
   });
   h += '</tbody></table></div>';
-  h += '<div class="rec-links"><button id="bundleCopy" type="button" title="Copy a link that carries this whole bundle in its #x= fragment.">Copy link</button>' +
-    '<button id="bundleShort" type="button" title="Store this bundle and copy a short link (openmaterials.ai/s/...). A stored bundle is public to anyone with the code.">Copy short link</button>' +
+  h += '<div class="rec-links"><button id="bundleCopy" type="button" title="Copy a link that carries this whole set in its #x= fragment.">Copy link</button>' +
+    '<button id="bundleShort" type="button" title="Store this set and copy a short link (openmaterials.ai/s/...). A stored set is public to anyone with the code.">Copy short link</button>' +
        '<span class="rec-link-note">Each lineage keeps its own id; every datasheet is on this page.</span></div>';
   h += '</div>';
 
@@ -2276,7 +2272,7 @@ function reproduceHTML(node, recordId){
       : 'within ±' + fmtValue(tol.value) + (exp.units ? ' ' + exp.units : '');
     h += '<div class="rec-conf' + (exact ? ' rec-conf-exact' : '') + '">' +
       '<span class="rec-conf-code">' + esc(t.code || '?') + '</span> pinned run: ' +
-      '<b>' + esc(fmtValue(exp.value)) + '</b>' + (exp.units ? ' ' + esc(exp.units) : '') +
+      esc(fmtValue(exp.value)) + (exp.units ? ' ' + esc(exp.units) : '') +
       ', ' + esc(tolText) +
       (exact ? ' <span class="rec-conf-mark">this exact lineage</span>'
              : (t.material ? ' <span class="rec-link-note">(' + esc(t.material) + ')</span>' : '')) +
@@ -2314,7 +2310,7 @@ function datasheetHTML(record, valid, opts){
   h += '<div><dt>Output node</dt><dd>' + output + '</dd></div>';
   h += '<div><dt>Material</dt><dd>' + esc(mat || 'not supplied') + '</dd></div>';
   h += '<div><dt>Lineage id</dt><dd title="lineage id, first 12 characters">' + esc(shortId) + '</dd></div>';
-  h += '<div><dt>Lineage</dt><dd title="the schema version this record was checked against: one rolling hash over the derivation graph and the instance-format rules">' + esc(mapVersion) + '</dd></div>';
+  h += '<div><dt>Map version</dt><dd>' + esc(mapVersion) + '</dd></div>';
   h += '</dl>' + lineageDoiHTML(record) + '</div>';
 
   // THE RECOVERY POINT for the sharing loop: a record that arrives with no
@@ -2445,7 +2441,7 @@ function renderLineage(record, opts){
 
   // a member opened out of a bundle keeps one plain way back to the paper view
   if (opts.fromBundle && currentBundle) {
-    h += '<p class="rec-meta"><a href="#" id="linBundleBack">Back to the shared bundle</a></p>';
+    h += '<p class="rec-meta"><a href="#" id="linBundleBack">Back to the shared set</a></p>';
   }
   h += datasheetHTML(record, valid, opts);
   h += '</div>';
@@ -2597,11 +2593,11 @@ function provenanceHTML(record, lineage, doc){
   } else if (typeof paper === 'string' && paper) {
     rows.push('<dt>paper</dt><dd>' + esc(paper) + '</dd>');
   }
-  if (window.__MAP_VERSION__) rows.push('<dt>lineage version</dt><dd class="wrap" title="the schema version this record was checked against: one rolling hash over the derivation graph and the instance-format rules">' + esc(String(window.__MAP_VERSION__).slice(0, 12)) + '</dd>');
+  if (window.__MAP_VERSION__) rows.push('<dt>map version</dt><dd class="wrap">' + esc(String(window.__MAP_VERSION__).slice(0, 12)) + '</dd>');
   if (!rows.length) return '';
   return '<div class="rec-sec"><div class="rec-h">Provenance</div>' +
     '<p class="rec-explain">Where this claim comes from (the paper, dataset, or code that ' +
-    'produced it) and which schema version checked it. Provenance travels with the record, ' +
+    'produced it) and which map version checked it. Provenance travels with the record, ' +
     'but only a source declared inside the lineage counts toward its id.</p>' +
     '<dl class="rec-kv">' + rows.join('') + '</dl></div>';
 }
@@ -2751,9 +2747,9 @@ function renderMapView(view){
   var mv = mapViewFromEdges(valid);
   var stale = view.v && currentVersion() && view.v.slice(0, 12) !== currentVersion();
   var note = '';
-  if (stale) note = '<div class="pg-note" style="margin-bottom:8px">Built against map ' + esc(view.v.slice(0,12)) + '; the live map is ' + esc(currentVersion()) + '. Rendering by node id.</div>';
-  if (valid.length < edges.length) note += '<div class="pg-note" style="margin-bottom:8px">' + (edges.length - valid.length) + ' edge(s) reference nodes not on this map version.</div>';
-  box.innerHTML = note + '<div class="lin-lab">' + valid.length + ' edges rendered</div><div class="lin-diagram">' +
+  if (stale) note = '<div class="pg-note" style="margin-bottom:8px">Built against map version ' + esc(view.v.slice(0,12)) + '; the live map version is ' + esc(currentVersion()) + '. Nodes render by id.</div>';
+  if (valid.length < edges.length) note += '<div class="pg-note" style="margin-bottom:8px">' + (edges.length - valid.length === 1 ? '1 edge references a node' : (edges.length - valid.length) + ' edges reference nodes') + ' not on this map version.</div>';
+  box.innerHTML = note + '<div class="lin-lab">' + valid.length + (valid.length === 1 ? ' edge' : ' edges') + ' rendered</div><div class="lin-diagram">' +
     valid.map(function(tr){ var op = String(tr[1] || '').replace(/\[.*?\]/g, '').replace(/_/g, ' ');
       return '<div class="lin-row"><span class="lin-n hot">' + esc(tr[0]) + '</span><span class="lin-op">' + esc(op) + ' &rarr;</span><span class="lin-n hot">' + esc(tr[2]) + '</span></div>'; }).join('') + '</div>';
   // any Lean theorems that cover the rendered edges: the dimension proofs, and
@@ -2804,7 +2800,7 @@ async function gzipToB64url(obj){
 async function b64urlToObj(str){
   var mode = str[0], body = bytesFromB64url(str.slice(1));
   if (mode === 'g') {
-    if (typeof DecompressionStream === 'undefined') throw new Error('this link needs a newer browser');
+    if (typeof DecompressionStream === 'undefined') throw new Error('This link needs a newer browser.');
     var ds = new DecompressionStream('gzip'); var w = ds.writable.getWriter(); w.write(body); w.close();
     body = new Uint8Array(await new Response(ds.readable).arrayBuffer());
   }
@@ -3033,7 +3029,7 @@ window.addEventListener('resize', function(){ if (svg.querySelector('.pg-node'))
     if (!resp.ok) {
       const t = (msg.error && msg.error.type) || '';
       if (t === 'budget_exhausted') throw new Error('The shared daily budget is spent; please try again tomorrow.');
-      if (t === 'rate_limit_error') throw new Error('Daily limit reached for your address; please try again tomorrow.');
+      if (t === 'rate_limit_error') throw new Error('Your address has reached its daily limit. Please try again tomorrow.');
       throw new Error((msg.error && msg.error.message) || ('The relay returned status ' + resp.status + '.'));
     }
     const txt = msg.content.map(function(b){ return b.text || ''; }).join('');
@@ -3053,7 +3049,7 @@ window.addEventListener('resize', function(){ if (svg.querySelector('.pg-node'))
     pl.appendChild(row);
     return {
       setState: function(state, msg){
-        st.className = 'prog-state ' + state; st.textContent = state;
+        st.className = 'prog-state ' + state; st.textContent = state.charAt(0).toUpperCase() + state.slice(1);
         mg.textContent = msg || '';
         spin.style.display = (state === 'reading' || state === 'extracting') ? 'inline-block' : 'none';
       }
