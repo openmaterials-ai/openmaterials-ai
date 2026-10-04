@@ -86,7 +86,7 @@ function permalinkHTML(entry, origin) {
 <meta property="og:title" content="${esc(title)}">
 <meta property="og:description" content="${esc(desc)}">
 <meta name="twitter:card" content="summary">
-<link rel="canonical" href="${esc(origin)}/l/${entry.id}">
+<link rel="canonical" href="${esc(origin)}/i/${entry.id}/">
 <meta http-equiv="refresh" content="0;url=${esc(target)}">
 </head>
 <body>
@@ -221,7 +221,7 @@ function sourceMismatchHTML(claimedRef, entry, origin) {
 <body>
 <p>The value <code>${esc(entry.id.slice(0, 12))}</code> does not belong to
 <code>${esc(claimedRef)}</code>${actual ? `; its committed source is <code>${esc(actual)}</code>` : `; it carries no in-hash source`}.
-The canonical link is <a href="${esc(origin)}/l/${esc(entry.id)}">${esc(origin)}/l/${esc(entry.id.slice(0, 12))}</a>.</p>
+The canonical link is <a href="${esc(origin)}/i/${esc(entry.id)}/">${esc(origin)}/i/${esc(entry.id)}/</a>.</p>
 </body>
 </html>
 `;

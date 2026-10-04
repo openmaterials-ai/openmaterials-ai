@@ -3,7 +3,8 @@ dynamic routes.
 
 infra/site is the edge deployment of the SAME docs/ every browser reads:
 wrangler serves docs/ as assets and the Worker script runs only for
-/l/<id> (the canonical permalink resolver) and /healthz. These tests pin the
+/l/<id> (the short-link resolver; a value's canonical URL is its /i/<id>/
+page) and /healthz. These tests pin the
 contract statically and, where node is available, run the Worker's pure
 resolver logic against the real committed projection.
 """
@@ -33,6 +34,14 @@ def test_worker_is_additive_over_the_static_site():
     assert set(cfg["assets"]["run_worker_first"]) == {"/l/*", "/s", "/s/*", "/badge/*", "/healthz"}, \
         "only the named dynamic routes may bypass the assets"
     assert cfg["name"] == "openmaterials-site"
+
+
+def test_worker_routes_on_the_domain_match_the_dynamic_paths():
+    """On openmaterials.ai the Worker is routed for exactly the paths it runs
+    first; everything else stays with the static host."""
+    cfg = _wrangler_config()
+    routes = {(r["pattern"], r["zone_name"]) for r in cfg["routes"]}
+    assert routes == {("openmaterials.ai" + p, "openmaterials.ai") for p in cfg["assets"]["run_worker_first"]}
 
 
 def test_worker_script_falls_through_to_assets():
