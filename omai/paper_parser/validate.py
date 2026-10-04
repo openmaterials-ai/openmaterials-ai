@@ -319,7 +319,7 @@ def is_delta_posing_as_value(cited_text: str, value) -> bool:
 # dynamical matrices: a "below X" on a linewidth or velocity is not the
 # band-edge narrative this gate targets, so keeping the set small avoids
 # killing legitimate values on those nodes.
-_SPECTRAL_NODE_IDS = frozenset({"Frequency", "MolecularFrequency", "PhononDOS"})
+_SPECTRAL_NODE_IDS = frozenset({"Frequency", "MolecularFrequency"})
 # Band-edge / threshold / range-bound / crossover cues in prose.
 _SPECTRAL_MARKERS = ("below", "above", "larger than", "smaller than",
                      "less than", "greater than", "lower than", "higher than",

@@ -38,6 +38,7 @@ from omai.operator.dimensions import (
     ENERGY_TIMES_LENGTH_PER_TIME,
     FREQUENCY,
     FREQUENCY_SQUARED,
+    INVERSE_FREQUENCY,
     LENGTH,
     LENGTH_PER_TIME,
     LENGTH_SQUARED,
@@ -401,13 +402,15 @@ ISOTOPE_ABUNDANCES = ObservableSpace(
 
 PHONON_DOS = ObservableSpace(
     name="PhononDOS",
-    fields=(Field("g", FREQUENCY, indices=("omega",)),),
+    fields=(Field("g", INVERSE_FREQUENCY, indices=("omega",)),),
     description=(
         "Density of states g(ω) = (1/N_q) Σ_qν δ(ω − ω_qν). A 1-D array "
-        "binned in ω. Gauge-invariant: ω_qν are basis-independent and the "
+        "binned in ω, states per unit frequency (dimension 1/frequency, the "
+        "δ's). Gauge-invariant: ω_qν are basis-independent and the "
         "sum over (q, ν) is uniformly weighted."
     ),
     tier="Harmonic",
+    aliases=("9b0af04f9828cfb02e19d5e41ab2c61fbe4759f049258b85c650baf22e43ebf1",),
 )
 
 GRUNEISEN = ObservableSpace(
@@ -423,13 +426,15 @@ GRUNEISEN = ObservableSpace(
 
 PHASE_SPACE_3PH = ObservableSpace(
     name="PhaseSpace3Phonon",
-    fields=(Field("P3", DIMENSIONLESS, indices=("q", "nu")),),
+    fields=(Field("P3", INVERSE_FREQUENCY, indices=("q", "nu")),),
     description=(
         "Three-phonon phase space P3_qν = (1/N) Σ_q'ν'ν'' [δ(ω−ω'−ω'') + "
         "2 δ(ω+ω'−ω'')] available for scattering channels involving mode "
-        "(q, ν). Doesn't include |V₃|² — purely the kinematic volume."
+        "(q, ν). Doesn't include |V₃|²: purely the kinematic volume. "
+        "Dimension 1/frequency, the δ's."
     ),
     tier="Scattering",
+    aliases=("41a47eada8fee04f0c84f46e2f4e73d50b3a51967fab666636c047cb2ddce0be",),
 )
 
 MEAN_FREE_DISPLACEMENT_RTA = HiddenSpace(

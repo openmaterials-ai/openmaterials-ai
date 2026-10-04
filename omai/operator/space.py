@@ -60,6 +60,9 @@ class Space:
     (e.g. 'Sources', 'Harmonic', 'Transport'). Empty means untiered; the
     map places untiered nodes in a trailing 'Other' band. Not part of
     identity: __hash__/__eq__ remain name-based."""
+    aliases: tuple[str, ...] = ()
+    """Former uids of this node (a re-minted identity keeps them so every
+    pin minted before the re-mint still resolves). Not part of identity."""
 
     def __hash__(self) -> int:
         return hash(self.name)

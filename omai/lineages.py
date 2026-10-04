@@ -526,9 +526,10 @@ def _validate_lineage_node(lineage, name_to_uid, *, where: str) -> None:
     """The lineage's node resolves against the live map by id AND uid pin.
 
     ``lineage.node`` is the map node id; ``lineage.node_uid`` (when the record
-    carries one, the pin) must equal the live content uid of that id. A stale
-    pin is a mismatch that fails the gate, never a silent pass: the instances
-    node-pin discipline, applied to the lineage's node.
+    carries one, the pin) must equal the live content uid of that id, or a
+    former uid the re-minted node keeps under ``aliases``. A stale pin is a
+    mismatch that fails the gate, never a silent pass: the instances node-pin
+    discipline, applied to the lineage's node.
     """
     if not isinstance(lineage, dict):
         raise LineageError(f"{where}: lineage must be an object")
@@ -536,10 +537,17 @@ def _validate_lineage_node(lineage, name_to_uid, *, where: str) -> None:
     if not isinstance(node, str) or node not in name_to_uid:
         raise LineageError(f"{where}: lineage.node {node!r} is not a live map node")
     pin = lineage.get("node_uid")
-    if pin is not None and pin != name_to_uid[node]:
+    if pin is not None and pin != name_to_uid[node] and pin not in _former_uids(node):
         raise LineageError(
             f"{where}: lineage.node_uid pin {str(pin)[:12]} does not match the "
             f"live uid {name_to_uid[node][:12]} of node {node!r}")
+
+
+def _former_uids(node: str) -> tuple[str, ...]:
+    """The former uids a re-minted node keeps as aliases; a pin minted before
+    the re-mint still resolves."""
+    from omai.map_data import _domains
+    return next((s.aliases for d in _domains() for s in d.nodes if s.name == node), ())
 
 
 def _validate_configuration(lineage, *, config_dir: Path, where: str) -> None:

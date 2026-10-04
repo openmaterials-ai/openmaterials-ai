@@ -28,7 +28,13 @@ from __future__ import annotations
 
 import sympy as sp
 
-from omai.operator.dimensions import DIMENSIONLESS, ENERGY, FREQUENCY_SQUARED, Dimension
+from omai.operator.dimensions import (
+    DIMENSIONLESS,
+    ENERGY,
+    FREQUENCY_SQUARED,
+    INVERSE_FREQUENCY,
+    Dimension,
+)
 
 __all__ = [
     "SYMBOL_DIMENSIONS",
@@ -53,13 +59,6 @@ KNOWN_VIOLATIONS: list[str] = [
     # and mass normalization that make gamma dimensionless are omitted, so the
     # bare Phi3/omega^2 leaves a residual M L^-1.
     "compute_gruneisen: lhs 1 != rhs M^1 L^-1",
-    # Three-phonon phase space: the continuum delta-sum over frequency
-    # differences carries 1/frequency (T) per the delta's dimension, while
-    # P3 is declared a dimensionless scattering-availability measure. At
-    # finite q-mesh the delta becomes a normalized (dimensionless) weight
-    # (see delta_broadening); the stray time is an artifact of the delta
-    # notation, shared with compute_dos's g delta-sum.
-    "compute_phase_space_3phonon: lhs 1 != rhs T^1",
 ]
 
 
@@ -289,7 +288,7 @@ def _edge_local_mapping(op) -> dict:
     """Per-edge {base name -> Dimension | None} mapping for `dimension_of`.
 
     Built from the edge's declared parameters (opaque parameter dimensions
-    map to None, i.e. treated as unknown) plus two symbol overrides:
+    map to None, i.e. treated as unknown) plus three symbol overrides:
 
       * dynamical matrix: on any edge touching a DynamicalMatrix /
         BareDynamicalMatrix space, ``D`` / ``D^{bare}`` is bound to
@@ -298,7 +297,9 @@ def _edge_local_mapping(op) -> dict:
       * internal energy: on any edge touching InternalEnergy /
         MolarInternalEnergy, the field symbol ``e`` is bound to ENERGY (it
         is left globally unregistered because it also names the eigenvector,
-        but eigenvectors never enter the internal-energy formulas).
+        but eigenvectors never enter the internal-energy formulas);
+      * phonon DOS: on any edge touching PhononDOS, ``g`` is bound to
+        INVERSE_FREQUENCY (globally it also names the isotope factor).
     """
     local: dict = {}
     for p in op.parameters:
@@ -308,6 +309,10 @@ def _edge_local_mapping(op) -> dict:
             local[sym] = FREQUENCY_SQUARED
     if any(s.name in _INTERNAL_ENERGY_SPACE_NAMES for s in (op.inputs + op.outputs)):
         local[_INTERNAL_ENERGY_OVERRIDE_SYMBOL] = ENERGY
+    # ``g`` is the phonon DOS on PhononDOS edges (globally ambiguous with the
+    # isotope factor g, so unregistered): a density in frequency.
+    if any(s.name == "PhononDOS" for s in (op.inputs + op.outputs)):
+        local["g"] = INVERSE_FREQUENCY
     return local
 
 

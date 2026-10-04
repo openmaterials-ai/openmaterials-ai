@@ -27,7 +27,7 @@
 {"@context": "https://schema.org", "@graph": [
  {"@type": "Dataset", "@id": "https://openmaterials.ai/#map", "name": "OpenMaterials",
   "description": "OpenMaterials is a versioned, content-addressed map of physical quantities and formulas. Simulated and measured values attach to it with their provenance. Data is CC BY 4.0 and code is Apache 2.0.",
-  "url": "https://openmaterials.ai/", "version": "f69b18c18fb7637aa6e07dbcc2a037a77c201826ae88ebcc4bfe5b464ffbee7e",
+  "url": "https://openmaterials.ai/", "version": "fc862ac975c10d48a8c49c7bdc9c0809eaa5987025bc975a3e7c2d91160cfca4",
   "license": "https://creativecommons.org/licenses/by/4.0/", "isAccessibleForFree": true,
   "creator": {"@id": "https://openmaterials.ai/#steward"}, "maintainer": {"@id": "https://openmaterials.ai/#steward"},
   "distribution": [
@@ -111,7 +111,7 @@
           <div><dt><a href="experiment/">Sources</a></dt><dd>Every committed value, grouped by the paper or run it came from.</dd></div>
           <div><dt><a href="agreement/">Cross-code agreement</a></dt><dd>Values of one quantity from different methods or codes, with the spread of each group.</dd></div>
           <div><dt><a href="lineage/">Lineage tour</a></dt><dd>One QHGK thermal conductivity result for amorphous silicon, from its derivation on the map to its lineage record.</dd></div>
-          <div><dt><a href="lean/">Verified layer</a></dt><dd>Dimensions of <span data-bind="lean-nodes">89</span> nodes declared in Lean 4, with <span data-bind="lean-edges">12</span> edge dimension statements proven against physlib and <span data-bind="lean-idents">13</span> operator identities against Mathlib.</dd></div>
+          <div><dt><a href="lean/">Verified layer</a></dt><dd>Dimensions of <span data-bind="lean-nodes">89</span> nodes declared in Lean 4, with <span data-bind="lean-edges">11</span> edge dimension statements proven against physlib and <span data-bind="lean-idents">13</span> operator identities against Mathlib.</dd></div>
           <div><dt><a href="lean/roadmap/">Formalization roadmap</a></dt><dd>Every operator on the map, rated by what a Lean proof of its formula would take: provable, trivial, needs analysis, or nothing to prove.</dd></div>
         </dl>
       </div>
@@ -215,15 +215,15 @@
   </section>
 
   <section class="close" id="cite">
-    <h2>Cite the map version you use: <span class="hash" data-bind="version12">f69b18c18fb7</span>.</h2>
-    <p class="cite-text">Barbalinardo, G. openmaterials.ai: a versioned, content-addressed map of physics. Map version <span data-bind="version12">f69b18c18fb7</span>. https://openmaterials.ai, accessed <span data-bind="today">2026-10-04</span>.</p>
+    <h2>Cite the map version you use: <span class="hash" data-bind="version12">fc862ac975c1</span>.</h2>
+    <p class="cite-text">Barbalinardo, G. openmaterials.ai: a versioned, content-addressed map of physics. Map version <span data-bind="version12">fc862ac975c1</span>. https://openmaterials.ai, accessed <span data-bind="today">2026-10-04</span>.</p>
     <figure class="code">
       <figcaption>BibTeX</figcaption>
-<pre>@misc{openmaterials-<span data-bind="version12">f69b18c18fb7</span>,
+<pre>@misc{openmaterials-<span data-bind="version12">fc862ac975c1</span>,
   author = {Barbalinardo, Giuseppe},
   title  = {{openmaterials.ai}: a versioned, content-addressed map of physics},
   url    = {https://openmaterials.ai},
-  note   = {Map version <span data-bind="version12">f69b18c18fb7</span>, accessed <span data-bind="today">2026-10-04</span>}
+  note   = {Map version <span data-bind="version12">fc862ac975c1</span>, accessed <span data-bind="today">2026-10-04</span>}
 }</pre>
     </figure>
     <div class="cta-row">
@@ -237,7 +237,7 @@
 <script src="assets/site.js"></script>
 <script>
 /* Each count and the map version are refreshed at load from the published files. The static text is
-   the value at map version f69b18c18fb7 and stays in place if a file cannot be read. */
+   the value at map version fc862ac975c1 and stays in place if a file cannot be read. */
 (function () {
   function get(p) { return fetch(p).then(function (r) { if (!r.ok) throw new Error(p); return r.json(); }); }
   function put(sel, text) {
