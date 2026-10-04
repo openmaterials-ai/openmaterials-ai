@@ -712,7 +712,7 @@ function openNode(id){
   h += '<div class="nm">' + esc(id) + '</div>';
   h += '<div class="lb">Symbol</div><div class="fm">' + (symHtml[id] || esc(n.symbol)) + '</div>';
   var fl = (n.formulas && n.formulas.length) ? n.formulas : (n.formula ? [{ op: '', latex: n.formula }] : []);
-  h += '<div class="lb">' + (fl.length > 1 ? fl.length + ' producing edges (alternative routes)' : 'Formula on the producing edge') + '</div>';
+  h += '<div class="lb">' + (fl.length > 1 ? fl.length + ' producing edges (alternative routes)' : (fl.length ? 'Formula on the producing edge' : 'Formula')) + '</div>';
   if (!fl.length) h += '<div class="fm pg-note">Input quantity: no edge produces it.</div>';
   fl.forEach(function(f){ h += (f.op ? '<div class="fop">' + esc(f.op) + '</div>' : '') + '<div class="fm">' + tex(f.latex, true) + '</div>'; });
   if (fam) h += '<div class="lb">Also known as</div><div class="aka">' + esc(fam) + '</div>';
@@ -804,8 +804,9 @@ function loadDefaultExample(report){
   fetch('example-proposal.json').then(function(r){ return r.json(); }).then(function(p){
     document.getElementById('proposalInput').value = JSON.stringify(p, null, 1);
     renderProposal(p);
-    var n = (p.claims || []).length;
-    var c = document.getElementById('pgCaption'); if (c) { c.textContent = 'Example: ' + n + (n === 1 ? ' value' : ' values') + ' from ' + (p.paper || 'a paper'); c.hidden = false; }
+    var claims = p.claims || [];
+    var nv = claims.filter(function(x){ return x.kind !== 'condition'; }).length, nc = claims.length - nv;
+    var c = document.getElementById('pgCaption'); if (c) { c.textContent = 'Example: ' + nv + (nv === 1 ? ' value' : ' values') + (nc ? ' and ' + nc + (nc === 1 ? ' condition' : ' conditions') : '') + ' from ' + (p.paper || 'a paper'); c.hidden = false; }
   }).catch(function(e){
     if (report) document.getElementById('parseResult').innerHTML = '<div class="pg-empty">The example did not load: ' + esc(e.message) + '</div>';
   });
