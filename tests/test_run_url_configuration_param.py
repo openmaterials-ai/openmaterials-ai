@@ -9,11 +9,13 @@ does not, the URL must be byte-identical to before (no stray param). The uid is
 kept verbatim (a ``sha256:`` prefix is passed through; MCG strips it server-side),
 and an unresolvable uid degrades gracefully MCG-side (it simply falls back).
 
-This pins the builders on BOTH pages by extracting ``mcgRunUrl`` and its helper
-dependencies from the shipped HTML and running them under Node against crafted
-records: a pin produces the param, no pin produces no param, and a
+This pins the experiment page's builder by extracting ``mcgRunUrl`` and its
+helper dependencies from the shipped HTML and running them under Node against
+crafted records: a pin produces the param, no pin produces no param, and a
 ``sha256:``-prefixed pin passes through verbatim. Skipped cleanly when Node is
-unavailable; a static wiring check guards the feature regardless.
+unavailable; a static wiring check guards the feature regardless. The
+playground datasheet has no deep link: its Run button opens the
+MaterialsCodeGraph connect page (2026-10-04).
 """
 from __future__ import annotations
 
@@ -50,8 +52,7 @@ def _grab_mcg_base(html: str) -> str:
     return m.group(0)
 
 
-# Each page's mcgRunUrl plus the top-level helpers it calls, in dependency order.
-_PLAY_HELPERS = ("baseNode", "materialName", "materialConfigUid", "mcgRunUrl")
+# The experiment page's mcgRunUrl plus the top-level helpers it calls, in dependency order.
 _EXPERIMENT_HELPERS = ("baseNode", "condText", "materialConfigUid", "mcgRunUrl")
 
 
@@ -70,13 +71,12 @@ def _run_builder(page: Path, helpers, call: str) -> str:
 
 
 # --------------------------------------------------------------------------
-# Static wiring: both builders append the param. Guards the feature even where
+# Static wiring: the builder appends the param. Guards the feature even where
 # Node is unavailable, and documents the exact query key MCG reads.
 # --------------------------------------------------------------------------
 
-@pytest.mark.parametrize("page", [_PLAY, _EXPERIMENT], ids=["play", "experiment"])
-def test_run_url_builder_appends_the_configuration_param(page):
-    body = _grab_function(page.read_text(), "mcgRunUrl")
+def test_run_url_builder_appends_the_configuration_param():
+    body = _grab_function(_EXPERIMENT.read_text(), "mcgRunUrl")
     assert "materialConfigUid(" in body, "the builder does not read the configuration pin"
     assert "'configuration=' + encodeURIComponent(" in body, (
         "the builder does not append configuration=<uid>"
@@ -87,37 +87,17 @@ def test_run_url_builder_appends_the_configuration_param(page):
 # Behavior, page by page, under Node against the shipped builder.
 # --------------------------------------------------------------------------
 
-# A lineage whose material carries a pin. mcgRunUrl reads lineage.material, so both
-# pages take the same shape here; the property key differs (node vs variable) but
-# neither affects the configuration param under test.
+# A record whose material carries a pin; mcgRunUrl reads its material.
 _UID = "a" * 64
 
 
-def test_play_pin_produces_configuration_param():
-    url = _run_builder(
-        _PLAY, _PLAY_HELPERS,
-        "mcgRunUrl({node:'ThermalConductivity', material:{name:'Si', configuration:'%s'}})" % _UID,
-    )
-    assert ("configuration=" + _UID) in url, url
-
-
-def test_play_no_pin_has_no_configuration_param():
-    # byte-identical to today: a bare-name material yields no configuration key
-    url = _run_builder(
-        _PLAY, _PLAY_HELPERS,
-        "mcgRunUrl({node:'ThermalConductivity', material:'Si', conditions:{T:300}})",
-    )
-    assert "configuration=" not in url, url
-    assert url == "https://app.materialscodegraph.com/#/new/ThermalConductivity?material=Si&conditions=T%20%3D%20300", url
-
-
-def test_play_sha256_pin_passes_through_verbatim():
-    url = _run_builder(
-        _PLAY, _PLAY_HELPERS,
-        "mcgRunUrl({node:'ThermalConductivity', material:{configuration:'sha256:%s'}})" % _UID,
-    )
-    # verbatim: the sha256: prefix survives (URL-encoded, ':' -> %3A); MCG strips it
-    assert ("configuration=sha256%3A" + _UID) in url, url
+def test_play_run_button_opens_the_connect_page():
+    """The datasheet's one Run button goes to the MaterialsCodeGraph connect page,
+    never the app host (which ends on a sign-in), and hides for measurements."""
+    html = _PLAY.read_text()
+    assert 'href="https://materialscodegraph.com/?ref=omai-datasheet#connect"' in html
+    assert "app.materialscodegraph.com" not in html and "function mcgRunUrl" not in html
+    assert "recordKind(record) !== 'measurement'" in html
 
 
 def test_experiment_pin_produces_configuration_param():
