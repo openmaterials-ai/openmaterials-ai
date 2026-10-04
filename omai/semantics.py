@@ -66,6 +66,20 @@ ALIASES: dict[str, tuple[str, ...]] = {
         "QuantumKineticEnergy", "HeatCapacity[method=pimd]",
         "sample_quantum_kinetic_energy", "sample_quantum_heat_capacity",
     ),
+    # Analog device metrology: the conductance family of memristors and memtransistors.
+    "conductance-state": ("ConductanceState", "contract_device_conductance"),
+    "electrical-conductance": ("ConductanceState",),
+    "analog-conductance": ("ConductanceState",),
+    "conductance-window": ("ConductanceWindow", "contract_conductance_window"),
+    "on-off-ratio": ("ConductanceWindow",),
+    "resistive-switching-ratio": ("ConductanceWindow",),
+    "memory-window": ("ConductanceWindow",),
+    "ltp-window": ("ConductanceWindow",),
+    "ltd-window": ("ConductanceWindow",),
+    "conductance-drift": ("ConductanceDriftExponent", "apply_conductance_drift"),
+    "drift-exponent": ("ConductanceDriftExponent",),
+    "conductance-coefficient-of-variation": ("StateCoefficientOfVariation",),
+    "state-variability": ("StateCoefficientOfVariation",),
     # Honest NO-HOME markers live in the alignment files, not here: an alias
     # must point at something that exists (the gate below enforces it).
 }

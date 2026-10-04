@@ -49,6 +49,14 @@ def _classify(op):
         return ("special function", "hard",
                 "needs analysis: transcendental factors (occupation numbers, "
                 "logarithms) with their analytic properties")
+    # A power with a symbolic exponent (the conductance-drift power law
+    # G_0 (t/t0)^(-nu)) is real exponentiation, not a rational identity the
+    # generator can clear; the Lean Tier-2 law pass skips it for this reason.
+    if any(isinstance(n, sp.Pow) and n.exp.has(sp.Symbol)
+           for n in sp.preorder_traversal(rhs)):
+        return ("special function", "hard",
+                "needs analysis: a power with a symbolic exponent (real "
+                "exponentiation), not a rational identity")
     if rhs.atoms(AppliedUndef):
         return ("opaque code output", "na",
                 "names an external code's output; nothing algebraic to prove")
