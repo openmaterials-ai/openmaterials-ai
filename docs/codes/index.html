@@ -17,7 +17,7 @@
 <meta property="og:url" content="https://openmaterials.ai/codes/">
 <meta property="og:image" content="https://openmaterials.ai/assets/og.png">
 <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="The openmaterials.ai mark and wordmark above the line &quot;A versioned map of physics.&quot; and the licenses &quot;Map data CC BY 4.0 · Code Apache 2.0&quot;.">
+<meta property="og:image:alt" content="The openmaterials.ai mark and wordmark above the line &quot;A versioned map of physics.&quot; A smaller line gives the licenses: map data CC BY 4.0 and code Apache 2.0.">
 <meta name="twitter:card" content="summary_large_image">
 <script>try{const t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch{}</script>
 <link rel="preload" href="../assets/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin>
@@ -65,7 +65,7 @@
     <article class="prose gwrap">
       <section class="gsec" id="lean">
         <h2>Lean, the prover behind the verified layer</h2>
-        <p>Most codes on this page compute numbers; <a href="https://lean-lang.org/">Lean 4</a> checks proofs. The map's node dimensions are declared in Lean, and its edge dimension statements and operator identities are proven as theorems against physlib and Mathlib, so part of the map is proven as well as tested, and a build with zero <code>sorry</code>s is the proof. The <a href="../lean/">verified layer</a> page lists the tiers and the limits of the proofs.</p>
+        <p><a href="https://lean-lang.org/">Lean 4</a> is a proof assistant. The map's node dimensions are declared in Lean, its edge dimension statements and operator identities are proven against physlib and Mathlib, and the build has no <code>sorry</code> placeholders. The <a href="../lean/">verified layer</a> page lists the tiers and the limits of the proofs.</p>
         <p>Cited works:</p>
         <ul>
           <li>L. de Moura and S. Ullrich, "The Lean 4 theorem prover and programming
@@ -82,7 +82,7 @@
 
       <section class="gsec" id="bibliography">
         <h2>The bibliography</h2>
-        <p>One entry per code, read from <code>codes.json</code>. The number after each name is how many quantities the code serves on the map, and each entry links to the map filtered to that code. Entries are sorted by that number, then by name.</p>
+        <p>Each entry is one code, read from <code>codes.json</code>. The number after each name is how many quantities the code serves on the map, and each entry links to the map filtered to that code. Entries are sorted by that number, then by name.</p>
         <noscript><p class="empty">This bibliography renders client-side from the
           published data and needs JavaScript. The raw file is plain JSON in
           <a href="../data/codes.json">../data/codes.json</a>.</p></noscript>
@@ -93,12 +93,6 @@
         <h2>What the map takes from a code</h2>
         <p>A representation records interface facts (keywords, file formats, units), citations, and published equations, written in our own words. The map does not vendor or copy any code's source, so no code's license applies to this repository: the kernel is Apache 2.0 and the map data is CC BY 4.0. Copyleft codes, such as GPUMD under GPL-3.0, are cited and described the same way as permissively licensed ones. The GPL does not restrict describing an interface for interoperability or citing a paper.</p>
         <p>Running a code remains under that code's own license, on the side of whoever runs it. CI checks every representation's recorded license: <code>tests/test_code_credits.py</code> reads <code>omai/representation/credits.py</code>, each license comes from the code's own <code>LICENSE</code> file, and a DOI is recorded only when one can be verified.</p>
-        <dl class="ledger">
-          <div><dt>The map records</dt><dd>Interface facts, citations, and equations, in our own words.</dd></div>
-          <div><dt>The map does not record</dt><dd>A code's source. Nothing is vendored or copied.</dd></div>
-          <div><dt>This repository</dt><dd>Kernel Apache 2.0; map data CC BY 4.0.</dd></div>
-          <div><dt>Running a code</dt><dd>Stays under that code's own license, on the runner's side.</dd></div>
-        </dl>
       </section>
     </article>
   </div>
@@ -186,7 +180,7 @@
     var links = '<div class="bib-links">' +
       (doi
         ? '<a href="https://doi.org/' + esc(doi) + '" rel="noopener">doi.org/' + esc(doi) + '</a>'
-        : '<span class="bib-nodoi">no DOI recorded</span>') +
+        : '<span class="bib-nodoi">No DOI recorded.</span>') +
       '<a href="' + esc(mapHref) + '">Show on the map</a>' +
       '</div>';
 
