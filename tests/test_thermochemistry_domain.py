@@ -435,8 +435,9 @@ def test_pycalphad_is_a_rail_and_the_config_thermo_scan_added_three_rails():
     # 2026-07-22 (the composite formulas are the map's own closed-form
     # edges); the xtb rail (the engine the GFN2-xTB thermo evidence names
     # in-hash) landed the same day, reaching 31; the qe-d3q representation
-    # (D3Q and thermal2 on Quantum ESPRESSO 7.5, 2026-10-01) makes it 32.
-    assert len(codes) == 32
+    # (D3Q and thermal2 on Quantum ESPRESSO 7.5, 2026-10-01) makes it 32; the
+    # meskal representation (MESKAL, 2026-10-04) makes it 33.
+    assert len(codes) == 33
     assert "materialscodegraph" not in codes
     assert "xtb" in codes
     assert "mescal" in codes

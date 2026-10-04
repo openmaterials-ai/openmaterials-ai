@@ -74,6 +74,20 @@ CODE_CREDITS: dict[str, dict] = {
         "repos/gbarbalinardo/mescal/license -> spdx_id MIT, verified 2026-07-13)",
         "url": "https://github.com/gbarbalinardo/mescal",
     },
+    "meskal": {
+        "name": "MESKAL",
+        "citation": "G. Barbalinardo and the MESKAL contributors, MESKAL: "
+        "Mesoscopic Scattering Kernel for Anharmonic Lattices, differentiable "
+        "lattice thermal transport in JAX, version 1.1.0 (software, 2026)",
+        # CITATION.cff cites the software itself; no paper or DOI yet.
+        "doi": None,
+        "license": "BSD-3-Clause",
+        "license_source": "gbarbalinardo/meskal tag v1.1.0, read 2026-10-04 "
+        "through gh api: LICENSE (BSD 3-Clause License), pyproject.toml and "
+        "CITATION.cff (BSD-3-Clause); the documentation site's License "
+        "section states BSD-3-Clause",
+        "url": "https://giuseppe.barbalinardo.com/meskal/",
+    },
     "shengbte": {
         "name": "ShengBTE",
         "citation": "W. Li, J. Carrete, N. A. Katcho, N. Mingo, ShengBTE: A "
