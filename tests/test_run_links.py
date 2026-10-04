@@ -1,4 +1,4 @@
-"""Run links open the MaterialsCodeGraph connect page.
+"""Run links open the connect panel at the top of materialscodegraph.com (#hero-connect).
 
 The app host ends on a sign-in for a first-time visitor, so no page under docs/ links it.
 """
@@ -10,7 +10,7 @@ _DOCS = Path(__file__).resolve().parents[1] / "docs"
 def test_run_links_open_the_connect_page():
     for page, ref in (("play", "omai-datasheet"), ("experiment", "omai-experiment")):
         html = (_DOCS / page / "index.html").read_text()
-        assert f"https://materialscodegraph.com/?ref={ref}#connect" in html, page
+        assert f"https://materialscodegraph.com/?ref={ref}#hero-connect" in html, page
 
 
 def test_no_page_links_the_app_host():

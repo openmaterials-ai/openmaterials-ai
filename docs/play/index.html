@@ -90,6 +90,7 @@
   .lin-n{min-width:0;font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);color:var(--ink-2,#4D4D4D);overflow-wrap:anywhere;}
   .lin-n.hot{color:var(--ink,#171717);font-weight:500;}
   .lin-op{font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);color:var(--ink-2,#4D4D4D);}
+  .names .lin-n,.names .lin-op{font-family:var(--font-sans,"Geist",ui-sans-serif,system-ui,sans-serif);}   /* names in words, not ids */
   .lin-code{margin:0;padding:10px 12px;border:1px solid var(--line,#EBEBEB);border-radius:var(--radius,6px);background:var(--page,#FFFFFF);color:var(--ink,#171717);font:400 12px/18px var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);white-space:pre-wrap;overflow-wrap:anywhere;}
   /* drop-a-record ingress: a paste OR a dropped/chosen .json file, rendered in
      place as a plain data view (no server, no storage). The record's data view
@@ -427,7 +428,7 @@
         <p>A lineage record is small. Its identity is its lineage: the output node
           on the map, or, when the map has no node for it, a template with its
           hyperparameters and setup values. Heavy artifacts stay with their host,
-          such as <a href="https://materialscodegraph.com/?ref=omai-playground#connect">MaterialsCodeGraph</a>,
+          such as <a href="https://materialscodegraph.com/?ref=omai-playground#hero-connect">MaterialsCodeGraph</a>,
           and the record points to them. Paste a record or drop a <code>.json</code>
           file, including a record served by MaterialsCodeGraph, to open its data
           view: every field of the lineage, its source, where the data lives, and
@@ -463,7 +464,7 @@
   <div class="lin-bar">
     <a id="linBack" href="#/play?tab=lineage">Back to the playground</a>
     <div class="lin-actions">
-      <a id="linRun" class="btn--primary" href="https://materialscodegraph.com/?ref=omai-datasheet#connect" target="_blank" rel="noopener" hidden>Run it for your material</a>
+      <a id="linRun" class="btn--primary" href="https://materialscodegraph.com/?ref=omai-datasheet#hero-connect" target="_blank" rel="noopener" hidden>Run it for your material</a>
       <button id="linPaste" type="button">Open another record</button>
     </div>
   </div>
@@ -485,12 +486,13 @@
 <script src="../assets/vendor/dagre.min.js"></script>
 <script src="../assets/vendor/katex/dist/katex.min.js"></script>
 <script src="../learn/lib.js"></script>
+<script src="../assets/map-words.js"></script>
 <script>
 /* ============================================================================
    openmaterials playground: a Mermaid-style two-pane shell over the live map.
    Left: input tabs (Learn parses a paper, Resolve matches labels, Sub-map renders edges). Right: one shared sub-map canvas rendered from graph.json with
    dagre + KaTeX (both degrade: nothing throws when either is missing). The
-   resolver mirrors omai/semantics.resolve exactly. Structure-pure: Resolve and
+   resolver and the plain names live in ../assets/map-words.js. Structure-pure: Resolve and
    the sub-map render structure only; values never appear on this canvas.
    ============================================================================ */
 'use strict';
@@ -508,33 +510,14 @@ var GRAPH = null, SEM = [], LEAN = {nodes:{},edges:{}}, semById = {}, nodeById =
 var catalogById = {};   // node id -> {id, symbol, description}: the plain-language names for the lineage view
 var INSTANCE_IDS = null; // Set of committed lineage ids: the badge's committed test
 var codesByNode = {};   // node id -> [{code, api, url}]: which codes compute the quantity
+var CODE_NAMES = {};    // code key -> its display name in codes.json, else the key
+function codeName(k){ return CODE_NAMES[k] || k; }
 var CONFORMANCE = [];   // conformance/index.json targets: the pinned reproduce runs
 var configByUid = {};   // canonical.uid and aliases -> configuration bundle record for a pinned lineage cell
 var VB = { x: 0, y: 0, w: 1000, h: 700 };
 
 function esc(s){ return String(s == null ? '' : s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
 function tex(s, block){ if (!s) return ''; if (!HAS_KATEX) return esc(s); try { return katex.renderToString(String(s), { throwOnError:false, displayMode: !!block }); } catch(e){ return esc(s); } }
-
-/* ---- the resolver (mirror of omai/semantics.resolve) --------------------- */
-function normLabel(s){ return String(s).replace(/([a-z0-9])([A-Z])/g,'$1 $2').replace(/[-_]/g,' ').toLowerCase().replace(/[^a-z0-9 ]+/g,' ').replace(/\s+/g,' ').trim(); }
-var STOP = { calculation:1, estimation:1, computation:1, analysis:1, the:1, a:1, an:1, of:1, and:1 };
-function tokset(s){ var out = {}; normLabel(s).split(' ').forEach(function(t){ if (t && !STOP[t]) out[t] = 1; }); return out; }
-function resolveLabel(q){
-  var nq = normLabel(q); if (!nq) return [];
-  var qt = tokset(q), out = [];
-  for (var id in semById){
-    var e = semById[id], score = 0, why = null;
-    if ((e.curated || []).some(function(c){ return normLabel(c) === nq; })) { score = 1.0; why = 'curated alias'; }
-    else if ((e.labels || []).some(function(l){ return normLabel(l) === nq; })) { score = 0.9; why = 'exact label'; }
-    else { var es = tokset((e.labels || []).join(' ') + ' ' + id), all = Object.keys(qt).length > 0;
-           for (var t in qt){ if (!es[t]) { all = false; break; } }
-           // token containment: 0.6 plus a coverage bonus, rounded as omai/semantics.py rounds it
-           if (all) { score = Math.round((0.6 + Math.min(0.2, 0.2 * Object.keys(qt).length / Math.max(1, Object.keys(tokset(id)).length))) * 1000) / 1000; why = 'token containment'; } }
-    if (score) out.push({ id: id, kind: e.kind, score: score, why: why });
-  }
-  out.sort(function(a,b){ return b.score - a.score || a.id.localeCompare(b.id); });
-  return out;
-}
 
 /* ---- data load ----------------------------------------------------------- */
 var mapReady = Promise.all([
@@ -559,6 +542,7 @@ var mapReady = Promise.all([
     Object.keys(codesData[code] || {}).forEach(function(nid){
       (codesByNode[nid] = codesByNode[nid] || []).push(
         { code: code, api: codesData[code][nid].api || '', url: codesData[code][nid].url || '' });
+      CODE_NAMES[code] = codesData[code][nid].name || CODE_NAMES[code] || code;
     });
   });
   Object.keys(codesByNode).forEach(function(nid){
@@ -698,7 +682,7 @@ function runQuery(q){
   var box = document.getElementById('qResults');
   q = (q || '').trim();
   if (!q) { box.innerHTML = ''; renderSubmap([], {}); hint.style.display = 'block'; hint.textContent = 'Type a method on the left, and the matching part of the map appears here.'; return; }
-  var hits = resolveLabel(q);
+  var hits = resolveLabels(q, semById);   // map-words.js
   if (!hits.length) {
     box.innerHTML = '<div class="pg-empty">No node on the map matches this phrase yet.</div>';
     renderSubmap([], {}); hint.style.display = 'block'; hint.textContent = '"' + q + '" matches no node on the map.';
@@ -736,7 +720,7 @@ function paperLineage(nodeIds){
     if (!l.op || l.source === l.target) return;
     if (!touched[l.target]) return;           // only edges that PRODUCE a reported quantity
     var k = l.source + '>>' + l.target + '>>' + l.op; if (seen[k]) return; seen[k] = 1;
-    edges.push({ from: l.source, to: l.target, op: l.op });
+    edges.push({ from: l.source, to: l.target, op: l.op, param: l.kind === 'param' });
     involved[l.source] = 1; involved[l.target] = 1;
   });
   Object.keys(touched).forEach(function(id){ involved[id] = 1; });
@@ -751,11 +735,11 @@ function renderProposal(proposal){
   var lin = paperLineage(nodeIds);
   var eops = {}; lin.edges.forEach(function(e){ eops[e.op] = 1; });
 
-  // the diagram: the paper's dataflow, each edge "from --op--> to" (Mermaid feel)
-  var diagram = lin.edges.map(function(e){
-    return '<div class="lin-row"><span class="lin-n' + (lin.touched[e.from] ? ' hot' : '') + '">' + esc(e.from) + '</span>'
+  // the diagram: the paper's dataflow in words, "from, op -> to"; parameter links stay on the canvas
+  var diagram = lin.edges.filter(function(e){ return !e.param; }).map(function(e){
+    return '<div class="lin-row"><span class="lin-n' + (lin.touched[e.from] ? ' hot' : '') + '">' + esc(nodeName(e.from)) + ',</span>'
          + '<span class="lin-op">' + esc(opName(e.op)) + ' &rarr;</span>'
-         + '<span class="lin-n' + (lin.touched[e.to] ? ' hot' : '') + '">' + esc(e.to) + '</span></div>';
+         + '<span class="lin-n' + (lin.touched[e.to] ? ' hot' : '') + '">' + esc(nodeName(e.to)) + '</span></div>';
   }).join('');
   // the mapping in code: each reported value -> its node id and unit
   var code = claims.filter(function(c){ return c.node_id && nodeById[c.node_id]; }).map(function(c){
@@ -764,7 +748,7 @@ function renderProposal(proposal){
 
   box.innerHTML =
     (proposal.paper ? '<div class="pg-paper">' + esc(proposal.paper) + '</div>' : '')
-    + '<div class="lin-lab">The paper\'s dataflow</div><div class="lin-diagram">' + (diagram || '<span class="pg-note">No map edge produces the reported quantities.</span>') + '</div>';
+    + '<div class="lin-lab">The paper\'s dataflow</div><div class="lin-diagram names">' + (diagram || '<span class="pg-note">No map edge produces the reported quantities.</span>') + '</div>';
   document.getElementById('parseCode').innerHTML = code;   // under For developers
   renderSubmap(lin.nodes.filter(function(n){ return lin.touched[n]; }), eops, lin.nodes);
 }
@@ -801,6 +785,7 @@ var currentBundle = null;            // the normalized envelope behind the open 
 var lineageHasRendered = false;
 var lineageGallery = null;
 var lineageFlagship = null;
+var FLAGSHIP_ID = 'f735a05c14db';
 var lineageExamplesPromise = null;
 var skipNextHashApply = '';
 function fmtScalar(v){
@@ -1061,13 +1046,20 @@ function galleryEntryFor(record){
 function renderLineageExampleNav(record){
   var box = document.getElementById('linExamples');
   var current = galleryEntryFor(record);
-  if (!current) { box.hidden = true; box.innerHTML = ''; return; }
-  var others = lineageGallery.filter(function(entry){ return entry && entry !== current && entry.fragment; });
-  box.innerHTML = '<p>This example is a committed value. Paste your own record or open another example:</p>' +
+  var fl = lineageFlagship && lineageFlagship.lineage;
+  if (!Array.isArray(lineageGallery) || (!current && !(record && lineageFlagship && record.id === lineageFlagship.id))) {
+    box.hidden = true; box.innerHTML = ''; return;
+  }
+  // an example that repeats the default's quantity and material is left out
+  var others = lineageGallery.filter(function(entry){
+    return entry && entry !== current && entry.fragment &&
+      !(fl && entry.node === fl.node && entry.material === materialName(fl.material));
+  });
+  box.innerHTML = '<p>Paste your own record or open another example:</p>' +
     '<div class="lin-example-links">' + others.map(function(entry){
-      var label = [entry.material, baseNode(entry.node)].filter(Boolean).join(' ');
-      if (entry.code) label += ' (' + entry.code + ')';
-      label = label || entry.slug || 'example';
+      var name = entry.node ? nodeName(entry.node) : '';
+      if (/^[A-Z][a-z]/.test(name)) name = name.charAt(0).toLowerCase() + name.slice(1);
+      var label = [entry.material, name, entry.code && codeName(entry.code)].filter(Boolean).join(', ') || entry.slug || 'example';
       return '<a href="#/play?tab=lineage&amp;x=' + esc(entry.fragment) + '">' + esc(label) + '</a>';
     }).join('') + '</div>';
   box.hidden = false;
@@ -1076,16 +1068,17 @@ function renderLineageExampleNav(record){
 function loadLineageExamples(){
   if (lineageExamplesPromise) return lineageExamplesPromise;
   lineageExamplesPromise = Promise.all([
-    fetch('../examples/si-diamond-kappa-dfpt.json').then(function(r){
-      if (!r.ok) throw new Error('flagship example unavailable');
-      return r.json();
+    // the default is the committed Si value the home page cites
+    loadPlayInstances().then(function(insts){
+      var r = resolveInstanceById(FLAGSHIP_ID, insts);
+      return r.ok ? r.record : null;
     }).catch(function(){ return null; }),
     fetch('../examples/index.json').then(function(r){
       if (!r.ok) throw new Error('example index unavailable');
       return r.json();
     }).catch(function(){ return null; })
   ]).then(function(res){
-    lineageFlagship = res[0] && typeof res[0] === 'object' ? res[0] : null;
+    lineageFlagship = res[0];
     lineageGallery = Array.isArray(res[1]) ? res[1] : null;
     renderLineageExampleNav(currentLineageRecord);
     return res;
@@ -1255,7 +1248,7 @@ function initPapersCompare(){
       var pb = b.indexOf('paper:') === 0 ? 0 : 1;
       return pa !== pb ? pa - pb : (a < b ? -1 : 1);
     });
-    var opts = refs.map(function(r){ return '<option value="' + esc(r) + '">' + esc(r) + '</option>'; }).join('');
+    var opts = refs.map(function(r){ return '<option value="' + esc(r) + '">' + esc(sourceTitle(r)) + '</option>'; }).join('');
     var selA = document.getElementById('distPaperA');
     var selB = document.getElementById('distPaperB');
     selA.innerHTML = opts; selB.innerHTML = opts;
@@ -1271,6 +1264,16 @@ function initPapersCompare(){
     document.getElementById('distPapers').innerHTML = '<p class="pg-empty">The committed values did not load: ' + esc(e.message) + '</p>';
   });
 }
+// A source as /experiment/ titles it: the shortest citation its records carry, "<code> run"
+// for a code, else its ref.
+function sourceTitle(ref){
+  var best = '';
+  papersRows.forEach(function(r){
+    var c = r.source.ref === ref ? citationOf(r.source.detail) : '';
+    if (c && (!best || c.length < best.length)) best = c;
+  });
+  return best || (ref in CODE_NAMES ? codeName(ref) + ' run' : ref);
+}
 function seriesOf(ref){
   var out = {};
   papersRows.forEach(function(r){
@@ -1278,10 +1281,15 @@ function seriesOf(ref){
     var T = r.conditions ? r.conditions.T : null;
     if (typeof r.value !== 'number') return;
     var key = (r.variable || '?') + ' | ' + (r.material || '?') + ' | ' + (r.units || '');
-    (out[key] = out[key] || {pts: [], material: r.material}).pts.push(
+    (out[key] = out[key] || {pts: [], material: r.material, units: r.units || '',
+      label: nodeName(r.variable) + ', ' + (r.material || '?') + (r.units ? ' (' + r.units + ')' : '')}).pts.push(
       {x: typeof T === 'number' ? T : null, y: r.value});
   });
   return out;
+}
+// A source's values on one shared key, as a reader reads them: "2.3 g/cm3 at 300 K".
+function seriesText(S){
+  return S.pts.map(function(p){ return fmtSig(p.y) + (S.units ? ' ' + S.units : '') + (p.x !== null ? ' at ' + p.x + ' K' : ''); }).join(', ');
 }
 function renderPapersCompare(){
   var refA = document.getElementById('distPaperA').value;
@@ -1290,31 +1298,31 @@ function renderPapersCompare(){
   var shared = Object.keys(A).filter(function(k){ return k in B; });
   var html = '';
   if (shared.length) {
-    html += '<table class="pg-table stack"><thead><tr><th>Shared quantity | material | units</th>' +
-      '<th>' + esc(refA) + '</th><th>' + esc(refB) + '</th><th>curve@1</th></tr></thead><tbody>';
+    html += '<table class="pg-table stack"><thead><tr><th>Shared quantity</th>' +
+      '<th>Source A</th><th>Source B</th><th>curve@1</th></tr></thead><tbody>';
     shared.forEach(function(k){
       var pa = A[k].pts.filter(function(p){ return p.x !== null; });
       var pb = B[k].pts.filter(function(p){ return p.x !== null; });
-      var cell = 'Single points, shown side by side';
+      var cell = 'No shared temperature';
       var matches = [];
       pa.forEach(function(pp){ pb.forEach(function(q){ if (pp.x === q.x) matches.push([pp.x, pp.y, q.y]); }); });
       if (matches.length && !(pa.length > 1 && pb.length > 1)) {
         cell = matches.map(function(m){
           var scale = (Math.abs(m[1]) + Math.abs(m[2])) / 2 || 1;
-          return 'at T=' + m[0] + ': relative difference ' + (Math.abs(m[1] - m[2]) / scale * 100).toFixed(1) + '%';
+          return 'at ' + m[0] + ' K: relative difference ' + (Math.abs(m[1] - m[2]) / scale * 100).toFixed(1) + '%';
         }).join('; ');
       }
       if (pa.length > 1 && pb.length > 1) {
         var d = window.omdcJS.curveRel(pa.map(function(p){ return p.x; }), pa.map(function(p){ return p.y; }),
                                        pb.map(function(p){ return p.x; }), pb.map(function(p){ return p.y; }));
-        cell = d === null ? 'No shared T range' : d.toFixed(4);
+        cell = d === null ? 'No shared temperature range' : d.toFixed(4);
       }
-      html += '<tr><td data-label="Shared quantity | material | units">' + esc(k) + '</td><td data-label="' + esc(refA) + '">' + A[k].pts.length + ' value' + (A[k].pts.length === 1 ? '' : 's') + '</td>' +
-        '<td data-label="' + esc(refB) + '">' + B[k].pts.length + ' value' + (B[k].pts.length === 1 ? '' : 's') + '</td><td data-label="curve@1">' + cell + '</td></tr>';
+      html += '<tr><td data-label="Shared quantity">' + esc(A[k].label) + '</td><td data-label="Source A">' + esc(seriesText(A[k])) + '</td>' +
+        '<td data-label="Source B">' + esc(seriesText(B[k])) + '</td><td data-label="curve@1">' + esc(cell) + '</td></tr>';
     });
     html += '</tbody></table>';
   } else {
-    html += '<p class="pg-note">These sources share no quantity, material, and units key, so there is no curve to compare.</p>';
+    html += '<p class="pg-note">The two sources share no quantity for the same material and units.</p>';
   }
   var mats = function(S){
     var seen = {};
@@ -1427,28 +1435,6 @@ async function mintShortlink(env, btn){
 var MCG_COMPUTABLE = { 'ThermalConductivity': 1 };
 function isComputable(id){ return !!MCG_COMPUTABLE[baseNode(id)]; }
 
-// The human property name for the headline. Precedence: an explicit short label
-// for the common families (so the customer-facing title reads clean, e.g.
-// "Thermal conductivity"), else the leading phrase of the catalog node's plain
-// description, else a de-camelCased base id. The [qualifier=...] route label is
-// NOT in the title (it lives in the provenance row); the title is the physical
-// property a customer recognizes, method-neutral.
-var HUMAN_PROP = {
-  'ThermalConductivity': 'Thermal conductivity',
-  'ThermalConductance': 'Thermal conductance',
-  'ElectronicThermalConductivity': 'Electronic thermal conductivity',
-  'ThermalExpansion': 'Thermal expansion',
-  'ThermalGruneisen': 'Thermal Gruneisen parameter',
-  'BulkModulus': 'Bulk modulus',
-  'ShearModulus': 'Shear modulus',
-  'ElasticConstants': 'Elastic constants',
-  'PhononDOS': 'Phonon density of states',
-  'ElectronicDOS': 'Electronic density of states',
-  'HeatCapacity': 'Heat capacity',
-  'Frequency': 'Phonon frequencies',
-  'BandGap': 'Band gap',
-  'Structure': 'Relaxed structure'
-};
 // A leading phrase from a catalog description: the first clause up to a
 // sentence break, colon, comma, or "from/of/tensor" pivot, then Title-cased
 // gently (first letter up). A readable fallback when the id is not in HUMAN_PROP.
@@ -1458,23 +1444,9 @@ function propFromDescription(desc){
   if (!s || s.length > 48) return '';
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
-// De-camelCase a node id, acronyms kept: ThermalConductivity -> "Thermal conductivity",
-// HOMOLUMOGap -> "HOMOLUMO gap".
-function humanizeId(id){
-  var w = String(id).replace(/([a-z0-9])([A-Z])/g, '$1 $2').replace(/([A-Z]+)([A-Z][a-z])/g, '$1 $2')
-    .replace(/[_-]+/g, ' ').trim().split(/\s+/).map(function(x, i){
-      return /^[A-Z0-9]{2,}$/.test(x) ? x : (i ? x.toLowerCase() : x.charAt(0).toUpperCase() + x.slice(1).toLowerCase());
-    }).join(' ');
-  return w || 'Property';
-}
-// A node's plain name, its route in words: ThermalConductivity[bte_solver=rta] -> "Thermal conductivity (rta)".
-function nodeName(id){
-  var q = /\[(.*)\]$/.exec(id || '');
-  return (HUMAN_PROP[baseNode(id)] || humanizeId(baseNode(id))) +
-    (q ? ' (' + q[1].replace(/\w+=/g, '').replace(/_/g, ' ').replace(/,/g, ', ') + ')' : '');
-}
-// An operator's plain name: compute_dispersion -> "compute dispersion".
-function opName(op){ return (op || '').replace(/\[.*?\]/g, '').replace(/_/g, ' ').trim() || 'operation'; }
+// The human property name for the headline: the curated name (HUMAN_PROP, map-words.js),
+// else the leading phrase of the catalog description, else the de-camelCased base id. The
+// [qualifier=...] route is not in the title; the title is the property, method-neutral.
 function humanProperty(node, template){
   var base = baseNode(node);
   if (base && HUMAN_PROP[base]) return HUMAN_PROP[base];
@@ -1654,7 +1626,7 @@ function detailGroups(record, lineage){
     var o = lineage[field];
     if (o && typeof o === 'object' && !Array.isArray(o)) {
       var ks = Object.keys(o);
-      if (ks.length) groups.push({ label: field === 'conditions' ? 'Conditions' : 'Parameters', tag: '', rows: ks.map(function(k){ return [k, detailVal(o[k])]; }) });
+      if (ks.length) groups.push({ label: field === 'conditions' ? 'Conditions' : 'Parameters', tag: '', rows: ks.map(function(k){ return [k, conditionVal(k, o[k])]; }) });
     }
   });
   // execution: how and where it ran (code, version, container, runner, timing, seeds)
@@ -1677,6 +1649,13 @@ function detailGroups(record, lineage){
     groups.push({ label: 'Template', tag: '', rows: [[String(lineage.template), templateWords(lineage.template) || '']] });
   }
   return groups;
+}
+// A condition as a reader sees it: a numeric T in kelvin, and a curator's "(label: note)"
+// aside cut to ", label" ("(solver unstated: ...)" reads ", solver not stated").
+function conditionVal(k, v){
+  if (k === 'T' && typeof v === 'number') return detailVal(v + ' K');
+  if (typeof v === 'string') v = v.replace(/\s*\(([^():]+):[^()]*\)/g, function(_, label){ return ', ' + label.trim().replace(/\bunstated\b/, 'not stated'); });
+  return detailVal(v);
 }
 // A detail value formatted for the grid: a list reads "8 × 8 × 8", an object is
 // JSON, a long hex is a hash we mark for break-anywhere wrapping.
@@ -1904,8 +1883,8 @@ function reproduceHTML(node, recordId){
   if (codes.length) {
     h += '<dl class="rec-kv">' + codes.map(function(c){
       var name = c.url
-        ? '<a href="' + esc(c.url) + '" target="_blank" rel="noopener">' + esc(c.code) + '</a>'
-        : esc(c.code);
+        ? '<a href="' + esc(c.url) + '" target="_blank" rel="noopener">' + esc(codeName(c.code)) + '</a>'
+        : esc(codeName(c.code));
       return '<dt>' + name + '</dt><dd class="wrap">' + esc(c.api || 'covers this node') + '</dd>';
     }).join('') + '</dl>';
   }
@@ -1982,9 +1961,7 @@ function datasheetHTML(record, valid, opts){
   }
 
   // ---- THE LINEAGE: every field, as plain labelled information ---------------
-  var lineageHTML = '<div class="rec-sec"><div class="rec-h">The lineage</div>' +
-    '<p class="rec-explain">These fields, and only these, are hashed into the id, so two records ' +
-    'with the same id are the same computation.</p>';
+  var lineageHTML = '<div class="rec-sec"><div class="rec-h">The lineage</div>';
   var idRows = [];
   if (node) idRows.push('<dt>node</dt><dd class="wrap">' + esc(node) + (known ? '' : ' (not on this map version)') + '</dd>');
   var cfgUid = materialConfigUid(lineage.material);
@@ -2161,16 +2138,10 @@ function renderInstanceById(hash){
   });
 }
 
-// A repo path in a curator's detail: a/b/c, a/b_c or a/b.ext (units such as W/mK, ratios and DOIs never match).
-var REPO_PATH = /(?:[.\w-]+\/){2,}[\w.-]*\w(?::\d+)?|[\w-]+\/[\w-]*_[\w.-]*\w|[\w-]+\/[\w-]+\.[a-z]{1,5}\b/.source;
-// source.detail as a reader sees it: curator notes such as [MIGRATED ...] and repo paths
-// (with the parenthesis or "recorded in" around them) are cut at render time; the hashed record keeps them.
+// source.detail as a reader sees it: bracketed curator notes such as [MIGRATED ...] are cut at
+// render time; the hashed record keeps them.
 function readerDetail(s){
-  return String(s == null ? '' : s)
-    .replace(/\s*\[[A-Z]{2,}[^\]]*\]/g, '')
-    .replace(new RegExp('\\s*\\((?:[^()]|\\([^()]*\\))*?(?:' + REPO_PATH + ')(?:[^()]|\\([^()]*\\))*\\)', 'g'), '')
-    .replace(new RegExp(',?\\s*(?:recorded in\\s+)?(?:' + REPO_PATH + ')', 'g'), '')
-    .replace(/\s+/g, ' ').replace(/\s+([,.;])/g, '$1').trim();
+  return String(s == null ? '' : s).replace(/\s*\[[A-Z]{2,}[^\]]*\]/g, '').replace(/\s+/g, ' ').trim();
 }
 // A paper's detail reads '<verbatim quote> (<where, with p. N>). <citation>, doi:..., arXiv:...'.
 function paperParts(d){
@@ -2181,16 +2152,39 @@ function paperParts(d){
   return { quote: m[1].replace(/^["“]|["”]$/g, ''), where: m[2].split(';')[0].trim(),
     citation: (cut < 0 ? m[3] : m[3].slice(0, cut)).replace(/[\s.,]+$/, ''), doi: doi && doi[1], arxiv: arx && arx[1] };
 }
-// The source rows: the quote with its page, the citation and its DOI for a paper;
-// citation and method for '<citation (year)>; <method>'; otherwise the method alone.
-function sourceRows(detail){
-  var d = readerDetail(detail), p = paperParts(d), c;
+// Any other source's method in one plain line from the record's fields: code and version,
+// material, potential or model. Its prose can carry repo paths, tags and hashes, so it never prints.
+function methodLine(record){
+  var lin = record.lineage || {}, c = lin.conditions || {}, ref = (record.source && record.source.ref) || '';
+  var cv = String(c.code || '').split(' '), key = cv[0] in CODE_NAMES ? cv[0] : (ref in CODE_NAMES ? ref : cv[0]);
+  var who = key ? [codeName(key), c.code_version || cv.slice(1).join(' ')].filter(Boolean).join(' ') : '';
+  var mat = materialName(lin.material), pot = c.potential || c.potential_name || c.potential_file;
+  var how = pot ? ' with the ' + String(pot).replace(/^[A-Z][a-z]?\./, '').replace(/^./, function(x){ return x.toUpperCase(); }) + ' potential'
+    : (c.model ? ' with ' + c.model : '');
+  if (!who && !mat) return '';
+  return (who ? who + ' run' + (mat ? ' of ' + mat : '') : 'Computed for ' + mat) + how +
+    (Object.keys(c).length ? '; settings under Conditions.' : '.');
+}
+// The citation a detail carries: a paper's, or the '<citation (year)>; <method>' form's.
+function citationOf(detail){
+  var d = readerDetail(detail), p = paperParts(d);
+  if (p) return p.citation;
+  var c = /^([^;:]{1,120}\(\d{4}\));/.exec(d.replace(/,?\s*\bdoi:\s*\S+/i, ''));
+  return c ? c[1] : '';
+}
+// The source rows: the quote with its page, the citation and its DOI for a paper; citation,
+// method and any DOI for '<citation (year)>; <method>'; otherwise the method line.
+function sourceRows(record){
+  var src = record.source || {}, d = readerDetail(src.detail), p = paperParts(d), c;
   var row = function(k, v){ return '<dt>' + k + '</dt><dd>' + v + '</dd>'; };
   var a = function(href, text){ return '<a href="' + esc(href) + '" target="_blank" rel="noopener">' + esc(text) + '</a>'; };
   if (p) return [row('Quote', '“' + esc(p.quote) + '” (' + esc(p.where) + ')'), row('Paper', esc(p.citation)),
     p.doi ? row('DOI', a('https://doi.org/' + p.doi, p.doi)) : (p.arxiv ? row('arXiv', a('https://arxiv.org/abs/' + p.arxiv, p.arxiv)) : '')];
-  if ((c = /^([^;:]{1,120}\(\d{4}\));\s*(.+)$/.exec(d))) return [row('Paper', esc(c[1])), row('Method', esc(c[2]))];
-  return d ? [row('Method', esc(d))] : [];
+  var doi = /,?\s*\bdoi:\s*(10\.[^\s;,]+[^\s;,.])/i.exec(d), dd = doi ? d.replace(doi[0], '') : d;
+  if ((c = /^([^;:]{1,120}\(\d{4}\));\s*(.+)$/.exec(dd)))
+    return [row('Paper', esc(c[1])), row('Method', esc(c[2]))].concat(doi ? [row('DOI', a('https://doi.org/' + doi[1], doi[1]))] : []);
+  var m = methodLine(record);
+  return m ? [row('Method', esc(m))] : [];
 }
 
 // The SOURCE section: what the record's source says (sourceRows), its source ref when
@@ -2202,7 +2196,7 @@ function provenanceHTML(record, lineage, doc){
   var linSrc = lineage && typeof lineage.source === 'string' ? lineage.source : null;
   var src = record.source || null;
   var ref = linSrc || (src && src.ref);
-  var rows = sourceRows(src && src.detail);
+  var rows = sourceRows(record);
   if (!rows.length && ref) rows.push('<dt>Ref</dt><dd class="wrap">' + esc(String(ref)) + '</dd>');
   // Read-time inheritance: a member with no source of its own shows the shared
   // document's source, labelled plainly. DISPLAY ONLY: nothing is written onto
