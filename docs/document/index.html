@@ -311,7 +311,6 @@
 <li><p>The version badge, a repository's statement of the map version it used: openmaterials.ai/badge/&lt;version&gt;.svg (the current version lives at /badge.svg).</p></li>
 <li><p>The verified layer and its roadmap, live: <code>docs/lean/</code> (openmaterials.ai/lean and /lean/roadmap/).</p></li>
 <li><p>This document, browsable with a PDF download: <code>docs/document/</code> (openmaterials.ai/document).</p></li>
-<li><p>The deck, a short walkthrough: <code>docs/deck/</code>.</p></li>
 </ul>
 <h1 id="part:architecture"><span class="partno">Part III</span>The architecture</h1>
 <p>This part records the design of the typed operator/representation framework: the two-worlds separation, the formal definitions, the gauge discipline, and the first thermal-transport demonstration. It is carried from the standalone architecture reference essentially verbatim; the implemented kernel that supersedes its content-identity and store sketches is Part <a href="#part:kernel" data-reference-type="ref" data-reference="part:kernel">IV</a>.</p>
@@ -1254,7 +1253,7 @@ L^2\cdot T^{-2}</span>, <span class="math inline">\mathtt{THERMAL\_CONDUCTIVITY}
 <p>Call <code>record_instance</code> from a script or a one-off Python session; the call writes a JSON file under <code>docs/data/instances/</code>.</p>
 <p>Example: the LGPS activation energy (0.152 eV) from the catalog was written as <code>docs/data/instances/</code><code>lgps-activationenergy-</code><code>atomisticskills-mat-</code><code>diffusion-analysis-lgps.json</code> with <code>variable="ActivationEnergy"</code>, <code>source_kind="simulation"</code>, and <code>conditions={"T_range": "600-1000K", "potential": "MatPES-r2SCAN"}</code>. The room-temperature conductivity (91.44 mS/cm) was not recorded because <code>RoomTemperatureConductivity</code> is a catalog-only quantity with no operator node.</p>
 <h3 id="step-6-symbols-entry"><span class="secno">C.6</span> Step 6: SYMBOLS entry</h3>
-<p>Add the LaTeX symbol for each new operator-graph node to the <code>SYMBOLS</code> dict in <code>omai/materials/domain.py</code>. The key is the node's <code>name</code> string; the value is the LaTeX symbol used in graph visualizations and the site deck.</p>
+<p>Add the LaTeX symbol for each new operator-graph node to the <code>SYMBOLS</code> dict in <code>omai/materials/domain.py</code>. The key is the node's <code>name</code> string; the value is the LaTeX symbol used in graph visualizations.</p>
 <p>Example: after adding <code>DIFFUSIVITY_STATE</code> and <code>ACTIVATION_ENERGY</code>, the dict received <code>"Diffusivity": r"D"</code> and <code>"ActivationEnergy": r"E_a"</code>. Add a node's symbol only once the node actually enters the graph (i.e. an edge in <code>EDGES</code> produces or consumes it); <code>STRUCTURE</code> is defined in <code>shared_primitives</code> but stays out of <code>SYMBOLS</code> until the first skill wires an edge to it.</p>
 <h3 id="step-7-regenerate-and-test"><span class="secno">C.7</span> Step 7: Regenerate and test</h3>
 <p>After completing steps 1 through 6, regenerate the site data files and run the test suite:</p>
