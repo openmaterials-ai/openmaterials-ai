@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Formalization roadmap | OpenMaterials</title>
-<meta name="description" content="Every operator on the map, rated by what a Lean proof of its formula would take: proven, trivial, needs analysis, or nothing to prove. One row per operator.">
+<meta name="description" content="This page rates every operator on the map by what a Lean proof of its formula would take: provable, trivial, needs analysis, or nothing to prove.">
 <link rel="canonical" href="https://openmaterials.ai/lean/roadmap/">
 <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
@@ -13,11 +13,11 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="openmaterials.ai">
 <meta property="og:title" content="Formalization roadmap | OpenMaterials">
-<meta property="og:description" content="Every operator on the map rated by what a Lean proof of its formula would take.">
+<meta property="og:description" content="This page rates every operator on the map by what a Lean proof of its formula would take: provable, trivial, needs analysis, or nothing to prove.">
 <meta property="og:url" content="https://openmaterials.ai/lean/roadmap/">
 <meta property="og:image" content="https://openmaterials.ai/assets/og.png">
 <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="The openmaterials.ai mark and wordmark above the line &quot;A versioned map of physics.&quot; and the licenses &quot;Map data CC BY 4.0 · Code Apache 2.0&quot;.">
+<meta property="og:image:alt" content="The openmaterials.ai mark and wordmark above the line &quot;A versioned map of physics.&quot; A smaller line gives the licenses: map data CC BY 4.0 and code Apache 2.0.">
 <meta name="twitter:card" content="summary_large_image">
 <script>try{const t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch{}</script>
 <link rel="preload" href="../../assets/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin>
@@ -36,7 +36,7 @@
 <main class="frame" id="main">
   <header class="page-head">
     <h1>Formalization roadmap</h1>
-    <p class="lede">The <a href="../">verified layer</a> shows what is proven. This page rates every operator, one row each: proven, trivially true, provable only with real analysis, or nothing to prove. The counts are computed at load from the published roadmap, <a href="../../data/lean_roadmap.json"><code>data/lean_roadmap.json</code></a>.</p>
+    <p class="lede">The <a href="../">verified layer</a> shows what is proven. This page rates every operator on the map by what a Lean proof of its formula would take: provable, trivial, needs analysis, or nothing to prove. The counts are computed at load from the published roadmap, <a href="../../data/lean_roadmap.json"><code>data/lean_roadmap.json</code></a>.</p>
   </header>
 
   <div class="page-body">
@@ -71,20 +71,11 @@
     const doc = await (await fetch("../../data/lean_roadmap.json")).json();
     const r = parseRoadmap(doc);
 
-    const tiles = [
-      { n: r.proven, l: "Proven in Lean" },
-      { n: r.counts.hard, l: "Need analysis" },
-      { n: r.counts.na, l: "Nothing to prove" },
-      { n: r.counts.trivial, l: "Trivially true" },
-    ];
+    const tiles = DIFFICULTIES.map(d => ({ n: r.counts[d], l: DIFF_LABEL[d] }));
     document.getElementById("stats").innerHTML = tiles.map(t =>
       "<div><dt>" + t.l + '</dt><dd class="mono">' + t.n + "</dd></div>").join("");
     document.getElementById("statsline").textContent =
-      r.total + " operators on map version " + r.version + ": " +
-      r.counts.easy + " rational identities (" + r.proven + " theorems proven, including compositions), " +
-      r.counts.trivial + " reflexive polynomials, " +
-      r.counts.hard + " needing analysis, and " +
-      r.counts.na + " external code outputs with nothing algebraic to prove.";
+      r.total + " operators on map version " + r.version + "; " + r.proven + " are proven in Lean.";
 
     const held = document.getElementById("rows");
     const esc = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;");

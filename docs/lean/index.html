@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Verified layer | OpenMaterials</title>
-<meta name="description" content="The map's dimensions and operator identities are stated as Lean 4 theorems and compiled against physlib and Mathlib, with coverage counted from the published export.">
+<meta name="description" content="The map's node dimensions are declared in Lean 4, and its edge dimension statements and operator identities are proven against physlib and Mathlib, with coverage counted from the published export.">
 <link rel="canonical" href="https://openmaterials.ai/lean/">
 <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
@@ -13,11 +13,11 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="openmaterials.ai">
 <meta property="og:title" content="Verified layer | OpenMaterials">
-<meta property="og:description" content="The dimensional layer of the map, proven in Lean 4 and checked against physlib.">
+<meta property="og:description" content="The map's node dimensions are declared in Lean 4, and its edge dimension statements and operator identities are proven against physlib and Mathlib, with coverage counted from the published export.">
 <meta property="og:url" content="https://openmaterials.ai/lean/">
 <meta property="og:image" content="https://openmaterials.ai/assets/og.png">
 <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="The openmaterials.ai mark and wordmark above the line &quot;A versioned map of physics.&quot; and the licenses &quot;Map data CC BY 4.0 · Code Apache 2.0&quot;.">
+<meta property="og:image:alt" content="The openmaterials.ai mark and wordmark above the line &quot;A versioned map of physics.&quot; A smaller line gives the licenses: map data CC BY 4.0 and code Apache 2.0.">
 <meta name="twitter:card" content="summary_large_image">
 <script>try{const t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch{}</script>
 <link rel="preload" href="../assets/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin>
@@ -31,7 +31,6 @@
   .thm-name { font: 400 13px/20px var(--font-mono); color: var(--ink); overflow-wrap: anywhere; }
   .thm-src { margin-left: auto; font-size: 14px; line-height: 20px; }
   .thm pre { margin: 0; padding: 16px; font: 400 13px/20px var(--font-mono); white-space: pre-wrap; overflow-wrap: anywhere; }
-  .thm .meaning { padding: 12px 16px; border-top: 1px solid var(--line); font-size: 14px; line-height: 20px; color: var(--ink-2); }
   .xwalk { margin-top: 8px; padding: 8px 12px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); font-size: 12px; line-height: 16px; white-space: normal; }
   .xwalk .xh { margin-bottom: 4px; font-weight: 500; color: var(--ink-2); }
   .xwalk .kv .k { color: var(--ink-2); }
@@ -69,21 +68,21 @@
 
       <section class="gsec" id="proven">
         <h2>What is proven, and what is not</h2>
-        <p>Tier 1 is the dimensional layer. Each exported map node has a declared
-          dimension, a Lean definition of five rational exponents over length, time,
-          mass, charge, and temperature. A Tier 1 theorem exists only when an edge's output dimension is the product
-          of its input dimensions, and it states that equality; the generator skips
-          edges whose formulas sum over modes, take ratios, or take square roots.
-          The Lean compiler checks every theorem against physlib (Lean 4.31.0); a
-          file that compiles with zero errors and zero <code>sorry</code>s is the
-          proof.</p>
-        <p>Tier 2 holds the operator identities. The map's executable identities
-          are stated as theorems over real numbers and checked against Mathlib. A
-          composition theorem substitutes an upstream identity into a
-          downstream one and proves the chained form equals the flat form; a
-          law theorem states a single identity's formula as a well-typed
-          real equation.</p>
-        <p>Scope: physlib's <code>Dimension</code> has five bases and no
+        <h3>Tier 1: the dimensional layer</h3>
+        <p>Each exported map node has a declared dimension, a Lean definition of five
+          rational exponents over length, time, mass, charge, and temperature. A Tier 1
+          theorem exists only when an edge's output dimension is the product of its input
+          dimensions, and it states that equality; the generator skips edges whose
+          formulas sum over modes, take ratios, or take square roots. The Lean compiler
+          checks each statement against physlib (Lean 4.31.0), and the file compiles with
+          zero errors and no <code>sorry</code> placeholders.</p>
+        <h3>Tier 2: the operator identities</h3>
+        <p>A composition theorem: after the upstream identity is substituted into the
+          downstream one, the chained form equals the flat form for all reals that satisfy
+          the stated hypotheses. A law theorem states a single identity's formula as a
+          well-typed real equation.</p>
+        <h3>Scope</h3>
+        <p>physlib's <code>Dimension</code> has five bases and no
           base for amount of substance, electric current, or luminous intensity, so
           map nodes whose dimension needs a mole, ampere, or candela base are
           omitted from the export. Extending the dimension system upstream is a
@@ -106,8 +105,8 @@
 
       <section class="gsec" id="edges">
         <h2>Edge theorems (Tier 1)</h2>
-        <p>One theorem per edge whose output dimension is the product of its input
-          dimensions; the theorem states that equality. Node names link to the quantity on
+        <p>Each operator that passes the product rule has one theorem: the output's
+          dimension equals the product of its inputs' dimensions. Node names link to the quantity on
           the map; every theorem lives in the generated
           <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/OpenMaterials.lean">lean/OpenMaterials.lean</a>.</p>
         <div id="edge-list"><p class="empty">Loading&hellip;</p></div>
@@ -115,16 +114,15 @@
 
       <section class="gsec" id="identities">
         <h2>Operator identities (Tier 2)</h2>
-        <p>Each identity is a theorem over real numbers, checked against Mathlib;
-          the statement below is the generated source, verbatim, from
+        <p>The statement below is the generated source, verbatim, from
           <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/OpenMaterialsIdentities.lean">lean/OpenMaterialsIdentities.lean</a>.</p>
         <div id="identity-list"><p class="empty">Loading&hellip;</p></div>
       </section>
 
       <section class="gsec" id="nodes">
         <h2>Nodes</h2>
-        <p>Every exported map node and its declared dimension, as five exponents in
-          physlib field order (length, time, mass, charge, temperature). Where a
+        <p>The table lists every exported map node and its declared dimension as five
+          exponents in physlib field order (length, time, mass, charge, temperature). Where a
           node has a counterpart formalized in physlib itself, the crosswalk entry
           appears under it.</p>
         <div id="node-list"><p class="empty">Loading&hellip;</p></div>
@@ -132,10 +130,10 @@
 
       <section class="gsec" id="reproduce">
         <h2>Reproduce this</h2>
-        <p><a href="https://github.com/openmaterials-ai/openmaterials-ai/actions/workflows/lean.yml">Lean CI status</a>.
-          Every pull request that touches the map or the generators recompiles the
-          full proof against physlib in CI, with warnings promoted to errors, so
-          that status is the live state of the claim on this page.</p>
+        <p>CI recompiles the full proof against physlib on every pull request that
+          touches the map or the generators, with warnings promoted to errors. The
+          <a href="https://github.com/openmaterials-ai/openmaterials-ai/actions/workflows/lean.yml">Lean CI status</a>
+          page shows each run.</p>
         <p><code>lean/</code> is a standalone lake package (library
           <code>OpenMaterials</code>) on toolchain Lean 4.31.0, depending on
           <a href="https://github.com/leanprover-community/physlib">physlib</a>
@@ -150,16 +148,16 @@
 cd openmaterials-ai/lean
 
 lake exe cache get   # fetch the mathlib build cache (first build only)
-lake build           # compiles every generated module; zero errors, zero sorries
+lake build           # compiles every generated module; zero errors, no sorry
 
 # the Python re-check (no Lean toolchain needed), from the repo root:
 pip install -e . &amp;&amp; python -m pytest tests/test_physlean_export.py tests/test_lean_tier2.py -q</pre>
         </div>
         <p>The generated sources:
-          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/OpenMaterials.lean">OpenMaterials.lean</a> (Tier 1 dimensions and edge theorems),
+          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/OpenMaterials.lean">OpenMaterials.lean</a> (Tier 1 declared dimensions and edge theorems),
           <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/OpenMaterialsIdentities.lean">OpenMaterialsIdentities.lean</a> (Tier 2 identities),
           <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/OpenMaterialsDimensions.lean">OpenMaterialsDimensions.lean</a> (the seven-base dimensional closure),
-          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/OpenMaterialsUnits.lean">OpenMaterialsUnits.lean</a> (the units bridge).</p>
+          and <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/OpenMaterialsUnits.lean">OpenMaterialsUnits.lean</a> (the map's SI convention).</p>
       </section>
     </article>
   </div>
@@ -207,24 +205,15 @@ pip install -e . &amp;&amp; python -m pytest tests/test_physlean_export.py tests
   function renderStats(stats) {
     var nodesEl = document.getElementById('c-nodes');
     nodesEl.innerHTML = stats.nodes +
-      (stats.graphNodes ? ' <span class="of">of ' + stats.graphNodes + '</span>' : '');
+      (stats.graphNodes ? ' <span class="of">of ' + stats.graphNodes + ' nodes</span>' : '');
     var edgesEl = document.getElementById('c-edges');
     edgesEl.innerHTML = stats.edges +
-      (stats.graphOps ? ' <span class="of">of ' + stats.graphOps + '</span>' : '');
+      (stats.graphOps ? ' <span class="of">of ' + stats.graphOps + ' operators that take input quantities</span>' : '');
     setText('c-idents', String(stats.identities));
     if (stats.version) setText('c-version', String(stats.version).slice(0, 12));
-    var parts = [
-      stats.nodes + (stats.graphNodes ? ' of the map\'s ' + stats.graphNodes + ' nodes' : ' nodes') +
-        ' carry a declared dimension',
-      stats.edges + (stats.graphOps ? ' of the ' + stats.graphOps + ' operators that take input quantities' : ' operators') +
-        ' carry an edge theorem',
-      stats.identities + (stats.identities === 1 ? ' operator identity is' : ' operator identities are') +
-        ' proven over the reals'
-    ];
     var el = document.getElementById('c-sentence');
     el.className = '';
-    el.innerHTML = parts.join('; ') + '. Generated from map version <code>' +
-      esc(stats.version || 'unknown') + '</code>.';
+    el.innerHTML = 'The counts come from map version <code>' + esc(stats.version || 'unknown') + '</code>.';
   }
 
   function renderEdges(lean, idx) {
@@ -237,13 +226,12 @@ pip install -e . &amp;&amp; python -m pytest tests/test_physlean_export.py tests
         '<td>' + nodeRef(e.output, idx) + '</td>' +
         '<td>' + inputs + '</td>' +
         '<td class="stmt">' + esc(e.statement) + '</td>' +
-        '<td><a href="' + REPO + 'OpenMaterials.lean" title="theorem ' +
-          esc(e.name) + '">source</a></td>' +
+        '<td><a class="nid" href="' + REPO + 'OpenMaterials.lean">' + esc(e.name) + '</a></td>' +
         '</tr>';
     }).join('');
     document.getElementById('edge-list').innerHTML =
       '<div class="table-wrap"><table class="gtable"><thead><tr>' +
-      '<th>Edge</th><th>Output</th><th>Inputs</th><th>Dimension statement</th><th>Lean</th>' +
+      '<th>Edge</th><th>Output</th><th>Inputs</th><th>Dimension statement</th><th>Theorem</th>' +
       '</tr></thead><tbody>' + rows + '</tbody></table></div>';
   }
 
@@ -257,17 +245,11 @@ pip install -e . &amp;&amp; python -m pytest tests/test_physlean_export.py tests
     var blocks = names.map(function (name) {
       var entry = lean.identities[name];
       var t = L.parseTheorem(entry.lean);
-      var meaning = entry.kind === 'composition'
-        ? 'A composition theorem: substituting the upstream identity into the ' +
-          'downstream one, the chained form equals the flat form, for all reals ' +
-          'satisfying the stated hypotheses.'
-        : 'A law theorem: the identity\'s formula stated as a well-typed real equation.';
       return '<div class="thm">' +
         '<div class="thm-head"><span class="thm-name">' + esc(name) + '</span>' +
         '<span class="thm-kind">' + esc(entry.kind || '') + '</span>' +
         '<a class="thm-src" href="' + REPO + 'OpenMaterialsIdentities.lean">source</a></div>' +
         '<pre>' + esc(entry.lean) + '</pre>' +
-        '<div class="meaning">' + meaning + '</div>' +
         '</div>';
     }).join('');
     document.getElementById('identity-list').innerHTML = blocks;

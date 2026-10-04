@@ -11,7 +11,7 @@ const DIFF_LABEL = {
 };
 
 // Validate the published roadmap and derive everything the page renders.
-// Throws on a malformed document so the page shows one honest error line
+// Throws on a malformed document so the page shows one error line
 // instead of a half-rendered table.
 function parseRoadmap(doc) {
   if (!doc || !Array.isArray(doc.rows)) throw new Error("roadmap: missing rows");
