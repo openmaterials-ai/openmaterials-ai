@@ -2118,13 +2118,11 @@ function renderInstanceEmpty(reason, hash){
   h += '<p class="rec-lede" style="white-space:normal">No shared value with this id</p>';
   h += '</div><div class="rec-sec">';
   if (reason === 'malformed') {
-    h += '<p class="rec-explain">A shared value opens by its id: the SHA-256 hash of its ' +
-      'lineage in hexadecimal, or a prefix of it. The id in this link has a different form, ' +
-      'so it cannot resolve.</p>';
+    h += '<p class="rec-explain">The id in this link is malformed, so no value can open.</p>';
     h += '<dl class="rec-kv"><dt>id in the link</dt><dd class="wrap">' + esc(String(hash || '')) + '</dd></dl>';
   } else {
-    h += '<p class="rec-explain">This id is well formed, but no committed value has it in ' +
-      'this site build. It may belong to a newer build, or the link may be stale.</p>';
+    h += '<p class="rec-explain">No value on the map has this id. The link may be stale, or the ' +
+      'value may be newer than this version of the map.</p>';
     h += '<dl class="rec-kv"><dt>id</dt><dd class="wrap">' + esc(String(hash || '')) + '</dd></dl>';
   }
   h += '<p class="rec-explain"><a href="../map/">Open the map</a> to browse the ' +

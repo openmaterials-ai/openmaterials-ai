@@ -595,13 +595,27 @@ function loadInstances(){
   return instancesPromise;
 }
 function resolveNodeId(v){ if(nodeById[v]) return v; const b=(''+v).split('[')[0]; return nodeById[b]?b:null; }
+// Citation parsing, as on experiment/index.html: a source is titled by the shortest citation its records carry.
+function parts(detail){
+  var d = String(detail == null ? '' : detail).replace(/\s+/g, ' ').replace(/ ?\[[A-Z]{2,}[^\]]*\]/g, '').trim();
+  var m = /^(.*\([^()]*\bp\. ?\d+[^()]*\))\.? (.+)$/.exec(d);
+  if (m) return { quote: m[1], cite: m[2].replace(/,? (?:doi|arXiv):.*$/, '').replace(/\.$/, '') };
+  m = /^([^;()]*\(\d{4}\))(?:; (.*))?$/.exec(d);
+  if (m) return { quote: m[2] || '', cite: m[1] };
+  return { quote: d, cite: '' };
+}
+function titleOf(recs){
+  var best = '';
+  recs.forEach(function(r){ var c = parts(r.source && r.source.detail).cite; if (c && (!best || c.length < best.length)) best = c; });
+  return best;
+}
 function showExperiment(ref, recs){
   const mine=recs.filter(r=> r.source && r.source.ref===ref);
   const ids=[...new Set(mine.map(r=>resolveNodeId(r.variable)).filter(Boolean))];
-  let h=closeBtn()+'<div class="om-panel-label">Experiment</div>';
-  h+='<div class="name" style="font-weight:500;color:var(--ink,#171717)">'+esc(ref)+'</div>';
+  let h=closeBtn()+'<div class="om-panel-label">Source</div>';
+  h+='<div class="name" style="font-weight:500;color:var(--ink,#171717)">'+esc(titleOf(mine)||ref)+'</div>';
   if(!ids.length){
-    h+='<p>No committed value in this site build carries this source reference.</p>';
+    h+='<p>No value on the map cites this source.</p>';
     panelEl.innerHTML=h; panelEl.style.display='block'; return;
   }
   depth='focused'; clearDim();
