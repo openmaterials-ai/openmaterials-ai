@@ -27,7 +27,7 @@ Cite the map version in https://openmaterials.ai/data/version.json with any valu
 - A committed value's id is the SHA-256 hash of its lineage object: 64 lowercase hex characters, the id field in instances.json.
 - The datasheet for a value opens at https://openmaterials.ai/play/#id={id}; a prefix of 8 or more hex characters also resolves.
 - https://openmaterials.ai/i/{id}/ is the value's permalink: it carries a preview card for link unfurls and opens the datasheet.
-- Short links of the form https://openmaterials.ai/l/{id} (the first 12 or more hex characters of the id) open the value; https://openmaterials.ai/i/{id}/ is its canonical page.
+- Short links of the form https://openmaterials.ai/l/{prefix} open the same datasheet; the prefix is 8 or more hex characters of the id, and the site prints 12.
 
 ## Optional
 

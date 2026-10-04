@@ -1416,10 +1416,10 @@ function lineageDoiHTML(record){
       '<a href="#id=' + short + '">' + link + '</a>' +
       '<button type="button" class="rec-doi-copy" data-copy="https://' + link + '">Copy</button>' +
       chip +
-      '<span class="rec-doi-lab">Canonical page</span><span class="rec-doi-page">' + page + '</span></div>';
+      '<span class="rec-doi-lab">Permalink</span><span class="rec-doi-page">' + page + '</span></div>';
   }
   return '<div class="rec-doi"><span class="rec-doi-lab">Lineage id</span>' +
-    '<span class="rec-doi-un" title="This lineage is not committed to the map, so it has no short link or value page yet. Committing it through a pull request creates both.">' + short + ' (uncommitted)</span></div>';
+    '<span class="rec-doi-un" title="This lineage is not committed to the map, so it has no short link or permalink yet. Committing it through a pull request creates both.">' + short + ' (uncommitted)</span></div>';
 }
 // Before a bundle is minted it HAS no short link (the data lives only in the
 // long URL); the badge row says so and offers the mint in place, so the

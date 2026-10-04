@@ -351,7 +351,7 @@ def test_datasheet_shows_the_lineage_badge():
         "an unminted bundle must show the create-one affordance, never a blank row"
     assert "var link = 'openmaterials.ai/l/' + short" in html, "the short link is not displayed"
     assert "data-copy=\"https://' + link + '\"" in html, "the copy button must copy the short link"
-    assert "page = 'openmaterials.ai/i/' + id + '/'" in html and "Canonical page" in html, \
+    assert "page = 'openmaterials.ai/i/' + id + '/'" in html and "Permalink" in html, \
         "the canonical value page is not printed beside the short link"
     assert "(uncommitted)" in html, "no honest uncommitted state"
     assert "INSTANCE_IDS" in html, "committed test set missing"
