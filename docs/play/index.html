@@ -786,6 +786,7 @@ var lineageHasRendered = false;
 var lineageGallery = null;
 var lineageFlagship = null;
 var FLAGSHIP_ID = 'f735a05c14db';
+var lineageIsExample = false;   // the open sheet is the Lineage tab's default example, not a shared link
 var lineageExamplesPromise = null;
 var skipNextHashApply = '';
 function fmtScalar(v){
@@ -1047,7 +1048,7 @@ function renderLineageExampleNav(record){
   var box = document.getElementById('linExamples');
   var current = galleryEntryFor(record);
   var fl = lineageFlagship && lineageFlagship.lineage;
-  if (!Array.isArray(lineageGallery) || (!current && !(record && lineageFlagship && record.id === lineageFlagship.id))) {
+  if (!Array.isArray(lineageGallery) || (!current && !(lineageIsExample && record === lineageFlagship))) {
     box.hidden = true; box.innerHTML = ''; return;
   }
   // an example that repeats the default's quantity and material is left out
@@ -1092,13 +1093,13 @@ function activateLineageDefault(){
     if (!GRAPH || lineageHasRendered || lineageHashHasRecord()) return;
     if (!document.querySelector('.pg-tab.on[data-tab="lineage"]')) return;
     if (!lineageFlagship) return;
-    renderLineage(lineageFlagship);
+    renderLineage(lineageFlagship, { example: true });
   }).catch(function(){});
 }
 
 function openFlagshipLineage(){
   Promise.all([mapReady, loadLineageExamples()]).then(function(){
-    if (GRAPH && lineageFlagship) renderLineage(lineageFlagship);
+    if (GRAPH && lineageFlagship) renderLineage(lineageFlagship, { example: true });
   }).catch(function(){});
 }
 
@@ -2033,6 +2034,7 @@ function renderLineage(record, opts){
   box.innerHTML = h;
   currentLineageRecord = record;
   lineageHasRendered = true;
+  lineageIsExample = !!opts.example;
   // the input boxes hold what a Share would mint: the one-element envelope with
   // its doc for a doc-bearing single-lineage share, else the record itself
   setLineageInputs(opts.doc && !opts.fromBundle ? shareEnvelopeFor(record, opts) : record);
