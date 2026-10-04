@@ -9,6 +9,7 @@
 \pdfgentounicode=1
 \usepackage{booktabs}
 \usepackage{enumitem}
+\setlist[itemize,2]{label=$\circ$}
 \usepackage{tikz}
 \usepackage{xcolor}
 \usepackage{titlesec}
@@ -30,7 +31,7 @@
 
 \title{\includegraphics[width=0.5in]{assets/logo-print.png}\\[0.75em]
        \textbf{openmaterials.ai}\\[0.3em]
-       \large\normalfont Git for science: a versioned map of physics}
+       \large\normalfont Specification and status of the OpenMaterials map}
 \author{The OpenMaterials project\\[0.25em]
         \small\texttt{openmaterials.ai}\ \ $\cdot$\ \ open source: map data
         CC~BY~4.0, code Apache~2.0}
@@ -126,7 +127,7 @@ happened to carry it, and recovering it, deciding what a given number actually
 claims, is left to the reader. What cannot be recovered mechanically cannot be
 checked mechanically, and so it cannot accumulate.
 
-\section{The bet: store the physics, not the printout}
+\section{The bet: store the physics itself}
 
 The move is to store the object. A result becomes a typed quantity, thermal
 conductivity or a phonon frequency or a heat capacity, declared as what it is. The
@@ -247,7 +248,7 @@ The analogy closes the loop. The structured corpus of code that accumulated in g
 is what made today's code models possible; a structured corpus of science is what
 will let an agent reason over physics rather than over prose about physics. This
 is, deliberately, Lean for computational physics, and like a proof assistant its
-worth is that correctness is checked, not trusted. It is only partly built, but the
+value is that correctness is checked mechanically. It is only partly built, but the
 shape is already here.
 
 \section{Where we are, and what is next}
@@ -299,14 +300,14 @@ compounding, machine-usable, verifiable body of physics.\\[0.5em]
 \end{center}
 
 % =====================================================================
-\part{The Product}
+\part{The product}
 \label{part:product}
 % =====================================================================
 
 \noindent
 openmaterials is a versioned map of physics knowledge, built like git: typed
 physical quantities (nodes) related by executable formulas (edges), every
-element content-hashed, every change logged. The structure comes from codes and
+node and formula content-hashed, every change logged. The structure comes from codes and
 theory: a respected codebase or a published derivation is what adds nodes and
 edges. Experiments fill it in: each simulation run or measurement attaches a
 value to a node, with its material, conditions, and source. Parsers turn the
@@ -391,13 +392,13 @@ and the near-synonyms they subsume:
 
 \begin{center}
 \small
-\begin{tabular}{lll}
+\begin{tabular}{llp{0.45\linewidth}}
 \toprule
 Concept & Canonical term & Notes \\
 \midrule
 A typed quantity on the map    & \textbf{node} & \texttt{Space} is the code class. \\
 A relation producing a node    & \textbf{edge} & \texttt{Operator} is the code class. \\
-A code's mapping onto the map  & \textbf{representation} & its on-map rendering is a \emph{representation}. \\
+A code's mapping onto the map  & \textbf{representation} & units, gauge, and conventions per covered node and edge. \\
 A committed value               & \textbf{instance} & the \texttt{\{id, kind, lineage, source\}} record. \\
 A semantic type parameter       & \textbf{label} & e.g.\ \texttt{bte\_solver=rta}, not a ``variant''. \\
 A content hash                  & \textbf{uid} & sha256; a 12-hex prefix is displayed. \\
@@ -487,13 +488,13 @@ no embeddings, so every resolution is auditable. An agent that grounds its
 phrase through the resolver inherits everything the map knows about the
 element: the formula, the dimensional proof, the producing codes with their
 citations, the evidence with its provenance. A label that resolves to nothing
-is an honest coverage gap and feeds the encode queue. External method
+marks a coverage gap: a node or alias the map does not have yet. External method
 vocabularies (the first being a 16,012-paper skill map extracted by
 large-scale literature analysis) will align to the map through reviewed
 alignment files, each unmatched label ranked by its usage frequency in the
-field; today the curated aliases carry that role while the corpus is awaited. This
-is the sense in which the map is a semantics for AI: fuzzy language in,
-checkable identity out.
+field; today the curated aliases carry that role while the corpus is awaited. In
+this sense the map is a semantic layer for AI: the resolver turns a phrase
+into node identities that can be checked.
 
 \section{The parsers}
 
@@ -728,7 +729,7 @@ that link; the heavy bytes are a separate, optional enrichment. A record with no
 artifacts and no map node is valid and normal: validation resolves a node by id
 and uid when the lineage names one (a stale pin is a mismatch, never a silent
 pass), and simply flags node-unresolved otherwise rather than rejecting it (the
-honesty rule). A full, checksummed bundle from MCG can additionally enrich a
+no-invention rule). A full, checksummed bundle from MCG can additionally enrich a
 record with verifiable byte pointers, which a verification tool then checks
 against their checksums as a dated report, never a gate; but that heavy path is
 optional and never required for a record to exist or to have identity. This is
@@ -748,9 +749,9 @@ one per lineage, each with its derivation drawn as an excerpt of the map;
 \texttt{doc.source} is inherited by members at read time for display only,
 never hashed into any member's id. The bundle itself is content-addressed
 (\texttt{bundle\_id}: the sha256 of the canonical document metadata plus the
-member ids in order). A link that would exceed 8000 characters is refused with
-a download-the-JSON fallback rather than silently truncated: the honesty rule,
-applied to the wire.
+member ids in order). A link over 8000 characters is refused and the JSON is offered as a
+download, so no link is truncated. This is the no-invention rule applied to
+links.
 
 \paragraph{Conformance target (a pinned expectation).} The check side of the
 evidence. A target is \texttt{\{id, lineage, code, expected, tolerance,
@@ -801,13 +802,13 @@ condition of a run, whose structural home is the configuration record and the
 claim whose quote is not found verbatim in the document (the hallucination gate)
 and flagging values that duplicate a committed instance. REVIEW is an adversarial
 model pass. PROPOSE emits a proposal file that a human confirms with
-\texttt{--apply} before any instance is written. The pipeline never prints or logs
+\texttt{-{}-apply} before any instance is written. The pipeline never prints or logs
 the API key. It is golden-evaluated against this very document, against a
 committed expected set of eight values: the acceptance bar is recall $\ge 0.8$
 with the worst of the ensemble runs still clearing it, no hallucinated quote
 surviving validation, and every recovered known correctly flagged as a duplicate
 of its committed instance. The ensemble was built to hold that recall bar against
-the single-pass variance, which is the honest edge of a model-driven extractor.
+the single-pass variance, which is the practical limit of a model-driven extractor.
 
 \paragraph{Index schema.} Registry: \texttt{index/papers/}, \texttt{index/codes/},
 \texttt{index/experiments/}, each entry pinned to (element hash at map version).
@@ -867,11 +868,10 @@ index.
   (openmaterials.ai/lean and /lean/roadmap/).
   \item This document, browsable with a PDF download:
   \texttt{docs/document/} (openmaterials.ai/document).
-  \item The deck, a short walkthrough: \texttt{docs/deck/}.
 \end{itemize}
 
 % =====================================================================
-\part{The Architecture}
+\part{The architecture}
 \label{part:architecture}
 % =====================================================================
 
@@ -902,8 +902,8 @@ their alternatives or justifications; supporting definitions follow in later sec
 
   \item \textbf{The atom is an operator operation.} The atomic unit of meaning is a typed
         transformation between operator states, not an instruction in an input file or an
-        algorithm. Every operation carries a \emph{operator formula}---a sympy expression
-        (closed-form output) or sympy.Eq (implicit equation defining the output)---stating
+        algorithm. Every operation carries a \emph{operator formula} (a sympy expression
+        for a closed-form output, or a sympy.Eq for an implicit equation defining the output) stating
         what it computes. The formula is the operator claim, machine-readable and
         Lean-projectable, against which adapter conformance can be checked.
 
@@ -959,7 +959,7 @@ their alternatives or justifications; supporting definitions follow in later sec
         for both; operator composition of error formulas is a Phase~2 capability.
 
   \item \textbf{The operator root is the potential.} Every representation in the framework
-        ultimately traces back to the Born--Oppenheimer potential of the material. Force
+        ultimately traces back to the Born-Oppenheimer potential of the material. Force
         constants of every order are derived states obtained by extracting derivatives of
         the potential and truncating the Taylor expansion. The upstream is stubbed in
         Phase~1.
@@ -982,7 +982,7 @@ their alternatives or justifications; supporting definitions follow in later sec
 \bigskip
 
 
-\section{Background and Motivation}
+\section{Background and motivation}
 \label{sec:motivation}
 
 Modern computational materials science has many codes, many workflows, and many opinions about how
@@ -1002,7 +1002,7 @@ output. This unit is opaque to two questions:
   \item \textbf{Given two results from two codes, where exactly do they diverge?} Identical force
         constants run through kaldo and through ShengBTE typically yield slightly different
         thermal conductivities. The difference is not localized to a particular operation, even
-        though---in principle---it is the result of distinct computational choices at specific
+        though (in principle) it is the result of distinct computational choices at specific
         steps.
 \end{itemize}
 
@@ -1030,7 +1030,7 @@ extra abstraction with three concrete returns: cross-code reconciliation at cano
 states, derived (rather than empirical) error bounds on computed observables, and a clean
 foundation for future formal verification.
 
-\section{Architectural Principle: Two Worlds, One Bridge}
+\section{Architectural principle: the operator layer and the numeric layer}
 \label{sec:principle}
 
 The single most important design decision is a strict separation between two type universes:
@@ -1038,16 +1038,16 @@ The single most important design decision is a strict separation between two typ
 \begin{itemize}[leftmargin=2em]
   \item \abstr{\textbf{The operator world}} holds typed physics states (Hamiltonians, dispersion
         relations, scattering rates, distribution functions, partition functions) and operator
-        operations between them. Errors here are \emph{approximation errors}---the $O(\cdot)$
+        operations between them. Errors here are \emph{approximation errors}: the $O(\cdot)$
         terms introduced by truncating perturbation series, linearizing equations, or imposing
-        physical assumptions such as the Born--Oppenheimer or harmonic approximation. The
+        physical assumptions such as the Born-Oppenheimer or harmonic approximation. The
         operator world contains no numerical content. Two operator states that differ only in
         their numerical estimates are the same operator state; two operator states that differ
         in the chain of approximations leading to them are different operator states.
   \item \numr{\textbf{The numeric world}} holds discretized realizations of operator states:
         arrays sampled on finite grids, mode-resolved quantities at finite k-meshes,
         distributions evaluated at finite temperature. Errors here are \emph{discretization
-        errors}---the $O((1/N)^k)$ or $O(h^k)$ terms introduced by sampling a continuum quantity
+        errors}: the $O((1/N)^k)$ or $O(h^k)$ terms introduced by sampling a continuum quantity
         on a finite scheme. The numeric world contains no operator content; it does not know
         what theory the numbers are estimates of.
 \end{itemize}
@@ -1074,7 +1074,7 @@ own control plus the external physics codes that produce numerical data.
 Nothing else is a layer: tests, visualization, and experiment scripts are
 supporting infrastructure.
 
-\paragraph{Layer 1 --- operator.} Types, declarations, formulas, gauges.
+\paragraph{Layer 1: operator.} Types, declarations, formulas, gauges.
 Machinery in \texttt{omai.operator} (the \texttt{Space} and
 \texttt{Operator} types, \texttt{Field}, \texttt{Dimension},
 \texttt{GaugeAction}, \texttt{SymmetryGroup}, \texttt{validate\_dag});
@@ -1082,7 +1082,7 @@ domain instances in \texttt{omai.thermal\_transport.operator} (the
 54-node, 55-edge DAG with sympy formulas on each edge, gauge actions).
 No values, no units, no per-code knowledge.
 
-\paragraph{Layer 2 --- representation.} Per-code declarations plus the
+\paragraph{Layer 2: representation.} Per-code declarations plus the
 runtime that operates on actual code outputs. Machinery in
 \texttt{omai.representation} (the \texttt{SpaceRepresentationSpec} and
 \texttt{OperatorRepresentationSpec} types, \texttt{Unit} and unit conversions,
@@ -1124,7 +1124,7 @@ in \texttt{omai/<layer>/}, domain instances in
 
 \medskip
 
-\section{Formal Definitions}
+\section{Formal definitions}
 \label{sec:defs}
 
 We collect the formal definitions implied by the decisions above.
@@ -1156,7 +1156,7 @@ A operator state $s$ is a tuple $(\kappa, \tau, \pi, F)$ where:
         is an ObservableSpace because the full LBTE preserves it);
   \item $\pi$ is the \emph{provenance}: an ordered list $[\mathcal{O}_1, \mathcal{O}_2,
         \ldots, \mathcal{O}_n]$ of operator operations whose composition produced $s$.
-        Provenance is never empty---source states have a single nullary operation
+        Provenance is never empty: source states have a single nullary operation
         (\texttt{provide\_potential}, \texttt{provide\_temperature}, \ldots);
   \item $F = (f_1, f_2, \ldots)$ is the state's tuple of \emph{fields}. Each field has
         a name, a dimension (frequency, energy, length, …), and an index signature
@@ -1199,14 +1199,14 @@ awkward cases: empirical inputs (``where does the lattice constant live?''), exp
 observables (``how does a measured $\kappa(T)$ enter the framework?''), and the unmodeled
 operator root in Phase 1 (``what is the silicon potential, before we differentiate
 it?''). All three are representations of source states whose provenance is a single
-nullary operation; the second is what makes the unified theory--experiment comparison
+nullary operation; the second is what makes the unified theory-experiment comparison
 framework native rather than bolted on; the third is how Phase 1 stubs the upstream of
 \texttt{Potential} without yet modeling it in detail.
 
 
 \paragraph{What ``witness-as-state'' means, concretely.}
 
-The phrase \emph{witness-as-state} comes from the Curry--Howard correspondence in type theory:
+The phrase \emph{witness-as-state} comes from the Curry-Howard correspondence in type theory:
 a typed value is read as evidence (a ``witness'') for a proposition. We borrow the intuition
 without borrowing the formal proof obligations. In this framework a state is not the data it
 contains; it is the \emph{claim} that something exists, expressed in a typed form rich enough
@@ -1216,17 +1216,17 @@ Concretely, three layers are conflated in most computational physics codes; the 
 them apart:
 
 \begin{enumerate}[leftmargin=2em]
-  \item \textbf{The proposition} -- ``the phonon dispersion of crystalline silicon under the
-        harmonic approximation, derived by truncating the Born--Oppenheimer Taylor expansion at
+  \item \textbf{The proposition}: ``the phonon dispersion of crystalline silicon under the
+        harmonic approximation, derived by truncating the Born-Oppenheimer Taylor expansion at
         second order, exists as a function $\omega(\mathbf{q}, \nu)$ from the Brillouin zone to
         positive reals.''
-  \item \textbf{The witness} -- a typed object \texttt{s = (Dispersion, $\pi$)} that records
+  \item \textbf{The witness}: a typed object \texttt{s = (Dispersion, $\pi$)} that records
         precisely this claim. The physics type \texttt{Dispersion} encodes the kind of object
         being asserted to exist; the provenance $\pi$ records the chain of operations
         (extraction, truncation, Fourier transform, eigendecomposition) that produced it. The
         witness carries no numerical content; it is the assertion that such an object exists
         with this history.
-  \item \textbf{The representation} -- a tuple $(s, \Sigma, x, \epsilon_{\text{disc}})$ in
+  \item \textbf{The representation}: a tuple $(s, \Sigma, x, \epsilon_{\text{disc}})$ in
         which $x$ is a concrete 4-D \texttt{numpy} array of frequencies sampled on a chosen
         k-mesh, $\Sigma$ is the discretization scheme, and $\epsilon_{\text{disc}}$ is the
         associated discretization error. The representation is the numerical evidence that the
@@ -1244,8 +1244,8 @@ This is the load-bearing distinction. It is also the answer to several otherwise
 ``What is the dispersion of silicon?'' is the question the witness answers. ``What does the
 dispersion of silicon look like on a $14\times14\times14$ mesh in kaldo'' is the question its
 representation answers. ``Are these two computed dispersions the same?'' resolves into two
-sub-questions---are the witnesses equal (a question about provenance), and are the
-representations consistent within their discretization errors (a question about numerics)---each
+sub-questions (whether the witnesses are equal, a question about provenance, and whether the
+representations are consistent within their discretization errors, a question about numerics), each
 answerable without confusion with the other.
 
 \paragraph{Read in this light:}
@@ -1267,7 +1267,7 @@ equipped with three pieces of metadata:
   \item a \emph{operator formula} $\mathcal{F}_\mathcal{O}$ stating what the operation
         computes, encoded as a sympy expression for closed-form ops or a sympy.Eq for
         implicit ones (eigenvalue equations, linear systems). \emph{Every} operation
-        carries a formula---source operations have identity formulas (e.g.,
+        carries a formula: source operations have identity formulas (e.g.,
         \texttt{provide\_temperature}: $T = T_{\text{provided}}$);
   \item an \emph{approximation error formula} $\epsilon_{\mathcal{O}}$, an operator
         expression in physical small parameters (e.g., $\lambda$ for the strength of a
@@ -1330,24 +1330,24 @@ consequences, so we record the rules here rather than leaving them to taste.
 declared schemes; \emph{spaces} are typed places (a claim that ``this physical
 quantity exists, with this dimension, this gauge type, this label
 vocabulary''). Different production formulas do not, by themselves, force
-different spaces --- they force different edges.
+different spaces. They force different edges.
 
-\paragraph{Pattern A --- label on the space.} Use when the label changes the
+\paragraph{Pattern A: label on the space.} Use when the label changes the
 \emph{gauge type} (\textsc{ObservableSpace} vs.\ \textsc{HiddenSpace}) of the
 produced quantity, \emph{and} the labelled space is terminal (or its
 labelled consumers are themselves a closed sub-branch). Existing examples:
 \begin{itemize}[leftmargin=2em]
-  \item \texttt{MeanFreeDisplacement[bte\_solver=rta|direct\_inverse]} ---
+  \item \texttt{MeanFreeDisplacement[bte\_solver=rta|direct\_inverse]}:
         RTA is \textsc{HiddenSpace}, direct is \textsc{ObservableSpace}. Propagates
         to \texttt{ThermalConductivity[bte\_solver=\ldots]} and stops there.
-  \item \texttt{ThermalConductivity[transport\_model=lbte|wigner|qhgk]} ---
+  \item \texttt{ThermalConductivity[transport\_model=lbte|wigner|qhgk]}:
         adds the orthogonal axis for Wigner and QHGK transport. All terminal.
 \end{itemize}
 This pattern is safe \emph{only} for terminal or near-terminal nodes. Putting a
 type parameter on an intermediate state forces every downstream consumer to be
 parameterised in turn, polluting the entire downstream sub-DAG.
 
-\paragraph{Pattern B --- sibling states converging through an explicit edge.}
+\paragraph{Pattern B: sibling states converging through an explicit edge.}
 Use when several variants represent physically distinct contributions, with
 different inputs, that must combine before a downstream consumer uses them.
 The variants are \emph{sibling named states}; a converging edge produces the
@@ -1365,12 +1365,12 @@ The advantage over Pattern A here is that the per-channel inputs differ;
 sibling states make that visible in the DAG diagram and let adapters declare
 the channels they support independently.
 
-\paragraph{Pattern C --- shared output node, alternative producing edges.}
+\paragraph{Pattern C: shared output node, alternative producing edges.}
 Use when several formulas produce the \emph{same-typed} output with the same
 gauge classification, but from different inputs. The downstream is unaware of
 which path was taken; provenance and adapter specs record it. A literal
-in-place modifier --- a single state with an edge that consumes and produces
-itself --- would create a cycle and is rejected by the DAG validator. The
+in-place modifier (a single state with an edge that consumes and produces
+itself) would create a cycle and is rejected by the DAG validator. The
 canonical workaround is to introduce a small intermediate node that names
 the pre-modification version. Existing example:
 \begin{itemize}[leftmargin=2em]
@@ -1516,7 +1516,7 @@ The same discipline applies edge-by-edge in the executor: when the
 operator-side runtime walks the DAG and dispatches an edge to code $A$
 (i.e.\ to representation $A$), the value returned MUST be carried back
 through $A$'s \texttt{representation\_to\_operator} before the
-next edge runs --- whether that next edge is sympy-executable (closed-form
+next edge runs, whether that next edge is sympy-executable (closed-form
 on the operator layer) or dispatched to a different representation $B$
 (which then applies $B$'s
 \texttt{operator\_to\_representation}). Operator-form intermediates
@@ -1603,7 +1603,7 @@ carries three additional fields:
   \item \texttt{kind}: one of \texttt{scaffolding} (the HiddenSpace is
         consumed by a downstream operation producing an ObservableSpace, so the
         gauge orbit is eventually summed away) or \texttt{approximation}
-        (the HiddenSpace is terminal --- an approximation of an ObservableSpace
+        (the HiddenSpace is terminal: an approximation of an ObservableSpace
         that happens to break gauge invariance, with no downstream recovery;
         $\kappa$\texttt{[bte\_solver=rta]} is the canonical example).
   \item \texttt{gauge\_invariant\_contractions}: names of ObservableSpaces in the
@@ -1636,7 +1636,7 @@ e_{i,q,\nu}$ to
 \end{equation*}
 gives $e^{-i\theta_{q,\nu}} \cdot e^{i\theta_{q,\nu}} = 1$, and sympy
 mechanically reduces the difference to zero. This is the operator layer's
-first machine-verified physics claim --- per-mode group velocity is
+first machine-verified physics claim: per-mode group velocity is
 U(1)-phase invariant, by construction of the formula.
 
 \emph{What's tractable today:} simple operator substitutions (U(1)
@@ -1652,12 +1652,12 @@ the operator layer falls back to the Level 1 named-gauge declarations.
 at the operator layer level is purely a \emph{declaration}: a
 \texttt{SymmetryGroup} carries a Hermann-Mauguin / Schoenflies name
 (\texttt{Oh}, \texttt{D6h}, \texttt{Ci}, \ldots) and an order $|G|$.
-No element data --- no rotation matrices, no translation vectors, no
-group-element enumeration --- lives in the operator layer.
+No element data (no rotation matrices, no translation vectors, no
+group-element enumeration) lives in the operator layer.
 
-The concrete handling --- extracting symmetry from a structure,
+The concrete handling (extracting symmetry from a structure,
 applying group operations to FC tensors, building irreducible-BZ
-reductions --- belongs to the materials codes (phonopy, kaldo,
+reductions) belongs to the materials codes (phonopy, kaldo,
 ShengBTE, \ldots), typically via spglib. The operator layer's role is just to
 \emph{name} the group so that operations can declare which symmetry they
 assume as a parameterized identity
@@ -1709,7 +1709,7 @@ transliteration rather than a redesign. We commit to three disciplines that prot
 \begin{enumerate}[leftmargin=2em]
   \item \textbf{Closed unions for physics types.} The registry of physics types
         (\texttt{Potential}, \texttt{ForceConstants}, \texttt{Dispersion},
-        \texttt{ScatteringRates}, \ldots) is exhaustive and closed---implemented in Python via
+        \texttt{ScatteringRates}, \ldots) is exhaustive and closed: implemented in Python via
         sealed enums or tagged unions, not via open class inheritance. Lean represents these as
         inductive types with a fixed list of constructors; closed unions in Python preserve this
         structure exactly. Open inheritance would require redesign at the Lean stage.
@@ -1735,7 +1735,7 @@ the transliteration cost low without committing the operator layer to Lean tooli
 need.
 
 
-\section{First Demonstration: Lattice Thermal Transport}
+\section{First demonstration: lattice thermal transport}
 \label{sec:demo}
 
 We instantiate the operator layer on the canonical workflow for lattice thermal conductivity $\kappa$,
@@ -1748,9 +1748,9 @@ The operator DAG has 54 nodes and 55 edges. Two source nodes (\texttt{Potential}
 \texttt{Temperature}) are produced by nullary \texttt{provide\_*} operations; the
 \texttt{MeanFreeDisplacement} and \texttt{ThermalConductivity} states are each split
 into two parameterized variants by the upstream \texttt{bte\_solver} choice (one
-gauge-invariant, one not). A second tier of derived observables ---
-\texttt{PhononDOS}, \texttt{Gruneisen}, \texttt{PhaseSpace3Phonon},
-\texttt{VolumetricHeatCapacity}, \texttt{MolarHeatCapacity} --- hangs off the
+gauge-invariant, one not). A second tier of derived observables
+(\texttt{PhononDOS}, \texttt{Gruneisen}, \texttt{PhaseSpace3Phonon},
+\texttt{VolumetricHeatCapacity}, \texttt{MolarHeatCapacity}) hangs off the
 harmonic chain to capture the quantities ShengBTE and phonopy emit directly.
 On top of the BTE chain, a parallel \emph{MD-primitive tier} captures the
 time-resolved quantities a classical molecular-dynamics run produces:
@@ -1786,50 +1786,50 @@ $\kappa$ map alongside the LBTE / Wigner / QHGK variants.
   \item \texttt{VolumetricHeatCapacity} (\textbf{O}), \texttt{MolarHeatCapacity}
         (\textbf{O}): the two BZ-and-mode contractions of \texttt{HeatCapacity}
         that ShengBTE (volumetric) and phonopy (molar) expose directly;
-  \item \texttt{PhononDOS} (\textbf{O}): histogram of $\omega(\mathbf{q},\nu)$
-        --- independent of eigenvectors, hence gauge-invariant;
+  \item \texttt{PhononDOS} (\textbf{O}): histogram of $\omega(\mathbf{q},\nu)$,
+        independent of eigenvectors, hence gauge-invariant;
   \item \texttt{Gruneisen} (\textbf{O}): mode $\gamma_{q,\nu}$ from FC2, FC3
         and the harmonic eigensystem;
   \item \texttt{PhaseSpace3Phonon} (\textbf{O}): three-phonon kinematic
-        availability $P_3(\mathbf{q},\nu)$ --- the bare counting underlying
+        availability $P_3(\mathbf{q},\nu)$, the bare counting underlying
         $\Gamma$ before $|V_3|^2$ enters;
   \item \texttt{BareDynamicalMatrix} (\textbf{O}), \texttt{BornCharges}
-        (\textbf{O}), \texttt{DielectricTensor} (\textbf{O}) ---
+        (\textbf{O}), \texttt{DielectricTensor} (\textbf{O}):
         the NAC inputs and the intermediate pre-correction DM
         (Pattern C; both \texttt{identity\_dm} and
         \texttt{apply\_nac\_correction} converge on
         \texttt{DynamicalMatrix});
   \item \texttt{HelmholtzFreeEnergy} (\textbf{O}), \texttt{Entropy}
         (\textbf{O}), \texttt{InternalEnergy} (\textbf{O}), plus their
-        \texttt{Molar*} contractions --- sibling ObservableSpaces of
+        \texttt{Molar*} contractions: sibling ObservableSpaces of
         \texttt{HeatCapacity};
   \item \texttt{Linewidth[channel=anharmonic\_3ph|isotope|boundary|total]}
-        (\textbf{H}) --- four channels with different inputs, summed via
+        (\textbf{H}): four channels with different inputs, summed via
         \texttt{sum\_linewidths};
-  \item \texttt{IsotopeAbundances} (\textbf{O}) --- source-tier per-atom
+  \item \texttt{IsotopeAbundances} (\textbf{O}): source-tier per-atom
         mass-variance factor;
   \item \texttt{ThermalConductivity[transport\_model=wigner]} (\textbf{O})
         decomposed into \texttt{wigner\_populations} (\textbf{O}) and
         \texttt{wigner\_coherences} (\textbf{O});
-        \texttt{[transport\_model=qhgk]} (\textbf{H}) --- inherits
+        \texttt{[transport\_model=qhgk]} (\textbf{H}): inherits
         $\Gamma$'s gauge type;
   \item \texttt{CumulativeKappa[wrt=omega]} (\textbf{O}),
-        \texttt{[wrt=mfp]} (\textbf{O}) --- distribution observables
+        \texttt{[wrt=mfp]} (\textbf{O}): distribution observables
         derived from $\kappa_{LBTE}$ ingredients.
   \item \emph{MD-primitive tier (P2):}
         \texttt{Trajectory} (\textbf{H}) with fields $r$, $v$ indexed
-        $(i,\alpha,t)$ --- gauge-dependent under MD ensemble noise;
+        $(i,\alpha,t)$, gauge-dependent under MD ensemble noise;
         \texttt{HeatCurrent} (\textbf{H}) with $J(\alpha,t)$, the
-        Irving--Kirkwood snapshot;
+        Irving-Kirkwood snapshot;
         \texttt{HeatCurrentACF} (\textbf{O}) with
-        $J^{corr}(\alpha,\beta,\tau)$, the Green--Kubo integrand;
+        $J^{corr}(\alpha,\beta,\tau)$, the Green-Kubo integrand;
         \texttt{VelocityAutocorrelation} (\textbf{O}) with $C_v(\tau)$,
-        whose cosine Fourier yields a phonon DOS via Wiener--Khinchin;
+        whose cosine Fourier yields a phonon DOS via Wiener-Khinchin;
         \texttt{MeanSquaredDisplacement} (\textbf{O}) with $M(\tau)$,
         the diffusion-limit observable.
   \item \emph{MD-based $\kappa$ terminals (P3):} three Pattern-A
         \texttt{transport\_model} variants of \texttt{ThermalConductivity}, all
-        ObservableSpaces --- \texttt{[transport\_model=green\_kubo]} from the
+        ObservableSpaces: \texttt{[transport\_model=green\_kubo]} from the
         time-integrated heat-flux ACF; \texttt{[transport\_model=nemd]} from
         the imposed-gradient/Müller-Plathe steady state; and
         \texttt{[transport\_model=hnemd]} from the homogeneous-NEMD driving
@@ -1840,9 +1840,9 @@ $\kappa$ map alongside the LBTE / Wigner / QHGK variants.
         alongside the QHGK terminal $\kappa$, the amorphous branch now carries
         the two per-mode quantities the QHGK-paper parse surfaced,
         \texttt{ParticipationRatio} (\textbf{O}, dimensionless, indexed
-        $(q,\nu)$) --- the Bell/Dean $1/N$ localization ratio --- and
+        $(q,\nu)$; the Bell/Dean $1/N$ localization ratio) and
         \texttt{ModalDiffusivity} (\textbf{O}, $L^2 T^{-1}$, indexed
-        $(q,\nu)$), the QHGK / Allen--Feldman per-mode heat-mode diffusivity in
+        $(q,\nu)$), the QHGK / Allen-Feldman per-mode heat-mode diffusivity in
         $\text{mm}^2/\text{s}$, kept apart from the mass-transport
         \texttt{Diffusivity} by name and tag despite the shared dimension.
   \item \emph{Nuclear-quantum-effects layer (Atomistic Cookbook audit, i-PI
@@ -1869,7 +1869,7 @@ $\kappa$ map alongside the LBTE / Wigner / QHGK variants.
         e^{i\mathbf{q}\cdot R}$;
   \item \texttt{compute\_dispersion} (multi-output): eigenvalue equation
         $\sum_j D_{ij}(\mathbf{q})\, e_{j,q,\nu} = \omega^2_{q,\nu}\, e_{i,q,\nu}$;
-  \item \texttt{compute\_group\_velocity}: Hellmann--Feynman
+  \item \texttt{compute\_group\_velocity}: Hellmann-Feynman
         $v^\alpha_{q,\nu} = \frac{1}{2\omega_{q,\nu}} e^\dagger_{q,\nu}\,
         \partial D / \partial q^\alpha\, e_{q,\nu}$; scheme
         \texttt{gv\_method} $\in$ \{\texttt{hellmann\_feynman} (canonical),
@@ -1878,10 +1878,10 @@ $\kappa$ map alongside the LBTE / Wigner / QHGK variants.
   \item \texttt{compute\_anharmonic\_linewidth}: triple BZ sum (Fermi's golden rule);
         scheme \texttt{broadening\_param} $\in$ \{stdev,
         halfwidth, adaptive\_scaled\}, plus an auxiliary equation
-        \texttt{auxiliary\_formulas[0]} that spells out the Maradudin--Fein
+        \texttt{auxiliary\_formulas[0]} that spells out the Maradudin-Fein
         kernel $|V_3|^2 = |\sum_{ijk,RR'} \Phi^3_{ijk}\, e\, e\, e /
-        \sqrt{m\,m\,m}|^2 / (8\, \omega\, \omega'\, \omega'')$ ---
-        the same kernel reappears verbatim in the LBTE collision matrix
+        \sqrt{m\,m\,m}|^2 / (8\, \omega\, \omega'\, \omega'')$.
+        The same kernel reappears verbatim in the LBTE collision matrix
         $\Xi$
         (\texttt{solve\_bte[direct\_inverse]}.\allowbreak\texttt{auxiliary\_formulas[0]});
   \item \texttt{solve\_bte[bte\_solver=rta]}: closed form $F = v/(2\Gamma)$;
@@ -1902,9 +1902,9 @@ $\kappa$ map alongside the LBTE / Wigner / QHGK variants.
         \delta(\omega - \omega_{q\nu})$, with scheme
         \texttt{dos\_broadening} $\in$ \{\texttt{gaussian} (canonical),
         \texttt{tetrahedron}, \texttt{adaptive\_scaled}\};
-  \item \texttt{compute\_gruneisen}: Maradudin--Fein closed form, with
+  \item \texttt{compute\_gruneisen}: Maradudin-Fein closed form, with
         scheme \texttt{gruneisen\_method} $\in$ \{\texttt{maradudin\_fein}
-        (canonical), \texttt{finite\_difference}\} --- phonopy uses the
+        (canonical), \texttt{finite\_difference}\}; phonopy uses the
         latter (deformed-cell finite difference), the other three codes the
         former;
   \item \texttt{compute\_phase\_space\_3phonon}: $P_3(\mathbf{q}, \nu)$ from
@@ -1912,7 +1912,7 @@ $\kappa$ map alongside the LBTE / Wigner / QHGK variants.
         \texttt{delta\_broadening} mirroring \texttt{dos\_broadening};
   \item \texttt{provide\_born\_charges},
         \texttt{provide\_dielectric\_tensor},
-        \texttt{provide\_isotope\_abundances} --- nullary sources for the
+        \texttt{provide\_isotope\_abundances}: nullary sources for the
         polar / isotope inputs;
   \item \texttt{identity\_dm} and \texttt{apply\_nac\_correction}:
         Pattern-C siblings into \texttt{DynamicalMatrix} (scheme
@@ -1920,11 +1920,11 @@ $\kappa$ map alongside the LBTE / Wigner / QHGK variants.
         wang, ewald\});
   \item \texttt{compute\_free\_energy}, \texttt{compute\_entropy},
         \texttt{compute\_internal\_energy} and their
-        \texttt{contract\_molar\_*} counterparts --- harmonic-oscillator
+        \texttt{contract\_molar\_*} counterparts: harmonic-oscillator
         closed forms with $x = \hbar\omega/(k_B T)$;
   \item \texttt{compute\_isotope\_scattering} (Tamura),
         \texttt{compute\_boundary\_scattering} (Casimir), and
-        \texttt{sum\_linewidths} (Matthiessen) --- the sibling channels
+        \texttt{sum\_linewidths} (Matthiessen): the sibling channels
         joining \texttt{compute\_anharmonic\_linewidth} above;
   \item \texttt{compute\_kappa\_wigner\_populations},
         \texttt{compute\_kappa\_wigner\_coherences} (Lorentzian
@@ -1933,39 +1933,39 @@ $\kappa$ map alongside the LBTE / Wigner / QHGK variants.
         mode-pair weighting was corrected on 2026-07-07 to the frequency-weighted
         Simoncelli form $(\omega+\omega')/2\cdot(c/\omega + c'/\omega')$,
         transcribed from the vendored phono3py SMM19 solver
-        (\texttt{kappa\_solvers.py:122--126});
-  \item \texttt{contract\_cumulative\_kappa[wrt=omega|mfp]} ---
+        (\texttt{kappa\_solvers.py:122-126});
+  \item \texttt{contract\_cumulative\_kappa[wrt=omega|mfp]}:
         Heaviside-$\theta$ encoded cumulative thresholds with
         \texttt{binning} scheme (linear for $\omega$, log for MFP).
   \item \emph{MD-primitive tier (P2):}
-        \texttt{run\_md} --- Velocity-Verlet recurrence with
+        \texttt{run\_md}: Velocity-Verlet recurrence with
         \texttt{ensemble} $\in$ \{nve, nvt, npt\},
         \texttt{thermostat} $\in$ \{berendsen, langevin, nose\_hoover,
         csvr, none\}, \texttt{integrator} $\in$ \{velocity\_verlet,
         leapfrog\};
-        \texttt{compute\_heat\_current} --- Irving--Kirkwood / Hardy
+        \texttt{compute\_heat\_current}: Irving-Kirkwood / Hardy
         / virial decomposition (\texttt{definition} scheme);
-        \texttt{autocorrelate\_heat\_current} --- direct/FFT time
+        \texttt{autocorrelate\_heat\_current}: direct/FFT time
         correlation of $J(t)$ (numerically equivalent under periodic
         padding, so no \texttt{correlation\_method} scheme is declared);
-        \texttt{compute\_velocity\_autocorrelation} --- direct/FFT
+        \texttt{compute\_velocity\_autocorrelation}: direct/FFT
         $\langle v(0)\cdot v(\tau)\rangle$;
-        \texttt{compute\_msd} --- $\langle |r(t+\tau)-r(t)|^2\rangle$,
+        \texttt{compute\_msd}: $\langle |r(t+\tau)-r(t)|^2\rangle$,
         with \texttt{unwrap\_pbc} scheme;
-        \texttt{fourier\_to\_dos} --- Wiener--Khinchin $g(\omega) =
+        \texttt{fourier\_to\_dos}: Wiener-Khinchin $g(\omega) =
         (1/\pi)\int C_v(\tau)\cos\omega\tau\,d\tau$, a Pattern-C
         alternative producer of \texttt{PhononDOS} alongside
         \texttt{compute\_dos}.
   \item \emph{MD-based $\kappa$ contractions (P3):}
-        \texttt{contract\_kappa[transport\_model=green\_kubo]} ---
+        \texttt{contract\_kappa[transport\_model=green\_kubo]}:
         $\kappa^{\alpha\beta} = V/(k_B T^2) \int_0^{\tau_{max}}
         \langle J^\alpha(0)J^\beta(\tau)\rangle\,d\tau$;
-        \texttt{contract\_kappa[transport\_model=nemd]} ---
+        \texttt{contract\_kappa[transport\_model=nemd]}:
         $\kappa = -\langle J\rangle / (\partial T/\partial z)$, with
         \texttt{nemd\_method} scheme $\in$ \{\texttt{direct\_two\_
         reservoir}, \texttt{muller\_plathe}, \texttt{ehex}\} (LAMMPS-side
         method);
-        \texttt{contract\_kappa[transport\_model=hnemd]} ---
+        \texttt{contract\_kappa[transport\_model=hnemd]}:
         $\kappa^{\alpha\beta} = \langle J^\alpha\rangle / (T\,V\,F_e^\beta)$
         in the linear-response limit (GPUMD-side method). Cross-paradigm
         $\kappa$ comparison between BTE, equilibrium MD, and
@@ -2054,14 +2054,14 @@ adapter-level steps recorded as provenance, not modeled by the framework.
 }
 \caption{Core $\kappa$ chain of the operator DAG for lattice thermal transport
 (12 nodes / 14 edges shown; the full DAG has 54 nodes / 55 edges once the
-derived-observable tier --- PhononDOS, Grüneisen, PhaseSpace, VolumetricHeatCapacity,
+derived-observable tier is included: PhononDOS, Grüneisen, PhaseSpace, VolumetricHeatCapacity,
 MolarHeatCapacity, the thermodynamic siblings (HelmholtzFreeEnergy, Entropy,
 InternalEnergy and their molar contractions), the polar-correction inputs
 (BareDynamicalMatrix, BornCharges, DielectricTensor), the per-channel
 Linewidth split, the Wigner/QHGK transport variants, the cumulative-$\kappa$
 distributions, the MD-primitive tier (Trajectory, HeatCurrent, HeatCurrentACF,
 VelocityAutocorrelation, MeanSquaredDisplacement), and the three MD-based
-$\kappa$ Pattern-A terminals (Green-Kubo, NEMD, HNEMD) --- is included; see
+$\kappa$ Pattern-A terminals (Green-Kubo, NEMD, HNEMD); see
 the interactive map at \texttt{docs/map/} for the live view). The
 two darker top boxes (\texttt{Potential}, \texttt{Temperature}) are source nodes;
 the dashed edges from \texttt{Potential} represent the stubbed Phase-1 upstream.
@@ -2098,7 +2098,7 @@ force constants:
   \item \textbf{phonopy} (C/Python). The harmonic-only sibling of phono3py:
         emits frequencies, group velocities, the DOS, the molar heat capacity,
         and (via \texttt{PhonopyGruneisen}) mode Grüneisen parameters from a
-        finite-difference $\omega(V)$ rather than the canonical Maradudin--Fein
+        finite-difference $\omega(V)$ rather than the canonical Maradudin-Fein
         closed form. No three-phonon scattering, so the adapter covers the
         harmonic half of the DAG only.
   \item \textbf{ShengBTE} (Fortran/MPI). Solves the full linearized BTE
@@ -2110,7 +2110,7 @@ force constants:
         rather than \texttt{HeatCapacity} on that branch.
 \end{itemize}
 
-\noindent and three phase-2 additions --- an ASE Potential anchor and two
+\noindent and three phase-2 additions, an ASE Potential anchor and two
 molecular-dynamics codes that realise the MD-primitive tier and the MD-based
 $\kappa$ paths:
 
@@ -2133,7 +2133,7 @@ $\kappa$ paths:
   \item \textbf{GPUMD} (CUDA/C++). GPU-accelerated classical MD specialised for
         thermal transport. NEP-potential (neuro-evolution) anchor, the same
         MD-primitive tier, and the Green-Kubo (\texttt{compute\_hac}) and
-        HNEMD (\texttt{compute\_hnemd}) $\kappa$ paths --- HNEMD being GPUMD's
+        HNEMD (\texttt{compute\_hnemd}) $\kappa$ paths, HNEMD being GPUMD's
         signature method; direct NEMD is recorded as not-exposed (routes
         through LAMMPS).
 \end{itemize}
@@ -2214,7 +2214,7 @@ worked example, the LAMMPS Green-Kubo path
 (\texttt{contract\_kappa[transport\_model=green\_kubo]} reached through the
 P2 MD-primitive tier and the P3 contraction edge) returns a $\kappa$ value
 that, in the small ensemble of equilibrium-MD runs the framework drives,
-is expected to land within $\sim 20$--$30\%$ of $\kappa_\text{LBTE}$. That tolerance is
+is expected to land within $\sim 20$ to $30\%$ of $\kappa_\text{LBTE}$. That tolerance is
 Green-Kubo's empirical signal-to-noise floor on a few-hundred-atom
 supercell, not a framework concern. The driver at
 \texttt{experiments/silicon\_tersoff/run\_lammps\_gk.py} generates the input
@@ -2240,14 +2240,14 @@ oriented but is deferred to Phase 2.
   \item \textbf{A unified framework for theory-experiment comparison.} The same operator DAG
         accepts experimental measurements as additional evidence on the same nodes,
         with the same alignment machinery as for cross-code comparison. The two
-        Glassbrenner--Slack 1964 steady-state thermal conductivities of bulk
+        Glassbrenner-Slack 1964 steady-state thermal conductivities of bulk
         single-crystal silicon and germanium (Part~\ref{part:status}) are the map's
         first measurement instances, sitting on the same $\kappa$ node as the
         computed values.
   \item \textbf{An agreement layer over the committed values.} The map already holds
         same-conditions comparisons, and a derived agreement view
-        (\texttt{docs/data/agreement.json}, the \texttt{/agreement/} page) surfaces
-        them as honest reporting of what the data contains. It groups the committed
+        (\texttt{docs/data/agreement.json}, the \texttt{/agreement/} page) reports
+        them exactly as the data contains them. It groups the committed
         instances that name the same base observable, the same material, and the
         same physical conditions, differing only in the method or the code that
         produced them, and reports each group's spread. The concrete cross-code
@@ -2256,7 +2256,7 @@ oriented but is deferred to Phase 2.
         versus $24.3$ and on RTA at $19.5$ versus $16.7$ (in W/m~K), the same run
         both cross-method and cross-code; the silicon DFPT LDA case, $19\times
         19\times 19$ q-grid, quantum statistics, contrasts direct inversion at
-        $147$ against RTA at $140$. The honesty caveat is the equivalence rule
+        $147$ against RTA at $140$. The caveat is the equivalence rule
         itself: two values are compared only when their base quantity, material,
         and every physical condition match and they differ solely in estimator,
         so a spread is a real method or code disagreement, never an
@@ -2281,7 +2281,7 @@ The Python package \texttt{omai} factors into two top-level sub-packages
 plus one per domain:
 
 \begin{itemize}[leftmargin=2em, itemsep=0.3em]
-  \item \texttt{omai.operator} --- operator layer machinery for the operator world.
+  \item \texttt{omai.operator}: operator layer machinery for the operator world.
         \texttt{Space} (base class), \texttt{ObservableSpace} and \texttt{HiddenSpace}
         (subclasses, with gauge-discipline fields on the latter), \texttt{Field},
         \texttt{Operator}, \texttt{Parameter}, \texttt{Dimension},
@@ -2289,12 +2289,12 @@ plus one per domain:
         \texttt{validate\_dag} (Level 1 discipline enforcement), and
         \texttt{GaugeAction} / \texttt{check\_invariance} (Level 2 operator
         gauge proofs). Code-agnostic and domain-agnostic.
-  \item \texttt{omai.representation} --- the bridge.
+  \item \texttt{omai.representation}: the bridge.
     \begin{itemize}[leftmargin=1.2em]
       \item \texttt{units.py}: the \texttt{Unit} class, named unit instances, strict
             same-dimension \texttt{conversion\_factor}.
       \item \texttt{normalizations.py}: the \texttt{Normalization} registry
-            mirroring \texttt{units.UNITS} in shape --- each entry carries a
+            mirroring \texttt{units.UNITS} in shape: each entry carries a
             \texttt{to\_operator} multiplier into canonical definitional form
             (e.g.\ \texttt{linewidth\_2x\_imag\_self\_energy} with factor
             $0.5$, \texttt{eV\_per\_A2\_per\_nm} with factor $10$).
@@ -2319,7 +2319,7 @@ plus one per domain:
             verdict and residuals.
     \end{itemize}
     Code-agnostic.
-  \item \texttt{omai.thermal\_transport} --- the lattice-thermal-transport domain.
+  \item \texttt{omai.thermal\_transport}: the lattice-thermal-transport domain.
     \begin{itemize}[leftmargin=1.2em]
       \item \texttt{operator/nodes.py}: the domain's 54 spaces as \texttt{ObservableSpace} or
             \texttt{HiddenSpace} instances with their fields.
@@ -2359,7 +2359,7 @@ domains follow the same pattern in their own folder (electronic transport has
 since landed exactly this way); no change to the operator-level packages is
 required to add one.
 
-\section{Open Questions and Deferred Decisions}
+\section{Open questions and deferred decisions}
 \label{sec:open}
 
 We list the architectural questions that remain open and the principled grounds on which they
@@ -2390,7 +2390,7 @@ Lean commitment in this subsection. Given a path of explicit-equation edges in t
 operator DAG, it substitutes each edge's RHS into the next, producing a composed
 symbolic expression at the path's terminal node. Implicit-equation edges (e.g.,
 \texttt{solve\_bte\_*}) raise \texttt{ImplicitEdgeBoundary} with the partial
-expression attached --- they mark the open research subproblem of composing across
+expression attached. They mark the open research subproblem of composing across
 an implicit BTE solve, which is the natural next step toward a full Lean
 projection. The composer's existence is evidence that the operator-layer formulas
 are not merely documentation: they are mechanically composable today, and the same
@@ -2419,8 +2419,8 @@ The first concrete deliverable is a Python implementation. We have considered th
 
 \begin{enumerate}[leftmargin=2em]
   \item \emph{Narrowest:} kaldo only, harmonic sub-DAG (force constants $\to$ dynamical matrix
-        $\to$ dispersion). 4--5 states, fastest to ship.
-  \item \emph{Recommended:} kaldo only, full thermal-conductivity DAG. 10--15 states, end-to-end
+        $\to$ dispersion). 4 to 5 states, fastest to ship.
+  \item \emph{Recommended:} kaldo only, full thermal-conductivity DAG. 10 to 15 states, end-to-end
         on silicon. The operator layer skeleton plus one full adapter.
   \item \emph{Broader:} kaldo plus phono3py, full DAG. Validates the cross-code story earlier but
         adds adapter work in parallel with framework design.
@@ -2459,9 +2459,9 @@ We have committed to Python for Sprint 1. The trade-offs were:
 
 The operator layer is an architectural commitment, not an implementation. The implementation
 began as a Python skeleton plus adapters for three thermal-transport codes and has since grown
-to the 32-representation map of Part~\ref{part:status}. The
-artifact that motivates the project, a paper-worthy demonstration of cross-code reconciliation
-and decomposed error bounds for lattice thermal conductivity, is downstream of the operator layer but
+to the map of Part~\ref{part:status}, which holds 32 representations. The
+artifact that motivates the project (a paper-worthy demonstration of cross-code reconciliation
+and decomposed error bounds for lattice thermal conductivity) is downstream of the operator layer but
 is the operator layer's first proof-of-value.
 
 The project's stewardship follows its architecture (2026-07-12). The map, its
@@ -2537,7 +2537,7 @@ right unit, at least for materials science, is the operator operation between ty
 states. Once that commitment is made, much of the rest of the architecture writes itself.
 
 % =====================================================================
-\part{The Kernel}
+\part{The kernel}
 \label{part:kernel}
 % =====================================================================
 
@@ -2684,7 +2684,7 @@ The \texttt{formula\_fingerprint} is the normalized \texttt{sympy.srepr} of the
 formula. Sympy's canonical \texttt{Add}/\texttt{Mul} ordering already collapses
 $c\,v^2\,\tau$ and $\tau\,v^2\,c$ to one tree; operators whose formula is a LaTeX
 string fingerprint the string after whitespace normalization. Editing a formula
-re-mints the edge and writes a supersede record. This is strict but honest: ``every
+re-mints the edge and writes a supersede record. The rule is strict because ``every
 edge carries its formula'' is the product's core claim, so a different formula is a
 different edge. Two points follow. First, the operator \emph{name} is not in the
 hash: names are metadata (edited via \texttt{edit\_meta}), and identity is
@@ -2915,7 +2915,7 @@ consequences.
         Pattern~C node and never re-mints on adding a producer.
   \item \textbf{Edge identity includes the formula fingerprint}
         (\S\ref{sec:kernel-identity}). Editing a formula re-mints the edge and
-        writes a supersede record. The rule is strict but honest, since ``every
+        writes a supersede record. The rule is strict because ``every
         edge carries its formula'' is the product's core claim. The operator name
         stays out of the hash (metadata), and general algebraic equivalence is
         reconciled by an \texttt{equate} record, not automatically.
@@ -2954,7 +2954,7 @@ supersede chains. The scope came from the P1 dimensional gate:
         missing $1/\omega$ weighting corrected. The corrected form was
         transcribed, not recalled from memory, from the vendored phono3py Wigner
         (SMM19) solver, at
-        \texttt{phono3py/phono3py/conductivity/ms\_smm19/kappa\_solvers.py:122--126}
+        \texttt{phono3py/phono3py/conductivity/ms\_smm19/kappa\_solvers.py:122-126}
         (the prefactor $0.25\,(\hbar\omega_s + \hbar\omega_{s'})(C_s/\hbar\omega_s
         + C_{s'}/\hbar\omega_{s'})$), and cross-checked against kaldo's
         off-diagonal QHGK kernel. This is the frequency-weighted Simoncelli form
@@ -2979,7 +2979,7 @@ The dimension algebra and gate (P1), the identity module and index-kind registry
 (P2), the store, genesis migration, and \texttt{verify()} (P3), and the
 contribution gates and sync tool (P4) are built: the six gates behind
 \texttt{Store.propose} and the \texttt{python -m omai.sync} tool are the
-\emph{Store API} paragraph of \S\ref{sec:kernel-store}. P5 is done in its minimal honest form: the map page shows
+\emph{Store API} paragraph of \S\ref{sec:kernel-store}. P5 is done in its minimal form: the map page shows
 each node's content-hash prefix on the provenance panel and the store head
 version it renders from (a \texttt{docs/data/version.json} stamp written next to
 the graph data), and the index pins every coverage file to the head at
@@ -3060,7 +3060,7 @@ numbers:
         Esfarjani 2011, the 2021 carbon-nanotube and 2025 kappa-limit BTE
         studies, PtSe$_2$ 2021, quantum-elastic PIMD/TDEP 2024, SiGe disorder
         2024, amorphous alloys 2020, and the Balandin 2008 graphene
-        measurement). The four measurements are the Glassbrenner--Slack 1964
+        measurement). The four measurements are the Glassbrenner-Slack 1964
         steady-state thermal conductivities of bulk single-crystal silicon
         ($156\,\mathrm{W/(m\,K)}$) and germanium ($60.2\,\mathrm{W/(m\,K)}$) at
         $300\,\mathrm{K}$ and natural isotopic abundance, the Balandin 2008
@@ -3902,7 +3902,7 @@ node.
 
 Add the LaTeX symbol for each new operator-graph node to the \texttt{SYMBOLS} dict
 in \texttt{omai/materials/domain.py}. The key is the node's \texttt{name} string;
-the value is the LaTeX symbol used in graph visualizations and the site deck.
+the value is the LaTeX symbol used in graph visualizations.
 
 Example: after adding \texttt{DIFFUSIVITY\_STATE} and \texttt{ACTIVATION\_ENERGY},
 the dict received \texttt{"Diffusivity": r"D"} and \texttt{"ActivationEnergy":

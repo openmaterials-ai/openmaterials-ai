@@ -7,6 +7,7 @@ import json
 import pkgutil
 import re
 from dataclasses import dataclass
+from decimal import ROUND_HALF_UP, Decimal
 from pathlib import Path
 from types import ModuleType
 
@@ -663,13 +664,50 @@ def _share_prop(variable: str) -> str:
     qualifier ([...]) is dropped: the title names the physical quantity a reader
     recognizes, method-neutral, matching the /l/ Worker's humanProperty."""
     base = re.sub(r"\[.*$", "", str(variable or ""))
-    words = re.sub(r"([a-z0-9])([A-Z])", r"\1 \2", base).lower()
+    spaced = re.sub(r"([a-z0-9])([A-Z])", r"\1 \2", base)
+    # an all-caps token (ZT) keeps its case
+    words = " ".join(t if t.isupper() else t.lower() for t in spaced.split(" "))
     return (words[:1].upper() + words[1:]) if words else "Property"
 
 
 def _esc(s: object) -> str:
     """HTML-escape an interpolated field, quotes included, for the stub pages."""
     return _html.escape(str(s), quote=True)
+
+
+def _js_number(v: object) -> str:
+    """A value as JavaScript's String(v) writes it (6.0 -> "6", 1.5e-05 ->
+    "0.000015"), so the stub, the /l/ Worker page, and the datasheet print
+    the same digits. Non-numbers fall back to str()."""
+    if isinstance(v, bool) or not isinstance(v, (int, float)):
+        return str(v)
+    x = float(v)
+    if x == 0:
+        return "0"
+    _sign, digits, exp = Decimal(repr(abs(x))).normalize().as_tuple()
+    d = "".join(map(str, digits))
+    k, n = len(d), exp + len(d)  # value = 0.d * 10**n
+    if k <= n <= 21:
+        s = d + "0" * (n - k)
+    elif 0 < n <= 21:
+        s = d[:n] + "." + d[n:]
+    elif -6 < n <= 0:
+        s = "0." + "0" * -n + d
+    else:
+        e = n - 1
+        s = d[0] + ("." + d[1:] if k > 1 else "") + ("e+" if e > 0 else "e-") + str(abs(e))
+    return ("-" if x < 0 else "") + s
+
+
+def _card_number(v: object) -> str:
+    """The datasheet's fmtSig, String(Number(v.toPrecision(6))): six
+    significant digits, ties away from zero, printed as JavaScript prints the
+    number. Zero and non-numbers go straight to _js_number."""
+    if isinstance(v, bool) or not isinstance(v, (int, float)) or v == 0:
+        return _js_number(v)
+    d = Decimal(v)
+    return _js_number(float(d.quantize(Decimal(1).scaleb(d.adjusted() - 5),
+                                       rounding=ROUND_HALF_UP)))
 
 
 # A canonical lineage id is a 64-hex sha256; only directories named like one are
@@ -681,13 +719,14 @@ def build_share_stubs(instances: list[dict] | None = None) -> dict[str, str]:
     """One crawler-facing stub page per committed value, keyed by canonical id.
 
     Projects the same flat instances the site serves into a compact static
-    document each: an ``og:title`` naming the property and material (e.g.
-    "Thermal conductivity of Si"), an ``og:description`` carrying the value with
-    units and its provenance (computed by a code, or the measurement source), a
-    ``canonical`` link and an instant redirect to the ``/play/#id=<id>``
-    datasheet, plus a ``<noscript>`` link so a reader with no JS still lands on
-    the live value. Every interpolated field is HTML-escaped. Pure: a function of
-    the projection alone, so the wire is testable without touching the tree."""
+    document each: a title naming the property and material (e.g. "Thermal
+    conductivity of Si | OpenMaterials"), an ``og:description`` carrying the
+    value with units, the record's kind and its source ref, the site's share
+    image, a ``canonical`` link and an instant redirect to the ``/play/#id=<id>``
+    datasheet, plus a visible paragraph with the value and a ``<noscript>`` link
+    so a reader with no JS still sees the value and reaches the datasheet. Every
+    interpolated field is HTML-escaped. Pure: a function of the projection
+    alone, so the wire is testable without touching the tree."""
     if instances is None:
         instances = build_instances()
     stubs: dict[str, str] = {}
@@ -697,23 +736,23 @@ def build_share_stubs(instances: list[dict] | None = None) -> dict[str, str]:
         mat = e.get("material")
         mat_name = mat.get("name") if isinstance(mat, dict) else mat
         mat_name = str(mat_name) if mat_name else ""
-        title = prop + (f" of {mat_name}" if mat_name else "")
+        name = prop + (f" of {mat_name}" if mat_name else "")
+        title = f"{name} | OpenMaterials"
         value = ""
         if e.get("value") is not None:
-            units = e.get("units")
-            value = f"{e['value']}{(' ' + str(units)) if units else ''}"
-        # Provenance, honestly from the record: a measurement names its source,
-        # a simulation is computed by its code (the source ref names it) or, when
-        # only the scheme:ref is on hand, cites that. Nothing is invented.
+            value = _card_number(e["value"])
+            unc = e.get("uncertainty")
+            if isinstance(unc, (int, float)) and not isinstance(unc, bool):
+                value += f" \u00b1 {_card_number(unc)}"
+            if e.get("units"):
+                value += f" {e['units']}"
+        # The record's own kind and source ref; nothing is inferred.
         src = e.get("source") or {}
         ref = str(src.get("ref") or "")
-        kind = src.get("kind")
-        if kind == "measurement":
-            provenance = f"measured, source {ref}" if ref else "a measured value"
-        else:
-            provenance = f"computed by {ref}" if ref else "a simulated value"
-        desc = (f"{value + ', ' if value else ''}{provenance}, "
-                f"on the openmaterials map.")
+        facts = ", ".join(x for x in (str(src.get("kind") or ""),
+                                      f"source {ref}" if ref else "") if x)
+        said = (value or "This value") + (f" ({facts})" if facts else "")
+        desc = f"{said} is a committed value on the OpenMaterials map."
         target = f"/play/#id={rid}"
         canonical = f"https://openmaterials.ai/i/{rid}/"
         stubs[rid] = (
@@ -726,14 +765,24 @@ def build_share_stubs(instances: list[dict] | None = None) -> dict[str, str]:
             "<meta property=\"og:site_name\" content=\"openmaterials.ai\">\n"
             f"<meta property=\"og:title\" content=\"{_esc(title)}\">\n"
             f"<meta property=\"og:description\" content=\"{_esc(desc)}\">\n"
-            "<meta name=\"twitter:card\" content=\"summary\">\n"
+            "<meta property=\"og:image\" "
+            "content=\"https://openmaterials.ai/assets/og.png\">\n"
+            "<meta property=\"og:image:width\" content=\"1200\">\n"
+            "<meta property=\"og:image:height\" content=\"630\">\n"
+            # the site's alt text, already HTML-escaped (a literal, not _esc'd)
+            "<meta property=\"og:image:alt\" content=\"The openmaterials.ai "
+            "mark and wordmark above the line &quot;A versioned map of "
+            "physics.&quot; A smaller line gives the licenses: map data "
+            "CC BY 4.0 and code Apache 2.0.\">\n"
+            "<meta name=\"twitter:card\" content=\"summary_large_image\">\n"
             f"<link rel=\"canonical\" href=\"{_esc(canonical)}\">\n"
             f"<meta http-equiv=\"refresh\" content=\"0;url={_esc(target)}\">\n"
             f"<script>location.replace({json.dumps(target)});</script>\n"
             "</head>\n"
             "<body>\n"
+            f"<p>{_esc(name)}: {_esc(said)}.</p>\n"
             f"<noscript><a href=\"{_esc(target)}\">Open the datasheet: "
-            f"{_esc(title)}</a></noscript>\n"
+            f"{_esc(name)}</a></noscript>\n"
             "</body>\n"
             "</html>\n"
         )

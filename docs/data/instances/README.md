@@ -54,7 +54,7 @@ conventions, generalizing what the existing materialscodegraph instances do:
   actually ran, which may differ from the one requested.
 
 An engine-run instance with no public record is still valid evidence, the
-same honesty rule as everywhere else: state what you have, invent nothing.
+same no-invention rule as everywhere else: state what you have and invent nothing.
 
 The easiest way to write one correctly is `omai.map_data.record_instance`,
 which the paper parser also uses. The build projects every `*.json` here into
@@ -65,7 +65,7 @@ lineage refactor):
 CUDA_VISIBLE_DEVICES="" PYTHONPATH=. python -m omai.map_data
 ```
 
-## Your data stays yours
+## Rights in contributed values
 
 Appending an instance grants the map a non-exclusive CC BY 4.0 license to
 redistribute the record with attribution, and nothing else: no copyright

@@ -19,8 +19,7 @@ contribute to the map or other data, you contribute it under CC BY 4.0.
 ## No CLA, no copyright assignment
 
 This project does **not** require a Contributor License Agreement and does
-**not** ask you to assign copyright. As stated in the governance document, "the
-license in is the license out." Contributors retain ownership of their
+**not** ask you to assign copyright. Contributors retain ownership of their
 contributions; they are simply licensed to the project (and to everyone) under
 the applicable license above.
 

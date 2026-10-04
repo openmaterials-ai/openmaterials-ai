@@ -16,7 +16,8 @@ from omai import doc_html
 
 PANDOC = doc_html.find_pandoc()
 needs_pandoc = pytest.mark.skipif(
-    PANDOC is None, reason="pandoc is not installed on this machine")
+    PANDOC is None,
+    reason="%s is not installed on this machine" % doc_html.PANDOC_VERSION)
 
 
 def _fresh_build() -> str:

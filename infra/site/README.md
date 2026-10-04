@@ -7,14 +7,17 @@ static site cannot express:
 
 - `GET /healthz`: liveness plus the published map/lineage version, read from
   the same `data/version.json` every browser reads.
-- `GET /l/<64-hex>`: the canonical permalink for a committed value. The id is
-  a lineage id (the sha256 of the value's canonical lineage). The Worker
-  resolves it against `data/instances.json`, serves a shell whose Open Graph
-  metadata names the property, material, value, and id (so the link unfurls
-  as the value it is), and redirects to the playground datasheet
-  (`/play/#id=<id>`), the one renderer. A well-formed id that matches no
-  committed value gets an honest 404 naming the hash; a malformed id gets a
-  400 before any data is read.
+- `GET /l/<12 hex>`: the short link for a committed value. It resolves an
+  id prefix (8 to 64 hex characters of the lineage id, the sha256 of the
+  value's canonical lineage), so it needs the Worker. `/i/<id>/` is the
+  canonical static page for the same value, built into `docs/` and served
+  without the Worker. The Worker resolves the prefix against
+  `data/instances.json` and serves a shell whose title, Open Graph metadata,
+  and paragraph name the property, material, value, kind, and source exactly
+  as `/i/<id>/` does, with its canonical link set to `/i/<id>/`, then
+  redirects to the playground datasheet (`/play/#id=<id>`), the one
+  renderer. A well-formed prefix that matches no committed value gets a 404
+  naming it; a malformed one gets a 400 before any data is read.
 
 - `POST /s` and `GET /s/<code>[/raw]`: the short-link store, the Worker's one
   write surface. Minting stores a lineage envelope (or a bare record,

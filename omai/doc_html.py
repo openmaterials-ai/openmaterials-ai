@@ -30,17 +30,28 @@ TEX_PATH = ROOT / "docs" / "openmaterials.tex"
 OUT_PATH = ROOT / "docs" / "document" / "index.html"
 
 PANDOC_CANDIDATES = ("/usr/local/bin/pandoc", "/opt/homebrew/bin/pandoc")
+# The committed page is byte-exact to this pandoc; other versions emit
+# different HTML, so they are not used.
+PANDOC_VERSION = "pandoc 2.9.2.1"
 
 ROMAN = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"]
 LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 
 def find_pandoc() -> str | None:
-    """Locate the pandoc binary, preferring the known system install."""
-    for cand in PANDOC_CANDIDATES:
-        if Path(cand).is_file():
+    """Locate a pandoc binary whose version is PANDOC_VERSION, preferring
+    the known system installs; None if no candidate matches."""
+    for cand in (*PANDOC_CANDIDATES, shutil.which("pandoc")):
+        if not cand or not Path(cand).is_file():
+            continue
+        try:
+            out = subprocess.run([cand, "--version"], capture_output=True,
+                                 text=True, check=False).stdout
+        except OSError:
+            continue
+        if out.split("\n", 1)[0] == PANDOC_VERSION:
             return cand
-    return shutil.which("pandoc")
+    return None
 
 
 # ---------------------------------------------------------------------------
@@ -78,9 +89,11 @@ def title_to_text(title: str) -> str:
     t = re.sub(r"\\texttt\{([^{}]*)\}", r"\1", title)
     t = re.sub(r"\\emph\{([^{}]*)\}", r"\1", t)
     t = t.replace(r"\_", "_").replace(r"\&", "&").replace("~", " ")
-    t = t.replace("''", "”").replace("``", "“")
-    t = t.replace("'", "’").replace("`", "‘")
+    t = t.replace("``", '"').replace("''", '"').replace("`", "'")
     return re.sub(r"\s+", " ", t).strip()
+
+
+STRAIGHT_QUOTES = str.maketrans({"“": '"', "”": '"', "‘": "'", "’": "'"})
 
 
 # ---------------------------------------------------------------------------
@@ -148,6 +161,15 @@ def preprocess_tex(tex: str) -> tuple[str, list[str]]:
     # \today would make the build nondeterministic (the date is not in the
     # fragment output today, but keep the guard explicit).
     tex = tex.replace(r"\date{\today}", r"\date{}")
+
+    # A p{width} column is print layout; pandoc would turn it into fixed
+    # table and column widths, so the HTML gets a plain l column and the
+    # table sizes itself.
+    tex = re.sub(
+        r"\\begin\{tabular\}\{((?:[^{}]|\{[^{}]*\})*)\}",
+        lambda m: "\\begin{tabular}{%s}"
+        % re.sub(r"p\{[^{}]*\}", "l", m.group(1)),
+        tex)
     return tex, notes
 
 
@@ -373,95 +395,40 @@ def build_toc(headings: list[Heading]) -> str:
 # ---------------------------------------------------------------------------
 
 PAGE_CSS = """
-  .doc-hero{max-width:1240px;margin:0 auto;padding:44px clamp(16px,3vw,26px) 8px;}
-  .doc-hero .om-overline{margin-bottom:12px;}
-  .doc-hero h1{font-size:clamp(1.9rem,4vw,2.6rem);margin:0 0 6px;}
-  .doc-mark{width:46px;height:46px;border-radius:10px;display:block;margin:2px 0 14px;}
-  .doc-tagline{font-family:var(--font-serif);font-size:1.15rem;color:var(--ink-2);margin:0 0 10px;}
-  .doc-byline{color:var(--muted);font-size:.92rem;margin:0 0 20px;}
-  .doc-actions{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:0 0 10px;}
-  .doc-actions .hint{color:var(--faint);font-size:.8rem;}
-
-  .doc-layout{max-width:1240px;margin:0 auto;display:grid;
-    grid-template-columns:280px minmax(0,1fr);gap:44px;align-items:start;
-    padding:12px clamp(16px,3vw,26px) 90px;}
-  .doc-toc{position:sticky;top:72px;max-height:calc(100vh - 96px);
-    overflow-y:auto;border:1px solid var(--line);border-radius:12px;
-    background:var(--surface);padding:14px 16px 18px;font-size:.84rem;}
-  .doc-toc summary{cursor:pointer;font-family:var(--font-serif);font-weight:700;
-    font-size:.95rem;color:var(--ink);list-style:none;}
-  .doc-toc summary::-webkit-details-marker{display:none;}
-  .doc-toc summary::after{content:"contents";margin-left:8px;font-family:var(--font-sans);
-    font-weight:500;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);}
-  .doc-toc ol{list-style:none;margin:0;padding:0;}
-  .toc-parts{margin-top:10px;}
-  .toc-parts > li.toc-part{margin:12px 0 4px;}
-  .toc-part > a{display:block;color:var(--ink);text-decoration:none;font-weight:600;padding:3px 0;}
-  .toc-partno{display:block;font-size:.66rem;font-weight:600;letter-spacing:.12em;
-    text-transform:uppercase;color:var(--accent);}
-  .toc-part-title{font-family:var(--font-serif);font-size:.95rem;}
-  .toc-secs{margin:2px 0 0;}
-  .toc-secs > li > a{display:block;color:var(--ink-2);text-decoration:none;
-    padding:2.5px 6px;border-left:2px solid transparent;border-radius:0 6px 6px 0;line-height:1.45;}
-  .toc-subs > li > a{display:block;color:var(--muted);text-decoration:none;
-    font-size:.78rem;padding:2px 6px 2px 18px;border-left:2px solid transparent;line-height:1.4;}
-  .doc-toc a:hover{color:var(--accent-2);background:var(--accent-soft);}
-  .doc-toc a.active{color:var(--accent-2);border-left-color:var(--accent);background:var(--accent-soft);}
-  .toc-no{display:inline-block;min-width:1.7em;margin-right:.35em;color:var(--faint);
-    font-variant-numeric:tabular-nums;font-size:.9em;}
-
-  .doc-body{max-width:72ch;min-width:0;font-size:1rem;color:var(--ink);}
-  .doc-body [id]{scroll-margin-top:76px;}
-  .doc-body p{line-height:1.72;margin:0 0 1.05em;}
-  .doc-body h1{font-size:1.9rem;margin:2.6em 0 .6em;padding-top:1.2em;border-top:1px solid var(--line);}
-  .doc-body h1:first-child{margin-top:.4em;padding-top:0;border-top:none;}
-  .partno{display:block;font-size:.72rem;font-weight:600;letter-spacing:.16em;
-    text-transform:uppercase;color:var(--accent);font-family:var(--font-sans);margin:0 0 8px;}
-  .doc-body h2{font-size:1.38rem;margin:2.1em 0 .55em;}
-  .doc-body h3{font-size:1.12rem;margin:1.8em 0 .5em;}
-  .doc-body h4{font-family:var(--font-sans);font-size:.98rem;font-weight:650;margin:1.6em 0 .45em;}
-  .doc-body h5{font-family:var(--font-sans);font-size:.92rem;font-weight:650;margin:1.4em 0 .4em;color:var(--ink-2);}
-  .secno{color:var(--faint);font-weight:600;margin-right:.35em;font-variant-numeric:tabular-nums;}
-  .doc-body a{color:var(--accent-2);text-decoration:none;}
-  .doc-body a:hover{text-decoration:underline;}
-  .doc-body ul,.doc-body ol{line-height:1.7;margin:0 0 1.05em;padding-left:1.5em;}
-  .doc-body li{margin:0 0 .35em;}
-  .doc-body li p{margin:0 0 .5em;}
-  .doc-body code{font-family:var(--font-mono);font-size:.86em;background:var(--wash,#f4f2ee);
-    border:1px solid var(--line);border-radius:5px;padding:.08em .32em;word-break:break-word;}
-  .doc-body pre{background:#fbfaf7;border:1px solid var(--line);border-radius:10px;
-    padding:14px 16px;overflow-x:auto;margin:0 0 1.2em;line-height:1.55;}
-  .doc-body pre code{background:none;border:none;padding:0;font-size:.82rem;}
-  .doc-body blockquote{margin:0 0 1.05em;padding:.2em 0 .2em 1em;
-    border-left:3px solid var(--line);color:var(--ink-2);}
-  .doc-body .math.display{display:block;overflow-x:auto;overflow-y:hidden;
-    padding:.35em 0;margin:0 0 1.05em;text-align:center;}
-  .doc-body .math.inline{white-space:nowrap;}
-
-  .tblwrap{overflow-x:auto;margin:0 0 1.2em;border:1px solid var(--line);border-radius:10px;}
-  .tblwrap table{border-collapse:collapse;width:100%;font-size:.9rem;}
-  .tblwrap th,.tblwrap td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top;}
-  .tblwrap thead th{font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;
-    color:var(--muted);font-weight:700;background:var(--surface);}
-  .tblwrap tbody tr:last-child td{border-bottom:none;}
-
-  .abstract{border:1px solid var(--line);border-radius:12px;background:var(--surface);
-    padding:20px 22px 8px;margin:0 0 2.2em;}
-  .abstract .abstract-label{display:block;font-size:.68rem;font-weight:600;letter-spacing:.14em;
-    text-transform:uppercase;color:var(--muted);margin:0 0 10px;}
-  .abstract p{font-size:.95rem;color:var(--ink-2);}
-
-  .fig-fallback{border:1px dashed var(--faint);border-radius:12px;background:var(--surface);
-    padding:16px 18px 6px;margin:0 0 1.4em;}
-  .fig-fallback-label{display:inline-block;font-size:.7rem;font-weight:700;letter-spacing:.1em;
-    text-transform:uppercase;color:var(--muted);margin:0 0 6px;}
-  .fig-fallback-note{display:block;font-size:.85rem;color:var(--muted);margin:0 0 10px;}
-  .fig-fallback p{font-size:.9rem;color:var(--ink-2);}
-
-  @media (max-width:920px){
-    .doc-layout{grid-template-columns:minmax(0,1fr);gap:18px;}
-    .doc-toc{position:static;max-height:none;}
-    .doc-toc:not([open]){padding:12px 16px;}
+  /* the document on the content-page grammar (spec 4.1, 4.2); .page-head, .page-body and .prose come from site.css */
+  .doc-byline { margin-top: 12px; font-size: 14px; line-height: 20px; color: var(--ink-2); }
+  .doc-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 24px; }
+  .doc-actions .hint { font-size: 14px; line-height: 20px; color: var(--ink-2); }
+  .doc-toc { font-size: 14px; line-height: 20px; border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 16px; }
+  .doc-toc summary { cursor: pointer; font-weight: 500; color: var(--ink); }
+  .doc-toc ol { list-style: none; margin: 0; padding: 0; }
+  .toc-parts { margin-top: 12px; }
+  .toc-parts > li.toc-part { margin: 12px 0 4px; }
+  .doc-toc a { display: block; padding: 2px 0; color: var(--ink-2); text-decoration: none; }
+  .toc-part > a { color: var(--ink); }
+  .toc-partno { display: block; font-size: 12px; line-height: 16px; color: var(--ink-2); }
+  .toc-subs > li > a { padding-left: 12px; font-size: 13px; }
+  .doc-toc a:hover, .doc-toc a.active { color: var(--ink); }
+  .toc-no { display: inline-block; min-width: 2.2em; font-variant-numeric: tabular-nums; color: var(--ink-2); }
+  .doc-body [id] { scroll-margin-top: calc(var(--header-h) + 24px); }
+  .doc-body h1 { font: 450 32px/40px var(--font-sans); letter-spacing: -0.04em; margin: 64px 0 16px; padding-top: 32px; border-top: 1px solid var(--line); }
+  .doc-body h1:first-child { margin-top: 0; padding-top: 0; border-top: 0; }
+  .doc-body h2 { margin-top: 48px; }
+  .partno { display: block; margin: 0 0 8px; font: 500 14px/20px var(--font-sans); letter-spacing: 0; color: var(--ink-2); }
+  .doc-body h5 { font: 500 14px/20px var(--font-sans); margin: 20px 0 8px; color: var(--ink-2); }
+  .secno { margin-right: .35em; font-variant-numeric: tabular-nums; color: var(--ink-2); }
+  .doc-body pre { margin: 0 0 16px; padding: 16px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--page); font: 400 13px/20px var(--font-mono); white-space: pre-wrap; overflow-wrap: anywhere; }
+  .doc-body pre code { padding: 0; background: none; font: inherit; }
+  .doc-body .math.display { display: block; overflow-x: auto; overflow-y: hidden; margin: 0 0 16px; padding: 4px 0; text-align: center; }
+  .tblwrap { margin: 0 0 16px; }
+  .abstract { margin-bottom: 32px; }
+  .abstract .abstract-label { display: block; margin: 0 0 8px; font: 500 14px/20px var(--font-sans); color: var(--ink-2); }
+  .fig-fallback { margin: 0 0 24px; }
+  .fig-fallback-label { display: block; font-weight: 500; color: var(--ink-2); }
+  .fig-fallback-note { display: block; margin: 0 0 8px; color: var(--ink-2); }
+  @media (min-width: 961px) {
+    .doc-layout { grid-template-columns: 200px minmax(0, 720px); gap: 64px; }
+    .doc-toc { position: sticky; top: calc(var(--header-h) + 24px); align-self: start; max-height: calc(100vh - var(--header-h) - 48px); overflow-y: auto; padding: 0; border: 0; border-radius: 0; }
   }
 """
 
@@ -496,7 +463,7 @@ PAGE_SCRIPT = """
   // The TOC is a <details>: collapsed by default on narrow screens, forced
   // open (with the summary acting as a plain title) on wide ones.
   var toc = document.getElementById('toc');
-  if (toc && window.matchMedia('(min-width: 921px)').matches) {
+  if (toc && window.matchMedia('(min-width: 961px)').matches) {
     toc.open = true;
   }
 
@@ -541,51 +508,60 @@ PAGE_TEMPLATE = """<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>openmaterials.ai: the document</title>
-<meta name="description" content="The project's single source of truth as readable documentation: vision, product, architecture, kernel, and status, converted from the LaTeX source, with the PDF one click away.">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The document | OpenMaterials</title>
+<meta name="description" content="The full OpenMaterials specification (vision, product, architecture, kernel, and status) is published here as HTML, generated from docs/openmaterials.tex. The typeset PDF is linked at the top.">
+<link rel="canonical" href="https://openmaterials.ai/document/">
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="openmaterials.ai">
-<meta property="og:title" content="openmaterials.ai: the document">
-<meta property="og:description" content="Git for science: a versioned map of physics. The full document as readable HTML.">
-<meta name="twitter:card" content="summary">
-<link rel="stylesheet" href="../assets/vendor/inter/inter.css">
-<link rel="stylesheet" href="../assets/vendor/source-serif-4/source-serif-4.css">
-<link rel="stylesheet" href="../assets/vendor/jetbrains-mono/jetbrains-mono.css">
+<meta property="og:title" content="The document | OpenMaterials">
+<meta property="og:description" content="The full OpenMaterials specification is published here as HTML, with the typeset PDF.">
+<meta property="og:url" content="https://openmaterials.ai/document/">
+<meta property="og:image" content="https://openmaterials.ai/assets/og.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The openmaterials.ai mark and wordmark above the line &quot;A versioned map of physics.&quot; A smaller line gives the licenses: map data CC BY 4.0 and code Apache 2.0.">
+<meta name="twitter:card" content="summary_large_image">
+<script>try{const t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch{}</script>
+<link rel="preload" href="../assets/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../assets/fonts/GeistMono-Variable.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="../assets/vendor/katex/dist/katex.min.css">
 <link rel="stylesheet" href="../assets/site.css">
 <style>__CSS__</style>
 </head>
 <body>
+<a class="skip-link" href="#main">Skip to content</a>
 <div data-site-header></div>
 
-<header class="doc-hero">
-  <div class="om-overline"><span>The document</span><span aria-hidden="true">/</span><span>Single source of truth</span></div>
-  <img class="doc-mark" src="../assets/logo.svg" alt="" width="46" height="46">
+<main class="frame" id="main">
+<header class="doc-hero page-head">
+  <p class="eyebrow">Document</p>
   <h1>openmaterials.ai</h1>
-  <p class="doc-tagline">Git for science: a versioned map of physics</p>
-  <p class="doc-byline">The OpenMaterials project &middot; open source: map data
-    <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/main/LICENSE-DATA">CC BY 4.0</a>, code
-    <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/main/LICENSE">Apache 2.0</a></p>
+  <p class="doc-tagline lede">Specification and status of the OpenMaterials map</p>
+  <p class="doc-byline">The OpenMaterials project. Map data is
+    <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/main/LICENSE-DATA">CC BY 4.0</a> and code is
+    <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/main/LICENSE">Apache 2.0</a>.</p>
   <div class="doc-actions">
-    <a class="om-btn" href="../openmaterials.pdf" id="download-pdf">Download the PDF</a>
+    <a class="btn btn--secondary btn--sm" href="../openmaterials.pdf" id="download-pdf">Download the PDF</a>
     <span class="hint">This page is generated from the LaTeX source; the PDF is the typeset original.</span>
   </div>
 </header>
 
-<div class="doc-layout">
+<div class="doc-layout page-body">
   <details class="doc-toc" id="toc">
     <summary>On this page</summary>
     <nav aria-label="Table of contents">
 __TOC__
     </nav>
   </details>
-  <article class="doc-body">
+  <article class="doc-body prose">
 __BODY__
   </article>
 </div>
+</main>
 
 <div data-site-footer></div>
 <script src="../assets/site.js"></script>
@@ -604,6 +580,8 @@ def build_page(tex: str, pandoc: str) -> tuple[str, list[str]]:
     """Full pipeline: LaTeX source text to the final page HTML."""
     pre, notes = preprocess_tex(tex)
     body = run_pandoc(pre, pandoc)
+    # straight quotes in the HTML; the PDF keeps TeX's curly quotes
+    body = body.translate(STRAIGHT_QUOTES)
     body = dedupe_class_attr(body)
     body = remap_heading_levels(body)
     headings = collect_headings(body)
@@ -640,8 +618,9 @@ def assign_numbers_from_spans(headings: list[Heading]) -> None:
 def main() -> int:
     pandoc = find_pandoc()
     if pandoc is None:
-        raise SystemExit("pandoc not found; install it or adjust "
-                         "PANDOC_CANDIDATES in omai/doc_html.py")
+        raise SystemExit("%s not found (the page is byte-exact to that "
+                         "version); install it or adjust PANDOC_CANDIDATES "
+                         "in omai/doc_html.py" % PANDOC_VERSION)
     tex = TEX_PATH.read_text(encoding="utf-8")
     page, notes = build_page(tex, pandoc)
     OUT_PATH.parent.mkdir(parents=True, exist_ok=True)
