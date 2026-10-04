@@ -330,6 +330,12 @@ document.getElementById('copylink').addEventListener('click', function(){
   else{ window.prompt('Copy this link:',url); }
 });
 
+// The view switch carries the selection: the current #node= rides along to the other view.
+document.querySelector('.view-switch').addEventListener('click', e=>{
+  const a=e.target.closest('a'), m=location.hash.match(/[#?&]node=([^&]*)/);
+  if(a&&m) a.hash='node='+m[1];
+});
+
 // ---- pick-two path mode ----
 let pathMode=null; // {a}
 function startPath(a){ pathMode={a}; showRest(false); const pb=document.getElementById('pathbar'); pb.style.display='flex'; pb.innerHTML='<span>Path from <span class="ep">'+symHtml[a]+'</span>: shift-click a second quantity.</span>'+clearBtn('Cancel'); }

@@ -459,6 +459,12 @@ function openPanel(node){
   panelEl.innerHTML=h; panelEl.style.display='block';
 }
 
+// The view switch carries the selection: the current #node= rides along to the other view.
+document.querySelector('.view-switch').addEventListener('click', e=>{
+  const a=e.target.closest('a'), m=location.hash.match(/[#?&]node=([^&]*)/);
+  if(a&&m) a.hash='node='+m[1];
+});
+
 // ---- interaction: search (fly to the match) --------------------------------
 document.getElementById('q').addEventListener('input', function(){
   const v=this.value.trim().toLowerCase(); if(!v){ clearSel(); return; }
