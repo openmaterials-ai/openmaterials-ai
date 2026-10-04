@@ -367,8 +367,9 @@
     <div class="pg-panel" data-panel="query">
       <h3>Resolve a method</h3>
       <p>Type a method or quantity as a paper would name it. The resolver matches
-        it against each node's labels and returns ranked node ids: curated aliases
-        first, then exact labels, then token matches. It runs in your browser
+        it against the labels of each node and operator and returns ranked node
+        and operator ids: curated aliases first, then exact labels, then token
+        matches. It runs in your browser
         with no model call.</p>
       <input class="pg-input" id="qInput" placeholder="quasi-harmonic approximation" autocomplete="off" spellcheck="false" aria-label="A method or quantity">
       <div class="pg-examples" id="qExamples"></div>
@@ -395,7 +396,7 @@
         from the live map by id.</p>
       <button class="om-btn om-btn-sm" id="loadMapExample" type="button">Load an example</button>
       <label class="pg-field" for="mapInput">Sub-map JSON:</label>
-      <textarea class="pg-input" id="mapInput" rows="7" placeholder='{"v": "8aea09f90c24", "e": [["Structure", "compute_dispersion", "Frequency"]]}'></textarea>
+      <textarea class="pg-input" id="mapInput" rows="7" placeholder='{"v": "f69b18c18fb7", "e": [["DynamicalMatrix", "compute_dispersion", "Frequency"]]}'></textarea>
       <div class="pg-actions">
         <button class="om-btn om-btn-sm" id="renderMap" type="button">Render</button>
         <button class="om-btn om-btn-sm" id="copyMermaid" type="button" title="Copy this sub-map as a Mermaid flowchart. GitHub renders Mermaid in Markdown files, issues, and pull requests.">Copy as Mermaid</button>
@@ -568,7 +569,8 @@ function resolveLabel(q){
     else if ((e.labels || []).some(function(l){ return normLabel(l) === nq; })) { score = 0.9; why = 'exact label'; }
     else { var es = tokset((e.labels || []).join(' ') + ' ' + id), all = Object.keys(qt).length > 0;
            for (var t in qt){ if (!es[t]) { all = false; break; } }
-           if (all) { score = 0.65; why = 'token containment'; } }
+           // token containment: 0.6 plus a coverage bonus, rounded as omai/semantics.py rounds it
+           if (all) { score = Math.round((0.6 + Math.min(0.2, 0.2 * Object.keys(qt).length / Math.max(1, Object.keys(tokset(id)).length))) * 1000) / 1000; why = 'token containment'; } }
     if (score) out.push({ id: id, kind: e.kind, score: score, why: why });
   }
   out.sort(function(a,b){ return b.score - a.score || a.id.localeCompare(b.id); });

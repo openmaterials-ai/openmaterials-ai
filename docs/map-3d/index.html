@@ -432,7 +432,8 @@ function openPanel(node){
   let h='<button type="button" class="x" aria-label="Close" onclick="clearSel()">&times;</button>';
   h+='<div><span class="sym">'+tex(node.symbol)+'</span><span class="badge '+node.type+'">'+esc(node.type)+'</span></div>';
   h+='<div class="name">'+esc(node.id)+'<span class="tiertag">'+esc(node.tier||'Other')+'</span>'+(node.uid?('<span class="uid" title="'+attr(node.uid)+'">'+esc((''+node.uid).slice(0,12))+'</span>'):'')+'</div>';
-  h+='<div class="traceline">'+(nAnc?('Built from <b class="u">'+nAnc+'</b> upstream quantit'+(nAnc>1?'ies':'y')+'.'):'An input quantity.')+' '+(nDesc?('Feeds <b class="d">'+nDesc+'</b> downstream quantit'+(nDesc>1?'ies':'y')+'.'):'Nothing on the map uses it.')+'</div>';
+  const routes=(node.formulas||[]).length;
+  h+='<div class="traceline">'+(nAnc?('Built from '+nAnc+' upstream quantit'+(nAnc>1?'ies':'y')+(routes>1?' across '+routes+' routes':'')+'.'):'An input quantity.')+' '+(nDesc?('Feeds '+nDesc+' downstream quantit'+(nDesc>1?'ies':'y')+'.'):'Nothing on the map uses it.')+'</div>';
   const fl=(node.formulas&&node.formulas.length)?node.formulas:(node.formula?[{op:'',latex:node.formula}]:[]);
   if(!fl.length){ h+='<div class="om-panel-label">Formula on the producing edge</div><div class="formula"><span class="muted">Input quantity: no edge produces it.</span></div>'; }
   else{   // every formula with the operator that carries it
