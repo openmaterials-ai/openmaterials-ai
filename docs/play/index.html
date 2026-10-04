@@ -17,7 +17,7 @@
 <meta property="og:url" content="https://openmaterials.ai/play/">
 <meta property="og:image" content="https://openmaterials.ai/assets/og.png">
 <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="The openmaterials.ai mark and wordmark above the line A versioned map of physics, with the licenses: map data CC BY 4.0, code Apache 2.0.">
+<meta property="og:image:alt" content="The openmaterials.ai mark and wordmark above the line &quot;A versioned map of physics.&quot; and the licenses &quot;Map data CC BY 4.0 · Code Apache 2.0&quot;.">
 <meta name="twitter:card" content="summary_large_image">
 <script>try{const t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch{}</script>
 <link rel="preload" href="../assets/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin>
@@ -388,8 +388,9 @@
       <textarea class="pg-input" id="mapInput" rows="7" placeholder='{"v": "f69b18c18fb7", "e": [["DynamicalMatrix", "compute_dispersion", "Frequency"]]}'></textarea>
       <div class="pg-actions">
         <button class="om-btn om-btn-sm" id="renderMap" type="button">Render</button>
-        <button class="om-btn om-btn-sm" id="copyMermaid" type="button" title="Copy this sub-map as a Mermaid flowchart. GitHub renders Mermaid in Markdown files, issues, and pull requests.">Copy as Mermaid</button>
+        <button class="om-btn om-btn-sm" id="copyMermaid" type="button">Copy as Mermaid</button>
       </div>
+      <p class="pg-note" style="margin-top:8px">Copy as Mermaid gives a flowchart that GitHub renders in Markdown files, issues, and pull requests.</p>
       <div id="mapResult" style="margin-top:12px"></div>
     </div>
 
@@ -405,7 +406,7 @@
       <p id="distZooNote"></p>
       <div id="distZoo"></div>
       <p id="distCommitted" class="pg-note"></p>
-      <h3 style="margin-top:18px">Distance between papers</h3>
+      <h3 style="margin-top:18px">Distance between two sources</h3>
       <p class="pg-note">Pick two committed sources. Each quantity, material, and
         units key they share is compared with <code>curve@1</code>, the symmetric
         relative L2 distance over the shared temperature range, computed in this
@@ -426,7 +427,7 @@
         graphite are both C.</p>
       <p class="pg-pair">
         <input class="pg-input" id="distTryFa" size="10" value="NaCl" aria-label="Formula A">
-        <span>vs</span>
+        <span>vs.</span>
         <input class="pg-input" id="distTryFb" size="10" value="KCl" aria-label="Formula B">
         <span id="distTryComp"></span>
       </p>
@@ -435,13 +436,13 @@
       </div>
       <p class="pg-note" id="distTryWord"></p>
       <p class="pg-note">Try:
-        <a href="#" class="dist-try-pair" data-a="NaCl" data-b="KCl">NaCl vs KCl</a> &middot;
-        <a href="#" class="dist-try-pair" data-a="C" data-b="C">diamond vs graphite</a> &middot;
-        <a href="#" class="dist-try-pair" data-a="Si" data-b="Ge">Si vs Ge</a> &middot;
-        <a href="#" class="dist-try-pair" data-a="GaAs" data-b="GaP">GaAs vs GaP</a> &middot;
-        <a href="#" class="dist-try-pair" data-a="SiO2" data-b="GeO2">SiO2 vs GeO2</a> &middot;
-        <a href="#" class="dist-try-pair" data-a="Fe" data-b="Au">Fe vs Au</a> &middot;
-        <a href="#" class="dist-try-pair" data-a="Si" data-b="C3H8O">Si vs C3H8O (isopropanol)</a>
+        <a href="#" class="dist-try-pair" data-a="NaCl" data-b="KCl">NaCl vs. KCl</a> &middot;
+        <a href="#" class="dist-try-pair" data-a="C" data-b="C">diamond vs. graphite</a> &middot;
+        <a href="#" class="dist-try-pair" data-a="Si" data-b="Ge">Si vs. Ge</a> &middot;
+        <a href="#" class="dist-try-pair" data-a="GaAs" data-b="GaP">GaAs vs. GaP</a> &middot;
+        <a href="#" class="dist-try-pair" data-a="SiO2" data-b="GeO2">SiO2 vs. GeO2</a> &middot;
+        <a href="#" class="dist-try-pair" data-a="Fe" data-b="Au">Fe vs. Au</a> &middot;
+        <a href="#" class="dist-try-pair" data-a="Si" data-b="C3H8O">Si vs. C3H8O (isopropanol)</a>
       </p>
     </div>
 
@@ -466,7 +467,7 @@
       <button class="om-btn om-btn-sm" id="loadXExample" type="button">Load an example</button>
       <label class="pg-field" for="xInput">Lineage record JSON:</label>
       <textarea class="pg-input" id="xInput" rows="9" placeholder='{"lineage": {"node": "ThermalConductivity[transport_model=hnemd]", "material": {"name": "Si"}, "hyperparameters": {"nep_cutoff": 8.0}}}'></textarea>
-      <div class="xp-drop" id="xDrop" role="button" tabindex="0" style="margin-top:8px">Drop a .json record here, or click to choose a file.
+      <div class="xp-drop" id="xDrop" role="button" tabindex="0" style="margin-top:8px">Drop a <code>.json</code> record here, or click to choose a file.
         <input type="file" id="xFile" accept=".json,application/json" style="display:none"></div>
       <div class="pg-actions">
         <button class="om-btn om-btn-sm" id="renderX" type="button">Open record</button>
@@ -480,7 +481,7 @@
     <svg id="pgsvg" preserveAspectRatio="xMidYMid meet" role="group" aria-label="A focused sub-map of the quantities the current tab draws."></svg>
     <div id="pglabels"><div id="pglabelsInner"></div></div>
     <p id="pgCaption" class="pg-caption" hidden></p>
-    <div class="pg-hint" id="pgHint">Parse a paper (or draw a proposal below the dropzone) and its claims light up here as the paper's sub-map.</div>
+    <div class="pg-hint" id="pgHint">Parse a paper, or draw a proposal below the dropzone, and the paper's sub-map appears here.</div>
     <div class="pg-node-panel" id="pgNodePanel"></div>
   </div>
   </div>
@@ -498,7 +499,7 @@
   <div class="lin-ingress" id="linIngress" hidden>
     <div class="lin-ingress-row">
       <textarea class="pg-input" id="linInput" rows="3" placeholder='{"lineage": {"node": "ThermalConductivity", "material": {"name": "Si"}}}' spellcheck="false" aria-label="Lineage record JSON"></textarea>
-      <div class="xp-drop" id="linDrop" role="button" tabindex="0">Drop a .json record here, or click to choose a file.
+      <div class="xp-drop" id="linDrop" role="button" tabindex="0">Drop a <code>.json</code> record here, or click to choose a file.
         <input type="file" id="linFile" accept=".json,application/json" style="display:none"></div>
       <button id="linRender" type="button">Open record</button>
     </div>
@@ -1050,8 +1051,8 @@ function ingestLineage(raw, sourceLabel){
   // A one-line status above the render (client convenience; the Python
   // validate_light is the real gate for anything entering git).
   var status = v.node
-    ? (v.nodeResolved ? 'Valid record: node ' + esc(v.node) + ' resolves on this map version.'
-                      : 'Valid record: node ' + esc(v.node) + ' is not on this map version (node-unresolved, still valid).')
+    ? (v.nodeResolved ? 'Valid record: node <code>' + esc(v.node) + '</code> resolves on this map version.'
+                      : 'Valid record: node <code>' + esc(v.node) + '</code> is not on this map version (node-unresolved, still valid).')
     : 'Valid record: it names no map node (template only, node-unresolved).';
   if (!renderLineage(v.record)) return;
   // Prepend the status banner WITHOUT re-parsing the box: insertAdjacentHTML
@@ -1229,7 +1230,7 @@ function renderDistanceTab(){
     var zoo = d.zoo || {rows: []};
     document.getElementById('distZooNote').textContent =
       (zoo.illustrative ? 'Illustrative: ' : '') + (zoo.note || '') +
-      (zoo.reference ? ' Reference: ' + zoo.reference + '.' : '');
+      (zoo.reference ? '. Reference: ' + zoo.reference + '.' : '');
     var ids = reg.distances.filter(function(m){ return !m.input || m.input === 'structure'; })
       .map(function(m){ return m.id; });
     var zh = '<table class="pg-table"><thead><tr><th>Compared with ' + esc(zoo.reference || 'the reference') + '</th>' +
@@ -1280,9 +1281,9 @@ function renderTryDistance(){
   word.textContent =
     d === 0 ? 'Same composition: any polymorph of one matches the other.' :
     d <= 1 ? 'Neighbors: one element swapped for an adjacent one on the Pettifor scale.' :
-    d < 4 ? 'Same neighborhood of the periodic table' :
-    d < 10 ? 'Different chemical families' :
-    'Unrelated chemistry';
+    d < 4 ? 'Same neighborhood of the periodic table.' :
+    d < 10 ? 'Different chemical families.' :
+    'Unrelated chemistry.';
 }
 function initTryDistance(){
   if (tryWired) return;
@@ -1480,7 +1481,7 @@ async function mintShortlink(env, btn){
           headers: { 'content-type': 'application/json' },
           body: JSON.stringify(mintEnvelope(env)) });
         if (r.ok) res = await r.json();
-        else if (r.status === 429) throw new Error('The daily short-link limit is reached.');
+        else if (r.status === 429) throw new Error('Daily short-link limit reached.');
         else lastErr = new Error('The short-link service returned ' + r.status + '.');
       } catch (e) { lastErr = e; }
     }
@@ -1491,7 +1492,7 @@ async function mintShortlink(env, btn){
     await navigator.clipboard.writeText(res.url);
     if (btn) { btn.textContent = 'Short link copied'; setTimeout(function(){ btn.textContent = label; }, 1600); }
   } catch (e) {
-    if (btn) { btn.textContent = String(e.message || 'failed').slice(0, 40); setTimeout(function(){ btn.textContent = label; }, 2500); }
+    if (btn) { btn.textContent = String(e.message || 'Failed.').slice(0, 40); setTimeout(function(){ btn.textContent = label; }, 2500); }
   }
 }
 
@@ -2159,8 +2160,8 @@ function renderBundle(env){
   if (rows.length) h += '<div class="rec-sec"><div class="rec-h">The shared document</div><dl class="rec-kv">' + rows.join('') + '</dl></div>';
 
   h += '<div class="rec-sec"><div class="rec-h">The lineages in this set</div>' +
-    '<p class="rec-explain">Every lineage this document carries, each rendered below as a ' +
-    'full datasheet on this same page. The rows here jump to the matching datasheet.</p>';
+    '<p class="rec-explain">This document carries the lineages below; each has a full ' +
+    'datasheet on this page. The rows here jump to the matching datasheet.</p>';
   h += '<table class="rec-vtable"><thead><tr><th>Lineage</th><th class="num">Value</th><th>Units</th><th>Id</th></tr></thead><tbody>';
   env.lineages.forEach(function(member, idx){
     var lineage = member.lineage || {};
@@ -2179,8 +2180,8 @@ function renderBundle(env){
   });
   h += '</tbody></table></div>';
   h += '<div class="rec-links"><button id="bundleCopy" type="button" title="Copy a link that carries this whole set in its #x= fragment.">Copy link</button>' +
-    '<button id="bundleShort" type="button" title="Store this set and copy a short link (openmaterials.ai/s/...). A stored set is public to anyone with the code.">Copy short link</button>' +
-       '<span class="rec-link-note">Each lineage keeps its own id; every datasheet is on this page.</span></div>';
+    '<button id="bundleShort" type="button" title="Stores this set and copies its short link, openmaterials.ai/s/ plus a code. Anyone with the code can open a stored set.">Copy short link</button>' +
+       '<span class="rec-link-note">Each lineage keeps its own id, and every datasheet is on this page. A stored set is public to anyone with the code.</span></div>';
   h += '</div>';
 
   // ---- every member's FULL datasheet, stacked on this same page --------------
@@ -2276,7 +2277,7 @@ function reproduceHTML(node, recordId){
       ', ' + esc(tolText) +
       (exact ? ' <span class="rec-conf-mark">this exact lineage</span>'
              : (t.material ? ' <span class="rec-link-note">(' + esc(t.material) + ')</span>' : '')) +
-      ' <a href="../data/conformance/' + esc(t.file) + '" title="The committed conformance target, identity-cited to its evidence instance">target &rarr;</a>' +
+      ' <a href="../data/conformance/' + esc(t.file) + '" title="The committed conformance target, which cites the value\'s id.">Open the target file</a>' +
       '</div>';
   });
   h += '</div>';
@@ -2309,7 +2310,7 @@ function datasheetHTML(record, valid, opts){
   h += '<div><dt>Kind</dt><dd>' + (kind === 'measurement' ? 'Measurement' : 'Simulation') + '</dd></div>';
   h += '<div><dt>Output node</dt><dd>' + output + '</dd></div>';
   h += '<div><dt>Material</dt><dd>' + esc(mat || 'not supplied') + '</dd></div>';
-  h += '<div><dt>Lineage id</dt><dd title="lineage id, first 12 characters">' + esc(shortId) + '</dd></div>';
+  h += '<div><dt>Lineage id</dt><dd>' + esc(shortId) + '</dd></div>';
   h += '<div><dt>Map version</dt><dd>' + esc(mapVersion) + '</dd></div>';
   h += '</dl>' + lineageDoiHTML(record) + '</div>';
 
@@ -2347,7 +2348,7 @@ function datasheetHTML(record, valid, opts){
 
   // ---- THE LINEAGE: every field, as plain labelled information ---------------
   var lineageHTML = '<div class="rec-sec"><div class="rec-h">The lineage</div>' +
-    '<p class="rec-explain">The complete computational identity of this value: the output ' +
+    '<p class="rec-explain">The lineage is the complete computational identity of this value: the output ' +
     'quantity, the material, and every condition that determines the number. These fields, ' +
     'and nothing else, are hashed into the lineage id, so two records with the same id are ' +
     'the same computation.</p>';
@@ -2385,7 +2386,7 @@ function datasheetHTML(record, valid, opts){
     var deriv = derivationSVG(node);
     if (deriv) {
       h += '<div class="rec-sec rec-maprow"><div class="rec-h">The derivation on the map</div>' +
-        '<p class="rec-explain">Every quantity this value depends on, drawn from the map itself. ' +
+        '<p class="rec-explain">The drawing shows every quantity this value depends on, taken from the map itself. ' +
         'Read left to right: the leftmost boxes are the provided inputs, each arrow is an operator ' +
         'carrying one quantity into the next computation, and the box at the right end is ' +
         'this record\'s quantity. The column headings are the numbered tiers of the full map. ' +
@@ -2593,11 +2594,11 @@ function provenanceHTML(record, lineage, doc){
   } else if (typeof paper === 'string' && paper) {
     rows.push('<dt>paper</dt><dd>' + esc(paper) + '</dd>');
   }
-  if (window.__MAP_VERSION__) rows.push('<dt>map version</dt><dd class="wrap">' + esc(String(window.__MAP_VERSION__).slice(0, 12)) + '</dd>');
+  if (window.__MAP_VERSION__) rows.push('<dt>Map version</dt><dd class="wrap">' + esc(String(window.__MAP_VERSION__).slice(0, 12)) + '</dd>');
   if (!rows.length) return '';
   return '<div class="rec-sec"><div class="rec-h">Provenance</div>' +
-    '<p class="rec-explain">Where this claim comes from (the paper, dataset, or code that ' +
-    'produced it) and which map version checked it. Provenance travels with the record, ' +
+    '<p class="rec-explain">This section names where the value comes from (the paper, dataset, ' +
+    'or code that produced it) and the map version that checked it. Provenance travels with the record, ' +
     'but only a source declared inside the lineage counts toward its id.</p>' +
     '<dl class="rec-kv">' + rows.join('') + '</dl></div>';
 }
@@ -2694,11 +2695,11 @@ document.getElementById('linBack').addEventListener('click', function(e){
 
 /* ---- tabs, share, hash --------------------------------------------------- */
 var PG_HINTS = {
-  learn: 'Parse a paper (or draw a proposal below the dropzone) and its claims light up here as the paper\'s sub-map.',
+  learn: 'Parse a paper, or draw a proposal below the dropzone, and the paper\'s sub-map appears here.',
   lineage: 'Open a record on the left and it renders as a full-width datasheet.',
-  distance: 'Distances compute in the panel; pick two materials and compare.',
+  distance: 'The distance tools are in the left panel; pick two materials to compare them.',
   query: 'Type a method on the left, and the matching part of the map appears here.',
-  map: 'A shared sub-map renders here; paste a view code or follow a shared link.'
+  map: 'Paste sub-map JSON on the left or open a shared link, and the sub-map renders here.'
 };
 function selectPlaygroundTab(tab){
   document.querySelectorAll('.pg-tab').forEach(function(x){ x.classList.remove('on'); x.removeAttribute('aria-current'); });

@@ -17,7 +17,7 @@
 <meta property="og:url" content="https://openmaterials.ai/map-trace/">
 <meta property="og:image" content="https://openmaterials.ai/assets/og.png">
 <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="The openmaterials.ai mark and wordmark above the line A versioned map of physics, with the licenses: map data CC BY 4.0, code Apache 2.0.">
+<meta property="og:image:alt" content="The openmaterials.ai mark and wordmark above the line &quot;A versioned map of physics.&quot; and the licenses &quot;Map data CC BY 4.0 · Code Apache 2.0&quot;.">
 <meta name="twitter:card" content="summary_large_image">
 <script>try{const t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch{}</script>
 <link rel="preload" href="../assets/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin>
@@ -112,7 +112,6 @@
   .pathbar .clear{height:28px;padding:0 10px;border:0;border-radius:var(--radius,6px);background:transparent;color:var(--ink,#171717);box-shadow:0 0 0 1px var(--line,#EBEBEB);font:inherit;font-weight:500;cursor:pointer;}
   .pathbar .clear:hover{background:var(--surface-2,#F2F2F2);}
   /* the caption shown after Reset */
-  @media (min-width:961px){.rest-hint{display:none;}}   /* the toolbar hint says it there */
   .rest-hint{position:absolute;left:16px;top:16px;z-index:2;max-width:min(560px,calc(100% - 32px));margin:0;color:var(--ink-2,#4D4D4D);pointer-events:none;}
   /* legend, floating over the canvas */
   .legend{position:absolute;left:16px;bottom:16px;z-index:4;display:flex;gap:12px;align-items:center;padding:8px 12px;border-radius:var(--radius,6px);background:var(--page,#FFFFFF);box-shadow:var(--shadow-float,0 0 0 1px #EBEBEB,0 4px 8px -4px rgb(0 0 0 / .04),0 16px 24px -8px rgb(0 0 0 / .06));font-size:12px;line-height:16px;color:var(--ink-2,#4D4D4D);}
@@ -189,7 +188,8 @@ function tex(latex,display){ try{ return katex.renderToString(latex,{throwOnErro
 function smooth(pts){ if(!pts||pts.length<2) return ''; if(pts.length===2) return 'M'+pts[0].x+' '+pts[0].y+' L'+pts[1].x+' '+pts[1].y; let d='M'+pts[0].x+' '+pts[0].y; for(let i=1;i<pts.length-1;i++){ const mx=(pts[i].x+pts[i+1].x)/2, my=(pts[i].y+pts[i+1].y)/2; d+=' Q'+pts[i].x+' '+pts[i].y+' '+mx+' '+my; } d+=' L'+pts[pts.length-1].x+' '+pts[pts.length-1].y; return d; }
 function err(m){ var e=document.getElementById('err'); e.style.display='block'; e.textContent='Error: '+m; }
 function esc(s){ return s.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
-function showRest(on){ document.getElementById('resthint').hidden=!on; }
+// the rest caption and the toolbar hint say the same thing, so only one shows
+function showRest(on){ document.getElementById('resthint').hidden=!on; document.querySelector('.toolbar .hint').style.display=on?'none':''; }
 
 if(typeof dagre==='undefined'){ err('The layout library did not load. Check the connection and reload.'); }
 else fetch('../data/graph.json').then(r=>r.json())
