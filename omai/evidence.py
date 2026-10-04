@@ -25,6 +25,11 @@ append-only list of ``{kind, ref, detail}``. The uid identifies parameters,
 not an energy surface: a head or task selection, the evaluation dtype and a
 dispersion term added at run time are lineage conditions.
 
+A lineage cites a model by bare uid under its node's fixed keys
+(:data:`CITATION_KEYS`): ``conditions.potential_sha256`` for the model it
+evaluates, ``conditions.base_potential_sha256`` for the model a training run
+starts from. :func:`model_citations` finds and resolves them.
+
 Registering a record publishes it; the commons holds metadata, hashes and
 pointers, never the files. :func:`resolve` looks a uid or an alias up in a
 list of roots, in order: a data directory (``docs/data/`` in a source tree) or
@@ -46,6 +51,12 @@ REGISTRY = _PACKAGE / "data" / "registry.json"
 
 MODEL_ROLES = ("model", "training_state")
 _HEX64 = re.compile(r"[0-9a-f]{64}")
+
+# The fixed keys under lineage.conditions that cite a model, one set per node a
+# model serves, the same for every representation so a model compares across
+# codes. Potential: the model a lineage evaluates, and the model a training run
+# starts from. Each value is the bare uid, 64 lowercase hex, no "sha256:".
+CITATION_KEYS = {"Potential": ("potential_sha256", "base_potential_sha256")}
 
 
 class EvidenceError(Exception):
@@ -119,8 +130,9 @@ def _check_model(record: dict, uid: str, *, where: str) -> None:
     for key in ("name", "family", "format", "citation"):
         if not isinstance(record.get(key), str) or not record[key]:
             raise EvidenceError(f"{where}: {key} must be a non-empty string")
-    if not isinstance(record.get("node", "Potential"), str):
-        raise EvidenceError(f"{where}: node must be a map node id")
+    # A node without fixed citation keys could not be cited by a lineage.
+    if record.get("node", "Potential") not in CITATION_KEYS:
+        raise EvidenceError(f"{where}: node must be one of {sorted(CITATION_KEYS)}")
     files = record.get("files")
     try:
         _validate_manifest(files, where=where)
@@ -173,3 +185,13 @@ def resolve(kind: str, uid: str, roots: list[Path] | None = None) -> str | None:
             if hit is not None:
                 return hit
     return None
+
+
+def model_citations(lineage: dict, roots: list[Path] | None = None) -> list[dict]:
+    """Every model a lineage cites, ``{key, uid, record}``, ``record`` being
+    the resolved path or None. A report: an unregistered uid is not refused."""
+    conditions = lineage.get("conditions") or {}
+    return [{"key": key, "uid": conditions[key],
+             "record": resolve("model", conditions[key], roots)}
+            for keys in CITATION_KEYS.values() for key in keys
+            if key in conditions]

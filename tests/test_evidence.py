@@ -42,7 +42,8 @@ def test_check_reproduces_a_model_uid_and_ignores_training_state():
                 _model(license={"spdx": "MIT"}),
                 _model(uid="sha256:" + A),
                 _model(uid=A + "\n"),
-                _model(aliases=["not-a-uid"])):
+                _model(aliases=["not-a-uid"]),
+                _model(node="Structure")):
         with pytest.raises(EvidenceError):
             check("model", bad, where="m")
 
@@ -81,3 +82,42 @@ def test_committed_model_records_reproduce_their_uids():
     # instances), re-read from the upstream files at registration.
     assert {"75168ece02e840e4a32644f982b78d43cba697f5b64b4c8134ab66c7a8c28be1",
             "52a93e90596829c57d54eef091de6215f1fac7ca15d57eac7568ddfdda26adfb"} <= uids
+
+
+def _cited(node):
+    """Every (key, value) under a citation key, at any depth of a JSON value."""
+    from omai.evidence import CITATION_KEYS
+
+    keys = {k for ks in CITATION_KEYS.values() for k in ks}
+    if isinstance(node, dict):
+        for key, value in node.items():
+            if key in keys:
+                yield key, value
+            yield from _cited(value)
+    elif isinstance(node, list):
+        for value in node:
+            yield from _cited(value)
+
+
+def test_every_committed_model_citation_resolves():
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1]
+    files = [f for d in ("docs/data", "docs/examples", "omai", "tests/fixtures")
+             for f in (root / d).rglob("*.json")]
+    cited = {(k, v) for f in files for k, v in _cited(json.loads(f.read_text()))}
+    assert cited, "the committed Si.tersoff instances cite potential_sha256"
+    for key, uid in cited:
+        assert resolve("model", uid) is not None, f"{key} {uid} is not registered"
+
+
+def test_model_citations_reports_without_refusing():
+    from omai.evidence import model_citations
+
+    lineage = {"conditions": {"potential_sha256": A, "base_potential_sha256":
+               "52a93e90596829c57d54eef091de6215f1fac7ca15d57eac7568ddfdda26adfb",
+               "T": 300}}
+    assert model_citations(lineage) == [
+        {"key": "potential_sha256", "uid": A, "record": None},
+        {"key": "base_potential_sha256", "uid": lineage["conditions"]
+         ["base_potential_sha256"], "record": "models/si-tersoff.json"}]

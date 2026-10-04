@@ -282,6 +282,9 @@ shipped here.
 | `omai.schema.validate_record(record)` | Every schema violation as a readable message; an empty list means valid. |
 | `omai.render.render_kappa / render_molar_cp / render_reaction_energy` | A typed result to a map evidence `Instance`. |
 | `omai.render.provenance(run_ref=None, what, map_version=...)` | The `Source` every rendered instance carries, stamping the map version. |
+| `omai.evidence.resolve(kind, uid, roots=None)` | Where a registered configuration or model uid lives; None when no root registers it. |
+| `omai.evidence.model_uid(digests)` | A model's uid: the sha256 of its one evaluated file, or of the sorted manifest of several. |
+| `omai.evidence.model_citations(lineage, roots=None)` | Every model a lineage cites, resolved; a report that refuses nothing. |
 
 The schema is a SHAPE gate. That `id` equals `lineage_id(lineage)`, that the
 node resolves against the live map, and the contribution gates in
@@ -294,6 +297,13 @@ new records are written in, and widening it would keep the legacy spelling
 alive in every consumer that validates. Normalize such a record before
 validating it (`{**record, "lineage": record_lineage(record)}`, minus the
 `recipe` key); legacy links stay readable through `record_lineage` forever.
+
+A lineage cites a model by its bare uid (64 lowercase hex) under fixed keys,
+the same for every representation so one model compares across codes:
+`conditions.potential_sha256` for the model it evaluates and
+`conditions.base_potential_sha256` for the model a training run starts from.
+Model and configuration uids resolve against `docs/data/`; an unregistered
+uid is reported, not refused.
 
 **The vectors.** `omai/vectors/*.json` ship inside the wheel.
 
