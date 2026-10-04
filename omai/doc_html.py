@@ -161,6 +161,15 @@ def preprocess_tex(tex: str) -> tuple[str, list[str]]:
     # \today would make the build nondeterministic (the date is not in the
     # fragment output today, but keep the guard explicit).
     tex = tex.replace(r"\date{\today}", r"\date{}")
+
+    # A p{width} column is print layout; pandoc would turn it into fixed
+    # table and column widths, so the HTML gets a plain l column and the
+    # table sizes itself.
+    tex = re.sub(
+        r"\\begin\{tabular\}\{((?:[^{}]|\{[^{}]*\})*)\}",
+        lambda m: "\\begin{tabular}{%s}"
+        % re.sub(r"p\{[^{}]*\}", "l", m.group(1)),
+        tex)
     return tex, notes
 
 
