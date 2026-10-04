@@ -331,6 +331,10 @@ refused.
   canonical JSON its uid hashes, and the uid (`7b5e77b1...`). Python only:
   computing the canonical JSON needs spglib. The record keeps its former uid,
   `55bf22ca...`, under `canonical.aliases`, and it still resolves.
+- `models.json`: model uid fixtures with inline bytes: one file (its sha256),
+  two files (the sha256 of the sorted digest manifest, whose bytes are given),
+  and one file with a `training_state` companion, whose uid equals the
+  one-file uid. The NEP89 and Si.tersoff uids are pinned in their records.
 
 Every id in these files is produced by the functions above and equals the id
 its source already pinned. A vector whose id changes is a defect in the

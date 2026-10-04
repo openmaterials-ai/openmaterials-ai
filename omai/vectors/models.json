@@ -1,0 +1,56 @@
+[
+ {
+  "files": [
+   {
+    "bytes": 16,
+    "content": "fixture model A\n",
+    "path": "model.txt",
+    "role": "model",
+    "sha256": "3d494d028c3b1037042ebf286712140c15b3c392f90f149cf1963c983dfba25e"
+   }
+  ],
+  "name": "one_file",
+  "uid": "3d494d028c3b1037042ebf286712140c15b3c392f90f149cf1963c983dfba25e"
+ },
+ {
+  "files": [
+   {
+    "bytes": 21,
+    "content": "fixture coefficients\n",
+    "path": "model.snapcoeff",
+    "role": "model",
+    "sha256": "7d8169f8bd6901a8cfd13d99616059d3a34de487223a6ce197618f4df04449d9"
+   },
+   {
+    "bytes": 19,
+    "content": "fixture parameters\n",
+    "path": "model.snapparam",
+    "role": "model",
+    "sha256": "fe349f1829a796b9ab3b4993c482a5781ac82104ac47d6bef9de50dbd16e41ca"
+   }
+  ],
+  "manifest_json": "{\"files\":[\"7d8169f8bd6901a8cfd13d99616059d3a34de487223a6ce197618f4df04449d9\",\"fe349f1829a796b9ab3b4993c482a5781ac82104ac47d6bef9de50dbd16e41ca\"]}",
+  "name": "two_files",
+  "uid": "45122ca959ad7855c59b787784b930ab151884f319e7782eb7469aeaf738de8a"
+ },
+ {
+  "files": [
+   {
+    "bytes": 16,
+    "content": "fixture model A\n",
+    "path": "model.txt",
+    "role": "model",
+    "sha256": "3d494d028c3b1037042ebf286712140c15b3c392f90f149cf1963c983dfba25e"
+   },
+   {
+    "bytes": 23,
+    "content": "fixture training state\n",
+    "path": "model.restart",
+    "role": "training_state",
+    "sha256": "b4c541e4db38019f11180fd5fbb624e0e69cefe5b7bd0f36a09ae20d1cf4ed94"
+   }
+  ],
+  "name": "one_file_with_training_state",
+  "uid": "3d494d028c3b1037042ebf286712140c15b3c392f90f149cf1963c983dfba25e"
+ }
+]

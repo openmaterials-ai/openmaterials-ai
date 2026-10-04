@@ -42,12 +42,14 @@ LINEAGE_VECTORS = _load("lineage_ids.json")
 RECORD_VECTORS = _load("records.json")
 RENDER_VECTORS = _load("render.json")
 CONFIGURATION_VECTORS = _load("configurations.json")
+MODEL_VECTORS = {v["name"]: v for v in _load("models.json")}
 
 
 # --- 1. the committed files equal a fresh generation ------------------------
 
 @pytest.mark.parametrize("name", ["lineage_ids.json", "records.json",
-                                  "render.json", "configurations.json"])
+                                  "render.json", "configurations.json",
+                                  "models.json"])
 def test_committed_vectors_equal_a_fresh_generation(name):
     fresh = gen_vectors.generate()[name]
     committed = (VECTORS / name).read_text()
@@ -189,3 +191,31 @@ def test_configuration_vector_is_the_committed_record(vector):
     assert vector["canonical_uid"] == record["canonical"]["uid"]
     digest = hashlib.sha256(vector["canonical_json"].encode("utf-8")).hexdigest()
     assert digest == vector["canonical_uid"]
+
+
+# --- model uids --------------------------------------------------------------
+
+@pytest.mark.parametrize("name", sorted(MODEL_VECTORS))
+def test_model_vector_reproduces_through_model_uid(name):
+    import hashlib
+
+    from omai.evidence import model_uid
+
+    vector = MODEL_VECTORS[name]
+    for f in vector["files"]:
+        data = f["content"].encode("utf-8")
+        assert (f["sha256"], f["bytes"]) == (hashlib.sha256(data).hexdigest(), len(data))
+    digests = [f["sha256"] for f in vector["files"] if f["role"] == "model"]
+    assert model_uid(digests) == vector["uid"]
+    if len(digests) == 1:
+        assert vector["uid"] == digests[0]
+    else:
+        manifest = vector["manifest_json"].encode("utf-8")
+        assert hashlib.sha256(manifest).hexdigest() == vector["uid"]
+
+
+def test_a_training_state_companion_leaves_the_model_uid_unchanged():
+    one = MODEL_VECTORS["one_file"]
+    companion = MODEL_VECTORS["one_file_with_training_state"]
+    assert {f["role"] for f in companion["files"]} == {"model", "training_state"}
+    assert companion["uid"] == one["uid"]
