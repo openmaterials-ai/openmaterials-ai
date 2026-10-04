@@ -49,32 +49,51 @@ function resolvePrefix(instances, prefix) {
   return { ok: false };
 }
 
+// Python's html.escape(quote=True), so these pages escape exactly as the
+// static /i/ stubs do.
 const esc = (s) =>
-  String(s == null ? "" : s).replace(/[&<>"]/g, (c) =>
-    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]
+  String(s == null ? "" : s).replace(/[&<>"']/g, (c) =>
+    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#x27;" })[c]
   );
 
-// "ThermalConductivity[bte_solver=rta]" -> "Thermal conductivity"
+// "ThermalConductivity[bte_solver=rta]" -> "Thermal conductivity"; an
+// all-caps token (ZT) keeps its case.
 function humanProperty(variable) {
   const base = String(variable || "").replace(/\[.*$/, "");
-  const words = base.replace(/([a-z0-9])([A-Z])/g, "$1 $2").toLowerCase();
+  const words = base.replace(/([a-z0-9])([A-Z])/g, "$1 $2").split(" ")
+    .map((t) => (t !== t.toLowerCase() && t === t.toUpperCase() ? t : t.toLowerCase()))
+    .join(" ");
   return words.charAt(0).toUpperCase() + words.slice(1);
 }
+
+// The datasheet's fmtSig: six significant digits, printed as JS prints numbers.
+const sig = (v) =>
+  typeof v === "number" && isFinite(v) ? String(Number(v.toPrecision(6))) : String(v);
 
 // The server-rendered shell for a resolved permalink: real OG metadata so
 // the link unfurls with the value it names, then an immediate client
 // redirect to the playground datasheet (the one renderer; this shell never
-// duplicates it). Everything shown comes from the committed entry.
+// duplicates it). Everything shown comes from the committed entry. The title,
+// description, share image, and paragraph mirror build_share_stubs in
+// omai/map_data.py field for field, fallbacks included, so /l/<id> and
+// /i/<id>/ name a value with the same bytes.
 function permalinkHTML(entry, origin) {
-  const prop = humanProperty(entry.variable);
-  const mat = entry.material ? ` of ${entry.material}` : "";
-  const title = `${prop}${mat}`;
-  const value =
-    entry.value != null ? `${entry.value}${entry.units ? " " + entry.units : ""}` : "";
-  const src = entry.source && entry.source.ref ? String(entry.source.ref) : "";
-  const desc =
-    `${value ? value + ". " : ""}Committed lineage ${entry.id.slice(0, 12)}` +
-    `${src ? ", source " + src : ""}, on the openmaterials map.`;
+  const prop = humanProperty(entry.variable) || "Property";
+  const mat = entry.material;
+  const matName = String((mat && typeof mat === "object" ? mat.name : mat) || "");
+  const name = `${prop}${matName ? " of " + matName : ""}`;
+  const title = `${name} | OpenMaterials`;
+  let value = "";
+  if (entry.value != null) {
+    value = sig(entry.value);
+    if (typeof entry.uncertainty === "number") value += ` \u00b1 ${sig(entry.uncertainty)}`;
+    if (entry.units) value += ` ${entry.units}`;
+  }
+  const src = entry.source || {};
+  const ref = String(src.ref || "");
+  const facts = [String(src.kind || ""), ref ? `source ${ref}` : ""].filter(Boolean).join(", ");
+  const said = (value || "This value") + (facts ? ` (${facts})` : "");
+  const desc = `${said} is a committed value on the OpenMaterials map.`;
   const target = `${origin}/play/#id=${entry.id}`;
   return `<!doctype html>
 <html lang="en">
@@ -85,12 +104,16 @@ function permalinkHTML(entry, origin) {
 <meta property="og:site_name" content="openmaterials.ai">
 <meta property="og:title" content="${esc(title)}">
 <meta property="og:description" content="${esc(desc)}">
-<meta name="twitter:card" content="summary">
+<meta property="og:image" content="https://openmaterials.ai/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The openmaterials.ai mark and wordmark above the line &quot;A versioned map of physics.&quot; A smaller line gives the licenses: map data CC BY 4.0 and code Apache 2.0.">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="canonical" href="${esc(origin)}/l/${entry.id}">
 <meta http-equiv="refresh" content="0;url=${esc(target)}">
 </head>
 <body>
-<p>${esc(title)}: ${esc(desc)}</p>
+<p>${esc(name)}: ${esc(said)}.</p>
 <p><a href="${esc(target)}">Open the datasheet</a></p>
 <script>location.replace(${JSON.stringify(target)});</script>
 </body>

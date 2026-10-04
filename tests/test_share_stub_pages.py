@@ -19,7 +19,8 @@ from pathlib import Path
 
 import pytest
 
-from omai.map_data import build_instances, build_share_stubs, write_share_stubs
+from omai.map_data import (_card_number, build_instances, build_share_stubs,
+                            write_share_stubs)
 
 _REPO = Path(__file__).resolve().parents[1]
 _PLAY = _REPO / "docs" / "play" / "index.html"
@@ -81,16 +82,20 @@ def test_stub_carries_the_unfurl_metadata_and_lands_humans_live():
 
 
 def test_value_and_provenance_ride_in_the_description():
-    """The og:description states the value with units, the record's kind and
-    its source ref, and a visible paragraph repeats the value for a client
-    that runs no JS."""
+    """The og:description states the value (six significant digits, as the
+    datasheet prints it, with the uncertainty when one is committed) and
+    units, the record's kind and its source ref, and a visible paragraph
+    repeats it for a client that runs no JS."""
     insts = build_instances()
     stubs = build_share_stubs(insts)
     for e in insts:
         page = stubs[e["id"]]
         m = re.search(r'<meta property="og:description" content="([^"]*)">', page)
         assert m, f"{e['id'][:12]}: no og:description"
-        said = (f"{e['value']} {e['units']} "
+        unc = e.get("uncertainty")
+        value = _card_number(e["value"]) + (
+            f" \u00b1 {_card_number(unc)}" if unc is not None else "")
+        said = (f"{value} {e['units']} "
                 f"({e['source']['kind']}, source {e['source']['ref']})")
         assert html.unescape(m.group(1)) == (
             f"{said} is a committed value on the OpenMaterials map."), m.group(1)

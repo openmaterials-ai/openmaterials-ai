@@ -44,7 +44,7 @@ test("the permalink shell carries real OG metadata and redirects to the datashee
   const entry = instances.find((e) => e.variable && e.value != null) || instances[0];
   const page = permalinkHTML(entry, "https://openmaterials.ai");
   assert.ok(page.includes('property="og:title"'));
-  assert.ok(page.includes(entry.id.slice(0, 12)), "description cites the id prefix");
+  assert.ok(page.includes(`/l/${entry.id}`), "the canonical link names the id");
   assert.ok(page.includes(`/play/#id=${entry.id}`), "redirect targets the one renderer");
   assert.ok(String(page.match(/og:description[^>]*/)).length > 0);
   if (entry.value != null) assert.ok(page.includes(String(entry.value)), "the committed value is on the card");
@@ -53,6 +53,8 @@ test("the permalink shell carries real OG metadata and redirects to the datashee
 test("humanProperty reads the node spelling", () => {
   assert.strictEqual(humanProperty("ThermalConductivity[bte_solver=rta]"), "Thermal conductivity");
   assert.strictEqual(humanProperty("MassDensity"), "Mass density");
+  assert.strictEqual(humanProperty("ZT"), "ZT");
+  assert.strictEqual(humanProperty("HeatCurrentACF"), "Heat current ACF");
 });
 
 test("prefixes resolve git-style at the edge: unique, ambiguous, none", () => {

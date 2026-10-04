@@ -7,6 +7,7 @@ import json
 import pkgutil
 import re
 from dataclasses import dataclass
+from decimal import ROUND_HALF_UP, Decimal
 from pathlib import Path
 from types import ModuleType
 
@@ -663,13 +664,50 @@ def _share_prop(variable: str) -> str:
     qualifier ([...]) is dropped: the title names the physical quantity a reader
     recognizes, method-neutral, matching the /l/ Worker's humanProperty."""
     base = re.sub(r"\[.*$", "", str(variable or ""))
-    words = re.sub(r"([a-z0-9])([A-Z])", r"\1 \2", base).lower()
+    spaced = re.sub(r"([a-z0-9])([A-Z])", r"\1 \2", base)
+    # an all-caps token (ZT) keeps its case
+    words = " ".join(t if t.isupper() else t.lower() for t in spaced.split(" "))
     return (words[:1].upper() + words[1:]) if words else "Property"
 
 
 def _esc(s: object) -> str:
     """HTML-escape an interpolated field, quotes included, for the stub pages."""
     return _html.escape(str(s), quote=True)
+
+
+def _js_number(v: object) -> str:
+    """A value as JavaScript's String(v) writes it (6.0 -> "6", 1.5e-05 ->
+    "0.000015"), so the stub, the /l/ Worker page, and the datasheet print
+    the same digits. Non-numbers fall back to str()."""
+    if isinstance(v, bool) or not isinstance(v, (int, float)):
+        return str(v)
+    x = float(v)
+    if x == 0:
+        return "0"
+    _sign, digits, exp = Decimal(repr(abs(x))).normalize().as_tuple()
+    d = "".join(map(str, digits))
+    k, n = len(d), exp + len(d)  # value = 0.d * 10**n
+    if k <= n <= 21:
+        s = d + "0" * (n - k)
+    elif 0 < n <= 21:
+        s = d[:n] + "." + d[n:]
+    elif -6 < n <= 0:
+        s = "0." + "0" * -n + d
+    else:
+        e = n - 1
+        s = d[0] + ("." + d[1:] if k > 1 else "") + ("e+" if e > 0 else "e-") + str(abs(e))
+    return ("-" if x < 0 else "") + s
+
+
+def _card_number(v: object) -> str:
+    """The datasheet's fmtSig, String(Number(v.toPrecision(6))): six
+    significant digits, ties away from zero, printed as JavaScript prints the
+    number. Zero and non-numbers go straight to _js_number."""
+    if isinstance(v, bool) or not isinstance(v, (int, float)) or v == 0:
+        return _js_number(v)
+    d = Decimal(v)
+    return _js_number(float(d.quantize(Decimal(1).scaleb(d.adjusted() - 5),
+                                       rounding=ROUND_HALF_UP)))
 
 
 # A canonical lineage id is a 64-hex sha256; only directories named like one are
@@ -702,8 +740,12 @@ def build_share_stubs(instances: list[dict] | None = None) -> dict[str, str]:
         title = f"{name} | OpenMaterials"
         value = ""
         if e.get("value") is not None:
-            units = e.get("units")
-            value = f"{e['value']}{(' ' + str(units)) if units else ''}"
+            value = _card_number(e["value"])
+            unc = e.get("uncertainty")
+            if isinstance(unc, (int, float)) and not isinstance(unc, bool):
+                value += f" \u00b1 {_card_number(unc)}"
+            if e.get("units"):
+                value += f" {e['units']}"
         # The record's own kind and source ref; nothing is inferred.
         src = e.get("source") or {}
         ref = str(src.get("ref") or "")

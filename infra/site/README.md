@@ -9,9 +9,10 @@ static site cannot express:
   the same `data/version.json` every browser reads.
 - `GET /l/<64-hex>`: the canonical permalink for a committed value. The id is
   a lineage id (the sha256 of the value's canonical lineage). The Worker
-  resolves it against `data/instances.json`, serves a shell whose Open Graph
-  metadata names the property, material, value, and id (so the link unfurls
-  as the value it is), and redirects to the playground datasheet
+  resolves it against `data/instances.json`, serves a shell whose title,
+  Open Graph metadata, and paragraph name the property, material, value,
+  kind, and source exactly as the static `/i/<id>/` page does (so the link
+  unfurls as the value it is), and redirects to the playground datasheet
   (`/play/#id=<id>`), the one renderer. A well-formed id that matches no
   committed value gets an honest 404 naming the hash; a malformed id gets a
   400 before any data is read.
