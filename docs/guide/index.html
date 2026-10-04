@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Guide | OpenMaterials</title>
-<meta name="description" content="The guide shows how to install the omai kernel, resolve a label to map nodes, load the graph, and parse a paper. CI runs every Python snippet on the page.">
+<meta name="description" content="The guide shows how to install the omai kernel, resolve a label to map nodes, load the graph, and parse a paper.">
 <link rel="canonical" href="https://openmaterials.ai/guide/">
 <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
@@ -31,13 +31,12 @@
 <main class="frame" id="main">
   <header class="page-head">
     <h1>Guide</h1>
-    <p class="lede">This guide covers common tasks with the OpenMaterials map and the <code>omai</code> kernel. The <a href="../document/">document</a> has the theory and the full specification; the <a href="../map/">map</a> and the <a href="../play/">playground</a> are the interactive views. CI runs every Python snippet below (<code>tests/test_guide_snippets.py</code>).</p>
+    <p class="lede">This guide covers common tasks with the OpenMaterials map and the <code>omai</code> kernel. The <a href="../document/">document</a> has the theory and the full specification; the <a href="../map/">map</a> and the <a href="../play/">playground</a> are the interactive views.</p>
   </header>
 
   <div class="page-body">
     <nav class="toc gtoc" aria-label="Contents">
       <a href="#install">Install</a>
-      <a href="#parts">Project structure</a>
       <a href="#resolve">Resolve a label</a>
       <a href="#graph">Load the map</a>
       <a href="#edges">A node's producing edges</a>
@@ -51,7 +50,11 @@
     <article class="prose gwrap">
       <section class="gsec" id="install">
         <h2>Install</h2>
-        <p>The map data is public JSON under <code>docs/data/</code>, so reading it needs no install. The released kernel is on PyPI as openmaterials-ai 0.1.3 (<code>pip install openmaterials-ai</code>). To work on the map itself, clone the repository and install it in editable mode.</p>
+        <div class="snippet" data-snippet="shell">
+          <div class="snippet-head"><span class="snippet-title">Install openmaterials-ai 0.1.3 from PyPI</span><span class="snippet-lang">shell</span></div>
+          <pre>pip install openmaterials-ai</pre>
+        </div>
+        <p>The map data is public JSON under <code>/data/</code>, so reading it needs no install. To work on the map itself, clone the repository and install it in editable mode.</p>
         <div class="snippet" data-snippet="shell">
           <div class="snippet-head"><span class="snippet-title">Clone and install</span><span class="snippet-lang">shell</span></div>
           <pre>git clone https://github.com/openmaterials-ai/openmaterials-ai.git
@@ -60,17 +63,11 @@ pip install -e .
 python -m pytest -q            # run the test suite
 python -m omai.map_data        # regenerate docs/data/*.json from the operator layer</pre>
         </div>
-        <p class="notice gnote">The kernel is Apache 2.0; the map data is CC BY 4.0. Cite the map version (<code>docs/data/version.json</code>) your work used; see <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/main/CITATION.cff">CITATION.cff</a>. A repository can state its pin as a badge, the way a CI badge states a build: <code>https://openmaterials.ai/badge/&lt;version12&gt;.svg</code> renders the version it names, and <code>/badge.svg</code> always shows the current one.</p>
+        <p class="notice gnote">Cite the map version your work used; the <a href="../#cite">Cite block</a> has the citation and a BibTeX entry. A repository can state its pin as a badge, the way a CI badge states a build: <code>https://openmaterials.ai/badge/&lt;version12&gt;.svg</code> renders the version it names, and <code>/badge.svg</code> always shows the current one.</p>
         <div class="snippet" data-snippet="markdown">
           <div class="snippet-head"><span class="snippet-title">Embed the version badge</span><span class="snippet-lang">markdown</span></div>
           <pre>[![OpenMaterials map version](https://openmaterials.ai/badge/&lt;version12&gt;.svg)](https://openmaterials.ai/)</pre>
         </div>
-        <p>This repository pins its own README badge the same way; <code>python -m omai.map_data</code> refreshes the pin whenever the version moves, and the suite fails if they ever disagree.</p>
-      </section>
-
-      <section class="gsec" id="parts">
-        <h2>Project structure</h2>
-        <p><a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/main/GOVERNANCE.md">GOVERNANCE.md</a> divides the project into the map, the interfaces, and the improvement engine. The map (the versioned graph, its evidence, the protocol, and the kernel) is stewarded by OpenMaterials-AI, a foundation in formation, and licensed for open reuse. Da Vinci Labs builds the interfaces (the map views, the playground, and the <a href="../codes/">codes bibliography</a>) and the improvement engine (the paper parser and the scan agents). Anything that decides what is true on the map belongs to the initiative and changes only through the gated contribution process.</p>
       </section>
 
       <section class="gsec" id="resolve">
