@@ -1,0 +1,27 @@
+# OpenMaterials
+
+> OpenMaterials is a versioned, content-addressed map of physical quantities and formulas. Simulated and measured values attach to it with their provenance. Data is CC BY 4.0 and code is Apache 2.0. OpenMaterials is stewarded by OpenMaterials-AI, a foundation in formation.
+
+Cite the map version in https://openmaterials.ai/data/version.json with any value you reuse.
+
+## Data
+
+- [graph.json](https://openmaterials.ai/data/graph.json): typed quantities, the links between them with operators and formulas, and the tiers
+- [catalog.json](https://openmaterials.ai/data/catalog.json): symbol, dimension, and description per node
+- [codes.json](https://openmaterials.ai/data/codes.json): each code's representation, citation, and license
+- [semantics.json](https://openmaterials.ai/data/semantics.json): the labels per node and edge that the resolver matches
+- [instances.json](https://openmaterials.ai/data/instances.json): committed values with their provenance
+- [lean.json](https://openmaterials.ai/data/lean.json): the Lean export of the dimensional layer
+- [version.json](https://openmaterials.ai/data/version.json): map version, graph version, and genesis hash
+
+## Docs
+
+- [Guide](https://openmaterials.ai/guide/): install the omai kernel, resolve a label, load the graph, parse a paper
+- [Document](https://openmaterials.ai/document/): the full specification, also as [PDF](https://openmaterials.ai/openmaterials.pdf)
+- [Codes](https://openmaterials.ai/codes/): the bibliography of the codes the map cites
+- [Repository](https://github.com/openmaterials-ai/openmaterials-ai): source, GOVERNANCE.md, and the contribution process
+
+## Optional
+
+- [Playground](https://openmaterials.ai/play/): parse a paper, open a lineage record, resolve a method name
+- [Map](https://openmaterials.ai/map/) and [Map in 3D](https://openmaterials.ai/map-3d/)
