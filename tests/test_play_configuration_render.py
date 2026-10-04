@@ -85,7 +85,8 @@ def test_play_page_loads_and_renders_the_pinned_configuration():
         )
 
 
-_HELPERS = ("esc", "materialConfigUid", "resolveConfiguration", "configSummaryHTML")
+_HELPERS = ("esc", "indexConfigurations", "materialConfigUid", "resolveConfiguration",
+            "configSummaryHTML")
 
 
 def test_resolver_js_resolves_a_pin_and_degrades_gracefully():
@@ -97,12 +98,12 @@ def test_resolver_js_resolves_a_pin_and_degrades_gracefully():
     helpers = "\n".join(_grab_function(html, name) for name in _HELPERS)
     bundle = json.loads(_BUNDLE.read_text())
     si_uid = _si_record(bundle)["canonical"]["uid"]
+    (si_alias,) = _si_record(bundle)["canonical"]["aliases"]
 
     script = (
-        "const bundle=%s;const wantUid=%s;\n"
-        "const configByUid={};bundle.forEach(c=>{const u=c&&c.canonical&&c.canonical.uid;"
-        "if(u)configByUid[String(u)]=c;});\n"
+        "const bundle=%s;const wantUid=%s;const alias=%s;\n"
         "%s\n"
+        "const configByUid=indexConfigurations(bundle);\n"
         "const out={};\n"
         "const pin=materialConfigUid({name:'Si',configuration:wantUid});\n"
         "out.bareString=pin===wantUid;\n"
@@ -112,6 +113,7 @@ def test_resolver_js_resolves_a_pin_and_degrades_gracefully():
         "out.sha256Prefix=resolveConfiguration(prefixed)===rec;\n"
         "out.noPinNull=resolveConfiguration(materialConfigUid({name:'Si'}))===null;\n"
         "out.unknownNull=resolveConfiguration('x')===null;\n"
+        "out.aliasResolves=resolveConfiguration(alias)===rec;\n"
         "const summary=configSummaryHTML(rec);\n"
         "out.formula=/<dt>formula<\\/dt><dd>Si<\\/dd>/.test(summary);\n"
         "out.spaceGroup=/<dt>space group<\\/dt><dd>227<\\/dd>/.test(summary);\n"
@@ -123,7 +125,7 @@ def test_resolver_js_resolves_a_pin_and_degrades_gracefully():
         "out.absentEmpty=configSummaryHTML(null)===''&&configSummaryHTML({})==='';\n"
         "out.plainRows=!/class=|<span|<canvas|<img/.test(summary);\n"
         "console.log(JSON.stringify(out));\n"
-    ) % (json.dumps(bundle), json.dumps(si_uid), helpers)
+    ) % (json.dumps(bundle), json.dumps(si_uid), json.dumps(si_alias), helpers)
 
     proc = subprocess.run([node, "-e", script], capture_output=True, text=True)
     assert proc.returncode == 0, f"node failed: {proc.stderr}"

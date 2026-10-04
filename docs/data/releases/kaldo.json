@@ -1,0 +1,13 @@
+{
+  "aliases": [],
+  "releases": [
+    {
+      "commit": "bcb9f6e1ccd996501bf90f4e2631532946b2770b",
+      "license_source": "https://github.com/nanotheorygroup/kaldo/tree/2.2.1 (LICENSE)",
+      "released": "2026-07-11",
+      "spdx": "BSD-3-Clause",
+      "tag": "2.2.1",
+      "version": "2.2.1"
+    }
+  ]
+}

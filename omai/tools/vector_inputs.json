@@ -89,6 +89,93 @@
    "source_file": "dgeba-epoxy-5-vol-gnp-reference-formulation-thermalconductivity-effective-medium-nan-orientation-random-materialscodegraph-target.json"
   }
  },
+ "configurations": [
+  {
+   "canonical_json": "{\"lattice\":[[0.0,2.72185,2.72185],[2.72185,0.0,2.72185],[2.72185,2.72185,0.0]],\"periodic\":true,\"sites_canonical\":\"[[\\\"Si\\\",0.0,0.0,0.0],[\\\"Si\\\",0.25,0.25,0.25]]\"}",
+   "name": "si-diamond-primitive-mp-149",
+   "pinned_uid": "7b5e77b1062f0997037cb9fd490d9edb8fce8099c4f700db334aa8afb8af22be",
+   "source_file": "docs/data/configurations/si-diamond-primitive-mp-149.json",
+   "structure": {
+    "@class": "Structure",
+    "@module": "pymatgen.core.structure",
+    "charge": 0.0,
+    "lattice": {
+     "a": 3.8492784033699095,
+     "alpha": 60.00001213094421,
+     "b": 3.8492794116013456,
+     "beta": 60.00000346645984,
+     "c": 3.849278,
+     "gamma": 60.00001097545789,
+     "matrix": [
+      [
+       3.333573,
+       0.0,
+       1.924639
+      ],
+      [
+       1.111191,
+       3.142924,
+       1.924639
+      ],
+      [
+       0.0,
+       0.0,
+       3.849278
+      ]
+     ],
+     "pbc": [
+      true,
+      true,
+      true
+     ],
+     "volume": 40.32952684741405
+    },
+    "properties": {},
+    "sites": [
+     {
+      "abc": [
+       0.875,
+       0.875,
+       0.875
+      ],
+      "label": "Si",
+      "properties": {},
+      "species": [
+       {
+        "element": "Si",
+        "occu": 1.0
+       }
+      ],
+      "xyz": [
+       3.8891685,
+       2.7500584999999997,
+       6.7362365
+      ]
+     },
+     {
+      "abc": [
+       0.125,
+       0.125,
+       0.125
+      ],
+      "label": "Si",
+      "properties": {},
+      "species": [
+       {
+        "element": "Si",
+        "occu": 1.0
+       }
+      ],
+      "xyz": [
+       0.5555955,
+       0.3928655,
+       0.9623195
+      ]
+     }
+    ]
+   }
+  }
+ ],
  "mcg_number_vectors": [
   {
    "conditions": {
@@ -317,5 +404,78 @@
    "params": {},
    "pinned_id": "6db0c040d4b7542b68e5fae623e947cb9473c744c47b725afe7d261505c3970c"
   }
- ]
+ ],
+ "release_codes": {
+  "gpumd": {
+   "aliases": [],
+   "releases": [
+    {
+     "commit": "3f19ea6a7d8c6e82dbdad0abcf30c5775936cb26",
+     "license_source": "https://github.com/brucefan1983/GPUMD/tree/v3.9.5 (LICENCE, GPL version 3; src/main_gpumd/main.cu, version 3 or any later version)",
+     "released": "2024-08-18",
+     "spdx": "GPL-3.0-or-later",
+     "tag": "v3.9.5",
+     "version": "3.9.5"
+    }
+   ]
+  },
+  "kaldo": {
+   "aliases": [],
+   "releases": [
+    {
+     "commit": "bcb9f6e1ccd996501bf90f4e2631532946b2770b",
+     "license_source": "https://github.com/nanotheorygroup/kaldo/tree/2.2.1 (LICENSE)",
+     "released": "2026-07-11",
+     "spdx": "BSD-3-Clause",
+     "tag": "2.2.1",
+     "version": "2.2.1"
+    }
+   ]
+  },
+  "lammps": {
+   "aliases": [],
+   "releases": [
+    {
+     "commit": "611ca3b7f8525ba802373b04f9e3d632d515f7e3",
+     "license_source": "https://github.com/lammps/lammps/tree/stable_22Jul2025_update4 (LICENSE and README, GPL version 2)",
+     "released": "2026-04-16",
+     "spdx": "GPL-2.0-only",
+     "tag": "stable_22Jul2025_update4",
+     "version": "2025.7.22.4.0"
+    }
+   ]
+  },
+  "phono3py": {
+   "aliases": [],
+   "releases": [
+    {
+     "commit": "302ad205452ee36e57887b10bbf4a0289dd037bb",
+     "license_source": "https://github.com/phonopy/phono3py/tree/v4.4.0 (LICENSE)",
+     "released": "2026-07-18",
+     "spdx": "BSD-3-Clause",
+     "tag": "v4.4.0",
+     "version": "4.4.0"
+    }
+   ]
+  },
+  "qe": {
+   "aliases": [
+    "quantum-espresso"
+   ],
+   "releases": [
+    {
+     "commit": "770a0b2d12928a67048e2f3da8d10d057e52179e",
+     "license_source": "https://github.com/QEF/q-e/tree/qe-7.5 (License, GPL version 2; README.md, version 2 or any later version)",
+     "released": "2025-08-19",
+     "spdx": "GPL-2.0-or-later",
+     "tag": "qe-7.5",
+     "version": "qe-7.5"
+    }
+   ]
+  },
+  "xtb": {
+   "aliases": [],
+   "releases": []
+  }
+ }
 }

@@ -323,3 +323,50 @@ def test_large_cell_stores_reduced_metadata(tmp_path):
     # load() cannot reconstruct a file-backed cell from inline metadata.
     with pytest.raises(cfg.ConfigurationError):
         cfg.load(uid, config_dir=tmp_path)
+
+
+# --------------------------------------------------------------------------
+# The configuration-uid vector (omai/vectors/configurations.json).
+# --------------------------------------------------------------------------
+
+def test_committed_si_configuration_reproduces_its_pinned_canonical_json():
+    """Catches spglib or pymatgen drift in the standardized cell."""
+    from pymatgen.core import Structure
+
+    vectors = json.loads((Path(cfg.__file__).parent / "vectors"
+                          / "configurations.json").read_text())
+    for vector in vectors:
+        structure = Structure.from_dict(vector["structure"])
+        canonical, _ = cfg._canonical_payload(structure)
+        blob = json.dumps(canonical, sort_keys=True, separators=(",", ":"))
+        assert blob == vector["canonical_json"], vector["name"]
+        assert cfg.canonical_uid(structure) == vector["canonical_uid"]
+
+
+def test_signed_zero_residue_does_not_change_the_uid():
+    """A ~4e-16 lattice residue rounds to -0.0 or 0.0 by its sign; both are
+    written 0.0. A disordered cell is hashed as given, so the residue reaches
+    the rounding unchanged."""
+    from pymatgen.core import Lattice, Structure
+
+    a = 5.5
+    alloy = {"Si": 0.5, "Ge": 0.5}
+
+    def cell(eps):
+        lat = Lattice([[eps, a / 2, a / 2], [a / 2, 0, a / 2], [a / 2, a / 2, 0]])
+        return Structure(lat, [alloy, alloy], [[0, 0, 0], [0.25, 0.25, 0.25]])
+
+    minus, plus = cell(-4e-16), cell(4e-16)
+    assert not minus.is_ordered
+    canonical, _ = cfg._canonical_payload(minus)
+    assert "-0.0" not in json.dumps(canonical)
+    assert "Ge:0.50000,Si:0.50000" in canonical["sites_canonical"]
+    assert cfg.canonical_uid(minus) == cfg.canonical_uid(plus)
+
+
+def test_load_accepts_a_former_uid_kept_as_an_alias():
+    record = json.loads((Path(cfg.__file__).parents[1] / "docs" / "data"
+                         / "configurations" / "si-diamond-primitive-mp-149.json")
+                        .read_text())
+    (alias,) = record["canonical"]["aliases"]
+    assert cfg.canonical_uid(cfg.load(alias)) == record["canonical"]["uid"]

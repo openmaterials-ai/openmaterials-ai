@@ -4,6 +4,9 @@
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage{graphicx}
 \usepackage[hidelinks]{hyperref}
+% ToUnicode maps, so text extracted from the PDF keeps glyphs such as bullets.
+\input{glyphtounicode}
+\pdfgentounicode=1
 \usepackage{booktabs}
 \usepackage{enumitem}
 \usepackage{tikz}
@@ -252,7 +255,7 @@ shape is already here.
 Today the framework is real and growing. It has an operator layer and a
 representation layer, 31 ingested representations (kaldo, phono3py, phonopy,
 pymatgen, ShengBTE, Quantum ESPRESSO, VASP, LAMMPS, GPUMD, i-PI, xtb, the
-machine-learned potentials matgl / MACE / fairchem, the database rail mp-api,
+machine-learned potentials matgl / MACE / fairchem, the database representation mp-api,
 and the CALPHAD, amset, ORCA, OpenMM, and AtomisticSkills mat-* / chem-*
 workflows), and a
 validation engine that executes the graph, composes
@@ -394,7 +397,7 @@ Concept & Canonical term & Notes \\
 \midrule
 A typed quantity on the map    & \textbf{node} & \texttt{Space} is the code class. \\
 A relation producing a node    & \textbf{edge} & \texttt{Operator} is the code class. \\
-A code's mapping onto the map  & \textbf{representation} & its on-map rendering is a \emph{rail}. \\
+A code's mapping onto the map  & \textbf{representation} & its on-map rendering is a \emph{representation}. \\
 A committed value               & \textbf{instance} & the \texttt{\{id, kind, lineage, source\}} record. \\
 A semantic type parameter       & \textbf{label} & e.g.\ \texttt{bte\_solver=rta}, not a ``variant''. \\
 A content hash                  & \textbf{uid} & sha256; a 12-hex prefix is displayed. \\
@@ -615,7 +618,7 @@ species. That payload lives in a configuration record, the structural sibling of
 the value record. It is content-addressed by a canonical uid: the sha256 of the
 spglib-standardized primitive cell (\texttt{symprec} $10^{-3}$), origin-anchored
 so a rigid translation is invariant, with species and sites sorted and
-coordinates rounded to five decimals (a hundredth of a milliangstrom: coarse enough to absorb refetch-level numerical noise, fine enough that physically distinct cells never collide; the matcher gate reviews the boundary). The same cell, its sites shuffled, and a
+coordinates rounded to five decimals (a hundredth of a milliangstrom: coarse enough to absorb refetch-level numerical noise, fine enough that physically distinct cells never collide; the matcher gate reviews the boundary), with signed zero written as zero. The same cell, its sites shuffled, and a
 supercell of it therefore hash to one uid; a strained cell does not. On top of
 the hash a validation gate runs \texttt{StructureMatcher}: a
 physically-equivalent but not hash-identical cell is flagged for human review
@@ -631,7 +634,7 @@ with the site list elided
   "natoms": 2,
   "structure": { ...pymatgen Structure.as_dict()... },
   "canonical": {
-    "uid": "55bf22ca8186...",
+    "uid": "7b5e77b10620...",
     "spacegroup": 227,
     "natoms_primitive": 2
   },
@@ -2079,7 +2082,7 @@ sense.}
 
 Each adapter is a representation functor over the operator DAG. Fifteen
 adapter modules are now ingested in the thermal-transport domain alone (31
-rails map the whole graph), in three tiers. The four BTE / harmonic codes that consume
+representations map the whole graph), in three tiers. The four BTE / harmonic codes that consume
 force constants:
 
 \begin{itemize}[leftmargin=2em]
@@ -2343,7 +2346,7 @@ plus one per domain:
             on the map. Coverage renders on the site map (\texttt{docs/map/},
             generated data in \texttt{docs/data/}); the standalone per-code
             pipeline page was retired 2026-07-08 as redundant with the map's
-            code rails. Per-operator scheme and discretization detail lives in
+            code representations. Per-operator scheme and discretization detail lives in
             the representation modules and this document; surfacing it in the
             map's edge panel is an open enhancement.
     \end{itemize}
@@ -2456,9 +2459,9 @@ We have committed to Python for Sprint 1. The trade-offs were:
 
 The operator layer is an architectural commitment, not an implementation. The implementation
 began as a Python skeleton plus adapters for three thermal-transport codes and has since grown
-to the map of Part~\ref{part:status}, with its 32 code representations. The
-artifact that motivates the project---a paper-worthy demonstration of cross-code reconciliation
-and decomposed error bounds for lattice thermal conductivity---is downstream of the operator layer but
+to the 32-representation map of Part~\ref{part:status}. The
+artifact that motivates the project, a paper-worthy demonstration of cross-code reconciliation
+and decomposed error bounds for lattice thermal conductivity, is downstream of the operator layer but
 is the operator layer's first proof-of-value.
 
 The project's stewardship follows its architecture (2026-07-12). The map, its
@@ -2472,7 +2475,7 @@ document states data ownership and fairness (2026-07-13): evidence stays its
 owner's (contribution grants a non-exclusive CC~BY~4.0 license, never a
 transfer, with no copyright assignment and no CLA), raw simulation and
 experimental artifacts are never ingested, and attribution is enforced in both
-directions, upstream through code rails and page-anchored quotes as a merge
+directions, upstream through code representations and page-anchored quotes as a merge
 gate, downstream through the map version's provenance.
 
 Four longer-term directions follow naturally from the design:
@@ -3150,13 +3153,14 @@ ORCA are proprietary: VASP under the commercial license at vasp.at, ORCA free
 for academic use with commercial licensing through FACCTs. The mat-* rows are
 AtomisticSkills skills and carry that project's MIT license. The single source
 of truth is \texttt{omai/representation/credits.py}, and an enforcement test
-(\texttt{tests/test\_code\_credits.py}) fails if any mapped rail lacks a
-citation or a license, so no future rail can land uncredited.
+(\texttt{tests/test\_code\_credits.py}) fails if any mapped representation lacks a
+citation or a license, so no future representation can land uncredited.
 
 \subsection{Code citations}
 \label{sec:code-citations}
 
-The principal code rails on the map are cited below (the remaining rails,
+The principal code representations on the map are cited below (the remaining
+representations,
 i-PI, PLUMED, MESCAL, and D3Q, carry their citations in
 \texttt{omai/representation/credits.py}, the single source of truth the
 enforcement test reads). Where one code serves nodes through different
@@ -3290,7 +3294,7 @@ order from here:
         instances); the AtomisticSkills scans then grew the map through record 182
         (2026-07-10) with the stability, thermochemistry, quasi-harmonic,
         molecular, and electronic-transport domains and the pymatgen, mp-api,
-        CALPHAD, amset, ORCA, and OpenMM rails, and a whole-map physics review
+        CALPHAD, amset, ORCA, and OpenMM representations, and a whole-map physics review
         added the thermodynamic-identities domain and two closed-form supersedes
         (records 183-203).
   \item \textbf{The app}, once the protocol and a rich mother map exist.

@@ -4,14 +4,13 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "openmaterials-ai"
-version = "0.1.2"
+version = "0.1.3"
 description = "A symbolic substrate for computational materials science"
 readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "Apache-2.0" }
 authors = [
   { name = "Giuseppe Barbalinardo", email = "barbalinardo@ucdavis.edu" },
-  { name = "Davide Donadio" },
 ]
 dependencies = [
     "pydantic>=2.5",
@@ -68,9 +67,11 @@ include = ["omai*", "omdc*", "omds*"]
 
 # The golden vectors ship INSIDE the wheel: mapengine and the MCG worker assert
 # their own canonicalization against these files, so a consumer that pip
-# installs omai must get them without cloning the repository.
+# installs omai must get them without cloning the repository. data/ holds the
+# registry of configuration and model uids, which an installed package
+# resolves against (the wheel ships no docs/data/).
 [tool.setuptools.package-data]
-omai = ["vectors/*.json", "tools/*.json"]
+omai = ["vectors/*.json", "tools/*.json", "data/*.json"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

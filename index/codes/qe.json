@@ -87,5 +87,18 @@
    "api": "pw.x stdout '!    total energy = ... Ry'; XML total_energy element",
    "unit": "ry"
   }
+ ],
+ "aliases": [
+  "quantum-espresso"
+ ],
+ "releases": [
+  {
+   "commit": "770a0b2d12928a67048e2f3da8d10d057e52179e",
+   "license_source": "https://github.com/QEF/q-e/tree/qe-7.5 (License, GPL version 2; README.md, version 2 or any later version)",
+   "released": "2025-08-19",
+   "spdx": "GPL-2.0-or-later",
+   "tag": "qe-7.5",
+   "version": "qe-7.5"
+  }
  ]
 }

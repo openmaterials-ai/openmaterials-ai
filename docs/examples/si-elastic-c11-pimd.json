@@ -24,14 +24,7 @@
   "artifacts": [
     {
       "path": "FORCE_CONSTANTS",
-      "role": "force_constants",
-      "url": "https://app.materialscodegraph.com/runs/si-elastic"
+      "role": "force_constants"
     }
-  ],
-  "mirrors": {
-    "FORCE_CONSTANTS": {
-      "url": "https://app.materialscodegraph.com/runs/si-elastic",
-      "provider": "materialscodegraph"
-    }
-  }
+  ]
 }
