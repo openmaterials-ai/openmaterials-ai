@@ -309,6 +309,26 @@
   },
   "uid": "1ab85488c90143e38b94e27f93ab96571f381e7b09d507fa7a38216ffd34c5ec"
  },
+ "1e6467a5b03397510e0d7f33403fd1cb42de5ea579e1f36b074d8dbbc620da20": {
+  "identity": {
+   "fields": [
+    {
+     "dimension": "1",
+     "indices": []
+    }
+   ],
+   "gauge": "observable",
+   "labels": {},
+   "quantity": "dot_product_error"
+  },
+  "meta": {
+   "description": "Error of an analog dot product computed by an array of programmed conductances: the root mean square, over the input distribution and over programmed arrays, of the analog output's error in weight units, divided by the range of the ideal outputs over the inputs. DIMENSIONLESS. The architecture (weight-to-conductance mapping, cells per weight, offset scheme, readout), the kernel, the input distribution, the read and verify conditions, the time since programming and the error sources included ride in instance conditions.",
+   "name": "DotProductError",
+   "symbol": "\\epsilon_{dot}",
+   "tier": "Analog device metrology"
+  },
+  "uid": "1e6467a5b03397510e0d7f33403fd1cb42de5ea579e1f36b074d8dbbc620da20"
+ },
  "1e8b145f7ea4fc232aac842c985a46fee4a6d2b2a04118a38d67dce470ed1b50": {
   "identity": {
    "fields": [

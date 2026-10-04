@@ -15,6 +15,7 @@ ride in an instance's conditions, not in the node identity.
   ConductanceWindow            conductance_window              DIMENSIONLESS
   ConductanceDriftExponent     conductance_drift_exponent      DIMENSIONLESS
   StateCoefficientOfVariation  state_coefficient_of_variation  DIMENSIONLESS
+  DotProductError              dot_product_error               DIMENSIONLESS
 
 CONDUCTANCE (the siemens, M^-1 L^-2 T^3 I^2) differs from the per-length
 ELECTRICAL_CONDUCTIVITY (S/m) by one length axis, the same conductance versus
@@ -87,9 +88,26 @@ STATE_COEFFICIENT_OF_VARIATION = ObservableSpace(
     ),
 )
 
+DOT_PRODUCT_ERROR = ObservableSpace(
+    name="DotProductError",
+    fields=(Field("eps_dot", DIMENSIONLESS, indices=()),),
+    tier=_TIER,
+    description=(
+        "Error of an analog dot product computed by an array of programmed "
+        "conductances: the root mean square, over the input distribution and over "
+        "programmed arrays, of the analog output's error in weight units, divided "
+        "by the range of the ideal outputs over the inputs. DIMENSIONLESS. The "
+        "architecture (weight-to-conductance mapping, cells per weight, offset "
+        "scheme, readout), the kernel, the input distribution, the read and "
+        "verify conditions, the time since programming and the error sources "
+        "included ride in instance conditions."
+    ),
+)
+
 NODES: tuple[Space, ...] = (
     CONDUCTANCE_STATE,
     CONDUCTANCE_WINDOW,
     CONDUCTANCE_DRIFT_EXPONENT,
     STATE_COEFFICIENT_OF_VARIATION,
+    DOT_PRODUCT_ERROR,
 )

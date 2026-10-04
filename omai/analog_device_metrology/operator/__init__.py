@@ -4,7 +4,7 @@ Importing this package registers the domain's formula-symbol vocabulary and its
 symbol-dimension bindings as side effects (mirroring the electronic-transport /
 thermodynamic-identities / mechanics / thermochemistry packages), so validate_dag
 and the dimensional gate see this domain's symbols. Here the side effect is
-load-bearing for the four closed-form edges: their field-symbol dimension
+load-bearing for the five closed-form edges: their field-symbol dimension
 bindings must be live before the dimensional gate runs so the formulas are
 proven, not skipped.
 """

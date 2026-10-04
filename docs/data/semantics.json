@@ -1319,6 +1319,20 @@
 "uid": "165019489c9bfee532b8ff4c164d71f2a16516a933f3f40950554bdc8a0f84a5"
 },
 {
+"curated": [
+"analog-dot-product-error",
+"dot-product-error"
+],
+"id": "DotProductError",
+"kind": "node",
+"labels": [
+"DotProductError",
+"\\epsilon_{dot}",
+"dot product error"
+],
+"uid": "1e6467a5b03397510e0d7f33403fd1cb42de5ea579e1f36b074d8dbbc620da20"
+},
+{
 "curated": [],
 "id": "CellVolume",
 "kind": "node",
@@ -2481,6 +2495,18 @@
 "labels": [
 "apply conductance drift",
 "apply_conductance_drift"
+],
+"uid": null
+},
+{
+"curated": [
+"dot-product-error"
+],
+"id": "propagate_programming_error",
+"kind": "edge",
+"labels": [
+"propagate programming error",
+"propagate_programming_error"
 ],
 "uid": null
 },

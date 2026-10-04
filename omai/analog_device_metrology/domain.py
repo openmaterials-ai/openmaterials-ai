@@ -10,6 +10,7 @@ SYMBOLS: dict[str, str] = {
     "ConductanceWindow": r"W_G",
     "ConductanceDriftExponent": r"\nu_{drift}",
     "StateCoefficientOfVariation": r"c_G",
+    "DotProductError": r"\epsilon_{dot}",
 }
 
 ANALOG_DEVICE_METROLOGY = Domain(
@@ -24,7 +25,8 @@ ANALOG_DEVICE_METROLOGY = Domain(
             "The conductance family of analog resistive devices (memristors, "
             "memtransistors): the programmed conductance, the conductance window "
             "(on/off ratio and LTP/LTD windows under their protocols), the drift "
-            "exponent and the per-level spread."
+            "exponent, the per-level spread, and the error of an analog dot product "
+            "on a crossbar of such cells."
         ),
     ),
     representation_package=adm_rep,

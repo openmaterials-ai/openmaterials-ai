@@ -249,6 +249,7 @@
   "ConductanceState": [],
   "ConductanceWindow": [],
   "ConductanceDriftExponent": [],
-  "StateCoefficientOfVariation": []
+  "StateCoefficientOfVariation": [],
+  "DotProductError": []
  }
 }

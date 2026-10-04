@@ -11,4 +11,5 @@ register_symbol_dimensions({
     "W_G": DIMENSIONLESS,
     "c_G": DIMENSIONLESS,
     r"\nu_{drift}": DIMENSIONLESS,
+    r"\epsilon_{dot}": DIMENSIONLESS,
 })

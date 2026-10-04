@@ -60,6 +60,13 @@ def _classify(op):
     if rhs.atoms(AppliedUndef):
         return ("opaque code output", "na",
                 "names an external code's output; nothing algebraic to prove")
+    # A fractional power (a root) is not a rational identity; the Tier-2 law
+    # pass excludes it too (lean_identities._law_out_reason).
+    if any(isinstance(n, sp.Pow) and n.exp.is_Rational and not n.exp.is_Integer
+           for n in sp.preorder_traversal(rhs)):
+        return ("special function", "hard",
+                "needs analysis: a fractional power (a root); the Tier-2 law pass "
+                "excludes it")
     den = sp.denom(sp.together(rhs))
     if den == 1 or den.is_number:
         return ("polynomial", "trivial",
