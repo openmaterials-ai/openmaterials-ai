@@ -153,7 +153,16 @@
   },
   "qe-d3q": {
    "aliases": [],
-   "releases": []
+   "releases": [
+    {
+     "commit": "f238d5879abcd53c154ef2a5c04e6d5d4016b756",
+     "license_source": "https://github.com/anharmonic/d3q/tree/q-e-7.5 (LICENSE, GPLv2, the thermal2 part dual licenced under CeCILL v 2.1; License; file headers: thermal2 CeCILL v2.1 or GPLv2 and following, thermal2/functions.f90 a GPLv3 quicksort; minpack/lapackified/DISCLAIMER and thermal2/lmdif_p.f90, Minpack)",
+     "released": "2025-07-24",
+     "spdx": "GPL-2.0-only AND (CECILL-2.1 OR GPL-2.0-or-later) AND GPL-3.0-only AND Minpack",
+     "tag": "q-e-7.5",
+     "version": "q-e-7.5"
+    }
+   ]
   },
   "rxn-network": {
    "aliases": [],
