@@ -13,6 +13,7 @@ stay the crawlable front door to the same #id= resolver.
 """
 from __future__ import annotations
 
+import html
 import re
 from pathlib import Path
 
@@ -49,6 +50,9 @@ def test_every_instance_has_a_stub_titled_with_its_material():
         if mat_name:
             assert str(mat_name) in title.group(1), \
                 f"{e['id'][:12]}: og:title omits the material {mat_name!r}"
+        assert title.group(1).endswith(" | OpenMaterials"), title.group(1)
+        assert f"<title>{title.group(1)}</title>" in page, \
+            f"{e['id'][:12]}: <title> and og:title differ"
         # the redirect target is THIS value's id, into the #id= resolver
         redirect = _REDIRECT_RE.search(page)
         assert redirect and redirect.group(1) == f"/play/#id={e['id']}", \
@@ -56,14 +60,18 @@ def test_every_instance_has_a_stub_titled_with_its_material():
 
 
 def test_stub_carries_the_unfurl_metadata_and_lands_humans_live():
-    """Each stub is the crawler surface AND the human on-ramp: og:site_name, a
-    summary card, a canonical link, an instant redirect, and a <noscript> link so
-    a reader with no JS still reaches the datasheet."""
+    """Each stub is the crawler surface AND the human on-ramp: og:site_name, the
+    site's share image as a large card, a canonical link, an instant redirect,
+    and a <noscript> link so a reader with no JS still reaches the datasheet."""
     stubs = build_share_stubs()
     page = next(iter(stubs.values()))
     for needle in (
         '<meta property="og:site_name" content="openmaterials.ai">',
-        '<meta name="twitter:card" content="summary">',
+        '<meta property="og:image" content="https://openmaterials.ai/assets/og.png">',
+        '<meta property="og:image:width" content="1200">',
+        '<meta property="og:image:height" content="630">',
+        '<meta property="og:image:alt" content="',
+        '<meta name="twitter:card" content="summary_large_image">',
         '<link rel="canonical"',
         '<meta http-equiv="refresh"',
         "location.replace(",
@@ -73,20 +81,22 @@ def test_stub_carries_the_unfurl_metadata_and_lands_humans_live():
 
 
 def test_value_and_provenance_ride_in_the_description():
-    """The og:description carries the value with units and the provenance: a
-    measurement names its source, a simulation is computed by its code."""
+    """The og:description states the value with units, the record's kind and
+    its source ref, and a visible paragraph repeats the value for a client
+    that runs no JS."""
     insts = build_instances()
     stubs = build_share_stubs(insts)
     for e in insts:
         page = stubs[e["id"]]
         m = re.search(r'<meta property="og:description" content="([^"]*)">', page)
         assert m, f"{e['id'][:12]}: no og:description"
-        desc = m.group(1)
-        if e.get("value") is not None and e.get("units"):
-            assert str(e["units"]) in desc, \
-                f"{e['id'][:12]}: description omits the units"
-        verb = "measured" if e["source"]["kind"] == "measurement" else "computed by"
-        assert verb in desc, f"{e['id'][:12]}: description omits the provenance verb"
+        said = (f"{e['value']} {e['units']} "
+                f"({e['source']['kind']}, source {e['source']['ref']})")
+        assert html.unescape(m.group(1)) == (
+            f"{said} is a committed value on the OpenMaterials map."), m.group(1)
+        p = re.search(r"<body>\n<p>([^<]*)</p>", page)
+        assert p and html.unescape(p.group(1)).endswith(f": {said}."), \
+            f"{e['id'][:12]}: no visible value paragraph"
 
 
 def test_every_interpolated_field_is_html_escaped():
