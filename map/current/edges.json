@@ -780,6 +780,28 @@
   },
   "uid": "40d04377570142198d0a7f3d505de3b8fa6fdcf0418622be679aceec11b13264"
  },
+ "4517674f602a29f64ecc7140384fc486ee295233ce03ca7dc6bbec7eb00a91c2": {
+  "identity": {
+   "formula": "Equality(Symbol('\\\\epsilon_{dot}'), Mul(Pow(Symbol('S_1'), Integer(-1)), Symbol('c_G'), Pow(Add(Mul(Symbol('S_1'), Symbol('w_max'), Pow(Add(Symbol('W_G'), Integer(-1)), Integer(-1))), Mul(Rational(1, 2), Symbol('S_2')), Mul(Rational(1, 2), Symbol('n_w'), Pow(Symbol('w_max'), Integer(2)), Pow(Add(Symbol('W_G'), Integer(-1)), Integer(-2)))), Rational(1, 2))))",
+   "inputs": [
+    "165019489c9bfee532b8ff4c164d71f2a16516a933f3f40950554bdc8a0f84a5",
+    "ec3515d40f800b3c58242b644285b045dcfaec8102799a44dea2a61a9783673c"
+   ],
+   "output": "1e6467a5b03397510e0d7f33403fd1cb42de5ea579e1f36b074d8dbbc620da20",
+   "outputs": [
+    "1e6467a5b03397510e0d7f33403fd1cb42de5ea579e1f36b074d8dbbc620da20"
+   ],
+   "schemes": {}
+  },
+  "meta": {
+   "description": "Dot-product error from programming error alone, for one architecture: one cell per nonzero weight, positive and negative weights on two column groups, the affine mapping G_i = G_min + (G_max - G_min) |w_i| / w_max (the largest |w| at G_max), the nominal G_min subtracted per active cell (no reference column), binary inputs uniform over patterns (E[x^2] = 1/2), reads at the verify voltage and temperature, and a level-independent, unbiased coefficient of variation c of each cell about its target, independent between cells. W is the window G_max/G_min of this mapping. Then eps = c sqrt(sum_i (1/r + |w_i|)^2 / 2) / sum |w_i| over the nonzero weights, r = (W - 1) / w_max, written with the power sums n_w, w_max, S_1 = sum |w_i| and S_2 = sum w_i^2 of the kernel (a real kernel has S_1 <= n_w w_max, S_2 <= w_max S_1 and S_1^2 <= n_w S_2). Read noise, drift, reads away from the verify voltage, wire IR drop, sneak paths, readout quantization and offset, and correlated errors are not included; independent sources add in quadrature.",
+   "formula_latex": "\\epsilon_{dot} = \\frac{c_{G} \\sqrt{\\frac{S_{1} w_{max}}{W_{G} - 1} + \\frac{S_{2}}{2} + \\frac{n_{w} w_{max}^{2}}{2 \\left(W_{G} - 1\\right)^{2}}}}{S_{1}}",
+   "formula_srepr": "Equality(Symbol('\\\\epsilon_{dot}'), Mul(Pow(Symbol('S_1'), Integer(-1)), Symbol('c_G'), Pow(Add(Mul(Symbol('S_1'), Symbol('w_max'), Pow(Add(Symbol('W_G'), Integer(-1)), Integer(-1))), Mul(Rational(1, 2), Symbol('S_2')), Mul(Rational(1, 2), Symbol('n_w'), Pow(Symbol('w_max'), Integer(2)), Pow(Add(Symbol('W_G'), Integer(-1)), Integer(-2)))), Rational(1, 2))))",
+   "name": "propagate_programming_error",
+   "schemes": {}
+  },
+  "uid": "4517674f602a29f64ecc7140384fc486ee295233ce03ca7dc6bbec7eb00a91c2"
+ },
  "4e11a6ef1474661ab6ea320a5c99e8774edbe32b5a4dcdb13d97fda4b108995e": {
   "identity": {
    "formula": "Equality(Symbol('\\\\alpha_V'), Function('\\\\alpha^{qha}')(Symbol('G_{qha}')))",

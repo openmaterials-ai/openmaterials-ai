@@ -272,7 +272,7 @@ a first materials-diffusion subgraph, a thermodynamic-identities domain that
 closes the map's formulas together, a composites domain (composite effective
 thermal conductivity with interfacial resistance), and an analog-device-metrology
 domain (the conductance family of memristors and memtransistors); the unified map of
-118 quantities and 118 operators is content-addressed in the log-first store
+119 quantities and 119 operators is content-addressed in the log-first store
 (Part~\ref{part:kernel}), grown past its frozen genesis version through the
 contribution gates. Its dimensional layer is proven in Lean~4 against physlib
 and recompiled in CI on every change to the map or its generators, its evidence carries pinned conformance
@@ -409,8 +409,8 @@ A content hash                  & \textbf{uid} & sha256; a 12-hex prefix is disp
 
 \section{The map}
 
-The map is a curated reference graph. Today it holds 118 nodes (115 observable
-and hidden quantities plus 3 promoted parameters) and 278 edges. Nodes are
+The map is a curated reference graph. Today it holds 119 nodes (116 observable
+and hidden quantities plus 3 promoted parameters) and 280 edges. Nodes are
 typed physical quantities. An edge produces one node from a list of input
 nodes, carrying the symbolic formula that relates them (parameter inputs are
 marked as inputs rather than derived through a formula).
@@ -831,8 +831,8 @@ the reviewers decide what enters the commons.
 
 \section{Status and build order}
 
-Today's map is one hundred fifty-seven change records past v1, its frozen genesis version:
-115 typed quantities plus 3 promoted
+Today's map is one hundred fifty-nine change records past v1, its frozen genesis version:
+116 typed quantities plus 3 promoted
 parameters, the symbolic formula on every relational edge, 32 representations
 mapped (kaldo 34 variables, phono3py 31, phonopy 22, pymatgen 22, ShengBTE 20,
 QE 14, mp-api 13, LAMMPS 12, VASP 10, GPUMD 8, pycalphad 7, i-PI 4, and a further
@@ -2490,10 +2490,10 @@ Four longer-term directions follow naturally from the design:
         is a standalone lake package on Lean~4.31.0 depending on physlib, the
         community Lean~4 physics library, pinned by revision. Tier~1 declares every
         exported node as a physics \texttt{Dimension} and proves one theorem per
-        verified executable edge: 92 nodes and 11 edge theorems compile against
+        verified executable edge: 93 nodes and 12 edge theorems compile against
         physlib's five bases, and a generated seven-base extension adds the
-        amount-of-substance, current, and luminous-intensity quantities, so 110 of
-        the map's 118 nodes carry a machine-checked dimension. Of the eight left
+        amount-of-substance, current, and luminous-intensity quantities, so 111 of
+        the map's 119 nodes carry a machine-checked dimension. Of the eight left
         out, five (\texttt{Structure}, \texttt{Potential}, and the opaque
         autocorrelation kinds) have no dimensional content to prove; three
         (\texttt{CellVolume}, \texttt{AtomicMass}, \texttt{AtomCount}) have
@@ -2506,9 +2506,9 @@ Four longer-term directions follow naturally from the design:
         map's SI convention. A CI gate recompiles the full proof on every pull
         request that touches the map or the generators, with warnings promoted to
         errors, so the verified badge is the live state of the claim. A public
-        formalization roadmap rates all 118 operators by what a proof of the formula
-        would take (15 rational identities closed by the generator, 45 needing real
-        analysis, 18 trivially reflexive, 40 opaque code outputs with nothing
+        formalization roadmap rates all 119 operators by what a proof of the formula
+        would take (15 rational identities closed by the generator, 47 needing real
+        analysis, 17 trivially reflexive, 40 opaque code outputs with nothing
         algebraic to prove), and a hand-reviewed crosswalk links map nodes to the
         physlib declarations that formalize the same concepts. The
         approximation-error theorems remain future work.
@@ -3052,12 +3052,12 @@ trusted). What remains, in order:
 \label{sec:status-live}
 
 The map is at store head version
-\texttt{e97fa5e31c8a911f658ec807e23f76379288a812e457fa640cf91be2dd372efa}
-(2026-10-04, 257 records), one hundred fifty-seven change records past the frozen genesis hash
+\texttt{02cc8eab7f719356a52a9f2bca21b333cdcc2d5057fa84977c6e1474ed3e512a}
+(2026-10-04, 259 records), one hundred fifty-nine change records past the frozen genesis hash
 \texttt{e6e8044e92039696417b53b220b0f3f10559a286b0eaabbe7ea4167ff510f6cd}
 (2026-07-07, the untouched 100-record prefix). Since the lineage became the one
 named artifact, the published stamp also carries the unified \emph{lineage
-version} (\texttt{8118137778c2\ldots}): one rolling content hash over the
+version} (\texttt{85d1a5deabd4\ldots}): one rolling content hash over the
 derivation graph and the instance-format rules together, appended to a chain
 whose root is the genesis, so a change to either the physics or the record
 format moves the one version the published stamp and every page cite (records
@@ -3067,8 +3067,8 @@ per-record frozen pin is designed, not yet carried on the records). The live
 numbers:
 
 \begin{itemize}[leftmargin=2em, itemsep=0.25em]
-  \item \textbf{Structure.} 118 nodes (115 observable and hidden quantities plus 3
-        promoted parameters), 278 rendered links, 118 deduplicated operators,
+  \item \textbf{Structure.} 119 nodes (116 observable and hidden quantities plus 3
+        promoted parameters), 280 rendered links, 119 deduplicated operators,
         rendered in seventeen physics tiers (Sources, Harmonic, Thermodynamics,
         Scattering, Transport, Molecular dynamics, Ground state, Mechanics,
         Stability, Thermochemistry, Quasi-harmonic, Molecular, Electronic
@@ -3115,7 +3115,7 @@ numbers:
         vendored Tersoff potential, each paired with a committed conformance
         target (eight targets total) that a re-run must reproduce within its
         stated tolerance.
-  \item \textbf{Dimensional gate.} Of the 118 operator edges the gate walks, 49
+  \item \textbf{Dimensional gate.} Of the 119 operator edges the gate walks, 50
         are ok, 1 is a documented-schematic violation
         (\texttt{compute\_gruneisen}, kept schematic by choice), and 68 are
         skipped (not closed-form
@@ -3133,9 +3133,9 @@ numbers:
         the Hasselman-Johnson spherical cross-check), and the two phonon delta
         sums (\texttt{compute\_dos} and \texttt{compute\_phase\_space\_3phonon},
         each a density in frequency).
-  \item \textbf{Verified layer.} 92 nodes and 11 edge theorems compile against
+  \item \textbf{Verified layer.} 93 nodes and 12 edge theorems compile against
         physlib (Lean~4.31.0, pinned by revision), the generated seven-base
-        extension lifts dimensional coverage to 110 of 118 nodes (five of the
+        extension lifts dimensional coverage to 111 of 119 nodes (five of the
         eight remaining are opaque by design; three await exporter coverage),
         and 16 identity theorems check against
         Mathlib; a CI gate recompiles the proof on every relevant pull request
