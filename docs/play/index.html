@@ -46,6 +46,7 @@
   .pg-tab{flex:0 0 auto;padding:12px 16px;border:0;background:none;font:inherit;font-weight:500;font-size:14px;line-height:20px;color:var(--ink-2,#4D4D4D);cursor:pointer;transition:color var(--dur,150ms) var(--ease,ease);}
   .pg-tab:hover{color:var(--ink,#171717);}
   .pg-tab.on{color:var(--ink,#171717);box-shadow:inset 0 -2px 0 var(--ink,#171717);}
+  a.pg-tab{text-decoration:none;}   /* the Trace link opens the tracer */
   .pg-tabsep{width:1px;height:20px;flex:0 0 auto;margin:0 8px;background:var(--line,#EBEBEB);}
   #shareBtn{margin-left:auto;}
   @media (max-width:960px){.pg-tab{padding:12px 10px;}}
@@ -322,7 +323,7 @@
     <button class="pg-tab" data-tab="distance" type="button">Distance</button>
     <span class="pg-tabsep" aria-hidden="true"></span>
     <button class="pg-tab" data-tab="query" type="button">Resolve</button>
-    <button class="pg-tab" data-tab="trace" type="button">Trace</button>
+    <a class="pg-tab" href="../map-trace/">Trace</a>
     <button class="pg-tab" data-tab="map" type="button">Sub-map</button>
     <button class="btn btn--secondary btn--sm" id="shareBtn" type="button">Share</button>
   </div>
@@ -374,18 +375,6 @@
       <input class="pg-input" id="qInput" placeholder="quasi-harmonic approximation" autocomplete="off" spellcheck="false" aria-label="A method or quantity">
       <div class="pg-examples" id="qExamples"></div>
       <div class="pg-results" id="qResults"></div>
-    </div>
-
-    <div class="pg-panel" data-panel="trace">
-      <h3>Trace a derivation</h3>
-      <p>Pick two quantities, and the canvas draws the shortest derivation path
-        between them in either direction.</p>
-      <div class="pg-sel">
-        <input class="pg-input" id="traceFrom" placeholder="from (e.g. Structure)" list="nodeList" autocomplete="off" aria-label="From">
-        <input class="pg-input" id="traceTo" placeholder="to (e.g. ThermalConductivity)" list="nodeList" autocomplete="off" aria-label="To">
-      </div>
-      <datalist id="nodeList"></datalist>
-      <div class="pg-results" id="traceResult"></div>
     </div>
 
     <div class="pg-panel" data-panel="map">
@@ -488,7 +477,7 @@
   </div>
 
   <div class="pg-canvas canvas">
-    <svg id="pgsvg" preserveAspectRatio="xMidYMid meet" role="img" aria-label="A focused sub-map of the quantities matching the current query or trace."></svg>
+    <svg id="pgsvg" preserveAspectRatio="xMidYMid meet" role="img" aria-label="A focused sub-map of the quantities the current tab draws."></svg>
     <div id="pglabels"><div id="pglabelsInner"></div></div>
     <p id="pgCaption" class="pg-caption" hidden></p>
     <div class="pg-hint" id="pgHint">Parse a paper (or draw a proposal below the dropzone) and its claims light up here as the paper's sub-map.</div>
@@ -527,7 +516,7 @@
 <script>
 /* ============================================================================
    openmaterials playground: a Mermaid-style two-pane shell over the live map.
-   Left: input tabs (query resolves labels, trace draws a path, parse links to
+   Left: input tabs (query resolves labels, the Trace link opens the tracer, parse links to
    the parser). Right: one shared sub-map canvas rendered from graph.json with
    dagre + KaTeX (both degrade: nothing throws when either is missing). The
    resolver mirrors omai/semantics.resolve exactly. Structure-pure: query and
@@ -630,8 +619,6 @@ function seedUI(){
   var box = document.getElementById('qExamples');
   ex.forEach(function(q){ var c = document.createElement('button'); c.type = 'button'; c.className = 'pg-chip'; c.textContent = q;
     c.addEventListener('click', function(){ document.getElementById('qInput').value = q; runQuery(q); }); box.appendChild(c); });
-  var dl = document.getElementById('nodeList');
-  Object.keys(nodeById).sort().forEach(function(id){ var o = document.createElement('option'); o.value = id; dl.appendChild(o); });
 }
 
 /* ---- rendering a focused sub-map ----------------------------------------- */
@@ -735,7 +722,7 @@ function runQuery(q){
   nodePanel.style.display = 'none';
   var box = document.getElementById('qResults');
   q = (q || '').trim();
-  if (!q) { box.innerHTML = ''; renderSubmap([], {}); hint.style.display = 'block'; hint.textContent = 'Type a method on the left, or trace a derivation, and the matching part of the map appears here.'; return; }
+  if (!q) { box.innerHTML = ''; renderSubmap([], {}); hint.style.display = 'block'; hint.textContent = 'Type a method on the left, and the matching part of the map appears here.'; return; }
   var hits = resolveLabel(q);
   if (!hits.length) {
     box.innerHTML = '<div class="pg-empty">No node on the map matches this phrase yet.</div>';
@@ -757,33 +744,6 @@ function runQuery(q){
     renderSubmap(Object.keys(uniq), eop);
   }); });
   renderSubmap(nodeHits, edgeOps);
-}
-
-/* ---- trace (BFS over the DAG, both directions) --------------------------- */
-function bfsPath(src, dst){
-  var prev = {}, dq = [src], seen = {}; seen[src] = 1;
-  while (dq.length) {
-    var x = dq.shift();
-    if (x === dst) { var p = [dst], c = dst; while (c !== src) { c = prev[c]; p.unshift(c); } return p; }
-    (children[x] || []).forEach(function(y){ if (!seen[y]) { seen[y] = 1; prev[y] = x; dq.push(y); } });
-  }
-  return null;
-}
-function runTrace(){
-  nodePanel.style.display = 'none';
-  var from = document.getElementById('traceFrom').value.trim();
-  var to = document.getElementById('traceTo').value.trim();
-  var out = document.getElementById('traceResult');
-  if (!nodeById[from] || !nodeById[to]) { out.innerHTML = '<div class="pg-empty">Pick two node ids from the list.</div>'; renderSubmap([], {}); return; }
-  var path = bfsPath(from, to) || bfsPath(to, from);
-  if (!path) { out.innerHTML = '<div class="pg-empty">No derivation path between these two on the map.</div>'; renderSubmap([from, to], {}); return; }
-  out.innerHTML = '<div class="pg-path">' + path.map(function(id){ return esc(id); }).join(' &rarr; ') + '</div>';
-  var ops = {};
-  for (var i = 0; i < path.length - 1; i++) {
-    var l = GRAPH.links.find(function(x){ return x.source === path[i] && x.target === path[i + 1]; });
-    if (l && l.op) ops[l.op] = 1;
-  }
-  renderSubmap(path, ops);
 }
 
 /* ---- parse: a paper's lineage -------------------------------------------- */
@@ -2730,8 +2690,7 @@ var PG_HINTS = {
   learn: 'Parse a paper (or draw a proposal below the dropzone) and its claims light up here as the paper\'s sub-map.',
   lineage: 'Open a record on the left and it renders as a full-width datasheet.',
   distance: 'Distances compute in the panel; pick two materials and compare.',
-  query: 'Type a method on the left, or trace a derivation, and the matching part of the map appears here.',
-  trace: 'Pick a source and a target on the left; the derivation path the map knows draws here.',
+  query: 'Type a method on the left, and the matching part of the map appears here.',
   map: 'A shared sub-map renders here; paste a view code or follow a shared link.'
 };
 function selectPlaygroundTab(tab){
@@ -2744,7 +2703,7 @@ function selectPlaygroundTab(tab){
   var hint = document.getElementById('pgHint');
   if (hint && PG_HINTS[tab]) hint.textContent = PG_HINTS[tab];
 }
-document.querySelectorAll('.pg-tab').forEach(function(t){
+document.querySelectorAll('.pg-tab[data-tab]').forEach(function(t){
   t.addEventListener('click', function(){
     var tab = t.getAttribute('data-tab');
     // the tab strip stays visible over an open datasheet; picking any other
@@ -2755,8 +2714,6 @@ document.querySelectorAll('.pg-tab').forEach(function(t){
   });
 });
 document.getElementById('qInput').addEventListener('input', function(){ runQuery(this.value); });
-document.getElementById('traceFrom').addEventListener('change', runTrace);
-document.getElementById('traceTo').addEventListener('change', runTrace);
 
 /* ---- the map-view format: {v: version, e: [[from, op, to], ...]} ---------- */
 // A sub-map is edges plus the version they came from. Node symbols and
@@ -2902,7 +2859,6 @@ document.getElementById('shareBtn').addEventListener('click', async function(){
   var hash = '#/play?tab=' + tab;
   var btn = this;
   if (tab === 'query') hash += '&q=' + encodeURIComponent(document.getElementById('qInput').value);
-  if (tab === 'trace') hash += '&from=' + encodeURIComponent(document.getElementById('traceFrom').value) + '&to=' + encodeURIComponent(document.getElementById('traceTo').value);
   // the Lineage tab shares the pasted record as an #x= fragment (its own
   // Copy link does the same); everything else shares the lit sub-map as #m=.
   var sharedObj = null;
@@ -2975,14 +2931,15 @@ async function applyHash(){
   // Legacy tab=experiment is an alias; the UI and every newly minted link use lineage.
   // Legacy tab=parse folded into the Learn tab, which owns proposals now.
   var tab = m[1] === 'experiment' ? 'lineage' : (m[1] === 'parse' ? 'learn' : m[1]);
+  // Legacy tab=trace links open the tracer, which draws a path from #from= and #to=.
+  var f = location.hash.match(/[#?&]from=([^&]*)/), t = location.hash.match(/[#?&]to=([^&]*)/);
+  if (tab === 'trace') { location.replace('../map-trace/' + (f && t ? '#from=' + f[1] + '&to=' + t[1] : '')); return; }
   var xm = location.hash.match(/[#?&]x=([^&]*)/);
   if (tab !== 'lineage' || !xm) document.body.classList.remove('lin-open');
   var tabBtn = document.querySelector('.pg-tab[data-tab="' + tab + '"]'); if (tabBtn) tabBtn.click();
   if (tab === 'learn' && !/[#?&]m=/.test(location.hash) && !svg.querySelector('.pg-node')) loadDefaultExample(false);
   var q = location.hash.match(/[#?&]q=([^&]*)/);
   if (q) { var v = decodeURIComponent(q[1]); document.getElementById('qInput').value = v; runQuery(v); }
-  var f = location.hash.match(/[#?&]from=([^&]*)/), t = location.hash.match(/[#?&]to=([^&]*)/);
-  if (f && t) { document.getElementById('traceFrom').value = decodeURIComponent(f[1]); document.getElementById('traceTo').value = decodeURIComponent(t[1]); runTrace(); }
   // the edges+version map payload: renders the shared sub-map. On the Map tab
   // it also fills the code box; elsewhere it just lights the canvas.
   var mm = location.hash.match(/[#?&]m=([^&]*)/);
