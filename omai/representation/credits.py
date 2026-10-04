@@ -160,7 +160,7 @@ CODE_CREDITS: dict[str, dict] = {
         "doi:10.1103/PhysRevB.88.045430",
         "doi": "10.1103/PhysRevB.87.214303",
         "license": "GPL-2.0 (thermal2: CeCILL-2.1 OR GPL-2.0-or-later; some "
-        "files GPL-3.0)",
+        "files GPL-3.0; bundled minpack: Minpack)",
         "license_source": "anharmonic/d3q tag q-e-7.5, read 2026-10-01: "
         "LICENSE ('This code is licenced under GPLv2, you wll find a copy in "
         "the Doc subdirectory. Some libraries are available under GPLv3. The "
@@ -168,7 +168,9 @@ CODE_CREDITS: dict[str, dict] = {
         "'GPLv2 and following' where possible) and the file headers: thermal2 "
         "CeCILL v2.1 and GPLv2-and-following, thermal2/PROGRAM_q2r.f90 "
         "GPLv2-and-following only, thermal2/functions.f90 embedding a GPLv3 "
-        "quicksort; both DOIs verified against Crossref metadata the same day",
+        "quicksort; minpack/lapackified/DISCLAIMER and thermal2/lmdif_p.f90 "
+        "the Minpack licence (University of Chicago, 1999), read 2026-10-04; "
+        "both DOIs verified against Crossref metadata on 2026-10-01",
         "url": "https://github.com/anharmonic/d3q",
     },
     "vasp": {

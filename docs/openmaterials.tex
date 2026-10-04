@@ -253,8 +253,8 @@ shape is already here.
 \section{Where we are, and what is next}
 
 Today the framework is real and growing. It has an operator layer and a
-representation layer, 31 ingested representations (kaldo, phono3py, phonopy,
-pymatgen, ShengBTE, Quantum ESPRESSO, VASP, LAMMPS, GPUMD, i-PI, xtb, the
+representation layer, 32 ingested representations (kaldo, phono3py, phonopy,
+pymatgen, ShengBTE, Quantum ESPRESSO, D3Q, VASP, LAMMPS, GPUMD, i-PI, xtb, the
 machine-learned potentials matgl / MACE / fairchem, the database representation mp-api,
 and the CALPHAD, amset, ORCA, OpenMM, and AtomisticSkills mat-* / chem-*
 workflows), and a
@@ -509,7 +509,7 @@ three exists today; the other two are designed and not yet built.
   \item The code parser will import a codebase as a representation: mapping the
   code's input, output, and intermediate files and key lines onto the nodes and
   edges the code implements (structure), and letting a run of the code be recorded
-  as an instance (values). The 31 representations on today's map were authored by
+  as an instance (values). The 32 representations on today's map were authored by
   hand against this contract; the parser that automates the mapping is not yet
   built.
   \item The run parser will read a concrete run and record its inputs (from the
@@ -831,10 +831,10 @@ the reviewers decide what enters the commons.
 
 Today's map is one hundred thirty-nine change records past v1, its frozen genesis version:
 111 typed quantities plus 3 promoted
-parameters, the symbolic formula on every relational edge, 31 representations
+parameters, the symbolic formula on every relational edge, 32 representations
 mapped (kaldo 34 variables, phono3py 31, phonopy 22, pymatgen 22, ShengBTE 20,
-mp-api 13, QE 13, LAMMPS 12, VASP 10, GPUMD 8, pycalphad 7, i-PI 4, and a further
-nineteen codes and mat-* / chem-* skills at five or fewer each), and real instances
+QE 14, mp-api 13, LAMMPS 12, VASP 10, GPUMD 8, pycalphad 7, i-PI 4, and a further
+twenty codes and mat-* / chem-* skills at five or fewer each), and real instances
 computed through the framework: cross-code silicon thermal conductivity
 (Tersoff potential, 8x8x8 mesh, 300 K: kaldo 19.46 RTA and 26.91 direct,
 phono3py 16.74 RTA and 24.30 direct, in W/m K) plus an LGPS activation energy
@@ -2080,8 +2080,8 @@ sense.}
 
 \subsection{Representation functors (codes)}
 
-Each adapter is a representation functor over the operator DAG. Fifteen
-adapter modules are now ingested in the thermal-transport domain alone (31
+Each adapter is a representation functor over the operator DAG. Sixteen
+adapter modules are now ingested in the thermal-transport domain alone (32
 representations map the whole graph), in three tiers. The four BTE / harmonic codes that consume
 force constants:
 
@@ -3120,7 +3120,7 @@ mat-elasticity               & 5  & MIT \\
 amset                        & 5  & BSD-3-Clause \\
 ORCA                         & 5  & Proprietary \\
 pymatgen-analysis-diffusion  & 5  & BSD-3-Clause \\
-D3Q (thermal2)               & 5  & GPL-2.0 (CeCILL-2.1, GPL-3.0 parts) \\
+D3Q (thermal2)               & 5  & GPL-2.0 (CeCILL-2.1, GPL-3.0, Minpack parts) \\
 i-PI                         & 4  & GPL-2.0-or-later / MIT \\
 fairchem                     & 4  & MIT \\
 MACE                         & 4  & MIT \\
@@ -3146,7 +3146,8 @@ for kaldo, LAMMPS, Quantum ESPRESSO, phonopy, phono3py, ShengBTE, and the
 AtomisticSkills skills; package metadata for the pip-distributed codes; the
 project's GitHub LICENSE for GPUMD, MatterGen, DiffCSP, and OpenMM; the D3Q
 repository's LICENSE and License files plus its file headers, GPL-2.0
-(thermal2: CeCILL-2.1 OR GPL-2.0-or-later; some files GPL-3.0); the i-PI
+(thermal2: CeCILL-2.1 OR GPL-2.0-or-later; some files GPL-3.0; bundled minpack:
+Minpack); the i-PI
 repository's \texttt{licenses/LICENSE.md} for i-PI, distributed under both the
 GPL and MIT at the user's choice). VASP and
 ORCA are proprietary: VASP under the commercial license at vasp.at, ORCA free

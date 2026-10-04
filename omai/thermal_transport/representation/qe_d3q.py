@@ -121,11 +121,14 @@ QE_D3Q_THERMAL_CONDUCTIVITY_RTA = SpaceRepresentationSpec(
     notes=(
         "Single-mode approximation (thermal2's name for the RTA) kappa "
         "tensor in W/(m K), one row per (temperature, smearing) "
-        "configuration: K_P, the populations term, the same K_P rows d3_tk.x "
-        "prints to stdout. _C.out (Wigner coherences) and _TOT.out "
+        "configuration: K_P, the populations term (stdout repeats its "
+        "diagonal, e16.8 against the file's e15.6). _C.out (Wigner coherences) and _TOT.out "
         "(K_P + K_C) are not the RTA. With store_lw=.true. (default .false.) "
         "the per-channel HWHM in cm^-1 are written alongside (lw., lwiso., "
-        "lwcas. files); the SMA uses twice their sum."
+        "lwcas. files); the SMA uses twice their sum. "
+        "K_P keeps only the velocity-operator diagonal (nu == nup), unrotated "
+        "within degenerate subspaces, so it is basis dependent at degenerate q. "
+        "With isotopic_disorder or casimir_scattering on, K_P includes them."
     ),
 )
 
@@ -149,7 +152,8 @@ QE_D3Q_THERMAL_CONDUCTIVITY_DIRECT = SpaceRepresentationSpec(
         "thr_tk (default 1e-2, about 1.2e-11 relative; pass thr_tk = 8.5e8 x "
         "the wanted relative tolerance), or after niter_max (default 1000) "
         "iterations; only the former prints 'Convergence achieved', and a "
-        "solve that exhausts niter_max is unconverged."
+        "solve that exhausts niter_max is unconverged. "
+        "With isotopic_disorder or casimir_scattering on, kappa includes them."
     ),
 )
 
