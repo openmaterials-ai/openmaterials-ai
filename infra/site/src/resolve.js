@@ -76,7 +76,8 @@ const sig = (v) =>
 // duplicates it). Everything shown comes from the committed entry. The title,
 // description, share image, and paragraph mirror build_share_stubs in
 // omai/map_data.py field for field, fallbacks included, so /l/<id> and
-// /i/<id>/ name a value with the same bytes.
+// /i/<id>/ name a value with the same bytes, and the canonical link is the
+// static /i/<id>/ page.
 function permalinkHTML(entry, origin) {
   const prop = humanProperty(entry.variable) || "Property";
   const mat = entry.material;
@@ -109,7 +110,7 @@ function permalinkHTML(entry, origin) {
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="The openmaterials.ai mark and wordmark above the line &quot;A versioned map of physics.&quot; A smaller line gives the licenses: map data CC BY 4.0 and code Apache 2.0.">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="canonical" href="${esc(origin)}/l/${entry.id}">
+<link rel="canonical" href="${esc(origin)}/i/${entry.id}/">
 <meta http-equiv="refresh" content="0;url=${esc(target)}">
 </head>
 <body>
@@ -162,7 +163,7 @@ export {
 // /l/<scheme:ref> lists a source's committed values; /l/<scheme:ref>/<hash
 // prefix> names one value WITH a mechanical consistency check: the visible
 // namespace must match the id's own in-hash source, so a speaking identifier
-// can never lie. Bare /l/<hash> stays the canonical form (values without an
+// can never lie. Bare /l/<hash> stays the plain short form (values without an
 // in-hash source have no namespace to speak).
 const SOURCE_REF_RE = /^[a-z][a-z0-9+.-]*:.+$/;
 
@@ -244,7 +245,7 @@ function sourceMismatchHTML(claimedRef, entry, origin) {
 <body>
 <p>The value <code>${esc(entry.id.slice(0, 12))}</code> does not belong to
 <code>${esc(claimedRef)}</code>${actual ? `; its committed source is <code>${esc(actual)}</code>` : `; it carries no in-hash source`}.
-The canonical link is <a href="${esc(origin)}/l/${esc(entry.id)}">${esc(origin)}/l/${esc(entry.id.slice(0, 12))}</a>.</p>
+The canonical link is <a href="${esc(origin)}/i/${esc(entry.id)}/">${esc(origin)}/i/${esc(entry.id)}/</a>.</p>
 </body>
 </html>
 `;

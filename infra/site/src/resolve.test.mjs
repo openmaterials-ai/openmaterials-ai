@@ -44,10 +44,11 @@ test("the permalink shell carries real OG metadata and redirects to the datashee
   const entry = instances.find((e) => e.variable && e.value != null) || instances[0];
   const page = permalinkHTML(entry, "https://openmaterials.ai");
   assert.ok(page.includes('property="og:title"'));
-  assert.ok(page.includes(`/l/${entry.id}`), "the canonical link names the id");
+  assert.ok(page.includes(`<link rel="canonical" href="https://openmaterials.ai/i/${entry.id}/">`),
+    "the canonical link is the static /i/<id>/ page");
   assert.ok(page.includes(`/play/#id=${entry.id}`), "redirect targets the one renderer");
   assert.ok(String(page.match(/og:description[^>]*/)).length > 0);
-  if (entry.value != null) assert.ok(page.includes(String(entry.value)), "the committed value is on the card");
+  if (typeof entry.value === "number") assert.ok(page.includes(String(Number(entry.value.toPrecision(6)))), "the committed value is on the card");
 });
 
 test("humanProperty reads the node spelling", () => {
@@ -100,5 +101,8 @@ test("source-first paths parse and resolve: listing, pair, mismatch honesty", ()
     const mism = sourceMismatchHTML(ref, other, "https://openmaterials.ai");
     assert.ok(mism.includes(other.id.slice(0, 12)));
     assert.ok(mism.includes("does not belong"));
+    const url = `https://openmaterials.ai/i/${other.id}/`;
+    assert.ok(mism.includes(`The canonical link is <a href="${url}">${url}</a>.`),
+      "the mismatch page names the static /i/<id>/ page as canonical");
   }
 });

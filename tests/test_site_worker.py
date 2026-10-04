@@ -3,7 +3,8 @@ dynamic routes.
 
 infra/site is the edge deployment of the SAME docs/ every browser reads:
 wrangler serves docs/ as assets and the Worker script runs only for
-/l/<id> (the canonical permalink resolver) and /healthz. These tests pin the
+/l/<id> (the short-link resolver; /i/<id>/ is the canonical page) and
+/healthz. These tests pin the
 contract statically and, where node is available, run the Worker's pure
 resolver logic against the real committed projection.
 """
@@ -121,7 +122,8 @@ console.log(JSON.stringify({
   numbers: __NUMBERS__.map((v) => String(Number(v.toPrecision(6)))),
 }));
 """
-_SHARED = re.compile(r'^(?:<title>.*|<meta (?:property="og:|name="twitter:).*|<p>[^<]*</p>)$', re.M)
+_SHARED = re.compile(r'^(?:<title>.*|<meta (?:property="og:|name="twitter:).*|'
+                     r'<link rel="canonical".*|<p>[^<]*</p>)$', re.M)
 # toPrecision(6) edges: exact ties (away from zero, both signs), carries,
 # exponent switches at 1e21 and 1e-7, the double range ends, plain floats.
 _NUMBERS = [0.0, -0.0, 6.0, 156, 0.027, -1.057843414e-05, 3.33222233511797e-10,
