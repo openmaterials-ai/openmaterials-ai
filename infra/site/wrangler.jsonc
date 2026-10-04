@@ -21,6 +21,8 @@
     { "pattern": "openmaterials.ai/badge/*", "zone_name": "openmaterials.ai" },
     { "pattern": "openmaterials.ai/healthz", "zone_name": "openmaterials.ai" }
   ],
+  // The workers.dev copy stays up next to the domain routes, as a staging view.
+  "workers_dev": true,
   "kv_namespaces": [
     { "binding": "SHORTLINKS", "id": "a234499878ab4e558c00ed9209012ed0" }
   ],
