@@ -16,6 +16,12 @@
    "unit": "dimensionless"
   },
   {
+   "node": "BulkModulus",
+   "uid": "c0a13e64c02811f49b951271c894373267937676e0c657fc9ef09fac72558ced",
+   "api": "ev.x <BULK_MODULUS_KBAR> (XML output of the E(V) fit of pw.x energies), kbar",
+   "unit": "kbar"
+  },
+  {
    "node": "DielectricTensor",
    "uid": "a84077d8f12cf490f370b5cd0b98a47e3e31b7ec75fc8763699763f8b2313db4",
    "api": "ph.x q=0 fildyn 'Dielectric Tensor' (epsil=.true.)",

@@ -22,7 +22,7 @@ stewarded by OpenMaterials-AI, a foundation in formation.
 
 At map version f69b18c18fb7 the map has 114 typed quantities (100 observable, 11
 hidden, 3 parameter), 274 links (235 formula, 39 parameter), and 114 operators
-in 16 tiers. It holds representations for 31 codes and 91 committed values (87
+in 16 tiers. It holds representations for 32 codes and 91 committed values (87
 from simulations, 4 from measurements). The [codes
 bibliography](https://openmaterials.ai/codes/) lists each code with its
 interface, citation, and license. Browse it in 2D at
