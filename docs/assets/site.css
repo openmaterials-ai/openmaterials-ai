@@ -261,6 +261,7 @@ a:hover { text-decoration-color: currentColor; }
 .step-index { font: 400 14px/24px var(--font-mono); color: var(--ink-2); }
 .steps-col > .small { margin-top: 24px; }
 .close .hash { font-family: var(--font-mono); letter-spacing: 0; font-size: min(1em, (100vw - 32px) / 7.5); }
+.close .cite-text, .close .code { margin-top: 24px; max-width: 720px; }
 @media (min-width: 601px) { .tools > .card { grid-column: span 6; } }
 @media (min-width: 961px) {
   .hero-text { grid-column: 1 / 8; }

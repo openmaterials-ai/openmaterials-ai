@@ -213,8 +213,18 @@
     </div>
   </section>
 
-  <section class="close">
+  <section class="close" id="cite">
     <h2>Cite the map version you use: <span class="hash" data-bind="version12">f69b18c18fb7</span>.</h2>
+    <p class="cite-text">Barbalinardo, G. openmaterials.ai: a versioned, content-addressed map of physics. Map version <span data-bind="version12">f69b18c18fb7</span>. https://openmaterials.ai, accessed <span data-bind="today">2026-10-04</span>.</p>
+    <figure class="code">
+      <figcaption>BibTeX</figcaption>
+<pre>@misc{openmaterials-<span data-bind="version12">f69b18c18fb7</span>,
+  author = {Barbalinardo, Giuseppe},
+  title  = {{openmaterials.ai}: a versioned, content-addressed map of physics},
+  url    = {https://openmaterials.ai},
+  note   = {Map version <span data-bind="version12">f69b18c18fb7</span>, accessed <span data-bind="today">2026-10-04</span>}
+}</pre>
+    </figure>
     <div class="cta-row">
       <a class="btn btn--primary" href="map/">Open the map</a>
       <a class="btn btn--secondary" href="https://github.com/openmaterials-ai/openmaterials-ai">View on GitHub</a>
@@ -258,6 +268,8 @@
     put('[data-bind="lean-idents"]', Object.keys(l.identities).length);
   }).catch(skip);
   get('data/version.json').then(function (v) { put('[data-bind="version12"]', String(v.version).slice(0, 12)); }).catch(skip);
+  var d = new Date();   // the Cite block's access date is the reader's today
+  put('[data-bind="today"]', d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'));
 })();
 </script>
 </body>

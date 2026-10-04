@@ -72,7 +72,8 @@ def test_the_pill_and_stamp_carry_the_map_version():
     got = _render("https://openmaterials.ai/map-3d/", "app", version)
     assert 'id="om-version"' in got["header"] and "pill pill--mono" in got["header"]
     assert got["pill"] == "map " + "ab" * 6
-    assert "ab" * 6 + "</a> · genesis " + "cd" * 6 == got["stamp"].split('">', 1)[1]
+    assert 'id="om-version" href="https://openmaterials.ai/#cite"' in got["header"], "the pill opens the Cite block"
+    assert got["stamp"].split('">', 1)[1] == "ab" * 6 + "</a>", "the stamp carries the map version only"
 
 
 def test_the_header_links_and_marks_the_current_view():

@@ -13,16 +13,16 @@
   var REPO = 'https://github.com/openmaterials-ai/openmaterials-ai';
   var BLOB = REPO + '/blob/main/';
   // Static fallback, shown until data/version.json answers (or if it cannot be read).
-  var VERSION = 'f69b18c18fb7', GENESIS = 'e6e8044e9203';
+  var VERSION = 'f69b18c18fb7';
 
   var NAV = [['Map', 'map/'], ['Playground', 'play/'], ['Guide', 'guide/'], ['Document', 'document/']];
   // The nav item each section marks with aria-current: Map covers the three map views.
   var ACTIVE = { 'map/': 'map/', 'map-3d/': 'map/', 'map-trace/': 'map/', 'play/': 'play/', 'guide/': 'guide/', 'document/': 'document/' };
   var FOOTER = [
     ['Map', [['Map', 'map/'], ['Map in 3D', 'map-3d/'], ['Tracer', 'map-trace/'], ['Playground', 'play/'], ['Learn a paper', 'play/#tab=learn']]],
-    ['Evidence', [['Experiments', 'experiment/'], ['Cross-code agreement', 'agreement/'], ['Lineage tour', 'lineage/'], ['Verified layer', 'lean/'], ['Formalization roadmap', 'lean/roadmap/']]],
-    ['Reference', [['Guide', 'guide/'], ['Document', 'document/'], ['PDF', 'openmaterials.pdf'], ['Codes', 'codes/'], ['llms.txt', 'llms.txt']]],
-    ['Project', [['GitHub', REPO], ['Contribute a value', '#contribute'], ['Contribution guide', BLOB + 'CONTRIBUTING.md'], ['Governance', BLOB + 'GOVERNANCE.md'], ['Citation', BLOB + 'CITATION.cff']]]
+    ['Evidence', [['Sources', 'experiment/'], ['Cross-code agreement', 'agreement/'], ['Lineage tour', 'lineage/'], ['Verified layer', 'lean/'], ['Formalization roadmap', 'lean/roadmap/']]],
+    ['Reference', [['Guide', 'guide/'], ['Document', 'document/'], ['PDF', 'openmaterials.pdf'], ['Codes', 'codes/']]],
+    ['Project', [['GitHub', REPO], ['Contribute a value', '#contribute'], ['Contribution guide', BLOB + 'CONTRIBUTING.md'], ['Governance', BLOB + 'GOVERNANCE.md'], ['Citation', '#cite']]]
   ];
   var THEMES = [
     ['system', 'System', '<rect x="2" y="3" width="12" height="8" rx="1"/><path d="M6 14h4M8 11v3"/>'],
@@ -54,7 +54,7 @@
     return '<header class="site-header"><div class="wrap">' +
       '<a class="wordmark" href="' + root + '" aria-label="OpenMaterials home">' + mark() + '</a>' +
       '<nav class="site-nav" aria-label="Primary">' + links + '</nav>' +
-      '<a class="pill pill--mono at-961" id="om-version" href="' + site('data/version.json') + '">map ' + VERSION + '</a>' +
+      '<a class="pill pill--mono at-961" id="om-version" href="' + site('#cite') + '">map ' + VERSION + '</a>' +
       (app ? themeField('theme') : '') +
       '<a class="btn btn--secondary btn--sm" href="' + REPO + '">GitHub</a>' +
       '<details class="menu"><summary class="btn btn--ghost btn--sm">Menu</summary>' +
@@ -75,11 +75,11 @@
       '<p>OpenMaterials is stewarded by OpenMaterials-AI, a foundation in formation.</p>' +
       '<p>Map data is <a href="' + BLOB + 'LICENSE-DATA">CC BY 4.0</a> and code is <a href="' + BLOB + 'LICENSE">Apache 2.0</a>.</p>' +
       '<p>The site and its tools are built by <a href="https://dvnclabs.com">Da Vinci Labs</a>, Berkeley.</p></div>' +
-      '<div class="footer-row"><span id="om-stamp" class="mono">' + stampHtml(VERSION, GENESIS) + '</span>' + themeField('theme') + '</div>' +
+      '<div class="footer-row"><span id="om-stamp" class="mono">' + stampHtml(VERSION) + '</span>' + themeField('theme') + '</div>' +
       '</div></footer>';
   }
-  function stampHtml(v, g) {
-    return 'map <a href="' + site('data/version.json') + '">' + v + '</a> · genesis ' + g;
+  function stampHtml(v) {
+    return 'map <a href="' + site('#cite') + '">' + v + '</a>';
   }
 
   function wireTheme() {
@@ -105,11 +105,11 @@
     fetch(site('data/version.json')).then(function (r) { return r.json(); }).then(function (v) {
       var hex = /^[0-9a-f]{12,64}$/;
       if (!v || !hex.test(v.version)) return;
-      var v12 = v.version.slice(0, 12), g12 = hex.test(v.genesis) ? v.genesis.slice(0, 12) : GENESIS;
+      var v12 = v.version.slice(0, 12);
       var pill = document.getElementById('om-version');
       if (pill) pill.textContent = 'map ' + v12;
       var st = document.getElementById('om-stamp');
-      if (st) st.innerHTML = stampHtml(v12, g12);
+      if (st) st.innerHTML = stampHtml(v12);
       bustDocumentLinks(v12);
     }).catch(function () { /* keep the static stamp */ });
   }
