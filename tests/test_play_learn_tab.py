@@ -8,6 +8,7 @@ GitHub is one consistent gesture site-wide.
 """
 from __future__ import annotations
 
+import json
 import re
 from pathlib import Path
 
@@ -130,3 +131,21 @@ def test_canvas_hint_speaks_per_tab():
     for key in ("learn:", "lineage:", "distance:", "query:", "trace:", "map:"):
         assert key in _PLAY.split("var PG_HINTS = {", 1)[1].split("};", 1)[0], key
     assert "PG_HINTS[tab]) hint.textContent" in _PLAY
+
+
+def test_example_proposal_holds_only_the_checked_claims():
+    """The example a bare /play/ draws carries only the claims checked against
+    the paper (review of 2026-10-04); the caption counts what it draws."""
+    example = json.loads((_DOCS / "play" / "example-proposal.json").read_text())
+    got = [(c["node_id"], c["value_text"]) for c in example["claims"]]
+    assert got == [
+        ("ThermalConductivity[bte_solver=direct_inverse]", "150"),
+        ("ThermalConductivity[bte_solver=direct_inverse]", "7"),
+        ("Temperature", "300"),
+        ("MassDensity", "2.32"),
+        ("AtomCount", "1728"),
+        ("AtomCount", "4096"),
+        ("AtomCount", "13824"),
+        ("ThermalConductivity[transport_model=qhgk]", "2.2"),
+    ], got
+    assert "(n === 1 ? ' claim' : ' claims') + ' from '" in _PLAY, "the caption counts the claims"

@@ -836,7 +836,8 @@ function loadDefaultExample(report){
   fetch('example-proposal.json?v=' + Date.now()).then(function(r){ return r.json(); }).then(function(p){
     document.getElementById('proposalInput').value = JSON.stringify(p, null, 1);
     renderProposal(p);
-    var c = document.getElementById('pgCaption'); if (c) { c.textContent = 'Example: ' + (p.paper || ''); c.hidden = false; }
+    var n = (p.claims || []).length;
+    var c = document.getElementById('pgCaption'); if (c) { c.textContent = 'Example: ' + n + (n === 1 ? ' claim' : ' claims') + ' from ' + (p.paper || 'a paper'); c.hidden = false; }
   }).catch(function(e){
     if (report) document.getElementById('parseResult').innerHTML = '<div class="pg-empty">The example did not load: ' + esc(e.message) + '</div>';
   });
@@ -2886,7 +2887,7 @@ document.getElementById('renderMap').addEventListener('click', function(){
 });
 document.getElementById('loadMapExample').addEventListener('click', function(){
   var ex = { v: currentVersion(), e: [
-    ['Frequency', 'compute_dos', 'PhononDOS'],
+    ['Stress', 'contract_pressure', 'Pressure'],
     ['ElasticConstants', 'contract_bulk_modulus', 'BulkModulus'],
     ['ThermalConductivity[bte_solver=direct_inverse]', 'resolve_thermal_conductivity', 'ThermalConductivity']
   ]};
