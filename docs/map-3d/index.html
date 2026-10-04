@@ -251,7 +251,7 @@ function renderGraph(graph, links){
   // waits one task; framing inside the callback fitted the stale starting
   // positions and left the camera close in.
   let framed=false;
-  const frameOnce=()=>{ if(framed||!Graph) return; framed=true; const id=hashNode(); if(id&&nodeById[id]) selectNode(id); else fitAll(); };
+  const frameOnce=()=>{ if(framed||!Graph) return; framed=true; const id=hashNode(); if(id&&nodeById[id]) selectNode(id, 0); else Graph.zoomToFit(0, 40); };   // the first view lands without motion
   Graph = new ForceGraph3D(sceneEl)
     .warmupTicks(300).cooldownTicks(0)   // laid out before the first frame, then still
     .onEngineStop(()=> setTimeout(frameOnce, 0))
@@ -336,7 +336,7 @@ function nodeLabelHtml(n){
 // ---- interaction: fit / fly ------------------------------------------------
 function fitAll(){ if(Graph && Graph.zoomToFit) Graph.zoomToFit(REDUCE?0:600, 40); }
 document.getElementById('resetView').addEventListener('click', fitAll);
-function flyTo(id){
+function flyTo(id, ms){
   if(!Graph) return;
   const n=(Graph.graphData().nodes||[]).find(x=>x.id===id);
   if(!n) return;
@@ -346,7 +346,7 @@ function flyTo(id){
   Graph.cameraPosition(
     { x:(n.x||0)*ratio, y:(n.y||0), z:(n.z||0)*ratio },
     { x:n.x||0, y:n.y||0, z:n.z||0 },
-    REDUCE?0:900
+    ms==null ? (REDUCE?0:900) : ms
   );
 }
 
@@ -354,13 +354,13 @@ function flyTo(id){
 let ancSet=new Set(), descSet=new Set(), upSet=new Set(), dnSet=new Set();
 function reach(id, adj){ const out=new Set(), dq=[id]; while(dq.length){ const x=dq.pop(); (adj[x]||[]).forEach(y=>{ if(!out.has(y)){ out.add(y); dq.push(y);} }); } return out; }
 
-function selectNode(id){
+function selectNode(id, ms){
   const node=nodeById[id]; if(!node) return;
   selId=id;
   ancSet=reach(id,parents); descSet=reach(id,children);
   upSet=new Set([id, ...ancSet]); dnSet=new Set([id, ...descSet]);
   refreshEncoding();
-  flyTo(id);
+  flyTo(id, ms);
   openPanel(node);
   history.replaceState(null,'','#node='+encodeURIComponent(id));
 }

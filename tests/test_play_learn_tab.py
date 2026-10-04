@@ -152,4 +152,4 @@ def test_example_proposal_holds_only_the_checked_claims():
         ("AtomCount", "13824"),
         ("ThermalConductivity[transport_model=qhgk]", "2.2"),
     ], got
-    assert "(n === 1 ? ' claim' : ' claims') + ' from '" in _PLAY, "the caption counts the claims"
+    assert "(n === 1 ? ' value' : ' values') + ' from '" in _PLAY, "the caption counts the values"

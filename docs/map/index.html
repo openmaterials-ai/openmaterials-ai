@@ -35,6 +35,7 @@
   .toolbar{flex:none;display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:8px var(--inset,16px);border-bottom:1px solid var(--line,#EBEBEB);background:var(--page,#FFFFFF);}
   .toolbar .om-search{flex:1 1 200px;max-width:360px;min-width:0;}
   .toolbar .push{margin-left:auto;}
+  @media (min-width:961px){.toolbar .hint{order:1;flex-basis:100%;}}   /* the hint takes the last row, so no control wraps under it */
   .toolbar .select{max-width:160px;}   /* the open list shows full names */
   @media (max-width:960px){.toolbar .om-search{flex:1 1 100%;max-width:none;}}
   /* phones: every control stays, in three rows: search; view switch, zoom and Fit; Tier, Code and
@@ -59,6 +60,7 @@
   /* nodes */
   .node{cursor:pointer;}
   .node:focus{outline:none;} .node:focus-visible{outline:2px solid var(--ink,#171717);outline-offset:2px;}
+  .node:focus-visible rect{stroke:var(--ink,#171717);stroke-width:3;}   /* WebKit paints no outline on SVG */
   .node rect{stroke-width:1;vector-effect:non-scaling-stroke;}
   .node.obs rect{fill:var(--data-obs,#4F46E5);stroke:var(--data-obs,#4F46E5);}
   .node.hid rect{fill:var(--surface-2,#F2F2F2);stroke:var(--edge,#8F8F8F);}
@@ -549,7 +551,7 @@ function selectNode(node){
     fl.forEach(f=>{ h+=(f.op?'<div class="fop">'+esc(f.op)+'</div>':'')+'<div class="formula">'+tex(f.latex,true)+'</div>'; });
   }
   const lv=leanData.nodes&&leanData.nodes[node.id];
-  if(lv){ h+='<div class="om-panel-label"><span class="lean-badge">Proven in Lean</span></div><pre class="lean-line">'+esc(lv.lean)+'</pre>'; }
+  if(lv){ h+='<div class="om-panel-label"><span class="lean-badge">Lean dimension</span></div><pre class="lean-line">'+esc(lv.lean)+'</pre>'; }
   if(outs.length){ h+='<div class="om-panel-label">Feeds into</div><div class="chips">'+outs.map(chip).join('')+'</div>'; }
   if(ins.length){ h+='<div class="om-panel-label">Computed from</div><div class="chips">'+ins.map(chip).join('')+'</div>'; }
   h+=mappedByHtml(id);
