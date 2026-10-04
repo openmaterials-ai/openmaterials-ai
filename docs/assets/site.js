@@ -22,7 +22,7 @@
     ['Map', [['Map', 'map/'], ['Map in 3D', 'map-3d/'], ['Tracer', 'map-trace/'], ['Playground', 'play/'], ['Learn a paper', 'play/#tab=learn']]],
     ['Evidence', [['Experiments', 'experiment/'], ['Cross-code agreement', 'agreement/'], ['Lineage tour', 'lineage/'], ['Verified layer', 'lean/'], ['Formalization roadmap', 'lean/roadmap/']]],
     ['Reference', [['Guide', 'guide/'], ['Document', 'document/'], ['PDF', 'openmaterials.pdf'], ['Codes', 'codes/'], ['llms.txt', 'llms.txt']]],
-    ['Project', [['GitHub', REPO], ['Contribute a value', '#contribute'], ['Contributing', BLOB + 'CONTRIBUTING.md'], ['Governance', BLOB + 'GOVERNANCE.md'], ['Citation', BLOB + 'CITATION.cff']]]
+    ['Project', [['GitHub', REPO], ['Contribute a value', '#contribute'], ['Contribution guide', BLOB + 'CONTRIBUTING.md'], ['Governance', BLOB + 'GOVERNANCE.md'], ['Citation', BLOB + 'CITATION.cff']]]
   ];
   var THEMES = [
     ['system', 'System', '<rect x="2" y="3" width="12" height="8" rx="1"/><path d="M6 14h4M8 11v3"/>'],

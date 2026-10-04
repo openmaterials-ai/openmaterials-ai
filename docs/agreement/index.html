@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Cross-code agreement | OpenMaterials</title>
-<meta name="description" content="Each group holds values for the same observable, material, and conditions that differ only in method or code, with the group's spread.">
+<meta name="description" content="The agreement page groups committed values that share a quantity, material, and recorded conditions and come from different methods or codes, and it reports each group's spread.">
 <link rel="canonical" href="https://openmaterials.ai/agreement/">
 <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
@@ -13,7 +13,7 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="openmaterials.ai">
 <meta property="og:title" content="Cross-code agreement | OpenMaterials">
-<meta property="og:description" content="Each group holds values for the same observable, material, and conditions that differ only in method or code, with the group's spread.">
+<meta property="og:description" content="The agreement page groups committed values that share a quantity, material, and recorded conditions and come from different methods or codes, and it reports each group's spread.">
 <meta property="og:url" content="https://openmaterials.ai/agreement/">
 <meta property="og:image" content="https://openmaterials.ai/assets/og.png">
 <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
@@ -49,7 +49,7 @@
     <p class="crumb"><a href="../experiment/">Experiments</a></p>
     <p class="eyebrow">Evidence</p>
     <h1>Cross-code agreement</h1>
-    <p class="lede">Each group below holds values of one quantity for one material whose recorded conditions match. They differ in the method or code that produced them, and possibly in settings the records do not state, so the spread of a group (the range of its values divided by their mean) measures how far those methods or codes disagree.</p>
+    <p class="lede">Each group below holds values of one quantity for one material, recorded under matching conditions. They differ in the method or code that produced them, and possibly in settings the records do not state, so the spread of a group (the range of its values divided by their mean) measures how far its values disagree.</p>
   </header>
   <div class="page-body"><div class="prose" id="groups">
     <noscript><p class="empty">This page renders the groups from the published data and needs JavaScript.
@@ -140,7 +140,7 @@ function render(){
   var summary =
     '<dl class="ledger">' +
     '<div><dt>Groups</dt><dd class="mono">' + esc(s.groups || 0) + '</dd></div>' +
-    '<div><dt>Cross-code</dt><dd><span class="mono">' + esc(s.cross_code || 0) + '</span> (the same method computed by different codes on the same inputs)</dd></div>' +
+    '<div><dt>Cross-code</dt><dd><span class="mono">' + esc(s.cross_code || 0) + '</span> (the same method computed by different codes under the same recorded conditions)</dd></div>' +
     '<div><dt>Theory vs. experiment</dt><dd><span class="mono">' + esc(s.theory_vs_experiment || 0) + '</span> (a measurement and a simulation of the same quantity under the same recorded conditions)</dd></div>' +
     '</dl>';
   var body = groups.length

@@ -44,7 +44,7 @@
 <main class="frame" id="main">
   <header class="page-head">
     <h1>Verified layer</h1>
-    <p class="lede">This page shows the part of the map that a proof assistant has checked. Tier 1 declares the dimension of each exported node in <a href="https://lean-lang.org/">Lean 4</a> and proves, against physlib, the community Lean 4 physics library, an edge theorem wherever an operator's output dimension is the product of its input dimensions. Tier 2 states the map's operator identities as theorems over the reals, checked against Mathlib. The counts on this page are computed at load from <a href="../data/lean.json">the published export</a>, and every theorem links to its generated source.</p>
+    <p class="lede">This page shows the part of the map that a proof assistant has checked. Tier 1 declares the dimension of each exported node in <a href="https://lean-lang.org/">Lean 4</a> and, wherever an operator's output dimension is the product of its input dimensions, proves an edge theorem against physlib, the community Lean 4 physics library. Tier 2 states the map's operator identities as theorems over the reals, checked against Mathlib. The counts on this page are computed at load from <a href="../data/lean.json">the published export</a>, and every theorem links to its generated source.</p>
   </header>
 
   <div class="page-body">
@@ -72,13 +72,14 @@
         <p>Each exported map node has a declared dimension, a Lean definition of five
           rational exponents over length, time, mass, charge, and temperature. A Tier 1
           theorem exists only when an edge's output dimension is the product of its input
-          dimensions, and it states that equality; the generator skips edges whose
-          formulas sum over modes, take ratios, or take square roots. The Lean compiler
+          dimensions, and it states that equality; the generator skips every edge where
+          that rule fails, for example a sum of several inputs, a ratio, a derivative, or a
+          square root. The Lean compiler
           checks each statement against physlib (Lean 4.31.0), and the file compiles with
           zero errors and no <code>sorry</code> placeholders.</p>
         <h3>Tier 2: the operator identities</h3>
-        <p>A composition theorem: after the upstream identity is substituted into the
-          downstream one, the chained form equals the flat form for all reals that satisfy
+        <p>A composition theorem substitutes the upstream identity into the downstream one
+          and states that the chained form equals the flat form for all reals that satisfy
           the stated hypotheses. A law theorem states a single identity's formula as a
           well-typed real equation.</p>
         <h3>Scope</h3>
@@ -114,7 +115,7 @@
 
       <section class="gsec" id="identities">
         <h2>Operator identities (Tier 2)</h2>
-        <p>The statement below is the generated source, verbatim, from
+        <p>Each statement below is the generated source, verbatim, from
           <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/OpenMaterialsIdentities.lean">lean/OpenMaterialsIdentities.lean</a>.</p>
         <div id="identity-list"><p class="empty">Loading&hellip;</p></div>
       </section>
@@ -208,7 +209,7 @@ pip install -e . &amp;&amp; python -m pytest tests/test_physlean_export.py tests
       (stats.graphNodes ? ' <span class="of">of ' + stats.graphNodes + ' nodes</span>' : '');
     var edgesEl = document.getElementById('c-edges');
     edgesEl.innerHTML = stats.edges +
-      (stats.graphOps ? ' <span class="of">of ' + stats.graphOps + ' operators that take input quantities</span>' : '');
+      (stats.graphOps ? ' <span class="of">of ' + stats.graphOps + ' operators with a formula link</span>' : '');
     setText('c-idents', String(stats.identities));
     if (stats.version) setText('c-version', String(stats.version).slice(0, 12));
     var el = document.getElementById('c-sentence');
