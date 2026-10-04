@@ -1,8 +1,8 @@
-<p align="center"><img src="docs/assets/logo.svg" width="72" alt="the openmaterials mark"></p>
+<p align="center"><img src="docs/assets/logo.svg" width="72" alt="the OpenMaterials mark"></p>
 
 # openmaterials-ai
 
-[![openmaterials map version](https://openmaterials.ai/badge/f69b18c18fb7.svg)](https://openmaterials.ai/)
+[![OpenMaterials map version](https://openmaterials.ai/badge/f69b18c18fb7.svg)](https://openmaterials.ai/)
 
 
 OpenMaterials is a versioned, content-addressed map of physics. Physical
@@ -22,10 +22,10 @@ stewarded by OpenMaterials-AI, a foundation in formation.
 
 At map version f69b18c18fb7 the map has 114 typed quantities (100 observable, 11
 hidden, 3 parameter), 274 links (235 formula, 39 parameter), and 114 operators
-in 16 tiers. It holds representations for 31 codes, listed with their
-interfaces, citations, and licenses in the [codes
-bibliography](https://openmaterials.ai/codes/), and 91 committed values: 87 from
-simulations and 4 from measurements. Browse it in 2D at
+in 16 tiers. It holds representations for 31 codes and 91 committed values (87
+from simulations, 4 from measurements). The [codes
+bibliography](https://openmaterials.ai/codes/) lists each code with its
+interface, citation, and license. Browse it in 2D at
 [openmaterials.ai/map/](https://openmaterials.ai/map/) or in 3D at
 [openmaterials.ai/map-3d/](https://openmaterials.ai/map-3d/). The full
 specification (vision, product, architecture, kernel, status, and the procedures

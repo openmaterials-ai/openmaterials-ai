@@ -17,7 +17,7 @@
 <meta property="og:url" content="https://openmaterials.ai/agreement/">
 <meta property="og:image" content="https://openmaterials.ai/assets/og.png">
 <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="The openmaterials.ai mark and wordmark above the line &quot;A versioned map of physics.&quot; and the licenses &quot;Map data CC BY 4.0 · Code Apache 2.0&quot;.">
+<meta property="og:image:alt" content="The openmaterials.ai mark and wordmark above the line &quot;A versioned map of physics.&quot; A smaller line gives the licenses: map data CC BY 4.0 and code Apache 2.0.">
 <meta name="twitter:card" content="summary_large_image">
 <script>try{const t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch{}</script>
 <link rel="preload" href="../assets/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin>
@@ -103,7 +103,7 @@ function badgesHtml(g){
   if (g.has_cross_code)
     out += '<span class="pill cross">cross-code</span>';
   if (g.has_measurement)
-    out += '<span class="pill exp">theory vs experiment</span>';
+    out += '<span class="pill exp">theory vs. experiment</span>';
   return out ? '<div class="badges">' + out + '</div>' : '';
 }
 
@@ -141,7 +141,7 @@ function render(){
     '<dl class="ledger">' +
     '<div><dt>Groups</dt><dd class="mono">' + esc(s.groups || 0) + '</dd></div>' +
     '<div><dt>Cross-code</dt><dd><span class="mono">' + esc(s.cross_code || 0) + '</span> (the same method computed by different codes on the same inputs)</dd></div>' +
-    '<div><dt>Theory vs experiment</dt><dd><span class="mono">' + esc(s.theory_vs_experiment || 0) + '</span> (a measurement and a simulation of the same quantity under the same recorded conditions)</dd></div>' +
+    '<div><dt>Theory vs. experiment</dt><dd><span class="mono">' + esc(s.theory_vs_experiment || 0) + '</span> (a measurement and a simulation of the same quantity under the same recorded conditions)</dd></div>' +
     '</dl>';
   var body = groups.length
     ? groups.map(groupHtml).join('')

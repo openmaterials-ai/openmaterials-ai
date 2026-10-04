@@ -11,12 +11,12 @@ Cite the map version in https://openmaterials.ai/data/version.json with any valu
 - [codes.json](https://openmaterials.ai/data/codes.json): each code's representation, citation, and license
 - [semantics.json](https://openmaterials.ai/data/semantics.json): the labels per node and edge that the resolver matches
 - [instances.json](https://openmaterials.ai/data/instances.json): committed values with their provenance
-- [lean.json](https://openmaterials.ai/data/lean.json): the Lean export of the dimensional layer
+- [lean.json](https://openmaterials.ai/data/lean.json): the Lean export: dimension nodes, edge theorems, and operator identities
 - [version.json](https://openmaterials.ai/data/version.json): map version, graph version, and genesis hash
 
 ## Docs
 
-- [Guide](https://openmaterials.ai/guide/): install the omai kernel, resolve a label, load the graph, parse a paper
+- [Guide](https://openmaterials.ai/guide/): install the omai kernel, resolve a label, load the graph, and parse a paper
 - [Document](https://openmaterials.ai/document/): the full specification, also as [PDF](https://openmaterials.ai/openmaterials.pdf)
 - [Codes](https://openmaterials.ai/codes/): the bibliography of the codes the map cites
 - [Data contract](https://openmaterials.ai/guide/#data): the shape of each JSON file under data/
@@ -31,5 +31,5 @@ Cite the map version in https://openmaterials.ai/data/version.json with any valu
 
 ## Optional
 
-- [Playground](https://openmaterials.ai/play/): parse a paper, open a lineage record, resolve a method name
+- [Playground](https://openmaterials.ai/play/): parse a paper, open a lineage record, or resolve a method name
 - [Map](https://openmaterials.ai/map/) and [Map in 3D](https://openmaterials.ai/map-3d/)
