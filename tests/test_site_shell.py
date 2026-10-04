@@ -190,6 +190,7 @@ def test_the_home_jsonld_matches_the_data_and_the_package():
 
 _SOURCES = r"""
 const fs = require('fs');
+eval(fs.readFileSync(process.argv[1].replace('sources.js', 'map-words.js'), 'utf8'));   // nodeName
 eval(fs.readFileSync(process.argv[1], 'utf8'));   // assets/sources.js: var Sources
 const page = fs.readFileSync(process.argv[2], 'utf8');
 const label = new Function(page.slice(page.indexOf('var METHOD'), page.indexOf('var DATA')) + '; return methodLabel;')();
@@ -203,7 +204,9 @@ console.log(JSON.stringify({titles, quotes: recs.map(r => Sources.parts(r.source
   conds: recs.map(r => Sources.condText(r.conditions)), methods: recs.map(r => Sources.methodLine(r, codes)),
   ptse2: Sources.condText(one('457f936b93d9').conditions), si: Sources.condText(one('f735a05c14db').conditions),
   conformance: Sources.methodLine(one('f64affbf549a'), codes),
-  name: Sources.nodeName('ThermalConductivity[bte_solver=direct_inverse]'),
+  precision: Sources.condText(one('c7f4680c4137').conditions),
+  ethanol: [...new Set(Sources.groups(recs)['atomisticskills-chem-bond-dissociation-ethanol'].map(r => Sources.methodLine(r, codes)))],
+  name: nodeName('ThermalConductivity[bte_solver=direct_inverse]'),
   labels: [].concat(...agreement.groups.map(g => g.members.map(m => label(m)))),
   fam: [Sources.family('atomisticskills-chem-bond-dissociation-ethanol-bond3'), Sources.family('paper:esfarjani-2011')]}));
 """
@@ -211,8 +214,8 @@ console.log(JSON.stringify({titles, quotes: recs.map(r => Sources.parts(r.source
 
 def test_sources_take_their_citations_and_print_plain_words():
     """A source is titled by the citation its records carry, or as its code's run; conditions read T in
-    kelvin and drop curator notes and hashes; a run prints one method line from its structured fields;
-    the agreement page prints a method label, never the raw method string."""
+    kelvin and drop curator notes, commit asides and hashes; a run prints one method line from its
+    structured fields; the agreement page prints a method label, never the raw method string."""
     node = shutil.which("node")
     if node is None:
         pytest.skip("node not available")
@@ -232,7 +235,10 @@ def test_sources_take_their_citations_and_print_plain_words():
     assert got["ptse2"].endswith("method = first-principles BTE, solver not stated")
     assert got["si"].startswith("T 300 K · ")
     assert not [c for c in got["conds"] if "unstated" in c or re.search(r"\b[0-9a-f]{64}\b", c)]
-    assert got["conformance"].endswith(" 2.2.1 run of Si, Si.tersoff")
+    assert got["conformance"].endswith(" 2.2.1 run of Si with the Tersoff potential")
+    assert "precision = frozen eskm reference output; MESCAL reproduces it on the CPU complex128 path" in got["precision"]
+    assert "commit" not in got["precision"] and "source of truth" not in got["precision"]
+    assert got["ethanol"] == ["Computed with MACE-OFF23-small"], "one line per distinct method"
     assert not [m for m in got["methods"] if ".json" in m], "no repo paths in a method line"
     assert got["name"] == "Thermal conductivity (direct inverse)"
     assert got["fam"] == ["atomisticskills-chem-bond-dissociation-ethanol", "paper:esfarjani-2011"]

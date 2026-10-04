@@ -58,6 +58,7 @@
   </div></div>
 </main>
 <script src="../assets/vendor/katex/dist/katex.min.js"></script>
+<script src="../assets/map-words.js"></script>
 <script src="../assets/sources.js"></script>
 <script>
 'use strict';
@@ -128,7 +129,7 @@ function groupHtml(g){
   var rows = (g.members || []).map(function(m){
     return '<tr>' +
       '<td class="val" data-label="Value">' + esc(m.value) +
-        (m.units ? ' <span class="u">' + esc(m.units) + '</span>' : '') + '</td>' +
+        (m.units ? ' <span class="u">' + esc(Sources.unit(m.units)) + '</span>' : '') + '</td>' +
       '<td class="est" data-label="Method">' + esc(methodLabel(m)) + '</td>' +
       '<td data-label="Source"><a href="../experiment/#ref=' + encodeURIComponent(m.ref) + '">' +
         esc(DATA.titles[m.ref] || m.ref) + '</a></td>' +
@@ -137,7 +138,7 @@ function groupHtml(g){
   }).join('');
   return '<section class="grp">' +
     '<div class="grp-head">' +
-      '<span class="obs">' + esc(Sources.nodeName(g.observable)) + '</span>' + sym +
+      '<span class="obs">' + esc(nodeName(g.observable)) + '</span>' + sym +
       '<span class="mat">' + esc(g.material) + '</span>' +
       '<span class="spread">spread ' + esc(pct(g.spread)) + '</span>' +
     '</div>' +

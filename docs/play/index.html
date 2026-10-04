@@ -487,6 +487,7 @@
 <script src="../assets/vendor/katex/dist/katex.min.js"></script>
 <script src="../learn/lib.js"></script>
 <script src="../assets/map-words.js"></script>
+<script src="../assets/sources.js"></script>
 <script>
 /* ============================================================================
    openmaterials playground: a Mermaid-style two-pane shell over the live map.
@@ -510,8 +511,8 @@ var GRAPH = null, SEM = [], LEAN = {nodes:{},edges:{}}, semById = {}, nodeById =
 var catalogById = {};   // node id -> {id, symbol, description}: the plain-language names for the lineage view
 var INSTANCE_IDS = null; // Set of committed lineage ids: the badge's committed test
 var codesByNode = {};   // node id -> [{code, api, url}]: which codes compute the quantity
-var CODE_NAMES = {};    // code key -> its display name in codes.json, else the key
-function codeName(k){ return CODE_NAMES[k] || k; }
+var CODES = {};         // codes.json, for code names and the Method line (sources.js)
+function codeName(k){ return Sources.codeName(k, CODES); }
 var CONFORMANCE = [];   // conformance/index.json targets: the pinned reproduce runs
 var configByUid = {};   // canonical.uid and aliases -> configuration bundle record for a pinned lineage cell
 var VB = { x: 0, y: 0, w: 1000, h: 700 };
@@ -537,10 +538,8 @@ var mapReady = Promise.all([
   (res[4] || []).forEach(function(n){ if (n && n.id) catalogById[n.id] = n; });
   configByUid = indexConfigurations(res[5]);
   // codes.json: code -> {node id -> {api, url, ...}}; invert to node -> codes
-  var codesData = res[6] || {};
+  var codesData = CODES = res[6] || {};
   Object.keys(codesData).forEach(function(code){
-    // codes.json `name` (a string beside the node entries) once the commons adds it, else the key
-    CODE_NAMES[code] = typeof (codesData[code] || {}).name === 'string' ? codesData[code].name : code;
     Object.keys(codesData[code] || {}).forEach(function(nid){
       if (nid === 'name') return;
       (codesByNode[nid] = codesByNode[nid] || []).push(
@@ -1240,18 +1239,21 @@ function initTryDistance(){
 
 /* ---- distance between papers: the committed instances, compared ---------- */
 var papersRows = null;
+var papersGroups = {};   // source key -> its records, a numbered family as one source (sources.js)
 function initPapersCompare(){
   if (papersRows) return;
   papersRows = [];
   fetch('../data/instances.json').then(function(r){ return r.json(); }).then(function(rows){
     papersRows = rows.filter(function(r){ return r && r.source && r.source.ref; });
-    var refs = Array.from(new Set(papersRows.map(function(r){ return r.source.ref; })));
+    papersGroups = Sources.groups(papersRows);
+    var refs = Object.keys(papersGroups);
     refs.sort(function(a, b){
       var pa = a.indexOf('paper:') === 0 ? 0 : 1;
       var pb = b.indexOf('paper:') === 0 ? 0 : 1;
       return pa !== pb ? pa - pb : (a < b ? -1 : 1);
     });
-    var opts = refs.map(function(r){ return '<option value="' + esc(r) + '">' + esc(sourceTitle(r)) + '</option>'; }).join('');
+    // each source as /experiment/ titles it, else its key
+    var opts = refs.map(function(r){ return '<option value="' + esc(r) + '">' + esc(Sources.titleOf(papersGroups[r], CODES) || r) + '</option>'; }).join('');
     var selA = document.getElementById('distPaperA');
     var selB = document.getElementById('distPaperB');
     selA.innerHTML = opts; selB.innerHTML = opts;
@@ -1267,25 +1269,15 @@ function initPapersCompare(){
     document.getElementById('distPapers').innerHTML = '<p class="pg-empty">The committed values did not load: ' + esc(e.message) + '</p>';
   });
 }
-// A source as /experiment/ titles it: the shortest citation its records carry, "<code> run"
-// for a code, else its ref.
-function sourceTitle(ref){
-  var best = '';
-  papersRows.forEach(function(r){
-    var c = r.source.ref === ref ? citationOf(r.source.detail) : '';
-    if (c && (!best || c.length < best.length)) best = c;
-  });
-  return best || (ref in CODE_NAMES ? codeName(ref) + ' run' : ref);
-}
-function seriesOf(ref){
+function seriesOf(src){
   var out = {};
-  papersRows.forEach(function(r){
-    if (r.source.ref !== ref) return;
+  (papersGroups[src] || []).forEach(function(r){
     var T = r.conditions ? r.conditions.T : null;
     if (typeof r.value !== 'number') return;
     var key = (r.variable || '?') + ' | ' + (r.material || '?') + ' | ' + (r.units || '');
-    (out[key] = out[key] || {pts: [], material: r.material, units: r.units || '',
-      label: nodeName(r.variable) + ', ' + (r.material || '?') + (r.units ? ' (' + r.units + ')' : '')}).pts.push(
+    var u = Sources.unit(r.units || '');
+    (out[key] = out[key] || {pts: [], material: r.material, units: u,
+      label: nodeName(r.variable) + ', ' + (r.material || '?') + (u ? ' (' + u + ')' : '')}).pts.push(
       {x: typeof T === 'number' ? T : null, y: r.value});
   });
   return out;
@@ -1438,25 +1430,11 @@ async function mintShortlink(env, btn){
 var MCG_COMPUTABLE = { 'ThermalConductivity': 1 };
 function isComputable(id){ return !!MCG_COMPUTABLE[baseNode(id)]; }
 
-// A leading phrase from a catalog description: the first clause up to a
-// sentence break, colon, comma, or "from/of/tensor" pivot, then Title-cased
-// gently (first letter up). A readable fallback when the id is not in HUMAN_PROP.
-function propFromDescription(desc){
-  if (!desc) return '';
-  var s = String(desc).split(/[:.,;]|\s+(?:from|of|the|tensor)\b/i)[0].trim();
-  if (!s || s.length > 48) return '';
-  return s.charAt(0).toUpperCase() + s.slice(1);
-}
-// The human property name for the headline: the curated name (HUMAN_PROP, map-words.js),
-// else the leading phrase of the catalog description, else the de-camelCased base id. The
-// [qualifier=...] route is not in the title; the title is the property, method-neutral.
+// The human property name for the headline: nodeName's base (HUMAN_PROP or the de-camelCased
+// id, map-words.js). The [qualifier=...] route is not in the title; the title is the property.
 function humanProperty(node, template){
   var base = baseNode(node);
-  if (base && HUMAN_PROP[base]) return HUMAN_PROP[base];
-  var cat = base && catalogById[base];
-  var fromDesc = cat && propFromDescription(cat.description);
-  if (fromDesc) return fromDesc;
-  if (base) return humanizeId(base);
+  if (base) return HUMAN_PROP[base] || humanizeId(base);
   // node-unresolved: fall back to the template phrased for a human
   if (template) return templateWords(template);
   return 'Lineage';
@@ -1629,7 +1607,9 @@ function detailGroups(record, lineage){
     var o = lineage[field];
     if (o && typeof o === 'object' && !Array.isArray(o)) {
       var ks = Object.keys(o);
-      if (ks.length) groups.push({ label: field === 'conditions' ? 'Conditions' : 'Parameters', tag: '', rows: ks.map(function(k){ return [k, conditionVal(k, o[k])]; }) });
+      // conditions read as sources.js prints them: T in kelvin, no hashes, no curator asides
+      ks = ks.filter(function(k){ return Sources.condValue(k, o[k]) !== ''; });
+      if (ks.length) groups.push({ label: field === 'conditions' ? 'Conditions' : 'Parameters', tag: '', rows: ks.map(function(k){ return [k, detailVal(Sources.condValue(k, o[k]))]; }) });
     }
   });
   // execution: how and where it ran (code, version, container, runner, timing, seeds)
@@ -1652,13 +1632,6 @@ function detailGroups(record, lineage){
     groups.push({ label: 'Template', tag: '', rows: [[String(lineage.template), templateWords(lineage.template) || '']] });
   }
   return groups;
-}
-// A condition as a reader sees it: a numeric T in kelvin, and a curator's "(label: note)"
-// aside cut to ", label" ("(solver unstated: ...)" reads ", solver not stated").
-function conditionVal(k, v){
-  if (k === 'T' && typeof v === 'number') return detailVal(v + ' K');
-  if (typeof v === 'string') v = v.replace(/\s*\(([^():]+):[^()]*\)/g, function(_, label){ return ', ' + label.trim().replace(/\bunstated\b/, 'not stated'); });
-  return detailVal(v);
 }
 // A detail value formatted for the grid: a list reads "8 × 8 × 8", an object is
 // JSON, a long hex is a hash we mark for break-anywhere wrapping.
@@ -1705,7 +1678,7 @@ function valuesHTML(lineage, node){
   var picked = pickValues(lineage.values, node);
   var isUnitMeta = function(k){ return k === 'units' || k === 'unit'; };
   if (!picked.primary || isUnitMeta(picked.primary.key)) return '';
-  var unit = cleanUnit((lineage.units) || (lineage.values && lineage.values.units) || '');
+  var unit = Sources.unit((lineage.units) || (lineage.values && lineage.values.units) || '');
   var rows = [{ key: picked.primary.key, val: picked.primary.val }]
     .concat(picked.rest.filter(function(r){ return !isUnitMeta(r.key); }));
   // the main row names its quantity and symbol ("Thermal conductivity κ"), not its key
@@ -1819,9 +1792,9 @@ function renderBundle(env){
     var picked = pickValues(lineage.values, lineage.node);
     var isUnitMeta = picked.primary && (picked.primary.key === 'units' || picked.primary.key === 'unit');
     var val = picked.primary && !isUnitMeta ? fmtSig(picked.primary.val) : '';
-    var unit = cleanUnit(lineage.units || (lineage.values && lineage.values.units) || '');
+    var unit = Sources.unit(lineage.units || (lineage.values && lineage.values.units) || '');
     var reported = reportedValues(member)[0];
-    if (!val && reported) { val = fmtSig(reported.value); unit = cleanUnit(reported.units || ''); }
+    if (!val && reported) { val = fmtSig(reported.value); unit = Sources.unit(reported.units || ''); }
     var short = member.id ? String(member.id).slice(0, 12) : '';
     h += '<tr><td class="rec-vk"><a href="#" class="rec-member" data-idx="' + idx + '" title="Jump to this lineage\'s datasheet below">' + esc(label ? label + (mat ? ' of ' + mat : '') : (mat || 'lineage record')) + '</a></td>' +
       '<td class="rec-vv">' + esc(val) + '</td><td class="rec-vu">' + esc(unit) + '</td>' +
@@ -1888,7 +1861,7 @@ function reproduceHTML(node, recordId){
       var name = c.url
         ? '<a href="' + esc(c.url) + '" target="_blank" rel="noopener">' + esc(codeName(c.code)) + '</a>'
         : esc(codeName(c.code));
-      return '<dt>' + name + '</dt><dd class="wrap">' + esc(c.api || 'covers this node') + '</dd>';
+      return '<dt>' + name + '</dt><dd class="wrap">' + esc(Sources.clean(c.api) || 'covers this node') + '</dd>';
     }).join('') + '</dl>';
   }
   targets.forEach(function(t){
@@ -2142,52 +2115,17 @@ function renderInstanceById(hash){
   });
 }
 
-// source.detail as a reader sees it: bracketed curator notes such as [MIGRATED ...] are cut at
-// render time; the hashed record keeps them.
-function readerDetail(s){
-  return String(s == null ? '' : s).replace(/\s*\[[A-Z]{2,}[^\]]*\]/g, '').replace(/\s+/g, ' ').trim();
-}
-// A paper's detail reads '<verbatim quote> (<where, with p. N>). <citation>, doi:..., arXiv:...'.
-function paperParts(d){
-  var m = /^(.+?)\s*\(([^()]*\bp\.\s*\d+[^()]*)\)\.\s+(.+)$/.exec(d);
-  if (!m) return null;
-  var cut = m[3].search(/,?\s*\b(?:doi|arXiv):/i);
-  var doi = /\bdoi:\s*(10\.\S+?)[.,;]?(?=\s|$)/i.exec(m[3]), arx = /\barXiv:\s*(\S+?)[.,;]?(?=\s|$)/i.exec(m[3]);
-  return { quote: m[1].replace(/^["“]|["”]$/g, ''), where: m[2].split(';')[0].trim(),
-    citation: (cut < 0 ? m[3] : m[3].slice(0, cut)).replace(/[\s.,]+$/, ''), doi: doi && doi[1], arxiv: arx && arx[1] };
-}
-// Any other source's method in one plain line from the record's fields: code and version,
-// material, potential or model. Its prose can carry repo paths, tags and hashes, so it never prints.
-function methodLine(record){
-  var lin = record.lineage || {}, c = lin.conditions || {}, ref = (record.source && record.source.ref) || '';
-  var cv = String(c.code || '').split(' '), key = cv[0] in CODE_NAMES ? cv[0] : (ref in CODE_NAMES ? ref : cv[0]);
-  var who = key ? [codeName(key), c.code_version || cv.slice(1).join(' ')].filter(Boolean).join(' ') : '';
-  var mat = materialName(lin.material), pot = c.potential || c.potential_name || c.potential_file;
-  var how = pot ? ' with the ' + String(pot).replace(/^[A-Z][a-z]?\./, '').replace(/^./, function(x){ return x.toUpperCase(); }) + ' potential'
-    : (c.model ? ' with ' + c.model : '');
-  if (!who && !mat) return '';
-  return (who ? who + ' run' + (mat ? ' of ' + mat : '') : 'Computed for ' + mat) + how +
-    (Object.keys(c).length ? '; settings under Conditions.' : '.');
-}
-// The citation a detail carries: a paper's, or the '<citation (year)>; <method>' form's.
-function citationOf(detail){
-  var d = readerDetail(detail), p = paperParts(d);
-  if (p) return p.citation;
-  var c = /^([^;:]{1,120}\(\d{4}\));/.exec(d.replace(/,?\s*\bdoi:\s*\S+/i, ''));
-  return c ? c[1] : '';
-}
-// The source rows: the quote with its page, the citation and its DOI for a paper; citation,
-// method and any DOI for '<citation (year)>; <method>'; otherwise the method line.
+// The source rows (sources.js reads the detail): the quote with its page, the citation and its
+// DOI for a paper; citation, method and any DOI for '<citation (year)>; <method>'; otherwise the
+// one Method line its fields give, and no row when they name no code, potential or model.
 function sourceRows(record){
-  var src = record.source || {}, d = readerDetail(src.detail), p = paperParts(d), c;
+  var p = Sources.parts(record.source && record.source.detail), m;
   var row = function(k, v){ return '<dt>' + k + '</dt><dd>' + v + '</dd>'; };
   var a = function(href, text){ return '<a href="' + esc(href) + '" target="_blank" rel="noopener">' + esc(text) + '</a>'; };
-  if (p) return [row('Quote', '“' + esc(p.quote) + '” (' + esc(p.where) + ')'), row('Paper', esc(p.citation)),
-    p.doi ? row('DOI', a('https://doi.org/' + p.doi, p.doi)) : (p.arxiv ? row('arXiv', a('https://arxiv.org/abs/' + p.arxiv, p.arxiv)) : '')];
-  var doi = /,?\s*\bdoi:\s*(10\.[^\s;,]+[^\s;,.])/i.exec(d), dd = doi ? d.replace(doi[0], '') : d;
-  if ((c = /^([^;:]{1,120}\(\d{4}\));\s*(.+)$/.exec(dd)))
-    return [row('Paper', esc(c[1])), row('Method', esc(c[2]))].concat(doi ? [row('DOI', a('https://doi.org/' + doi[1], doi[1]))] : []);
-  var m = methodLine(record);
+  var id = p.doi ? row('DOI', a('https://doi.org/' + p.doi, p.doi)) : (p.arxiv ? row('arXiv', a('https://arxiv.org/abs/' + p.arxiv, p.arxiv)) : '');
+  if (p.quote) return [row('Quote', '“' + esc(p.quote) + '” (' + esc(p.where) + ')'), row('Paper', esc(p.cite)), id];
+  if (p.cite) return [row('Paper', esc(p.cite)), p.method ? row('Method', esc(p.method)) : '', id];
+  m = Sources.methodLine(record, CODES);
   return m ? [row('Method', esc(m))] : [];
 }
 

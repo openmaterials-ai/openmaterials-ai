@@ -517,7 +517,7 @@ function chip(id){ return '<button type="button" class="chip" onclick="navTo(\''
 function closeBtn(){ return '<button type="button" class="x" aria-label="Close" onclick="clearSel()">&times;</button>'; }
 
 function mappedByHtml(id){
-  const rows=Object.keys(codesData).filter(c=> codesData[c] && codesData[c][id]).sort().map(c=>{ const m=codesData[c][id]; return '<div class="om-kv-row"><span class="om-kv-k">'+esc(codeName(c))+'</span><span class="om-kv-v">'+esc((m.api||''))+(m.unit?(' · '+esc(m.unit)):'')+'</span></div>'; });
+  const rows=Object.keys(codesData).filter(c=> codesData[c] && codesData[c][id]).sort().map(c=>{ const m=codesData[c][id]; return '<div class="om-kv-row"><span class="om-kv-k">'+esc(codeName(c))+'</span><span class="om-kv-v">'+esc(Sources.clean(m.api||''))+(m.unit?(' · '+esc(Sources.unit(m.unit))):'')+'</span></div>'; });
   return rows.length? ('<div class="om-panel-label">Mapped by '+rows.length+' code'+(rows.length>1?'s':'')+'</div><div class="mapby om-kv">'+rows.join('')+'</div>') : '';
 }
 function selectNode(node){
@@ -580,7 +580,8 @@ function loadInstances(){
 }
 function resolveNodeId(v){ if(nodeById[v]) return v; const b=(''+v).split('[')[0]; return nodeById[b]?b:null; }
 function showExperiment(ref, recs){
-  const mine=recs.filter(r=> r.source && r.source.ref===ref);
+  // a source key is a ref or a numbered family of refs (Sources.groups)
+  const mine=recs.filter(r=> r.source && (r.source.ref===ref || Sources.family(r.source.ref)===ref));
   const ids=[...new Set(mine.map(r=>resolveNodeId(r.variable)).filter(Boolean))];
   let h=closeBtn()+'<div class="om-panel-label">Source</div>';
   h+='<div class="name" style="font-weight:500;color:var(--ink,#171717)">'+esc(Sources.titleOf(mine, codesData)||ref)+'</div>';

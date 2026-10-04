@@ -58,6 +58,7 @@
   </div></div>
 </main>
 <script src="../assets/vendor/katex/dist/katex.min.js"></script>
+<script src="../assets/map-words.js"></script>
 <script src="../assets/sources.js"></script>
 <script>
 'use strict';
@@ -86,7 +87,7 @@ function fail(msg){
 function valText(rec){
   var v = esc(rec.value);
   if (rec.uncertainty != null) v += ' ± ' + esc(rec.uncertainty);
-  if (rec.units) v += ' <span class="u">' + esc(rec.units) + '</span>';
+  if (rec.units) v += ' <span class="u">' + esc(Sources.unit(rec.units)) + '</span>';
   return v;
 }
 function uniq(arr){
@@ -114,18 +115,7 @@ function load(){
   ]).then(function(res){
     var records = res[0], catalog = {}, version = res[2];
     res[1].forEach(function(n){ catalog[n.id] = n; });
-    var byRef = {}, fams = {}, groups = {};
-    records.forEach(function(rec){
-      var ref = (rec.source && rec.source.ref) || '(unsourced)';
-      (byRef[ref] = byRef[ref] || []).push(rec);
-    });
-    Object.keys(byRef).forEach(function(ref){ (fams[family(ref)] = fams[family(ref)] || []).push(ref); });
-    Object.keys(fams).forEach(function(f){
-      var refs = fams[f];
-      if (refs.length === 1) groups[refs[0]] = byRef[refs[0]];
-      else groups[f] = [].concat.apply([], refs.map(function(r){ return byRef[r]; }));
-    });
-    DATA = { records: records, groups: groups, catalog: catalog, codes: res[3], version: version };
+    DATA = { records: records, groups: Sources.groups(records), catalog: catalog, codes: res[3], version: version };
   });
 }
 
@@ -195,18 +185,23 @@ function renderDetail(ref){
     return '<tr>' +
       '<td class="var" data-label="Quantity"><span class="sym">' + tex(node.symbol) + '</span>' +
       '<a class="vid" href="../map/#node=' + encodeURIComponent(rec.variable) +
-      '" title="Open this quantity on the map">' + esc(Sources.nodeName(rec.variable)) + '</a></td>' +
+      '" title="Open this quantity on the map">' + esc(nodeName(rec.variable)) + '</a></td>' +
       '<td class="mat" data-label="Material">' + esc(rec.material) + '</td>' +
       '<td class="cond" data-label="Conditions">' + esc(Sources.condText(rec.conditions)) + '</td>' +
       '<td class="val" data-label="Value">' + valText(rec) + '</td>' +
       '</tr>';
   }).join('');
-  // A cited source shows each record's quoted passage (the citation is the title); a run shows one
-  // plain method line per record, never its detail prose.
-  var quotes = cited ? uniq(sorted.map(function(r){ return parts(r.source && r.source.detail).quote || null; }))
-    .map(function(d){ return '<blockquote class="quote">' + esc(d) + '</blockquote>'; }).join('') : '';
-  var methods = cited ? '' : uniq(sorted.map(function(r){ return Sources.methodLine(r, DATA.codes) || null; }))
-    .map(function(m){ return '<li>' + esc(m) + '</li>'; }).join('');
+  // A cited source quotes each record's passage with its page (the citation is the title) and
+  // prints any curator method note as plain text; a run prints one method line per distinct
+  // method, never its detail prose.
+  var quotes = uniq(sorted.map(function(r){
+    var p = parts(r.source && r.source.detail);
+    return p.quote ? p.quote + ' (' + p.where + ')' : null;
+  })).map(function(d){ return '<blockquote class="quote">' + esc(d) + '</blockquote>'; }).join('');
+  var methods = uniq(sorted.map(function(r){
+    var p = parts(r.source && r.source.detail);
+    return (cited ? p.method : Sources.methodLine(r, DATA.codes)) || null;
+  })).map(function(m){ return '<li>' + esc(m) + '</li>'; }).join('');
   var facts =
     '<dl class="ledger">' +
     '<div><dt>Kind</dt><dd>' + esc(kinds.join(', ')) + '</dd></div>' +
@@ -215,13 +210,12 @@ function renderDetail(ref){
       return '<a href="#material=' + encodeURIComponent(m) + '">' + esc(m) + '</a>'; }).join(', ') + '</dd></div>' +
     '</dl>';
   var runBtn = runnable(recs) ? '<a class="btn btn--primary btn--sm" href="' + MCG_CONNECT + '">Run it for your material</a>' : '';
-  var mapRef = (recs[0].source && recs[0].source.ref) || key;   // the map marks one ref's quantities
   page(
     '<p class="crumb"><a href="#">All sources</a></p>' +
     '<p class="eyebrow">Source</p>' +
     '<h1 class="' + (title ? 'cite' : 'ref') + '">' + esc(title || key) + '</h1>' +
     '<div class="cta-row">' + runBtn + '<button class="btn btn--secondary btn--sm" id="copy" type="button">Copy link</button>' +
-    '<a class="btn btn--secondary btn--sm" href="../map/#experiment=' + encodeURIComponent(mapRef) + '">View on the map</a>' +
+    '<a class="btn btn--secondary btn--sm" href="../map/#experiment=' + encodeURIComponent(key) + '">View on the map</a>' +
     '<span class="copied small" id="copied" aria-live="polite"></span></div>',
     facts +
     '<h2>Values</h2>' +
