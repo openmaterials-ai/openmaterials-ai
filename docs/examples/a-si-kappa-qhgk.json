@@ -24,14 +24,7 @@
   "artifacts": [
     {
       "path": "FORCE_CONSTANTS",
-      "role": "force_constants",
-      "url": "https://app.materialscodegraph.com/runs/a-si-qhgk"
+      "role": "force_constants"
     }
-  ],
-  "mirrors": {
-    "FORCE_CONSTANTS": {
-      "url": "https://app.materialscodegraph.com/runs/a-si-qhgk",
-      "provider": "materialscodegraph"
-    }
-  }
+  ]
 }
