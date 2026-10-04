@@ -436,6 +436,8 @@ omai/
                      #   together (Gruneisen, kappa_total, molar volume, C_P-C_V, PF, ZT)
   paper_parser/      # P1 paper parser: PDF -> gated evidence proposal (six stages)
   configurations.py  # structure-valued evidence: content-addressed atomic cells
+  evidence.py        # one resolver for content-addressed records (configurations,
+                     #   models); data/registry.json ships their uids in the wheel
   map_data.py        # unified multi-domain export -> docs/data/*.json
   store.py           # log-first store: push/read/diff/verify
 infra/
@@ -474,3 +476,6 @@ through it, the original sources. The full statement is GOVERNANCE.md,
 The architecture is Part III of `docs/openmaterials.pdf`; the implemented kernel
 (dimensions, identity, store, genesis) is Part IV. Read the Principles and the
 two-worlds section first.
+
+The format of model records, code releases and private overlays is specified
+in [docs/specs/models-releases-overlays.md](docs/specs/models-releases-overlays.md).
