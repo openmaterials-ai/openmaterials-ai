@@ -45,8 +45,16 @@
 <a class="skip-link" href="#main">Skip to content</a>
 <div data-site-header></div>
 <main class="frame" id="main">
-  <noscript><div class="page-body"><p class="empty">This page renders the agreement layer client-side and needs JavaScript.
-    The raw groups are plain JSON in <a href="../data/agreement.json">../data/agreement.json</a>.</p></div></noscript>
+  <header class="page-head">
+    <p class="crumb"><a href="../experiment/">Experiments</a></p>
+    <p class="eyebrow">Evidence</p>
+    <h1>Cross-code agreement</h1>
+    <p class="lede">Each group below holds values of one quantity for one material whose recorded conditions match. They differ in the method or code that produced them, and possibly in settings the records do not state, so the spread of a group (the range of its values divided by their mean) measures how far those methods or codes disagree.</p>
+  </header>
+  <div class="page-body"><div class="prose" id="groups">
+    <noscript><p class="empty">This page renders the groups from the published data and needs JavaScript.
+      The raw groups are plain JSON in <a href="../data/agreement.json">../data/agreement.json</a>.</p></noscript>
+  </div></div>
 </main>
 <script>
 'use strict';
@@ -56,8 +64,8 @@ function esc(s){
     .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
 function fail(msg){
-  document.getElementById('main').innerHTML =
-    '<div class="page-body"><p id="err" class="notice notice--error">' + esc(msg) + '</p></div>';
+  document.getElementById('groups').innerHTML =
+    '<p id="err" class="notice notice--error">' + esc(msg) + '</p>';
 }
 function condText(c){
   if (!c || typeof c !== 'object') return '';
@@ -86,16 +94,16 @@ function pinHtml(){
   return '<p class="notice pin">Map version <span class="mono">' + esc(v.slice(0, 12)) + '</span>' +
     (v ? ' (<span class="mono">' + esc(v) + '</span>)' : '') +
     '. The groups are derived from the values committed in the current site build. Cite the map version with any spread you share.' +
-    '<br>Contributors grant the initiative a non-exclusive license to redistribute each value under CC BY 4.0 and keep every other right. Raw artifacts are never ingested, and reuse credits the source named in each value\'s provenance ' +
-    '(<a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/main/GOVERNANCE.md">GOVERNANCE.md, "Data ownership and fairness"</a>).</p>';
+    '<br>Contributors grant OpenMaterials-AI a non-exclusive license to redistribute each value under CC BY 4.0 and keep every other right. Raw artifacts are never ingested, and reuse credits the source named in each value\'s provenance ' +
+    '(<a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/main/GOVERNANCE.md#data-ownership-and-fairness">GOVERNANCE.md, "Data ownership and fairness"</a>).</p>';
 }
 
 function badgesHtml(g){
   var out = '';
   if (g.has_cross_code)
-    out += '<span class="pill cross" title="The same method computed by different codes on the same inputs">cross-code</span>';
+    out += '<span class="pill cross">cross-code</span>';
   if (g.has_measurement)
-    out += '<span class="pill exp" title="A measurement and a simulation of the same quantity under the same conditions">theory vs experiment</span>';
+    out += '<span class="pill exp">theory vs experiment</span>';
   return out ? '<div class="badges">' + out + '</div>' : '';
 }
 
@@ -120,7 +128,7 @@ function groupHtml(g){
     badgesHtml(g) +
     '<p class="cond">Conditions <span class="mono">' + esc(condText(g.conditions)) + '</span></p>' +
     '<div class="table-wrap"><table class="table"><thead><tr>' +
-      '<th>Value</th><th>Estimator</th><th>Code</th><th>Kind</th>' +
+      '<th>Value</th><th>Estimator</th><th>Source</th><th>Kind</th>' +
     '</tr></thead><tbody>' + rows + '</tbody></table></div>' +
     '</section>';
 }
@@ -132,27 +140,14 @@ function render(){
   var summary =
     '<dl class="ledger">' +
     '<div><dt>Groups</dt><dd class="mono">' + esc(s.groups || 0) + '</dd></div>' +
-    '<div><dt>Cross-code</dt><dd class="mono">' + esc(s.cross_code || 0) + '</dd></div>' +
-    '<div><dt>Theory vs experiment</dt><dd class="mono">' + esc(s.theory_vs_experiment || 0) + '</dd></div>' +
+    '<div><dt>Cross-code</dt><dd><span class="mono">' + esc(s.cross_code || 0) + '</span> (the same method computed by different codes on the same inputs)</dd></div>' +
+    '<div><dt>Theory vs experiment</dt><dd><span class="mono">' + esc(s.theory_vs_experiment || 0) + '</span> (a measurement and a simulation of the same quantity under the same recorded conditions)</dd></div>' +
     '</dl>';
   var body = groups.length
     ? groups.map(groupHtml).join('')
     : '<p class="empty">No comparison groups in this site build yet. A group needs values from different methods or codes ' +
-      'for the same observable and material under identical physical conditions.</p>';
-  document.getElementById('main').innerHTML =
-    '<header class="page-head">' +
-    '<p class="crumb"><a href="../experiment/">Experiments</a></p>' +
-    '<p class="eyebrow">Evidence</p>' +
-    '<h1>Cross-code agreement</h1>' +
-    '<p class="lede">Each group below holds values of the same observable for the same material under identical physical ' +
-    'conditions. The values differ only in the method or code that produced them, so the spread of a group (the range of its ' +
-    'values divided by their mean) measures a difference between methods or codes.</p>' +
-    '<p class="lede">Values share a group only when their base quantity, material, and every physical condition match and ' +
-    'they differ only in estimator: the solver label, the method, or the code. The source paper does not count as a ' +
-    'condition, so values from different papers can share a group.</p>' +
-    '</header>' +
-    '<div class="page-body"><div class="prose">' + summary + body + pinHtml() + '</div></div>';
-  window.scrollTo(0, 0);
+      'for the same observable and material under the same recorded conditions.</p>';
+  document.getElementById('groups').innerHTML = summary + body + pinHtml();
 }
 
 load().then(render, function(e){ fail('Could not load the agreement data: ' + e); });
