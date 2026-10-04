@@ -28,14 +28,6 @@
   /* The playground, an app page: header, the tab strip, the tools column and
      the sub-map canvas, or the full-width datasheet stage. Colors are the
      site.css tokens; each var() carries the light value as its fallback. */
-  @layer om-fallback {
-    /* Shared components. Unlayered site.css rules win over these once it defines them. */
-    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:40px;padding:0 20px;border:0;border-radius:9999px;font:inherit;font-weight:500;font-size:16px;line-height:24px;text-decoration:none;white-space:nowrap;cursor:pointer;transition:background-color var(--dur,150ms) var(--ease,ease),color var(--dur,150ms) var(--ease,ease);}
-    .btn--sm{height:32px;padding:0 12px;border-radius:var(--radius,6px);font-size:14px;line-height:20px;}
-    .btn--secondary{background:var(--page,#FFFFFF);color:var(--ink,#171717);box-shadow:0 0 0 1px var(--line,#EBEBEB);}
-    .btn--secondary:hover{background:var(--surface-2,#F2F2F2);}
-    .select{height:32px;min-width:0;max-width:100%;padding:0 8px;border:0;border-radius:var(--radius,6px);box-shadow:0 0 0 1px var(--line,#EBEBEB);background:var(--page,#FFFFFF);color:var(--ink,#171717);font:inherit;font-size:14px;line-height:20px;}
-  }
   *{box-sizing:border-box;}
   html,body{height:100%;}
   body.app{height:100vh;height:100dvh;margin:0;display:flex;flex-direction:column;overflow:hidden;max-width:100vw;background:var(--page,#FFFFFF);color:var(--ink,#171717);font:400 14px/20px var(--font-sans,"Geist","Geist Fallback",ui-sans-serif,system-ui,sans-serif);-webkit-font-smoothing:antialiased;}
