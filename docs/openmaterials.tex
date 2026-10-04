@@ -9,6 +9,7 @@
 \pdfgentounicode=1
 \usepackage{booktabs}
 \usepackage{enumitem}
+\setlist[itemize,2]{label=$\circ$}
 \usepackage{tikz}
 \usepackage{xcolor}
 \usepackage{titlesec}
@@ -247,7 +248,7 @@ The analogy closes the loop. The structured corpus of code that accumulated in g
 is what made today's code models possible; a structured corpus of science is what
 will let an agent reason over physics rather than over prose about physics. This
 is, deliberately, Lean for computational physics, and like a proof assistant its
-value is that anyone can check the correctness. It is only partly built, but the
+value is that correctness is checked mechanically. It is only partly built, but the
 shape is already here.
 
 \section{Where we are, and what is next}
@@ -397,7 +398,7 @@ Concept & Canonical term & Notes \\
 \midrule
 A typed quantity on the map    & \textbf{node} & \texttt{Space} is the code class. \\
 A relation producing a node    & \textbf{edge} & \texttt{Operator} is the code class. \\
-A code's mapping onto the map  & \textbf{representation} & units and conventions per covered node. \\
+A code's mapping onto the map  & \textbf{representation} & units, gauge, and conventions per covered node and edge. \\
 A committed value               & \textbf{instance} & the \texttt{\{id, kind, lineage, source\}} record. \\
 A semantic type parameter       & \textbf{label} & e.g.\ \texttt{bte\_solver=rta}, not a ``variant''. \\
 A content hash                  & \textbf{uid} & sha256; a 12-hex prefix is displayed. \\
@@ -487,7 +488,7 @@ no embeddings, so every resolution is auditable. An agent that grounds its
 phrase through the resolver inherits everything the map knows about the
 element: the formula, the dimensional proof, the producing codes with their
 citations, the evidence with its provenance. A label that resolves to nothing
-marks a coverage gap: a node the map does not have yet. External method
+marks a coverage gap: a node or alias the map does not have yet. External method
 vocabularies (the first being a 16,012-paper skill map extracted by
 large-scale literature analysis) will align to the map through reviewed
 alignment files, each unmatched label ranked by its usage frequency in the
@@ -748,7 +749,7 @@ one per lineage, each with its derivation drawn as an excerpt of the map;
 \texttt{doc.source} is inherited by members at read time for display only,
 never hashed into any member's id. The bundle itself is content-addressed
 (\texttt{bundle\_id}: the sha256 of the canonical document metadata plus the
-member ids in order). A link over the length limit is refused and the JSON is offered as a
+member ids in order). A link over 8000 characters is refused and the JSON is offered as a
 download, so no link is truncated. This is the no-invention rule applied to
 links.
 
@@ -1030,7 +1031,7 @@ extra abstraction with three concrete returns: cross-code reconciliation at cano
 states, derived (rather than empirical) error bounds on computed observables, and a clean
 foundation for future formal verification.
 
-\section{Architectural principle: the operator layer and the representation layer}
+\section{Architectural principle: the operator layer and the numeric layer}
 \label{sec:principle}
 
 The single most important design decision is a strict separation between two type universes:
@@ -1840,7 +1841,7 @@ $\kappa$ map alongside the LBTE / Wigner / QHGK variants.
         alongside the QHGK terminal $\kappa$, the amorphous branch now carries
         the two per-mode quantities the QHGK-paper parse surfaced,
         \texttt{ParticipationRatio} (\textbf{O}, dimensionless, indexed
-        $(q,\nu)$) (the Bell/Dean $1/N$ localization ratio) and
+        $(q,\nu)$; the Bell/Dean $1/N$ localization ratio) and
         \texttt{ModalDiffusivity} (\textbf{O}, $L^2 T^{-1}$, indexed
         $(q,\nu)$), the QHGK / Allen-Feldman per-mode heat-mode diffusivity in
         $\text{mm}^2/\text{s}$, kept apart from the mass-transport
@@ -1904,7 +1905,7 @@ $\kappa$ map alongside the LBTE / Wigner / QHGK variants.
         \texttt{tetrahedron}, \texttt{adaptive\_scaled}\};
   \item \texttt{compute\_gruneisen}: Maradudin-Fein closed form, with
         scheme \texttt{gruneisen\_method} $\in$ \{\texttt{maradudin\_fein}
-        (canonical), \texttt{finite\_difference}\}: phonopy uses the
+        (canonical), \texttt{finite\_difference}\}; phonopy uses the
         latter (deformed-cell finite difference), the other three codes the
         former;
   \item \texttt{compute\_phase\_space\_3phonon}: $P_3(\mathbf{q}, \nu)$ from
@@ -1933,7 +1934,7 @@ $\kappa$ map alongside the LBTE / Wigner / QHGK variants.
         mode-pair weighting was corrected on 2026-07-07 to the frequency-weighted
         Simoncelli form $(\omega+\omega')/2\cdot(c/\omega + c'/\omega')$,
         transcribed from the vendored phono3py SMM19 solver
-        (\texttt{kappa\_solvers.py:122 to 126});
+        (\texttt{kappa\_solvers.py:122-126});
   \item \texttt{contract\_cumulative\_kappa[wrt=omega|mfp]}:
         Heaviside-$\theta$ encoded cumulative thresholds with
         \texttt{binning} scheme (linear for $\omega$, log for MFP).
@@ -2954,7 +2955,7 @@ supersede chains. The scope came from the P1 dimensional gate:
         missing $1/\omega$ weighting corrected. The corrected form was
         transcribed, not recalled from memory, from the vendored phono3py Wigner
         (SMM19) solver, at
-        \texttt{phono3py/phono3py/conductivity/ms\_smm19/kappa\_solvers.py:122 to 126}
+        \texttt{phono3py/phono3py/conductivity/ms\_smm19/kappa\_solvers.py:122-126}
         (the prefactor $0.25\,(\hbar\omega_s + \hbar\omega_{s'})(C_s/\hbar\omega_s
         + C_{s'}/\hbar\omega_{s'})$), and cross-checked against kaldo's
         off-diagonal QHGK kernel. This is the frequency-weighted Simoncelli form

@@ -30,17 +30,28 @@ TEX_PATH = ROOT / "docs" / "openmaterials.tex"
 OUT_PATH = ROOT / "docs" / "document" / "index.html"
 
 PANDOC_CANDIDATES = ("/usr/local/bin/pandoc", "/opt/homebrew/bin/pandoc")
+# The committed page is byte-exact to this pandoc; other versions emit
+# different HTML, so they are not used.
+PANDOC_VERSION = "pandoc 2.9.2.1"
 
 ROMAN = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"]
 LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 
 def find_pandoc() -> str | None:
-    """Locate the pandoc binary, preferring the known system install."""
-    for cand in PANDOC_CANDIDATES:
-        if Path(cand).is_file():
+    """Locate a pandoc binary whose version is PANDOC_VERSION, preferring
+    the known system installs; None if no candidate matches."""
+    for cand in (*PANDOC_CANDIDATES, shutil.which("pandoc")):
+        if not cand or not Path(cand).is_file():
+            continue
+        try:
+            out = subprocess.run([cand, "--version"], capture_output=True,
+                                 text=True, check=False).stdout
+        except OSError:
+            continue
+        if out.split("\n", 1)[0] == PANDOC_VERSION:
             return cand
-    return shutil.which("pandoc")
+    return None
 
 
 # ---------------------------------------------------------------------------
@@ -644,8 +655,9 @@ def assign_numbers_from_spans(headings: list[Heading]) -> None:
 def main() -> int:
     pandoc = find_pandoc()
     if pandoc is None:
-        raise SystemExit("pandoc not found; install it or adjust "
-                         "PANDOC_CANDIDATES in omai/doc_html.py")
+        raise SystemExit("%s not found (the page is byte-exact to that "
+                         "version); install it or adjust PANDOC_CANDIDATES "
+                         "in omai/doc_html.py" % PANDOC_VERSION)
     tex = TEX_PATH.read_text(encoding="utf-8")
     page, notes = build_page(tex, pandoc)
     OUT_PATH.parent.mkdir(parents=True, exist_ok=True)
