@@ -152,7 +152,7 @@
 //    - data       : fetch graph.json ONLY, build adjacency + tier index
 //    - layout     : force in x/z, tier index FIXES the y (height) coordinate
 //    - encoding    : color by type, size by degree, dashed-ish parameter edges
-//    - interaction: orbit/zoom (lib), auto-rotate, click -> fly + panel +
+//    - interaction: orbit/zoom (lib), click -> fly + panel +
 //                   ancestry highlight (upstream amber / downstream indigo),
 //                   search -> fly, escape/background clears, #node= deep link
 //    - fallback   : static tier outline when WebGL / the lib is unavailable
@@ -169,8 +169,7 @@ const panelEl = document.getElementById('panel');
 const tokenProbe = document.getElementById('tokenProbe');
 
 let Graph=null, nodeById={}, parents={}, children={}, symHtml={},
-    codesData={}, tierList=[], tierIndex={}, degree={}, selId=null,
-    autoRotate=true, interacted=false;
+    codesData={}, tierList=[], tierIndex={}, degree={}, selId=null;
 
 // tier -> vertical height. Sources sit lowest; each later tier is one step up.
 // three.js has +y up, so higher tier index maps to a larger y.
@@ -257,7 +256,7 @@ function renderGraph(graph, links){
   };
 
   Graph = new ForceGraph3D(sceneEl)
-    .warmupTicks(100)                 // lay out before the first frame
+    .warmupTicks(300).cooldownTicks(0)   // laid out before the first frame, then still
     .graphData(gData)
     .backgroundColor('rgba(0,0,0,0)')
     .showNavInfo(false)
@@ -274,8 +273,8 @@ function renderGraph(graph, links){
     .linkDirectionalArrowLength(3.2)
     .linkDirectionalArrowRelPos(1)
     .linkDirectionalArrowColor(l=> linkColorFor(l))
-    .onNodeClick(node=>{ interact(); selectNode(node.id); })
-    .onBackgroundClick(()=>{ interact(); clearSel(); })
+    .onNodeClick(node=> selectNode(node.id))
+    .onBackgroundClick(()=> clearSel())
     .onNodeHover(node=>{ sceneEl.style.cursor = node ? 'pointer' : 'grab'; });
 
   // The tier list: one entry per tier, top altitude first; click flies
@@ -286,7 +285,7 @@ function renderGraph(graph, links){
     tierList.slice().reverse().forEach(t=>{
       const b=document.createElement('button');
       b.type='button'; b.textContent=t.name; b.setAttribute('aria-label','Fly to the '+t.name+' tier');
-      b.onclick=()=>{ interact(); const ti=tierIndex[t.name];
+      b.onclick=()=>{ const ti=tierIndex[t.name];
         const y=(ti-(nTiers-1)/2)*TIER_STEP;
         Graph.cameraPosition({x:0,y:y+TIER_STEP*0.6,z:420},{x:0,y:y,z:0},REDUCE?0:900); };
       rail.appendChild(b);
@@ -301,19 +300,11 @@ function renderGraph(graph, links){
   sizeToViewport();
   window.addEventListener('resize', sizeToViewport);
 
-  // gentle auto-rotate until the first interaction; none under reduced motion.
-  if(REDUCE){ autoRotate=false; syncRotBtn(); }
-  else { startAutoRotate(); }
-
-  // A #node= link selects its quantity now and flies to it once the layout has
-  // run a few ticks; otherwise the whole graph is framed.
-  let deep=hashNode(), ticks=0;
-  if(deep&&nodeById[deep]){ interact(); selectNode(deep, true); } else { deep=null; setTimeout(fitAll, 600); }
-  Graph.onEngineTick(()=>{ if(deep && ++ticks===20){ flyTo(deep); deep=null; } });
-
-  // stop auto-rotate on any pointer / wheel / key input over the canvas.
-  ['pointerdown','wheel','touchstart'].forEach(ev=>
-    sceneEl.addEventListener(ev, ()=> interact(), {passive:true}));
+  // The engine stops right after the warmup; frame once then: fly to the #node=
+  // quantity, or fit the whole graph. A later drag restarts and stops it again.
+  let framed=false;
+  Graph.onEngineStop(()=>{ if(framed) return; framed=true;
+    const id=hashNode(); if(id&&nodeById[id]) selectNode(id); else fitAll(); });
 }
 
 function sizeToViewport(){
@@ -349,31 +340,9 @@ function nodeLabelHtml(n){
        + ' <span style="color:var(--ink-2,#4D4D4D);font-weight:400">'+esc(n.id)+'</span></div>';
 }
 
-// ---- interaction: auto-rotate ----------------------------------------------
-let rotTimer=null, rotAngle=0;
-function startAutoRotate(){
-  if(rotTimer||!Graph) return;
-  autoRotate=true; syncRotBtn();
-  const R0 = currentOrbitRadius();
-  rotTimer=setInterval(()=>{
-    if(!autoRotate||!Graph) return;
-    rotAngle += 0.0025 * (2*Math.PI);
-    const R = currentOrbitRadius() || R0;
-    Graph.cameraPosition({ x: R*Math.sin(rotAngle), z: R*Math.cos(rotAngle) });
-  }, 30);
-}
-function currentOrbitRadius(){
-  if(!Graph) return 260;
-  const p=Graph.cameraPosition();
-  return Math.hypot(p.x||0, p.z||0) || 260;
-}
-function stopAutoRotate(){ autoRotate=false; if(rotTimer){ clearInterval(rotTimer); rotTimer=null; } syncRotBtn(); }
-function syncRotBtn(){ }
-function interact(){ if(!interacted){ interacted=true; } if(autoRotate) stopAutoRotate(); }
-
 // ---- interaction: fit / fly ------------------------------------------------
 function fitAll(){ if(Graph && Graph.zoomToFit) Graph.zoomToFit(REDUCE?0:600, 40); }
-document.getElementById('resetView').addEventListener('click', ()=>{ interact(); fitAll(); });
+document.getElementById('resetView').addEventListener('click', fitAll);
 function flyTo(id){
   if(!Graph) return;
   const n=(Graph.graphData().nodes||[]).find(x=>x.id===id);
@@ -392,13 +361,13 @@ function flyTo(id){
 let ancSet=new Set(), descSet=new Set(), upSet=new Set(), dnSet=new Set();
 function reach(id, adj){ const out=new Set(), dq=[id]; while(dq.length){ const x=dq.pop(); (adj[x]||[]).forEach(y=>{ if(!out.has(y)){ out.add(y); dq.push(y);} }); } return out; }
 
-function selectNode(id, noFly){
+function selectNode(id){
   const node=nodeById[id]; if(!node) return;
   selId=id;
   ancSet=reach(id,parents); descSet=reach(id,children);
   upSet=new Set([id, ...ancSet]); dnSet=new Set([id, ...descSet]);
   refreshEncoding();
-  if(!noFly) flyTo(id);
+  flyTo(id);
   openPanel(node);
   history.replaceState(null,'','#node='+encodeURIComponent(id));
 }
@@ -408,7 +377,7 @@ function clearSel(){
   panelEl.style.display='none';
   if(location.hash) history.replaceState(null,'',location.pathname+location.search);
 }
-window.addEventListener('hashchange', ()=>{ const id=hashNode(); if(id&&id!==selId&&nodeById[id]){ interact(); selectNode(id); } });
+window.addEventListener('hashchange', ()=>{ const id=hashNode(); if(id&&id!==selId&&nodeById[id]) selectNode(id); });
 // re-evaluate the color/width accessors so the highlight repaints.
 function refreshEncoding(){
   if(!Graph) return;
@@ -418,7 +387,7 @@ function refreshEncoding(){
        .linkDirectionalArrowColor(l=> linkColorFor(l));
 }
 
-window.navTo=function(id){ if(nodeById[id]){ interact(); selectNode(id); } };
+window.navTo=function(id){ if(nodeById[id]) selectNode(id); };
 function chip(id, cls){ return '<button type="button" class="chip '+(cls||'')+'" onclick="navTo(\''+attr(id).replace(/'/g,"&#39;")+'\')">'+(symHtml[id]||esc(id))+'</button>'; }
 
 function mappedByHtml(id){
@@ -453,13 +422,14 @@ document.querySelector('.view-switch').addEventListener('click', e=>{
 });
 
 // ---- interaction: search (fly to the match) --------------------------------
-document.getElementById('q').addEventListener('input', function(){
+// on change (Enter or leaving the field), so typing does not fly the camera at each key
+document.getElementById('q').addEventListener('change', function(){
   const v=this.value.trim().toLowerCase(); if(!v){ clearSel(); return; }
   const hits=Object.values(nodeById).filter(n=> (n.id+' '+(n.symbol||'')).toLowerCase().includes(v));
   if(!hits.length) return;
   // exact-ish first: prefer an id/symbol that starts with the query.
   hits.sort((a,b)=> (a.id.toLowerCase().indexOf(v)) - (b.id.toLowerCase().indexOf(v)));
-  interact(); selectNode(hits[0].id);
+  selectNode(hits[0].id);
 });
 
 // ---- keyboard: Escape clears ----------------------------------------------
