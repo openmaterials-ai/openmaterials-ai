@@ -70,9 +70,10 @@ CODE_CREDITS: dict[str, dict] = {
         # Duchemin-Donadio 2011 paper, whose DOI is 10.1103/PhysRevB.84.115423.
         "doi": None,
         "license": "MIT",
-        "license_source": "gbarbalinardo/mescal LICENSE (gh api "
-        "repos/gbarbalinardo/mescal/license -> spdx_id MIT, verified 2026-07-13)",
-        "url": "https://github.com/gbarbalinardo/mescal",
+        "license_source": "MIT per the repository LICENSE at commit 47786d0f "
+        "(2026-07-13); the source repository is not public",
+        # No public home: the former GitHub path now redirects to MESKAL.
+        "url": None,
     },
     "meskal": {
         "name": "MESKAL",

@@ -241,6 +241,8 @@ def test_mescal_appears_in_build_codes_with_phonon_transmission_mapped():
     assert landauer in mescal
     assert mescal[landauer]["unit"] == "nW_per_K"
     assert mescal[landauer]["license"] == "MIT"
+    # Not public: no url, so no page links MESCAL to MESKAL's repository.
+    assert all(e["url"] is None for e in mescal.values())
     # The mapped variables are real nodes on the map.
     ids = {n["id"] for n in build_graph_dict((THERMAL_TRANSPORT,))["nodes"]}
     assert "PhononTransmission" in ids and landauer in ids
