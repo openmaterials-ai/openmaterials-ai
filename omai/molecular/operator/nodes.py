@@ -119,8 +119,9 @@ REACTION_BARRIER = ObservableSpace(
     labels={"construction": "neb_mep"},
     tier="Molecular",
     description=(
-        "Reaction / migration barrier energy: the peak-minus-reactant energy "
-        "along a reaction path. Minted this slice as the neb_mep construction: "
+        "Reaction barrier energy of a molecular reaction or conformational "
+        "change: the peak-minus-reactant energy along a reaction path (defect "
+        "and ion migration in solids is MigrationBarrier). Minted this slice as the neb_mep construction: "
         "the CI-NEB minimum-energy-path barrier from chem-neb-barrier via "
         "ase.mep NEBTools.get_barrier()[0] (calculate_barrier.py:126-127, "
         "results['barrier_eV']:144; idpp interpolation, 7 images, an MLIP "

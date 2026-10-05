@@ -29,6 +29,7 @@ register_symbol_dimensions({
     "D": DIFFUSIVITY,
     "D_0": DIFFUSIVITY,
     "E_a": ENERGY,
+    "E_m": ENERGY,
     "d": DIMENSIONLESS,
     # Fitted slope of MSD(t); length^2 / time is exactly diffusivity.
     r"\mathrm{slope}_{MSD}": LENGTH_SQUARED / TIME,

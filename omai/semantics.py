@@ -88,6 +88,12 @@ ALIASES: dict[str, tuple[str, ...]] = {
     "electron-affinity": ("ElectronAffinity",),
     "programming-pulse-energy": ("ProgrammingPulseEnergy", "dissipate_pulse_energy"),
     "switching-energy": ("ProgrammingPulseEnergy",),
+    "migration-barrier": ("MigrationBarrier",),
+    "hop-barrier": ("MigrationBarrier",),
+    "set-voltage": ("SetVoltage", "ramp_set_voltage"),
+    "set-threshold": ("SetVoltage",),
+    "retention-time": ("RetentionTime", "zero_bias_retention"),
+    "state-retention": ("RetentionTime",),
     # Honest NO-HOME markers live in the alignment files, not here: an alias
     # must point at something that exists (the gate below enforces it).
 }

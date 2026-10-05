@@ -28,9 +28,9 @@ with the boundary configuration (Sigma, tilt, axis, GB plane) in conditions.
 Two candidates the matcalc/ASE scan deferred have since landed in their own
 domains: the QHA finite-T thermodynamics (Gibbs G(T), thermal expansion
 alpha(T), Cp(T)) landed as the quasiharmonic domain (2026-07-10) via the
-phonopy PhonopyQHA route; the NEB migration barrier (chem-neb-barrier via
-ase.mep) landed as the molecular ReactionBarrier[construction=neb_mep]
-(2026-07-10).
+phonopy PhonopyQHA route; the NEB barrier (chem-neb-barrier via ase.mep)
+landed as the molecular ReactionBarrier[construction=neb_mep] (2026-07-10), and
+solid-state migration barriers as MigrationBarrier (2026-10-05).
 
 Deferred candidates from the scan's new-node list, each with why:
 

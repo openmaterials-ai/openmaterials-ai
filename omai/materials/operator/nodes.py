@@ -85,6 +85,24 @@ ACTIVATION_ENERGY = ObservableSpace(
     tier="Diffusion",
 )
 
+MIGRATION_BARRIER = ObservableSpace(
+    name="MigrationBarrier",
+    fields=(Field("E_m", ENERGY, indices=()),),
+    tier="Diffusion",
+    description=(
+        "Migration barrier E_m of one defect or ion hop in a solid: the energy "
+        "from the initial minimum to the saddle point along the hop's path, the "
+        "activation energy of its transition-state-theory rate nu_0 exp(-E_m / "
+        "k_B T). ENERGY. The species and charge state, the path and direction, "
+        "the site (bulk, grain boundary, surface, contact) and the source "
+        "(nudged elastic band, fit to measured rates, calibrated model) ride in "
+        "instance conditions. For diffusion by this one mechanism at fixed "
+        "defect density it equals the diffusivity's ActivationEnergy; a "
+        "formation term or a second mechanism makes them differ. Molecular "
+        "reaction barriers are ReactionBarrier."
+    ),
+)
+
 ELECTRICAL_CONDUCTIVITY_IONIC = ObservableSpace(
     name="ElectricalConductivity[carrier=ionic]",
     fields=(Field("sigma", ELECTRICAL_CONDUCTIVITY, indices=()),),
@@ -161,6 +179,7 @@ CONFIGURATIONAL_ENERGY = ObservableSpace(
 NODES: tuple[Space, ...] = (
     DIFFUSIVITY_STATE,
     ACTIVATION_ENERGY,
+    MIGRATION_BARRIER,
     ELECTRICAL_CONDUCTIVITY_IONIC,
     CONFIGURATIONAL_ENERGY,
     CARRIER_DENSITY,

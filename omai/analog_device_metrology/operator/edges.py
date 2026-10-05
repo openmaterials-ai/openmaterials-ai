@@ -1,6 +1,6 @@
 r"""Operators (edges) of the analog-device-metrology domain.
 
-Eight closed forms the dimensional gate proves and apply_edge runs. Each operand
+Ten closed forms the dimensional gate proves and apply_edge runs. Each operand
 is a typed input's field symbol, a dimensioned Parameter on the edge or a
 universal constant (k_B, q_e). As everywhere on the map, validity statements are
 documented, not enforced by apply_edge.
@@ -23,6 +23,11 @@ documented, not enforced by apply_edge.
                                                        Phi_Bn = Phi_W - chi
   dissipate_pulse_energy       ConductanceState -> ProgrammingPulseEnergy
                                                        E = V_p^2 G t_p
+  ramp_set_voltage             MigrationBarrier, Temperature -> SetVoltage
+                               V = (E_m - k_B T ln(g_r nu_0 k_B T / alpha_F)) / alpha_F
+                                   - gamma k_B T / alpha_F
+  zero_bias_retention          MigrationBarrier, Temperature -> RetentionTime
+                                                       tau = exp(E_m / k_B T) / nu_0
 
 contract_device_conductance connects the domain to the map through the
 electronic conductivity; the other nodes are one or two edges from ConductanceState.
@@ -38,7 +43,9 @@ from omai.analog_device_metrology.operator.nodes import (
     DOT_PRODUCT_ERROR,
     ELECTRON_AFFINITY,
     PROGRAMMING_PULSE_ENERGY,
+    RETENTION_TIME,
     SCHOTTKY_BARRIER_HEIGHT,
+    SET_VOLTAGE,
     STATE_COEFFICIENT_OF_VARIATION,
     WORK_FUNCTION,
 )
@@ -49,11 +56,14 @@ from omai.operator.dimensions import (
     CONDUCTANCE,
     CURRENT_PER_TEMPERATURE_SQUARED,
     DIMENSIONLESS,
+    ELECTRIC_CHARGE,
+    FREQUENCY,
     LENGTH,
     LENGTH_SQUARED,
     TIME,
     VOLTAGE,
 )
+from omai.materials.operator.nodes import MIGRATION_BARRIER
 from omai.operator.operator import Operator, Parameter
 from omai.thermal_transport.operator.nodes import TEMPERATURE_STATE
 
@@ -249,6 +259,69 @@ dissipate_pulse_energy = Operator(
     ),
 )
 
+_V_set = sp.Symbol("V_{set}")                # SetVoltage
+_tau_ret = sp.Symbol(r"\tau_{ret}")          # RetentionTime
+_E_m = sp.Symbol("E_m")                       # MigrationBarrier
+_alpha_F = sp.Symbol("alpha_F")               # field coupling, -d(barrier)/dV
+_nu_0 = sp.Symbol("nu_0")                     # attempt frequency
+_g_r = sp.Symbol("g_r")                       # hop sites times dwell per volt
+
+ramp_set_voltage = Operator(
+    name="ramp_set_voltage",
+    inputs=(MIGRATION_BARRIER, TEMPERATURE_STATE),
+    outputs=(SET_VOLTAGE,),
+    parameters=(Parameter("alpha_F", ELECTRIC_CHARGE), Parameter("nu_0", FREQUENCY),
+                Parameter("g_r", TIME / VOLTAGE)),
+    formula=sp.Eq(_V_set, (_E_m - _kB * _T * sp.log(_g_r * _nu_0 * _kB * _T / _alpha_F)) / _alpha_F
+                  - sp.EulerGamma * _kB * _T / _alpha_F),
+    description=(
+        "Mean set voltage of devices that switch on their first defect hop "
+        "under a rising drive, the hop rate being nu_0 exp(-(E_m - alpha_F V) / "
+        "k_B T) with E_m the set-direction barrier, measured from the "
+        "unprogrammed state (one value feeds this edge and zero_bias_retention "
+        "only for symmetric sites). The expected hop count reaches one at V* = (E_m - k_B T "
+        "ln(g_r nu_0 k_B T / alpha_F)) / alpha_F, and the set voltage follows a "
+        "minimum Gumbel law with location V*, mean V* - gamma k_B T / alpha_F "
+        "(gamma the Euler-Mascheroni constant) and standard deviation pi k_B T "
+        "/ (sqrt(6) alpha_F). g_r is the number of equivalent hop sites times "
+        "the dwell per volt: 1 / ramp rate for a linear ramp, t_p / dV for a "
+        "staircase of pulses of width t_p and step dV. Units: E_m in joules, T "
+        "in kelvin, alpha_F in coulombs (0.2 eV/V is 3.2e-20 C), nu_0 in THz "
+        "and g_r in ps/V (the map's canonical frequency and time; 1e13 Hz is "
+        "10, 1 ms/V is 1e9), V in volts. Valid when one hop switches the device "
+        "(N sequential hops raise the mean by (k_B T / alpha_F)(psi(N) + gamma) "
+        "and narrow the spread to (k_B T / alpha_F) sqrt(psi'(N))), the barrier "
+        "falls linearly with V, a hop at zero bias is unlikely (g_r nu_0 (k_B T "
+        "/ alpha_F) exp(-E_m / k_B T) much smaller than 1), rests between "
+        "pulses add no hops, and the device stays at T (Joule heating "
+        "excluded). The spread is for identical devices: a device-to-device "
+        "spread sigma_E of E_m adds sigma_E / alpha_F in quadrature, and a "
+        "staircase step dV adds about dV^2 / 12 to the variance and raises the "
+        "mean slightly (about 0.04 k_B T / alpha_F at dV near k_B T / alpha_F)."
+    ),
+)
+
+zero_bias_retention = Operator(
+    name="zero_bias_retention",
+    inputs=(MIGRATION_BARRIER, TEMPERATURE_STATE),
+    outputs=(RETENTION_TIME,),
+    parameters=(Parameter("nu_0", FREQUENCY),),
+    formula=sp.Eq(_tau_ret, sp.exp(_E_m / (_kB * _T)) / _nu_0),
+    description=(
+        "Mean time to the first back-hop of a programmed state at zero bias over "
+        "one exit path, tau = exp(E_m / k_B T) / nu_0, with E_m the barrier of "
+        "that back-hop measured from the programmed state (for M equivalent "
+        "exit paths divide by M). Units: E_m in joules, T in kelvin, nu_0 in "
+        "THz, tau in the map's canonical time unit, 1 ps (1 s is 1e12). With the "
+        "back-hop the only exit at a constant rate, the state's survival decays "
+        "exponentially with this time, its RetentionTime. An ensemble's "
+        "conductance decays with it only when the return is irreversible, the "
+        "original state lying several k_B T lower: with symmetric sites a "
+        "device re-sets as often as it decays, and the ensemble relaxes toward "
+        "one half with time constant tau / 2. E_m and nu_0 are not separable at one temperature."
+    ),
+)
+
 EDGES: tuple[Operator, ...] = (
     contract_device_conductance,
     contract_conductance_window,
@@ -258,4 +331,6 @@ EDGES: tuple[Operator, ...] = (
     emit_thermionic_conductance,
     schottky_mott_barrier,
     dissipate_pulse_energy,
+    ramp_set_voltage,
+    zero_bias_retention,
 )

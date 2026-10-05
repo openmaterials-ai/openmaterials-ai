@@ -417,9 +417,9 @@ def test_no_platform_rail_on_the_map():
 
 def test_graph_totals_after_the_composites_domain():
     g = build_graph_dict(DOMAINS)
-    assert len(g["nodes"]) == 123  # 107 + 7 composite + 9 analog device metrology
+    assert len(g["nodes"]) == 126  # 107 + 7 composite + 11 analog device metrology + MigrationBarrier
     ops = set()
     for d in DOMAINS:
         for op in d.edges:
             ops.add(op.name)
-    assert len(ops) == 122  # 109 + 5 composite + 8 analog device metrology edges
+    assert len(ops) == 124  # 109 + 5 composite + 10 analog device metrology edges
