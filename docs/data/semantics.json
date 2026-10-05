@@ -1388,6 +1388,35 @@
 "uid": "4dc358661b8a847db69d30a786b2b1475f1a291809bb34f55612d3203975be34"
 },
 {
+"curated": [
+"set-voltage",
+"switching-threshold",
+"switching-voltage"
+],
+"id": "SetVoltage",
+"kind": "node",
+"labels": [
+"SetVoltage",
+"V_{set}",
+"set voltage"
+],
+"uid": "5b46cb4fc1bf84f1fa97e2b52a352694f5c98c856e9b9034763243994a1c2d21"
+},
+{
+"curated": [
+"retention-time",
+"state-retention"
+],
+"id": "RetentionTime",
+"kind": "node",
+"labels": [
+"RetentionTime",
+"\\tau_{ret}",
+"retention time"
+],
+"uid": "4280779257128d9b63d9180e7b7b03ab80beac66ee35480b178a09fa46b289f2"
+},
+{
 "curated": [],
 "id": "CellVolume",
 "kind": "node",
@@ -2598,6 +2627,30 @@
 "labels": [
 "dissipate pulse energy",
 "dissipate_pulse_energy"
+],
+"uid": null
+},
+{
+"curated": [
+"set-voltage"
+],
+"id": "ramp_set_voltage",
+"kind": "edge",
+"labels": [
+"ramp set voltage",
+"ramp_set_voltage"
+],
+"uid": null
+},
+{
+"curated": [
+"retention-time"
+],
+"id": "zero_bias_retention",
+"kind": "edge",
+"labels": [
+"zero bias retention",
+"zero_bias_retention"
 ],
 "uid": null
 },

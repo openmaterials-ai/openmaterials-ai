@@ -2,7 +2,7 @@
 
 # openmaterials-ai
 
-[![OpenMaterials map version](https://openmaterials.ai/badge/693a10d28fc2.svg)](https://openmaterials.ai/)
+[![OpenMaterials map version](https://openmaterials.ai/badge/b4667f3407ec.svg)](https://openmaterials.ai/)
 
 
 OpenMaterials is a versioned, content-addressed map of physics. Physical
@@ -20,8 +20,8 @@ Lean dimensional proof where one exists, the codes that produce it with their
 citations, and the values attached to it with their provenance. OpenMaterials is
 stewarded by OpenMaterials-AI, a foundation in formation.
 
-At map version 693a10d28fc2 the map has 123 typed quantities (109 observable, 11
-hidden, 3 parameter), 285 links (246 formula, 39 parameter), and 122 operators
+At map version b4667f3407ec the map has 125 typed quantities (111 observable, 11
+hidden, 3 parameter), 289 links (250 formula, 39 parameter), and 124 operators
 in 17 tiers. It holds representations for 33 codes and 93 committed values (87
 from simulations, 6 from measurements). The [codes
 bibliography](https://openmaterials.ai/codes/) lists each code with its

@@ -27,7 +27,7 @@
 {"@context": "https://schema.org", "@graph": [
  {"@type": "Dataset", "@id": "https://openmaterials.ai/#map", "name": "OpenMaterials",
   "description": "OpenMaterials is a versioned, content-addressed map of physical quantities and formulas. Simulated and measured values attach to it with their provenance. Data is CC BY 4.0 and code is Apache 2.0.",
-  "url": "https://openmaterials.ai/", "version": "693a10d28fc2b099d0471e52c868b2f64f7d14fc625fee9b99cb369ba18bbfff",
+  "url": "https://openmaterials.ai/", "version": "b4667f3407ecb732f3b3816d7d28e07b914c2b0a657eb36d7904fdf394c97500",
   "license": "https://creativecommons.org/licenses/by/4.0/", "isAccessibleForFree": true,
   "creator": {"@id": "https://openmaterials.ai/#steward"}, "maintainer": {"@id": "https://openmaterials.ai/#steward"},
   "distribution": [
@@ -110,7 +110,7 @@
         <dl class="ledger">
           <div><dt><a href="agreement/">Cross-code agreement</a></dt><dd>Values of one quantity from different methods or codes, with the spread of each group.</dd></div>
           <div><dt><a href="lineage/">Lineage tour</a></dt><dd>One QHGK thermal conductivity result for amorphous silicon, from its derivation on the map to its lineage record.</dd></div>
-          <div><dt><a href="lean/">Verified layer</a></dt><dd>Dimensions of <span data-bind="lean-nodes">97</span> nodes declared in Lean 4, with <span data-bind="lean-edges">12</span> edge dimension statements proven against physlib and <span data-bind="lean-idents">16</span> operator identities against Mathlib.</dd></div>
+          <div><dt><a href="lean/">Verified layer</a></dt><dd>Dimensions of <span data-bind="lean-nodes">98</span> nodes declared in Lean 4, with <span data-bind="lean-edges">12</span> edge dimension statements proven against physlib and <span data-bind="lean-idents">16</span> operator identities against Mathlib.</dd></div>
           <div><dt><a href="lean/roadmap/">Formalization roadmap</a></dt><dd>Every operator on the map, rated by what a Lean proof of its formula would take: provable, trivial, needs analysis, or nothing to prove.</dd></div>
         </dl>
       </div>
@@ -133,9 +133,9 @@
     <div class="split">
       <div class="facts">
         <dl class="ledger">
-          <div><dt>Quantities</dt><dd><span id="s-nodes">123 (109 observable, 11 hidden, 3 parameter)</span></dd></div>
-          <div><dt>Links</dt><dd><span id="s-links">285 (246 formula, 39 parameter)</span></dd></div>
-          <div><dt>Operators</dt><dd><span id="s-ops">122</span></dd></div>
+          <div><dt>Quantities</dt><dd><span id="s-nodes">125 (111 observable, 11 hidden, 3 parameter)</span></dd></div>
+          <div><dt>Links</dt><dd><span id="s-links">289 (250 formula, 39 parameter)</span></dd></div>
+          <div><dt>Operators</dt><dd><span id="s-ops">124</span></dd></div>
           <div><dt>Tiers</dt><dd><span id="s-tiers">17</span></dd></div>
         </dl>
         <p>Each quantity is a typed node. An observable carries no gauge freedom, so codes given the same inputs should agree on it. A hidden quantity depends on a gauge choice (an eigenvector phase, or the basis inside a degenerate subspace). It is an intermediate, like the eigenvectors, or an approximation, like the RTA thermal conductivity, and codes can differ on it. An operator computes a quantity from its inputs: formula links carry its symbolic formula, and parameter links supply inputs such as the cell volume. The nodes are grouped into tiers, such as Sources, Harmonic, Transport, Ground state, and Thermochemistry.</p>
@@ -214,15 +214,15 @@
   </section>
 
   <section class="close" id="cite">
-    <h2>Cite the map version you use: <span class="hash" data-bind="version12">693a10d28fc2</span>.</h2>
-    <p class="cite-text">Barbalinardo, G. openmaterials.ai: a versioned, content-addressed map of physics. Map version <span data-bind="version12">693a10d28fc2</span>. https://openmaterials.ai, accessed <span data-bind="today">2026-10-04</span>.</p>
+    <h2>Cite the map version you use: <span class="hash" data-bind="version12">b4667f3407ec</span>.</h2>
+    <p class="cite-text">Barbalinardo, G. openmaterials.ai: a versioned, content-addressed map of physics. Map version <span data-bind="version12">b4667f3407ec</span>. https://openmaterials.ai, accessed <span data-bind="today">2026-10-04</span>.</p>
     <figure class="code">
       <figcaption>BibTeX</figcaption>
-<pre>@misc{openmaterials-<span data-bind="version12">693a10d28fc2</span>,
+<pre>@misc{openmaterials-<span data-bind="version12">b4667f3407ec</span>,
   author = {Barbalinardo, Giuseppe},
   title  = {{openmaterials.ai}: a versioned, content-addressed map of physics},
   url    = {https://openmaterials.ai},
-  note   = {Map version <span data-bind="version12">693a10d28fc2</span>, accessed <span data-bind="today">2026-10-04</span>}
+  note   = {Map version <span data-bind="version12">b4667f3407ec</span>, accessed <span data-bind="today">2026-10-04</span>}
 }</pre>
     </figure>
     <div class="cta-row">
@@ -236,7 +236,7 @@
 <script src="assets/site.js"></script>
 <script>
 /* Each count and the map version are refreshed at load from the published files. The static text is
-   the value at map version 693a10d28fc2 and stays in place if a file cannot be read. */
+   the value at map version b4667f3407ec and stays in place if a file cannot be read. */
 (function () {
   function get(p) { return fetch(p).then(function (r) { if (!r.ok) throw new Error(p); return r.json(); }); }
   function put(sel, text) {

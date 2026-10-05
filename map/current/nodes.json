@@ -917,6 +917,26 @@
   },
   "uid": "41f6c971e70bc42117a79b8ec51039f498280fdd9b77ef433bb602f90f966d93"
  },
+ "4280779257128d9b63d9180e7b7b03ab80beac66ee35480b178a09fa46b289f2": {
+  "identity": {
+   "fields": [
+    {
+     "dimension": "T^1",
+     "indices": []
+    }
+   ],
+   "gauge": "observable",
+   "labels": {},
+   "quantity": "retention_time"
+  },
+  "meta": {
+   "description": "Retention time of a programmed state: the 1/e lifetime of its conductance change at zero bias, so an exponential decay loses a fraction f in -tau ln(1 - f). TIME. The state, the storage bias and temperature and the decay law fitted ride in instance conditions; a power-law relaxation belongs on ConductanceDriftExponent.",
+   "name": "RetentionTime",
+   "symbol": "\\tau_{ret}",
+   "tier": "Analog device metrology"
+  },
+  "uid": "4280779257128d9b63d9180e7b7b03ab80beac66ee35480b178a09fa46b289f2"
+ },
  "438f0314dee5f9e98d88e4a7ba4425ef0edd207605338b318340da27bf28b2a4": {
   "identity": {
    "fields": [
@@ -1119,6 +1139,26 @@
    "tier": "Thermodynamics"
   },
   "uid": "5aa485c8eea2f4a2a9966f39589ad15e802327513f72c2366dc15605879b86ae"
+ },
+ "5b46cb4fc1bf84f1fa97e2b52a352694f5c98c856e9b9034763243994a1c2d21": {
+  "identity": {
+   "fields": [
+    {
+     "dimension": "M^1 L^2 T^-3 I^-1",
+     "indices": []
+    }
+   ],
+   "gauge": "observable",
+   "labels": {},
+   "quantity": "set_voltage"
+  },
+  "meta": {
+   "description": "Set voltage of a resistive device: the applied voltage at which a monotonically increasing drive first switches it to the low-resistance state, as the mean over devices or over cycles of one device. VOLTAGE. The drive (a linear ramp with its rate, or a pulse staircase with its pulse width, step and rest), the driven terminal and the other terminals' biases, the switching criterion, the temperature and the number of devices or cycles ride in instance conditions; the spread rides in the uncertainty.",
+   "name": "SetVoltage",
+   "symbol": "V_{set}",
+   "tier": "Analog device metrology"
+  },
+  "uid": "5b46cb4fc1bf84f1fa97e2b52a352694f5c98c856e9b9034763243994a1c2d21"
  },
  "5d35f8f6975629291c51d432d3b137fb5bd92165706d37dbab71366a4714b71d": {
   "identity": {
