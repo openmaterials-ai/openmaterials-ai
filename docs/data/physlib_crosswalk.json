@@ -254,6 +254,8 @@
   "SchottkyBarrierHeight[band_carrier=electron]": [],
   "WorkFunction": [],
   "ElectronAffinity": [],
-  "ProgrammingPulseEnergy": []
+  "ProgrammingPulseEnergy": [],
+  "SetVoltage": [],
+  "RetentionTime": []
  }
 }

@@ -155,10 +155,10 @@ def test_no_node_uid_collisions_at_105_nodes():
     # ThermalConductivity[role=matrix], ThermalConductivity[role=filler],
     # InterfaceConductance, FillerVolumeFraction, DepolarizationFactor, and the
     # two effective-medium outputs [effective_medium=nan,orientation=random] and
-    # [effective_medium=nan,orientation=aligned]. 123 with the
-    # analog-device-metrology domain's nine nodes (2026-10-04).
+    # [effective_medium=nan,orientation=aligned]. 125 with the
+    # analog-device-metrology domain's eleven nodes (2026-10-05).
     g = build_graph_dict(DOMAINS)
-    assert len(g["nodes"]) == 123
+    assert len(g["nodes"]) == 125
     uids = [n["uid"] for n in g["nodes"]]
     assert len(set(uids)) == len(uids), "node uid collision"
 

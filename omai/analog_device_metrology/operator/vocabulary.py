@@ -15,4 +15,6 @@ register_space_symbols({
     "WorkFunction": {r"\Phi_{W}"},
     "ElectronAffinity": {r"\chi_{s}"},
     "ProgrammingPulseEnergy": {"E_{pulse}"},
+    "SetVoltage": {"V_{set}"},
+    "RetentionTime": {r"\tau_{ret}"},
 })

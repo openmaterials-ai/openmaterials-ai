@@ -1,6 +1,6 @@
 r"""Operators (edges) of the analog-device-metrology domain.
 
-Eight closed forms the dimensional gate proves and apply_edge runs. Each operand
+Ten closed forms the dimensional gate proves and apply_edge runs. Each operand
 is a typed input's field symbol, a dimensioned Parameter on the edge or a
 universal constant (k_B, q_e). As everywhere on the map, validity statements are
 documented, not enforced by apply_edge.
@@ -23,6 +23,11 @@ documented, not enforced by apply_edge.
                                                        Phi_Bn = Phi_W - chi
   dissipate_pulse_energy       ConductanceState -> ProgrammingPulseEnergy
                                                        E = V_p^2 G t_p
+  ramp_set_voltage             ActivationEnergy, Temperature -> SetVoltage
+                               V = (E_a - k_B T ln(g_r nu_0 k_B T / alpha_F)) / alpha_F
+                                   - gamma k_B T / alpha_F
+  zero_bias_retention          ActivationEnergy, Temperature -> RetentionTime
+                                                       tau = exp(E_a / k_B T) / nu_0
 
 contract_device_conductance connects the domain to the map through the
 electronic conductivity; the other nodes are one or two edges from ConductanceState.
@@ -38,7 +43,9 @@ from omai.analog_device_metrology.operator.nodes import (
     DOT_PRODUCT_ERROR,
     ELECTRON_AFFINITY,
     PROGRAMMING_PULSE_ENERGY,
+    RETENTION_TIME,
     SCHOTTKY_BARRIER_HEIGHT,
+    SET_VOLTAGE,
     STATE_COEFFICIENT_OF_VARIATION,
     WORK_FUNCTION,
 )
@@ -49,11 +56,14 @@ from omai.operator.dimensions import (
     CONDUCTANCE,
     CURRENT_PER_TEMPERATURE_SQUARED,
     DIMENSIONLESS,
+    ELECTRIC_CHARGE,
+    FREQUENCY,
     LENGTH,
     LENGTH_SQUARED,
     TIME,
     VOLTAGE,
 )
+from omai.materials.operator.nodes import ACTIVATION_ENERGY
 from omai.operator.operator import Operator, Parameter
 from omai.thermal_transport.operator.nodes import TEMPERATURE_STATE
 
@@ -249,6 +259,63 @@ dissipate_pulse_energy = Operator(
     ),
 )
 
+_V_set = sp.Symbol("V_{set}")                # SetVoltage
+_tau_ret = sp.Symbol(r"\tau_{ret}")          # RetentionTime
+_E_a = sp.Symbol("E_a")                       # ActivationEnergy
+_alpha_F = sp.Symbol("alpha_F")               # field coupling, d(barrier)/dV
+_nu_0 = sp.Symbol("nu_0")                     # attempt frequency
+_g_r = sp.Symbol("g_r")                       # hop sites times dwell per volt
+
+ramp_set_voltage = Operator(
+    name="ramp_set_voltage",
+    inputs=(ACTIVATION_ENERGY, TEMPERATURE_STATE),
+    outputs=(SET_VOLTAGE,),
+    parameters=(Parameter("alpha_F", ELECTRIC_CHARGE), Parameter("nu_0", FREQUENCY),
+                Parameter("g_r", TIME / VOLTAGE)),
+    formula=sp.Eq(_V_set, (_E_a - _kB * _T * sp.log(_g_r * _nu_0 * _kB * _T / _alpha_F)) / _alpha_F
+                  - sp.EulerGamma * _kB * _T / _alpha_F),
+    description=(
+        "Mean set voltage of a device that switches on its first vacancy hop "
+        "under a rising drive, with hop rate k = nu_0 exp(-(E_a - alpha_F V) / "
+        "k_B T). The cumulative hop count reaches one at V* = (E_a - k_B T "
+        "ln(g_r nu_0 k_B T / alpha_F)) / alpha_F; the set voltage follows a "
+        "minimum Gumbel law with location V* and scale k_B T / alpha_F, mean "
+        "V* - gamma k_B T / alpha_F (gamma the Euler-Mascheroni constant) and "
+        "spread pi k_B T / (sqrt(6) alpha_F). g_r is the number of equivalent hop "
+        "sites times the dwell per volt: 1 / ramp rate for a linear ramp, t_p / "
+        "dV for a staircase of pulses of width t_p and step dV. Units: E_a in "
+        "joules, T in kelvin, alpha_F in coulombs (0.255 eV/V is 4.09e-20 C), "
+        "nu_0 in THz and g_r in ps/V (the map's canonical frequency and time; "
+        "1e13 Hz is 10, 6.13 ms/V is 6.13e9), V in volts. E_a is the Arrhenius "
+        "activation energy of the governing hop; for vacancy diffusion through "
+        "that one mechanism at fixed vacancy density it is the diffusivity's "
+        "ActivationEnergy. Valid when one hop switches the device (N sequential "
+        "hops narrow the spread and shift the mean), the barrier falls linearly "
+        "with V, no hop is likely at zero bias (g_r nu_0 (k_B T / alpha_F) "
+        "exp(-E_a / k_B T) much smaller than 1), drive steps are much smaller "
+        "than k_B T / alpha_F, rests between pulses add no hops, and the "
+        "temperature stays at T during the drive (Joule heating excluded)."
+    ),
+)
+
+zero_bias_retention = Operator(
+    name="zero_bias_retention",
+    inputs=(ACTIVATION_ENERGY, TEMPERATURE_STATE),
+    outputs=(RETENTION_TIME,),
+    parameters=(Parameter("nu_0", FREQUENCY),),
+    formula=sp.Eq(_tau_ret, sp.exp(_E_a / (_kB * _T)) / _nu_0),
+    description=(
+        "Retention time of a state held by one vacancy hop: the mean time to the "
+        "thermally activated back-hop at zero bias, tau = exp(E_a / k_B T) / "
+        "nu_0. Units: E_a in joules, T in kelvin, nu_0 in THz, tau in the map's "
+        "canonical time unit, 1 ps (1 s is 1e12). Valid for a single activated "
+        "back-hop with no restoring or driving force at zero bias, so the state "
+        "decays exponentially; a state undone only after N back-hops lasts about "
+        "N tau. E_a and nu_0 are not separable at one temperature. Stretched or "
+        "power-law relaxation (ConductanceDriftExponent) is a different law."
+    ),
+)
+
 EDGES: tuple[Operator, ...] = (
     contract_device_conductance,
     contract_conductance_window,
@@ -258,4 +325,6 @@ EDGES: tuple[Operator, ...] = (
     emit_thermionic_conductance,
     schottky_mott_barrier,
     dissipate_pulse_energy,
+    ramp_set_voltage,
+    zero_bias_retention,
 )

@@ -2938,7 +2938,22 @@ charge joins the map's universal constants. The domain's first measured values
 are the UPS work functions of pristine and oxygen-plasma-treated MoS$_2$, 3.38
 and 3.94~eV (X.~Hou et al., Nat.\ Commun.\ 16, 9506 (2025), Fig.~3j), whose
 0.56~eV difference the paper reads as the barrier between oxidized and pristine
-MoS$_2$.
+MoS$_2$. Two more nodes (records 268-269) and two edges (records 270-271) carry the
+vacancy-hop physics of the KMC device model: \texttt{SetVoltage}, the mean voltage
+at which a rising drive first switches a device, and \texttt{RetentionTime}, the
+$1/e$ lifetime of a programmed state at zero bias. Both take the Arrhenius
+\texttt{ActivationEnergy} $E_a$ of the governing hop and \texttt{Temperature} as
+inputs, with hop rate $k = \nu_0 \exp(-(E_a - \alpha_F V)/k_B T)$. If one hop
+switches the device, the set voltage follows a minimum Gumbel law with location
+$V^* = (E_a - k_B T \ln(g_r \nu_0 k_B T/\alpha_F))/\alpha_F$, mean
+$V^* - \gamma k_B T/\alpha_F$ and spread $\pi k_B T/(\sqrt{6}\,\alpha_F)$, where
+$g_r$ is the number of equivalent hop sites times the dwell per volt (the inverse
+ramp rate, or $t_p/\Delta V$ for a staircase of pulses); the retention time is
+$\tau = \exp(E_a/k_B T)/\nu_0$. With the KMC device model's MoS$_2$ constants
+($E_a = 1.21$~eV, $\alpha_F = 0.255$~eV/V, $\nu_0 = 10^{13}$~Hz,
+$g_r = 6.13$~ms/V, 300~K) the closed form returns its calibrated mean of 2.40~V
+and spread of 0.13~V. Both hold for a barrier linear in $V$ and without Joule
+heating; $E_a$ and $\nu_0$ are not separable at one temperature.
 
 \paragraph{Instance uid pinning.} Instances are additive JSON that attach a value
 to a node. The uid pin lives in the regenerated projection, not the committed
@@ -3164,7 +3179,7 @@ numbers:
         effective-medium edges (the Nan random and aligned mixing formulas and
         the Hasselman-Johnson spherical cross-check), and the two phonon delta
         sums (\texttt{compute\_dos} and \texttt{compute\_phase\_space\_3phonon},
-        each a density in frequency), and the eight analog-device-metrology
+        each a density in frequency), and the ten analog-device-metrology
         closed forms.
   \item \textbf{Verified layer.} 97 nodes and 12 edge theorems compile against
         physlib (Lean~4.31.0, pinned by revision), the generated seven-base

@@ -4,7 +4,8 @@ The conductance family of analog resistive devices (memristors, memtransistors):
 the programmed conductance, the conductance window, the drift exponent, the
 per-level spread and the error of an analog dot product; the contact barrier
 that sets a Schottky device's conductance with the work function and electron
-affinity that set the barrier; and the energy of a programming pulse. The domain
+affinity that set the barrier; the energy of a programming pulse; and the set
+voltage and retention time of a device switched by vacancy hops. The domain
 is definitional: it holds the quantities and the closed forms that relate them.
 No code representation attaches yet; two measured work functions do.
 
@@ -25,6 +26,8 @@ state ride in an instance's conditions, not in the node identity.
   WorkFunction                 work_function                   ENERGY
   ElectronAffinity             electron_affinity               ENERGY
   ProgrammingPulseEnergy       programming_pulse_energy        ENERGY
+  SetVoltage                   set_voltage                     VOLTAGE
+  RetentionTime                retention_time                  TIME
 
 CONDUCTANCE (the siemens, M^-1 L^-2 T^3 I^2) differs from the per-length
 ELECTRICAL_CONDUCTIVITY (S/m) by one length axis, the same conductance versus
@@ -36,7 +39,7 @@ is added with the first instance that needs it.
 """
 from __future__ import annotations
 
-from omai.operator.dimensions import CONDUCTANCE, DIMENSIONLESS, ENERGY
+from omai.operator.dimensions import CONDUCTANCE, DIMENSIONLESS, ENERGY, TIME, VOLTAGE
 from omai.operator.space import Field, ObservableSpace, Space
 
 _TIER = "Analog device metrology"
@@ -173,6 +176,35 @@ PROGRAMMING_PULSE_ENERGY = ObservableSpace(
     ),
 )
 
+SET_VOLTAGE = ObservableSpace(
+    name="SetVoltage",
+    fields=(Field("V_set", VOLTAGE, indices=()),),
+    tier=_TIER,
+    description=(
+        "Set voltage of a resistive device: the applied voltage at which a "
+        "monotonically increasing drive first switches it to the "
+        "low-resistance state, as the mean over devices or over cycles of one "
+        "device. VOLTAGE. The drive (a linear ramp with its rate, or a pulse "
+        "staircase with its pulse width, step and rest), the driven terminal "
+        "and the other terminals' biases, the switching criterion, the "
+        "temperature and the number of devices or cycles ride in instance "
+        "conditions; the spread rides in the uncertainty."
+    ),
+)
+
+RETENTION_TIME = ObservableSpace(
+    name="RetentionTime",
+    fields=(Field("tau_ret", TIME, indices=()),),
+    tier=_TIER,
+    description=(
+        "Retention time of a programmed state: the 1/e lifetime of its "
+        "conductance change at zero bias, so an exponential decay loses a "
+        "fraction f in -tau ln(1 - f). TIME. The state, the storage bias and "
+        "temperature and the decay law fitted ride in instance conditions; a "
+        "power-law relaxation belongs on ConductanceDriftExponent."
+    ),
+)
+
 NODES: tuple[Space, ...] = (
     CONDUCTANCE_STATE,
     CONDUCTANCE_WINDOW,
@@ -183,4 +215,6 @@ NODES: tuple[Space, ...] = (
     WORK_FUNCTION,
     ELECTRON_AFFINITY,
     PROGRAMMING_PULSE_ENERGY,
+    SET_VOLTAGE,
+    RETENTION_TIME,
 )

@@ -1,5 +1,5 @@
-"""Tests for the analog-device-metrology contributions (records 250-257, 258-259
-and 260-267).
+"""Tests for the analog-device-metrology contributions (records 250-257, 258-259,
+260-267 and 268-271).
 
 A definitional domain: the conductance family of analog resistive devices, the
 error of an analog dot product, the contact barrier with the work function and
@@ -34,6 +34,8 @@ _NODES = {
     "WorkFunction": "work_function",
     "ElectronAffinity": "electron_affinity",
     "ProgrammingPulseEnergy": "programming_pulse_energy",
+    "SetVoltage": "set_voltage",
+    "RetentionTime": "retention_time",
 }
 _EDGES = (
     "contract_device_conductance",
@@ -44,6 +46,8 @@ _EDGES = (
     "emit_thermionic_conductance",
     "schottky_mott_barrier",
     "dissipate_pulse_energy",
+    "ramp_set_voltage",
+    "zero_bias_retention",
 )
 _EV = 1.602176634e-19  # J; ENERGY values enter in the canonical joule
 _KB = 1.380649e-23  # J/K
@@ -68,7 +72,7 @@ def _rep(space, symbol, data):
                           observable_name=symbol, data=np.asarray(data), is_operator=True)
 
 
-def test_the_nine_nodes_and_eight_edges():
+def test_the_eleven_nodes_and_ten_edges():
     from omai.analog_device_metrology.operator import EDGES, NODES
 
     assert [s.name for s in NODES] == list(_NODES)
@@ -77,7 +81,7 @@ def test_the_nine_nodes_and_eight_edges():
         assert node_identity(s)["quantity"] == _NODES[s.name], s.name
         want = {"band_carrier": "electron"} if s.name.startswith("SchottkyBarrierHeight") else {}
         assert s.labels == want, s.name
-    assert len({node_id(s) for s in NODES}) == 9
+    assert len({node_id(s) for s in NODES}) == 11
 
 
 def test_conductance_is_the_siemens_and_not_a_conductivity():
@@ -174,6 +178,7 @@ def test_contribution_connects_through_conductivity_and_temperature():
     from omai.gates import validate_contribution
     from omai.genesis import _formula_srepr
     from omai.operator.identity import edge_identity
+    from omai.materials.operator.nodes import ACTIVATION_ENERGY
     from omai.thermal_transport.operator.nodes import TEMPERATURE_STATE
 
     records = [{"op": "add_node", "payload": {"uid": node_id(s), "identity": node_identity(s),
@@ -183,7 +188,8 @@ def test_contribution_connects_through_conductivity_and_temperature():
         "meta": {"name": op.name, "schemes": op.schemes,
                  "formula_srepr": _formula_srepr(op.formula)}}} for op in EDGES]
     current = {"nodes": {node_id(s): {"uid": node_id(s), "identity": node_identity(s), "meta": {}}
-                         for s in (ELECTRICAL_CONDUCTIVITY_ELECTRONIC, TEMPERATURE_STATE)},
+                         for s in (ELECTRICAL_CONDUCTIVITY_ELECTRONIC, TEMPERATURE_STATE,
+                                   ACTIVATION_ENERGY)},
                "edges": {}}
     assert validate_contribution(records, current) == []
 
@@ -205,6 +211,9 @@ def test_semantic_aliases_resolve_to_the_nodes():
                          "electron affinity": "ElectronAffinity",
                          "programming pulse energy": "ProgrammingPulseEnergy",
                          "switching energy": "ProgrammingPulseEnergy",
+                         "set voltage": "SetVoltage",
+                         "switching voltage": "SetVoltage",
+                         "retention time": "RetentionTime",
                          }.items():
         hits = resolve(phrase, sem, limit=3)
         assert any(h["id"] == node for h in hits), (phrase, hits)
@@ -350,6 +359,8 @@ def test_roadmap_classes_of_the_new_edges_and_the_inverse_tangents():
     assert _classify(E.emit_thermionic_conductance)[0] == "special function"
     assert _classify(E.schottky_mott_barrier)[0] == "polynomial"
     assert _classify(E.dissipate_pulse_energy)[0] == "polynomial"
+    assert _classify(E.ramp_set_voltage)[0] == "special function"
+    assert _classify(E.zero_bias_retention)[0] == "special function"
     assert "transcendental" in _classify(depolarization_factors)[2]
 
 
@@ -368,3 +379,51 @@ def test_committed_store_holds_records_260_to_267():
     assert recs[7]["payload"]["uid"] == edge_id(EDGES[4], node_id)
     assert list(recs[7]["payload"]["meta"]) == ["description"]
     assert "the count n_w, the largest weight w_max" in recs[7]["payload"]["meta"]["description"]
+
+
+def test_ramp_set_voltage_reproduces_the_kmc_calibration():
+    """With the KMC device model's MoS2 constants (E_a 1.21 eV, alpha 0.25505 eV/V,
+    nu_0 1e13 Hz, group 6.12912 ms/V, 300 K) the Gumbel mean is its calibrated
+    2.40 V and the spread pi k_B T / (sqrt(6) alpha) its measured 0.130 V."""
+    import math
+
+    from omai.analog_device_metrology.operator.edges import ramp_set_voltage
+    from omai.materials.operator.nodes import ACTIVATION_ENERGY
+    from omai.thermal_transport.operator.nodes import TEMPERATURE_STATE
+
+    kT, alpha = _KB * 300.0, 0.25505 * _EV
+    out = apply_edge(ramp_set_voltage, _rep(ACTIVATION_ENERGY, "E_a", 1.21 * _EV),
+                     _rep(TEMPERATURE_STATE, "temperature", 300.0),
+                     constants={"alpha_F": alpha, "nu_0": 10.0, "g_r": 6.12912e9})
+    assert out.space.name == "SetVoltage"
+    v_star = (1.21 * _EV - kT * math.log(6.12912e-3 * 1e13 * kT / alpha)) / alpha
+    np.testing.assert_allclose(float(out.data), v_star - 0.5772156649015329 * kT / alpha, rtol=1e-10)
+    np.testing.assert_allclose(float(out.data), 2.40, atol=2e-3)
+    np.testing.assert_allclose(math.pi * kT / (math.sqrt(6) * alpha), 0.130, atol=1e-3)
+
+
+def test_zero_bias_retention_in_the_canonical_time_unit():
+    """tau = exp(E_a / k_B T) / nu_0: 1.157 eV (the KMC model's WS2 barrier) at
+    300 K and 1e13 Hz is 2.73e6 s, about 32 days, returned in ps."""
+    from omai.analog_device_metrology.operator.edges import zero_bias_retention
+    from omai.materials.operator.nodes import ACTIVATION_ENERGY
+    from omai.thermal_transport.operator.nodes import TEMPERATURE_STATE
+
+    out = apply_edge(zero_bias_retention, _rep(ACTIVATION_ENERGY, "E_a", 1.157 * _EV),
+                     _rep(TEMPERATURE_STATE, "temperature", 300.0), constants={"nu_0": 10.0})
+    assert out.space.name == "RetentionTime"
+    want_s = np.exp(1.157 * _EV / (_KB * 300.0)) / 1e13
+    np.testing.assert_allclose(float(out.data) * 1e-12, want_s, rtol=1e-10)
+    np.testing.assert_allclose(want_s / 86400.0, 31.6, atol=0.1)
+
+
+def test_committed_store_holds_records_268_to_271():
+    """Records 268-269 add SetVoltage and RetentionTime; 270-271 their edges."""
+    from omai.analog_device_metrology.operator import EDGES, NODES
+
+    lines = (_REPO / "map" / "log.jsonl").read_text().splitlines()
+    assert len(lines) >= 271
+    recs = [json.loads(line) for line in lines[267:271]]
+    assert [r["op"] for r in recs] == ["add_node"] * 2 + ["add_edge"] * 2
+    assert [r["payload"]["uid"] for r in recs[:2]] == [node_id(s) for s in NODES[9:11]]
+    assert [r["payload"]["uid"] for r in recs[2:]] == [edge_id(op, node_id) for op in EDGES[8:10]]
