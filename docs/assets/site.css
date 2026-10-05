@@ -280,7 +280,7 @@ a:hover { text-decoration-color: currentColor; }
 .nf-forward, .nf-forward [data-for] { display: none; }
 html[data-forward] .nf-body { display: none; }
 html[data-forward] .nf-forward { display: block; }
-html[data-forward="play"] [data-for="play"], html[data-forward="experiment"] [data-for="experiment"] { display: block; }
+html[data-forward="play"] [data-for="play"] { display: block; }
 
 /* Tool pages (spec 5.1): each page styles its own toolbar, canvas, panel and legend; the
    shared header is a fixed-height row of its flex column. */

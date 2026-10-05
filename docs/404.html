@@ -11,14 +11,13 @@
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <!-- GitHub Pages serves this file for every unknown path. Until the site Worker is routed on the
      domain, the short links the site hands out are forwarded here, before paint, to the pages that
-     already resolve them: /l/<id> and /l/<scheme:ref>/<id> to the datasheet, /l/<scheme:ref> to
-     the experiment page, /s/<code> to the playground's stored set. -->
+     already resolve them: /l/<id> and /l/<scheme:ref>/<id> to the datasheet, /s/<code> to the
+     playground's stored set. -->
 <script>(function(){try{var p=location.pathname,m,t;
 if(m=p.match(/^\/l\/([0-9a-f]{8,64})\/?$/i))t='/play/#id='+m[1].toLowerCase();
 else if(m=p.match(/^\/l\/[a-z][a-z0-9+.-]*:[^/]+\/([0-9a-f]{8,64})\/?$/i))t='/play/#id='+m[1].toLowerCase();
-else if(m=p.match(/^\/l\/([a-z][a-z0-9+.-]*:[^/]+)\/?$/i))t='/experiment/#ref='+encodeURIComponent(decodeURIComponent(m[1]));
 else if(m=p.match(/^\/s\/([1-9A-HJ-NP-Za-km-z]{9})\/?$/))t='/play/#s='+m[1];
-if(t){document.documentElement.dataset.forward=t.indexOf('/play/')===0?'play':'experiment';location.replace(t);}}catch(e){}})();</script>
+if(t){document.documentElement.dataset.forward='play';location.replace(t);}}catch(e){}})();</script>
 <script>try{const t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch{}</script>
 <link rel="preload" href="/assets/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/GeistMono-Variable.woff2" as="font" type="font/woff2" crossorigin>
@@ -41,7 +40,6 @@ if(t){document.documentElement.dataset.forward=t.indexOf('/play/')===0?'play':'e
   </section>
   <section class="nf-forward">
     <p class="lede" data-for="play">Opening this link in the playground.</p>
-    <p class="lede" data-for="experiment">Opening this source.</p>
   </section>
 </main>
 

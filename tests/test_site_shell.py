@@ -93,7 +93,7 @@ def test_404_forwards_the_short_links():
         "/l/04c6dbdb9b04": "/play/#id=04c6dbdb9b04",
         "/l/04C6DBDB9B04/": "/play/#id=04c6dbdb9b04",
         "/l/paper:qhgk-2019-isaeva/04c6dbdb": "/play/#id=04c6dbdb",
-        "/l/paper:qhgk-2019-isaeva": "/experiment/#ref=paper%3Aqhgk-2019-isaeva",
+        "/l/paper:qhgk-2019-isaeva": None,
         "/s/2kPq7xYzA": "/play/#s=2kPq7xYzA",
         "/s/2kPq7xYz0": None, "/l/1234567": None, "/guide/missing": None,
     }

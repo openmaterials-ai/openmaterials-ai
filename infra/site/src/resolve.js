@@ -216,7 +216,6 @@ function sourceListingHTML(ref, entries, origin) {
 <body>
 <p>${esc(desc)}</p>
 <ul>${rows}</ul>
-<p><a href="${esc(origin)}/experiment/#ref=${esc(ref)}">Open this source on the experiments page</a></p>
 </body>
 </html>
 `;
