@@ -27,12 +27,10 @@ from pathlib import Path
 import sympy as sp
 from sympy.core.function import AppliedUndef
 
+from omai.lean_identities import _TRANSCENDENTAL as _ANALYTIC
+
 _REPO = Path(__file__).resolve().parent.parent
 _DOCS = _REPO / "docs"
-
-_ANALYTIC = (sp.log, sp.exp, sp.sin, sp.cos, sp.tan,
-             sp.sinh, sp.cosh, sp.tanh, sp.coth)
-
 
 def _classify(op):
     """(class, difficulty, reason) for one operator's formula."""
@@ -47,8 +45,9 @@ def _classify(op):
                 "with convergence and measurability to establish")
     if any(rhs.has(x) for x in _ANALYTIC):
         return ("special function", "hard",
-                "needs analysis: transcendental factors (occupation numbers, "
-                "logarithms) with their analytic properties")
+                "needs analysis: transcendental or non-rational functions "
+                "(exponentials, logarithms, inverse tangents) with their "
+                "analytic properties")
     # A power with a symbolic exponent (the conductance-drift power law
     # G_0 (t/t0)^(-nu)) is real exponentiation, not a rational identity the
     # generator can clear; the Lean Tier-2 law pass skips it for this reason.

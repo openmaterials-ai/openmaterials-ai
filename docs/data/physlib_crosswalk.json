@@ -250,6 +250,10 @@
   "ConductanceWindow": [],
   "ConductanceDriftExponent": [],
   "StateCoefficientOfVariation": [],
-  "DotProductError": []
+  "DotProductError": [],
+  "SchottkyBarrierHeight[band_carrier=electron]": [],
+  "WorkFunction": [],
+  "ElectronAffinity": [],
+  "ProgrammingPulseEnergy": []
  }
 }

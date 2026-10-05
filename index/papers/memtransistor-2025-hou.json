@@ -1,0 +1,41 @@
+{
+ "map_version": "PENDING",
+ "paper": {
+  "arxiv": null,
+  "authors": "X. Hou, W. Zhang, S. Duan, T. Jin, X. Geng, M. Lin, Y. Cai, J. Mao, Y. Luo, J. Zhu, J. Lin, W. Chen",
+  "doi": "10.1038/s41467-025-64579-5",
+  "journal_ref": "Nat. Commun. 16, 9506 (2025)",
+  "title": "Scalable transition metal dichalcogenide memtransistor arrays with Schottky-barrier control for energy-efficient artificial neural networks"
+ },
+ "parsed": {
+  "date": "2026-10-05",
+  "parser": "manual curation",
+  "proposal_stats": {
+   "applied": 2
+  }
+ },
+ "values": [
+  {
+   "instance": "mos2-pristine-workfunction-paper-memtransistor-2025-hou.json",
+   "node_id": "WorkFunction",
+   "node_uid": "bb5595d7a9f8f599458906c16f1b5ad255d70e7dc4a2001e54c626da2fc0ca70",
+   "pages": [
+    5
+   ],
+   "quote": "Ultraviolet photoelectron spectroscopy (UPS) analysis shows a shift in the work function, correlating with the Schottky barrier height modification from 3.38 eV to 3.94 eV",
+   "units": "eV",
+   "value": 3.38
+  },
+  {
+   "instance": "mos2-oxygen-plasma-treated-workfunction-paper-memtransistor-2025-hou.json",
+   "node_id": "WorkFunction",
+   "node_uid": "bb5595d7a9f8f599458906c16f1b5ad255d70e7dc4a2001e54c626da2fc0ca70",
+   "pages": [
+    5
+   ],
+   "quote": "Ultraviolet photoelectron spectroscopy (UPS) analysis shows a shift in the work function, correlating with the Schottky barrier height modification from 3.38 eV to 3.94 eV",
+   "units": "eV",
+   "value": 3.94
+  }
+ ]
+}

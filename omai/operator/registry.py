@@ -191,6 +191,10 @@ QUANTITY_TAGS: dict[str, str] = {
     "conductance_state": "Conductance state G = I/V of a two-terminal resistive device or a memtransistor channel, the analog state a multilevel cell stores; CONDUCTANCE (the siemens). Read bias, gate bias, temperature, state and time since programming ride in instance conditions. NOT the per-length electrical conductivity (S/m).",
     "conductance_window": "Conductance window W = G_max/G_min of one device under a stated protocol, both read at the same read bias, gate bias and temperature; DIMENSIONLESS. Full SET/RESET switching gives the on/off ratio; incremental programming gives the analog (LTP, LTD) window. A ratio across gate voltages is transistor modulation, not this window.",
     "conductance_drift_exponent": "Drift exponent nu of the power-law relaxation G(t) = G(t0) (t/t0)^(-nu) of a programmed conductance, for t >= t0 > 0 in the fitted range; DIMENSIONLESS.",
+    "schottky_barrier_height": "Schottky barrier height: the barrier for carrier injection from a metal contact into a semiconductor, from the metal Fermi level to the injected carrier's band edge at the interface; ENERGY. The injected carrier is the band_carrier label (electron and hole barriers sum to the quasiparticle gap); materials, state, gate voltage, flat-band or zero-bias effective value, and extraction method ride in instance conditions.",
+    "work_function": "Work function Phi_W of a surface: the minimum energy to move an electron from the Fermi level to the vacuum level just outside it; ENERGY. The surface (contact metal, or semiconductor with its doping, thickness or treatment), termination and method ride in instance conditions.",
+    "electron_affinity": "Electron affinity chi: the energy released when an electron moves from the vacuum level into the lowest unoccupied state (E_vac - E_CBM for a surface, E(N) - E(N+1) for a molecule); ENERGY. The system, surface or termination, thickness and method ride in instance conditions.",
+    "programming_pulse_energy": "Electrical energy dissipated in a device by one programming voltage pulse, not an optical pulse energy; ENERGY. Terminal, pulse amplitude, width and shape, states before and after, and whether capacitive charging is included ride in instance conditions.",
     "dot_product_error": "Error of an analog dot product computed by an array of programmed conductances: the root mean square over the input distribution and programmed arrays of the output error in weight units, over the range of the ideal outputs; DIMENSIONLESS. The architecture, kernel, inputs, read conditions and error sources ride in instance conditions.",
     "state_coefficient_of_variation": "Coefficient of variation c = sigma_G/mu_G of a programmed conductance level across cells or cycles, stated in instance conditions with the target level and protocol; DIMENSIONLESS.",
 }
@@ -276,6 +280,11 @@ LABEL_KEYS: dict[str, frozenset[str]] = {
     # against the other label keys (order, bte_solver, transport_model,
     # channel, wrt): no value or key overlaps.
     "carrier": frozenset({"ionic", "electronic"}),
+    # The band carrier a quantity refers to: electron (conduction band) for the
+    # electron Schottky barrier, SchottkyBarrierHeight[band_carrier=electron]; a
+    # hole barrier adds "hole" when a value needs it. Kept apart from carrier,
+    # which separates ionic from electronic (band) conduction.
+    "band_carrier": frozenset({"electron"}),
     # The construction of a reaction barrier: neb_mep (a CI-NEB minimum-energy-path
     # barrier, chem-neb-barrier via ase.mep, eV, MLIP), static_ts_mlip (a static
     # saddle-point barrier from an MLIP transition state, chem-ts-optimization via

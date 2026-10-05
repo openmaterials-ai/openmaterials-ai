@@ -471,3 +471,30 @@ def test_config_thermo_is_records_148_to_153_two_contributions():
     assert all("ionic transport and configurational energetics" in r["reason"]
                for r in recs_a)
     assert all("reaction energetics" in r["reason"] for r in recs_b)
+
+
+def test_ionic_conductivity_executes_in_si():
+    """The coulomb unit gives the charge parameter e_c an SI scale, so the
+    Nernst-Einstein edge executes: n_c 1e28 m^-3, D 1e-9 m^2/s, T 300 K and z 1
+    give sigma = n_c z^2 e^2 D / (k_B T), about 61.975 S/m."""
+    import numpy as np
+
+    from omai.materials.operator.edges import compute_ionic_conductivity
+    from omai.materials.operator.nodes import CARRIER_DENSITY, DIFFUSIVITY_STATE
+    from omai.representation.executor import apply_edge, operator_form_spec
+    from omai.representation.instance import Representation
+    from omai.representation.units import dimension_si_scale
+    from omai.thermal_transport.operator.nodes import TEMPERATURE_STATE
+
+    def rep(space, value_si):
+        canon = value_si / dimension_si_scale(space.fields[0].dimension)
+        return Representation(space_adapter_spec=operator_form_spec(space),
+                              observable_name=space.fields[0].name,
+                              data=np.asarray(canon), is_operator=True)
+
+    e = 1.602176634e-19
+    out = apply_edge(compute_ionic_conductivity, rep(CARRIER_DENSITY, 1e28),
+                     rep(DIFFUSIVITY_STATE, 1e-9), rep(TEMPERATURE_STATE, 300.0),
+                     constants={"z": 1.0, "e_c": e})
+    sigma = float(out.data) * dimension_si_scale(out.space.fields[0].dimension)
+    np.testing.assert_allclose(sigma, 1e28 * e**2 * 1e-9 / (1.380649e-23 * 300.0), rtol=1e-9)

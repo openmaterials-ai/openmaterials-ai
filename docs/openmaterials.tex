@@ -271,13 +271,14 @@ domains (grown from the AtomisticSkills scans),
 a first materials-diffusion subgraph, a thermodynamic-identities domain that
 closes the map's formulas together, a composites domain (composite effective
 thermal conductivity with interfacial resistance), and an analog-device-metrology
-domain (the conductance family of memristors and memtransistors); the unified map of
-119 quantities and 119 operators is content-addressed in the log-first store
+domain (the conductance family of memristors and memtransistors and the Schottky
+contact that sets it); the unified map of
+123 quantities and 122 operators is content-addressed in the log-first store
 (Part~\ref{part:kernel}), grown past its frozen genesis version through the
 contribution gates. Its dimensional layer is proven in Lean~4 against physlib
 and recompiled in CI on every change to the map or its generators, its evidence carries pinned conformance
 targets a re-run must reproduce, and the whole is held together by a suite of
-1732 passing tests.
+over 2,300 passing tests.
 
 What is next is mostly upward and outward. The upstream from the
 Born-Oppenheimer potential, the force constants from which everything descends, is
@@ -409,8 +410,8 @@ A content hash                  & \textbf{uid} & sha256; a 12-hex prefix is disp
 
 \section{The map}
 
-The map is a curated reference graph. Today it holds 119 nodes (116 observable
-and hidden quantities plus 3 promoted parameters) and 280 edges. Nodes are
+The map is a curated reference graph. Today it holds 123 nodes (120 observable
+and hidden quantities plus 3 promoted parameters) and 285 edges. Nodes are
 typed physical quantities. An edge produces one node from a list of input
 nodes, carrying the symbolic formula that relates them (parameter inputs are
 marked as inputs rather than derived through a formula).
@@ -831,8 +832,8 @@ the reviewers decide what enters the commons.
 
 \section{Status and build order}
 
-Today's map is one hundred fifty-nine change records past v1, its frozen genesis version:
-116 typed quantities plus 3 promoted
+Today's map is one hundred sixty-seven change records past v1, its frozen genesis version:
+120 typed quantities plus 3 promoted
 parameters, the symbolic formula on every relational edge, 33 representations
 mapped (kaldo 34 variables, phono3py 31, phonopy 22, pymatgen 22, ShengBTE 20,
 MESKAL 18, QE 14, mp-api 13, LAMMPS 12, VASP 10, GPUMD 8, pycalphad 7, i-PI 4, and a further
@@ -2490,10 +2491,10 @@ Four longer-term directions follow naturally from the design:
         is a standalone lake package on Lean~4.31.0 depending on physlib, the
         community Lean~4 physics library, pinned by revision. Tier~1 declares every
         exported node as a physics \texttt{Dimension} and proves one theorem per
-        verified executable edge: 93 nodes and 12 edge theorems compile against
+        verified executable edge: 97 nodes and 12 edge theorems compile against
         physlib's five bases, and a generated seven-base extension adds the
-        amount-of-substance, current, and luminous-intensity quantities, so 111 of
-        the map's 119 nodes carry a machine-checked dimension. Of the eight left
+        amount-of-substance, current, and luminous-intensity quantities, so 115 of
+        the map's 123 nodes carry a machine-checked dimension. Of the eight left
         out, five (\texttt{Structure}, \texttt{Potential}, and the opaque
         autocorrelation kinds) have no dimensional content to prove; three
         (\texttt{CellVolume}, \texttt{AtomicMass}, \texttt{AtomCount}) have
@@ -2506,9 +2507,9 @@ Four longer-term directions follow naturally from the design:
         map's SI convention. A CI gate recompiles the full proof on every pull
         request that touches the map or the generators, with warnings promoted to
         errors, so the verified badge is the live state of the claim. A public
-        formalization roadmap rates all 119 operators by what a proof of the formula
-        would take (15 rational identities closed by the generator, 47 needing real
-        analysis, 17 trivially reflexive, 40 opaque code outputs with nothing
+        formalization roadmap rates all 122 operators by what a proof of the formula
+        would take (15 rational identities closed by the generator, 48 needing real
+        analysis, 19 trivially reflexive, 40 opaque code outputs with nothing
         algebraic to prove), and a hand-reviewed crosswalk links map nodes to the
         physlib declarations that formalize the same concepts. The
         approximation-error theorems remain future work.
@@ -2886,7 +2887,7 @@ windows of analog programming, the protocol riding in conditions), the drift
 exponent and the per-level coefficient of variation. It is a definitional domain,
 like the thermodynamic identities, with four nodes whose ids are unlabeled
 (protocol, read and gate bias, state and time since programming ride in
-conditions), and no code representation or measured value attaches yet. Its new
+conditions), and no code representation attaches yet. Its new
 physics is the two-terminal conductance $G$ (the siemens, the new
 \texttt{CONDUCTANCE} dimension), the electrical mirror of the map's
 \texttt{THERMAL\_CONDUCTANCE}-vs-\texttt{THERMAL\_CONDUCTIVITY} split, kept apart
@@ -2906,9 +2907,38 @@ the programming-error limit for one architecture (one cell per nonzero weight on
 two column groups, the affine mapping with the largest weight at $G_\mathrm{max}$,
 per-cell nominal offset subtraction, binary inputs, reads at the verify voltage):
 $\epsilon = c \sqrt{\sum_i (1/r + |w_i|)^2 / 2} / \sum |w_i|$ with
-$r = (W - 1)/\max|w|$, written with four power sums of the kernel as parameters. The domain
+$r = (W - 1)/\max|w|$, written with the weight count, the largest weight and two power sums of the
+kernel as parameters. The domain
 connects to the map through \texttt{contract\_device\_conductance}, which consumes
 the electronic-transport \texttt{ElectricalConductivity[carrier=electronic]}.
+Four more nodes (records 260-263) and three edges (records 264-266) carry the
+contact of a Schottky-barrier device and the cost of programming it: the
+electron barrier \texttt{SchottkyBarrierHeight[band\_carrier=electron]} ($\Phi_{Bn}$;
+the hole barrier is another quantity, and the two sum to the quasiparticle gap),
+the work function $\Phi_W$, the electron affinity $\chi_s$ and the energy of one
+programming pulse, all energies in joules. The Schottky-Mott limit
+$\Phi_{Bn} = \Phi_W - \chi_s$ needs the contact metal's work function and holds
+without Fermi-level pinning: metals deposited on 2D semiconductors usually pin,
+while transferred van der Waals contacts approach the limit (Y.~Liu et al.,
+Nature 557, 696 (2018)). The zero-bias thermionic conductance
+$G = P_\mathrm{th} T (q_e/k_B) \exp(-\Phi_{Bn}/k_B T)$, with \texttt{Temperature}
+an input and $P_\mathrm{th}$ the contact area times the effective Richardson
+constant in A\,K$^{-2}$, holds for emission over the barrier without tunnelling,
+ideality factor 1, $\Phi_{Bn} \gg k_B T$, a contact-limited device and the
+three-dimensional $T^2$ law; $\Phi_{Bn}$ is the effective barrier at zero applied
+bias, which the built-in field already lowers by the image force. The pulse
+energy $E = V_p^2 G t_p$ holds for a conductance nearly constant during the
+pulse, with $G$ the chord conductance at $V_p$ and capacitive charging excluded;
+$t_p$ enters in the map's canonical time unit, 1~ps. Two chains the graph offers
+are invalid: the small-signal thermionic $G$ is not the conductance at a
+volt-scale programming pulse, and a semiconductor's own work function does not
+feed the Schottky-Mott limit. The dimensional bridge rescales only monomial
+formulas, so energies inside the exponential enter in joules; the elementary
+charge joins the map's universal constants. The domain's first measured values
+are the UPS work functions of pristine and oxygen-plasma-treated MoS$_2$, 3.38
+and 3.94~eV (X.~Hou et al., Nat.\ Commun.\ 16, 9506 (2025), Fig.~3j), whose
+0.56~eV difference the paper reads as the barrier between oxidized and pristine
+MoS$_2$.
 
 \paragraph{Instance uid pinning.} Instances are additive JSON that attach a value
 to a node. The uid pin lives in the regenerated projection, not the committed
@@ -3052,12 +3082,12 @@ trusted). What remains, in order:
 \label{sec:status-live}
 
 The map is at store head version
-\texttt{02cc8eab7f719356a52a9f2bca21b333cdcc2d5057fa84977c6e1474ed3e512a}
-(2026-10-04, 259 records), one hundred fifty-nine change records past the frozen genesis hash
+\texttt{e78c68153934f0191abff9570820ce0867a34a54e89eb8bcf76055e82e5d539a}
+(2026-10-05, 267 records), one hundred sixty-seven change records past the frozen genesis hash
 \texttt{e6e8044e92039696417b53b220b0f3f10559a286b0eaabbe7ea4167ff510f6cd}
 (2026-07-07, the untouched 100-record prefix). Since the lineage became the one
 named artifact, the published stamp also carries the unified \emph{lineage
-version} (\texttt{85d1a5deabd4\ldots}): one rolling content hash over the
+version} (\texttt{f6211084b01b\ldots}): one rolling content hash over the
 derivation graph and the instance-format rules together, appended to a chain
 whose root is the genesis, so a change to either the physics or the record
 format moves the one version the published stamp and every page cite (records
@@ -3067,8 +3097,8 @@ per-record frozen pin is designed, not yet carried on the records). The live
 numbers:
 
 \begin{itemize}[leftmargin=2em, itemsep=0.25em]
-  \item \textbf{Structure.} 119 nodes (116 observable and hidden quantities plus 3
-        promoted parameters), 280 rendered links, 119 deduplicated operators,
+  \item \textbf{Structure.} 123 nodes (120 observable and hidden quantities plus 3
+        promoted parameters), 285 rendered links, 122 deduplicated operators,
         rendered in seventeen physics tiers (Sources, Harmonic, Thermodynamics,
         Scattering, Transport, Molecular dynamics, Ground state, Mechanics,
         Stability, Thermochemistry, Quasi-harmonic, Molecular, Electronic
@@ -3090,32 +3120,34 @@ numbers:
         mat-diffusion-analysis 2, mescal 2, plumed 2, smol 2, xtb 2,
         mat-equation-of-state 1, mat-surface-adsorption 1, rxn-network 1,
         diffcsp 1, mattergen 1.
-  \item \textbf{Instances.} 91 recorded values, 87 simulation and 4 measurement.
+  \item \textbf{Instances.} 93 recorded values, 87 simulation and 6 measurement.
         They span the newer domains (formation and hull energies, elastic and
         equation-of-state moduli, CALPHAD Gibbs energies, quasi-harmonic thermal
         expansion, molecular NEB barriers and bond dissociation energies) as
         well as the original thermal-transport and ground-state values from the
         Si and Ge cross-checks (the SCF total energy and the $\Gamma$ optical
-        frequency). Thirty-five of the values are paper-sourced evidence,
+        frequency). Thirty-seven of the values are paper-sourced evidence,
         carrying an identity-bearing \texttt{paper:} source in the lineage and
-        landed with a verbatim, page-located quote; they come from ten
+        landed with a verbatim, page-located quote; they come from eleven
         published papers (kaldo 2020, the QHGK/Green-Kubo Isaeva 2019,
         Esfarjani 2011, the 2021 carbon-nanotube and 2025 kappa-limit BTE
         studies, PtSe$_2$ 2021, quantum-elastic PIMD/TDEP 2024, SiGe disorder
-        2024, amorphous alloys 2020, and the Balandin 2008 graphene
-        measurement). The four measurements are the Glassbrenner-Slack 1964
+        2024, amorphous alloys 2020, the Balandin 2008 graphene
+        measurement and the Hou 2025 MoS$_2$ memtransistor arrays). The six
+        measurements are the Glassbrenner-Slack 1964
         steady-state thermal conductivities of bulk single-crystal silicon
         ($156\,\mathrm{W/(m\,K)}$) and germanium ($60.2\,\mathrm{W/(m\,K)}$) at
         $300\,\mathrm{K}$ and natural isotopic abundance, the Balandin 2008
-        suspended-graphene Raman value, and the PtSe$_2$ 2021 in-plane FDTR
-        value. The four newest
+        suspended-graphene Raman value, the PtSe$_2$ 2021 in-plane FDTR
+        value, and the Hou 2025 UPS work functions of pristine and
+        oxygen-plasma-treated MoS$_2$. The four newest
         simulation values (2026-07-18) are fully-specified engine-adapter
         evidence: kaldo and phono3py silicon thermal conductivities, RTA and
         direct-inverse, with every knob in-hash down to the sha256 of the
         vendored Tersoff potential, each paired with a committed conformance
         target (eight targets total) that a re-run must reproduce within its
         stated tolerance.
-  \item \textbf{Dimensional gate.} Of the 119 operator edges the gate walks, 50
+  \item \textbf{Dimensional gate.} Of the 122 operator edges the gate walks, 53
         are ok, 1 is a documented-schematic violation
         (\texttt{compute\_gruneisen}, kept schematic by choice), and 68 are
         skipped (not closed-form
@@ -3132,16 +3164,17 @@ numbers:
         effective-medium edges (the Nan random and aligned mixing formulas and
         the Hasselman-Johnson spherical cross-check), and the two phonon delta
         sums (\texttt{compute\_dos} and \texttt{compute\_phase\_space\_3phonon},
-        each a density in frequency).
-  \item \textbf{Verified layer.} 93 nodes and 12 edge theorems compile against
+        each a density in frequency), and the eight analog-device-metrology
+        closed forms.
+  \item \textbf{Verified layer.} 97 nodes and 12 edge theorems compile against
         physlib (Lean~4.31.0, pinned by revision), the generated seven-base
-        extension lifts dimensional coverage to 111 of 119 nodes (five of the
+        extension lifts dimensional coverage to 115 of 123 nodes (five of the
         eight remaining are opaque by design; three await exporter coverage),
         and 16 identity theorems check against
         Mathlib; a CI gate recompiles the proof on every relevant pull request
         with warnings promoted to errors. The formalization roadmap page rates
         every operator by what proving its formula would take.
-  \item \textbf{Tests.} The suite is 1732 passing.
+  \item \textbf{Tests.} The suite has over 2,300 passing tests.
 \end{itemize}
 
 \begin{center}

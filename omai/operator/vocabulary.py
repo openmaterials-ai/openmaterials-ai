@@ -33,6 +33,7 @@ GENERIC_CONSTANTS: frozenset[str] = frozenset({
     "k_B",
     r"\hbar",
     "N_A",
+    "q_e",  # elementary charge
     "pi",
     # Plain dummy indices.
     "i",

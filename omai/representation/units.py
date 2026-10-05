@@ -19,6 +19,7 @@ from omai.operator.dimensions import (
     INVERSE_ENERGY,
     Dimension,
     CONDUCTANCE,
+    ELECTRIC_CHARGE,
     DIFFUSIVITY,
     DIMENSIONLESS,
     ENERGY,
@@ -251,6 +252,9 @@ MS_PER_CM = Unit("ms_per_cm", ELECTRICAL_CONDUCTIVITY, 0.1)
 # unit to survive the six-decimal identity rounding; it is added with the first
 # instance that needs it.
 SIEMENS = Unit("siemens", CONDUCTANCE, 1.0, si_scale=1.0)
+# Canonical charge unit, the coulomb (SI). It also gives the charge parameter e_c
+# of compute_ionic_conductivity an SI scale, so that edge now executes.
+COULOMB = Unit("coulomb", ELECTRIC_CHARGE, 1.0, si_scale=1.0)
 
 
 # Canonical Seebeck unit: volt per kelvin (V/K). amset serializes the Seebeck
@@ -363,6 +367,7 @@ UNITS: dict[str, Unit] = {
         S_PER_M,
         MS_PER_CM,
         SIEMENS,
+        COULOMB,
         ANGSTROM_SQUARED,
         V_PER_K,
         MUV_PER_K,
