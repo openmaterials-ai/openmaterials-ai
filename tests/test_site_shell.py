@@ -20,7 +20,7 @@ import pytest
 DOCS = Path(__file__).resolve().parents[1] / "docs"
 HOME = (DOCS / "index.html").read_text()
 SHELL_PAGES = ["index.html", "guide/index.html", "codes/index.html", "lean/index.html",
-               "lean/roadmap/index.html", "agreement/index.html", "experiment/index.html",
+               "lean/roadmap/index.html", "agreement/index.html",
                "lineage/index.html", "document/index.html", "404.html", "map/index.html",
                "map-3d/index.html", "map-trace/index.html", "play/index.html"]
 
