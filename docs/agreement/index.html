@@ -131,8 +131,7 @@ function groupHtml(g){
       '<td class="val" data-label="Value">' + esc(m.value) +
         (m.units ? ' <span class="u">' + esc(Sources.unit(m.units)) + '</span>' : '') + '</td>' +
       '<td class="est" data-label="Method">' + esc(methodLabel(m)) + '</td>' +
-      '<td data-label="Source"><a href="../experiment/#ref=' + encodeURIComponent(m.ref) + '">' +
-        esc(DATA.titles[m.ref] || m.ref) + '</a></td>' +
+      '<td data-label="Source">' + esc(DATA.titles[m.ref] || m.ref) + '</td>' +
       '<td class="kind" data-label="Kind"><span class="pill kind-' + esc(m.kind) + '">' + esc(m.kind) + '</span></td>' +
       '</tr>';
   }).join('');

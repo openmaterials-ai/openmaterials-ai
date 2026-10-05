@@ -1249,7 +1249,7 @@ function initPapersCompare(){
       var pb = b.indexOf('paper:') === 0 ? 0 : 1;
       return pa !== pb ? pa - pb : (a < b ? -1 : 1);
     });
-    // each source as /experiment/ titles it, else its key
+    // each source titled by its citation, else its key
     var opts = refs.map(function(r){ return '<option value="' + esc(r) + '">' + esc(Sources.titleOf(papersGroups[r], CODES) || r) + '</option>'; }).join('');
     var selA = document.getElementById('distPaperA');
     var selB = document.getElementById('distPaperB');
@@ -1420,10 +1420,9 @@ async function mintShortlink(env, btn){
   }
 }
 
-// The MCG-computable set, mirrored from docs/experiment/index.html (the shipped
-// allowlist): the base map nodes MCG has a wired engine for right now, so the
-// Run button (to the MaterialsCodeGraph connect page) shows only for a runnable
-// node. Static by choice; extend it as MCG wires more kinds.
+// The MCG-computable set (the shipped allowlist): the base map nodes MCG has a wired
+// engine for right now, so the Run button (to the MaterialsCodeGraph connect page)
+// shows only for a runnable node. Static by choice; extend it as MCG wires more kinds.
 var MCG_COMPUTABLE = { 'ThermalConductivity': 1 };
 function isComputable(id){ return !!MCG_COMPUTABLE[baseNode(id)]; }
 
@@ -2127,8 +2126,7 @@ function sourceRows(record){
 }
 
 // The SOURCE section: what the record's source says (sourceRows), its source ref when
-// it has no readable detail, any paper metadata it carries, and, for a committed value,
-// the page of every value from the same source.
+// it has no readable detail, and any paper metadata it carries.
 function provenanceHTML(record, lineage, doc){
   // The identity-bearing form is lineage.source, a "scheme:ref" string; the
   // legacy top-level record.source object (outside the hash) stays readable.
@@ -2155,9 +2153,7 @@ function provenanceHTML(record, lineage, doc){
     rows.push('<dt>Paper</dt><dd>' + esc(paper) + '</dd>');
   }
   if (!rows.length) return '';
-  var family = ref && INSTANCE_IDS && INSTANCE_IDS.has(String(record.id || '').toLowerCase())
-    ? '<p class="rec-meta"><a class="rec-doi-src" href="../experiment/#ref=' + encodeURIComponent(ref) + '">All values from this source</a></p>' : '';
-  return '<div class="rec-sec"><div class="rec-h">Source</div><dl class="rec-kv rec-src">' + rows.join('') + '</dl>' + family + '</div>';
+  return '<div class="rec-sec"><div class="rec-h">Source</div><dl class="rec-kv rec-src">' + rows.join('') + '</dl></div>';
 }
 document.getElementById('renderX').addEventListener('click', function(){
   ingestLineage(document.getElementById('xInput').value, null);

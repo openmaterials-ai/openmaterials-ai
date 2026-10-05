@@ -1,6 +1,6 @@
-/* How the datasheet, the sources page (experiment/), the agreement page and the map panels read a
-   record's source, run, conditions and units. Nothing here prints repo paths, hashes or curator
-   notes; the hashed data keeps them. Quantity names come from map-words.js. */
+/* How the datasheet, the agreement page and the map panels read a record's source, run,
+   conditions and units. Nothing here prints repo paths, hashes or curator notes; the hashed
+   data keeps them. Quantity names come from map-words.js. */
 var Sources = (function () {
   'use strict';
 

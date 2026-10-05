@@ -22,7 +22,7 @@ _SITE_JS = _DOCS / "assets" / "site.js"
 # Every page on the shell: the content pages and the four tool pages.
 _SHELL_PAGES = ["index.html", "guide/index.html", "document/index.html",
                 "codes/index.html", "lean/index.html", "lean/roadmap/index.html",
-                "agreement/index.html", "experiment/index.html",
+                "agreement/index.html",
                 "lineage/index.html", "404.html", "map/index.html",
                 "map-3d/index.html", "map-trace/index.html", "play/index.html"]
 

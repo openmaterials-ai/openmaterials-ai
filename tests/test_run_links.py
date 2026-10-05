@@ -12,8 +12,7 @@ _DOCS = Path(__file__).resolve().parents[1] / "docs"
 
 def test_run_links_open_the_sign_up_panel():
     for page, ref in (("index.html", "omai-home"), ("index.html", "omai-governance"),
-                      ("experiment/index.html", "omai-experiment"), ("play/index.html", "omai-datasheet"),
-                      ("llms.txt", "omai-llms")):
+                      ("play/index.html", "omai-datasheet"), ("llms.txt", "omai-llms")):
         assert f"https://materialscodegraph.com/?ref={ref}#hero-connect" in (_DOCS / page).read_text(), ref
 
 

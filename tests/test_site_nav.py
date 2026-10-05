@@ -24,7 +24,6 @@ INJECTED = [
     "lean/index.html",
     "lean/roadmap/index.html",
     "lineage/index.html",
-    "experiment/index.html",
     "agreement/index.html",
     "codes/index.html",
 ]

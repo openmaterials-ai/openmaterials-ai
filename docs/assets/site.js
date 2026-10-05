@@ -20,7 +20,7 @@
   var ACTIVE = { 'map/': 'map/', 'map-3d/': 'map/', 'map-trace/': 'map/', 'play/': 'play/', 'guide/': 'guide/', 'document/': 'document/' };
   var FOOTER = [
     ['Map', [['Map', 'map/'], ['Map in 3D', 'map-3d/'], ['Tracer', 'map-trace/'], ['Playground', 'play/'], ['Learn a paper', 'play/#tab=learn']]],
-    ['Evidence', [['Sources', 'experiment/'], ['Cross-code agreement', 'agreement/'], ['Lineage tour', 'lineage/'], ['Verified layer', 'lean/'], ['Formalization roadmap', 'lean/roadmap/']]],
+    ['Evidence', [['Cross-code agreement', 'agreement/'], ['Lineage tour', 'lineage/'], ['Verified layer', 'lean/'], ['Formalization roadmap', 'lean/roadmap/']]],
     ['Reference', [['Guide', 'guide/'], ['Document', 'document/'], ['PDF', 'openmaterials.pdf'], ['Codes', 'codes/']]],
     ['Project', [['GitHub', REPO], ['Contribute a value', '#contribute'], ['Contribution guide', BLOB + 'CONTRIBUTING.md'], ['Governance', BLOB + 'GOVERNANCE.md'], ['Citation', '#cite']]]
   ];

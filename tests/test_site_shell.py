@@ -20,7 +20,7 @@ import pytest
 DOCS = Path(__file__).resolve().parents[1] / "docs"
 HOME = (DOCS / "index.html").read_text()
 SHELL_PAGES = ["index.html", "guide/index.html", "codes/index.html", "lean/index.html",
-               "lean/roadmap/index.html", "agreement/index.html", "experiment/index.html",
+               "lean/roadmap/index.html", "agreement/index.html",
                "lineage/index.html", "document/index.html", "404.html", "map/index.html",
                "map-3d/index.html", "map-trace/index.html", "play/index.html"]
 
@@ -93,7 +93,7 @@ def test_404_forwards_the_short_links():
         "/l/04c6dbdb9b04": "/play/#id=04c6dbdb9b04",
         "/l/04C6DBDB9B04/": "/play/#id=04c6dbdb9b04",
         "/l/paper:qhgk-2019-isaeva/04c6dbdb": "/play/#id=04c6dbdb",
-        "/l/paper:qhgk-2019-isaeva": "/experiment/#ref=paper%3Aqhgk-2019-isaeva",
+        "/l/paper:qhgk-2019-isaeva": None,
         "/s/2kPq7xYzA": "/play/#s=2kPq7xYzA",
         "/s/2kPq7xYz0": None, "/l/1234567": None, "/guide/missing": None,
     }
@@ -250,3 +250,12 @@ def test_the_lineage_tour_opens_its_example():
     page = (DOCS / "lineage/index.html").read_text()
     assert '../play/#/play?tab=lineage&amp;x=' + ex["fragment"] + '"' in page
     assert ">Id " + ex["id"] + "<" in page
+
+
+def test_the_home_names_codes_that_ran_values():
+    """The Values section names a few codes; each one ran committed values, by its codes.json name."""
+    inst, codes = _data("instances.json"), _data("codes.json")
+    ran = {i["source"]["ref"].split("-")[0] for i in inst} | {str(i["conditions"].get("code", "")).split(" ")[0] for i in inst}
+    named = re.search(r"Values come from published papers and from runs of ([^.<]+)\.", HOME).group(1)
+    for key in ("kaldo", "phono3py", "qe", "mescal", "xtb"):
+        assert key in ran and next(iter(codes[key].values()))["name"] in named, key

@@ -59,30 +59,7 @@ non-exclusive license to redistribute it under CC BY 4.0, and the raw simulation
 or experimental artifacts behind it are never ingested (GOVERNANCE.md, "Data
 ownership and fairness").
 
-## Share an experiment with a link
-
-Every instance carries a provenance reference (`source.ref`), and that ref is
-the experiment key: all the values one simulation campaign, measurement, or
-parsed paper contributed, grouped. The [experiments
-page](https://openmaterials.ai/experiment/) lists every group in the store and
-gives each one a permalink:
-
-```
-https://openmaterials.ai/experiment/#ref=paper:cnt-2021-barbalinardo
-```
-
-The page renders the group's values with conditions and uncertainty, its
-verbatim provenance quotes, and the map version it was built from, so the link
-you share carries the result and its receipts together. To share your own
-experiment, contribute its values as instances under one `source.ref` and send
-the URL.
-
-For a card whose quantity [MaterialsCodeGraph](https://materialscodegraph.com/)
-can actually run, the page adds one more action: a **Run on MaterialsCodeGraph**
-link that deep-links MCG's compute wizard (`#/new/<node id>`) prefilled from the
-lineage. It is optional and storage-free: it appears only for genuinely runnable
-nodes and is simply absent otherwise, adds no data and touches no record, and
-the card is identical without it.
+## Share a result with a link
 
 OpenMaterials provides templates and lineages; MaterialsCodeGraph stores
 experiments and runs simulations from lineages.
@@ -105,7 +82,7 @@ Glossary:
 - Provenance is a quantity instance's source reference, `source.ref`.
 - Derivation is a node's upstream graph in the map.
 
-A lineage can also be shared as a link on its own, with no store or server. The
+A lineage can be shared as a link on its own, with no store or server. The
 record is light and lineage-identified: its identity comes from its `lineage`
 field (a map node when known, else a template with its hyperparameters and setup
 values), and heavy artifacts are optional pointers to
@@ -208,16 +185,13 @@ an apples-to-oranges artifact. The strongest comparisons are cross-code (the sam
 method run by two codes on the same inputs) and theory-versus-experiment (a
 measurement on the same node as a simulation), both badged.
 
-Views are links too: the map takes `#node=<id>` (and writes it as you click)
-and `#experiment=<source.ref>` to light up exactly the quantities an
-experiment's evidence covers,
+Views are links too: the map takes `#node=<id>` (and writes it as you click),
 the tracer takes `#node=<id>` or `#from=<id>&to=<id>` for a derivation path,
 the playground serializes its whole state behind its Share button and takes
 `#x=<gzipped record>` to open a single light lineage record as a plain data
 view (what the container holds: every lineage field, a value-and-units table, what
 the output node means on the map, where the data lives, and a plain link to run
-it as a simulation on MaterialsCodeGraph), and the experiments index takes
-`#material=<name>`. Every page has a copy-link control.
+it as a simulation on MaterialsCodeGraph). Every page has a copy-link control.
 
 ## The verified layer (Lean 4)
 
