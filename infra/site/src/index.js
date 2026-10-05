@@ -82,7 +82,7 @@ export default {
             const graph = await assetJSON(env, request, "/data/graph.json");
             count = (graph.nodes || []).length;
           } else if (name === "operators") {
-            // the home page count: one row per deduplicated operator
+            // the home page count: one row per operator
             const roadmap = await assetJSON(env, request, "/data/lean_roadmap.json");
             count = (roadmap.rows || []).length;
           } else if (name === "codes") {
