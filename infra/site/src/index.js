@@ -78,10 +78,13 @@ export default {
         try {
           const name = sm[1];
           let count;
-          if (name === "nodes" || name === "operators") {
+          if (name === "nodes") {
             const graph = await assetJSON(env, request, "/data/graph.json");
-            if (name === "nodes") count = (graph.nodes || []).length;
-            else count = new Set((graph.links || []).map((l) => l && l.op).filter(Boolean)).size;
+            count = (graph.nodes || []).length;
+          } else if (name === "operators") {
+            // the home page count: one row per operator
+            const roadmap = await assetJSON(env, request, "/data/lean_roadmap.json");
+            count = (roadmap.rows || []).length;
           } else if (name === "codes") {
             const codes = await assetJSON(env, request, "/data/codes.json");
             count = Object.keys(codes).length;

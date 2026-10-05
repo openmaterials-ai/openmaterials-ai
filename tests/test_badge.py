@@ -85,6 +85,8 @@ def test_stat_badges_exist_and_are_fresh():
     from omai.badge import labeled_badge_svg, map_stats
     stats = map_stats()
     assert set(stats) == {"nodes", "operators", "codes", "values"}
+    roadmap = json.loads((_DOCS / "data" / "lean_roadmap.json").read_text())
+    assert stats["operators"] == len(roadmap["rows"])
     for name, count in stats.items():
         f = _DOCS / "badge" / "stat" / (name + ".svg")
         assert f.exists(), f"missing stat badge {name}: rerun write_badge"

@@ -118,10 +118,10 @@ def map_stats() -> dict[str, int]:
     graph = json.loads((docs / "data" / "graph.json").read_text())
     codes = json.loads((docs / "data" / "codes.json").read_text())
     insts = json.loads((docs / "data" / "instances.json").read_text())
-    ops = {l["op"] for l in graph.get("links", []) if isinstance(l, dict) and l.get("op")}
+    roadmap = json.loads((docs / "data" / "lean_roadmap.json").read_text())
     return {
         "nodes": len(graph.get("nodes", [])),
-        "operators": len(ops),
+        "operators": len(roadmap.get("rows", [])),
         "codes": len(codes),
         "values": len(insts if isinstance(insts, list) else insts.get("instances", [])),
     }

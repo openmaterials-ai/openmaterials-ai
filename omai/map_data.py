@@ -1129,6 +1129,13 @@ if __name__ == "__main__":
     # bundle stamps it), so every artifact of one build carries THIS build's
     # lineage_version, never the previous one.
     print("wrote", write_version())
+    # the roadmap feeds the operators badge, so it is written before the badge
+    from omai.lean_roadmap import write_roadmap as _write_roadmap
+    try:
+        _pr, _sr = _write_roadmap()
+        print("wrote", _pr, "(" + str(_sr["rows"]) + " operators, " + str(_sr["proven"]) + " proven)")
+    except Exception as _e:
+        print("lean roadmap skipped:", _e)
     # the version badge re-renders whenever the stamp changes; embedders pin
     # their own hash through the Worker's /badge/<hash>.svg
     from omai.badge import pin_readme_badge as _pin_readme_badge
@@ -1151,12 +1158,6 @@ if __name__ == "__main__":
         _pu, _su = _write_units(); print("wrote", _pu, "(" + str(_su["theorems"]) + " unit theorems)")
     except Exception as _e:
         print("lean tier2/units export skipped:", _e)
-    from omai.lean_roadmap import write_roadmap as _write_roadmap
-    try:
-        _pr, _sr = _write_roadmap()
-        print("wrote", _pr, "(" + str(_sr["rows"]) + " operators, " + str(_sr["proven"]) + " proven)")
-    except Exception as _e:
-        print("lean roadmap skipped:", _e)
     _pc, _sc = write_conformance_index()
     print("wrote", _pc, "(" + str(_sc) + " conformance targets)")
     try:
