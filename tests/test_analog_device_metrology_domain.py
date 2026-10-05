@@ -1,10 +1,12 @@
-"""Tests for the analog-device-metrology contributions (records 250-257 and 258-259).
+"""Tests for the analog-device-metrology contributions (records 250-257, 258-259
+and 260-267).
 
-A definitional domain: the conductance family of analog resistive devices and the
-error of an analog dot product, five nodes and five closed-form edges the
-dimensional gate proves and apply_edge
-runs. It connects to the map through ElectricalConductivity[carrier=electronic].
-No code representation and no measured value attach yet.
+A definitional domain: the conductance family of analog resistive devices, the
+error of an analog dot product, the contact barrier with the work function and
+electron affinity that set it, and the energy of a programming pulse; nine nodes
+and eight closed-form edges the dimensional gate proves and apply_edge runs. It
+connects to the map through ElectricalConductivity[carrier=electronic]. No code
+representation attaches; two measured work functions (Hou et al. 2025) do.
 """
 from __future__ import annotations
 
@@ -28,6 +30,10 @@ _NODES = {
     "ConductanceDriftExponent": "conductance_drift_exponent",
     "StateCoefficientOfVariation": "state_coefficient_of_variation",
     "DotProductError": "dot_product_error",
+    "SchottkyBarrierHeight[band_carrier=electron]": "schottky_barrier_height",
+    "WorkFunction": "work_function",
+    "ElectronAffinity": "electron_affinity",
+    "ProgrammingPulseEnergy": "programming_pulse_energy",
 }
 _EDGES = (
     "contract_device_conductance",
@@ -35,7 +41,12 @@ _EDGES = (
     "contract_state_coefficient_of_variation",
     "apply_conductance_drift",
     "propagate_programming_error",
+    "emit_thermionic_conductance",
+    "schottky_mott_barrier",
+    "dissipate_pulse_energy",
 )
+_EV = 1.602176634e-19  # J; ENERGY values enter in the canonical joule
+_KB = 1.380649e-23  # J/K
 
 
 def _all_nodes_edges():
@@ -57,15 +68,16 @@ def _rep(space, symbol, data):
                           observable_name=symbol, data=np.asarray(data), is_operator=True)
 
 
-def test_the_five_nodes_and_five_edges():
+def test_the_nine_nodes_and_eight_edges():
     from omai.analog_device_metrology.operator import EDGES, NODES
 
     assert [s.name for s in NODES] == list(_NODES)
     assert [op.name for op in EDGES] == list(_EDGES)
     for s in NODES:
         assert node_identity(s)["quantity"] == _NODES[s.name], s.name
-        assert s.labels == {} and "[" not in s.name, s.name
-    assert len({node_id(s) for s in NODES}) == 5
+        want = {"band_carrier": "electron"} if s.name.startswith("SchottkyBarrierHeight") else {}
+        assert s.labels == want, s.name
+    assert len({node_id(s) for s in NODES}) == 9
 
 
 def test_conductance_is_the_siemens_and_not_a_conductivity():
@@ -156,12 +168,13 @@ def test_validate_dag_is_clean_and_the_tier_exists():
         assert tier_of[name] == "Analog device metrology", name
 
 
-def test_contribution_connects_through_the_electronic_conductivity():
+def test_contribution_connects_through_conductivity_and_temperature():
     from omai.analog_device_metrology.operator import EDGES, NODES
     from omai.electronic_transport.operator.nodes import ELECTRICAL_CONDUCTIVITY_ELECTRONIC
     from omai.gates import validate_contribution
     from omai.genesis import _formula_srepr
     from omai.operator.identity import edge_identity
+    from omai.thermal_transport.operator.nodes import TEMPERATURE_STATE
 
     records = [{"op": "add_node", "payload": {"uid": node_id(s), "identity": node_identity(s),
                                               "meta": {"name": s.name}}} for s in NODES]
@@ -169,9 +182,9 @@ def test_contribution_connects_through_the_electronic_conductivity():
         "uid": edge_id(op, node_id), "identity": edge_identity(op, node_id),
         "meta": {"name": op.name, "schemes": op.schemes,
                  "formula_srepr": _formula_srepr(op.formula)}}} for op in EDGES]
-    sigma = ELECTRICAL_CONDUCTIVITY_ELECTRONIC
-    current = {"nodes": {node_id(sigma): {"uid": node_id(sigma), "identity": node_identity(sigma),
-                                          "meta": {}}}, "edges": {}}
+    current = {"nodes": {node_id(s): {"uid": node_id(s), "identity": node_identity(s), "meta": {}}
+                         for s in (ELECTRICAL_CONDUCTIVITY_ELECTRONIC, TEMPERATURE_STATE)},
+               "edges": {}}
     assert validate_contribution(records, current) == []
 
 
@@ -186,18 +199,44 @@ def test_semantic_aliases_resolve_to_the_nodes():
                          "conductance drift": "ConductanceDriftExponent",
                          "conductance coefficient of variation": "StateCoefficientOfVariation",
                          "dot product error": "DotProductError",
+                         "schottky barrier height": "SchottkyBarrierHeight[band_carrier=electron]",
+                         "thermionic emission": "ConductanceState",
+                         "work function": "WorkFunction",
+                         "electron affinity": "ElectronAffinity",
+                         "programming pulse energy": "ProgrammingPulseEnergy",
+                         "switching energy": "ProgrammingPulseEnergy",
                          }.items():
         hits = resolve(phrase, sem, limit=3)
         assert any(h["id"] == node for h in hits), (phrase, hits)
 
 
-def test_no_representation_and_no_instance_attaches():
+def test_no_representation_attaches_and_two_work_functions_do():
     import omai.analog_device_metrology.representation as rep
     from omai.representation.adapter import SpaceRepresentationSpec
 
     assert not any(isinstance(v, SpaceRepresentationSpec) for v in vars(rep).values())
     insts = json.loads((_REPO / "docs" / "data" / "instances.json").read_text())
-    assert not any(i.get("variable") in _NODES for i in insts)
+    ours = [i for i in insts if i.get("variable") in _NODES]
+    assert sorted((i["variable"], i["material"], i["value"], i["units"]) for i in ours) == [
+        ("WorkFunction", "MoS2 (oxygen-plasma treated)", 3.94, "eV"),
+        ("WorkFunction", "MoS2 (pristine)", 3.38, "eV")]
+    for i in ours:
+        assert i["source"]["kind"] == "measurement"
+        assert i["source"]["ref"] == "paper:memtransistor-2025-hou"
+
+
+def test_the_paper_record_pins_each_value_to_its_instance():
+    from omai.analog_device_metrology.operator.nodes import WORK_FUNCTION
+
+    paper = json.loads((_REPO / "index" / "papers" / "memtransistor-2025-hou.json").read_text())
+    assert paper["paper"]["doi"] == "10.1038/s41467-025-64579-5"
+    assert [v["value"] for v in paper["values"]] == [3.38, 3.94]
+    for v in paper["values"]:
+        inst = json.loads((_REPO / "docs" / "data" / "instances" / v["instance"]).read_text())
+        assert inst["lineage"]["node"] == v["node_id"] == "WorkFunction"
+        assert v["node_uid"] == node_id(WORK_FUNCTION)
+        assert inst["lineage"]["values"] == {"value": v["value"], "units": v["units"]}
+        assert v["quote"] in inst["source"]["detail"]
 
 
 def test_committed_store_holds_records_250_to_257():
@@ -257,3 +296,75 @@ def test_the_root_in_the_dot_product_edge_is_not_a_rational_identity():
     from omai.lean_roadmap import _classify
 
     assert _classify(propagate_programming_error)[0] == "special function"
+
+
+def test_thermionic_conductance_executes_in_si():
+    """G = P_th T q_e / k_B exp(-Phi_Bn / k_B T). Phi_Bn = 0.5 eV, T = 300 K and
+    P_th = 1.2e-6 A/K^2 (A* = 120 A cm^-2 K^-2 on 1 um^2) give 1.6646e-8 S. The
+    dimensional bridge does not rescale inside the exponential, so the barrier
+    enters in joules and P_th in SI; T is the Temperature input."""
+    from omai.analog_device_metrology.operator.edges import emit_thermionic_conductance
+    from omai.analog_device_metrology.operator.nodes import SCHOTTKY_BARRIER_HEIGHT
+    from omai.thermal_transport.operator.nodes import TEMPERATURE_STATE
+
+    assert [s.name for s in emit_thermionic_conductance.inputs] == [
+        "SchottkyBarrierHeight[band_carrier=electron]", "Temperature"]
+    out = apply_edge(emit_thermionic_conductance, _rep(SCHOTTKY_BARRIER_HEIGHT, "Phi_Bn", 0.5 * _EV),
+                     _rep(TEMPERATURE_STATE, "temperature", 300.0), constants={"P_th": 1.2e-6})
+    assert out.space.name == "ConductanceState"
+    want = 1.2e-6 * 300.0 * _EV / _KB * np.exp(-0.5 * _EV / (_KB * 300.0))
+    np.testing.assert_allclose(float(out.data), want, rtol=1e-12)
+    np.testing.assert_allclose(float(out.data), 1.6646e-8, rtol=1e-4)
+
+
+def test_schottky_mott_barrier_executes():
+    from omai.analog_device_metrology.operator.edges import schottky_mott_barrier
+    from omai.analog_device_metrology.operator.nodes import ELECTRON_AFFINITY, WORK_FUNCTION
+
+    out = apply_edge(schottky_mott_barrier, _rep(WORK_FUNCTION, "Phi_W", 4.5 * _EV),
+                     _rep(ELECTRON_AFFINITY, "chi_s", 4.0 * _EV))
+    assert out.space.name == "SchottkyBarrierHeight[band_carrier=electron]"
+    np.testing.assert_allclose(float(out.data), 0.5 * _EV, rtol=1e-12)
+
+
+def test_pulse_energy_executes_with_the_width_in_the_canonical_time_unit():
+    """E = V_p^2 G t_p: 2 V on 1 uS for 1 ms is 4 nJ; t_p enters in the map's
+    canonical time unit, 1 ps (1 ms = 1e9)."""
+    from omai.analog_device_metrology.operator.edges import dissipate_pulse_energy
+    from omai.analog_device_metrology.operator.nodes import CONDUCTANCE_STATE
+
+    out = apply_edge(dissipate_pulse_energy, _rep(CONDUCTANCE_STATE, "G_c", 1e-6),
+                     constants={"V_p": 2.0, "t_p": 1e9})
+    assert out.space.name == "ProgrammingPulseEnergy"
+    np.testing.assert_allclose(float(out.data), 4e-9, rtol=1e-12)
+
+
+def test_roadmap_classes_of_the_new_edges_and_the_inverse_tangents():
+    """The exponential makes thermionic emission analysis; the other two are
+    polynomial. atan and atanh count as transcendental, so depolarization_factors
+    (a Piecewise of both) is classed by them, not only by its root."""
+    from omai.analog_device_metrology.operator import edges as E
+    from omai.composites.operator.edges import depolarization_factors
+    from omai.lean_roadmap import _classify
+
+    assert _classify(E.emit_thermionic_conductance)[0] == "special function"
+    assert _classify(E.schottky_mott_barrier)[0] == "polynomial"
+    assert _classify(E.dissipate_pulse_energy)[0] == "polynomial"
+    assert "transcendental" in _classify(depolarization_factors)[2]
+
+
+def test_committed_store_holds_records_260_to_267():
+    """Records 260-263 add the barrier, work function, electron affinity and pulse
+    energy nodes, records 264-266 their three edges, and record 267 corrects the
+    dot-product edge's description (its identity is unchanged)."""
+    from omai.analog_device_metrology.operator import EDGES, NODES
+
+    lines = (_REPO / "map" / "log.jsonl").read_text().splitlines()
+    assert len(lines) >= 267
+    recs = [json.loads(line) for line in lines[259:267]]
+    assert [r["op"] for r in recs] == ["add_node"] * 4 + ["add_edge"] * 3 + ["edit_meta"]
+    assert [r["payload"]["uid"] for r in recs[:4]] == [node_id(s) for s in NODES[5:9]]
+    assert [r["payload"]["uid"] for r in recs[4:7]] == [edge_id(op, node_id) for op in EDGES[5:8]]
+    assert recs[7]["payload"]["uid"] == edge_id(EDGES[4], node_id)
+    assert list(recs[7]["payload"]["meta"]) == ["description"]
+    assert "the count n_w, the largest weight w_max" in recs[7]["payload"]["meta"]["description"]

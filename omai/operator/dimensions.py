@@ -157,6 +157,12 @@ ELECTRICAL_CONDUCTIVITY = Dimension("electrical_conductivity", (-1, -3, 3, 0, 0,
 # The conductance a resistive-switching device programs and reads; the analog
 # device-metrology ConductanceState node carries it. Canonical unit the siemens.
 CONDUCTANCE = Dimension("conductance", (-1, -2, 3, 0, 0, 2, 0))
+# Electric charge, the coulomb (current times time): the elementary charge q_e
+# that turns k_B T into a thermal voltage in the thermionic-emission law.
+ELECTRIC_CHARGE = Dimension("electric_charge", (0, 0, 1, 0, 0, 1, 0))
+# Current per squared temperature, A K^-2: the thermionic prefactor A_c A* of a
+# contact (area times effective Richardson constant).
+CURRENT_PER_TEMPERATURE_SQUARED = Dimension("current_per_temperature_squared", (0, 0, 0, -2, 0, 1, 0))
 # Seebeck (thermopower) coefficient: volts per kelvin, V/K =
 # M L^2 T^-3 I^-1 Th^-1. Built from VOLTAGE (M L^2 T^-3 I^-1, the volt) by
 # dividing a temperature (adding Th^-1): S = V/K. The first dimension to carry
@@ -244,6 +250,8 @@ DIMENSIONS: dict[str, Dimension] = {
         MAGNETIC_MOMENT,
         ELECTRICAL_CONDUCTIVITY,
         CONDUCTANCE,
+        ELECTRIC_CHARGE,
+        CURRENT_PER_TEMPERATURE_SQUARED,
         SEEBECK,
         MOBILITY,
         THERMAL_EXPANSIVITY,

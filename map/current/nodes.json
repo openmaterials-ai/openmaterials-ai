@@ -107,6 +107,26 @@
   },
   "uid": "093e6e3278c242894f90f40f3ef1d4b7fda19c58061ceb9e65ceddc2e0000c0d"
  },
+ "0bc59239b7ed9882c822aae5818ec2c5449e656ab9897c32d45103b9d51a7b56": {
+  "identity": {
+   "fields": [
+    {
+     "dimension": "M^1 L^2 T^-2",
+     "indices": []
+    }
+   ],
+   "gauge": "observable",
+   "labels": {},
+   "quantity": "electron_affinity"
+  },
+  "meta": {
+   "description": "Electron affinity chi: the energy released when an electron moves from the vacuum level into the lowest unoccupied state. For a semiconductor or insulator surface chi = E_vac - E_CBM, which depends on the surface; for a molecule E(N) - E(N+1), vertical or adiabatic. ENERGY. The system, its surface or termination, thickness or layer count, and the method ride in instance conditions. Relations through a gap need the quasiparticle gap, not the optical gap.",
+   "name": "ElectronAffinity",
+   "symbol": "\\chi_{s}",
+   "tier": "Analog device metrology"
+  },
+  "uid": "0bc59239b7ed9882c822aae5818ec2c5449e656ab9897c32d45103b9d51a7b56"
+ },
  "0f08fcb37791dc7cc3e0e0ee5c611abbefc5075867719b275fcaa77ada4f1ac2": {
   "identity": {
    "fields": [
@@ -940,6 +960,26 @@
    "tier": "Mechanics"
   },
   "uid": "4ca6efdb874d146a6cca564c7a8a0504ee8868ae5890d4c33abddc147423d6f1"
+ },
+ "4dc358661b8a847db69d30a786b2b1475f1a291809bb34f55612d3203975be34": {
+  "identity": {
+   "fields": [
+    {
+     "dimension": "M^1 L^2 T^-2",
+     "indices": []
+    }
+   ],
+   "gauge": "observable",
+   "labels": {},
+   "quantity": "programming_pulse_energy"
+  },
+  "meta": {
+   "description": "Electrical energy dissipated in a device by one programming voltage pulse (not an optical pulse energy). ENERGY. The terminal pulsed (drain or gate), the pulse amplitude, width and shape, the device state before and after the pulse and whether capacitive charging is included ride in instance conditions.",
+   "name": "ProgrammingPulseEnergy",
+   "symbol": "E_{pulse}",
+   "tier": "Analog device metrology"
+  },
+  "uid": "4dc358661b8a847db69d30a786b2b1475f1a291809bb34f55612d3203975be34"
  },
  "4e9c9eb989aa721167806f40b353dbb75aedba068a1a486eeef178f77432108d": {
   "identity": {
@@ -1830,6 +1870,28 @@
   },
   "uid": "a9a8eae4014c21afe87f7332c4aa842b0fd9002a7ed33e0bdb1ec339402fc9c9"
  },
+ "a9e6a79e618d279fa3030c939d079eb130aa60268b1fc07a40393bec703496ca": {
+  "identity": {
+   "fields": [
+    {
+     "dimension": "M^1 L^2 T^-2",
+     "indices": []
+    }
+   ],
+   "gauge": "observable",
+   "labels": {
+    "band_carrier": "electron"
+   },
+   "quantity": "schottky_barrier_height"
+  },
+  "meta": {
+   "description": "Electron Schottky barrier height Phi_Bn: the barrier for electron injection from a metal contact into a semiconductor, from the metal Fermi level to the conduction-band edge at the interface. ENERGY. The hole barrier is another quantity (the two sum to the quasiparticle gap). The contact metal and semiconductor, the device state and gate voltage, whether the value is the flat-band barrier or the effective barrier at zero applied bias, and the extraction (thermionic Arrhenius fit with its bias, temperature range, Richardson exponent and A*; C-V; internal photoemission or band alignment) ride in instance conditions.",
+   "name": "SchottkyBarrierHeight[band_carrier=electron]",
+   "symbol": "\\Phi_{Bn}",
+   "tier": "Analog device metrology"
+  },
+  "uid": "a9e6a79e618d279fa3030c939d079eb130aa60268b1fc07a40393bec703496ca"
+ },
  "aab7019fbc014398b74ece01428527aa95e89da6f6d51efc0323b0acf59248c6": {
   "identity": {
    "fields": [
@@ -2012,6 +2074,26 @@
    "tier": "Quasi-harmonic"
   },
   "uid": "bb10912780eb22d45beff551be14f7f4216f3aae26161e8bfd60cdc051f63f58"
+ },
+ "bb5595d7a9f8f599458906c16f1b5ad255d70e7dc4a2001e54c626da2fc0ca70": {
+  "identity": {
+   "fields": [
+    {
+     "dimension": "M^1 L^2 T^-2",
+     "indices": []
+    }
+   ],
+   "gauge": "observable",
+   "labels": {},
+   "quantity": "work_function"
+  },
+  "meta": {
+   "description": "Work function Phi_W of a surface: the minimum energy to move an electron from the Fermi level to the vacuum level just outside the surface. ENERGY. The surface (a contact metal, or a semiconductor with its doping, thickness and treatment), its termination and the method (photoemission secondary-electron cutoff, Kelvin probe) ride in instance conditions. A Schottky-Mott barrier needs the contact metal's value.",
+   "name": "WorkFunction",
+   "symbol": "\\Phi_{W}",
+   "tier": "Analog device metrology"
+  },
+  "uid": "bb5595d7a9f8f599458906c16f1b5ad255d70e7dc4a2001e54c626da2fc0ca70"
  },
  "bf0f65e5f725c4d82321504f06db3610ce8e9d4d2041bf01dbcc9a1a02cfd191": {
   "identity": {

@@ -1262,7 +1262,8 @@
 "curated": [
 "analog-conductance",
 "conductance-state",
-"electrical-conductance"
+"electrical-conductance",
+"thermionic-emission"
 ],
 "id": "ConductanceState",
 "kind": "node",
@@ -1331,6 +1332,60 @@
 "dot product error"
 ],
 "uid": "1e6467a5b03397510e0d7f33403fd1cb42de5ea579e1f36b074d8dbbc620da20"
+},
+{
+"curated": [
+"schottky-barrier-height",
+"schottky-mott"
+],
+"id": "SchottkyBarrierHeight[band_carrier=electron]",
+"kind": "node",
+"labels": [
+"SchottkyBarrierHeight[band_carrier=electron]",
+"\\Phi_{Bn}",
+"schottky barrier height band carrier electron"
+],
+"uid": "a9e6a79e618d279fa3030c939d079eb130aa60268b1fc07a40393bec703496ca"
+},
+{
+"curated": [
+"work-function"
+],
+"id": "WorkFunction",
+"kind": "node",
+"labels": [
+"WorkFunction",
+"\\Phi_{W}",
+"work function"
+],
+"uid": "bb5595d7a9f8f599458906c16f1b5ad255d70e7dc4a2001e54c626da2fc0ca70"
+},
+{
+"curated": [
+"electron-affinity"
+],
+"id": "ElectronAffinity",
+"kind": "node",
+"labels": [
+"ElectronAffinity",
+"\\chi_{s}",
+"electron affinity"
+],
+"uid": "0bc59239b7ed9882c822aae5818ec2c5449e656ab9897c32d45103b9d51a7b56"
+},
+{
+"curated": [
+"programming-pulse-energy",
+"switching-energy"
+],
+"id": "ProgrammingPulseEnergy",
+"kind": "node",
+"labels": [
+"E_{pulse}",
+"ProgrammingPulseEnergy",
+"programming pulse energy"
+],
+"uid": "4dc358661b8a847db69d30a786b2b1475f1a291809bb34f55612d3203975be34"
 },
 {
 "curated": [],
@@ -2507,6 +2562,42 @@
 "labels": [
 "propagate programming error",
 "propagate_programming_error"
+],
+"uid": null
+},
+{
+"curated": [
+"thermionic-emission"
+],
+"id": "emit_thermionic_conductance",
+"kind": "edge",
+"labels": [
+"emit thermionic conductance",
+"emit_thermionic_conductance"
+],
+"uid": null
+},
+{
+"curated": [
+"schottky-barrier-height"
+],
+"id": "schottky_mott_barrier",
+"kind": "edge",
+"labels": [
+"schottky mott barrier",
+"schottky_mott_barrier"
+],
+"uid": null
+},
+{
+"curated": [
+"programming-pulse-energy"
+],
+"id": "dissipate_pulse_energy",
+"kind": "edge",
+"labels": [
+"dissipate pulse energy",
+"dissipate_pulse_energy"
 ],
 "uid": null
 },

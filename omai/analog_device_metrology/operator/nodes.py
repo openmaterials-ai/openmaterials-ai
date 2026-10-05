@@ -1,13 +1,17 @@
 r"""Operator nodes of the analog-device-metrology domain.
 
 The conductance family of analog resistive devices (memristors, memtransistors):
-the programmed conductance, the conductance window, the drift exponent and the
-per-level spread. The domain
+the programmed conductance, the conductance window, the drift exponent, the
+per-level spread and the error of an analog dot product; the contact barrier
+that sets a Schottky device's conductance with the work function and electron
+affinity that set the barrier; and the energy of a programming pulse. The domain
 is definitional: it holds the quantities and the closed forms that relate them.
-No code representation and no measured value attach yet.
+No code representation attaches yet; two measured work functions do.
 
-Node ids are unlabeled (plain names): protocol, read bias, gate bias and state
-ride in an instance's conditions, not in the node identity.
+Node ids are plain names, except where a label changes the quantity: the
+electron Schottky barrier is SchottkyBarrierHeight[band_carrier=electron] (the hole
+barrier differs; the two sum to the gap). Protocol, read bias, gate bias and
+state ride in an instance's conditions, not in the node identity.
 
   Node                         tag                             dimension
   ---------------------------  ------------------------------  -------------
@@ -16,6 +20,11 @@ ride in an instance's conditions, not in the node identity.
   ConductanceDriftExponent     conductance_drift_exponent      DIMENSIONLESS
   StateCoefficientOfVariation  state_coefficient_of_variation  DIMENSIONLESS
   DotProductError              dot_product_error               DIMENSIONLESS
+  SchottkyBarrierHeight[band_carrier=electron]
+                               schottky_barrier_height         ENERGY
+  WorkFunction                 work_function                   ENERGY
+  ElectronAffinity             electron_affinity               ENERGY
+  ProgrammingPulseEnergy       programming_pulse_energy        ENERGY
 
 CONDUCTANCE (the siemens, M^-1 L^-2 T^3 I^2) differs from the per-length
 ELECTRICAL_CONDUCTIVITY (S/m) by one length axis, the same conductance versus
@@ -27,7 +36,7 @@ is added with the first instance that needs it.
 """
 from __future__ import annotations
 
-from omai.operator.dimensions import CONDUCTANCE, DIMENSIONLESS
+from omai.operator.dimensions import CONDUCTANCE, DIMENSIONLESS, ENERGY
 from omai.operator.space import Field, ObservableSpace, Space
 
 _TIER = "Analog device metrology"
@@ -104,10 +113,74 @@ DOT_PRODUCT_ERROR = ObservableSpace(
     ),
 )
 
+SCHOTTKY_BARRIER_HEIGHT = ObservableSpace(
+    name="SchottkyBarrierHeight[band_carrier=electron]",
+    fields=(Field("Phi_Bn", ENERGY, indices=()),),
+    labels={"band_carrier": "electron"},
+    tier=_TIER,
+    description=(
+        "Electron Schottky barrier height Phi_Bn: the barrier for electron "
+        "injection from a metal contact into a semiconductor, from the metal "
+        "Fermi level to the conduction-band edge at the interface. ENERGY. The "
+        "hole barrier is another quantity (the two sum to the quasiparticle "
+        "gap). The contact metal and semiconductor, the device state and gate "
+        "voltage, whether the value is the flat-band barrier or the effective "
+        "barrier at zero applied bias, and the extraction (thermionic Arrhenius "
+        "fit with its bias, temperature range, Richardson exponent and A*; C-V; "
+        "internal photoemission or band alignment) ride in instance conditions."
+    ),
+)
+
+WORK_FUNCTION = ObservableSpace(
+    name="WorkFunction",
+    fields=(Field("Phi_W", ENERGY, indices=()),),
+    tier=_TIER,
+    description=(
+        "Work function Phi_W of a surface: the minimum energy to move an electron "
+        "from the Fermi level to the vacuum level just outside the surface. ENERGY. "
+        "The surface (a contact metal, or a semiconductor with its doping, "
+        "thickness and treatment), its termination and the method (photoemission "
+        "secondary-electron cutoff, Kelvin probe) ride in instance conditions. A "
+        "Schottky-Mott barrier needs the contact metal's value."
+    ),
+)
+
+ELECTRON_AFFINITY = ObservableSpace(
+    name="ElectronAffinity",
+    fields=(Field("chi_s", ENERGY, indices=()),),
+    tier=_TIER,
+    description=(
+        "Electron affinity chi: the energy released when an electron moves from "
+        "the vacuum level into the lowest unoccupied state. For a semiconductor "
+        "or insulator surface chi = E_vac - E_CBM, which depends on the surface; "
+        "for a molecule E(N) - E(N+1), vertical or adiabatic. ENERGY. The "
+        "system, its surface or termination, thickness or layer count, and the "
+        "method ride in instance conditions. Relations through a gap need the "
+        "quasiparticle gap, not the optical gap."
+    ),
+)
+
+PROGRAMMING_PULSE_ENERGY = ObservableSpace(
+    name="ProgrammingPulseEnergy",
+    fields=(Field("E_pulse", ENERGY, indices=()),),
+    tier=_TIER,
+    description=(
+        "Electrical energy dissipated in a device by one programming voltage "
+        "pulse (not an optical pulse energy). ENERGY. The terminal pulsed (drain "
+        "or gate), the pulse amplitude, width and shape, the device state before "
+        "and after the pulse and whether capacitive charging is included ride in "
+        "instance conditions."
+    ),
+)
+
 NODES: tuple[Space, ...] = (
     CONDUCTANCE_STATE,
     CONDUCTANCE_WINDOW,
     CONDUCTANCE_DRIFT_EXPONENT,
     STATE_COEFFICIENT_OF_VARIATION,
     DOT_PRODUCT_ERROR,
+    SCHOTTKY_BARRIER_HEIGHT,
+    WORK_FUNCTION,
+    ELECTRON_AFFINITY,
+    PROGRAMMING_PULSE_ENERGY,
 )

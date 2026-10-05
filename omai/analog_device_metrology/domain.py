@@ -11,6 +11,10 @@ SYMBOLS: dict[str, str] = {
     "ConductanceDriftExponent": r"\nu_{drift}",
     "StateCoefficientOfVariation": r"c_G",
     "DotProductError": r"\epsilon_{dot}",
+    "SchottkyBarrierHeight[band_carrier=electron]": r"\Phi_{Bn}",
+    "WorkFunction": r"\Phi_{W}",
+    "ElectronAffinity": r"\chi_{s}",
+    "ProgrammingPulseEnergy": r"E_{pulse}",
 }
 
 ANALOG_DEVICE_METROLOGY = Domain(
@@ -25,8 +29,10 @@ ANALOG_DEVICE_METROLOGY = Domain(
             "The conductance family of analog resistive devices (memristors, "
             "memtransistors): the programmed conductance, the conductance window "
             "(on/off ratio and LTP/LTD windows under their protocols), the drift "
-            "exponent, the per-level spread, and the error of an analog dot product "
-            "on a crossbar of such cells."
+            "exponent, the per-level spread, the error of an analog dot product on "
+            "a crossbar of such cells, the Schottky barrier with the work function "
+            "and electron affinity that set it, and the energy of a programming "
+            "pulse."
         ),
     ),
     representation_package=adm_rep,

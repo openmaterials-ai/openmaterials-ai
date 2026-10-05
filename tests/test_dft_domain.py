@@ -714,10 +714,12 @@ def test_instances_bundle_32_records_all_uid_pinned():
     # occupation, and the vendored Si.tersoff potential sha256) carried in-hash;
     # these supersede, without replacing, the under-specified kaldo/phono3py
     # instances whose mesh-only conditions leave the value unreproducible.
+    # 93 after the Hou 2025 apply (2026-10-05): the UPS work functions of
+    # pristine and oxygen-plasma-treated MoS2, two measurements on WorkFunction.
     from omai.map_data import build_instances
 
     insts = build_instances()
-    assert len(insts) == 91
+    assert len(insts) == 93
     for it in insts:
         assert it.get("node_uid"), f"instance for {it['variable']} lacks node_uid"
 

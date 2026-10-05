@@ -11,4 +11,8 @@ register_space_symbols({
     "ConductanceDriftExponent": {r"\nu_{drift}"},
     "StateCoefficientOfVariation": {"c_G"},
     "DotProductError": {r"\epsilon_{dot}"},
+    "SchottkyBarrierHeight[band_carrier=electron]": {r"\Phi_{Bn}"},
+    "WorkFunction": {r"\Phi_{W}"},
+    "ElectronAffinity": {r"\chi_{s}"},
+    "ProgrammingPulseEnergy": {"E_{pulse}"},
 })

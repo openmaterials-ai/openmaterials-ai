@@ -81,6 +81,13 @@ ALIASES: dict[str, tuple[str, ...]] = {
     "state-variability": ("StateCoefficientOfVariation",),
     "dot-product-error": ("DotProductError", "propagate_programming_error"),
     "analog-dot-product-error": ("DotProductError",),
+    "schottky-barrier-height": ("SchottkyBarrierHeight[band_carrier=electron]", "schottky_mott_barrier"),
+    "schottky-mott": ("SchottkyBarrierHeight[band_carrier=electron]",),
+    "thermionic-emission": ("ConductanceState", "emit_thermionic_conductance"),
+    "work-function": ("WorkFunction",),
+    "electron-affinity": ("ElectronAffinity",),
+    "programming-pulse-energy": ("ProgrammingPulseEnergy", "dissipate_pulse_energy"),
+    "switching-energy": ("ProgrammingPulseEnergy",),
     # Honest NO-HOME markers live in the alignment files, not here: an alias
     # must point at something that exists (the gate below enforces it).
 }

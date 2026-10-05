@@ -82,6 +82,7 @@ _h_PLANCK = 6.62607015e-34  # J·s
 _HBAR_LINEAR_THZ_FACTOR = _h_PLANCK * 1.0e12  # J per (linear THz) — matches ℏω
 _KB = 1.380649e-23  # J / K
 _N_A_VALUE = 6.02214076e23  # 1 / mol
+_Q_E = 1.602176634e-19  # C
 
 
 # Symbol-name → numeric-value table. Keys are the LaTeX names sympy uses on
@@ -91,6 +92,7 @@ _PHYSICS_CONSTANTS: dict[str, float] = {
     r"\hbar": _HBAR_LINEAR_THZ_FACTOR,
     "k_B": _KB,
     "N_A": _N_A_VALUE,
+    "q_e": _Q_E,
 }
 
 
