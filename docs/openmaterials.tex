@@ -254,8 +254,8 @@ shape is already here.
 \section{Where we are, and what is next}
 
 Today the framework is real and growing. It has an operator layer and a
-representation layer, 32 ingested representations (kaldo, phono3py, phonopy,
-pymatgen, ShengBTE, Quantum ESPRESSO, D3Q, VASP, LAMMPS, GPUMD, i-PI, xtb, the
+representation layer, 33 ingested representations (kaldo, phono3py, phonopy,
+pymatgen, ShengBTE, MESKAL, Quantum ESPRESSO, D3Q, VASP, LAMMPS, GPUMD, i-PI, xtb, the
 machine-learned potentials matgl / MACE / fairchem, the database representation mp-api,
 and the CALPHAD, amset, ORCA, OpenMM, and AtomisticSkills mat-* / chem-*
 workflows), and a
@@ -511,7 +511,7 @@ three exists today; the other two are designed and not yet built.
   \item The code parser will import a codebase as a representation: mapping the
   code's input, output, and intermediate files and key lines onto the nodes and
   edges the code implements (structure), and letting a run of the code be recorded
-  as an instance (values). The 32 representations on today's map were authored by
+  as an instance (values). The 33 representations on today's map were authored by
   hand against this contract; the parser that automates the mapping is not yet
   built.
   \item The run parser will read a concrete run and record its inputs (from the
@@ -833,9 +833,9 @@ the reviewers decide what enters the commons.
 
 Today's map is one hundred fifty-nine change records past v1, its frozen genesis version:
 116 typed quantities plus 3 promoted
-parameters, the symbolic formula on every relational edge, 32 representations
+parameters, the symbolic formula on every relational edge, 33 representations
 mapped (kaldo 34 variables, phono3py 31, phonopy 22, pymatgen 22, ShengBTE 20,
-QE 14, mp-api 13, LAMMPS 12, VASP 10, GPUMD 8, pycalphad 7, i-PI 4, and a further
+MESKAL 18, QE 14, mp-api 13, LAMMPS 12, VASP 10, GPUMD 8, pycalphad 7, i-PI 4, and a further
 twenty codes and mat-* / chem-* skills at five or fewer each), and real instances
 computed through the framework: cross-code silicon thermal conductivity
 (Tersoff potential, 8x8x8 mesh, 300 K: kaldo 19.46 RTA and 26.91 direct,
@@ -2081,8 +2081,8 @@ sense.}
 
 \subsection{Representation functors (codes)}
 
-Each adapter is a representation functor over the operator DAG. Sixteen
-adapter modules are now ingested in the thermal-transport domain alone (32
+Each adapter is a representation functor over the operator DAG. Seventeen
+adapter modules are now ingested in the thermal-transport domain alone (33
 representations map the whole graph), in three tiers. The four BTE / harmonic codes that consume
 force constants:
 
@@ -2460,7 +2460,7 @@ We have committed to Python for Sprint 1. The trade-offs were:
 
 The operator layer is an architectural commitment, not an implementation. The implementation
 began as a Python skeleton plus adapters for three thermal-transport codes and has since grown
-to the map of Part~\ref{part:status}, which holds 32 representations. The
+to the map of Part~\ref{part:status}, which holds 33 representations. The
 artifact that motivates the project (a paper-worthy demonstration of cross-code reconciliation
 and decomposed error bounds for lattice thermal conductivity) is downstream of the operator layer but
 is the operator layer's first proof-of-value.
@@ -3082,8 +3082,8 @@ numbers:
         rendered-link count exceeds the operator count because the site graph
         draws one link per (input $\to$ output) pair while an operator with
         several inputs is a single edge in the store.
-  \item \textbf{Representations.} 32 codes mapped, with per-code variable coverage:
-        kaldo 34, phono3py 31, phonopy 22, pymatgen 22, ShengBTE 20,
+  \item \textbf{Representations.} 33 codes mapped, with per-code variable coverage:
+        kaldo 34, phono3py 31, phonopy 22, pymatgen 22, ShengBTE 20, MESKAL 18,
         Quantum ESPRESSO 14, mp-api 13, LAMMPS 12, VASP 10, GPUMD 8, pycalphad 7, matgl 5,
         mat-elasticity 5, amset 5, ORCA 5, pymatgen-analysis-diffusion 5, D3Q 5,
         i-PI 4, fairchem 4, MACE 4, OpenMM 4, ASE 3,
@@ -3154,6 +3154,7 @@ phono3py                     & 31 & BSD-3-Clause \\
 phonopy                      & 22 & BSD-3-Clause \\
 pymatgen                     & 22 & MIT \\
 ShengBTE                     & 20 & GPL-3.0 \\
+MESKAL                       & 18 & BSD-3-Clause \\
 Quantum ESPRESSO             & 14 & GPL-2.0 \\
 mp-api                       & 13 & BSD-3-Clause \\
 LAMMPS                       & 12 & GPL-2.0 \\
@@ -3189,7 +3190,9 @@ Every code we represent must be cited and must carry its license. The License
 column above is read from the actual license text (the vendored LICENSE files
 for kaldo, LAMMPS, Quantum ESPRESSO, phonopy, phono3py, ShengBTE, and the
 AtomisticSkills skills; package metadata for the pip-distributed codes; the
-project's GitHub LICENSE for GPUMD, MatterGen, DiffCSP, and OpenMM; the D3Q
+project's GitHub LICENSE for GPUMD, MatterGen, DiffCSP, and OpenMM;
+MESKAL's LICENSE, pyproject.toml and CITATION.cff at tag v1.1.0 (private
+repository) and its public documentation site; the D3Q
 repository's LICENSE and License files plus its file headers, GPL-2.0
 (thermal2: CeCILL-2.1 OR GPL-2.0-or-later; some files GPL-3.0; bundled minpack:
 Minpack); the i-PI
@@ -3207,7 +3210,7 @@ citation or a license, so no future representation can land uncredited.
 
 The principal code representations on the map are cited below (the remaining
 representations,
-i-PI, PLUMED, MESCAL, and D3Q, carry their citations in
+i-PI, PLUMED, MESCAL, D3Q, and MESKAL, carry their citations in
 \texttt{omai/representation/credits.py}, the single source of truth the
 enforcement test reads). Where one code serves nodes through different
 methods, a per-node override (\texttt{PER\_NODE\_CREDITS}) carries the

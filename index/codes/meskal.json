@@ -1,0 +1,126 @@
+{
+ "representation": "meskal",
+ "lineage_version": "85d1a5deabd4e82e3e78522c153db378128eccdee37dfb299658abefa5fd3df3",
+ "map_version": "02cc8eab7f719356a52a9f2bca21b333cdcc2d5057fa84977c6e1474ed3e512a",
+ "covers": [
+  {
+   "node": "DynamicalMatrix",
+   "uid": "a883ea19a62fcb80dc79d8c347fc583bef6a56d8764aef89455da764b4732031",
+   "api": "harmonic.dynamical_matrix(fc2, list_of_replicas, cell_inv, q_point)",
+   "unit": null
+  },
+  {
+   "node": "ForceConstants[order=3]",
+   "uid": "73372380af126dde147e403f69339b87ee2f938a896dd5b56e9100c055dc8f93",
+   "api": "fc_supercell.supercell_fc3(potential, structure, supercell)",
+   "unit": "eV_per_A3"
+  },
+  {
+   "node": "Frequency",
+   "uid": "fa262448f625b62f5a8c6934518bb8ddc5d3a5a5ce69203b3e2f6b10b21cc4b8",
+   "api": "harmonic.frequencies",
+   "unit": "linear_THz"
+  },
+  {
+   "node": "GroupVelocity",
+   "uid": "d1934e166dbd0c91125936f9b2ccc0100af0ba44ed439003aae76b47b6d26fc6",
+   "api": "harmonic.velocities",
+   "unit": "angstrom_linear_THz"
+  },
+  {
+   "node": "HeatCapacity",
+   "uid": "343adfdb0717f7f81ae52cc5fca8279ff84a9715ba19b5630d405453682b12f9",
+   "api": "thermal.heat_capacity(frequency_thz, temperature)",
+   "unit": "J_per_K"
+  },
+  {
+   "node": "IsotopeAbundances",
+   "uid": "f8e4253dc1f218daff8e76af5b433dc230bf952f910ba163f87c6fa331aa033d",
+   "api": "isotope.mass_variance(species_masses, isotope_table)",
+   "unit": "dimensionless"
+  },
+  {
+   "node": "Linewidth[channel=anharmonic_3ph]",
+   "uid": "f52d161ad0be284c121c6fd10fe403c922aaa59646746c12719622004da5fa3a",
+   "api": "scattering.gamma_from_fc3",
+   "unit": "angular_THz"
+  },
+  {
+   "node": "Linewidth[channel=boundary]",
+   "uid": "81288248a2b40f0abfe78b058ffa4025a0312324e8af26b801017b9a0971961e",
+   "api": "2 * isotope.gamma_boundary(velocity, length)",
+   "unit": "angular_THz"
+  },
+  {
+   "node": "Linewidth[channel=isotope]",
+   "uid": "6cbd3322c5b6eb0105f9ca22d9ddc88334206ec9c115a31e6fb87409cc374c45",
+   "api": "isotope.gamma_isotope",
+   "unit": "angular_THz"
+  },
+  {
+   "node": "MeanFreeDisplacement[bte_solver=direct_inverse]",
+   "uid": "b24a26725f5641ffb16720514a7fdb23bf03304ce0d51c9f39501d1c8c009b6c",
+   "api": "collision_matvec.mean_free_paths_matrix_free",
+   "unit": "angstrom"
+  },
+  {
+   "node": "MeanFreeDisplacement[bte_solver=rta]",
+   "uid": "ad1373f31b9dbb8bd24ea16e1f90f1d92a39d309f2dc22583fad4fd82eca6f59",
+   "api": "collision_matvec.mean_free_paths_matrix_free(..., include_off_diagonal=False)",
+   "unit": "angstrom"
+  },
+  {
+   "node": "ModalDiffusivity",
+   "uid": "6052fe7e6aa8d2116b369886bffe59b04859f21145640184d24dfd96fbb60513",
+   "api": "qhgk.qhgk_diffusivity",
+   "unit": "mm2_per_s"
+  },
+  {
+   "node": "PhononTransmission",
+   "uid": "1e8b145f7ea4fc232aac842c985a46fee4a6d2b2a04118a38d67dce470ed1b50",
+   "api": "green.transmission.caroli_transmission(z, h_device, sigma_left, sigma_right)",
+   "unit": "dimensionless"
+  },
+  {
+   "node": "Potential",
+   "uid": "80a4273845e09207860e06db18d1f1ee5670a9b9c8b1020a99928c872878f901",
+   "api": "potentials.nep (nep_io.load_nep) | potentials.tersoff",
+   "unit": null
+  },
+  {
+   "node": "ThermalConductance[transport_model=landauer]",
+   "uid": "50084cef8405999bb14c2ff71b98f70f982d71254e3ec35bed543a10bbbbf542",
+   "api": "green.conductance.landauer_conductance(nu_thz, transmission, temperatures_k)",
+   "unit": "nW_per_K"
+  },
+  {
+   "node": "ThermalConductivity[bte_solver=direct_inverse]",
+   "uid": "a369d33e9643b9f8766b111cde72c44fbf34a13ae46dfab31e1afab1c2129ca9",
+   "api": "collision.kappa_full_from_fc | collision_matvec.kappa_full_matrix_free",
+   "unit": "W_per_m_per_K"
+  },
+  {
+   "node": "ThermalConductivity[bte_solver=rta]",
+   "uid": "d79d88d53266c147ea8d806cdbd30df309199469351ee13bcc9040a98745ebc4",
+   "api": "kappa.kappa_from_fc (runners.bulk_kappa: kappa_tensor_W_m_K)",
+   "unit": "W_per_m_per_K"
+  },
+  {
+   "node": "ThermalConductivity[transport_model=qhgk]",
+   "uid": "8932e3cbadef74a82802b43fd1d25328cb40e6136c90df3b6a4a998e77f9567b",
+   "api": "qhgk.qhgk_kappa (sum over axis 0)",
+   "unit": "W_per_m_per_K"
+  }
+ ],
+ "aliases": [],
+ "releases": [
+  {
+   "commit": "d97531d0cccb8a9950782534801973082f0642d1",
+   "license_source": "https://github.com/gbarbalinardo/meskal/tree/v1.1.0 (private repository: LICENSE, BSD 3-Clause License; pyproject.toml and CITATION.cff, BSD-3-Clause); public: https://giuseppe.barbalinardo.com/meskal/ (License section, BSD-3-Clause)",
+   "released": "2026-09-02",
+   "spdx": "BSD-3-Clause",
+   "tag": "v1.1.0",
+   "version": "1.1.0"
+  }
+ ]
+}

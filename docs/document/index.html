@@ -130,7 +130,7 @@
 <p>A typed substrate offers a different footing: a semantic action space. An agent that acts on the graph does not write a description of a calculation; it composes an edge, materializes a quantity in a chosen code, contracts a hidden quantity into an observable, cross-checks two routes. Each move is type-checked and dimensionally sound by construction, so an invalid step becomes a type error rather than a silent number. And because the routes are redundant, the substrate is its own verifier, which is the scarce ingredient for reinforcement learning in any open-ended domain: an agent can search and be told, mechanically, whether the answer holds.</p>
 <p>The analogy closes the loop. The structured corpus of code that accumulated in git is what made today's code models possible; a structured corpus of science is what will let an agent reason over physics rather than over prose about physics. This is, deliberately, Lean for computational physics, and like a proof assistant its value is that correctness is checked mechanically. It is only partly built, but the shape is already here.</p>
 <h2 id="where-we-are-and-what-is-next"><span class="secno">7</span> Where we are, and what is next</h2>
-<p>Today the framework is real and growing. It has an operator layer and a representation layer, 32 ingested representations (kaldo, phono3py, phonopy, pymatgen, ShengBTE, Quantum ESPRESSO, D3Q, VASP, LAMMPS, GPUMD, i-PI, xtb, the machine-learned potentials matgl / MACE / fairchem, the database representation mp-api, and the CALPHAD, amset, ORCA, OpenMM, and AtomisticSkills mat-* / chem-* workflows), and a validation engine that executes the graph, composes edges symbolically, and cross-checks redundant routes. Units reconcile automatically from the typed dimensions, and a dimensional gate checks every closed-form edge mechanically. The worked domains are lattice thermal transport (54 quantities, 55 operators), the Quantum ESPRESSO DFT ground state (the first contribution to land through the protocol gates), the mechanics domain (the elastic tensor, its Voigt moduli, and the pressure), the stability, thermochemistry, quasi-harmonic, molecular, and electronic-transport domains (grown from the AtomisticSkills scans), a first materials-diffusion subgraph, a thermodynamic-identities domain that closes the map's formulas together, a composites domain (composite effective thermal conductivity with interfacial resistance), and an analog-device-metrology domain (the conductance family of memristors and memtransistors); the unified map of 119 quantities and 119 operators is content-addressed in the log-first store (Part <a href="#part:kernel" data-reference-type="ref" data-reference="part:kernel">IV</a>), grown past its frozen genesis version through the contribution gates. Its dimensional layer is proven in Lean 4 against physlib and recompiled in CI on every change to the map or its generators, its evidence carries pinned conformance targets a re-run must reproduce, and the whole is held together by a suite of 1732 passing tests.</p>
+<p>Today the framework is real and growing. It has an operator layer and a representation layer, 33 ingested representations (kaldo, phono3py, phonopy, pymatgen, ShengBTE, MESKAL, Quantum ESPRESSO, D3Q, VASP, LAMMPS, GPUMD, i-PI, xtb, the machine-learned potentials matgl / MACE / fairchem, the database representation mp-api, and the CALPHAD, amset, ORCA, OpenMM, and AtomisticSkills mat-* / chem-* workflows), and a validation engine that executes the graph, composes edges symbolically, and cross-checks redundant routes. Units reconcile automatically from the typed dimensions, and a dimensional gate checks every closed-form edge mechanically. The worked domains are lattice thermal transport (54 quantities, 55 operators), the Quantum ESPRESSO DFT ground state (the first contribution to land through the protocol gates), the mechanics domain (the elastic tensor, its Voigt moduli, and the pressure), the stability, thermochemistry, quasi-harmonic, molecular, and electronic-transport domains (grown from the AtomisticSkills scans), a first materials-diffusion subgraph, a thermodynamic-identities domain that closes the map's formulas together, a composites domain (composite effective thermal conductivity with interfacial resistance), and an analog-device-metrology domain (the conductance family of memristors and memtransistors); the unified map of 119 quantities and 119 operators is content-addressed in the log-first store (Part <a href="#part:kernel" data-reference-type="ref" data-reference="part:kernel">IV</a>), grown past its frozen genesis version through the contribution gates. Its dimensional layer is proven in Lean 4 against physlib and recompiled in CI on every change to the map or its generators, its evidence carries pinned conformance targets a re-run must reproduce, and the whole is held together by a suite of 1732 passing tests.</p>
 <p>What is next is mostly upward and outward. The upstream from the Born-Oppenheimer potential, the force constants from which everything descends, is currently stubbed rather than modeled in full. The symbolic composition of error, the approximation error carried by an operation and the discretization error carried by a representation, is designed and not yet built. And the largest reach, the one this document is really about, is to ingest not only codes but whole papers: to turn a published result into an object the substrate can hold, re-run, and check, the same way it already ingests a code. That reach has begun: the paper parser already turns a PDF into gated, quote-anchored evidence proposals and mints the share links that carry a whole paper's lineages; what remains is scale.</p>
 <p><em>Git gave code a standard object, and an ecosystem grew on it. Give science the same, and a result stops being a dead end: it becomes a contribution to a compounding, machine-usable, verifiable body of physics.<br />
 <strong>The standard to store science.</strong></em></p>
@@ -207,7 +207,7 @@
 <p>A parser is an assisted on-ramp, one per artifact type. Each proposes structure, values, or both; the map validates them; a human confirms. One of the three exists today; the other two are designed and not yet built.</p>
 <ul>
 <li><p>The paper parser turns a paper's measured or computed numbers into values on nodes (and, in its eventual full form, its formulas into edges). Its value-extraction half is built (<code>omai/paper_parser</code>, gated evidence), detailed under the parser contract below.</p></li>
-<li><p>The code parser will import a codebase as a representation: mapping the code's input, output, and intermediate files and key lines onto the nodes and edges the code implements (structure), and letting a run of the code be recorded as an instance (values). The 32 representations on today's map were authored by hand against this contract; the parser that automates the mapping is not yet built.</p></li>
+<li><p>The code parser will import a codebase as a representation: mapping the code's input, output, and intermediate files and key lines onto the nodes and edges the code implements (structure), and letting a run of the code be recorded as an instance (values). The 33 representations on today's map were authored by hand against this contract; the parser that automates the mapping is not yet built.</p></li>
 <li><p>The run parser will read a concrete run and record its inputs (from the input file) and its outputs as values on the nodes they belong to.</p></li>
 </ul>
 <p>Proposals must pass the map's types as continuous integration: dimensional agreement; reachability, so a value lands only on a node that already exists and a new edge is introduced only by a code or a theory source, never by a bare experiment; observable discipline, so cross-source equality is asserted only at observables; completeness, so every input and output of a run is recorded; and coherence, so one source's contributions form a connected subgraph. All the difficulty of joining the commons concentrates here, in the parsers, which is what keeps the store itself simple.</p>
@@ -300,7 +300,7 @@
 <h2 id="governance"><span class="secno">15</span> Governance</h2>
 <p>The protocol is forkable: anyone can self-host a map or fork the mother map. Landing a contribution in the canonical maintained repository goes through a reviewer list. Content-addressing handles identity and deduplication on its own; the reviewers decide what enters the commons.</p>
 <h2 id="status-and-build-order"><span class="secno">16</span> Status and build order</h2>
-<p>Today's map is one hundred fifty-nine change records past v1, its frozen genesis version: 116 typed quantities plus 3 promoted parameters, the symbolic formula on every relational edge, 32 representations mapped (kaldo 34 variables, phono3py 31, phonopy 22, pymatgen 22, ShengBTE 20, QE 14, mp-api 13, LAMMPS 12, VASP 10, GPUMD 8, pycalphad 7, i-PI 4, and a further twenty codes and mat-* / chem-* skills at five or fewer each), and real instances computed through the framework: cross-code silicon thermal conductivity (Tersoff potential, 8x8x8 mesh, 300 K: kaldo 19.46 RTA and 26.91 direct, phono3py 16.74 RTA and 24.30 direct, in W/m K) plus an LGPS activation energy (0.152 eV) from the materials domain. It is live and browsable as an interactive map.</p>
+<p>Today's map is one hundred fifty-nine change records past v1, its frozen genesis version: 116 typed quantities plus 3 promoted parameters, the symbolic formula on every relational edge, 33 representations mapped (kaldo 34 variables, phono3py 31, phonopy 22, pymatgen 22, ShengBTE 20, MESKAL 18, QE 14, mp-api 13, LAMMPS 12, VASP 10, GPUMD 8, pycalphad 7, i-PI 4, and a further twenty codes and mat-* / chem-* skills at five or fewer each), and real instances computed through the framework: cross-code silicon thermal conductivity (Tersoff potential, 8x8x8 mesh, 300 K: kaldo 19.46 RTA and 26.91 direct, phono3py 16.74 RTA and 24.30 direct, in W/m K) plus an LGPS activation energy (0.152 eV) from the materials domain. It is live and browsable as an interactive map.</p>
 <p>The contributor on-ramp today is curated pull requests reviewed by the maintainer list; the silicon values above arrived that way. The genesis version hash is now frozen and the log-first store and the index exist, so the map's source of truth is data (an append-only log plus a materialized view) and the Python operator layer is an authoring client that emits change records; Part <a href="#part:kernel" data-reference-type="ref" data-reference="part:kernel">IV</a> documents all three. The parsers are the automated on-ramp, not the day-one one: the paper parser's value-extraction half now exists, and the code and run parsers remain the next build after the store and index.</p>
 <h2 class="unnumbered" id="see-also">See also</h2>
 <ul>
@@ -591,7 +591,7 @@ e_{i,q,\nu}</span> to <span class="math display">v^\alpha_{q,\nu} = \frac{1}{2\o
 <p>Core <span class="math inline">\kappa</span> chain of the operator DAG for lattice thermal transport (12 nodes / 14 edges shown; the full DAG has 54 nodes / 55 edges once the derived-observable tier is included: PhononDOS, Grüneisen, PhaseSpace, VolumetricHeatCapacity, MolarHeatCapacity, the thermodynamic siblings (HelmholtzFreeEnergy, Entropy, InternalEnergy and their molar contractions), the polar-correction inputs (BareDynamicalMatrix, BornCharges, DielectricTensor), the per-channel Linewidth split, the Wigner/QHGK transport variants, the cumulative-<span class="math inline">\kappa</span> distributions, the MD-primitive tier (Trajectory, HeatCurrent, HeatCurrentACF, VelocityAutocorrelation, MeanSquaredDisplacement), and the three MD-based <span class="math inline">\kappa</span> Pattern-A terminals (Green-Kubo, NEMD, HNEMD); see the interactive map at <code>docs/map/</code> for the live view). The two darker top boxes (<code>Potential</code>, <code>Temperature</code>) are source nodes; the dashed edges from <code>Potential</code> represent the stubbed Phase-1 upstream. <code>MeanFreeDisplacement</code> and <span class="math inline">\kappa</span> split into two parameterized variants by <code>bte_solver</code>: the gray-shaded <code>[rta]</code> variants are HiddenSpaces (RTA's <span class="math inline">1/\Gamma</span> non-linearity breaks gauge invariance), the unshaded <code>[direct_inverse]</code> variants are ObservableSpaces (the full LBTE preserves it). Each derived edge carries a sympy formula; sources carry identity formulas. All nodes are outputs of some operator; cross-code comparison happens at ObservableSpace nodes (after the operator layer's spec-derived unit and normalization conversion). Other HiddenSpaces (<code>Eigenvectors</code>, <code>GroupVelocity</code>, <code>Linewidth</code>) are not visually distinguished in this diagram but are gauge-dependent in the same sense.</p>
 </div>
 <h3 id="representation-functors-codes"><span class="secno">22.2</span> Representation functors (codes)</h3>
-<p>Each adapter is a representation functor over the operator DAG. Sixteen adapter modules are now ingested in the thermal-transport domain alone (32 representations map the whole graph), in three tiers. The four BTE / harmonic codes that consume force constants:</p>
+<p>Each adapter is a representation functor over the operator DAG. Seventeen adapter modules are now ingested in the thermal-transport domain alone (33 representations map the whole graph), in three tiers. The four BTE / harmonic codes that consume force constants:</p>
 <ul>
 <li><p><strong>kaldo</strong> (Python). Computes harmonic and anharmonic phonon transport from force constants, supporting iterative BTE, RTA, and the Wigner formulation. Most intermediate states are exposed via Python attributes on the <code>Phonons</code> object. kaldo's <code>Conductivity(method='inverse')</code> realizes the canonical <code>bte_solver=direct_inverse</code>.</p></li>
 <li><p><strong>phono3py</strong> (C/Python). Computes lattice thermal conductivity from third-order force constants. Intermediate quantities are exposed in HDF5 outputs. <code>run_thermal_conductivity(is_LBTE=True)</code> realizes the canonical <code>bte_solver=direct_inverse</code>.</p></li>
@@ -716,7 +716,7 @@ e_{i,q,\nu}</span> to <span class="math display">v^\alpha_{q,\nu} = \frac{1}{2\o
 <li><p><em>Lean.</em> Not the right tool for running scientific computations; reserved as a verification target, a reservation since cashed in: the verified layer of Part <a href="#part:status" data-reference-type="ref" data-reference="part:status">V</a> compiles today.</p></li>
 </ul>
 <h2 id="sec:outlook"><span class="secno">25</span> Outlook</h2>
-<p>The operator layer is an architectural commitment, not an implementation. The implementation began as a Python skeleton plus adapters for three thermal-transport codes and has since grown to the map of Part <a href="#part:status" data-reference-type="ref" data-reference="part:status">V</a>, which holds 32 representations. The artifact that motivates the project (a paper-worthy demonstration of cross-code reconciliation and decomposed error bounds for lattice thermal conductivity) is downstream of the operator layer but is the operator layer's first proof-of-value.</p>
+<p>The operator layer is an architectural commitment, not an implementation. The implementation began as a Python skeleton plus adapters for three thermal-transport codes and has since grown to the map of Part <a href="#part:status" data-reference-type="ref" data-reference="part:status">V</a>, which holds 33 representations. The artifact that motivates the project (a paper-worthy demonstration of cross-code reconciliation and decomposed error bounds for lattice thermal conductivity) is downstream of the operator layer but is the operator layer's first proof-of-value.</p>
 <p>The project's stewardship follows its architecture (2026-07-12). The map, its evidence, and the rules that govern changes are the commons, held by OpenMaterials-AI, an open initiative structured as a foundation in formation: map data is licensed CC BY 4.0, the kernel Apache 2.0, and the governance document states the boundary rule plainly: the commons owns the ledger and its laws; companies own tools and products built on top. The interfaces and the AI improvement engine are built by Da Vinci Labs against that boundary. The same document states data ownership and fairness (2026-07-13): evidence stays its owner's (contribution grants a non-exclusive CC BY 4.0 license, never a transfer, with no copyright assignment and no CLA), raw simulation and experimental artifacts are never ingested, and attribution is enforced in both directions, upstream through code representations and page-anchored quotes as a merge gate, downstream through the map version's provenance.</p>
 <p>Four longer-term directions follow naturally from the design:</p>
 <ul>
@@ -830,7 +830,7 @@ L^2\cdot T^{-2}</span>, <span class="math inline">\mathtt{THERMAL\_CONDUCTIVITY}
 <p>The map is at store head version <code>02cc8eab7f719356a52a9f2bca21b333cdcc2d5057fa84977c6e1474ed3e512a</code> (2026-10-04, 259 records), one hundred fifty-nine change records past the frozen genesis hash <code>e6e8044e92039696417b53b220b0f3f10559a286b0eaabbe7ea4167ff510f6cd</code> (2026-07-07, the untouched 100-record prefix). Since the lineage became the one named artifact, the published stamp also carries the unified <em>lineage version</em> (<code>85d1a5deabd4…</code>): one rolling content hash over the derivation graph and the instance-format rules together, appended to a chain whose root is the genesis, so a change to either the physics or the record format moves the one version the published stamp and every page cite (records themselves stay version-free: the projection stamps each value with the live node uid at build time, so committed values follow the current map; a per-record frozen pin is designed, not yet carried on the records). The live numbers:</p>
 <ul>
 <li><p><strong>Structure.</strong> 119 nodes (116 observable and hidden quantities plus 3 promoted parameters), 280 rendered links, 119 deduplicated operators, rendered in seventeen physics tiers (Sources, Harmonic, Thermodynamics, Scattering, Transport, Molecular dynamics, Ground state, Mechanics, Stability, Thermochemistry, Quasi-harmonic, Molecular, Electronic transport, Diffusion, Thermoelectric, Composite, Analog device metrology). The newest tier (Analog device metrology) and its conductance-family nodes landed with the analog-device-metrology domain; the Composite tier before it landed with the composites domain (composite effective thermal conductivity with interfacial resistance, cross-checked against the Hasselman-Johnson spherical limit), and the Thermoelectric tier before that with the thermodynamic-identities domain. The rendered-link count exceeds the operator count because the site graph draws one link per (input <span class="math inline">\to</span> output) pair while an operator with several inputs is a single edge in the store.</p></li>
-<li><p><strong>Representations.</strong> 32 codes mapped, with per-code variable coverage: kaldo 34, phono3py 31, phonopy 22, pymatgen 22, ShengBTE 20, Quantum ESPRESSO 14, mp-api 13, LAMMPS 12, VASP 10, GPUMD 8, pycalphad 7, matgl 5, mat-elasticity 5, amset 5, ORCA 5, pymatgen-analysis-diffusion 5, D3Q 5, i-PI 4, fairchem 4, MACE 4, OpenMM 4, ASE 3, mat-diffusion-analysis 2, mescal 2, plumed 2, smol 2, xtb 2, mat-equation-of-state 1, mat-surface-adsorption 1, rxn-network 1, diffcsp 1, mattergen 1.</p></li>
+<li><p><strong>Representations.</strong> 33 codes mapped, with per-code variable coverage: kaldo 34, phono3py 31, phonopy 22, pymatgen 22, ShengBTE 20, MESKAL 18, Quantum ESPRESSO 14, mp-api 13, LAMMPS 12, VASP 10, GPUMD 8, pycalphad 7, matgl 5, mat-elasticity 5, amset 5, ORCA 5, pymatgen-analysis-diffusion 5, D3Q 5, i-PI 4, fairchem 4, MACE 4, OpenMM 4, ASE 3, mat-diffusion-analysis 2, mescal 2, plumed 2, smol 2, xtb 2, mat-equation-of-state 1, mat-surface-adsorption 1, rxn-network 1, diffcsp 1, mattergen 1.</p></li>
 <li><p><strong>Instances.</strong> 91 recorded values, 87 simulation and 4 measurement. They span the newer domains (formation and hull energies, elastic and equation-of-state moduli, CALPHAD Gibbs energies, quasi-harmonic thermal expansion, molecular NEB barriers and bond dissociation energies) as well as the original thermal-transport and ground-state values from the Si and Ge cross-checks (the SCF total energy and the <span class="math inline">\Gamma</span> optical frequency). Thirty-five of the values are paper-sourced evidence, carrying an identity-bearing <code>paper:</code> source in the lineage and landed with a verbatim, page-located quote; they come from ten published papers (kaldo 2020, the QHGK/Green-Kubo Isaeva 2019, Esfarjani 2011, the 2021 carbon-nanotube and 2025 kappa-limit BTE studies, PtSe<span class="math inline">_2</span> 2021, quantum-elastic PIMD/TDEP 2024, SiGe disorder 2024, amorphous alloys 2020, and the Balandin 2008 graphene measurement). The four measurements are the Glassbrenner-Slack 1964 steady-state thermal conductivities of bulk single-crystal silicon (<span class="math inline">156\,\mathrm{W/(m\,K)}</span>) and germanium (<span class="math inline">60.2\,\mathrm{W/(m\,K)}</span>) at <span class="math inline">300\,\mathrm{K}</span> and natural isotopic abundance, the Balandin 2008 suspended-graphene Raman value, and the PtSe<span class="math inline">_2</span> 2021 in-plane FDTR value. The four newest simulation values (2026-07-18) are fully-specified engine-adapter evidence: kaldo and phono3py silicon thermal conductivities, RTA and direct-inverse, with every knob in-hash down to the sha256 of the vendored Tersoff potential, each paired with a committed conformance target (eight targets total) that a re-run must reproduce within its stated tolerance.</p></li>
 <li><p><strong>Dimensional gate.</strong> Of the 119 operator edges the gate walks, 50 are ok, 1 is a documented-schematic violation (<code>compute_gruneisen</code>, kept schematic by choice), and 68 are skipped (not closed-form <code>Eq</code> edges the gate can check, most of them the opaque solver edges of the newer domains, plus the composites depolarization <code>Piecewise</code> and the resolve identity). The two ground-state derivatives (<code>compute_forces_hf</code> and <code>compute_stress_cell</code>) and all four mechanics edges (the elastic tensor as <span class="math inline">-\partial\sigma/\partial\varepsilon</span>, the pressure trace, and both Voigt moduli) are proven ok, as are the six thermodynamic-identity edges (the Grüneisen identity, total thermal conductivity, molar volume, the <span class="math inline">C_P - C_V</span> relation, the power factor, and <span class="math inline">ZT</span>) and the three composite effective-medium edges (the Nan random and aligned mixing formulas and the Hasselman-Johnson spherical cross-check), and the two phonon delta sums (<code>compute_dos</code> and <code>compute_phase_space_3phonon</code>, each a density in frequency).</p></li>
 <li><p><strong>Verified layer.</strong> 93 nodes and 12 edge theorems compile against physlib (Lean 4.31.0, pinned by revision), the generated seven-base extension lifts dimensional coverage to 111 of 119 nodes (five of the eight remaining are opaque by design; three await exporter coverage), and 16 identity theorems check against Mathlib; a CI gate recompiles the proof on every relevant pull request with warnings promoted to errors. The formalization roadmap page rates every operator by what proving its formula would take.</p></li>
@@ -871,145 +871,150 @@ L^2\cdot T^{-2}</span>, <span class="math inline">\mathtt{THERMAL\_CONDUCTIVITY}
 <td style="text-align: left;">GPL-3.0</td>
 </tr>
 <tr class="even">
+<td style="text-align: left;">MESKAL</td>
+<td style="text-align: right;">18</td>
+<td style="text-align: left;">BSD-3-Clause</td>
+</tr>
+<tr class="odd">
 <td style="text-align: left;">Quantum ESPRESSO</td>
 <td style="text-align: right;">14</td>
 <td style="text-align: left;">GPL-2.0</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">mp-api</td>
 <td style="text-align: right;">13</td>
 <td style="text-align: left;">BSD-3-Clause</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">LAMMPS</td>
 <td style="text-align: right;">12</td>
 <td style="text-align: left;">GPL-2.0</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">VASP</td>
 <td style="text-align: right;">10</td>
 <td style="text-align: left;">Proprietary</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">GPUMD</td>
 <td style="text-align: right;">8</td>
 <td style="text-align: left;">GPL-3.0</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">pycalphad</td>
 <td style="text-align: right;">7</td>
 <td style="text-align: left;">MIT</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">matgl</td>
 <td style="text-align: right;">5</td>
 <td style="text-align: left;">BSD-3-Clause</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">mat-elasticity</td>
 <td style="text-align: right;">5</td>
 <td style="text-align: left;">MIT</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">amset</td>
 <td style="text-align: right;">5</td>
 <td style="text-align: left;">BSD-3-Clause</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">ORCA</td>
 <td style="text-align: right;">5</td>
 <td style="text-align: left;">Proprietary</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">pymatgen-analysis-diffusion</td>
 <td style="text-align: right;">5</td>
 <td style="text-align: left;">BSD-3-Clause</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">D3Q (thermal2)</td>
 <td style="text-align: right;">5</td>
 <td style="text-align: left;">GPL-2.0 (CeCILL-2.1, GPL-3.0, Minpack parts)</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">i-PI</td>
 <td style="text-align: right;">4</td>
 <td style="text-align: left;">GPL-2.0-or-later / MIT</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">fairchem</td>
 <td style="text-align: right;">4</td>
 <td style="text-align: left;">MIT</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">MACE</td>
 <td style="text-align: right;">4</td>
 <td style="text-align: left;">MIT</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">OpenMM</td>
 <td style="text-align: right;">4</td>
 <td style="text-align: left;">MIT (LGPL parts)</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">ASE</td>
 <td style="text-align: right;">3</td>
 <td style="text-align: left;">LGPL-2.1-or-later</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">mat-diffusion-analysis</td>
 <td style="text-align: right;">2</td>
 <td style="text-align: left;">MIT</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">mescal</td>
 <td style="text-align: right;">2</td>
 <td style="text-align: left;">MIT</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">plumed</td>
 <td style="text-align: right;">2</td>
 <td style="text-align: left;">LGPL-3.0</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">xtb</td>
 <td style="text-align: right;">2</td>
 <td style="text-align: left;">LGPL-3.0</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">smol</td>
 <td style="text-align: right;">2</td>
 <td style="text-align: left;">BSD-3-Clause</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">mat-equation-of-state</td>
 <td style="text-align: right;">1</td>
 <td style="text-align: left;">MIT</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">mat-surface-adsorption</td>
 <td style="text-align: right;">1</td>
 <td style="text-align: left;">MIT</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">rxn-network</td>
 <td style="text-align: right;">1</td>
 <td style="text-align: left;">BSD-3-Clause</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">diffcsp</td>
 <td style="text-align: right;">1</td>
 <td style="text-align: left;">MIT</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">mattergen</td>
 <td style="text-align: right;">1</td>
 <td style="text-align: left;">MIT</td>
 </tr>
 </tbody>
 </table></div>
-<p>Every code we represent must be cited and must carry its license. The License column above is read from the actual license text (the vendored LICENSE files for kaldo, LAMMPS, Quantum ESPRESSO, phonopy, phono3py, ShengBTE, and the AtomisticSkills skills; package metadata for the pip-distributed codes; the project's GitHub LICENSE for GPUMD, MatterGen, DiffCSP, and OpenMM; the D3Q repository's LICENSE and License files plus its file headers, GPL-2.0 (thermal2: CeCILL-2.1 OR GPL-2.0-or-later; some files GPL-3.0; bundled minpack: Minpack); the i-PI repository's <code>licenses/LICENSE.md</code> for i-PI, distributed under both the GPL and MIT at the user's choice). VASP and ORCA are proprietary: VASP under the commercial license at vasp.at, ORCA free for academic use with commercial licensing through FACCTs. The mat-* rows are AtomisticSkills skills and carry that project's MIT license. The single source of truth is <code>omai/representation/credits.py</code>, and an enforcement test (<code>tests/test_code_credits.py</code>) fails if any mapped representation lacks a citation or a license, so no future representation can land uncredited.</p>
+<p>Every code we represent must be cited and must carry its license. The License column above is read from the actual license text (the vendored LICENSE files for kaldo, LAMMPS, Quantum ESPRESSO, phonopy, phono3py, ShengBTE, and the AtomisticSkills skills; package metadata for the pip-distributed codes; the project's GitHub LICENSE for GPUMD, MatterGen, DiffCSP, and OpenMM; MESKAL's LICENSE, pyproject.toml and CITATION.cff at tag v1.1.0 (private repository) and its public documentation site; the D3Q repository's LICENSE and License files plus its file headers, GPL-2.0 (thermal2: CeCILL-2.1 OR GPL-2.0-or-later; some files GPL-3.0; bundled minpack: Minpack); the i-PI repository's <code>licenses/LICENSE.md</code> for i-PI, distributed under both the GPL and MIT at the user's choice). VASP and ORCA are proprietary: VASP under the commercial license at vasp.at, ORCA free for academic use with commercial licensing through FACCTs. The mat-* rows are AtomisticSkills skills and carry that project's MIT license. The single source of truth is <code>omai/representation/credits.py</code>, and an enforcement test (<code>tests/test_code_credits.py</code>) fails if any mapped representation lacks a citation or a license, so no future representation can land uncredited.</p>
 <h3 id="sec:code-citations"><span class="secno">35.1</span> Code citations</h3>
-<p>The principal code representations on the map are cited below (the remaining representations, i-PI, PLUMED, MESCAL, and D3Q, carry their citations in <code>omai/representation/credits.py</code>, the single source of truth the enforcement test reads). Where one code serves nodes through different methods, a per-node override (<code>PER_NODE_CREDITS</code>) carries the method citation, so a quantity is never credited to a formula that did not produce it. References were taken from each code's own citation guidance where it exists (kaldo, LAMMPS, phonopy, phono3py, and the AtomisticSkills paper were read this way) and otherwise from the canonical method paper, verified against the project's citation page.</p>
+<p>The principal code representations on the map are cited below (the remaining representations, i-PI, PLUMED, MESCAL, D3Q, and MESKAL, carry their citations in <code>omai/representation/credits.py</code>, the single source of truth the enforcement test reads). Where one code serves nodes through different methods, a per-node override (<code>PER_NODE_CREDITS</code>) carries the method citation, so a quantity is never credited to a formula that did not produce it. References were taken from each code's own citation guidance where it exists (kaldo, LAMMPS, phonopy, phono3py, and the AtomisticSkills paper were read this way) and otherwise from the canonical method paper, verified against the project's citation page.</p>
 <ul>
 <li><p><strong>kaldo</strong>: G. Barbalinardo, Z. Chen, N. W. Lundgren, D. Donadio, <em>Efficient anharmonic lattice dynamics calculations of thermal transport in crystalline and disordered solids</em>, J. Appl. Phys. <strong>128</strong>, 135104 (2020). doi:10.1063/5.0020443.</p></li>
 <li><p><strong>ShengBTE</strong>: W. Li, J. Carrete, N. A. Katcho, N. Mingo, <em>ShengBTE: A solver of the Boltzmann transport equation for phonons</em>, Comput. Phys. Commun. <strong>185</strong>, 1747 (2014). doi:10.1016/j.cpc.2014.02.015.</p></li>
