@@ -629,6 +629,27 @@
   },
   "uid": "3662d6183de400b2337d314499e31dd473b7b2ea3994290f21046e36bdcedfdb"
  },
+ "3714b2588a2c9400c356080644dab2fcdf778f5224235d6389519e648f41ab8a": {
+  "identity": {
+   "formula": "Equality(Symbol('E_{pulse}'), Mul(Symbol('G_c'), Pow(Symbol('V_p'), Integer(2)), Symbol('t_p')))",
+   "inputs": [
+    "325f09352a8872995fe6ab0a40b9df8780a778389fa0fe00ebcbd9ef7758f4a3"
+   ],
+   "output": "4dc358661b8a847db69d30a786b2b1475f1a291809bb34f55612d3203975be34",
+   "outputs": [
+    "4dc358661b8a847db69d30a786b2b1475f1a291809bb34f55612d3203975be34"
+   ],
+   "schemes": {}
+  },
+  "meta": {
+   "description": "Energy dissipated by a rectangular programming pulse of amplitude V_p (volts) and width t_p, E = V_p^2 G t_p in joules, with t_p in the map's canonical time unit, 1 ps (1 ms is 1e9; a width in seconds gives an energy 1e12 too small). G is the chord conductance I(V_p) / V_p at the pulse amplitude: a low-bias read conductance or the zero-bias thermionic conductance of a Schottky device differs from it by orders of magnitude. Valid when G changes little during the pulse (Delta G / G much smaller than 1). For a switching pulse E lies between V_p^2 G_before t_p and V_p^2 G_after t_p; their mean holds only for G linear in time. The energy dissipated charging and discharging the device and wiring capacitance (C V_p^2 per pulse) and the energy of the drive electronics are not included.",
+   "formula_latex": "E_{pulse} = G_{c} V_{p}^{2} t_{p}",
+   "formula_srepr": "Equality(Symbol('E_{pulse}'), Mul(Symbol('G_c'), Pow(Symbol('V_p'), Integer(2)), Symbol('t_p')))",
+   "name": "dissipate_pulse_energy",
+   "schemes": {}
+  },
+  "uid": "3714b2588a2c9400c356080644dab2fcdf778f5224235d6389519e648f41ab8a"
+ },
  "37f84c36a5360843374288b336337844eb07c6ca843d1ede38645404f0dde768": {
   "identity": {
    "formula": "Equality(Indexed(IndexedBase(Symbol('D')), Symbol('i', integer=True), Symbol('j', integer=True), Symbol('\\\\mathbf{q}')), Add(Indexed(IndexedBase(Symbol('D^{bare}')), Symbol('i', integer=True), Symbol('j', integer=True), Symbol('\\\\mathbf{q}')), Mul(Integer(4), pi, Pow(Symbol('V_{cell}', positive=True), Integer(-1)), Pow(Mul(Indexed(IndexedBase(Symbol('M')), Symbol('i', integer=True)), Indexed(IndexedBase(Symbol('M')), Symbol('j', integer=True))), Rational(-1, 2)), Sum(Mul(Symbol('q^\\\\alpha'), Indexed(IndexedBase(Symbol('Z^*')), Symbol('i', integer=True), Symbol('\\\\gamma', integer=True), Symbol('\\\\alpha', integer=True))), Tuple(Symbol('\\\\gamma', integer=True), Integer(1), Integer(3))), Sum(Mul(Symbol('q^\\\\beta'), Indexed(IndexedBase(Symbol('Z^*')), Symbol('j', integer=True), Symbol('\\\\delta', integer=True), Symbol('\\\\beta', integer=True))), Tuple(Symbol('\\\\delta', integer=True), Integer(1), Integer(3))), Pow(Sum(Mul(Symbol('q^\\\\alpha'), Symbol('q^\\\\beta'), Indexed(IndexedBase(Symbol('\\\\varepsilon_\\\\infty')), Symbol('\\\\gamma', integer=True), Symbol('\\\\delta', integer=True))), Tuple(Symbol('\\\\gamma', integer=True), Integer(1), Integer(3)), Tuple(Symbol('\\\\delta', integer=True), Integer(1), Integer(3))), Integer(-1)))))",
@@ -794,7 +815,7 @@
    "schemes": {}
   },
   "meta": {
-   "description": "Dot-product error from programming error alone, for one architecture: one cell per nonzero weight, positive and negative weights on two column groups, the affine mapping G_i = G_min + (G_max - G_min) |w_i| / w_max (the largest |w| at G_max), the nominal G_min subtracted per active cell (no reference column), binary inputs uniform over patterns (E[x^2] = 1/2), reads at the verify voltage and temperature, and a level-independent, unbiased coefficient of variation c of each cell about its target, independent between cells. W is the window G_max/G_min of this mapping. Then eps = c sqrt(sum_i (1/r + |w_i|)^2 / 2) / sum |w_i| over the nonzero weights, r = (W - 1) / w_max, written with the power sums n_w, w_max, S_1 = sum |w_i| and S_2 = sum w_i^2 of the kernel (a real kernel has S_1 <= n_w w_max, S_2 <= w_max S_1 and S_1^2 <= n_w S_2). Read noise, drift, reads away from the verify voltage, wire IR drop, sneak paths, readout quantization and offset, and correlated errors are not included; independent sources add in quadrature.",
+   "description": "Dot-product error from programming error alone, for one architecture: one cell per nonzero weight, positive and negative weights on two column groups, the affine mapping G_i = G_min + (G_max - G_min) |w_i| / w_max (the largest |w| at G_max), the nominal G_min subtracted per active cell (no reference column), binary inputs uniform over patterns (E[x^2] = 1/2), reads at the verify voltage and temperature, and a level-independent, unbiased coefficient of variation c of each cell about its target, independent between cells. W is the window G_max/G_min of this mapping. Then eps = c sqrt(sum_i (1/r + |w_i|)^2 / 2) / sum |w_i| over the nonzero weights, r = (W - 1) / w_max, written with the count n_w, the largest weight w_max and the power sums S_1 = sum |w_i| and S_2 = sum w_i^2 of the kernel (a real kernel has S_1 <= n_w w_max, S_2 <= w_max S_1 and S_1^2 <= n_w S_2). Read noise, drift, reads away from the verify voltage, wire IR drop, sneak paths, readout quantization and offset, and correlated errors are not included; independent sources add in quadrature.",
    "formula_latex": "\\epsilon_{dot} = \\frac{c_{G} \\sqrt{\\frac{S_{1} w_{max}}{W_{G} - 1} + \\frac{S_{2}}{2} + \\frac{n_{w} w_{max}^{2}}{2 \\left(W_{G} - 1\\right)^{2}}}}{S_{1}}",
    "formula_srepr": "Equality(Symbol('\\\\epsilon_{dot}'), Mul(Pow(Symbol('S_1'), Integer(-1)), Symbol('c_G'), Pow(Add(Mul(Symbol('S_1'), Symbol('w_max'), Pow(Add(Symbol('W_G'), Integer(-1)), Integer(-1))), Mul(Rational(1, 2), Symbol('S_2')), Mul(Rational(1, 2), Symbol('n_w'), Pow(Symbol('w_max'), Integer(2)), Pow(Add(Symbol('W_G'), Integer(-1)), Integer(-2)))), Rational(1, 2))))",
    "name": "propagate_programming_error",
@@ -933,6 +954,50 @@
    "schemes": {}
   },
   "uid": "516d748ca6d647abd4346336058ba9c42970078bee2991aa45cf8d4cfb8ff49d"
+ },
+ "5495d20eea478bf7e68e39211a5881ed9e1ba5bb0d8bda8d0b943c03e69a9a6c": {
+  "identity": {
+   "formula": "Equality(Symbol('\\\\Phi_{Bn}'), Add(Symbol('\\\\Phi_{W}'), Mul(Integer(-1), Symbol('\\\\chi_{s}'))))",
+   "inputs": [
+    "0bc59239b7ed9882c822aae5818ec2c5449e656ab9897c32d45103b9d51a7b56",
+    "bb5595d7a9f8f599458906c16f1b5ad255d70e7dc4a2001e54c626da2fc0ca70"
+   ],
+   "output": "a9e6a79e618d279fa3030c939d079eb130aa60268b1fc07a40393bec703496ca",
+   "outputs": [
+    "a9e6a79e618d279fa3030c939d079eb130aa60268b1fc07a40393bec703496ca"
+   ],
+   "schemes": {}
+  },
+  "meta": {
+   "description": "Schottky-Mott limit of the electron barrier, Phi_Bn = Phi_W - chi: the contact metal's work function minus the semiconductor's electron affinity, all in joules. The work function must be the metal's: a semiconductor's own work function minus its affinity is E_C - E_F, not a barrier. Valid for an ideal interface without Fermi-level pinning, interface dipoles or interface states; metals deposited on 2D semiconductors usually pin, so measured barriers depart from it, while transferred van der Waals contacts approach it. The hole barrier is the quasiparticle gap minus this value.",
+   "formula_latex": "\\Phi_{Bn} = \\Phi_{W} - \\chi_{s}",
+   "formula_srepr": "Equality(Symbol('\\\\Phi_{Bn}'), Add(Symbol('\\\\Phi_{W}'), Mul(Integer(-1), Symbol('\\\\chi_{s}'))))",
+   "name": "schottky_mott_barrier",
+   "schemes": {}
+  },
+  "uid": "5495d20eea478bf7e68e39211a5881ed9e1ba5bb0d8bda8d0b943c03e69a9a6c"
+ },
+ "58a959a412e7f92ec955cad34321812f5df453e9db8dcf4f8eb706f109bdf09a": {
+  "identity": {
+   "formula": "Equality(Symbol('G_c'), Mul(Symbol('P_th'), Symbol('T'), Pow(Symbol('k_B'), Integer(-1)), Symbol('q_e'), exp(Mul(Integer(-1), Pow(Symbol('T'), Integer(-1)), Symbol('\\\\Phi_{Bn}'), Pow(Symbol('k_B'), Integer(-1))))))",
+   "inputs": [
+    "63f9bd32d94d77e12afbb96f5b1b7a870de6b1f5805213b7f3c3ff227da301f0",
+    "a9e6a79e618d279fa3030c939d079eb130aa60268b1fc07a40393bec703496ca"
+   ],
+   "output": "325f09352a8872995fe6ab0a40b9df8780a778389fa0fe00ebcbd9ef7758f4a3",
+   "outputs": [
+    "325f09352a8872995fe6ab0a40b9df8780a778389fa0fe00ebcbd9ef7758f4a3"
+   ],
+   "schemes": {}
+  },
+  "meta": {
+   "description": "Zero-bias conductance of one Schottky contact by thermionic emission of electrons, G = P_th T^2 (q_e / k_B T) exp(-Phi_Bn / k_B T), the V -> 0 slope of I = P_th T^2 exp(-Phi_Bn / k_B T) (exp(q_e V / k_B T) - 1). Units: Phi_Bn in joules (the map's energy unit; an eV number read as joules gives G = 0), T in kelvin, P_th = A_c A* (contact area times effective Richardson constant) in A K^-2, G in siemens. Valid for emission over the barrier without field or thermionic-field tunnelling, ideality factor 1 (I = I_s (exp(q_e V / n k_B T) - 1) gives G / n; in the form I_s exp(q_e V / n k_B T) (1 - exp(-q_e V / k_B T)) n drops out and G holds), Phi_Bn much larger than k_B T, and a device this contact limits; two identical back-to-back contacts in series give G / 2. Phi_Bn is the effective barrier at zero applied bias: the built-in field lowers it by the image force even then, and a low-bias Arrhenius fit returns this value, not the flat-band barrier. The T^2 prefactor is the three-dimensional Richardson law; injection into a 2D channel follows a T^{3/2} law with a per-width prefactor P_th cannot express, and fitting one law to data from the other shifts the barrier by about k_B T / 2. G is a small-signal conductance for |V| much smaller than k_B T / q_e, not the chord conductance at a programming pulse, so it does not feed dissipate_pulse_energy.",
+   "formula_latex": "G_{c} = \\frac{P_{th} T q_{e} e^{- \\frac{\\Phi_{Bn}}{T k_{B}}}}{k_{B}}",
+   "formula_srepr": "Equality(Symbol('G_c'), Mul(Symbol('P_th'), Symbol('T'), Pow(Symbol('k_B'), Integer(-1)), Symbol('q_e'), exp(Mul(Integer(-1), Pow(Symbol('T'), Integer(-1)), Symbol('\\\\Phi_{Bn}'), Pow(Symbol('k_B'), Integer(-1))))))",
+   "name": "emit_thermionic_conductance",
+   "schemes": {}
+  },
+  "uid": "58a959a412e7f92ec955cad34321812f5df453e9db8dcf4f8eb706f109bdf09a"
  },
  "59ae54527b2e735e5408e66eadb81c9f1fa29720ea39207564e388a44cd1b04c": {
   "identity": {
