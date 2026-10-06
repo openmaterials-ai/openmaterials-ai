@@ -3,7 +3,10 @@
 The edge deployment of openmaterials.ai. Wrangler serves the repository's
 `docs/` directory as static assets, byte-identical to the GitHub Pages
 deployment, and the Worker script runs only for the routes a fragment-only
-static site cannot express:
+static site cannot express. On openmaterials.ai the Worker reads its data
+files (`data/version.json`, `data/instances.json`, `data/lean_roadmap.json`
+and the rest) from the Pages origin, so a data merge reaches it without a
+redeploy; the bundled assets are the fallback.
 
 - `GET /healthz`: liveness plus the published map/lineage version, read from
   the same `data/version.json` every browser reads.
