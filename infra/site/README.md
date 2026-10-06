@@ -76,7 +76,8 @@ Deploys to the `openmaterials-site` Worker on workers.dev. A change to the
 private-evidence rule: merging publishes `docs/data/registry.json` and the
 playground on Pages; deploy the Worker from the merge commit right after,
 then run the probe on both origins. Until the Worker matches the live
-registry, the domain Worker answers 503 and the playground stops there:
+registry, the domain Worker answers 503 and the playground stops there,
+while workers.dev still mints with its bundled table; deploy promptly:
 
 ```
 infra/site/probe.sh                       # openmaterials.ai
@@ -91,7 +92,8 @@ and the revoke command.
 Revoke a stored set (for example one published by mistake): delete its key
 from `infra/site`, `npx wrangler kv key delete --binding SHORTLINKS --remote "s:<code>"`. The
 `/raw` of a private set is `no-store`, so no cache holds it afterwards; a
-public set's `/raw` is immutable and may persist in caches. Attaching the
+public set's `/raw` is immutable and may persist in caches, as may a `/raw`
+read before this rule was deployed. Attaching the
 production domain (openmaterials.ai) is a DNS decision made by the project
 owner, not by this deploy; until then GitHub Pages remains the origin the
 domain points at, and the two deployments serve identical bytes.
