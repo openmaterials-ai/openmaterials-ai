@@ -20,7 +20,7 @@ import {
   sourceListingHTML, sourceEmptyHTML, sourceMismatchHTML,
 } from "./resolve.js";
 import {
-  MINTS_PER_DAY, randomCode, parseCode, validateMintBody,
+  MINTS_PER_DAY, randomCode, parseCode, validateMintBody, mintRefusal, memberLabels,
   shortlinkHTML, shortlinkNotFoundHTML,
 } from "./shortlinks.js";
 import { badgeSVG, statBadgeSVG, BADGE_PATH_RE, STAT_BADGE_PATH_RE } from "./badge.js";
@@ -58,11 +58,14 @@ async function assetJSON(env, request, path) {
   return res.json();
 }
 
-const html = (body, status) =>
+const html = (body, status, headers = {}) =>
   new Response(body, {
     status,
-    headers: { "content-type": "text/html; charset=utf-8" },
+    headers: { "content-type": "text/html; charset=utf-8", ...headers },
   });
+
+// Crawlers skip a stored set that cites evidence outside the public registry.
+const NOINDEX = { "x-robots-tag": "noindex" };
 
 export default {
   async fetch(request, env) {
@@ -167,8 +170,11 @@ export default {
 
 // The short-link store: the one write surface. POST /s mints (rate-limited,
 // validated, public-by-construction); GET /s/<code> serves the crawlable
-// shell; GET /s/<code>/raw serves the stored envelope JSON with open CORS
-// (a minted payload is public data; the code is the only handle).
+// shell; GET /s/<code>/raw serves the stored bytes with open CORS (a minted
+// payload is public data; the code is the only handle). A set citing evidence
+// outside the public registry mints only with ?publish_private=1 and is then
+// stored with metadata private: true. A set that is private by its metadata or
+// by the registry as read now is served no-store and noindex.
 async function handleShortlink(request, env, url) {
   const origin = request.headers.get("origin");
 
@@ -195,6 +201,18 @@ async function handleShortlink(request, env, url) {
     if (!v.ok) {
       return Response.json({ error: v.error }, { status: 400, headers: corsHeaders(origin) });
     }
+    // live registry first, the bundled copy as fallback; neither readable, or
+    // one the predicate refuses (citation_keys not its bound table): mint nothing
+    let refusal;
+    try {
+      refusal = mintRefusal(v.envelope, await assetJSON(env, request, "/data/registry.json"));
+    } catch (e) {
+      return Response.json({ error: "The public registry could not be read, so nothing was minted. Try again later." },
+        { status: 503, headers: corsHeaders(origin) });
+    }
+    if (refusal && url.searchParams.get("publish_private") !== "1") {
+      return Response.json(refusal, { status: 400, headers: corsHeaders(origin) });
+    }
     let code = null;
     for (let attempt = 0; attempt < 5 && !code; attempt++) {
       const bytes = new Uint8Array(9);
@@ -204,8 +222,8 @@ async function handleShortlink(request, env, url) {
     }
     if (!code) return Response.json({ error: "could not allocate a code" },
       { status: 503, headers: corsHeaders(origin) });
-    await env.SHORTLINKS.put(`s:${code}`, v.bytes,
-      { metadata: { created: new Date().toISOString(), members: v.envelope.lineages.length } });
+    await env.SHORTLINKS.put(`s:${code}`, body, { metadata: {
+      created: new Date().toISOString(), members: v.envelope.lineages.length, private: !!refusal } });
     await env.SHORTLINKS.put(rlKey, String(used + 1), { expirationTtl: 172800 });
     return Response.json({ code, url: `${url.origin}/s/${code}` },
       { status: 201, headers: corsHeaders(origin) });
@@ -216,23 +234,37 @@ async function handleShortlink(request, env, url) {
     const seg = url.pathname.slice(3).replace(/\/raw$/, "").replace(/\/$/, "");
     const code = parseCode(seg);
     if (!code) return html("<!doctype html><p>Malformed short code.</p>", 400);
-    const stored = await env.SHORTLINKS.get(`s:${code}`);
+    const { value: stored, metadata } = await env.SHORTLINKS.getWithMetadata(`s:${code}`);
     if (stored == null) {
       return raw
         ? Response.json({ error: "not found" },
             { status: 404, headers: { "access-control-allow-origin": "*" } })
         : html(shortlinkNotFoundHTML(code, url.origin), 404);
     }
+    // private by the metadata, or by the registry as read now (sets stored
+    // before this rule carry no flag); a registry or value that cannot be read
+    // counts as private
+    const v = validateMintBody(stored);
+    let labels = null;
+    if (v.ok) {
+      try { labels = memberLabels(v.envelope, await assetJSON(env, request, "/data/registry.json")); } catch (e) {}
+    }
+    const isPrivate = metadata?.private === true || !labels || labels.length > 0;
     if (raw) {
       return new Response(stored, {
         headers: {
           "content-type": "application/json",
           "access-control-allow-origin": "*",
-          "cache-control": "public, max-age=31536000, immutable",
+          "cache-control": isPrivate ? "no-store" : "public, max-age=31536000, immutable",
+          ...(isPrivate ? NOINDEX : {}),
         },
       });
     }
-    return html(shortlinkHTML(JSON.parse(stored), code, url.origin), 200);
+    if (!labels) {
+      labels = metadata?.private === true ? ["Some lineages cite evidence that is not in the public registry; their values cannot be checked against the commons."] : [];
+    }
+    return html(shortlinkHTML(v.envelope || { lineages: [] }, code, url.origin, { labels, noindex: isPrivate }), 200,
+      isPrivate ? NOINDEX : {});
   }
 
   return new Response("method not allowed", { status: 405 });

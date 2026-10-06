@@ -20,9 +20,10 @@ static site cannot express:
   naming it; a malformed one gets a 400 before any data is read.
 
 - `POST /s` and `GET /s/<code>[/raw]`: the short-link store, the Worker's one
-  write surface. Minting stores a lineage envelope (or a bare record,
-  normalized to a one-element envelope) in the `SHORTLINKS` KV namespace and
-  returns `<origin>/s/<code>`; the code is 9 unambiguous base58 characters.
+  write surface. Minting stores a lineage envelope (or a bare record, read as
+  a one-element envelope) in the `SHORTLINKS` KV namespace, byte for byte as
+  sent, and returns `<origin>/s/<code>`; the code is 9 unambiguous base58
+  characters.
   Minting is origin-gated (the site plus localhost) and rate-limited per IP
   per day; payloads are capped at 64 KB and 64 lineages, and a stored payload
   is PUBLIC by construction (anyone with the code can read it). `GET
@@ -31,6 +32,19 @@ static site cannot express:
   `/s/<code>/raw` (open CORS, immutable) and renders through the same
   dual-read path as a `#x=` link. Unknown codes 404 naming the code;
   malformed codes 400 before any read.
+
+  A set with a member citing evidence outside the public registry (the
+  predicate `docs/assets/private-members.js`, over `data/registry.json` read
+  like the other data files) is refused with a 400 naming each member as
+  "Lineage n of m" and its fields, unless the request carries the query
+  parameter `publish_private=1` (a flag in the body or in `doc` is ignored).
+  An accepted one is stored with KV metadata `private: true`. A set private by
+  that flag or by the registry as read now (sets stored before the rule carry
+  no flag), or whose registry cannot be read, has its `/raw` served
+  `no-store` and its shell `noindex` (meta and `X-Robots-Tag`), with each such
+  member's label in the description. When no registry is readable (live or
+  bundled), nothing is minted and the answer is 503; the playground does not
+  retry on the other origin after any JSON answer from a Worker.
 
 Everything else falls through to the assets, so removing the Worker returns
 the site to plain static hosting. The Worker holds no secrets and, outside
@@ -58,7 +72,28 @@ cd infra/site
 npx wrangler deploy
 ```
 
-Deploys to the `openmaterials-site` Worker on workers.dev. Attaching the
+Deploys to the `openmaterials-site` Worker on workers.dev. A change to the
+private-evidence rule: merging publishes `docs/data/registry.json` and the
+playground on Pages; deploy the Worker from the merge commit right after,
+then run the probe on both origins. Until the Worker matches the live
+registry, the domain Worker answers 503 and the playground stops there,
+while workers.dev still mints with its bundled table; deploy promptly:
+
+```
+infra/site/probe.sh                       # openmaterials.ai
+infra/site/probe.sh https://openmaterials-site.giuseppe-barbalinardo.workers.dev
+```
+
+The probe posts a set whose lineage 1 cites an unregistered model and exits
+non-zero unless the answer is a 400 naming lineage 1. A refusing Worker
+stores nothing; if an old Worker stores the probe, the failure names its key
+and the revoke command.
+
+Revoke a stored set (for example one published by mistake): delete its key
+from `infra/site`, `npx wrangler kv key delete --binding SHORTLINKS --remote "s:<code>"`. The
+`/raw` of a private set is `no-store`, so no cache holds it afterwards; a
+public set's `/raw` is immutable and may persist in caches, as may a `/raw`
+read before this rule was deployed. Attaching the
 production domain (openmaterials.ai) is a DNS decision made by the project
 owner, not by this deploy; until then GitHub Pages remains the origin the
 domain points at, and the two deployments serve identical bytes.

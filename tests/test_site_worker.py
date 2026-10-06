@@ -172,3 +172,24 @@ def test_value_page_matches_the_share_stub(tmp_path):
         stub = _SHARED.findall(stubs[e["id"]])
         worker = _SHARED.findall(out["pages"][e["id"]])
         assert stub and stub == worker, e["id"][:12]
+
+
+def test_private_records_contract():
+    """A set citing evidence outside the public registry mints only with the
+    request parameter publish_private=1 (never a body key, so the stored bytes
+    are the bytes sent), reads no-store and noindex, and nothing mints without
+    a readable registry. The behavior runs under node in shortlinks.test.mjs
+    (test_short_link_store_contract): every predicate vector, the flag in the
+    body or doc ignored, the bare record, the refusal naming lineage n of m,
+    the opt-in with its metadata and headers, and the 503."""
+    src = (_SITE / "src" / "index.js").read_text()
+    assert 'url.searchParams.get("publish_private") !== "1"' in src
+    assert '"/data/registry.json"' in src and "status: 503" in src
+    assert "SHORTLINKS.put(`s:${code}`, body," in src, "stored bytes must be the bytes sent"
+    assert "getWithMetadata" in src and '"no-store"' in src and '"x-robots-tag": "noindex"' in src
+    links = (_SITE / "src" / "shortlinks.js").read_text()
+    assert 'from "../../../docs/assets/private-members.js"' in links, "one predicate for the site"
+    probe = (_SITE / "probe.sh").read_text()
+    assert "Lineage 1 of 1" in probe and "400" in probe
+    readme = (_SITE / "README.md").read_text()
+    assert "probe.sh" in readme and '"s:<code>"' in readme, "probe and revoke runbook documented"

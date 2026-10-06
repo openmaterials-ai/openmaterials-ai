@@ -6,10 +6,16 @@
 // Policy, stated where it is enforced:
 //   - a short link names an ENVELOPE (or a bare lineage record, normalized on
 //     read like everywhere else); nothing else is storable
-//   - payload cap 64 KB canonical JSON; member cap 64 lineages
+//   - payload cap 64 KB as sent; member cap 64 lineages
 //   - minting is public but rate-limited per IP per day; a minted payload is
 //     PUBLIC by construction (anyone with the code can read it)
 //   - codes are 9 chars of an unambiguous base58 alphabet, collision-checked
+//   - a member citing evidence outside the public registry (private-members.js)
+//     is refused unless the request opts in with ?publish_private=1; the
+//     stored bytes are exactly the bytes sent, so nothing marks the opt-in
+//     but the KV metadata
+
+import { privateReasons, memberLabel } from "../../../docs/assets/private-members.js";
 
 const CODE_ALPHABET = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
 const CODE_LEN = 9;
@@ -33,7 +39,7 @@ function parseCode(segment) {
 }
 
 // Validate a mint body: a bare lineage record or a v1 envelope. Returns
-// {ok: true, envelope, bytes} with the payload normalized to envelope form,
+// {ok: true, envelope} with the payload normalized to envelope form,
 // or {ok: false, error}. Mirrors the page's normalizeEnvelope contract: a
 // bare record becomes a one-element envelope; both-keys or unknown v rejects.
 function validateMintBody(text) {
@@ -65,10 +71,30 @@ function validateMintBody(text) {
       return { ok: false, error: "a member carries no lineage" };
     }
   }
-  const bytes = JSON.stringify(envelope);
-  if (bytes.length > MAX_PAYLOAD_BYTES) return { ok: false, error: "payload exceeds 64 KB" };
-  return { ok: true, envelope, bytes };
+  return { ok: true, envelope };
 }
+
+// The refusal for an envelope whose members cite evidence outside the public
+// registry, or null when none does. Throws when the registry lacks its tables.
+function mintRefusal(envelope, registry) {
+  const m = envelope.lineages.length;
+  const lines = [], lineages = [];
+  envelope.lineages.forEach((member, i) => {
+    const fields = [...new Set(privateReasons(member, registry).map((r) => r.field))];
+    if (!fields.length) return;
+    lines.push(`Lineage ${i + 1} of ${m} (${fields.join(", ")})`);
+    lineages.push(i + 1);
+  });
+  if (!lines.length) return null;
+  return {
+    error: `Not minted: a short link is public, and these lineages cite evidence that is not in the public registry: ${lines.join("; ")}. To publish them anyway, repeat the request with the query parameter publish_private=1.`,
+    lineages,
+  };
+}
+
+// The reader's label per member citing such evidence (the playground's words).
+const memberLabels = (envelope, registry) =>
+  envelope.lineages.map((member, i) => memberLabel(i + 1, privateReasons(member, registry))).filter(Boolean);
 
 const esc = (s) =>
   String(s == null ? "" : s).replace(/[&<>"]/g, (c) =>
@@ -76,19 +102,20 @@ const esc = (s) =>
   );
 
 // The crawlable shell for a stored short link. Everything shown comes from
-// the stored envelope; a missing doc title gets the honest generic form.
-function shortlinkHTML(envelope, code, origin) {
+// the stored envelope; a missing doc title gets the generic form. `labels`
+// (memberLabels) join the description; `noindex` keeps the shell out of search.
+function shortlinkHTML(envelope, code, origin, { labels = [], noindex = false } = {}) {
   const n = envelope.lineages.length;
   const doc = envelope.doc || {};
   const title = doc.title ? String(doc.title) : `A shared set of lineages`;
   const src = doc.source ? `, source ${doc.source}` : "";
-  const desc = `${n} lineage${n === 1 ? "" : "s"}${src}, shared on the openmaterials playground.`;
+  const desc = [`${n} lineage${n === 1 ? "" : "s"}${src}, shared on the openmaterials playground.`, ...labels].join(" ");
   const target = `${origin}/play/#s=${code}`;
   return `<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>${esc(title)}</title>
+<title>${esc(title)}</title>${noindex ? '\n<meta name="robots" content="noindex">' : ""}
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="openmaterials.ai">
 <meta property="og:title" content="${esc(title)}">
@@ -121,5 +148,5 @@ minted from the playground; this one may have been mistyped.</p>
 
 export {
   CODE_ALPHABET, CODE_LEN, CODE_RE, MAX_PAYLOAD_BYTES, MAX_MEMBERS, MINTS_PER_DAY,
-  randomCode, parseCode, validateMintBody, shortlinkHTML, shortlinkNotFoundHTML,
+  randomCode, parseCode, validateMintBody, mintRefusal, memberLabels, shortlinkHTML, shortlinkNotFoundHTML,
 };

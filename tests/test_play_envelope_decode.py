@@ -165,7 +165,7 @@ def test_datasheet_reproduce_section_names_codes_and_pinned_runs():
     assert "data/conformance/index.json" in html, "the page does not load the conformance index"
     assert "t.id === recordId" in html, "targets must match the record's own lineage"
     assert "toPrecision(4)" in html and "Open the target file" not in html
-    assert "reproduceHTML(node, record.id)" in html, "the datasheet does not wire the section"
+    assert "reproduceHTML(node, record.id, (evidenceReasons(record)" in html, "the datasheet does not wire the section"
     # the index the page reads is committed and non-empty
     idx = json.loads((_REPO / "docs" / "data" / "conformance" / "index.json").read_text())
     assert idx.get("targets"), "committed conformance index is empty"
@@ -325,3 +325,59 @@ def test_datasheet_shows_the_lineage_badge():
     assert "Copy permalink" not in html and "Permalink" not in html, "one id, one Copy link"
     assert "(uncommitted)" in html, "no plain uncommitted state"
     assert "INSTANCE_IDS" in html, "committed test set missing"
+
+
+# --------------------------------------------------------------------------
+# A member citing evidence outside the public registry carries its label on
+# every path; #x= is pinned here with the page's real decode and label code
+# over the real predicate module and the published registry.
+# --------------------------------------------------------------------------
+
+_LABEL = ("Lineage 2 cites a model that is not in the public registry; "
+          "its values cannot be checked against the commons.")
+
+
+def _labels_on_page(fragment: str, registry) -> list:
+    node = _node_or_skip()
+    html = _PLAY.read_text()
+    src = "var PRIVACY = null;\n" + "\n".join(
+        _grab_function(html, n) for n in _DECODE_HELPERS + ("evidenceReasons", "evidenceLabel"))
+    script = src + """
+(async function(){
+  var registry = %s;
+  if (registry) PRIVACY = { mod: await import(%s), registry: registry };
+  var env = normalizeEnvelope(await b64urlToObj(%s));
+  console.log(JSON.stringify(env.lineages.map(function(m, i){ return evidenceLabel(m, i + 1); })));
+})().catch(function(e){ console.error(e); process.exit(1); });
+""" % (json.dumps(registry), json.dumps((_REPO / "docs" / "assets" / "private-members.js").as_uri()),
+       json.dumps(fragment))
+    proc = subprocess.run([node, "-e", script], capture_output=True, text=True)
+    assert proc.returncode == 0, f"node failed: {proc.stderr}"
+    return json.loads(proc.stdout.strip().splitlines()[-1])
+
+
+def test_x_link_labels_the_member_citing_unregistered_evidence():
+    marked = dict(_member("ThermalConductivity", "Ge", 62.0),
+                  unregistered=[{"kind": "model", "uid": "2" * 64}])
+    frag = lin.envelope_to_fragment(lin.envelope(
+        [_member("ThermalConductivity", "Si", 148.0), marked]))
+    registry = json.loads((_REPO / "docs" / "data" / "registry.json").read_text())
+    assert _labels_on_page(frag, registry) == ["", _LABEL]
+    # fail closed, no crash: an unread registry, or one whose citation_keys is
+    # not the module's bound table, labels every lineage
+    unbound = dict(registry, citation_keys={})
+    for reg in (None, unbound):
+        assert all("could not be read" in label for label in _labels_on_page(frag, reg))
+
+
+def test_page_wires_the_label_reproduce_note_and_mint_opt_in():
+    html = _PLAY.read_text()
+    assert "import('../assets/private-members.js')" in html, "the predicate is not loaded"
+    assert "fetch('../data/registry.json')" in html
+    assert "var evidence = evidenceLabel(record, n);" in html, "the datasheet does not label"
+    assert "cites evidence that is not public, so it cannot be rerun" in html
+    assert "'?publish_private=1'" in html and "Publish anyway" in html
+    assert "where anyone with the code can read it" in html, "the opt-in must state what becomes public"
+    assert "if (body) refusal = body;" in html, "a Worker's JSON answer must stop the fallback retry"
+    assert "(body && body.error) ||" in html, "the server's answer must be shown"
+    assert "(evidenceReasons(record) || []).length &&" in html, "the Reproduce note follows reasons, not the label"

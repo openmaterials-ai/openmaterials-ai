@@ -511,6 +511,7 @@ var GRAPH = null, SEM = [], LEAN = {nodes:{},edges:{}}, semById = {}, nodeById =
 var catalogById = {};   // node id -> {id, symbol, description}: the plain-language names for the lineage view
 var INSTANCE_IDS = null; // Set of committed lineage ids: the badge's committed test
 var codesByNode = {};   // node id -> [{code, api, url}]: which codes compute the quantity
+var PRIVACY = null;     // {mod: ../assets/private-members.js, registry: data/registry.json}; null until both load
 var CODES = {};         // codes.json, for code names and the Method line (sources.js)
 function codeName(k){ return Sources.codeName(k, CODES); }
 var CONFORMANCE = [];   // conformance/index.json targets: the pinned reproduce runs
@@ -530,7 +531,11 @@ var mapReady = Promise.all([
   fetch('../data/configurations.json').then(function(r){ return r.json(); }).catch(function(){ return null; }),
   fetch('../data/codes.json').then(function(r){ return r.json(); }).catch(function(){ return {}; }),
   fetch('../data/conformance/index.json').then(function(r){ return r.json(); }).catch(function(){ return {targets:[]}; }),
-  loadPlayInstances().catch(function(){ return []; })
+  loadPlayInstances().catch(function(){ return []; }),
+  // the private-evidence predicate the site Worker shares, and the registry it reads
+  Promise.all([import('../assets/private-members.js'),
+    fetch('../data/registry.json').then(function(r){ return r.json(); })])
+    .then(function(p){ return { mod: p[0], registry: p[1] }; }).catch(function(){ return null; })
 ]).then(function(res){
   GRAPH = res[0]; SEM = res[1] || [];
   if (res[2] && res[2].version) window.__MAP_VERSION__ = res[2].version;
@@ -551,6 +556,7 @@ var mapReady = Promise.all([
   CONFORMANCE = (res[7] && Array.isArray(res[7].targets)) ? res[7].targets : [];
   INSTANCE_IDS = new Set((Array.isArray(res[8]) ? res[8] : [])
     .map(function(e){ return e && e.id; }).filter(Boolean));
+  PRIVACY = res[9];
   SEM.forEach(function(e){ semById[e.id] = e; });
   var seen = {};
   GRAPH.nodes.forEach(function(n){ nodeById[n.id] = n; symHtml[n.id] = tex(n.symbol); });
@@ -1391,22 +1397,30 @@ async function fetchShortlink(code){
   }
   throw lastErr || new Error('The short-link service is unreachable.');
 }
-async function mintShortlink(env, btn){
+// Any JSON answer is the Worker's own (a refusal, the daily limit, a 503), so
+// the other origin is tried only after a network error or a non-JSON answer;
+// the answer's text is shown, and a refusal naming lineages that cite evidence
+// outside the public registry offers the explicit opt-in.
+async function mintShortlink(env, btn, publishPrivate){
   if (!env) return;
   var label = btn ? btn.textContent : '';
+  var note = document.getElementById('bundleMint');
+  if (note) note.innerHTML = '';
   if (btn) btn.textContent = 'Creating…';
+  var refusal = null;
   try {
     // a set opened from (or already given) a short link keeps its code
     var endpoints = currentShortCode ? [] : [location.origin + '/s', SHORTLINK_ORIGIN + '/s'];
     var res = null, lastErr = null;
-    for (var i = 0; i < endpoints.length && !res; i++) {
+    for (var i = 0; i < endpoints.length && !refusal; i++) {
       try {
-        var r = await fetch(endpoints[i], { method: 'POST',
+        var r = await fetch(endpoints[i] + (publishPrivate ? '?publish_private=1' : ''), { method: 'POST',
           headers: { 'content-type': 'application/json' },
           body: JSON.stringify(mintEnvelope(env)) });
-        if (r.ok) res = await r.json();
-        else if (r.status === 429) throw new Error('Daily short-link limit reached.');
-        else lastErr = new Error('The short-link service returned ' + r.status + '.');
+        var body = await r.json().catch(function(){ return null; });
+        if (r.ok && body) { res = body; break; }
+        lastErr = new Error((body && body.error) || 'The short-link service returned ' + r.status + '.');
+        if (body) refusal = body;
       } catch (e) { lastErr = e; }
     }
     if (res) currentShortCode = res.code;
@@ -1416,7 +1430,20 @@ async function mintShortlink(env, btn){
     await navigator.clipboard.writeText('https://openmaterials.ai/s/' + currentShortCode);
     if (btn) { btn.textContent = 'Short link copied'; setTimeout(function(){ btn.textContent = label; }, 1600); }
   } catch (e) {
-    if (btn) { btn.textContent = String(e.message || 'Failed.').slice(0, 40); setTimeout(function(){ btn.textContent = label; }, 2500); }
+    if (btn) btn.textContent = label;
+    if (!note) return;
+    var ks = refusal && Array.isArray(refusal.lineages) ? refusal.lineages : [];
+    var many = ks.length > 1;
+    var msg = ks.length ? 'Not created: a short link is public, and lineage' + (many ? 's ' : ' ') + ks.join(', ') +
+      (many ? ' cite' : ' cites') + ' evidence that is not in the public registry.' : (e.message || 'Failed.');
+    note.innerHTML = '<p class="rec-explain">' + esc(msg) + '</p>' + (ks.length && !publishPrivate
+      ? '<div class="rec-links"><button id="bundlePublish" type="button">Publish anyway</button>' +
+        '<span class="rec-link-note">Publishing stores the whole set as it is, where anyone with the code can read it: lineage' +
+        (many ? 's ' : ' ') + esc(ks.join(', ')) + ' with ' + (many ? 'their' : 'its') +
+        ' values, conditions and the ids of the evidence ' + (many ? 'they cite' : 'it cites') + '.</span></div>'
+      : '');
+    var pub = note.querySelector('#bundlePublish');
+    if (pub) pub.addEventListener('click', function(){ mintShortlink(env, btn, true); });
   }
 }
 
@@ -1798,7 +1825,8 @@ function renderBundle(env){
   });
   h += '</tbody></table></div>';
   h += '<div class="rec-links"><button id="bundleShort" type="button">Copy short link</button>' +
-    '<span class="rec-link-note">A stored set is public to anyone with the code.</span></div>';
+    '<span class="rec-link-note">A stored set is public to anyone with the code.</span></div>' +
+    '<div id="bundleMint" role="status"></div>';
   h += '</div>';
 
   // ---- every member's FULL datasheet, stacked on this same page --------------
@@ -1846,12 +1874,13 @@ function renderBundle(env){
    pins THIS lineage: a target counts only when its id equals the record's, so
    its conditions are the record's own. */
 function fmt4(v){ return typeof v === 'number' && isFinite(v) ? String(Number(v.toPrecision(4))) : fmtValue(v); }
-function reproduceHTML(node, recordId){
+function reproduceHTML(node, recordId, note){
   if (!node) return '';
   var codes = codesByNode[node] || codesByNode[baseNode(node)] || [];
   var targets = CONFORMANCE.filter(function(t){ return recordId && t.id === recordId; });
-  if (!codes.length && !targets.length) return '';
+  if (!codes.length && !targets.length && !note) return '';
   var h = '<div class="rec-sec"><div class="rec-h">Reproduce this</div>';
+  if (note) h += '<p class="rec-explain">' + esc(note) + '</p>';
   if (codes.length) {
     h += '<dl class="rec-kv">' + codes.map(function(c){
       var name = c.url
@@ -1870,6 +1899,20 @@ function reproduceHTML(node, recordId){
       esc(fmt4(exp.value)) + (exp.units ? ' ' + esc(exp.units) : '') + ', ' + esc(tolText) + '</div>';
   });
   return h + '</div>';
+}
+
+/* evidenceLabel: the label for lineage n when it cites evidence outside the
+   public registry (private-members.js, the words the Worker's shell uses), ''
+   when it cites none. Fail closed: a registry that did not load, or that the
+   module refuses (citation_keys not its bound table), labels every lineage.
+   evidenceReasons: the predicate's reasons, null when it cannot run. */
+function evidenceReasons(record){
+  try { return PRIVACY.mod.privateReasons(record, PRIVACY.registry); } catch (e) { return null; }
+}
+function evidenceLabel(record, n){
+  var reasons = evidenceReasons(record);
+  return reasons ? PRIVACY.mod.memberLabel(n, reasons)
+    : 'The public registry could not be read, so lineage ' + n + ' cannot be checked against the commons.';
 }
 
 /* datasheetHTML: ONE lineage's datasheet (header + three-column grid), shared
@@ -1899,6 +1942,9 @@ function datasheetHTML(record, valid, opts){
   h += '<div><dt>Kind</dt><dd>' + (kind === 'measurement' ? 'Measurement' : 'Simulation') + '</dd></div>';
   h += '<div><dt>Map version</dt><dd>' + esc(mapVersion) + '</dd></div>';
   h += '</dl>' + lineageDoiHTML(record, opts.memberIdx, trace) + '</div>';
+  var n = opts.memberIdx != null ? opts.memberIdx + 1 : 1;
+  var evidence = evidenceLabel(record, n);
+  if (evidence) h += '<p class="rec-explain">' + esc(evidence) + '</p>';
 
   // THE RECOVERY POINT for the sharing loop: a record that arrives with no
   // mapped quantity, no values, and no conditions (the thin handoff, e.g. an
@@ -1960,7 +2006,8 @@ function datasheetHTML(record, valid, opts){
 
   var values = valuesHTML(lineage, node) || resultsHTML(record);
   var recordTail = provenanceHTML(record, lineage, opts.doc) + artifactsHTML(record) +
-    (known ? reproduceHTML(node, record.id) : '');
+    (known ? reproduceHTML(node, record.id, (evidenceReasons(record) || []).length &&
+      'Lineage ' + n + ' cites evidence that is not public, so it cannot be rerun from the commons alone.') : '');
   h += '<div class="rec-grid"><div class="rec-col">' + lineageHTML + '</div>';
   if (values) h += '<div class="rec-col">' + values + '</div>';
   if (recordTail) h += '<div class="rec-col">' + recordTail + '</div>';
