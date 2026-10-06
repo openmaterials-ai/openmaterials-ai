@@ -70,3 +70,12 @@ export function privateReasons(member, registry) {
   }
   return out;
 }
+
+// The reader's label for lineage n (numbered from 1) given its reasons, "" when
+// there are none: one wording for the playground and the Worker's shell.
+const WORDS = { configuration: "a configuration", model: "a model", node: "a map node" };
+export function memberLabel(n, reasons) {
+  const kinds = [...new Set(reasons.map((r) => WORDS[r.kind] || "evidence"))];
+  if (!kinds.length) return "";
+  return `Lineage ${n} cites ${kinds.join(" and ")} that ${kinds.length > 1 ? "are" : "is"} not in the public registry; its values cannot be checked against the commons.`;
+}
