@@ -260,7 +260,7 @@ shipped here.
 | `omai.schema.simulation_record_schema()` | The SimulationRecord as JSON Schema draft 2020-12, closed objects. |
 | `omai.schema.validate_record(record)` | Every schema violation as a readable message; an empty list means valid. |
 | `omai.render.render_kappa / render_molar_cp / render_reaction_energy` | A typed result to a map evidence `Instance`. |
-| `omai.render.provenance(run_ref=None, what, map_version=...)` | The `Source` every rendered instance carries, stamping the map version. |
+| `omai.render.provenance(run_ref=None, what, map_version=...)` | The `Source` every rendered instance carries, stamping the graph version (`graph_version` in version.json) passed as `map_version`. |
 | `omai.evidence.resolve(kind, uid, roots=None)` | Where a registered configuration or model uid lives; None when no root registers it. |
 | `omai.evidence.model_uid(digests)` | A model's uid: the sha256 of its one evaluated file, or of the sorted manifest of several. |
 | `omai.evidence.model_citations(lineage, roots=None)` | Every model a lineage cites, resolved; a report that refuses nothing. |
@@ -315,12 +315,12 @@ writer refuses them. The registry ships the releases under `code`.
   proof record exactly as the platform served it (real production bytes, so
   the vectors pin the shape a producer emits and not only the shapes this
   repository invents).
-- `render.json`: 8 renderer inputs and the instances they render to, in both
-  producer forms. Five carry no `run_ref`: the form the platform serves, where
+- `render.json`: 10 renderer inputs and the instances they render to, in both
+  producer forms. Six carry no `run_ref`: the form the platform serves, where
   `source.ref` is the bare provider and the detail names no run, because a
   public share page carries no run identity. One of those, `kappa_served_proof`,
-  is asserted byte-for-byte against the result stored for the Cut 1 proof run.
-  Three carry a `run_ref`, the form the committed instances under
+  equals the result stored for the Cut 1 proof run in every field but the
+  0.2.0 detail text. Four carry a `run_ref`, the form the committed instances under
   `docs/data/instances/` use (`materialscodegraph-dgeba-cp300-gfn2` and
   friends).
 - `configurations.json`: the committed Si configuration's structure, the
@@ -341,8 +341,10 @@ refuses to write when a recomputed id disagrees with its pin.
 
 A rendered instance omits `uncertainty` entirely when the run reports no
 spread (a single-seed run reports 0, which is not a claim of exactness), and
-its detail prints `+/- None`. `execution.registry` is the engine manifest's
-code rows, each
+its detail writes no `+/-` term (0.1.x printed `+/- None`). The kappa detail
+gives the value and its error to 4 significant figures in plain decimal, ties
+rounded half up; `value` and `uncertainty` keep full precision.
+`execution.registry` is the engine manifest's code rows, each
 `{id, name, spdx, license_source, source, version}` with a nullable `version`:
 the licence provenance of what ran, not a list of registry hosts. 0.1.0
 declared it as an array of strings and refused every record the platform

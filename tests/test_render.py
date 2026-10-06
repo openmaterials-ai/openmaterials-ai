@@ -15,6 +15,7 @@ from omai.render import (
     KAPPA_NODE,
     Instance,
     Source,
+    _sig4,
     kj_per_mol_to_ev,
     provenance,
     render_kappa,
@@ -77,11 +78,30 @@ def test_render_kappa_omits_the_uncertainty_key_when_there_is_no_spread():
     assert render_kappa(kappa(), run_ref="r").to_json_dict()["uncertainty"] == 4.2
 
 
-def test_render_kappa_detail_prints_none_for_an_absent_spread():
-    # The worker prints "+/- None", not "+/- 0", and the served bytes have it.
-    detail = render_kappa(kappa(kappa_std_W_per_mK=0), run_ref="r").source.detail
-    assert "+/- None W/(m K)" in detail
+def test_render_kappa_detail_drops_the_error_for_an_absent_spread():
+    # 0.1.x printed "+/- None"; no spread now writes no "+/-" term.
+    for std in (0, None):
+        detail = render_kappa(kappa(kappa_std_W_per_mK=std), run_ref="r").source.detail
+        assert "(HNEMD, 137.5 W/(m K) at 300 K" in detail
+        assert "+/-" not in detail
     assert "+/- 4.2 W/(m K)" in render_kappa(kappa(), run_ref="r").source.detail
+
+
+def test_sig4_is_plain_decimal_with_ties_half_up():
+    # The platform's bytes: 4 significant figures, trailing zeros dropped.
+    cases = {12345.6: "12350", 16.34999: "16.35", 0.41234567: "0.4123",
+             120.25: "120.3", 16.125: "16.13", 137.5: "137.5", 300.0: "300",
+             97.93078199999998: "97.93", 0.0: "0", -1.23456: "-1.235",
+             9999.5: "10000", 0.000123456: "0.0001235"}
+    for x, text in cases.items():
+        assert _sig4(x) == text, x
+
+
+def test_render_kappa_detail_writes_4_significant_figures():
+    inst = render_kappa(kappa(kappa_W_per_mK=12345.6, kappa_std_W_per_mK=120.25))
+    assert "(HNEMD, 12350 +/- 120.3 W/(m K) at 300 K" in inst.source.detail
+    # The fields keep full precision.
+    assert (inst.value, inst.uncertainty) == (12345.6, 120.25)
 
 
 def test_render_kappa_without_a_run_ref_is_the_served_platform_form():
@@ -203,7 +223,7 @@ def test_provenance_without_a_run_ref_names_no_run():
     src = provenance(what="Something from a", map_version="abc123")
     assert src.ref == "materialscodegraph"
     assert src.detail == ("Something from a MaterialsCodeGraph run; "
-                          "rendered against openmaterials map version abc123.")
+                          "rendered against openmaterials graph version abc123.")
 
 
 def test_provenance_stamps_the_map_version_and_slugs_the_ref():
@@ -212,13 +232,13 @@ def test_provenance_stamps_the_map_version_and_slugs_the_ref():
     assert src.kind == "simulation"
     assert src.ref == "materialscodegraph-run-ref-xyz"
     assert src.detail == ("Something from a MaterialsCodeGraph run Run Ref XYZ; "
-                          "rendered against openmaterials map version abc123.")
+                          "rendered against openmaterials graph version abc123.")
 
 
 def test_provenance_says_unknown_when_no_map_version_is_given():
     # An instance must state what it was rendered against; "unknown" says so
     # rather than implying a pin that was never made.
-    assert "map version unknown." in provenance("r", "x").detail
+    assert "graph version unknown." in provenance("r", "x").detail
 
 
 def test_instance_to_json_dict_omits_absent_optional_keys():
