@@ -33,12 +33,14 @@ not what this schema describes.
 
 from __future__ import annotations
 
-# A sha256 hex digest, the shape lineages.py's _SHA256_RE enforces.
-_SHA256 = r"^[0-9a-f]{64}$"
+# A sha256 hex digest, the shape lineages.py's _SHA256_RE enforces. Python's
+# re.search (jsonschema) lets "$" match before a final newline; the lookahead
+# refuses "<hex>\n" there, as ECMAScript's "$" already does.
+_SHA256 = r"^[0-9a-f]{64}(?!\n)$"
 
 # A configuration pin: the bare uid, or the "sha256:<uid>" spelling that the
 # lineage validators (omai.lineages) also accept.
-_CONFIGURATION_UID = r"^(sha256:)?[0-9a-f]{64}$"
+_CONFIGURATION_UID = r"^(sha256:)?[0-9a-f]{64}(?!\n)$"
 
 _NON_EMPTY = {"type": "string", "minLength": 1}
 
@@ -185,8 +187,10 @@ def _lineage_schema() -> dict:
                 ]
             },
             # Open maps: the KEYS are the experiment's dials, not a fixed
-            # vocabulary. Closing these would refuse every new condition.
-            "conditions": {"type": "object"},
+            # vocabulary. Closing these would refuse every new condition. The
+            # model citation keys are the exception: a bare uid, as the lineage
+            # validators require.
+            "conditions": {"type": "object", "properties": _citation_keys()},
             "params": {"type": "object"},
             "hyperparameters": {"type": "object"},
             "values": {"type": "object"},
@@ -202,6 +206,16 @@ def _lineage_schema() -> dict:
             },
         },
     }
+
+
+def _citation_keys() -> dict:
+    """Each model citation key (omai.evidence.CITATION_KEYS, checked wherever
+    it appears in conditions) as a bare uid, 64 lowercase hex."""
+    from omai.evidence import CITATION_KEYS
+
+    return {key: {"description": "A model uid, 64 lowercase hex, no 'sha256:'.",
+                  "type": "string", "pattern": _SHA256}
+            for keys in CITATION_KEYS.values() for key in keys}
 
 
 def _execution_schema() -> dict:

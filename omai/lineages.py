@@ -427,7 +427,7 @@ def _validate_manifest(artifacts, *, where: str) -> None:
             raise LineageError(
                 f"{where}: artifact {i} bytes must be a positive integer")
         sha = art.get("sha256")
-        if not isinstance(sha, str) or not _SHA256_RE.match(sha):
+        if not isinstance(sha, str) or not _SHA256_RE.fullmatch(sha):
             raise LineageError(
                 f"{where}: artifact {i} sha256 must be a 64-hex-character string")
         role = art.get("role")
@@ -465,7 +465,7 @@ def _validate_pointers(artifacts, *, where: str) -> None:
             raise LineageError(
                 f"{where}: artifact {i} url, when present, must be a string")
         sha = art.get("sha256")
-        if sha is not None and (not isinstance(sha, str) or not _SHA256_RE.match(sha)):
+        if sha is not None and (not isinstance(sha, str) or not _SHA256_RE.fullmatch(sha)):
             raise LineageError(
                 f"{where}: artifact {i} sha256, when present, must be a "
                 f"64-hex-character string")
@@ -564,14 +564,14 @@ def _validate_markers(record: dict, *, where: str) -> set:
 
     for key in ("lineage_version", "overlay_version"):
         if key in record and not (isinstance(record[key], str)
-                                  and _SHA256_RE.match(record[key])):
+                                  and _SHA256_RE.fullmatch(record[key])):
             raise LineageError(f"{where}: {key} must be a 64-hex lowercase string")
     listed = record.get("unregistered", [])
     if not isinstance(listed, list) or not all(
             isinstance(e, dict) and set(e) == {"kind", "uid"}
             and isinstance(e["kind"], str) and e["kind"] in KINDS
             and isinstance(e["uid"], str)
-            and _SHA256_RE.match(e["uid"]) for e in listed):
+            and _SHA256_RE.fullmatch(e["uid"]) for e in listed):
         raise LineageError(
             f"{where}: unregistered must be a list of {{kind, uid}}, kind in "
             f"{sorted(KINDS)}, uid 64 lowercase hex without 'sha256:'")
@@ -594,7 +594,7 @@ def _citations(lineage, *, where: str) -> list[tuple[str, str, str, bool]]:
     pin = material.get("configuration") if isinstance(material, dict) else None
     if pin is not None:
         uid = pin[len("sha256:"):] if isinstance(pin, str) and pin.startswith("sha256:") else pin
-        if not isinstance(uid, str) or not _SHA256_RE.match(uid):
+        if not isinstance(uid, str) or not _SHA256_RE.fullmatch(uid):
             raise LineageError(f"{where}: material.configuration must be a 64-hex "
                                f"uid, bare or 'sha256:'-prefixed")
         out.append(("configuration", "material.configuration", uid, False))
@@ -604,7 +604,7 @@ def _citations(lineage, *, where: str) -> list[tuple[str, str, str, bool]]:
         for key in keys:
             if key in conditions:
                 uid = conditions[key]
-                if not isinstance(uid, str) or not _SHA256_RE.match(uid):
+                if not isinstance(uid, str) or not _SHA256_RE.fullmatch(uid):
                     raise LineageError(f"{where}: conditions.{key} must be a bare "
                                        f"64-hex model uid")
                 out.append(("model", f"conditions.{key}", uid, node in RULED_NODES))

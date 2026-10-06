@@ -8,7 +8,9 @@ id.
 ## 0.2.0
 
 Every consumer that validates records pins `openmaterials-ai==0.2.0` before
-any producer emits the new record fields.
+any producer emits the new record fields: a 0.1.3 `validate_light` accepts a
+0.2.0 record carrying `unregistered` and ignores it (only the 0.1.3 schema
+refuses it).
 
 ### Breaking
 
@@ -23,14 +25,27 @@ any producer emits the new record fields.
   one. The citations checked are the configuration pin
   (`material.configuration`, compared without a `sha256:` prefix) and the
   model citation keys `conditions.potential_sha256`,
-  `conditions.base_potential_sha256` and, for `SetVoltage`,
-  `conditions.calibration_sha256`. The `SetVoltage` calibration key is fixed
-  by ruling: that calibration is never registered, so a record citing it
-  always lists it. A listed uid that later resolves is checked as registered,
+  `conditions.base_potential_sha256` and `conditions.calibration_sha256`
+  (bound under `SetVoltage`, checked wherever it appears). The calibration key
+  is fixed by ruling: that calibration is never registered, so a record citing
+  it always lists it. A listed uid that later resolves is checked as registered,
   never an error. 0.1.3 refused a configuration pin with no committed record
   and did not check model citations.
 - A model citation is the bare uid, 64 lowercase hex, no `sha256:` prefix;
-  any other value is refused.
+  any other value (a prefix, uppercase, null, "unknown") is refused by the
+  lineage validators and by the schema, which now declares the three citation
+  keys in `lineage.conditions` (the map stays open otherwise).
+- Every 64-hex field refuses a trailing newline: the Python validators use a
+  full match, and each 64-hex pattern in the schema ends `(?!\n)$`, since
+  Python's `$` matches before a final newline. 0.1.3's Python validators and
+  schema accepted `<hex>\n`, which an ECMAScript schema validator refuses.
+- `omai.render.render_kappa` raises TypeError when kappa is None (0.1.x
+  printed "None"), and its detail text no longer reproduces the bytes 0.1.x
+  served (see Changed).
+- The packaged external-solve request `omai/tools/kaldo-direct-bte-si.json`
+  pins the new graph version, so its `request_id` moves from `1b97039653fe`
+  to `f54665faafd9`. A request minted against graph `9802d9e854c9` fails as a
+  stale map version.
 - `omai/vectors/records.json` goes from 34 to 35 vectors. The new
   `omai:safe_light_with_unregistered_and_versions` carries the three new
   fields and has the id of `mcg:safe_light`; a 0.1.3 schema refuses it.
@@ -41,7 +56,8 @@ any producer emits the new record fields.
 
 ### Re-keyed ids
 
-No lineage id and no vector id changes. These ids changed since 0.1.3:
+No lineage id and no vector id changes. These map and record ids changed since
+0.1.3:
 
 | id | 0.1.3 | 0.2.0 | former id |
 |---|---|---|---|
@@ -127,7 +143,15 @@ No lineage id and no vector id changes. These ids changed since 0.1.3:
   run without a spread writes no "+/-" term where 0.1.x printed "+/- None".
   Only the detail text changes: `value`, `uncertainty` and every id stay.
   `render.json` follows the new text and gains two vectors (10).
-- `config_dir` on the validators and writers is deprecated; pass `roots`.
+- `config_dir` on the validators and writers is deprecated, without a
+  warning; pass `roots`. It now adds a directory of configuration records to
+  the roots, where 0.1.3 replaced the lookup directory with it.
+- `omai.badge.map_stats()["operators"]` counts the rows of
+  docs/data/lean_roadmap.json, the home page count, instead of the distinct
+  edge operators in graph.json.
+- Package metadata: `License-Expression: Apache-2.0 AND CC-BY-4.0`. The code
+  is Apache-2.0; the map data the wheel ships under omai/data/ and
+  omai/vectors/ is CC BY 4.0 (LICENSE-DATA, NOTICE).
 
 ### Deferred to 0.2.1
 

@@ -3,7 +3,8 @@ OpenMaterials data licensing notice
 
 The text below this notice is the unmodified Creative Commons
 Attribution 4.0 International license (CC BY 4.0). It applies to the map
-data in this repository (map/, docs/data/, index/).
+data in this repository (map/, docs/data/, index/, and the package data
+under omai/data/ and omai/vectors/).
 
 Three plain-language notes on how it applies. They summarize
 GOVERNANCE.md ("Data ownership and fairness") and are not part of the
