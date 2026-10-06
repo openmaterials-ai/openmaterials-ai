@@ -11,7 +11,7 @@
 // data files from the Pages origin, which every browser reads and which
 // updates on each push; its bundled assets update only on deploy and serve
 // as the fallback (and as the data on workers.dev and in wrangler dev). So
-// the resolver and the badges follow the site within about a minute; a change
+// the resolver and the badges follow the site once Pages publishes; a change
 // to a data file's shape still needs a Worker deploy.
 
 import {

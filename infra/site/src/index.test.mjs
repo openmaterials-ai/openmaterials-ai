@@ -13,7 +13,7 @@ test("openmaterials.ai reads the live origin", async () => {
 });
 
 test("other hosts read the bundled assets", async () => {
-  globalThis.fetch = async () => { throw new Error("must not fetch"); };
+  globalThis.fetch = async () => Response.json({ version: "live" });
   assert.equal(await healthz("openmaterials-site.example.workers.dev"), "bundled");
 });
 

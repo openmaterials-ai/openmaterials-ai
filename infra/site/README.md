@@ -35,12 +35,12 @@ static site cannot express:
 Everything else falls through to the assets, so removing the Worker returns
 the site to plain static hosting. The Worker holds no secrets and, outside
 the explicitly public short-link store, no data of its own: the permalink
-resolver reads the same committed projection the site serves, so it can never
-disagree with the map.
+resolver reads the committed projection the site serves, from the Pages origin
+with the bundled copy as the fallback.
 
 On openmaterials.ai the Worker reads its data files (`data/version.json`,
 `data/instances.json`, `data/lean_roadmap.json` and the rest) from the Pages
-origin, so a data merge reaches it within about a minute without a redeploy.
+origin, so a data merge reaches it once Pages publishes, without a redeploy.
 The bundled assets are the fallback, and the data on workers.dev and in
 `wrangler dev`. A change to a data file's shape still needs a Worker deploy.
 
@@ -48,7 +48,7 @@ The bundled assets are the fallback, and the data on workers.dev and in
 
 ```
 cd infra/site
-npx wrangler dev --port 8971 --local-upstream localhost:8971
+npx wrangler dev --port 8971 --local-upstream localhost
 ```
 
 ## Deploy
