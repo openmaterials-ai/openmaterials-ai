@@ -384,11 +384,11 @@ promise: a change to `lineage_id`, to the canonical JSON, or to a vector's id
 is breaking and takes a major version, because every id ever minted by this
 library would stop reproducing. Before 1.0 such a change takes the minor
 version; a record it re-keys keeps its old uid under `aliases`, which every
-resolver accepts, and the release notes list each re-keyed id. Adding a schema
+resolver accepts, and CHANGELOG.md lists each re-keyed id. Adding a schema
 field, a renderer, or a vector is a minor version. Widening a schema field to
 accept a shape real producers already emit is a patch, since it can only turn a
 spurious rejection into an acceptance. Consumers pin an exact version
-(`openmaterials-ai==0.1.3`).
+(`openmaterials-ai==0.2.0`).
 
 ## Install
 
