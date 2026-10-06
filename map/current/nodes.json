@@ -917,6 +917,26 @@
   },
   "uid": "41f6c971e70bc42117a79b8ec51039f498280fdd9b77ef433bb602f90f966d93"
  },
+ "4280779257128d9b63d9180e7b7b03ab80beac66ee35480b178a09fa46b289f2": {
+  "identity": {
+   "fields": [
+    {
+     "dimension": "T^1",
+     "indices": []
+    }
+   ],
+   "gauge": "observable",
+   "labels": {},
+   "quantity": "retention_time"
+  },
+  "meta": {
+   "description": "Retention time of a programmed state: the 1/e time of its first-passage survival at zero bias, the time by which the probability that the state has not yet left the programmed state falls to 1/e. It equals the 1/e time of an ensemble's conductance change only when the return is irreversible. TIME. The state, the storage bias and temperature, the loss criterion and the decay law fitted ride in instance conditions. A bound such as 'exceeding 1e3 s' is not a 1/e time; a power-law relaxation belongs on ConductanceDriftExponent.",
+   "name": "RetentionTime",
+   "symbol": "\\tau_{ret}",
+   "tier": "Analog device metrology"
+  },
+  "uid": "4280779257128d9b63d9180e7b7b03ab80beac66ee35480b178a09fa46b289f2"
+ },
  "438f0314dee5f9e98d88e4a7ba4425ef0edd207605338b318340da27bf28b2a4": {
   "identity": {
    "fields": [
@@ -1119,6 +1139,26 @@
    "tier": "Thermodynamics"
   },
   "uid": "5aa485c8eea2f4a2a9966f39589ad15e802327513f72c2366dc15605879b86ae"
+ },
+ "5b46cb4fc1bf84f1fa97e2b52a352694f5c98c856e9b9034763243994a1c2d21": {
+  "identity": {
+   "fields": [
+    {
+     "dimension": "M^1 L^2 T^-3 I^-1",
+     "indices": []
+    }
+   ],
+   "gauge": "observable",
+   "labels": {},
+   "quantity": "set_voltage"
+  },
+  "meta": {
+   "description": "Set voltage of a resistive device: the applied voltage at which a monotonically rising drive switches a formed device to the low-resistance state, as the mean over devices or over cycles of one device (the first switch of a pristine device, the forming voltage, is excluded). VOLTAGE. The drive (a linear ramp with its rate, or a pulse staircase with its pulse width, step and rest), the driven terminal and the other terminals' biases, the compliance current, the switching criterion, the temperature, and the spread across devices or cycles with their number ride in instance conditions.",
+   "name": "SetVoltage",
+   "symbol": "V_{set}",
+   "tier": "Analog device metrology"
+  },
+  "uid": "5b46cb4fc1bf84f1fa97e2b52a352694f5c98c856e9b9034763243994a1c2d21"
  },
  "5d35f8f6975629291c51d432d3b137fb5bd92165706d37dbab71366a4714b71d": {
   "identity": {
@@ -2157,6 +2197,26 @@
   },
   "uid": "c4a81f649b3964aed4d4b3c48dfec4f252958c9560332286e2105b175794144b"
  },
+ "c59c8d2bc372392cff55803e7b8b742878dac82f3ab7623bd267acd006d23d07": {
+  "identity": {
+   "fields": [
+    {
+     "dimension": "M^1 L^2 T^-2",
+     "indices": []
+    }
+   ],
+   "gauge": "observable",
+   "labels": {},
+   "quantity": "migration_barrier"
+  },
+  "meta": {
+   "description": "Migration barrier E_m of one defect or ion hop in a solid: the energy from the initial minimum to the saddle point along the hop's path, the activation energy of its transition-state-theory rate nu_0 exp(-E_m / k_B T). ENERGY. The species and charge state, the path and direction, the site (bulk, grain boundary, surface, contact) and the source (nudged elastic band, fit to measured rates, calibrated model) ride in instance conditions. For diffusion by this one mechanism at fixed defect density it equals the diffusivity's ActivationEnergy; a formation term or a second mechanism makes them differ. Molecular reaction barriers are ReactionBarrier.",
+   "name": "MigrationBarrier",
+   "symbol": "E_{m}",
+   "tier": "Diffusion"
+  },
+  "uid": "c59c8d2bc372392cff55803e7b8b742878dac82f3ab7623bd267acd006d23d07"
+ },
  "c922f2cfe105ec7d7fc5afd8eabcc0cc2e7adde25e2231272a4dd34493b4bd98": {
   "identity": {
    "fields": [
@@ -2172,7 +2232,7 @@
    "quantity": "reaction_barrier"
   },
   "meta": {
-   "description": "Reaction / migration barrier energy: the peak-minus-reactant energy along a reaction path. Minted this slice as the neb_mep construction: the CI-NEB minimum-energy-path barrier from chem-neb-barrier via ase.mep NEBTools.get_barrier()[0] (calculate_barrier.py:126-127, results['barrier_eV']:144; idpp interpolation, 7 images, an MLIP calculator), a single ENERGY scalar per reaction in eV. Dimension ENERGY (1,2,-2,0,0,0,0). It JOINS one reaction_barrier family through the construction LABEL_KEY (a registered value): the sella static-TS route (construction=static_ts_mlip, chem-ts-optimization, the barrier a downstream reactant/product/TS MLIP-energy difference) and the ORCA static-TS route (construction=static_ts_dft, chem-dft-orca molecular DFT, Hartree->eV, all-electron zero) join the SAME node family LATER with the SAME reaction_barrier tag and ENERGY dimension, distinct nodes only by the construction label, NO re-mint (the carrier-label pattern). CROSS-CONSTRUCTION SUBTRACTION IS FORBIDDEN: an MLIP-eV NEB barrier and an ORCA all-electron Hartree->eV barrier sit on different energy zeros and must never be differenced. EMPHATICALLY DISTINCT from the Arrhenius ActivationEnergy (activation_energy tag, E_a from the temperature dependence of diffusivity D(T) = D0 exp(-E_a/k_B T)): that is a diffusivity SLOPE, NOT a PES barrier, and the shared word is a trap.",
+   "description": "Reaction barrier energy of a molecular reaction or conformational change: the peak-minus-reactant energy along a reaction path (defect and ion migration in solids is MigrationBarrier). Minted this slice as the neb_mep construction: the CI-NEB minimum-energy-path barrier from chem-neb-barrier via ase.mep NEBTools.get_barrier()[0] (calculate_barrier.py:126-127, results['barrier_eV']:144; idpp interpolation, 7 images, an MLIP calculator), a single ENERGY scalar per reaction in eV. Dimension ENERGY (1,2,-2,0,0,0,0). It JOINS one reaction_barrier family through the construction LABEL_KEY (a registered value): the sella static-TS route (construction=static_ts_mlip, chem-ts-optimization, the barrier a downstream reactant/product/TS MLIP-energy difference) and the ORCA static-TS route (construction=static_ts_dft, chem-dft-orca molecular DFT, Hartree->eV, all-electron zero) join the SAME node family LATER with the SAME reaction_barrier tag and ENERGY dimension, distinct nodes only by the construction label, NO re-mint (the carrier-label pattern). CROSS-CONSTRUCTION SUBTRACTION IS FORBIDDEN: an MLIP-eV NEB barrier and an ORCA all-electron Hartree->eV barrier sit on different energy zeros and must never be differenced. EMPHATICALLY DISTINCT from the Arrhenius ActivationEnergy (activation_energy tag, E_a from the temperature dependence of diffusivity D(T) = D0 exp(-E_a/k_B T)): that is a diffusivity SLOPE, NOT a PES barrier, and the shared word is a trap.",
    "name": "ReactionBarrier[construction=neb_mep]",
    "symbol": "E_{barrier}",
    "tier": "Molecular"

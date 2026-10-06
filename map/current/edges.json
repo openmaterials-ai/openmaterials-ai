@@ -161,6 +161,28 @@
   },
   "uid": "1038d2249c062baff931bbc06138496d90157bb4365334cae8c5092866e9b6a4"
  },
+ "10e6c7d5ab4087efdea29cf2219771cd55f19a87c50c19ca46756620116344e8": {
+  "identity": {
+   "formula": "Equality(Symbol('\\\\tau_{ret}'), Mul(Pow(Symbol('nu_0'), Integer(-1)), exp(Mul(Symbol('E_m'), Pow(Symbol('T'), Integer(-1)), Pow(Symbol('k_B'), Integer(-1))))))",
+   "inputs": [
+    "63f9bd32d94d77e12afbb96f5b1b7a870de6b1f5805213b7f3c3ff227da301f0",
+    "c59c8d2bc372392cff55803e7b8b742878dac82f3ab7623bd267acd006d23d07"
+   ],
+   "output": "4280779257128d9b63d9180e7b7b03ab80beac66ee35480b178a09fa46b289f2",
+   "outputs": [
+    "4280779257128d9b63d9180e7b7b03ab80beac66ee35480b178a09fa46b289f2"
+   ],
+   "schemes": {}
+  },
+  "meta": {
+   "description": "Mean time to the first back-hop of a programmed state at zero bias over one exit path, tau = exp(E_m / k_B T) / nu_0, with E_m the barrier of that back-hop measured from the programmed state (for M equivalent exit paths divide by M). Units: E_m in joules, T in kelvin, nu_0 in THz, tau in the map's canonical time unit, 1 ps (1 s is 1e12). With the back-hop the only exit at a constant rate, the state's survival decays exponentially with this time, its RetentionTime. An ensemble's conductance decays with it only when the return is irreversible, the original state lying several k_B T lower: with symmetric sites a device re-sets as often as it decays, and the ensemble relaxes toward one half with time constant tau / 2. E_m and nu_0 are not separable at one temperature.",
+   "formula_latex": "\\tau_{ret} = \\frac{e^{\\frac{E_{m}}{T k_{B}}}}{\\nu_{0}}",
+   "formula_srepr": "Equality(Symbol('\\\\tau_{ret}'), Mul(Pow(Symbol('nu_0'), Integer(-1)), exp(Mul(Symbol('E_m'), Pow(Symbol('T'), Integer(-1)), Pow(Symbol('k_B'), Integer(-1))))))",
+   "name": "zero_bias_retention",
+   "schemes": {}
+  },
+  "uid": "10e6c7d5ab4087efdea29cf2219771cd55f19a87c50c19ca46756620116344e8"
+ },
  "1201b09100e9aaac69f343b09ff8c8002c6de6dec1c843458bec89e3151ef436": {
   "identity": {
    "formula": "Equality(Symbol('\\\\mathcal{G}'), Mul(Rational(1, 2), Pow(pi, Integer(-1)), Integral(Mul(Symbol('\\\\hbar', positive=True), Symbol('\\\\omega', positive=True), Derivative(Function('n_{BE}')(Mul(Pow(Symbol('T', positive=True), Integer(-1)), Symbol('\\\\hbar', positive=True), Symbol('\\\\omega', positive=True), Pow(Symbol('k_B', positive=True), Integer(-1)))), Tuple(Symbol('T', positive=True), Integer(1))), Indexed(IndexedBase(Symbol('\\\\mathcal{T}')), Symbol('\\\\omega', positive=True))), Tuple(Symbol('\\\\omega', positive=True), Integer(0), oo))))",
@@ -1864,6 +1886,28 @@
    "schemes": {}
   },
   "uid": "99e6e0bd3c2d868c2c7ce9ebad11cca90df15a0c005c7a362518c7d18ed0bada"
+ },
+ "9ab6278d7c06fcac5a8f9bcea7c65eb193c793c435822f24ca6762da34880dea": {
+  "identity": {
+   "formula": "Equality(Symbol('V_{set}'), Add(Mul(Integer(-1), EulerGamma, Symbol('T'), Pow(Symbol('alpha_F'), Integer(-1)), Symbol('k_B')), Mul(Pow(Symbol('alpha_F'), Integer(-1)), Add(Symbol('E_m'), Mul(Integer(-1), Symbol('T'), Symbol('k_B'), log(Mul(Symbol('T'), Pow(Symbol('alpha_F'), Integer(-1)), Symbol('g_r'), Symbol('k_B'), Symbol('nu_0'))))))))",
+   "inputs": [
+    "63f9bd32d94d77e12afbb96f5b1b7a870de6b1f5805213b7f3c3ff227da301f0",
+    "c59c8d2bc372392cff55803e7b8b742878dac82f3ab7623bd267acd006d23d07"
+   ],
+   "output": "5b46cb4fc1bf84f1fa97e2b52a352694f5c98c856e9b9034763243994a1c2d21",
+   "outputs": [
+    "5b46cb4fc1bf84f1fa97e2b52a352694f5c98c856e9b9034763243994a1c2d21"
+   ],
+   "schemes": {}
+  },
+  "meta": {
+   "description": "Mean set voltage of devices that switch on their first defect hop under a rising drive, the hop rate being nu_0 exp(-(E_m - alpha_F V) / k_B T) with E_m the set-direction barrier, measured from the unprogrammed state (one value feeds this edge and zero_bias_retention only for symmetric sites). The expected hop count reaches one at V* = (E_m - k_B T ln(g_r nu_0 k_B T / alpha_F)) / alpha_F, and the set voltage follows a minimum Gumbel law with location V*, mean V* - gamma k_B T / alpha_F (gamma the Euler-Mascheroni constant) and standard deviation pi k_B T / (sqrt(6) alpha_F). g_r is the number of equivalent hop sites times the dwell per volt: 1 / ramp rate for a linear ramp, t_p / dV for a staircase of pulses of width t_p and step dV. Units: E_m in joules, T in kelvin, alpha_F in coulombs (0.2 eV/V is 3.2e-20 C), nu_0 in THz and g_r in ps/V (the map's canonical frequency and time; 1e13 Hz is 10, 1 ms/V is 1e9), V in volts. Valid when one hop switches the device (N sequential hops raise the mean by (k_B T / alpha_F)(psi(N) + gamma) and narrow the spread to (k_B T / alpha_F) sqrt(psi'(N))), the barrier falls linearly with V, a hop at zero bias is unlikely (g_r nu_0 (k_B T / alpha_F) exp(-E_m / k_B T) much smaller than 1), rests between pulses add no hops, and the device stays at T (Joule heating excluded). The spread is for identical devices: a device-to-device spread sigma_E of E_m adds sigma_E / alpha_F in quadrature, and a staircase step dV adds about dV^2 / 12 to the variance and raises the mean slightly (about 0.04 k_B T / alpha_F at dV near k_B T / alpha_F).",
+   "formula_latex": "V_{set} = - \\frac{\\gamma T k_{B}}{\\alpha_{F}} + \\frac{E_{m} - T k_{B} \\log{\\left(\\frac{T g_{r} k_{B} \\nu_{0}}{\\alpha_{F}} \\right)}}{\\alpha_{F}}",
+   "formula_srepr": "Equality(Symbol('V_{set}'), Add(Mul(Integer(-1), EulerGamma, Symbol('T'), Pow(Symbol('alpha_F'), Integer(-1)), Symbol('k_B')), Mul(Pow(Symbol('alpha_F'), Integer(-1)), Add(Symbol('E_m'), Mul(Integer(-1), Symbol('T'), Symbol('k_B'), log(Mul(Symbol('T'), Pow(Symbol('alpha_F'), Integer(-1)), Symbol('g_r'), Symbol('k_B'), Symbol('nu_0'))))))))",
+   "name": "ramp_set_voltage",
+   "schemes": {}
+  },
+  "uid": "9ab6278d7c06fcac5a8f9bcea7c65eb193c793c435822f24ca6762da34880dea"
  },
  "9c182752f0970df148341ff0e66df8e5be8c74744e79d9626847399355dab7a2": {
   "identity": {
