@@ -10,8 +10,9 @@
 // The Worker holds no state and no secrets. On openmaterials.ai it reads the
 // data files from the Pages origin, which every browser reads and which
 // updates on each push; its bundled assets update only on deploy and serve
-// as the fallback (and as the data on workers.dev). So the resolver and the
-// badges never disagree with the site.
+// as the fallback (and as the data on workers.dev and in wrangler dev). So
+// the resolver and the badges follow the site within about a minute; a change
+// to a data file's shape still needs a Worker deploy.
 
 import {
   parsePrefix, resolvePrefix, permalinkHTML, notFoundHTML, ambiguousHTML,
@@ -45,10 +46,11 @@ async function assetJSON(env, request, path) {
   url.search = "";
   if (url.hostname === "openmaterials.ai") {
     try {
-      const live = await fetch(url, { cf: { cacheTtl: 60 } });
+      const live = await fetch(url, { cf: { cacheTtl: 60 }, signal: AbortSignal.timeout(3000) });
       if (live.ok) return await live.json();
+      console.warn(`live ${path}: ${live.status}; using the bundled copy`);
     } catch (e) {
-      // the bundled copy below
+      console.warn(`live ${path}: ${e}; using the bundled copy`);
     }
   }
   const res = await env.ASSETS.fetch(new Request(url, { method: "GET" }));

@@ -3,10 +3,7 @@
 The edge deployment of openmaterials.ai. Wrangler serves the repository's
 `docs/` directory as static assets, byte-identical to the GitHub Pages
 deployment, and the Worker script runs only for the routes a fragment-only
-static site cannot express. On openmaterials.ai the Worker reads its data
-files (`data/version.json`, `data/instances.json`, `data/lean_roadmap.json`
-and the rest) from the Pages origin, so a data merge reaches it without a
-redeploy; the bundled assets are the fallback.
+static site cannot express:
 
 - `GET /healthz`: liveness plus the published map/lineage version, read from
   the same `data/version.json` every browser reads.
@@ -41,11 +38,17 @@ the explicitly public short-link store, no data of its own: the permalink
 resolver reads the same committed projection the site serves, so it can never
 disagree with the map.
 
+On openmaterials.ai the Worker reads its data files (`data/version.json`,
+`data/instances.json`, `data/lean_roadmap.json` and the rest) from the Pages
+origin, so a data merge reaches it within about a minute without a redeploy.
+The bundled assets are the fallback, and the data on workers.dev and in
+`wrangler dev`. A change to a data file's shape still needs a Worker deploy.
+
 ## Develop
 
 ```
 cd infra/site
-npx wrangler dev --port 8971
+npx wrangler dev --port 8971 --local-upstream localhost:8971
 ```
 
 ## Deploy
