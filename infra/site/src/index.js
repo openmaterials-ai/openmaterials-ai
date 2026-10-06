@@ -173,7 +173,8 @@ export default {
 // shell; GET /s/<code>/raw serves the stored bytes with open CORS (a minted
 // payload is public data; the code is the only handle). A set citing evidence
 // outside the public registry mints only with ?publish_private=1 and is then
-// stored with metadata private: true, read no-store and noindex.
+// stored with metadata private: true. A set that is private by its metadata or
+// by the registry as read now is served no-store and noindex.
 async function handleShortlink(request, env, url) {
   const origin = request.headers.get("origin");
 
@@ -234,13 +235,21 @@ async function handleShortlink(request, env, url) {
     const code = parseCode(seg);
     if (!code) return html("<!doctype html><p>Malformed short code.</p>", 400);
     const { value: stored, metadata } = await env.SHORTLINKS.getWithMetadata(`s:${code}`);
-    const isPrivate = metadata?.private === true;
     if (stored == null) {
       return raw
         ? Response.json({ error: "not found" },
             { status: 404, headers: { "access-control-allow-origin": "*" } })
         : html(shortlinkNotFoundHTML(code, url.origin), 404);
     }
+    // private by the metadata, or by the registry as read now (sets stored
+    // before this rule carry no flag); a registry or value that cannot be read
+    // counts as private
+    const v = validateMintBody(stored);
+    let labels = null;
+    if (v.ok) {
+      try { labels = memberLabels(v.envelope, await assetJSON(env, request, "/data/registry.json")); } catch (e) {}
+    }
+    const isPrivate = metadata?.private === true || !labels || labels.length > 0;
     if (raw) {
       return new Response(stored, {
         headers: {
@@ -251,16 +260,11 @@ async function handleShortlink(request, env, url) {
         },
       });
     }
-    // labels from the registry as read now; unreadable, a private set keeps one
-    const envelope = validateMintBody(stored).envelope;
-    let labels;
-    try {
-      labels = memberLabels(envelope, await assetJSON(env, request, "/data/registry.json"));
-    } catch (e) {
-      labels = isPrivate ? ["Some lineages cite evidence that is not in the public registry; their values cannot be checked against the commons."] : [];
+    if (!labels) {
+      labels = metadata?.private === true ? ["Some lineages cite evidence that is not in the public registry; their values cannot be checked against the commons."] : [];
     }
-    const noindex = isPrivate || labels.length > 0;
-    return html(shortlinkHTML(envelope, code, url.origin, { labels, noindex }), 200, noindex ? NOINDEX : {});
+    return html(shortlinkHTML(v.envelope || { lineages: [] }, code, url.origin, { labels, noindex: isPrivate }), 200,
+      isPrivate ? NOINDEX : {});
   }
 
   return new Response("method not allowed", { status: 405 });

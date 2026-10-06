@@ -165,7 +165,7 @@ def test_datasheet_reproduce_section_names_codes_and_pinned_runs():
     assert "data/conformance/index.json" in html, "the page does not load the conformance index"
     assert "t.id === recordId" in html, "targets must match the record's own lineage"
     assert "toPrecision(4)" in html and "Open the target file" not in html
-    assert "reproduceHTML(node, record.id, evidence" in html, "the datasheet does not wire the section"
+    assert "reproduceHTML(node, record.id, (evidenceReasons(record)" in html, "the datasheet does not wire the section"
     # the index the page reads is committed and non-empty
     idx = json.loads((_REPO / "docs" / "data" / "conformance" / "index.json").read_text())
     assert idx.get("targets"), "committed conformance index is empty"
@@ -341,7 +341,7 @@ def _labels_on_page(fragment: str, registry) -> list:
     node = _node_or_skip()
     html = _PLAY.read_text()
     src = "var PRIVACY = null;\n" + "\n".join(
-        _grab_function(html, n) for n in _DECODE_HELPERS + ("evidenceLabel",))
+        _grab_function(html, n) for n in _DECODE_HELPERS + ("evidenceReasons", "evidenceLabel"))
     script = src + """
 (async function(){
   var registry = %s;
@@ -378,5 +378,6 @@ def test_page_wires_the_label_reproduce_note_and_mint_opt_in():
     assert "cites evidence that is not public, so it cannot be rerun" in html
     assert "'?publish_private=1'" in html and "Publish anyway" in html
     assert "where anyone with the code can read it" in html, "the opt-in must state what becomes public"
-    assert "r.status === 400 || r.status === 429" in html, "a refusal must stop the fallback retry"
-    assert "body.error ||" in html, "the server's refusal text must be shown"
+    assert "if (body) refusal = body;" in html, "a Worker's JSON answer must stop the fallback retry"
+    assert "(body && body.error) ||" in html, "the server's answer must be shown"
+    assert "(evidenceReasons(record) || []).length &&" in html, "the Reproduce note follows reasons, not the label"

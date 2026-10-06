@@ -38,10 +38,13 @@ static site cannot express:
   like the other data files) is refused with a 400 naming each member as
   "Lineage n of m" and its fields, unless the request carries the query
   parameter `publish_private=1` (a flag in the body or in `doc` is ignored).
-  An accepted one is stored with KV metadata `private: true`; its `/raw` is
-  served `no-store` and its shell `noindex` (meta and `X-Robots-Tag`), with
-  each such member's label in the description. When no registry is readable
-  (live or bundled), nothing is minted and the answer is 503.
+  An accepted one is stored with KV metadata `private: true`. A set private by
+  that flag or by the registry as read now (sets stored before the rule carry
+  no flag), or whose registry cannot be read, has its `/raw` served
+  `no-store` and its shell `noindex` (meta and `X-Robots-Tag`), with each such
+  member's label in the description. When no registry is readable (live or
+  bundled), nothing is minted and the answer is 503; the playground does not
+  retry on the other origin after any JSON answer from a Worker.
 
 Everything else falls through to the assets, so removing the Worker returns
 the site to plain static hosting. The Worker holds no secrets and, outside
@@ -69,9 +72,11 @@ cd infra/site
 npx wrangler deploy
 ```
 
-Deploys to the `openmaterials-site` Worker on workers.dev. Order for a
-change to the private-evidence rule: `docs/data/registry.json` on Pages
-first, then the Worker, then the probe, then the playground:
+Deploys to the `openmaterials-site` Worker on workers.dev. A change to the
+private-evidence rule: merging publishes `docs/data/registry.json` and the
+playground on Pages; deploy the Worker from the merge commit right after,
+then run the probe on both origins. Until the Worker matches the live
+registry, the domain Worker answers 503 and the playground stops there:
 
 ```
 infra/site/probe.sh                       # openmaterials.ai
@@ -79,7 +84,9 @@ infra/site/probe.sh https://openmaterials-site.giuseppe-barbalinardo.workers.dev
 ```
 
 The probe posts a set whose lineage 1 cites an unregistered model and exits
-non-zero unless the answer is a 400 naming lineage 1. It stores nothing.
+non-zero unless the answer is a 400 naming lineage 1. A refusing Worker
+stores nothing; if an old Worker stores the probe, the failure names its key
+and the revoke command.
 
 Revoke a stored set (for example one published by mistake): delete its key
 from `infra/site`, `npx wrangler kv key delete --binding SHORTLINKS --remote "s:<code>"`. The

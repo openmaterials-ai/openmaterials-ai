@@ -241,3 +241,23 @@ test("worker: the live registry is read first on openmaterials.ai", async () => 
     globalThis.fetch = realFetch;
   }
 });
+
+test("worker: a set stored before the rule, or unreadable, is served no-store and noindex", async () => {
+  const env = siteEnv();
+  const old = JSON.stringify({ v: 1, lineages: [marked("Si")] });
+  const pub = JSON.stringify({ v: 1, lineages: [record("Si")] });
+  await env.SHORTLINKS.put("s:AAAAAAAAA", old, { metadata: { created: "2026-10-01", members: 1 } });
+  await env.SHORTLINKS.put("s:BBBBBBBBB", pub, { metadata: { created: "2026-10-01", members: 1 } });
+  await env.SHORTLINKS.put("s:CCCCCCCCC", "{}", { metadata: null });
+  const headers = async (path) => (await get(env, path)).headers;
+  for (const path of ["/s/AAAAAAAAA/raw", "/s/AAAAAAAAA", "/s/CCCCCCCCC/raw", "/s/CCCCCCCCC"]) {
+    assert.strictEqual((await headers(path)).get("x-robots-tag"), "noindex", path);
+  }
+  assert.strictEqual((await headers("/s/AAAAAAAAA/raw")).get("cache-control"), "no-store");
+  assert.ok((await (await get(env, "/s/AAAAAAAAA")).text()).includes("Lineage 1 cites a model"));
+  assert.match((await headers("/s/BBBBBBBBB/raw")).get("cache-control"), /immutable/);
+  // the registry unusable: a public set is no longer served immutable or indexable
+  env.ASSETS.fetch = async () => new Response("missing", { status: 404 });
+  assert.strictEqual((await headers("/s/BBBBBBBBB/raw")).get("cache-control"), "no-store");
+  assert.strictEqual((await headers("/s/BBBBBBBBB")).get("x-robots-tag"), "noindex");
+});

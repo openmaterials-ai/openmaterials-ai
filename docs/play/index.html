@@ -1397,9 +1397,10 @@ async function fetchShortlink(code){
   }
   throw lastErr || new Error('The short-link service is unreachable.');
 }
-// A 400 or 429 is the Worker refusing this payload, so the other origin is not
-// tried; the refusal's text is shown, and a refusal naming lineages that cite
-// evidence outside the public registry offers the explicit opt-in.
+// Any JSON answer is the Worker's own (a refusal, the daily limit, a 503), so
+// the other origin is tried only after a network error or a non-JSON answer;
+// the answer's text is shown, and a refusal naming lineages that cite evidence
+// outside the public registry offers the explicit opt-in.
 async function mintShortlink(env, btn, publishPrivate){
   if (!env) return;
   var label = btn ? btn.textContent : '';
@@ -1416,10 +1417,10 @@ async function mintShortlink(env, btn, publishPrivate){
         var r = await fetch(endpoints[i] + (publishPrivate ? '?publish_private=1' : ''), { method: 'POST',
           headers: { 'content-type': 'application/json' },
           body: JSON.stringify(mintEnvelope(env)) });
-        var body = await r.json().catch(function(){ return {}; });
-        if (r.ok) { res = body; break; }
-        lastErr = new Error(body.error || 'The short-link service returned ' + r.status + '.');
-        if (r.status === 400 || r.status === 429) refusal = body;
+        var body = await r.json().catch(function(){ return null; });
+        if (r.ok && body) { res = body; break; }
+        lastErr = new Error((body && body.error) || 'The short-link service returned ' + r.status + '.');
+        if (body) refusal = body;
       } catch (e) { lastErr = e; }
     }
     if (res) currentShortCode = res.code;
@@ -1433,7 +1434,9 @@ async function mintShortlink(env, btn, publishPrivate){
     if (!note) return;
     var ks = refusal && Array.isArray(refusal.lineages) ? refusal.lineages : [];
     var many = ks.length > 1;
-    note.innerHTML = '<p class="rec-explain">' + esc(e.message || 'Failed.') + '</p>' + (ks.length && !publishPrivate
+    var msg = ks.length ? 'Not created: a short link is public, and lineage' + (many ? 's ' : ' ') + ks.join(', ') +
+      (many ? ' cite' : ' cites') + ' evidence that is not in the public registry.' : (e.message || 'Failed.');
+    note.innerHTML = '<p class="rec-explain">' + esc(msg) + '</p>' + (ks.length && !publishPrivate
       ? '<div class="rec-links"><button id="bundlePublish" type="button">Publish anyway</button>' +
         '<span class="rec-link-note">Publishing stores the whole set as it is, where anyone with the code can read it: lineage' +
         (many ? 's ' : ' ') + esc(ks.join(', ')) + ' with ' + (many ? 'their' : 'its') +
@@ -1901,10 +1904,15 @@ function reproduceHTML(node, recordId, note){
 /* evidenceLabel: the label for lineage n when it cites evidence outside the
    public registry (private-members.js, the words the Worker's shell uses), ''
    when it cites none. Fail closed: a registry that did not load, or that the
-   module refuses (citation_keys not its bound table), labels every lineage. */
+   module refuses (citation_keys not its bound table), labels every lineage.
+   evidenceReasons: the predicate's reasons, null when it cannot run. */
+function evidenceReasons(record){
+  try { return PRIVACY.mod.privateReasons(record, PRIVACY.registry); } catch (e) { return null; }
+}
 function evidenceLabel(record, n){
-  try { return PRIVACY.mod.memberLabel(n, PRIVACY.mod.privateReasons(record, PRIVACY.registry)); }
-  catch (e) { return 'The public registry could not be read, so lineage ' + n + ' cannot be checked against the commons.'; }
+  var reasons = evidenceReasons(record);
+  return reasons ? PRIVACY.mod.memberLabel(n, reasons)
+    : 'The public registry could not be read, so lineage ' + n + ' cannot be checked against the commons.';
 }
 
 /* datasheetHTML: ONE lineage's datasheet (header + three-column grid), shared
@@ -1998,7 +2006,7 @@ function datasheetHTML(record, valid, opts){
 
   var values = valuesHTML(lineage, node) || resultsHTML(record);
   var recordTail = provenanceHTML(record, lineage, opts.doc) + artifactsHTML(record) +
-    (known ? reproduceHTML(node, record.id, evidence &&
+    (known ? reproduceHTML(node, record.id, (evidenceReasons(record) || []).length &&
       'Lineage ' + n + ' cites evidence that is not public, so it cannot be rerun from the commons alone.') : '');
   h += '<div class="rec-grid"><div class="rec-col">' + lineageHTML + '</div>';
   if (values) h += '<div class="rec-col">' + values + '</div>';
