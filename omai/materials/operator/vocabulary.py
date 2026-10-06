@@ -29,6 +29,7 @@ register_formula_constants({
 register_space_symbols({
     "Diffusivity": {"D"},
     "ActivationEnergy": {"E_a"},
+    "MigrationBarrier": {"E_m"},
     "MeanSquaredDisplacement": {r"\mathrm{slope}_{MSD}"},
     # Config-thermo scan. sigma is the ionic conductivity; E_{cfg} the
     # cluster-expansion configurational energy. The cluster-expansion and

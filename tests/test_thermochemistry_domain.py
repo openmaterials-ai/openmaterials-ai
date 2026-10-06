@@ -366,9 +366,9 @@ def test_map_has_one_hundred_nodes_and_fifteen_tiers():
     # (2026-07-13, no new tier). +7 for the composites domain's nodes in the new
     # Composite tier (2026-07-13), the 16th tier.
     g = build_graph_dict(DOMAINS)
-    # 123 nodes and 17 tiers with the analog-device-metrology domain's nine
-    # nodes in the Analog device metrology tier (2026-10-04).
-    assert len(g["nodes"]) == 123
+    # 126 nodes and 17 tiers with the analog-device-metrology domain's eleven
+    # nodes and the Diffusion tier's MigrationBarrier (2026-10-05).
+    assert len(g["nodes"]) == 126
     assert len(g["tiers"]) == 17
 
 

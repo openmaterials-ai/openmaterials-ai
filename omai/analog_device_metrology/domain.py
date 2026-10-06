@@ -15,6 +15,8 @@ SYMBOLS: dict[str, str] = {
     "WorkFunction": r"\Phi_{W}",
     "ElectronAffinity": r"\chi_{s}",
     "ProgrammingPulseEnergy": r"E_{pulse}",
+    "SetVoltage": r"V_{set}",
+    "RetentionTime": r"\tau_{ret}",
 }
 
 ANALOG_DEVICE_METROLOGY = Domain(
@@ -31,8 +33,9 @@ ANALOG_DEVICE_METROLOGY = Domain(
             "(on/off ratio and LTP/LTD windows under their protocols), the drift "
             "exponent, the per-level spread, the error of an analog dot product on "
             "a crossbar of such cells, the Schottky barrier with the work function "
-            "and electron affinity that set it, and the energy of a programming "
-            "pulse."
+            "and electron affinity that set it, the energy of a programming "
+            "pulse, and the set voltage and retention time of a device switched "
+            "by a defect hop."
         ),
     ),
     representation_package=adm_rep,
