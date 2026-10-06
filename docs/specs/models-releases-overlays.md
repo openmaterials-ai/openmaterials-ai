@@ -1,7 +1,8 @@
 # Model records, code releases, private overlays
 
-Status: accepted design, 2026-10-03, for openmaterials-ai 0.2.0. Basis: main at
-f7e8655 (0.1.3). Delivered in three library changes (section 9).
+Status: accepted design, 2026-10-03, for openmaterials-ai 0.2.0; overlays and
+retraction follow in 0.2.1. Basis: main at f7e8655 (0.1.3). Delivered in three
+library changes (section 9).
 
 OpenMaterials is the reference for the map's nodes and representations, for
 the released versions of the codes they describe, and for the models those
@@ -149,7 +150,11 @@ every model citation. The model check reads these keys only: a potential hash
 that appears in free text (a `source.detail`) is not a citation, and its model
 is registered when a record cites it. Each node a model record serves has
 fixed citation keys; `Potential`'s are these two, and a later node fixes its
-keys with its first record.
+keys with its first record. `SetVoltage` is the exception: its key,
+`conditions.calibration_sha256` (the calibration a set-voltage device model
+reads), is fixed by ruling, because that calibration stays private to its
+owner and is never registered; a record citing it lists it in
+`unregistered`.
 
 A training record stays on `Potential` with no value (`Potential` remains in
 `_NON_EVIDENCE_NODES`); its model-file artifact pointer carries the produced
@@ -288,9 +293,9 @@ not a subset of the cited model's `elements`.
   records and re-read from the upstream files at registration; the commons
   holds neither file); the Si configuration's canonical JSON and uid
   `7b5e77b1` (Python only: a TypeScript consumer has no symmetry library); a
-  record with the new fields whose id equals its twin without them; a fixture
-  overlay shipped as one `{path: content}` JSON in `omai/vectors/` with its
-  `overlay_version`; the release-check report cases.
+  record with the new fields whose id equals that of the same lineage without
+  them; a fixture overlay shipped as one `{path: content}` JSON in
+  `omai/vectors/` with its `overlay_version`; the release-check report cases.
 - Signed zero: a standardized lattice can carry a residue of about 1e-16
   whose sign differs between machines, so rounding wrote it as `-0.0` on one
   and `0.0` on another, and the committed Si cell hashed to `55bf22ca` where
@@ -330,10 +335,15 @@ This document, then three library changes inside 0.2.0:
    with the NEP89 and Si.tersoff records and the citation keys. Models
    resolve; an unlisted model uid is not refused yet.
 2. Authored releases with the backfill and the release check.
-3. The `unregistered` marker, which binds the model check in the same change
-   so no caller potential is refused in between; the version fields; overlays
-   with their GOVERNANCE.md text; and the site Worker change (`infra/site`)
-   that refuses private records in the public short-link store.
+3. The `unregistered` marker, which binds the model check (the `SetVoltage`
+   calibration key included) in the same change so no caller potential is
+   refused in between; the version fields; `roots`; `registry.json` published
+   under `docs/data/` with its `citation_keys`, and one private-evidence
+   predicate the site shares (`docs/assets/private-members.js`, mirrored by
+   `omai.evidence.private_reasons`). Then the site Worker change
+   (`infra/site`) that refuses private records in the public short-link
+   store. Overlays with their GOVERNANCE.md text, and retraction, follow in
+   0.2.1.
 
 Producers that mint registry rows then read releases, licences and model uids
 from the pinned library.

@@ -36,6 +36,9 @@ ids, never retyped:
   the representations the release-check cases name, as the registry held them
   when the cases were cut, copied into the vector beside them.
 
+The private-evidence cases (``private.json``) and the fixture registry they
+are checked against are defined in this file: shapes, not data.
+
 Each input carries the id it was pinned with; the generator RECOMPUTES the id
 and refuses to write when the two disagree. A changed id is a defect in the
 canonicalization, never a reason to regenerate.
@@ -88,6 +91,10 @@ _PROBE_EXECUTION = {"code": "gpumd_hnemd", "wall_time_s": 4210.1234567,
 # kaldo fixture and MCG's worker tests already carry. The vector key stays
 # "map_version", the renderers' keyword.
 _MAP_VERSION = "9802d9e854c915eb47d867575730a556ab7f4a565e392bf5b29da58338f08434"
+
+# A lineage_version for the record carrying the 0.2.0 fields: the first one
+# in docs/data/versions.json, whose graph half is _MAP_VERSION.
+_LINEAGE_VERSION = "1a35c51f998fb466b899903b0f7e49a079d636395c281d359dcff1728fc294eb"
 
 
 def _canonical_json(lineage: dict) -> str:
@@ -242,6 +249,19 @@ def build_records(inputs: dict) -> list[dict]:
             f"{computed}. The copy drifted from the served bytes; re-fetch it, "
             f"do not adjust the id.")
     out.append({"name": "mcg:cut1_proof_run_903616ec", "record": proof})
+    # The 0.2.0 fields outside identity on the lightweight Si lineage: the
+    # SAME id as mcg:safe_light. The listed uid is the one_file model fixture.
+    out.append({
+        "name": "omai:safe_light_with_unregistered_and_versions",
+        "record": {
+            "id": light["lineage_id"],
+            "lineage": light["lineage"],
+            "unregistered": [{"kind": "model", "uid": hashlib.sha256(
+                b"fixture model A\n").hexdigest()}],
+            "lineage_version": _LINEAGE_VERSION,
+            "overlay_version": hashlib.sha256(b"fixture overlay\n").hexdigest(),
+        },
+    })
     return out
 
 
@@ -457,6 +477,109 @@ def build_releases(inputs: dict) -> dict:
     return {"codes": codes, "cases": cases}
 
 
+# Private-evidence cases (omai.evidence.private_reasons, mirrored by
+# docs/assets/private-members.js): record shapes and the reasons each gives
+# against a fixture registry. Uids are fixtures: 1 a registered model, 2 a
+# model no registry holds, 3 a registered configuration, 4 its former uid,
+# 5 a configuration no registry holds.
+_M, _U, _C, _A, _V = ("1" * 64, "2" * 64, "3" * 64, "4" * 64, "5" * 64)
+_PRIVATE_REGISTRY = {
+    # The bound table itself: both predicates refuse any other.
+    "citation_keys": {"Potential": ["potential_sha256", "base_potential_sha256"],
+                      "SetVoltage": ["calibration_sha256"]},
+    "configuration": {_C: "configurations/fixture.json",
+                      _A: "configurations/fixture.json"},
+    "model": {_M: "models/fixture.json"},
+}
+
+
+def _member(conditions=None, material=None, **top):
+    lineage = {"node": "SetVoltage", "conditions": conditions or {"T_K": 300}}
+    if material is not None:
+        lineage["material"] = material
+    return {"lineage": lineage, **top}
+
+
+_PRIVATE_CASES = [
+    ("public", _member()),
+    ("unregistered_empty", _member(unregistered=[])),
+    ("unregistered_null", _member(unregistered=None)),
+    ("unregistered_string", _member(unregistered="")),
+    ("unregistered_object", _member(unregistered={})),
+    ("unregistered_model", _member(unregistered=[{"kind": "model", "uid": _U}])),
+    ("unregistered_two_kinds", _member(unregistered=[
+        {"kind": "configuration", "uid": _V}, {"kind": "model", "uid": _U}])),
+    ("unregistered_malformed_entries", _member(unregistered=[
+        {}, 1, {"kind": "overlay", "uid": _U}, {"kind": ["model"], "uid": _U}])),
+    ("unregistered_listing_a_registered_uid",
+     _member(unregistered=[{"kind": "model", "uid": _M}])),
+    ("overlay_version_null", _member(overlay_version=None)),
+    ("overlay_version_set", _member(overlay_version="6" * 64)),
+    ("overlay_version_empty_string", _member(overlay_version="")),
+    ("overlay_version_false", _member(overlay_version=False)),
+    ("potential_registered", _member({"potential_sha256": _M})),
+    ("potential_unregistered", _member({"potential_sha256": _U})),
+    ("base_potential_unregistered",
+     _member({"potential_sha256": _M, "base_potential_sha256": _U})),
+    ("calibration_unregistered", _member({"calibration_sha256": _U})),
+    ("calibration_listed", _member({"calibration_sha256": _U},
+                                   unregistered=[{"kind": "model", "uid": _U}])),
+    ("potential_prefixed", _member({"potential_sha256": "sha256:" + _M})),
+    ("potential_null", _member({"potential_sha256": None})),
+    ("potential_number", _member({"potential_sha256": 7})),
+    ("potential_object_key", _member({"potential_sha256": "__proto__"})),
+    ("not_a_citation_key", _member({"model_sha256": _U})),
+    ("configuration_registered", _member(material={"name": "Si", "configuration": _C})),
+    ("configuration_prefixed",
+     _member(material={"name": "Si", "configuration": "sha256:" + _C})),
+    ("configuration_former_uid", _member(material={"name": "Si", "configuration": _A})),
+    ("configuration_unregistered",
+     _member(material={"name": "Si", "configuration": _V})),
+    ("configuration_null", _member(material={"name": "Si", "configuration": None})),
+    ("material_name_only", _member(material="Si")),
+    ("legacy_recipe", {"recipe": {"conditions": {"potential_sha256": _U}}}),
+    ("conditions_not_an_object",
+     {"lineage": {"conditions": ["potential_sha256"]}}),
+    ("member_not_an_object", "x"),
+]
+
+
+# Registries both predicates refuse (fail closed): any citation_keys table
+# other than the bound one, which would check fewer or other keys.
+_REFUSED_REGISTRIES = [
+    ("citation_keys_value_a_string",
+     {**_PRIVATE_REGISTRY, "citation_keys": {"Potential": "potential_sha256"}}),
+    ("citation_keys_value_empty",
+     {**_PRIVATE_REGISTRY, "citation_keys": {"Potential": []}}),
+    ("citation_keys_value_not_strings",
+     {**_PRIVATE_REGISTRY, "citation_keys": {"Potential": [["potential_sha256"]]}}),
+    ("citation_keys_empty", {**_PRIVATE_REGISTRY, "citation_keys": {}}),
+    ("citation_keys_missing_a_node", {**_PRIVATE_REGISTRY, "citation_keys": {
+        "Potential": ["potential_sha256", "base_potential_sha256"]}}),
+    ("citation_keys_extra_node", {**_PRIVATE_REGISTRY, "citation_keys": {
+        **_PRIVATE_REGISTRY["citation_keys"], "Structure": ["structure_sha256"]}}),
+]
+
+
+def build_private() -> dict:
+    """Private-evidence cases with the fixture registry they read, and the
+    registries both predicates refuse."""
+    from omai.evidence import private_reasons
+
+    for name, registry in _REFUSED_REGISTRIES:
+        try:
+            private_reasons({}, registry)
+        except ValueError:
+            continue
+        raise SystemExit(f"{name}: private_reasons accepted a malformed registry")
+    return {"registry": _PRIVATE_REGISTRY,
+            "cases": [{"name": name, "member": member,
+                       "reasons": private_reasons(member, _PRIVATE_REGISTRY)}
+                      for name, member in _PRIVATE_CASES],
+            "refused_registries": [{"name": name, "registry": registry}
+                                   for name, registry in _REFUSED_REGISTRIES]}
+
+
 def generate() -> dict[str, str]:
     """The vector files as ``{filename: text}``, without writing anything."""
     inputs = json.loads(_INPUTS.read_text())
@@ -467,6 +590,7 @@ def generate() -> dict[str, str]:
         "configurations.json": _dump(build_configurations(inputs)),
         "models.json": _dump(build_models()),
         "releases.json": _dump(build_releases(inputs)),
+        "private.json": _dump(build_private()),
     }
 
 

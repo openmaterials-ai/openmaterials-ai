@@ -2,7 +2,7 @@
 
 # openmaterials-ai
 
-[![OpenMaterials map version](https://openmaterials.ai/badge/9eb62e10a91b.svg)](https://openmaterials.ai/)
+[![OpenMaterials map version](https://openmaterials.ai/badge/9d1d27635859.svg)](https://openmaterials.ai/)
 
 
 OpenMaterials is a versioned, content-addressed map of physics. Physical
@@ -20,7 +20,7 @@ Lean dimensional proof where one exists, the codes that produce it with their
 citations, and the values attached to it with their provenance. OpenMaterials is
 stewarded by OpenMaterials-AI, a foundation in formation.
 
-At map version 9eb62e10a91b the map has 126 typed quantities (112 observable, 11
+At map version 9d1d27635859 the map has 126 typed quantities (112 observable, 11
 hidden, 3 parameter), 289 links (250 formula, 39 parameter), and 124 operators
 in 17 tiers. It holds representations for 33 codes and 93 committed values (87
 from simulations, 6 from measurements). The [codes
@@ -265,6 +265,8 @@ shipped here.
 | `omai.evidence.model_uid(digests)` | A model's uid: the sha256 of its one evaluated file, or of the sorted manifest of several. |
 | `omai.evidence.model_citations(lineage, roots=None)` | Every model a lineage cites, resolved; a report that refuses nothing. |
 | `omai.evidence.code_releases(roots=None)` | `{representation: {aliases, releases}}` for every representation. |
+| `omai.evidence.private_reasons(record, registry=None)` | Why a record cites evidence that is not public, `[{field, kind}]`; `[]` when it cites none. |
+| `omai.lineages.unregistered_for(lineage, roots=None)` | The `unregistered` list a producer declares: each cited configuration or model uid no root registers, as `{kind, uid}`. |
 | `omai.lineages.release_check(execution, codes=None)` | The `execution.registry` rows that resolve to no registered release, each with its reason; a report that refuses nothing. |
 
 The schema is a SHAPE gate. That `id` equals `lineage_id(lineage)`, that the
@@ -281,12 +283,34 @@ validating it (`{**record, "lineage": record_lineage(record)}`, minus the
 
 A lineage cites a model by its bare uid (64 lowercase hex) under fixed keys,
 the same for every representation so one model compares across codes:
-`conditions.potential_sha256` for the model it evaluates and
-`conditions.base_potential_sha256` for the model a training run starts from.
-Model and configuration uids resolve against `docs/data/` in a source tree
-and against `omai/data/registry.json` in an installed package (written by
-`omai.map_data`, shipped in the wheel); an unregistered uid is reported, not
-refused.
+`conditions.potential_sha256` for the model it evaluates,
+`conditions.base_potential_sha256` for the model a training run starts from,
+and `conditions.calibration_sha256` for the calibration a `SetVoltage` device
+model reads. A node's keys are normally fixed by its first registered record;
+`SetVoltage`'s are fixed by ruling, because its calibration stays private to
+its owner and is never registered (the commons accepts no model record for
+`SetVoltage`).
+Model and configuration uids resolve against `roots`: `docs/data/` in a source
+tree and `omai/data/registry.json` in an installed package (written by
+`omai.map_data`, shipped in the wheel, and published as
+`docs/data/registry.json` with a `citation_keys` table). `validate_light`,
+`record_light` and `record_simulation` take `roots` beside the deprecated
+`config_dir`, and refuse a cited configuration or model uid that resolves
+nowhere unless the record lists it in a top-level `unregistered: [{kind,
+uid}]` (`kind` is `configuration` or `model`, `uid` the bare uid; a
+`sha256:`-prefixed configuration pin is compared without its prefix).
+`omai.lineages.unregistered_for(lineage, roots=None)` returns the list a
+producer declares. The list states what was unregistered at minting: a listed
+uid that later resolves is checked as registered and is never an error.
+`unregistered`, `lineage_version` (the commons map version a record was made
+against: `version` in `docs/data/version.json`, not the store head) and
+`overlay_version` sit outside identity, so a record carrying them has the
+same id as the same lineage without them. Writers omit a field that is None
+(and an empty `unregistered`) and refuse a malformed one. A record whose
+`unregistered` is present and not `[]`, or whose `overlay_version` is not
+null, or that cites under a citation key a uid the registry does not hold,
+cites private evidence (`private_reasons`; `docs/assets/private-members.js`
+is the same predicate for the site).
 
 A record's `execution.registry` rows name the codes that ran. A row resolves
 when its `id` is a representation or one of its aliases (`quantum-espresso`
@@ -310,11 +334,12 @@ writer refuses them. The registry ships the releases under `code`.
   openmaterials commons conformance targets, the 27 adversarial float/int
   vectors MaterialsCodeGraph pins in Python and TypeScript, and the kaldo
   external-solve fixture.
-- `records.json`: 34 full records with their ids, including one carrying
-  artifacts and mirrors whose id equals its artifact-free twin, and the Cut 1
-  proof record exactly as the platform served it (real production bytes, so
-  the vectors pin the shape a producer emits and not only the shapes this
-  repository invents).
+- `records.json`: 35 full records with their ids, including one carrying
+  artifacts and mirrors and one carrying `unregistered`, `lineage_version` and
+  `overlay_version`, each with the id of the same lineage without them, and
+  the Cut 1 proof record exactly as the platform served it (real production
+  bytes, so the vectors pin the shape a producer emits and not only the
+  shapes this repository invents).
 - `render.json`: 10 renderer inputs and the instances they render to, in both
   producer forms. Six carry no `run_ref`: the form the platform serves, where
   `source.ref` is the bare provider and the detail names no run, because a
@@ -333,6 +358,9 @@ writer refuses them. The registry ships the releases under `code`.
   one-file uid. The NEP89 and Si.tersoff uids are pinned in their records.
 - `releases.json`: release-check cases, each an execution block and the rows
   it reports, with the registered releases they are checked against.
+- `private.json`: private-evidence cases, each a record shape and the reasons
+  `private_reasons` gives for it, with the fixture registry they are checked
+  against; `docs/assets/private-members.js` agrees on every case.
 
 Every id in these files is produced by the functions above and equals the id
 its source already pinned. A vector whose id changes is a defect in the
