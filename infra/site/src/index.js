@@ -5,7 +5,7 @@
 //   GET /healthz        liveness + the published map/lineage version
 //   GET /l/<64-hex>     canonical permalink: resolve a lineage id against the
 //                       committed projection, serve OG metadata, redirect to
-//                       the playground datasheet. Honest 404/400 otherwise.
+//                       the playground datasheet. A 404 or 400 otherwise.
 //
 // The Worker holds no state and no secrets. On openmaterials.ai it reads the
 // data files from the Pages origin, which every browser reads and which
