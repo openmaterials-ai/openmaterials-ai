@@ -1349,5 +1349,32 @@
     }
    ]
   }
+ },
+ {
+  "name": "omai:safe_light_with_unregistered_and_versions",
+  "record": {
+   "id": "6db0c040d4b7542b68e5fae623e947cb9473c744c47b725afe7d261505c3970c",
+   "lineage": {
+    "conditions": {
+     "T": 300,
+     "material": "Si",
+     "potential": "Si-NEP"
+    },
+    "material": {
+     "name": "Si"
+    },
+    "node": "ThermalConductivity[transport_model=hnemd]",
+    "node_uid": "e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88",
+    "params": {}
+   },
+   "lineage_version": "1a35c51f998fb466b899903b0f7e49a079d636395c281d359dcff1728fc294eb",
+   "overlay_version": "582a64c0796f3dad547fe3bcf825cd2842d26829f3093a26ffa7a8964110eca7",
+   "unregistered": [
+    {
+     "kind": "model",
+     "uid": "3d494d028c3b1037042ebf286712140c15b3c392f90f149cf1963c983dfba25e"
+    }
+   ]
+  }
  }
 ]

@@ -104,6 +104,36 @@ def simulation_record_schema() -> dict:
                 ),
                 "type": "object",
             },
+            "unregistered": {
+                "description": (
+                    "Each cited configuration or model uid that no public "
+                    "registry held at minting. Outside identity. A record "
+                    "carrying a non-empty list cites private evidence."
+                ),
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "required": ["kind", "uid"],
+                    "additionalProperties": False,
+                    "properties": {
+                        "kind": {"enum": ["configuration", "model"]},
+                        "uid": {"description": "The bare uid, no 'sha256:'.",
+                                "type": "string", "pattern": _SHA256},
+                    },
+                },
+            },
+            "lineage_version": {
+                "description": "The map version the record was made against. "
+                               "Outside identity.",
+                "type": "string",
+                "pattern": _SHA256,
+            },
+            "overlay_version": {
+                "description": "The private overlay the record was made "
+                               "against. Outside identity.",
+                "type": "string",
+                "pattern": _SHA256,
+            },
         },
     }
 

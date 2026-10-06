@@ -103,8 +103,9 @@ def test_every_committed_model_citation_resolves():
     from pathlib import Path
 
     root = Path(__file__).resolve().parents[1]
+    # omai/vectors/private.json cites fixture uids no registry holds, on purpose.
     files = [f for d in ("docs/data", "docs/examples", "omai", "tests/fixtures")
-             for f in (root / d).rglob("*.json")]
+             for f in (root / d).rglob("*.json") if f.name != "private.json"]
     cited = {(k, v) for f in files for k, v in _cited(json.loads(f.read_text()))}
     assert cited, "the committed Si.tersoff instances cite potential_sha256"
     for key, uid in cited:

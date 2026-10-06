@@ -43,6 +43,26 @@ jobs:
       - name: Test
         run: pytest tests/distance -q
 
+  # An installed package has no docs/data/: it resolves uids against the
+  # registry the wheel ships. Build the wheel, install it into a fresh venv and
+  # run the check from outside the checkout, so nothing imports the source tree.
+  wheel:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Build and install the wheel
+        run: |
+          pip wheel --no-deps -w "$RUNNER_TEMP/dist" .
+          python -m venv "$RUNNER_TEMP/venv"
+          "$RUNNER_TEMP/venv/bin/pip" install "$RUNNER_TEMP"/dist/*.whl
+      - name: Validate records pinning the Si uid and its alias
+        working-directory: ${{ runner.temp }}
+        run: '"$RUNNER_TEMP/venv/bin/python" -I "$GITHUB_WORKSPACE/tests/installed_wheel.py"'
+
   # Configuration uids hash an spglib-standardized cell; the canonical-JSON
   # vector runs on both architectures, so a platform-dependent byte fails here.
   configurations:

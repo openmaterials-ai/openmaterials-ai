@@ -28,14 +28,19 @@ dispersion term added at run time are lineage conditions.
 A lineage cites a model by bare uid under its node's fixed keys
 (:data:`CITATION_KEYS`): ``conditions.potential_sha256`` for the model it
 evaluates, ``conditions.base_potential_sha256`` for the model a training run
-starts from. :func:`model_citations` finds and resolves them.
+starts from, ``conditions.calibration_sha256`` for the calibration a
+``SetVoltage`` device model reads. :func:`model_citations` finds and resolves
+them.
 
 Registering a record publishes it; the commons holds metadata, hashes and
 pointers, never the files. :func:`resolve` looks a uid or an alias up in a
 list of roots, in order: a data directory (``docs/data/`` in a source tree) or
 a registry file (``omai/data/registry.json``, written by ``omai.map_data`` and
-shipped in the wheel). An unregistered uid resolves to None; nothing is
-refused here.
+shipped in the wheel, and published as ``docs/data/registry.json``). An
+unregistered uid resolves to None; nothing is refused here. The lineage
+validators refuse a cited uid that resolves nowhere unless the record lists
+it in its top-level ``unregistered`` marker, and :func:`private_reasons` says
+why a record cites evidence that is not public.
 
 Code releases are not content-addressed: a code's identity is its name and
 release. They are authored in ``releases/<representation>.json`` under the
@@ -65,8 +70,13 @@ _HEX64 = re.compile(r"[0-9a-f]{64}")
 # The fixed keys under lineage.conditions that cite a model, one set per node a
 # model serves, the same for every representation so a model compares across
 # codes. Potential: the model a lineage evaluates, and the model a training run
-# starts from. Each value is the bare uid, 64 lowercase hex, no "sha256:".
-CITATION_KEYS = {"Potential": ("potential_sha256", "base_potential_sha256")}
+# starts from. SetVoltage: the calibration file a set-voltage device model
+# reads. A node's keys are normally fixed by its first registered record;
+# SetVoltage's are fixed by ruling instead, because its calibration stays
+# private to its owner and is never registered (a record lists it in
+# `unregistered`). Each value is the bare uid, 64 lowercase hex, no "sha256:".
+CITATION_KEYS = {"Potential": ("potential_sha256", "base_potential_sha256"),
+                 "SetVoltage": ("calibration_sha256",)}
 
 
 class EvidenceError(Exception):
@@ -276,3 +286,62 @@ def model_citations(lineage: dict, roots: list[Path] | None = None) -> list[dict
              "record": resolve("model", conditions[key], roots)}
             for keys in CITATION_KEYS.values() for key in keys
             if key in conditions]
+
+
+def private_reasons(record, registry: dict | None = None) -> list[dict]:
+    """Why a record cites evidence that is not public, ``[{field, kind}]``;
+    ``[]`` when it cites none. Fail closed on shape:
+
+    - ``unregistered`` present and not ``[]``: one reason per entry, ``kind``
+      the entry's kind (``configuration`` or ``model``, else None); a value
+      that is not a list is one reason with kind None.
+    - ``overlay_version`` present and not null: kind ``node``.
+    - ``lineage.material.configuration`` (``sha256:`` stripped) absent from
+      the registry: kind ``configuration``.
+    - any key of ``registry["citation_keys"]`` present in
+      ``lineage.conditions`` whose value is not a registered model uid:
+      ``field`` ``conditions.<key>``, kind ``model``.
+
+    ``registry`` is a registry.json document (default: the one this package
+    ships). docs/assets/private-members.js is the same predicate for the
+    site; ``omai/vectors/private.json`` holds the cases both must agree on.
+    """
+    if registry is None:
+        registry = json.loads(REGISTRY.read_text())
+    if not (isinstance(registry, dict) and all(
+            isinstance(registry.get(t), dict)
+            for t in ("citation_keys", "configuration", "model"))):
+        raise ValueError("registry lacks citation_keys, configuration or model")
+    if not isinstance(record, dict):
+        return []
+    out = []
+    if "unregistered" in record:
+        listed = record["unregistered"]
+        if not isinstance(listed, list):
+            out.append({"field": "unregistered", "kind": None})
+        for entry in listed if isinstance(listed, list) else []:
+            kind = entry.get("kind") if isinstance(entry, dict) else None
+            kind = kind if isinstance(kind, str) and kind in KINDS else None
+            out.append({"field": "unregistered", "kind": kind})
+    if record.get("overlay_version") is not None:
+        out.append({"field": "overlay_version", "kind": "node"})
+    lineage = record.get("lineage")
+    if lineage is None:
+        lineage = record.get("recipe")
+    lineage = lineage if isinstance(lineage, dict) else {}
+    material = lineage.get("material")
+    if isinstance(material, dict) and "configuration" in material:
+        pin = material["configuration"]
+        if isinstance(pin, str) and pin.startswith("sha256:"):
+            pin = pin[len("sha256:"):]
+        if not (isinstance(pin, str) and pin in registry["configuration"]):
+            out.append({"field": "material.configuration", "kind": "configuration"})
+    conditions = lineage.get("conditions")
+    conditions = conditions if isinstance(conditions, dict) else {}
+    for keys in registry["citation_keys"].values():
+        for key in keys:
+            uid = conditions.get(key)
+            if key in conditions and not (isinstance(uid, str)
+                                          and uid in registry["model"]):
+                out.append({"field": f"conditions.{key}", "kind": "model"})
+    return out

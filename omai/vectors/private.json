@@ -1,0 +1,594 @@
+{
+ "cases": [
+  {
+   "member": {
+    "lineage": {
+     "conditions": {
+      "T_K": 300
+     },
+     "node": "SetVoltage"
+    }
+   },
+   "name": "public",
+   "reasons": []
+  },
+  {
+   "member": {
+    "lineage": {
+     "conditions": {
+      "T_K": 300
+     },
+     "node": "SetVoltage"
+    },
+    "unregistered": []
+   },
+   "name": "unregistered_empty",
+   "reasons": []
+  },
+  {
+   "member": {
+    "lineage": {
+     "conditions": {
+      "T_K": 300
+     },
+     "node": "SetVoltage"
+    },
+    "unregistered": null
+   },
+   "name": "unregistered_null",
+   "reasons": [
+    {
+     "field": "unregistered",
+     "kind": null
+    }
+   ]
+  },
+  {
+   "member": {
+    "lineage": {
+     "conditions": {
+      "T_K": 300
+     },
+     "node": "SetVoltage"
+    },
+    "unregistered": ""
+   },
+   "name": "unregistered_string",
+   "reasons": [
+    {
+     "field": "unregistered",
+     "kind": null
+    }
+   ]
+  },
+  {
+   "member": {
+    "lineage": {
+     "conditions": {
+      "T_K": 300
+     },
+     "node": "SetVoltage"
+    },
+    "unregistered": {}
+   },
+   "name": "unregistered_object",
+   "reasons": [
+    {
+     "field": "unregistered",
+     "kind": null
+    }
+   ]
+  },
+  {
+   "member": {
+    "lineage": {
+     "conditions": {
+      "T_K": 300
+     },
+     "node": "SetVoltage"
+    },
+    "unregistered": [
+     {
+      "kind": "model",
+      "uid": "2222222222222222222222222222222222222222222222222222222222222222"
+     }
+    ]
+   },
+   "name": "unregistered_model",
+   "reasons": [
+    {
+     "field": "unregistered",
+     "kind": "model"
+    }
+   ]
+  },
+  {
+   "member": {
+    "lineage": {
+     "conditions": {
+      "T_K": 300
+     },
+     "node": "SetVoltage"
+    },
+    "unregistered": [
+     {
+      "kind": "configuration",
+      "uid": "5555555555555555555555555555555555555555555555555555555555555555"
+     },
+     {
+      "kind": "model",
+      "uid": "2222222222222222222222222222222222222222222222222222222222222222"
+     }
+    ]
+   },
+   "name": "unregistered_two_kinds",
+   "reasons": [
+    {
+     "field": "unregistered",
+     "kind": "configuration"
+    },
+    {
+     "field": "unregistered",
+     "kind": "model"
+    }
+   ]
+  },
+  {
+   "member": {
+    "lineage": {
+     "conditions": {
+      "T_K": 300
+     },
+     "node": "SetVoltage"
+    },
+    "unregistered": [
+     {},
+     1,
+     {
+      "kind": "overlay",
+      "uid": "2222222222222222222222222222222222222222222222222222222222222222"
+     },
+     {
+      "kind": [
+       "model"
+      ],
+      "uid": "2222222222222222222222222222222222222222222222222222222222222222"
+     }
+    ]
+   },
+   "name": "unregistered_malformed_entries",
+   "reasons": [
+    {
+     "field": "unregistered",
+     "kind": null
+    },
+    {
+     "field": "unregistered",
+     "kind": null
+    },
+    {
+     "field": "unregistered",
+     "kind": null
+    },
+    {
+     "field": "unregistered",
+     "kind": null
+    }
+   ]
+  },
+  {
+   "member": {
+    "lineage": {
+     "conditions": {
+      "T_K": 300
+     },
+     "node": "SetVoltage"
+    },
+    "unregistered": [
+     {
+      "kind": "model",
+      "uid": "1111111111111111111111111111111111111111111111111111111111111111"
+     }
+    ]
+   },
+   "name": "unregistered_listing_a_registered_uid",
+   "reasons": [
+    {
+     "field": "unregistered",
+     "kind": "model"
+    }
+   ]
+  },
+  {
+   "member": {
+    "lineage": {
+     "conditions": {
+      "T_K": 300
+     },
+     "node": "SetVoltage"
+    },
+    "overlay_version": null
+   },
+   "name": "overlay_version_null",
+   "reasons": []
+  },
+  {
+   "member": {
+    "lineage": {
+     "conditions": {
+      "T_K": 300
+     },
+     "node": "SetVoltage"
+    },
+    "overlay_version": "6666666666666666666666666666666666666666666666666666666666666666"
+   },
+   "name": "overlay_version_set",
+   "reasons": [
+    {
+     "field": "overlay_version",
+     "kind": "node"
+    }
+   ]
+  },
+  {
+   "member": {
+    "lineage": {
+     "conditions": {
+      "T_K": 300
+     },
+     "node": "SetVoltage"
+    },
+    "overlay_version": ""
+   },
+   "name": "overlay_version_empty_string",
+   "reasons": [
+    {
+     "field": "overlay_version",
+     "kind": "node"
+    }
+   ]
+  },
+  {
+   "member": {
+    "lineage": {
+     "conditions": {
+      "T_K": 300
+     },
+     "node": "SetVoltage"
+    },
+    "overlay_version": false
+   },
+   "name": "overlay_version_false",
+   "reasons": [
+    {
+     "field": "overlay_version",
+     "kind": "node"
+    }
+   ]
+  },
+  {
+   "member": {
+    "lineage": {
+     "conditions": {
+      "potential_sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+     },
+     "node": "SetVoltage"
+    }
+   },
+   "name": "potential_registered",
+   "reasons": []
+  },
+  {
+   "member": {
+    "lineage": {
+     "conditions": {
+      "potential_sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+     },
+     "node": "SetVoltage"
+    }
+   },
+   "name": "potential_unregistered",
+   "reasons": [
+    {
+     "field": "conditions.potential_sha256",
+     "kind": "model"
+    }
+   ]
+  },
+  {
+   "member": {
+    "lineage": {
+     "conditions": {
+      "base_potential_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+      "potential_sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+     },
+     "node": "SetVoltage"
+    }
+   },
+   "name": "base_potential_unregistered",
+   "reasons": [
+    {
+     "field": "conditions.base_potential_sha256",
+     "kind": "model"
+    }
+   ]
+  },
+  {
+   "member": {
+    "lineage": {
+     "conditions": {
+      "calibration_sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+     },
+     "node": "SetVoltage"
+    }
+   },
+   "name": "calibration_unregistered",
+   "reasons": [
+    {
+     "field": "conditions.calibration_sha256",
+     "kind": "model"
+    }
+   ]
+  },
+  {
+   "member": {
+    "lineage": {
+     "conditions": {
+      "calibration_sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+     },
+     "node": "SetVoltage"
+    },
+    "unregistered": [
+     {
+      "kind": "model",
+      "uid": "2222222222222222222222222222222222222222222222222222222222222222"
+     }
+    ]
+   },
+   "name": "calibration_listed",
+   "reasons": [
+    {
+     "field": "unregistered",
+     "kind": "model"
+    },
+    {
+     "field": "conditions.calibration_sha256",
+     "kind": "model"
+    }
+   ]
+  },
+  {
+   "member": {
+    "lineage": {
+     "conditions": {
+      "potential_sha256": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+     },
+     "node": "SetVoltage"
+    }
+   },
+   "name": "potential_prefixed",
+   "reasons": [
+    {
+     "field": "conditions.potential_sha256",
+     "kind": "model"
+    }
+   ]
+  },
+  {
+   "member": {
+    "lineage": {
+     "conditions": {
+      "potential_sha256": null
+     },
+     "node": "SetVoltage"
+    }
+   },
+   "name": "potential_null",
+   "reasons": [
+    {
+     "field": "conditions.potential_sha256",
+     "kind": "model"
+    }
+   ]
+  },
+  {
+   "member": {
+    "lineage": {
+     "conditions": {
+      "potential_sha256": 7
+     },
+     "node": "SetVoltage"
+    }
+   },
+   "name": "potential_number",
+   "reasons": [
+    {
+     "field": "conditions.potential_sha256",
+     "kind": "model"
+    }
+   ]
+  },
+  {
+   "member": {
+    "lineage": {
+     "conditions": {
+      "potential_sha256": "__proto__"
+     },
+     "node": "SetVoltage"
+    }
+   },
+   "name": "potential_object_key",
+   "reasons": [
+    {
+     "field": "conditions.potential_sha256",
+     "kind": "model"
+    }
+   ]
+  },
+  {
+   "member": {
+    "lineage": {
+     "conditions": {
+      "model_sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+     },
+     "node": "SetVoltage"
+    }
+   },
+   "name": "not_a_citation_key",
+   "reasons": []
+  },
+  {
+   "member": {
+    "lineage": {
+     "conditions": {
+      "T_K": 300
+     },
+     "material": {
+      "configuration": "3333333333333333333333333333333333333333333333333333333333333333",
+      "name": "Si"
+     },
+     "node": "SetVoltage"
+    }
+   },
+   "name": "configuration_registered",
+   "reasons": []
+  },
+  {
+   "member": {
+    "lineage": {
+     "conditions": {
+      "T_K": 300
+     },
+     "material": {
+      "configuration": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+      "name": "Si"
+     },
+     "node": "SetVoltage"
+    }
+   },
+   "name": "configuration_prefixed",
+   "reasons": []
+  },
+  {
+   "member": {
+    "lineage": {
+     "conditions": {
+      "T_K": 300
+     },
+     "material": {
+      "configuration": "4444444444444444444444444444444444444444444444444444444444444444",
+      "name": "Si"
+     },
+     "node": "SetVoltage"
+    }
+   },
+   "name": "configuration_former_uid",
+   "reasons": []
+  },
+  {
+   "member": {
+    "lineage": {
+     "conditions": {
+      "T_K": 300
+     },
+     "material": {
+      "configuration": "5555555555555555555555555555555555555555555555555555555555555555",
+      "name": "Si"
+     },
+     "node": "SetVoltage"
+    }
+   },
+   "name": "configuration_unregistered",
+   "reasons": [
+    {
+     "field": "material.configuration",
+     "kind": "configuration"
+    }
+   ]
+  },
+  {
+   "member": {
+    "lineage": {
+     "conditions": {
+      "T_K": 300
+     },
+     "material": {
+      "configuration": null,
+      "name": "Si"
+     },
+     "node": "SetVoltage"
+    }
+   },
+   "name": "configuration_null",
+   "reasons": [
+    {
+     "field": "material.configuration",
+     "kind": "configuration"
+    }
+   ]
+  },
+  {
+   "member": {
+    "lineage": {
+     "conditions": {
+      "T_K": 300
+     },
+     "material": "Si",
+     "node": "SetVoltage"
+    }
+   },
+   "name": "material_name_only",
+   "reasons": []
+  },
+  {
+   "member": {
+    "recipe": {
+     "conditions": {
+      "potential_sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+     }
+    }
+   },
+   "name": "legacy_recipe",
+   "reasons": [
+    {
+     "field": "conditions.potential_sha256",
+     "kind": "model"
+    }
+   ]
+  },
+  {
+   "member": {
+    "lineage": {
+     "conditions": [
+      "potential_sha256"
+     ]
+    }
+   },
+   "name": "conditions_not_an_object",
+   "reasons": []
+  },
+  {
+   "member": "x",
+   "name": "member_not_an_object",
+   "reasons": []
+  }
+ ],
+ "registry": {
+  "citation_keys": {
+   "Potential": [
+    "potential_sha256",
+    "base_potential_sha256"
+   ],
+   "SetVoltage": [
+    "calibration_sha256"
+   ]
+  },
+  "configuration": {
+   "3333333333333333333333333333333333333333333333333333333333333333": "configurations/fixture.json",
+   "4444444444444444444444444444444444444444444444444444444444444444": "configurations/fixture.json"
+  },
+  "model": {
+   "1111111111111111111111111111111111111111111111111111111111111111": "models/fixture.json"
+  }
+ }
+}

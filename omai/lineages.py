@@ -136,7 +136,6 @@ from pathlib import Path
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 _SIM_DIR = _REPO_ROOT / "docs" / "data" / "simulations"
-_CONFIG_DIR = _REPO_ROOT / "docs" / "data" / "configurations"
 
 # Decimals every float in a lineage's conditions/params/hyperparameters/values is
 # rounded to before hashing. Six collapses refetch-level noise in a shared lineage
@@ -187,7 +186,8 @@ ENVELOPE_VERSION = 1
 # lineage_version.
 FORMAT_DESCRIPTOR = {
     "record_fields": ["id", "lineage", "kind", "execution", "artifacts",
-                      "mirrors", "results", "source"],
+                      "mirrors", "results", "source", "unregistered",
+                      "lineage_version", "overlay_version"],
     "identity": {
         "rule": "sha256 of the canonical JSON of the lineage object alone",
         "canonical_json": {"sort_keys": True, "separators": [",", ":"]},
@@ -550,31 +550,87 @@ def _former_uids(node: str) -> tuple[str, ...]:
     return next((s.aliases for d in _domains() for s in d.nodes if s.name == node), ())
 
 
-def _validate_configuration(lineage, *, config_dir: Path, where: str) -> None:
-    """A named configuration uid exists under docs/data/configurations/.
+def _validate_markers(record: dict, *, where: str) -> set:
+    """The top-level fields outside identity that 0.2.0 adds, shape-checked;
+    returns the ``(kind, uid)`` pairs ``unregistered`` lists.
 
-    The configuration is optional (a bare material name is legitimate); when
-    the lineage pins one, it must resolve to a committed configuration record,
-    by its canonical uid or a former uid it keeps under ``canonical.aliases``.
+    ``unregistered`` is a list of ``{kind, uid}``, kind ``configuration`` or
+    ``model``, uid the bare 64-hex uid; ``lineage_version`` and
+    ``overlay_version`` are 64-hex strings. Writers omit a field they have no
+    value for, so a null is malformed.
     """
-    material = lineage.get("material") or {}
-    uid = material.get("configuration") if isinstance(material, dict) else None
-    if uid is None:
-        return
-    # A lineage may carry the uid bare or as "sha256:<uid>"; accept both.
-    wanted = uid.split(":", 1)[1] if isinstance(uid, str) and uid.startswith("sha256:") else uid
-    if config_dir.exists():
-        for path in config_dir.glob("*.json"):
-            try:
-                rec = json.loads(path.read_text())
-            except (json.JSONDecodeError, OSError):
-                continue
-            canonical = rec.get("canonical", {})
-            if wanted == canonical.get("uid") or wanted in canonical.get("aliases", []):
-                return
-    raise LineageError(
-        f"{where}: configuration {str(wanted)[:12]} is not a committed "
-        f"configuration record under {config_dir.name}/")
+    from omai.evidence import KINDS
+
+    for key in ("lineage_version", "overlay_version"):
+        if key in record and not (isinstance(record[key], str)
+                                  and _SHA256_RE.match(record[key])):
+            raise LineageError(f"{where}: {key} must be a 64-hex string")
+    listed = record.get("unregistered", [])
+    if not isinstance(listed, list) or not all(
+            isinstance(e, dict) and set(e) == {"kind", "uid"}
+            and isinstance(e["kind"], str) and e["kind"] in KINDS
+            and isinstance(e["uid"], str)
+            and _SHA256_RE.match(e["uid"]) for e in listed):
+        raise LineageError(
+            f"{where}: unregistered must be a list of {{kind, uid}}, kind in "
+            f"{sorted(KINDS)}, uid 64 lowercase hex without 'sha256:'")
+    return {(e["kind"], e["uid"]) for e in listed}
+
+
+def _validate_evidence(lineage, listed: set, *, roots, config_dir, where: str) -> None:
+    """Every configuration and model the lineage cites resolves, or is listed.
+
+    The configuration pin (``material.configuration``, bare or
+    ``sha256:``-prefixed) and every model citation key
+    (:data:`omai.evidence.CITATION_KEYS`, a bare 64-hex uid) resolve against
+    ``roots`` (default: ``docs/data/`` in a source tree, the registry the
+    wheel ships otherwise) and, for configurations, the deprecated
+    ``config_dir`` (a directory of configuration records). A uid that
+    resolves nowhere must be listed in ``unregistered``; a listed uid that
+    resolves is registered, never an error.
+    """
+    from omai.evidence import CITATION_KEYS, resolve
+
+    cited = []
+    material = lineage.get("material")
+    pin = material.get("configuration") if isinstance(material, dict) else None
+    if pin is not None:
+        uid = pin[len("sha256:"):] if isinstance(pin, str) and pin.startswith("sha256:") else pin
+        if not isinstance(uid, str) or not _SHA256_RE.match(uid):
+            raise LineageError(f"{where}: material.configuration must be a 64-hex "
+                               f"uid, bare or 'sha256:'-prefixed")
+        if not (config_dir is not None and _in_config_dir(uid, Path(config_dir))):
+            cited.append(("configuration", "material.configuration", uid))
+    conditions = lineage.get("conditions")
+    conditions = conditions if isinstance(conditions, dict) else {}
+    for key in (k for keys in CITATION_KEYS.values() for k in keys):
+        if key in conditions:
+            uid = conditions[key]
+            if not isinstance(uid, str) or not _SHA256_RE.match(uid):
+                raise LineageError(f"{where}: conditions.{key} must be a bare "
+                                   f"64-hex model uid")
+            cited.append(("model", f"conditions.{key}", uid))
+    for kind, field, uid in cited:
+        if (kind, uid) not in listed and resolve(kind, uid, roots) is None:
+            raise LineageError(
+                f"{where}: {field} cites {kind} {uid[:12]}, which no registry "
+                f"holds; register it or list it in unregistered as "
+                f"{{\"kind\": \"{kind}\", \"uid\": \"{uid}\"}}")
+
+
+def _in_config_dir(uid: str, config_dir: Path) -> bool:
+    """A configuration record under ``config_dir`` states ``uid`` as its
+    canonical uid or a former uid it keeps under ``canonical.aliases``."""
+    from omai.evidence import record_uids
+
+    for path in config_dir.glob("*.json") if config_dir.is_dir() else ():
+        try:
+            rec = json.loads(path.read_text())
+        except (json.JSONDecodeError, OSError):
+            continue
+        if uid in record_uids("configuration", rec):
+            return True
+    return False
 
 
 def release_check(execution, codes: dict | None = None) -> list[dict]:
@@ -677,16 +733,17 @@ def _validate_results(results, record_id, name_to_uid, *, where: str,
                 f"{record_id[:12]}")
 
 
-def _validate(record: dict, *, name_to_uid: dict, config_dir: Path, where: str,
-              instances_dir: Path | None = None) -> str:
+def _validate(record: dict, *, name_to_uid: dict, where: str,
+              config_dir: Path | None = None, instances_dir: Path | None = None,
+              roots: list[Path] | None = None) -> str:
     """Validate a whole STRICT (heavy-writer) record and return its id.
 
     The strict gate for :func:`record_simulation`: requires a four-key
     checksummed manifest and an execution block, recomputes the id from the
     lineage (:func:`lineage_id`; a stated id that disagrees is rejected), then runs
-    the execution, lineage-node, configuration, manifest, and results gates. A
-    LIGHT record (pointer artifacts, optional execution/node) is validated by
-    :func:`validate_light` instead. ``instances_dir`` turns on slug resolution
+    the execution, lineage-node, evidence (:func:`_validate_evidence`),
+    manifest, and results gates. A LIGHT record (pointer artifacts, optional
+    execution/node) is validated by :func:`validate_light` instead. ``instances_dir`` turns on slug resolution
     for results (the bundler passes it; the writer leaves it None, since a slug
     may name an instance that lands after the record does).
     """
@@ -708,7 +765,8 @@ def _validate(record: dict, *, name_to_uid: dict, config_dir: Path, where: str,
             f"(location must be out of the hash; put urls in 'mirrors')")
 
     _validate_lineage_node(lineage, name_to_uid, where=where)
-    _validate_configuration(lineage, config_dir=config_dir, where=where)
+    _validate_evidence(lineage, _validate_markers(record, where=where),
+                       roots=roots, config_dir=config_dir, where=where)
     _validate_mirrors(record.get("mirrors"), where=where)
     _validate_results(record.get("results"), record_id, name_to_uid, where=where,
                       instances_dir=instances_dir)
@@ -717,7 +775,8 @@ def _validate(record: dict, *, name_to_uid: dict, config_dir: Path, where: str,
 
 def validate_light(record: dict, *, name_to_uid: dict | None = None,
                    where: str = "<record>", config_dir: Path | None = None,
-                   instances_dir: Path | None = None) -> dict:
+                   instances_dir: Path | None = None,
+                   roots: list[Path] | None = None) -> dict:
     """Validate a LIGHT record and return a report (honest about gaps).
 
     The light contract, "whatever we have":
@@ -735,12 +794,16 @@ def validate_light(record: dict, *, name_to_uid: dict | None = None,
     - ``mirrors`` (when present) is a well-formed resolver layer: each entry a
       url string or an object whose ``url`` and optional free-form ``provider``
       (who holds the bytes) are strings. Outside identity; a shape check only.
-    - A named ``material.configuration`` MUST resolve to a committed
-      configuration record under ``config_dir`` (default: the real
-      ``docs/data/configurations/``): the structure pin sits inside the lineage
-      (part of ``lineage_id``), so a bogus uid is rejected on this path exactly
-      as it is on the heavy writer. A lineage with no configuration key is
-      unaffected (the common bare-material-name case is still valid).
+    - A named ``material.configuration`` and every model citation key
+      (``conditions.potential_sha256`` and the rest of
+      :data:`omai.evidence.CITATION_KEYS`) MUST resolve against ``roots``
+      (default: ``docs/data/`` in a source tree, the registry the wheel ships
+      in an installed package; ``config_dir``, deprecated, adds a directory of
+      configuration records) or be listed in the record's top-level
+      ``unregistered`` marker. A listed uid that resolves is registered, never
+      an error. A lineage citing nothing is unaffected.
+    - ``unregistered``, ``lineage_version`` and ``overlay_version`` (outside
+      identity) are well-formed when present (:func:`_validate_markers`).
     - ``execution`` and ``results`` are OPTIONAL enrichment: each is validated
       only when present.
     - ``execution.registry`` rows that do not resolve to a registered code
@@ -749,9 +812,10 @@ def validate_light(record: dict, *, name_to_uid: dict | None = None,
     Returns a report ``{"id", "node_resolved": bool, "node": <id or None>,
     "artifact_count": int, "unresolved_registry_rows": [{id, version,
     reason}]}``. Raises :class:`LineageError` only on a genuinely
-    malformed record (bad lineage, stated-id mismatch, a stale node pin, an
-    unresolved configuration pin, or a malformed pointer); a node-unresolved
-    record is a normal return, not a raise.
+    malformed record (bad lineage, stated-id mismatch, a stale node pin, a
+    cited uid that resolves nowhere and is not listed, a malformed marker, or a
+    malformed pointer); a node-unresolved record is a normal return, not a
+    raise.
     """
     if not isinstance(record, dict):
         raise LineageError(f"{where}: record must be an object")
@@ -803,13 +867,11 @@ def validate_light(record: dict, *, name_to_uid: dict | None = None,
     # Optional enrichment, checked only when present.
     if record.get("execution") is not None:
         _validate_execution(record["execution"], where=where)
-    # The configuration pin sits inside the lineage (material.configuration is
-    # part of lineage_id), so a bogus uid must be caught on the primary path
-    # too, not just the heavy writer. config_dir defaults to the real
-    # configurations dir; a caller may still point it elsewhere (tests). A
-    # lineage with no configuration key is unaffected (_validate_configuration
-    # no-ops on that): the common bare-material-name case still passes.
-    _validate_configuration(lineage, config_dir=config_dir or _CONFIG_DIR, where=where)
+    # Cited evidence sits inside the lineage (part of lineage_id), so a uid
+    # that resolves nowhere is caught on the primary path too, unless the
+    # record lists it as unregistered.
+    _validate_evidence(lineage, _validate_markers(record, where=where),
+                       roots=roots, config_dir=config_dir, where=where)
     if record.get("results") is not None:
         if name_to_uid is None:
             from omai.map_data import _domains, build_graph_dict
@@ -833,7 +895,8 @@ def validate_light(record: dict, *, name_to_uid: dict | None = None,
 
 def record_light(*, lineage, execution=None, artifacts=None, mirrors=None,
                  results=None, name_to_uid=None, domains=None,
-                 config_dir=None):
+                 config_dir=None, roots=None, unregistered=None,
+                 lineage_version=None, overlay_version=None):
     """Build a LIGHT, lineage-identified record: the primary builder.
 
     A light record stores whatever we have of an experiment. Its identity is the
@@ -873,15 +936,24 @@ def record_light(*, lineage, execution=None, artifacts=None, mirrors=None,
         Domains to build ``name_to_uid`` from when the lineage names a node and no
         map was supplied (default: the live map).
     config_dir : Path | None
-        Configurations dir for the configuration-pin check (default: the real
-        ``docs/data/configurations/``). A lineage naming no configuration is
-        unaffected regardless of this value; pass an explicit dir (e.g. a test
-        fixture) to point the check elsewhere.
+        Deprecated: a directory of configuration records the configuration
+        pin may also resolve in, beside ``roots``.
+    roots : list[Path] | None
+        Where cited configuration and model uids resolve (default:
+        ``docs/data/`` in a source tree, the registry the wheel ships in an
+        installed package).
+    unregistered : list[dict] | None
+        ``[{kind, uid}]``: each cited configuration or model uid that no root
+        registers. Outside identity; omitted when None or empty.
+    lineage_version, overlay_version : str | None
+        The map version the record was made against, and the private overlay
+        it used (0.2.1). Outside identity; omitted when None.
 
     Returns
     -------
     dict
-        The record: ``{id, lineage, execution?, artifacts?, mirrors?, results?}``.
+        The record: ``{id, lineage, execution?, artifacts?, mirrors?, results?,
+        unregistered?, lineage_version?, overlay_version?}``.
         ``artifacts`` is included (possibly empty) so a consumer sees the (light)
         manifest explicitly; ``execution``/``mirrors``/``results`` appear only
         when given.
@@ -924,10 +996,23 @@ def record_light(*, lineage, execution=None, artifacts=None, mirrors=None,
         record["mirrors"] = mirrors
     if results is not None:
         record["results"] = results
+    _set_markers(record, unregistered, lineage_version, overlay_version)
 
     validate_light(record, name_to_uid=name_to_uid, where=where,
-                   config_dir=config_dir)
+                   config_dir=config_dir, roots=roots)
     return record
+
+
+def _set_markers(record: dict, unregistered, lineage_version, overlay_version) -> None:
+    """The writers' fields outside identity, each omitted when it has no
+    value: a reader treats any ``unregistered`` other than absent or ``[]``
+    as private, so a writer never emits null."""
+    if unregistered:
+        record["unregistered"] = unregistered
+    if lineage_version is not None:
+        record["lineage_version"] = lineage_version
+    if overlay_version is not None:
+        record["overlay_version"] = overlay_version
 
 
 def _stored_pointer(art: dict, mirrors) -> dict:
@@ -1176,7 +1261,9 @@ def envelope_from_fragment(fragment: str) -> dict:
 
 
 def record_simulation(*, lineage, execution, artifacts, results=None, mirrors=None,
-                      domains=None, sim_dir=None, name_to_uid=None):
+                      domains=None, sim_dir=None, name_to_uid=None, roots=None,
+                      unregistered=None, lineage_version=None,
+                      overlay_version=None):
     """Write a STRICT, checksummed record to ``docs/data/simulations/``.
 
     The heavy on-disk writer: unlike :func:`record_light`, it requires a full
@@ -1217,6 +1304,8 @@ def record_simulation(*, lineage, execution, artifacts, results=None, mirrors=No
         Override the default docs/data/simulations directory (tests).
     name_to_uid : dict | None
         Precomputed node-id -> uid map (tests); built from ``domains`` if omitted.
+    roots, unregistered, lineage_version, overlay_version
+        As in :func:`record_light`.
 
     Returns
     -------
@@ -1252,11 +1341,11 @@ def record_simulation(*, lineage, execution, artifacts, results=None, mirrors=No
         record["results"] = results
     if mirrors is not None:
         record["mirrors"] = mirrors
+    _set_markers(record, unregistered, lineage_version, overlay_version)
 
-    # Full validation on the assembled record (id pin, node pin, configuration,
-    # results) before anything touches disk.
-    _validate(record, name_to_uid=name_to_uid,
-              config_dir=_CONFIG_DIR, where=where)
+    # Full validation on the assembled record (id pin, node pin, cited
+    # evidence, results) before anything touches disk.
+    _validate(record, name_to_uid=name_to_uid, roots=roots, where=where)
 
     sim_dir = Path(sim_dir) if sim_dir else _SIM_DIR
     sim_dir.mkdir(parents=True, exist_ok=True)

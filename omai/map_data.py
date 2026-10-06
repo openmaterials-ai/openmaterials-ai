@@ -569,7 +569,6 @@ def build_simulations(simulations_dir: Path | None = None,
     instances_dir = instances_dir or (_DOCS / "data" / "instances")
     domains = _domains()
     name_to_uid = {n["id"]: n["uid"] for n in build_graph_dict(domains)["nodes"]}
-    config_dir = _DOCS / "data" / "configurations"
     out = []
     if not simulations_dir.exists():
         return out
@@ -581,7 +580,7 @@ def build_simulations(simulations_dir: Path | None = None,
                 ("lineage" if key == "recipe" else key): value
                 for key, value in rec.items()
             }
-        _validate(rec, name_to_uid=name_to_uid, config_dir=config_dir, where=f.name,
+        _validate(rec, name_to_uid=name_to_uid, where=f.name,
                   instances_dir=instances_dir)
         node = lineage["node"]
         # Pin the record to the live uid of its lineage node (the instance/
@@ -901,12 +900,25 @@ def build_registry(data_dir: Path | None = None) -> dict:
     package resolves uids against this file. Each record is checked by its
     kind (omai.evidence.check); a uid or alias registered twice is refused.
     ``code`` holds ``{aliases, releases}`` for every representation in
-    codes.json, checked by omai.evidence.check_releases."""
-    from omai.evidence import KINDS, check, check_releases, record_uids, records, release_files
+    codes.json, checked by omai.evidence.check_releases. ``citation_keys``
+    is ``{node: [condition keys]}``, omai.evidence.CITATION_KEYS: the keys
+    under which a lineage cites a model, which the site reads to tell a record
+    citing unregistered evidence."""
+    from omai.evidence import (
+        CITATION_KEYS,
+        KINDS,
+        check,
+        check_releases,
+        record_uids,
+        records,
+        release_files,
+    )
 
     data_dir = data_dir or (_DOCS / "data")
-    registry: dict[str, dict] = {"code": check_releases(
-        release_files(data_dir), json.loads((data_dir / "codes.json").read_text()))}
+    codes = json.loads((data_dir / "codes.json").read_text())
+    registry: dict[str, dict] = {
+        "citation_keys": {node: list(keys) for node, keys in CITATION_KEYS.items()},
+        "code": check_releases(release_files(data_dir), codes)}
     for kind in KINDS:
         entries = registry.setdefault(kind, {})
         for path, record in records(kind, data_dir):
@@ -919,12 +931,15 @@ def build_registry(data_dir: Path | None = None) -> dict:
 
 
 def write_registry(path: Path | None = None) -> Path:
+    """The registry the wheel ships (omai/data/registry.json) and the same
+    bytes under docs/data/registry.json, where the site reads it."""
     from omai.evidence import REGISTRY
 
-    path = path or REGISTRY
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(build_registry(), indent=1, sort_keys=True) + "\n")
-    return path
+    text = json.dumps(build_registry(), indent=1, sort_keys=True) + "\n"
+    for out in (path,) if path else (REGISTRY, _DOCS / "data" / "registry.json"):
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(text)
+    return path or REGISTRY
 
 
 # Source / parameter nodes that carry a value INTO a calculation rather than

@@ -266,3 +266,39 @@ def test_validation_is_order_stable():
     record["totally_new_field"] = 1
     record["id"] = "abc"
     assert validate_record(record) == validate_record(record)
+
+
+# The keywords the MaterialsCodeGraph worker's validator implements
+# (platform/shared/engine-manifest.ts SUPPORTED_SCHEMA_KEYWORDS). A keyword it
+# skips would let a record through there that this schema refuses.
+_WORKER_KEYWORDS = {
+    "type", "enum", "minimum", "maximum", "exclusiveMinimum", "exclusiveMaximum",
+    "pattern", "minLength", "minItems", "maxItems", "items",
+    "properties", "required", "additionalProperties",
+    "anyOf", "if", "then", "else",
+    "title", "description", "$comment", "default", "examples",
+}
+
+
+def _unsupported(schema, where="<record>"):
+    if not isinstance(schema, dict):
+        return []
+    out = []
+    for key, value in schema.items():
+        if key not in _WORKER_KEYWORDS:
+            out.append(f"{where}: {key}")
+        elif key == "properties":
+            for name, sub in value.items():
+                out += _unsupported(sub, f"{where}.properties.{name}")
+        elif key in ("items", "if", "then", "else", "additionalProperties"):
+            out += _unsupported(value, f"{where}.{key}")
+        elif key == "anyOf":
+            for i, sub in enumerate(value):
+                out += _unsupported(sub, f"{where}.anyOf[{i}]")
+    return out
+
+
+def test_the_schema_uses_only_keywords_the_worker_validator_implements():
+    schema = simulation_record_schema()
+    del schema["$id"], schema["$schema"]
+    assert _unsupported(schema) == []
