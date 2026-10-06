@@ -293,9 +293,9 @@ not a subset of the cited model's `elements`.
   records and re-read from the upstream files at registration; the commons
   holds neither file); the Si configuration's canonical JSON and uid
   `7b5e77b1` (Python only: a TypeScript consumer has no symmetry library); a
-  record with the new fields whose id equals its twin without them; a fixture
-  overlay shipped as one `{path: content}` JSON in `omai/vectors/` with its
-  `overlay_version`; the release-check report cases.
+  record with the new fields whose id equals that of the same lineage without
+  them; a fixture overlay shipped as one `{path: content}` JSON in
+  `omai/vectors/` with its `overlay_version`; the release-check report cases.
 - Signed zero: a standardized lattice can carry a residue of about 1e-16
   whose sign differs between machines, so rounding wrote it as `-0.0` on one
   and `0.0` on another, and the committed Si cell hashed to `55bf22ca` where

@@ -9,18 +9,29 @@
 //   - lineage.material.configuration ("sha256:" stripped) not in the registry
 //   - a registry citation key in lineage.conditions whose value is not a
 //     registered model uid
-// `registry` is data/registry.json; one lacking its tables throws, so a caller
-// that cannot read it refuses rather than passing everything.
+//   - a member that is not an object: field "record"
+// `registry` is data/registry.json. One lacking its tables, or whose
+// citation_keys values are not non-empty arrays of strings, throws, so a caller
+// that cannot read it refuses rather than passing everything. A stale copy (the
+// one bundled into the Worker) over-refuses a uid registered after it was built
+// but misses a citation key bound after it: the Worker reads the live registry
+// first and uses the bundled copy only when the live one is unreadable.
 
 const has = (o, k) => Object.prototype.hasOwnProperty.call(o, k);
 const isObj = (v) => v !== null && typeof v === "object" && !Array.isArray(v);
 const KINDS = ["configuration", "model"];
 
 export function privateReasons(member, registry) {
-  if (!isObj(registry) || !["citation_keys", "configuration", "model"].every((t) => isObj(registry[t]))) {
-    throw new Error("registry lacks citation_keys, configuration or model");
+  if (
+    !isObj(registry) ||
+    !["citation_keys", "configuration", "model"].every((t) => isObj(registry[t])) ||
+    !Object.values(registry.citation_keys).every(
+      (keys) => Array.isArray(keys) && keys.length > 0 && keys.every((k) => typeof k === "string"),
+    )
+  ) {
+    throw new Error("registry lacks citation_keys, configuration or model, or a citation_keys value is not a non-empty array of strings");
   }
-  if (!isObj(member)) return [];
+  if (!isObj(member)) return [{ field: "record", kind: null }];
   const out = [];
   if (has(member, "unregistered")) {
     const listed = member.unregistered;

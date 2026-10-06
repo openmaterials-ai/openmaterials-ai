@@ -68,8 +68,14 @@ PATHS = [_validate, _light]
 @pytest.mark.parametrize("path", PATHS)
 @pytest.mark.parametrize("key", KEYS)
 def test_an_unlisted_model_uid_that_resolves_nowhere_is_refused(path, key):
-    with pytest.raises(lin.LineageError, match=f"conditions.{key} cites model"):
+    with pytest.raises(lin.LineageError, match=f"conditions.{key} cites model") as err:
         path(_record(_lineage({key: PRIVATE})))
+    # A key fixed by ruling cites what is never registered: only listing helps.
+    if key == "calibration_sha256":
+        assert "never registered; list it in unregistered" in str(err.value)
+        assert "register it" not in str(err.value)
+    else:
+        assert "register it or list it in unregistered" in str(err.value)
 
 
 @pytest.mark.parametrize("path", PATHS)
@@ -176,7 +182,7 @@ def test_a_malformed_marker_is_refused(bad):
 @pytest.mark.parametrize("key", ["lineage_version", "overlay_version"])
 @pytest.mark.parametrize("bad", [None, "", "c" * 63, "C" * 64, 1])
 def test_a_malformed_version_field_is_refused(key, bad):
-    with pytest.raises(lin.LineageError, match=key):
+    with pytest.raises(lin.LineageError, match=f"{key} must be a 64-hex lowercase string"):
         _validate(_record(_lineage(), **{key: bad}))
     assert validate_record(_record(_lineage(), **{key: bad}))
 
@@ -188,14 +194,46 @@ def test_writers_omit_fields_without_a_value():
     _validate(_record(_lineage(), unregistered=[]))
 
 
+@pytest.mark.parametrize("bad", [{}, "", 0, False])
+def test_writers_refuse_a_falsy_malformed_marker(tmp_path, bad):
+    with pytest.raises(lin.LineageError, match="unregistered must be"):
+        lin.record_light(lineage=_lineage(), name_to_uid=_NAME_TO_UID, unregistered=bad)
+    with pytest.raises(lin.LineageError, match="unregistered must be"):
+        _strict(tmp_path, _lineage(), unregistered=bad)
+
+
+# --- what a producer declares ------------------------------------------------
+
+def test_unregistered_for_lists_each_unresolved_citation_once():
+    lineage = _lineage({"potential_sha256": TERSOFF, "base_potential_sha256": PRIVATE,
+                        "calibration_sha256": PRIVATE}, "sha256:" + "5" * 64)
+    declared = lin.unregistered_for(lineage)
+    assert declared == [{"kind": "configuration", "uid": "5" * 64},
+                        {"kind": "model", "uid": PRIVATE}]
+    record = lin.record_light(lineage=lineage, name_to_uid=_NAME_TO_UID,
+                              unregistered=declared)
+    assert private_reasons(record)
+    assert lin.unregistered_for(_lineage({"potential_sha256": TERSOFF}, SI_FORMER)) == []
+    with pytest.raises(lin.LineageError, match="bare 64-hex model uid"):
+        lin.unregistered_for(_lineage({"potential_sha256": "sha256:" + TERSOFF}))
+
+
+def test_unregistered_for_reads_the_roots(tmp_path):
+    registry = tmp_path / "registry.json"
+    registry.write_text(json.dumps({"model": {PRIVATE: "models/x.json"}}))
+    lineage = _lineage({"potential_sha256": PRIVATE}, SI)
+    assert lin.unregistered_for(lineage, [registry]) == [
+        {"kind": "configuration", "uid": SI}]
+
+
 # --- identity and the format version -----------------------------------------
 
 def test_the_new_fields_leave_the_id_unchanged_and_validate():
-    twin = lin.record_light(lineage=_lineage(), name_to_uid=_NAME_TO_UID)
+    without = lin.record_light(lineage=_lineage(), name_to_uid=_NAME_TO_UID)
     full = lin.record_light(lineage=_lineage(), name_to_uid=_NAME_TO_UID,
                             unregistered=[{"kind": "model", "uid": PRIVATE}],
                             lineage_version="c" * 64, overlay_version="d" * 64)
-    assert full["id"] == twin["id"] == lin.lineage_id(_lineage())
+    assert full["id"] == without["id"] == lin.lineage_id(_lineage())
     assert validate_record(full) == []
 
 
@@ -238,6 +276,14 @@ def test_the_vectors_cover_the_fail_closed_rules():
                  "calibration_unregistered", "legacy_recipe"):
         assert by[name], name
     assert by["configuration_prefixed"] == by["configuration_former_uid"] == []
+    assert by["member_not_an_object"] == [{"field": "record", "kind": None}]
+
+
+@pytest.mark.parametrize("entry", _PRIVATE["refused_registries"],
+                         ids=[r["name"] for r in _PRIVATE["refused_registries"]])
+def test_a_refused_registry_vector_raises(entry):
+    with pytest.raises(ValueError):
+        private_reasons({"lineage": {}}, entry["registry"])
 
 
 def test_a_registry_without_its_tables_is_refused():

@@ -266,6 +266,7 @@ shipped here.
 | `omai.evidence.model_citations(lineage, roots=None)` | Every model a lineage cites, resolved; a report that refuses nothing. |
 | `omai.evidence.code_releases(roots=None)` | `{representation: {aliases, releases}}` for every representation. |
 | `omai.evidence.private_reasons(record, registry=None)` | Why a record cites evidence that is not public, `[{field, kind}]`; `[]` when it cites none. |
+| `omai.lineages.unregistered_for(lineage, roots=None)` | The `unregistered` list a producer declares: each cited configuration or model uid no root registers, as `{kind, uid}`. |
 | `omai.lineages.release_check(execution, codes=None)` | The `execution.registry` rows that resolve to no registered release, each with its reason; a report that refuses nothing. |
 
 The schema is a SHAPE gate. That `id` equals `lineage_id(lineage)`, that the
@@ -287,7 +288,8 @@ the same for every representation so one model compares across codes:
 and `conditions.calibration_sha256` for the calibration a `SetVoltage` device
 model reads. A node's keys are normally fixed by its first registered record;
 `SetVoltage`'s are fixed by ruling, because its calibration stays private to
-its owner and is never registered.
+its owner and is never registered (the commons accepts no model record for
+`SetVoltage`).
 Model and configuration uids resolve against `roots`: `docs/data/` in a source
 tree and `omai/data/registry.json` in an installed package (written by
 `omai.map_data`, shipped in the wheel, and published as
@@ -296,16 +298,19 @@ tree and `omai/data/registry.json` in an installed package (written by
 `config_dir`, and refuse a cited configuration or model uid that resolves
 nowhere unless the record lists it in a top-level `unregistered: [{kind,
 uid}]` (`kind` is `configuration` or `model`, `uid` the bare uid; a
-`sha256:`-prefixed configuration pin is compared without its prefix). The
-list states what was unregistered at minting: a listed uid that later
-resolves is checked as registered and is never an error. `unregistered`,
-`lineage_version` (the map version a record was made against) and
-`overlay_version` sit outside identity, so a record carrying them keeps the
-id of its twin without them; writers omit a field they have no value for. A
-record whose `unregistered` is present and not `[]`, or whose
-`overlay_version` is not null, or that cites under a citation key a uid the
-registry does not hold, cites private evidence (`private_reasons`;
-`docs/assets/private-members.js` is the same predicate for the site).
+`sha256:`-prefixed configuration pin is compared without its prefix).
+`omai.lineages.unregistered_for(lineage, roots=None)` returns the list a
+producer declares. The list states what was unregistered at minting: a listed
+uid that later resolves is checked as registered and is never an error.
+`unregistered`, `lineage_version` (the commons map version a record was made
+against: `version` in `docs/data/version.json`, not the store head) and
+`overlay_version` sit outside identity, so a record carrying them has the
+same id as the same lineage without them. Writers omit a field that is None
+(and an empty `unregistered`) and refuse a malformed one. A record whose
+`unregistered` is present and not `[]`, or whose `overlay_version` is not
+null, or that cites under a citation key a uid the registry does not hold,
+cites private evidence (`private_reasons`; `docs/assets/private-members.js`
+is the same predicate for the site).
 
 A record's `execution.registry` rows name the codes that ran. A row resolves
 when its `id` is a representation or one of its aliases (`quantum-espresso`
@@ -330,11 +335,11 @@ writer refuses them. The registry ships the releases under `code`.
   vectors MaterialsCodeGraph pins in Python and TypeScript, and the kaldo
   external-solve fixture.
 - `records.json`: 35 full records with their ids, including one carrying
-  artifacts and mirrors whose id equals its artifact-free twin, one carrying
-  `unregistered`, `lineage_version` and `overlay_version` whose id equals the
-  same twin, and the Cut 1 proof record exactly as the platform served it (real production bytes, so
-  the vectors pin the shape a producer emits and not only the shapes this
-  repository invents).
+  artifacts and mirrors and one carrying `unregistered`, `lineage_version` and
+  `overlay_version`, each with the id of the same lineage without them, and
+  the Cut 1 proof record exactly as the platform served it (real production
+  bytes, so the vectors pin the shape a producer emits and not only the
+  shapes this repository invents).
 - `render.json`: 10 renderer inputs and the instances they render to, in both
   producer forms. Six carry no `run_ref`: the form the platform serves, where
   `source.ref` is the bare provider and the detail names no run, because a

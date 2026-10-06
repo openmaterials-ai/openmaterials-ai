@@ -15,6 +15,12 @@ for (const c of vectors.cases) {
   });
 }
 
+for (const r of vectors.refused_registries) {
+  test(`refused registry ${r.name}`, () => {
+    assert.throws(() => privateReasons({ lineage: {} }, r.registry));
+  });
+}
+
 test("a registry without its tables throws instead of passing everything", () => {
   for (const bad of [null, {}, { model: {}, configuration: {} }, { ...registry, citation_keys: [] }]) {
     assert.throws(() => privateReasons({ lineage: {} }, bad));

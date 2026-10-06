@@ -77,6 +77,9 @@ _HEX64 = re.compile(r"[0-9a-f]{64}")
 # `unregistered`). Each value is the bare uid, 64 lowercase hex, no "sha256:".
 CITATION_KEYS = {"Potential": ("potential_sha256", "base_potential_sha256"),
                  "SetVoltage": ("calibration_sha256",)}
+# The nodes whose keys are fixed by ruling: what they cite is never registered,
+# so the commons accepts no model record for them.
+RULED_NODES = ("SetVoltage",)
 
 
 class EvidenceError(Exception):
@@ -150,9 +153,11 @@ def _check_model(record: dict, uid: str, *, where: str) -> None:
     for key in ("name", "family", "format", "citation"):
         if not isinstance(record.get(key), str) or not record[key]:
             raise EvidenceError(f"{where}: {key} must be a non-empty string")
-    # A node without fixed citation keys could not be cited by a lineage.
-    if record.get("node", "Potential") not in CITATION_KEYS:
-        raise EvidenceError(f"{where}: node must be one of {sorted(CITATION_KEYS)}")
+    # A node without fixed citation keys could not be cited by a lineage; a
+    # node whose keys are fixed by ruling cites evidence that is never registered.
+    nodes = sorted(set(CITATION_KEYS) - set(RULED_NODES))
+    if record.get("node", "Potential") not in nodes:
+        raise EvidenceError(f"{where}: node must be one of {nodes}")
     files = record.get("files")
     try:
         _validate_manifest(files, where=where)
@@ -301,19 +306,28 @@ def private_reasons(record, registry: dict | None = None) -> list[dict]:
     - any key of ``registry["citation_keys"]`` present in
       ``lineage.conditions`` whose value is not a registered model uid:
       ``field`` ``conditions.<key>``, kind ``model``.
+    - a record that is not an object: field ``record``, kind None.
 
     ``registry`` is a registry.json document (default: the one this package
-    ships). docs/assets/private-members.js is the same predicate for the
-    site; ``omai/vectors/private.json`` holds the cases both must agree on.
+    ships); one whose tables are missing, or whose ``citation_keys`` values
+    are not non-empty lists of strings, raises ValueError. A stale copy
+    over-refuses a uid registered after it was built but misses a citation
+    key bound after it, so a reader prefers the live registry.
+    docs/assets/private-members.js is the same predicate for the site;
+    ``omai/vectors/private.json`` holds the cases both must agree on.
     """
     if registry is None:
         registry = json.loads(REGISTRY.read_text())
-    if not (isinstance(registry, dict) and all(
-            isinstance(registry.get(t), dict)
-            for t in ("citation_keys", "configuration", "model"))):
-        raise ValueError("registry lacks citation_keys, configuration or model")
+    if not (isinstance(registry, dict)
+            and all(isinstance(registry.get(t), dict)
+                    for t in ("citation_keys", "configuration", "model"))
+            and all(isinstance(keys, list) and keys
+                    and all(isinstance(k, str) for k in keys)
+                    for keys in registry["citation_keys"].values())):
+        raise ValueError("registry lacks citation_keys, configuration or model, "
+                         "or a citation_keys value is not a non-empty list of strings")
     if not isinstance(record, dict):
-        return []
+        return [{"field": "record", "kind": None}]
     out = []
     if "unregistered" in record:
         listed = record["unregistered"]

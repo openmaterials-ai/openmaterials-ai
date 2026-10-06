@@ -81,8 +81,8 @@ def test_a_missing_lineage_node_uid_is_accepted_but_a_malformed_one_is_not():
 
 
 def test_a_configuration_pin_is_accepted_bare_and_sha256_prefixed():
-    # lineages.py _validate_configuration accepts both spellings, so the schema
-    # must not refuse either one.
+    # The lineage validators accept both spellings, so the schema must not
+    # refuse either one.
     uid = "a" * 64
     for pin in (uid, f"sha256:{uid}"):
         record = _light()

@@ -264,6 +264,7 @@ __all__ = [
     "envelope_to_fragment",
     "envelope_from_fragment",
     "validate_light",
+    "unregistered_for",
     "release_check",
     "verify_simulation",
     "verify_bundle_bytes",
@@ -556,15 +557,15 @@ def _validate_markers(record: dict, *, where: str) -> set:
 
     ``unregistered`` is a list of ``{kind, uid}``, kind ``configuration`` or
     ``model``, uid the bare 64-hex uid; ``lineage_version`` and
-    ``overlay_version`` are 64-hex strings. Writers omit a field they have no
-    value for, so a null is malformed.
+    ``overlay_version`` are 64-hex lowercase strings. Writers omit a field they
+    have no value for, so a null is malformed.
     """
     from omai.evidence import KINDS
 
     for key in ("lineage_version", "overlay_version"):
         if key in record and not (isinstance(record[key], str)
                                   and _SHA256_RE.match(record[key])):
-            raise LineageError(f"{where}: {key} must be a 64-hex string")
+            raise LineageError(f"{where}: {key} must be a 64-hex lowercase string")
     listed = record.get("unregistered", [])
     if not isinstance(listed, list) or not all(
             isinstance(e, dict) and set(e) == {"kind", "uid"}
@@ -577,21 +578,18 @@ def _validate_markers(record: dict, *, where: str) -> set:
     return {(e["kind"], e["uid"]) for e in listed}
 
 
-def _validate_evidence(lineage, listed: set, *, roots, config_dir, where: str) -> None:
-    """Every configuration and model the lineage cites resolves, or is listed.
+def _citations(lineage, *, where: str) -> list[tuple[str, str, str, bool]]:
+    """``(kind, field, uid, ruled)`` for every configuration and model a
+    lineage cites: the configuration pin (``material.configuration``, bare or
+    ``sha256:``-prefixed, returned bare) and each model citation key
+    (:data:`omai.evidence.CITATION_KEYS`, a bare 64-hex uid). ``ruled`` marks
+    a key fixed by ruling, whose evidence is never registered. A malformed
+    value raises."""
+    from omai.evidence import CITATION_KEYS, RULED_NODES
 
-    The configuration pin (``material.configuration``, bare or
-    ``sha256:``-prefixed) and every model citation key
-    (:data:`omai.evidence.CITATION_KEYS`, a bare 64-hex uid) resolve against
-    ``roots`` (default: ``docs/data/`` in a source tree, the registry the
-    wheel ships otherwise) and, for configurations, the deprecated
-    ``config_dir`` (a directory of configuration records). A uid that
-    resolves nowhere must be listed in ``unregistered``; a listed uid that
-    resolves is registered, never an error.
-    """
-    from omai.evidence import CITATION_KEYS, resolve
-
-    cited = []
+    if not isinstance(lineage, dict):
+        raise LineageError(f"{where}: lineage must be an object")
+    out = []
     material = lineage.get("material")
     pin = material.get("configuration") if isinstance(material, dict) else None
     if pin is not None:
@@ -599,23 +597,60 @@ def _validate_evidence(lineage, listed: set, *, roots, config_dir, where: str) -
         if not isinstance(uid, str) or not _SHA256_RE.match(uid):
             raise LineageError(f"{where}: material.configuration must be a 64-hex "
                                f"uid, bare or 'sha256:'-prefixed")
-        if not (config_dir is not None and _in_config_dir(uid, Path(config_dir))):
-            cited.append(("configuration", "material.configuration", uid))
+        out.append(("configuration", "material.configuration", uid, False))
     conditions = lineage.get("conditions")
     conditions = conditions if isinstance(conditions, dict) else {}
-    for key in (k for keys in CITATION_KEYS.values() for k in keys):
-        if key in conditions:
-            uid = conditions[key]
-            if not isinstance(uid, str) or not _SHA256_RE.match(uid):
-                raise LineageError(f"{where}: conditions.{key} must be a bare "
-                                   f"64-hex model uid")
-            cited.append(("model", f"conditions.{key}", uid))
-    for kind, field, uid in cited:
-        if (kind, uid) not in listed and resolve(kind, uid, roots) is None:
-            raise LineageError(
-                f"{where}: {field} cites {kind} {uid[:12]}, which no registry "
-                f"holds; register it or list it in unregistered as "
-                f"{{\"kind\": \"{kind}\", \"uid\": \"{uid}\"}}")
+    for node, keys in CITATION_KEYS.items():
+        for key in keys:
+            if key in conditions:
+                uid = conditions[key]
+                if not isinstance(uid, str) or not _SHA256_RE.match(uid):
+                    raise LineageError(f"{where}: conditions.{key} must be a bare "
+                                       f"64-hex model uid")
+                out.append(("model", f"conditions.{key}", uid, node in RULED_NODES))
+    return out
+
+
+def unregistered_for(lineage: dict, roots: list[Path] | None = None) -> list[dict]:
+    """The ``unregistered`` list a producer declares for ``lineage``: each
+    configuration or model uid it cites that no root registers, as ``{kind,
+    uid}`` (a configuration pin without its ``sha256:`` prefix), in citation
+    order, once each. Pass it to :func:`record_light` or
+    :func:`record_simulation`; ``[]`` when everything cited is registered."""
+    from omai.evidence import resolve
+
+    out: list[dict] = []
+    for kind, _, uid, _ in _citations(lineage, where="unregistered_for"):
+        entry = {"kind": kind, "uid": uid}
+        if entry not in out and resolve(kind, uid, roots) is None:
+            out.append(entry)
+    return out
+
+
+def _validate_evidence(lineage, listed: set, *, roots, config_dir, where: str) -> None:
+    """Every configuration and model the lineage cites (:func:`_citations`)
+    resolves, or is listed.
+
+    Uids resolve against ``roots`` (default: ``docs/data/`` in a source tree,
+    the registry the wheel ships otherwise) and, for configurations, the
+    deprecated ``config_dir`` (a directory of configuration records). A uid
+    that resolves nowhere must be listed in ``unregistered``; a listed uid
+    that resolves is registered, never an error.
+    """
+    from omai.evidence import resolve
+
+    for kind, field, uid, ruled in _citations(lineage, where=where):
+        if ((kind, uid) in listed
+                or (kind == "configuration" and config_dir is not None
+                    and _in_config_dir(uid, Path(config_dir)))
+                or resolve(kind, uid, roots) is not None):
+            continue
+        entry = json.dumps({"kind": kind, "uid": uid})
+        raise LineageError(
+            f"{where}: {field} cites {kind} {uid[:12]}, " + (
+                f"which is never registered; list it in unregistered as {entry}"
+                if ruled else f"which no registry holds; register it or list it "
+                              f"in unregistered as {entry}"))
 
 
 def _in_config_dir(uid: str, config_dir: Path) -> bool:
@@ -944,9 +979,11 @@ def record_light(*, lineage, execution=None, artifacts=None, mirrors=None,
         installed package).
     unregistered : list[dict] | None
         ``[{kind, uid}]``: each cited configuration or model uid that no root
-        registers. Outside identity; omitted when None or empty.
+        registers (:func:`unregistered_for` computes it). Outside identity;
+        omitted when None or empty.
     lineage_version, overlay_version : str | None
-        The map version the record was made against, and the private overlay
+        The commons map version the record was made against (``version`` in
+        docs/data/version.json, not the store head), and the private overlay
         it used (0.2.1). Outside identity; omitted when None.
 
     Returns
@@ -1004,10 +1041,12 @@ def record_light(*, lineage, execution=None, artifacts=None, mirrors=None,
 
 
 def _set_markers(record: dict, unregistered, lineage_version, overlay_version) -> None:
-    """The writers' fields outside identity, each omitted when it has no
-    value: a reader treats any ``unregistered`` other than absent or ``[]``
-    as private, so a writer never emits null."""
-    if unregistered:
+    """The writers' fields outside identity, each omitted when it is None
+    (and ``unregistered`` when it is ``[]``): a reader treats any
+    ``unregistered`` other than absent or ``[]`` as private, so a writer never
+    emits null. Any other value is kept for the validator to judge, so a
+    malformed marker is refused, never dropped."""
+    if unregistered is not None and unregistered != []:
         record["unregistered"] = unregistered
     if lineage_version is not None:
         record["lineage_version"] = lineage_version

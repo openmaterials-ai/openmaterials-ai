@@ -543,14 +543,35 @@ _PRIVATE_CASES = [
 ]
 
 
+# Registries both predicates refuse (fail closed): a citation_keys value that
+# is not a non-empty list of strings would otherwise check fewer keys.
+_REFUSED_REGISTRIES = [
+    ("citation_keys_value_a_string",
+     {**_PRIVATE_REGISTRY, "citation_keys": {"Potential": "potential_sha256"}}),
+    ("citation_keys_value_empty",
+     {**_PRIVATE_REGISTRY, "citation_keys": {"Potential": []}}),
+    ("citation_keys_value_not_strings",
+     {**_PRIVATE_REGISTRY, "citation_keys": {"Potential": [["potential_sha256"]]}}),
+]
+
+
 def build_private() -> dict:
-    """Private-evidence cases with the fixture registry they read."""
+    """Private-evidence cases with the fixture registry they read, and the
+    registries both predicates refuse."""
     from omai.evidence import private_reasons
 
+    for name, registry in _REFUSED_REGISTRIES:
+        try:
+            private_reasons({}, registry)
+        except ValueError:
+            continue
+        raise SystemExit(f"{name}: private_reasons accepted a malformed registry")
     return {"registry": _PRIVATE_REGISTRY,
             "cases": [{"name": name, "member": member,
                        "reasons": private_reasons(member, _PRIVATE_REGISTRY)}
-                      for name, member in _PRIVATE_CASES]}
+                      for name, member in _PRIVATE_CASES],
+            "refused_registries": [{"name": name, "registry": registry}
+                                   for name, registry in _REFUSED_REGISTRIES]}
 
 
 def generate() -> dict[str, str]:

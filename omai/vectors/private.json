@@ -570,7 +570,63 @@
   {
    "member": "x",
    "name": "member_not_an_object",
-   "reasons": []
+   "reasons": [
+    {
+     "field": "record",
+     "kind": null
+    }
+   ]
+  }
+ ],
+ "refused_registries": [
+  {
+   "name": "citation_keys_value_a_string",
+   "registry": {
+    "citation_keys": {
+     "Potential": "potential_sha256"
+    },
+    "configuration": {
+     "3333333333333333333333333333333333333333333333333333333333333333": "configurations/fixture.json",
+     "4444444444444444444444444444444444444444444444444444444444444444": "configurations/fixture.json"
+    },
+    "model": {
+     "1111111111111111111111111111111111111111111111111111111111111111": "models/fixture.json"
+    }
+   }
+  },
+  {
+   "name": "citation_keys_value_empty",
+   "registry": {
+    "citation_keys": {
+     "Potential": []
+    },
+    "configuration": {
+     "3333333333333333333333333333333333333333333333333333333333333333": "configurations/fixture.json",
+     "4444444444444444444444444444444444444444444444444444444444444444": "configurations/fixture.json"
+    },
+    "model": {
+     "1111111111111111111111111111111111111111111111111111111111111111": "models/fixture.json"
+    }
+   }
+  },
+  {
+   "name": "citation_keys_value_not_strings",
+   "registry": {
+    "citation_keys": {
+     "Potential": [
+      [
+       "potential_sha256"
+      ]
+     ]
+    },
+    "configuration": {
+     "3333333333333333333333333333333333333333333333333333333333333333": "configurations/fixture.json",
+     "4444444444444444444444444444444444444444444444444444444444444444": "configurations/fixture.json"
+    },
+    "model": {
+     "1111111111111111111111111111111111111111111111111111111111111111": "models/fixture.json"
+    }
+   }
   }
  ],
  "registry": {

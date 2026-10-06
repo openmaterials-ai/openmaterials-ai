@@ -106,12 +106,12 @@ def test_artifacts_and_mirrors_do_not_change_the_record_id():
 
 
 def test_the_0_2_fields_do_not_change_the_record_id():
-    twin = next(e for e in RECORD_VECTORS
-                if e["name"] == "omai:safe_light_with_unregistered_and_versions")["record"]
+    with_fields = next(e for e in RECORD_VECTORS
+                       if e["name"] == "omai:safe_light_with_unregistered_and_versions")["record"]
     light = next(e for e in RECORD_VECTORS
                  if e["name"] == "mcg:safe_light")["record"]
-    assert {"unregistered", "lineage_version", "overlay_version"} <= set(twin)
-    assert twin["id"] == light["id"]
+    assert {"unregistered", "lineage_version", "overlay_version"} <= set(with_fields)
+    assert with_fields["id"] == light["id"]
 
 
 @pytest.mark.parametrize("vector", RENDER_VECTORS,

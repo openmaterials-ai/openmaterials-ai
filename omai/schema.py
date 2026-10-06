@@ -36,8 +36,8 @@ from __future__ import annotations
 # A sha256 hex digest, the shape lineages.py's _SHA256_RE enforces.
 _SHA256 = r"^[0-9a-f]{64}$"
 
-# A configuration pin: the bare uid, or the "sha256:<uid>" spelling that
-# lineages.py _validate_configuration also accepts.
+# A configuration pin: the bare uid, or the "sha256:<uid>" spelling that the
+# lineage validators (omai.lineages) also accept.
 _CONFIGURATION_UID = r"^(sha256:)?[0-9a-f]{64}$"
 
 _NON_EMPTY = {"type": "string", "minLength": 1}
@@ -123,8 +123,9 @@ def simulation_record_schema() -> dict:
                 },
             },
             "lineage_version": {
-                "description": "The map version the record was made against. "
-                               "Outside identity.",
+                "description": "The commons map version the record was made "
+                               "against: 'version' in version.json, not the "
+                               "store head. Outside identity.",
                 "type": "string",
                 "pattern": _SHA256,
             },
@@ -169,11 +170,13 @@ def _lineage_schema() -> dict:
                         "properties": {
                             "name": _NON_EMPTY,
                             "configuration": {
-                                # lineages.py _validate_configuration accepts
-                                # the uid bare or as "sha256:<uid>"; the schema
-                                # must not refuse a form the gate admits.
-                                "description": "A committed configuration uid, "
-                                               "bare or 'sha256:'-prefixed.",
+                                # The lineage validators accept the uid bare or
+                                # as "sha256:<uid>"; the schema must not refuse
+                                # a form they admit.
+                                "description": "A configuration uid, bare or "
+                                               "'sha256:'-prefixed. One no "
+                                               "registry holds must be listed "
+                                               "in unregistered.",
                                 "type": "string",
                                 "pattern": _CONFIGURATION_UID,
                             },

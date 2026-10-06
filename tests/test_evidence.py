@@ -43,7 +43,10 @@ def test_check_reproduces_a_model_uid_and_ignores_training_state():
                 _model(uid="sha256:" + A),
                 _model(uid=A + "\n"),
                 _model(aliases=["not-a-uid"]),
-                _model(node="Structure")):
+                _model(node="Structure"),
+                # SetVoltage's key is fixed by ruling: its calibration is
+                # never registered.
+                _model(node="SetVoltage")):
         with pytest.raises(EvidenceError):
             check("model", bad, where="m")
 
