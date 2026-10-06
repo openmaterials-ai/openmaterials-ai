@@ -84,8 +84,9 @@ _MCG_MATERIAL = {"name": "Si"}
 _PROBE_EXECUTION = {"code": "gpumd_hnemd", "wall_time_s": 4210.1234567,
                     "container_digest": "sha256:deadbeef"}
 
-# The map version the render vectors are stamped against: the commons pin the
-# kaldo fixture and MCG's worker tests already carry.
+# The graph version the render vectors are stamped against: the commons pin the
+# kaldo fixture and MCG's worker tests already carry. The vector key stays
+# "map_version", the renderers' keyword.
 _MAP_VERSION = "9802d9e854c915eb47d867575730a556ab7f4a565e392bf5b29da58338f08434"
 
 
@@ -249,8 +250,8 @@ def build_records(inputs: dict) -> list[dict]:
 # - The PLATFORM form (no run_ref): what the MCG worker serves. The ref is the
 #   bare provider and the detail names no run, because a public share page
 #   carries no run identity. `kappa_served_proof` is the Cut 1 proof record's
-#   own result, and the vector asserts the rendered bytes equal the ones
-#   stored for run_74cdf438f9e64a9bb90a.
+#   own result: every field equals the served one except source.detail, whose
+#   text 0.2.0 changed (graph version wording, 4 significant figures).
 # - The COMMONS form (with run_ref): what the committed instances under
 #   docs/data/instances/ carry, e.g. "materialscodegraph-dgeba-cp300-gfn2".
 #   The run refs below are the real committed ones, not invented labels.
@@ -262,9 +263,8 @@ def build_records(inputs: dict) -> list[dict]:
 # molar-Cp and reaction-energy cases keep the commons form and now carry the
 # run refs their committed instances actually use.
 _RENDER_CASES = [
-    # The served proof record's own result: these exact bytes are stored for
-    # run_74cdf438f9e64a9bb90a. std is 0 (single seed), so uncertainty is
-    # absent and the detail prints "+/- None".
+    # The served proof record's own result. std is 0 (single seed), so
+    # uncertainty is absent and the detail writes no "+/-" term.
     {"name": "kappa_served_proof",
      "function": "render_kappa",
      "result": {"method": "bte_rta", "material_name": "Si",
@@ -292,6 +292,21 @@ _RENDER_CASES = [
                 "temperature_K": 300.0, "n_seeds": 1, "code": "kaldo",
                 "kappa_W_per_mK": 254.46618271513248,
                 "kappa_std_W_per_mK": None},
+     "kwargs": {}},
+    # 4 significant figures in plain decimal: 12345.6 -> "12350", and the
+    # error 120.25 (an exact binary tie) rounds half up to "120.3".
+    {"name": "kappa_sig4_plain_decimal_half_up",
+     "function": "render_kappa",
+     "result": {"method": "hnemd", "material_name": "Si",
+                "temperature_K": 300.0, "n_seeds": 4, "code": "GPUMD",
+                "kappa_W_per_mK": 12345.6, "kappa_std_W_per_mK": 120.25},
+     "kwargs": {}},
+    # 16.34999 -> "16.35", 0.41234567 -> "0.4123".
+    {"name": "kappa_sig4_small_error",
+     "function": "render_kappa",
+     "result": {"method": "hnemd", "material_name": "Si",
+                "temperature_K": 300.0, "n_seeds": 4, "code": "GPUMD",
+                "kappa_W_per_mK": 16.34999, "kappa_std_W_per_mK": 0.41234567},
      "kwargs": {}},
     # The run-identified form, still available to callers that want it.
     {"name": "kappa_hnemd_with_run_ref",

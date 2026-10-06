@@ -135,27 +135,32 @@ def test_the_generator_reads_only_files_beside_itself():
         assert path.exists()
 
 
-def test_the_renderer_reproduces_the_served_proof_instance_byte_for_byte():
-    """The renderer's output equals the result stored for
-    run_74cdf438f9e64a9bb90a, field for field.
+def test_the_renderer_reproduces_the_served_proof_instance():
+    """The renderer's output equals the served proof record's result in every
+    field but the detail text, which 0.2.0 rewords.
 
-    This is the assertion 0.1.0 and 0.1.1 lacked. The renderers were moved from
-    MCG's Python render.py, but the records the platform served were rendered
-    by the worker's TypeScript renderer, and the two disagreed on source.ref,
-    source.detail and the uncertainty key. Nothing compared them, so the
-    divergence shipped twice.
+    0.1.0 and 0.1.1 lacked this comparison: the renderers came from MCG's
+    Python render.py, but the platform served records rendered by the worker's
+    TypeScript renderer, and the two disagreed on source.ref, source.detail and
+    the uncertainty key. records.json keeps the served bytes; source.detail sits
+    outside the record id, so the rewording moves no id.
     """
     proof = next(e for e in RECORD_VECTORS
                  if e["name"] == "mcg:cut1_proof_run_903616ec")["record"]
     served = proof["results"][0]
-    rendered = next(v for v in RENDER_VECTORS
-                    if v["name"] == "kappa_served_proof")["instance"]
-    assert rendered == served
-    # And through the live function, not only the committed vector.
     case = next(v for v in RENDER_VECTORS if v["name"] == "kappa_served_proof")
     live = render_kappa(case["result"], map_version=case["map_version"],
                         **case["kwargs"]).to_json_dict()
-    assert live == served
+    assert "uncertainty" not in served  # std 0 is no spread
+    for rendered in (case["instance"], live):
+        assert set(rendered) == set(served)
+        for key in ("variable", "material", "conditions", "value", "units"):
+            assert rendered[key] == served[key], key
+        assert {**rendered["source"], "detail": ""} == {**served["source"], "detail": ""}
+        assert rendered["source"]["detail"] == (
+            "Bulk Si kappa (BTE_RTA, 97.93 W/(m K) at 300 K, 1 seed(s)) from a "
+            "MaterialsCodeGraph run; rendered against openmaterials graph "
+            f"version {case['map_version']}.")
 
 
 def test_the_proof_record_vector_is_real_production_bytes():

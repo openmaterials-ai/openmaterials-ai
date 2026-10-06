@@ -16,25 +16,34 @@ the served record is the truth a consumer verifies against:
   ``run_ref`` keeps the older, run-identified form for a caller that wants it.
 - ``uncertainty`` is emitted only for a spread strictly greater than zero. A
   single-seed run reports ``kappa_std = 0``, which is not a claim of
-  exactness, so the key is ABSENT and the detail prints "+/- None".
+  exactness, so the key is ABSENT.
+
+0.2.0 changes the kappa detail text (never ``value`` or ``uncertainty``): kappa
+and its error are written to 4 significant figures, and a missing error drops
+the "+/-" term where 0.1.x printed "+/- None". The pin is named "graph version",
+which is what it holds. source.detail sits outside the record id, so no id moves.
 
 The one deliberate change is the INPUT type. MCG passed its own pydantic
 result models (KappaResult, MolecularThermoResult, ReactionThermoResult) and
-read the map version off its own manifest loader; neither exists here. Each
+read the version pin off its own manifest loader; neither exists here. Each
 renderer now takes a plain mapping (a dict, or any object exposing the same
 fields via attributes: a dataclass, a pydantic model, a SimpleNamespace) with
 exactly the fields the old model carried, listed per function below, and the
-map version is passed in explicitly. A caller holding the old pydantic object
-passes it directly; a caller holding parsed JSON passes the dict.
+pin is passed in explicitly as ``map_version`` (the 0.1 keyword name). It holds
+the commons graph version (``graph_version`` in docs/data/version.json), not
+the map version (``version``). A caller holding the old pydantic object passes
+it directly; a caller holding parsed JSON passes the dict.
 
-Every instance pins the map version it was rendered against in source.detail,
-per the commons' provenance rule.
+Every instance pins the graph version it was rendered against in
+source.detail, per the commons' provenance rule.
 """
 
 from __future__ import annotations
 
+import math
 import re
 from dataclasses import dataclass
+from decimal import ROUND_HALF_UP, Decimal
 
 # 1 eV = 96.48533212331 kJ/mol (CODATA 2018: N_A * e, exact SI constants).
 KJ_PER_MOL_PER_EV = 96.48533212331
@@ -50,8 +59,9 @@ KAPPA_NODE = {
     "bte_direct_inverse": "ThermalConductivity[bte_solver=direct_inverse]",
 }
 
-# The map version stamped when a caller names none. An instance must state what
-# it was rendered against; "unknown" says so plainly instead of implying a pin.
+# The graph version stamped when a caller names none. An instance must state
+# what it was rendered against; "unknown" says so plainly instead of implying a
+# pin.
 UNKNOWN_MAP_VERSION = "unknown"
 
 # Who holds the bytes and mints the citation. The worker's MIRROR_PROVIDER.
@@ -121,6 +131,15 @@ def slugify(text: str) -> str:
     return re.sub(r"[^a-z0-9]+", "-", (text or "").lower()).strip("-")
 
 
+def _sig4(x: float) -> str:
+    """``x`` to 4 significant figures in plain decimal, trailing zeros dropped,
+    ties rounded half up (12345.6 -> "12350", 16.34999 -> "16.35")."""
+    if not math.isfinite(x):
+        return repr(x)
+    d = Decimal(x)
+    return f"{d.quantize(Decimal(1).scaleb(d.adjusted() - 3), ROUND_HALF_UP).normalize():f}"
+
+
 def kj_per_mol_to_ev(kj_per_mol: float) -> float:
     """Molar energy (kJ/mol) to energy per event (eV)."""
     return kj_per_mol / KJ_PER_MOL_PER_EV
@@ -131,7 +150,7 @@ def provenance(run_ref: str | None = None, what: str = "", *,
     """The source block every rendered instance carries.
 
     ``what`` is the sentence fragment naming the quantity, ending in "from a",
-    which this completes with the map version pin and, when a ``run_ref`` is
+    which this completes with the graph version pin and, when a ``run_ref`` is
     given, the run reference.
 
     With NO ``run_ref`` (the default, and what the platform serves) the ref is
@@ -143,13 +162,13 @@ def provenance(run_ref: str | None = None, what: str = "", *,
             kind="simulation",
             ref=MIRROR_PROVIDER,
             detail=f"{what} MaterialsCodeGraph run; "
-                   f"rendered against openmaterials map version {map_version}.",
+                   f"rendered against openmaterials graph version {map_version}.",
         )
     return Source(
         kind="simulation",
         ref=f"{MIRROR_PROVIDER}-{slugify(run_ref)}",
         detail=f"{what} MaterialsCodeGraph run {run_ref}; "
-               f"rendered against openmaterials map version {map_version}.",
+               f"rendered against openmaterials graph version {map_version}.",
     )
 
 
@@ -190,10 +209,10 @@ def render_kappa(result, *, run_ref: str | None = None,
     if potential:
         conditions["potential"] = potential
     # A spread of 0 (a single-seed run computed none) is not exactness: the
-    # key is dropped and the detail says "None", which is what was served.
+    # key is dropped and the detail writes no "+/-" term.
     has_std = isinstance(kappa_std, (int, float)) and not isinstance(
         kappa_std, bool) and kappa_std > 0
-    std_text = f"{kappa_std}" if has_std else "None"
+    std_text = f" +/- {_sig4(kappa_std)}" if has_std else ""
     return Instance(
         variable=node,
         material=material_name,
@@ -204,7 +223,7 @@ def render_kappa(result, *, run_ref: str | None = None,
         source=provenance(
             run_ref,
             f"Bulk {material_name} kappa ({method.upper()}, "
-            f"{kappa} +/- {std_text} W/(m K) "
+            f"{_sig4(kappa)}{std_text} W/(m K) "
             f"at {temperature_K:g} K, {_get(result, 'n_seeds')} seed(s)) from a",
             map_version=map_version,
         ),
