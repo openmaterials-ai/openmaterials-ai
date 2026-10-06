@@ -43,7 +43,7 @@ from __future__ import annotations
 import math
 import re
 from dataclasses import dataclass
-from decimal import ROUND_HALF_UP, Decimal
+from decimal import ROUND_HALF_UP, Context, Decimal
 
 # 1 eV = 96.48533212331 kJ/mol (CODATA 2018: N_A * e, exact SI constants).
 KJ_PER_MOL_PER_EV = 96.48533212331
@@ -133,11 +133,16 @@ def slugify(text: str) -> str:
 
 def _sig4(x: float) -> str:
     """``x`` to 4 significant figures in plain decimal, trailing zeros dropped,
-    ties rounded half up (12345.6 -> "12350", 16.34999 -> "16.35")."""
+    ties rounded half up in magnitude (12345.6 -> "12350", 16.34999 -> "16.35").
+    Matches the platform worker's pyG(x, 4) for |x| in [1e-6, 1e21). Raises
+    TypeError for None: a kappa instance without a value is not evidence."""
+    x = float(x)  # numpy scalars too
     if not math.isfinite(x):
         return repr(x)
+    ctx = Context(prec=28)  # independent of the caller's decimal context
     d = Decimal(x)
-    return f"{d.quantize(Decimal(1).scaleb(d.adjusted() - 3), ROUND_HALF_UP).normalize():f}"
+    q = d.quantize(Decimal(1).scaleb(d.adjusted() - 3), ROUND_HALF_UP, ctx)
+    return f"{q.normalize(ctx):f}"
 
 
 def kj_per_mol_to_ev(kj_per_mol: float) -> float:

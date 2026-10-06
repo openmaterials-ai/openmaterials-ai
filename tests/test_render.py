@@ -91,7 +91,8 @@ def test_sig4_is_plain_decimal_with_ties_half_up():
     # The platform's bytes: 4 significant figures, trailing zeros dropped.
     cases = {12345.6: "12350", 16.34999: "16.35", 0.41234567: "0.4123",
              120.25: "120.3", 16.125: "16.13", 137.5: "137.5", 300.0: "300",
-             97.93078199999998: "97.93", 0.0: "0", -1.23456: "-1.235"}
+             97.93078199999998: "97.93", 0.0: "0", -1.23456: "-1.235",
+             9999.5: "10000", 0.000123456: "0.0001235"}
     for x, text in cases.items():
         assert _sig4(x) == text, x
 

@@ -12,6 +12,7 @@ Two properties, both non-negotiable:
 
 from __future__ import annotations
 
+import hashlib
 import json
 from pathlib import Path
 
@@ -133,6 +134,16 @@ def test_the_generator_reads_only_files_beside_itself():
     for path in (gen_vectors._INPUTS, gen_vectors._KALDO):
         assert path.parent == here, f"{path} is outside the package"
         assert path.exists()
+
+
+# The served proof record is production evidence: its bytes are pinned so a
+# wording change can never rewrite them (the renderer's text is tested below).
+PROOF_RECORD_SHA256 = "cc97bebc0b1e20bd3aa529b7ea5a93d059145342fa6d76a9130d6d7404432546"
+
+
+def test_the_served_proof_record_bytes_are_pinned():
+    data = (Path(__file__).resolve().parents[1] / "omai" / "tools" / "proof-record-903616ec.json").read_bytes()
+    assert hashlib.sha256(data).hexdigest() == PROOF_RECORD_SHA256
 
 
 def test_the_renderer_reproduces_the_served_proof_instance():
