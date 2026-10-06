@@ -5,11 +5,14 @@
 //   GET /healthz        liveness + the published map/lineage version
 //   GET /l/<64-hex>     canonical permalink: resolve a lineage id against the
 //                       committed projection, serve OG metadata, redirect to
-//                       the playground datasheet. Honest 404/400 otherwise.
+//                       the playground datasheet. A 404 or 400 otherwise.
 //
-// The Worker holds no state and no secrets: instances.json and version.json
-// are read from the same assets every browser reads, so the resolver can
-// never disagree with the site.
+// The Worker holds no state and no secrets. On openmaterials.ai it reads the
+// data files from the Pages origin, which every browser reads and which
+// updates on each push; its bundled assets update only on deploy and serve
+// as the fallback (and as the data on workers.dev and in wrangler dev). So
+// the resolver and the badges follow the site once Pages publishes; a change
+// to a data file's shape still needs a Worker deploy.
 
 import {
   parsePrefix, resolvePrefix, permalinkHTML, notFoundHTML, ambiguousHTML,
@@ -41,6 +44,15 @@ async function assetJSON(env, request, path) {
   const url = new URL(request.url);
   url.pathname = path;
   url.search = "";
+  if (url.hostname === "openmaterials.ai") {
+    try {
+      const live = await fetch(url, { cf: { cacheTtl: 60 }, signal: AbortSignal.timeout(3000) });
+      if (live.ok) return await live.json();
+      console.warn(`live ${path}: ${live.status}; using the bundled copy`);
+    } catch (e) {
+      console.warn(`live ${path}: ${e}; using the bundled copy`);
+    }
+  }
   const res = await env.ASSETS.fetch(new Request(url, { method: "GET" }));
   if (!res.ok) throw new Error(`asset ${path}: ${res.status}`);
   return res.json();

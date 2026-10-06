@@ -62,6 +62,16 @@ def test_resolver_logic_under_node():
     assert proc.returncode == 0, proc.stdout + proc.stderr
 
 
+def test_worker_data_source_under_node():
+    node = shutil.which("node")
+    if not node:
+        pytest.skip("node not available; data source checked where present")
+    proc = subprocess.run(
+        [node, "--test", str(_SITE / "src" / "index.test.mjs")],
+        capture_output=True, text=True)
+    assert proc.returncode == 0, proc.stdout + proc.stderr
+
+
 def test_short_link_store_contract():
     """The /s short-link store (the one write surface): worker-first routes,
     the KV binding, origin-gated minting, open-CORS immutable raw reads, and
