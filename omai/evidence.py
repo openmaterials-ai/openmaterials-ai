@@ -309,10 +309,12 @@ def private_reasons(record, registry: dict | None = None) -> list[dict]:
     - a record that is not an object: field ``record``, kind None.
 
     ``registry`` is a registry.json document (default: the one this package
-    ships); one whose tables are missing, or whose ``citation_keys`` values
-    are not non-empty lists of strings, raises ValueError. A stale copy
-    over-refuses a uid registered after it was built but misses a citation
-    key bound after it, so a reader prefers the live registry.
+    ships); one whose tables are missing, or whose ``citation_keys`` is not
+    exactly :data:`CITATION_KEYS` (same nodes, same keys in order), raises
+    ValueError rather than checking fewer keys. A stale copy over-refuses a
+    uid registered after it was built; a key bound later makes the copy and
+    the library disagree, which raises, so a reader prefers the live
+    registry.
     docs/assets/private-members.js is the same predicate for the site;
     ``omai/vectors/private.json`` holds the cases both must agree on.
     """
@@ -321,11 +323,10 @@ def private_reasons(record, registry: dict | None = None) -> list[dict]:
     if not (isinstance(registry, dict)
             and all(isinstance(registry.get(t), dict)
                     for t in ("citation_keys", "configuration", "model"))
-            and all(isinstance(keys, list) and keys
-                    and all(isinstance(k, str) for k in keys)
-                    for keys in registry["citation_keys"].values())):
-        raise ValueError("registry lacks citation_keys, configuration or model, "
-                         "or a citation_keys value is not a non-empty list of strings")
+            and registry["citation_keys"] == {
+                node: list(keys) for node, keys in CITATION_KEYS.items()}):
+        raise ValueError("registry lacks configuration or model, or its "
+                         "citation_keys is not CITATION_KEYS")
     if not isinstance(record, dict):
         return [{"field": "record", "kind": None}]
     out = []

@@ -27,8 +27,7 @@ test("a registry without its tables throws instead of passing everything", () =>
   }
 });
 
-test("the published registry still binds every citation key the vectors use", () => {
-  for (const [node, keys] of Object.entries(vectors.registry.citation_keys)) {
-    assert.deepStrictEqual(registry.citation_keys[node], keys, node);
-  }
+test("the published registry binds the table the vectors and this module bind", () => {
+  assert.deepStrictEqual(registry.citation_keys, vectors.registry.citation_keys);
+  assert.deepStrictEqual(privateReasons({ lineage: {} }, registry), []);
 });

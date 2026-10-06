@@ -484,6 +484,7 @@ def build_releases(inputs: dict) -> dict:
 # 5 a configuration no registry holds.
 _M, _U, _C, _A, _V = ("1" * 64, "2" * 64, "3" * 64, "4" * 64, "5" * 64)
 _PRIVATE_REGISTRY = {
+    # The bound table itself: both predicates refuse any other.
     "citation_keys": {"Potential": ["potential_sha256", "base_potential_sha256"],
                       "SetVoltage": ["calibration_sha256"]},
     "configuration": {_C: "configurations/fixture.json",
@@ -543,8 +544,8 @@ _PRIVATE_CASES = [
 ]
 
 
-# Registries both predicates refuse (fail closed): a citation_keys value that
-# is not a non-empty list of strings would otherwise check fewer keys.
+# Registries both predicates refuse (fail closed): any citation_keys table
+# other than the bound one, which would check fewer or other keys.
 _REFUSED_REGISTRIES = [
     ("citation_keys_value_a_string",
      {**_PRIVATE_REGISTRY, "citation_keys": {"Potential": "potential_sha256"}}),
@@ -552,6 +553,11 @@ _REFUSED_REGISTRIES = [
      {**_PRIVATE_REGISTRY, "citation_keys": {"Potential": []}}),
     ("citation_keys_value_not_strings",
      {**_PRIVATE_REGISTRY, "citation_keys": {"Potential": [["potential_sha256"]]}}),
+    ("citation_keys_empty", {**_PRIVATE_REGISTRY, "citation_keys": {}}),
+    ("citation_keys_missing_a_node", {**_PRIVATE_REGISTRY, "citation_keys": {
+        "Potential": ["potential_sha256", "base_potential_sha256"]}}),
+    ("citation_keys_extra_node", {**_PRIVATE_REGISTRY, "citation_keys": {
+        **_PRIVATE_REGISTRY["citation_keys"], "Structure": ["structure_sha256"]}}),
 ]
 
 

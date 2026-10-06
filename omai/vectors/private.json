@@ -627,6 +627,61 @@
      "1111111111111111111111111111111111111111111111111111111111111111": "models/fixture.json"
     }
    }
+  },
+  {
+   "name": "citation_keys_empty",
+   "registry": {
+    "citation_keys": {},
+    "configuration": {
+     "3333333333333333333333333333333333333333333333333333333333333333": "configurations/fixture.json",
+     "4444444444444444444444444444444444444444444444444444444444444444": "configurations/fixture.json"
+    },
+    "model": {
+     "1111111111111111111111111111111111111111111111111111111111111111": "models/fixture.json"
+    }
+   }
+  },
+  {
+   "name": "citation_keys_missing_a_node",
+   "registry": {
+    "citation_keys": {
+     "Potential": [
+      "potential_sha256",
+      "base_potential_sha256"
+     ]
+    },
+    "configuration": {
+     "3333333333333333333333333333333333333333333333333333333333333333": "configurations/fixture.json",
+     "4444444444444444444444444444444444444444444444444444444444444444": "configurations/fixture.json"
+    },
+    "model": {
+     "1111111111111111111111111111111111111111111111111111111111111111": "models/fixture.json"
+    }
+   }
+  },
+  {
+   "name": "citation_keys_extra_node",
+   "registry": {
+    "citation_keys": {
+     "Potential": [
+      "potential_sha256",
+      "base_potential_sha256"
+     ],
+     "SetVoltage": [
+      "calibration_sha256"
+     ],
+     "Structure": [
+      "structure_sha256"
+     ]
+    },
+    "configuration": {
+     "3333333333333333333333333333333333333333333333333333333333333333": "configurations/fixture.json",
+     "4444444444444444444444444444444444444444444444444444444444444444": "configurations/fixture.json"
+    },
+    "model": {
+     "1111111111111111111111111111111111111111111111111111111111111111": "models/fixture.json"
+    }
+   }
   }
  ],
  "registry": {

@@ -11,25 +11,33 @@
 //     registered model uid
 //   - a member that is not an object: field "record"
 // `registry` is data/registry.json. One lacking its tables, or whose
-// citation_keys values are not non-empty arrays of strings, throws, so a caller
-// that cannot read it refuses rather than passing everything. A stale copy (the
-// one bundled into the Worker) over-refuses a uid registered after it was built
-// but misses a citation key bound after it: the Worker reads the live registry
-// first and uses the bundled copy only when the live one is unreadable.
+// citation_keys is not exactly BOUND (the keys omai.evidence.CITATION_KEYS
+// binds, same nodes, same keys in order), throws, so a caller that cannot read
+// it refuses rather than checking fewer keys. A stale copy (the one bundled into
+// the Worker) over-refuses a uid registered after it was built; a key bound
+// later makes the registry and this module disagree, which throws until both
+// are redeployed. The Worker reads the live registry first and uses the bundled
+// copy only when the live one is unreadable.
 
 const has = (o, k) => Object.prototype.hasOwnProperty.call(o, k);
 const isObj = (v) => v !== null && typeof v === "object" && !Array.isArray(v);
 const KINDS = ["configuration", "model"];
+const BOUND = { Potential: ["potential_sha256", "base_potential_sha256"], SetVoltage: ["calibration_sha256"] };
+const bindsExactly = (table) =>
+  isObj(table) &&
+  Object.keys(table).length === Object.keys(BOUND).length &&
+  Object.entries(BOUND).every(
+    ([node, keys]) => has(table, node) && Array.isArray(table[node]) &&
+      table[node].length === keys.length && keys.every((k, i) => table[node][i] === k),
+  );
 
 export function privateReasons(member, registry) {
   if (
     !isObj(registry) ||
     !["citation_keys", "configuration", "model"].every((t) => isObj(registry[t])) ||
-    !Object.values(registry.citation_keys).every(
-      (keys) => Array.isArray(keys) && keys.length > 0 && keys.every((k) => typeof k === "string"),
-    )
+    !bindsExactly(registry.citation_keys)
   ) {
-    throw new Error("registry lacks citation_keys, configuration or model, or a citation_keys value is not a non-empty array of strings");
+    throw new Error("registry lacks configuration or model, or its citation_keys is not the bound table");
   }
   if (!isObj(member)) return [{ field: "record", kind: null }];
   const out = [];
