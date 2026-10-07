@@ -150,8 +150,8 @@ No lineage id and no vector id changes. These map and record ids changed since
   docs/data/lean_roadmap.json, the home page count, instead of the distinct
   edge operators in graph.json.
 - Package metadata: `License-Expression: Apache-2.0 AND CC-BY-4.0`. The code
-  is Apache-2.0; the map data the wheel ships under omai/data/ and
-  omai/vectors/ is CC BY 4.0 (LICENSE-DATA, NOTICE).
+  and the conformance vectors (omai/vectors/) are Apache-2.0; the registry the
+  wheel ships under omai/data/ is map data, CC BY 4.0 (LICENSE-DATA, NOTICE).
 
 ### Deferred to 0.2.1
 
