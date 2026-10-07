@@ -93,10 +93,15 @@ def test_a_registered_model_needs_no_marker_and_a_listed_one_is_no_error(path):
                  unregistered=[{"kind": "model", "uid": TERSOFF}]))
 
 
-@pytest.mark.parametrize("value", ["sha256:" + TERSOFF, TERSOFF.upper(), None, 7])
-def test_a_model_citation_is_a_bare_uid(value):
+# The schema and the lineage validators refuse the same citations; a trailing
+# newline included (Python's "$" admits one).
+@pytest.mark.parametrize("key", KEYS)
+@pytest.mark.parametrize("value", ["sha256:" + TERSOFF, TERSOFF.upper(), None, 7,
+                                   "unknown", TERSOFF + "\n"])
+def test_a_model_citation_is_a_bare_uid(key, value):
     with pytest.raises(lin.LineageError, match="bare 64-hex model uid"):
-        _validate(_record(_lineage({"potential_sha256": value})))
+        _validate(_record(_lineage({key: value})))
+    assert validate_record(_record(_lineage({key: value})))
 
 
 def test_the_listing_must_name_the_kind_it_cites():
@@ -171,6 +176,7 @@ def test_roots_replace_the_default(tmp_path):
     [{"kind": "overlay", "uid": PRIVATE}],
     [{"kind": ["model"], "uid": PRIVATE}],
     [{"kind": "model", "uid": "sha256:" + PRIVATE}],
+    [{"kind": "model", "uid": PRIVATE + "\n"}],
     [{"kind": "model", "uid": PRIVATE, "note": "x"}],
 ])
 def test_a_malformed_marker_is_refused(bad):
@@ -180,7 +186,7 @@ def test_a_malformed_marker_is_refused(bad):
 
 
 @pytest.mark.parametrize("key", ["lineage_version", "overlay_version"])
-@pytest.mark.parametrize("bad", [None, "", "c" * 63, "C" * 64, 1])
+@pytest.mark.parametrize("bad", [None, "", "c" * 63, "C" * 64, 1, "c" * 64 + "\n"])
 def test_a_malformed_version_field_is_refused(key, bad):
     with pytest.raises(lin.LineageError, match=f"{key} must be a 64-hex lowercase string"):
         _validate(_record(_lineage(), **{key: bad}))

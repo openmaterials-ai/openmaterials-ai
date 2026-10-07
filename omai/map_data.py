@@ -270,7 +270,7 @@ def build_instances(instances_dir: Path | None = None,
             # The optional backref to the run record that produced this value:
             # shape-checked here, membership-checked against the committed
             # records so a value never cites a run the commons does not hold.
-            if not isinstance(backref, str) or not _SHA256_RE.match(backref):
+            if not isinstance(backref, str) or not _SHA256_RE.fullmatch(backref):
                 raise ValueError(
                     f"{f.name}: simulation backref must be a 64-hex sha256 "
                     f"record id")
@@ -468,7 +468,7 @@ def record_instance(*, domains, variable, material, value, units, source_kind,
     if simulation is not None:
         from omai.lineages import _SHA256_RE
 
-        if not isinstance(simulation, str) or not _SHA256_RE.match(simulation):
+        if not isinstance(simulation, str) or not _SHA256_RE.fullmatch(simulation):
             raise ValueError(
                 "simulation backref must be a 64-hex sha256 record id")
         rec["simulation"] = simulation
@@ -806,7 +806,7 @@ def write_share_stubs(out_dir: Path | None = None) -> Path:
     keep = set(stubs)
     for child in out_dir.iterdir():
         # only our own <64-hex>/ stub dirs are pruned; anything else stays put
-        if child.is_dir() and _SHARE_ID_RE.match(child.name) and child.name not in keep:
+        if child.is_dir() and _SHARE_ID_RE.fullmatch(child.name) and child.name not in keep:
             (child / "index.html").unlink(missing_ok=True)
             child.rmdir()
     for rid, doc in stubs.items():

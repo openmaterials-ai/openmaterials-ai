@@ -189,7 +189,7 @@ def _fail(where: str, message: str) -> ExternalSolveRequestError:
 
 
 def _check_hex64(value: Any, *, where: str, what: str) -> None:
-    if not isinstance(value, str) or not _SHA256_RE.match(value):
+    if not isinstance(value, str) or not _SHA256_RE.fullmatch(value):
         raise _fail(where, f"{what} must be a 64-hex-character sha256 string")
 
 

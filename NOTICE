@@ -10,7 +10,9 @@ under the Apache License, Version 2.0. See the LICENSE file for the full terms.
 The map data (for example, the map/, docs/data/, and index/ directories) is
 licensed separately under the Creative Commons Attribution 4.0 International
 license (CC BY 4.0). See the LICENSE-DATA file for the full terms and the
-attribution requirements that apply to reuse of the data.
+attribution requirements that apply to reuse of the data. The registry the
+Python package ships under omai/data/ is map data under the same license; the
+conformance vectors under omai/vectors/ are part of the package (Apache-2.0).
 
 Third-party components redistributed with this project (for example, the
 front-end libraries vendored under docs/assets/vendor/) are the property of

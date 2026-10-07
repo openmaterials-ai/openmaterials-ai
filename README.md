@@ -286,7 +286,9 @@ the same for every representation so one model compares across codes:
 `conditions.potential_sha256` for the model it evaluates,
 `conditions.base_potential_sha256` for the model a training run starts from,
 and `conditions.calibration_sha256` for the calibration a `SetVoltage` device
-model reads. A node's keys are normally fixed by its first registered record;
+model reads (bound under `SetVoltage`, checked wherever it appears). The
+schema and the validators refuse any other value, a trailing newline included.
+A node's keys are normally fixed by its first registered record;
 `SetVoltage`'s are fixed by ruling, because its calibration stays private to
 its owner and is never registered (the commons accepts no model record for
 `SetVoltage`).
@@ -294,11 +296,13 @@ Model and configuration uids resolve against `roots`: `docs/data/` in a source
 tree and `omai/data/registry.json` in an installed package (written by
 `omai.map_data`, shipped in the wheel, and published as
 `docs/data/registry.json` with a `citation_keys` table). `validate_light`,
-`record_light` and `record_simulation` take `roots` beside the deprecated
-`config_dir`, and refuse a cited configuration or model uid that resolves
-nowhere unless the record lists it in a top-level `unregistered: [{kind,
-uid}]` (`kind` is `configuration` or `model`, `uid` the bare uid; a
-`sha256:`-prefixed configuration pin is compared without its prefix).
+`record_light` and `record_simulation` take `roots` beside `config_dir`
+(deprecated without a warning; it adds a directory of configuration records
+to the roots, where 0.1.3 replaced the lookup directory), and refuse a cited
+configuration or model uid that resolves nowhere unless the record lists it
+in a top-level `unregistered: [{kind, uid}]` (`kind` is `configuration` or
+`model`, `uid` the bare uid; a `sha256:`-prefixed configuration pin is
+compared without its prefix).
 `omai.lineages.unregistered_for(lineage, roots=None)` returns the list a
 producer declares. The list states what was unregistered at minting: a listed
 uid that later resolves is checked as registered and is never an error.
@@ -371,7 +375,8 @@ A rendered instance omits `uncertainty` entirely when the run reports no
 spread (a single-seed run reports 0, which is not a claim of exactness), and
 its detail writes no `+/-` term (0.1.x printed `+/- None`). The kappa detail
 gives the value and its error to 4 significant figures in plain decimal, ties
-rounded half up; `value` and `uncertainty` keep full precision.
+rounded half up; `value` and `uncertainty` keep full precision. A kappa of
+None raises TypeError (0.1.x printed "None").
 `execution.registry` is the engine manifest's code rows, each
 `{id, name, spdx, license_source, source, version}` with a nullable `version`:
 the licence provenance of what ran, not a list of registry hosts. 0.1.0
@@ -383,12 +388,14 @@ serves; 0.1.1 fixes that. A result instance may also carry an optional
 promise: a change to `lineage_id`, to the canonical JSON, or to a vector's id
 is breaking and takes a major version, because every id ever minted by this
 library would stop reproducing. Before 1.0 such a change takes the minor
-version; a record it re-keys keeps its old uid under `aliases`, which every
-resolver accepts, and the release notes list each re-keyed id. Adding a schema
+version. A re-keyed configuration or model record keeps its old uid under
+`aliases` and a re-keyed map node keeps it as a node alias, which every
+resolver accepts; a re-keyed edge keeps none (the map log records the
+supersede). CHANGELOG.md lists each re-keyed id. Adding a schema
 field, a renderer, or a vector is a minor version. Widening a schema field to
 accept a shape real producers already emit is a patch, since it can only turn a
 spurious rejection into an acceptance. Consumers pin an exact version
-(`openmaterials-ai==0.1.3`).
+(`openmaterials-ai==0.2.0`).
 
 ## Install
 
