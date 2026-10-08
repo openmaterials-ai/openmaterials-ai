@@ -66,7 +66,7 @@ in the hashed payload. The canonical blob is
 ``json.dumps(lineage, sort_keys=True, separators=(",", ":"))`` and the id is its
 sha256; this rule is a protocol commitment, not an implementation detail.
 
-Validation (gate-shaped, cheap, deterministic, and HONEST about gaps): the light
+Validation (gate-shaped, cheap, deterministic, and EXPLICIT about gaps): the light
 validator holds a lineage to "whatever we have". When the lineage names a ``node``,
 it must resolve against the live map by BOTH id and content uid (the instances
 node-pin discipline: a stale pin is a mismatch, not a silent pass); when it does

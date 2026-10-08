@@ -320,36 +320,35 @@ trustable.
 
 Three things ship. The \textbf{openmaterials protocol} is free and open: the map
 format, the hashing rules, the versioned change-log, the schemas, the parser
-contracts. The \textbf{map} and its \textbf{index} are the shared data built
-through it. The \textbf{site} at \texttt{openmaterials.ai} serves views of both.
+contracts. The \textbf{map} and its \textbf{index} live in this repository. The
+\textbf{site} at \texttt{openmaterials.ai} serves views of both.
 
 \section{Protocol, map, and site}
 
 The protocol is a standard anyone can implement, self-host, and fork. The
 mother map and its index are the shared artifact the community builds through
-the protocol; they belong to no one and to everyone.
+the protocol; they belong to no one and to everyone. The priority is explicit:
+first build the community that builds the mother map, and a rich initial map
+worth using.
 
-The site is static pages served from \texttt{docs/} in this repository, plus a
-small Cloudflare Worker (\texttt{infra/site}) for the routes a static site cannot
-express. It offers views of the map; the playground, which opens records and
-\texttt{\#x=} links; permalinks for committed values under \texttt{/l/}; version
-badges; and a short-link store under \texttt{/s/}. The short-link store is the
-Worker's one write surface: a stored set is public by construction, and a set
-citing evidence outside the public registry is refused unless the request opts
-in. The site has no accounts and stores no private maps, and removing the Worker
-returns it to plain static hosting.
+The site is static pages served from \texttt{docs/} in this repository, plus two
+small Cloudflare Workers: \texttt{infra/site} for the routes a static site cannot
+express, and \texttt{infra/learn-proxy} for the playground's Learn tab, its
+default tab. It offers views of the map; the playground, which opens records and
+\texttt{\#x=} links; short links for committed values under \texttt{/l/};
+version badges; and a short-link store under \texttt{/s/}. Everything stored
+there is public: anyone with the code can read it. The site has no accounts and
+stores no private maps, and removing the \texttt{infra/site} Worker returns it to
+plain static hosting.
 
-The priority is explicit: first build the community that builds the mother map,
-and a rich initial map worth using. The protocol and the map come first.
-
-The playground's Learn tab runs the paper parser as a public demo. Because that
-demo calls a paid model, it runs through a cost-gated Cloudflare Worker
-(\texttt{infra/learn-proxy}) rather than from the browser: the Worker holds a
-daily budget and per-IP limits and keeps the API key server-side, never shipping
-it to the page. The Learn tab is also a contributor on-ramp: each value a reader
-accepts from the parser's output downloads as an instance JSON in the committed
-schema, and contributing it is one reviewed pull request through the same gates
-the maintainers use.
+The Learn tab runs the paper parser as a public demo. Because that demo calls a
+paid model, it runs through the cost-gated \texttt{infra/learn-proxy} Worker
+rather than from the browser: the Worker holds a daily budget and per-IP limits
+and keeps the API key server-side, never shipping it to the page. The Learn tab
+is also a contributor on-ramp: each value a reader accepts from the parser's
+output can be downloaded as an instance JSON in the committed schema, and
+contributing it is one reviewed pull request through the same gates the
+maintainers use.
 
 \section{Structure and evidence}
 
@@ -717,9 +716,9 @@ float-rounding discipline the configuration uid uses. Everything else rides
 \emph{outside} the hash: an optional \texttt{execution} block (code, version,
 seeds, wall time, whatever the run recorded); optional \texttt{artifacts}, which
 are pointer-only, each \texttt{\{path, role, url?, sha256?\}} where only path and
-role are required and the url points at the heavy bytes wherever they are kept
-(for example the artifacts of the MaterialsCodeGraph (MCG) run that produced the
-record), never embedding them; a \texttt{mirrors} resolver; and the
+role are required and the url points at the heavy bytes wherever they are kept,
+for example as the artifacts of its run on the \texttt{MaterialsCodeGraph} (MCG)
+simulation platform, never embedding them; a \texttt{mirrors} resolver; and the
 run's \texttt{results}. Attaching a trajectory pointer, moving its bytes, or
 re-running on another node therefore never re-mints the record. Because the
 record is light, it is URL-encodable: gzip and base64url pack it into a
@@ -735,7 +734,7 @@ record with verifiable byte pointers, which a verification tool then checks
 against their checksums as a dated report, never a gate; but that heavy path is
 optional and never required for a record to exist or to have identity. This is
 the same bytes-out-of-git rule the governance commits to (the open format holds
-the lineage and its identity, the platform holds the artifacts, referenced by
+the lineage and its identity, the bytes stay with their owner, referenced by
 pointer), made into a first-class record kind.
 
 \paragraph{The share envelope (multi-lineage bundles).} A parsed paper rarely
@@ -1007,16 +1006,17 @@ output. This unit is opaque to two questions:
         steps.
 \end{itemize}
 
-An earlier design of \texttt{MaterialsCodeGraph} (MCG), the simulation platform that now
-records each run pinned to a map node as a lineage on this map, addressed parts of this gap by
-treating each instruction in an input file as the atomic unit of a knowledge graph and tracking
-inputs, parameters, and outputs at that level. That design's tool-encapsulation principle (all
-tool knowledge in YAML/Markdown configs, all code generic over tool) was right at that level of
-abstraction. But the level of abstraction itself is too low: an instruction in an input
-file is a syntactic unit, not a semantic one. It tells you what a code is told to do, not what
-\emph{physics} the code thereby computes. Two codes that compute the phonon dispersion via
-diagonalization of the dynamical matrix express that operation as different instructions; yet
-they perform the same physics. A graph indexed by instructions sees them as two unrelated tasks.
+An earlier design of the \texttt{MaterialsCodeGraph} (MCG) simulation platform, which now
+records each run pinned to a map node as a simulation record whose lineage cites that node,
+addressed parts of this gap by treating each instruction in an input file as the atomic unit of
+a knowledge graph and tracking inputs, parameters, and outputs at that level. That design's
+tool-encapsulation principle (all tool knowledge in YAML/Markdown configs, all code generic over
+tool) was right at that level of abstraction. But the level of abstraction itself is too low: an
+instruction in an input file is a syntactic unit, not a semantic one. It tells you what a code
+is told to do, not what \emph{physics} the code thereby computes. Two codes that compute the
+phonon dispersion via diagonalization of the dynamical matrix express that operation as
+different instructions; yet they perform the same physics. A graph indexed by instructions sees
+them as two unrelated tasks.
 
 \medskip
 
