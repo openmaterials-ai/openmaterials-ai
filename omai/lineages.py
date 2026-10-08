@@ -18,8 +18,9 @@ so an experiment IS a link that opens in the openmaterials playground under
 Python-produced fragment and a browser-produced one interoperate.
 
 This is deliberately a two-tier design. OpenMaterials is the open FORMAT (this
-data structure, host-agnostic); MaterialsCodeGraph (MCG) is the cheap host for
-the heavy bytes, referenced by pointer, never embedded in identity. The heavy,
+data structure, host-agnostic); the heavy bytes stay wherever they are kept (for
+example a MaterialsCodeGraph run's artifacts), referenced by pointer, never
+embedded in identity. The heavy,
 byte-verifiable path (:func:`record_from_bundle` over a checksummed bundle,
 :func:`verify_bundle_bytes` over its bytes) still exists as an OPTIONAL
 enrichment for when a full manifest DOES exist and someone wants byte

@@ -93,9 +93,9 @@ commitments of the initiative, not courtesies.
   values), and heavy artifacts are optional, pointer-only
   (`{path, role, url?, sha256?}`), never embedded and never hashed into
   identity. The format (the data structure) is the open-source,
-  host-agnostic part; the heavy bytes live on the platform
-  (MaterialsCodeGraph) as the cheap host, or any object store under the
-  owner's own terms, referenced by pointer alone. Because location is
+  host-agnostic part; the heavy bytes live wherever their owner keeps
+  them (for example the MaterialsCodeGraph run that produced them, or any
+  object store under the owner's own terms), referenced by pointer alone. Because location is
   outside the identity, moving bytes, renaming a bucket, or adding a
   mirror never changes the record's identity or orphans a value that cites
   it. This is the operational form of the rule above: the open format
