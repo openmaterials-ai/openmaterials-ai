@@ -85,10 +85,10 @@ Glossary:
 A lineage can be shared as a link on its own, with no store or server. The
 record is light and lineage-identified: its identity comes from its `lineage`
 field (a map node when known, else a template with its hyperparameters and setup
-values), and heavy artifacts are optional pointers to
-[MaterialsCodeGraph](https://materialscodegraph.com/), never embedded. Because
-it is light, the whole record gzips into a `#x=` link fragment that opens in the
-playground's Lineage tab:
+values), and heavy artifacts are optional pointers to wherever the bytes are
+kept, for example [MaterialsCodeGraph](https://materialscodegraph.com/), never
+embedded. Because it is light, the whole record gzips into a `#x=` link fragment
+that opens in the playground's Lineage tab:
 
 ```
 https://openmaterials.ai/play/#/play?tab=lineage&x=<gzipped record>

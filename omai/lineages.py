@@ -18,8 +18,9 @@ so an experiment IS a link that opens in the openmaterials playground under
 Python-produced fragment and a browser-produced one interoperate.
 
 This is deliberately a two-tier design. OpenMaterials is the open FORMAT (this
-data structure, host-agnostic); MaterialsCodeGraph (MCG) is the cheap host for
-the heavy bytes, referenced by pointer, never embedded in identity. The heavy,
+data structure, host-agnostic); the heavy bytes stay wherever they are kept (for
+example a MaterialsCodeGraph run's artifacts), referenced by pointer, never
+embedded in identity. The heavy,
 byte-verifiable path (:func:`record_from_bundle` over a checksummed bundle,
 :func:`verify_bundle_bytes` over its bytes) still exists as an OPTIONAL
 enrichment for when a full manifest DOES exist and someone wants byte
@@ -65,7 +66,7 @@ in the hashed payload. The canonical blob is
 ``json.dumps(lineage, sort_keys=True, separators=(",", ":"))`` and the id is its
 sha256; this rule is a protocol commitment, not an implementation detail.
 
-Validation (gate-shaped, cheap, deterministic, and HONEST about gaps): the light
+Validation (gate-shaped, cheap, deterministic, and EXPLICIT about gaps): the light
 validator holds a lineage to "whatever we have". When the lineage names a ``node``,
 it must resolve against the live map by BOTH id and content uid (the instances
 node-pin discipline: a stale pin is a mismatch, not a silent pass); when it does

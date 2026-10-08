@@ -85,21 +85,21 @@ commitments of the initiative, not courtesies.
   underlying trajectories, wavefunctions, force sets, lab records, or
   datasets. Those remain wholly the owner's, under the owner's own
   terms, reachable through the provenance reference and nowhere else.
-* **Identity in the commons, bulk on the platform.** A lineage is the shareable
-  run record defined in `omai/lineages.py`; provenance is a quantity instance's
-  source reference; derivation is a node's upstream graph in the map. The record
-  is light and lineage-identified: its identity comes from its `lineage` field
-  (a map node when known, else a template with its hyperparameters and setup
-  values), and heavy artifacts are optional, pointer-only
-  (`{path, role, url?, sha256?}`), never embedded and never hashed into
-  identity. The format (the data structure) is the open-source,
-  host-agnostic part; the heavy bytes live on the platform
-  (MaterialsCodeGraph) as the cheap host, or any object store under the
-  owner's own terms, referenced by pointer alone. Because location is
-  outside the identity, moving bytes, renaming a bucket, or adding a
-  mirror never changes the record's identity or orphans a value that cites
-  it. This is the operational form of the rule above: the open format
-  keeps the lineage and its identity, the platform keeps the bytes.
+* **Identity in the commons, bytes with their owner.** A lineage is the
+  shareable run record defined in `omai/lineages.py`; provenance is a quantity
+  instance's source reference; derivation is a node's upstream graph in the
+  map. The record is light and lineage-identified: its identity comes from its
+  `lineage` field (a map node when known, else a template with its
+  hyperparameters and setup values), and heavy artifacts are optional,
+  pointer-only (`{path, role, url?, sha256?}`), never embedded and never
+  hashed into identity. The format (the data structure) is the open-source,
+  host-agnostic part; the heavy bytes live wherever their owner keeps them
+  (for example the MaterialsCodeGraph run that produced them, or any object
+  store under the owner's own terms), referenced by pointer alone. Because
+  location is outside the identity, moving bytes, renaming a bucket, or adding
+  a mirror never changes the record's identity or orphans a value that cites
+  it. This is the operational form of the rule above: the open format keeps
+  the lineage and its identity, the bytes stay with their owner.
 * **Attribution flows both ways.** Downstream, reuse of map data must
   credit the map version and, through its provenance, the original
   sources: that is what the BY in CC BY 4.0 means. Upstream, every
