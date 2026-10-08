@@ -50,8 +50,8 @@ doubles as a semantic layer for AI: fuzzy natural-language labels resolve to
 typed, gated, content-addressed identities, so agents ground their language in
 checkable physics instead of text similarity. This
 document is the project's single source of truth. Part~I states the vision (why
-science needs a git-like object model). Part~II describes the product (the free
-protocol and the hosted app, the map, the parsers, the index, the contracts).
+science needs a git-like object model). Part~II describes the product (the open
+protocol, the map, the site's views, the parsers, the index, the contracts).
 Part~III records the architecture (the operator and representation layers, the
 two-worlds separation, the formal definitions, and the first thermal-transport
 demonstration). Part~IV documents the implemented kernel (dimension algebra and
@@ -318,40 +318,38 @@ repository collects them. The map compounds: every code mapped and every value
 attached makes the neighborhood more cross-checked, more reproducible, and more
 trustable.
 
-The picture has two tiers, the way git has GitHub. The \textbf{openmaterials
-protocol} is free and open forever: the map format, the hashing rules, the
-versioned change-log, the schemas, the parser contracts. The \textbf{openmaterials
-app} is a hosted service on top: upload a map and see it rendered instantly, or
-store your own custom and private maps. The protocol is the commons; the app is
-convenience built on it.
+Three things ship. The \textbf{openmaterials protocol} is free and open: the map
+format, the hashing rules, the versioned change-log, the schemas, the parser
+contracts. The \textbf{map} and its \textbf{index} are the shared data built
+through it. The \textbf{site} at \texttt{openmaterials.ai} serves views of both.
 
-\section{Protocol and app}
+\section{Protocol, map, and site}
 
 The protocol is a standard anyone can implement, self-host, and fork. The
 mother map and its index are the shared artifact the community builds through
 the protocol; they belong to no one and to everyone.
 
-The app (the website, a separate project) adds the hosted conveniences: paste
-and upload a map and have it rendered immediately in rich traversal views, the
-way mermaid.live renders a diagram with no setup, and optionally store custom or
-private maps. Anything hosted lives entirely app-side; it never touches the
-protocol or the commons. The app is free while we build it, and how it is funded
-later is out of scope here. The priority is the protocol and the map.
+The site is static pages served from \texttt{docs/} in this repository, plus a
+small Cloudflare Worker (\texttt{infra/site}) for the routes a static site cannot
+express. It offers views of the map; the playground, which opens records and
+\texttt{\#x=} links; permalinks for committed values under \texttt{/l/}; version
+badges; and a short-link store under \texttt{/s/}. The short-link store is the
+Worker's one write surface: a stored set is public by construction, and a set
+citing evidence outside the public registry is refused unless the request opts
+in. The site has no accounts and stores no private maps, and removing the Worker
+returns it to plain static hosting.
 
 The priority is explicit: first build the community that builds the mother map,
-and a rich initial map worth using. The app comes second. Protocol adoption is
-what makes the app valuable, the same way git had to matter before GitHub
-could.
+and a rich initial map worth using. The protocol and the map come first.
 
-The site already carries a first taste of the app: a Learn page that runs the
-paper parser as a public demo. Because that demo calls a paid model, it runs
-through a cost-gated Cloudflare Worker (\texttt{infra/learn-proxy}) rather than
-from the browser: the Worker holds a daily budget and per-IP limits and keeps the
-API key server-side, never shipping it to the page. The Learn page is also a
-contributor on-ramp: a value a reader accepts from the parser's output is
-exported as an instance JSON in the committed schema, with a prefilled GitHub pull
-request link, so contributing a value from a paper is one reviewed PR through the
-same gates the maintainers use.
+The playground's Learn tab runs the paper parser as a public demo. Because that
+demo calls a paid model, it runs through a cost-gated Cloudflare Worker
+(\texttt{infra/learn-proxy}) rather than from the browser: the Worker holds a
+daily budget and per-IP limits and keeps the API key server-side, never shipping
+it to the page. The Learn tab is also a contributor on-ramp: each value a reader
+accepts from the parser's output downloads as an instance JSON in the committed
+schema, and contributing it is one reviewed pull request through the same gates
+the maintainers use.
 
 \section{Structure and evidence}
 
@@ -371,7 +369,7 @@ simulation record). Evidence never creates structure: a
 simulation cannot invent a formula, it can only put a number on a node that
 already exists.
 
-The split is also a separation of concerns in the app. The map view renders the
+The split is also a separation of concerns on the site. The map view renders the
 structure alone (nodes, edges, formulas, and the code representations that map
 onto them); the four data record kinds beside the ledger (instances,
 configurations, spectra, and simulations) are a distinct evidence layer that
@@ -719,8 +717,9 @@ float-rounding discipline the configuration uid uses. Everything else rides
 \emph{outside} the hash: an optional \texttt{execution} block (code, version,
 seeds, wall time, whatever the run recorded); optional \texttt{artifacts}, which
 are pointer-only, each \texttt{\{path, role, url?, sha256?\}} where only path and
-role are required and the url points at the heavy bytes on MaterialsCodeGraph
-(MCG), the cheap host, never embedding them; a \texttt{mirrors} resolver; and the
+role are required and the url points at the heavy bytes wherever they are kept
+(for example the artifacts of the MaterialsCodeGraph (MCG) run that produced the
+record), never embedding them; a \texttt{mirrors} resolver; and the
 run's \texttt{results}. Attaching a trajectory pointer, moving its bytes, or
 re-running on another node therefore never re-mints the record. Because the
 record is light, it is URL-encodable: gzip and base64url pack it into a
@@ -1008,11 +1007,12 @@ output. This unit is opaque to two questions:
         steps.
 \end{itemize}
 
-A previous attempt of ours, \texttt{MaterialsCodeGraph} (MCG), addressed parts of this gap by
+An earlier design of \texttt{MaterialsCodeGraph} (MCG), the simulation platform that now
+records each run pinned to a map node as a lineage on this map, addressed parts of this gap by
 treating each instruction in an input file as the atomic unit of a knowledge graph and tracking
-inputs, parameters, and outputs at that level. MCG's tool-encapsulation principle (all tool
-knowledge in YAML/Markdown configs, all code generic over tool) was the right design at that
-level of abstraction. But the level of abstraction itself is too low: an instruction in an input
+inputs, parameters, and outputs at that level. That design's tool-encapsulation principle (all
+tool knowledge in YAML/Markdown configs, all code generic over tool) was right at that level of
+abstraction. But the level of abstraction itself is too low: an instruction in an input
 file is a syntactic unit, not a semantic one. It tells you what a code is told to do, not what
 \emph{physics} the code thereby computes. Two codes that compute the phonon dispersion via
 diagonalization of the dynamical matrix express that operation as different instructions; yet
@@ -3400,7 +3400,6 @@ order from here:
         CALPHAD, amset, ORCA, and OpenMM representations, and a whole-map physics review
         added the thermodynamic-identities domain and two closed-form supersedes
         (records 183-203).
-  \item \textbf{The app}, once the protocol and a rich mother map exist.
 \end{enumerate}
 
 % =====================================================================
