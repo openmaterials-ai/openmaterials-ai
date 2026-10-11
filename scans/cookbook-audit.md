@@ -2,7 +2,7 @@
 
 A systematic probe of the COSMO/EPFL Atomistic Cookbook
 (https://atomistic-cookbook.org, repo lab-cosmo/atomistic-cookbook,
-BSD-3-Clause) against the map's current coverage: 27 code rails
+BSD-3-Clause) against the map's current coverage: 27 code representations
 (`docs/data/codes.json`), 98 nodes (`docs/data/graph.json`), 10 domains
 (`omai/map_data.py`). Companion catalog: `scans/cookbook-audit.json`.
 Statuses: `covered` / `gap-code` / `gap-node` / `gap-edge`.
@@ -24,24 +24,24 @@ That is exactly where Giuseppe's missing-nodes worry is justified.
 
 ## The code-gap list (axis A)
 
-Cookbook codes absent from the 27 rails, with the encode call:
+Cookbook codes absent from the 27 representations, with the encode call:
 
 | Code | What it produces | Call |
 |---|---|---|
-| **i-PI** | PIMD trajectories, quantum kinetic-energy estimators, quantum heat capacity, instanton rates | **RAIL (top priority).** A Trajectory producer variant; the home of the whole nuclear-quantum-effects layer. |
-| **PLUMED** | free-energy surfaces, collective variables, metadynamics bias | **RAIL.** Producer for the biggest missing tier (free energy / PMF). |
-| **CP2K** | DFT energies, forces, stress, AIMD frames | **RAIL (medium).** Second first-principles engine; grounds existing DFT nodes. |
-| **eOn** | NEB / dimer reaction barriers, saddle geometries | **RAIL (medium).** Second producer for the existing ReactionBarrier[neb_mep] node. |
-| **GROMACS** | trajectories, dielectric/dipole response | RAIL (medium-low). MD producer variant; value is soft-matter reach. |
-| **metatensor / metatomic** | the calculator interface that delivers ML predictions | REPRESENTATION-ONLY. The MLIP delivery mechanism, not a physics rail; credit owed when PET models land. |
+| **i-PI** | PIMD trajectories, quantum kinetic-energy estimators, quantum heat capacity, instanton rates | **REPRESENTATION (top priority).** A Trajectory producer variant; the home of the whole nuclear-quantum-effects layer. |
+| **PLUMED** | free-energy surfaces, collective variables, metadynamics bias | **REPRESENTATION.** Producer for the biggest missing tier (free energy / PMF). |
+| **CP2K** | DFT energies, forces, stress, AIMD frames | **REPRESENTATION (medium).** Second first-principles engine; grounds existing DFT nodes. |
+| **eOn** | NEB / dimer reaction barriers, saddle geometries | **REPRESENTATION (medium).** Second producer for the existing ReactionBarrier[neb_mep] node. |
+| **GROMACS** | trajectories, dielectric/dipole response | REPRESENTATION (medium-low). MD producer variant; value is soft-matter reach. |
+| **metatensor / metatomic** | the calculator interface that delivers ML predictions | REPRESENTATION-ONLY. The MLIP delivery mechanism, not a codes.json entry of its own; credit owed when PET models land. |
 | **torch-pme** | long-range electrostatic energy inside potentials | OUT-OF-SCOPE. An energy contribution internal to a potential, no map-tier observable. |
 | **featomic** | SOAP / lambda-SOAP descriptors | OUT-OF-SCOPE. Model internals. |
 | **scikit-matter** | FPS/CUR selection, PCovR, convex hulls | OUT-OF-SCOPE. Data-science tooling. |
 | **chemiscope** | interactive structure viewer | OUT-OF-SCOPE. Pure visualization, computes no physics. |
-| kALDo, LAMMPS, ASE | (already rails) | COVERED. |
+| kALDo, LAMMPS, ASE | (already representations) | COVERED. |
 
-License confirmation is the gating item for i-PI and eOn before either rail
-is minted (the credits rule blocks an unlicensed rail).
+License confirmation is the gating item for i-PI and eOn before either representation
+is minted (the credits rule blocks an unlicensed representation).
 
 ## The new-node candidates (axis B)
 
@@ -101,21 +101,21 @@ false-merge check against the existing 98.
 
 Ranked by breadth of field use x fit to the map's existing tiers.
 
-1. **i-PI rail + PIMD Trajectory producer** - ring-polymer sampling of the
-   quantum partition function; one rail opens the entire NQE layer.
+1. **i-PI representation + PIMD Trajectory producer** - ring-polymer sampling of the
+   quantum partition function; one representation opens the entire NQE layer.
 2. **FreeEnergySurface / PMF node** - F(s) = -kT ln P(s) along a CV; the single
    biggest missing tier, function-valued, fits the spectrum contract.
-3. **PLUMED rail** - the metadynamics producer for candidate 2; ubiquitous.
+3. **PLUMED representation** - the metadynamics producer for candidate 2; ubiquitous.
 4. **ElectronicDOS node** - g(E), Fermi level, gap; parent of BandGap; guard
    the PhononDOS false-merge.
-5. **eOn rail + second NEB/saddle producer** - strengthens ReactionBarrier
+5. **eOn representation + second NEB/saddle producer** - strengthens ReactionBarrier
    [neb_mep] with a second producer.
 6. **IRAbsorptionSpectrum node + dipole-ACF producer** - reuses the existing
    Green-Kubo machinery; classic observable.
 7. **QuantumHeatCapacity as a HeatCapacity producer variant** - small
-   increment on the i-PI rail; grounds an existing node with a quantum
+   increment on the i-PI representation; grounds an existing node with a quantum
    estimator.
-8. **CP2K rail** - second first-principles engine; nodes already exist, low
+8. **CP2K representation** - second first-principles engine; nodes already exist, low
    new-node cost.
 9. **PolarizabilityTensor node** - molecular optical response; distinct from
    the bulk dielectric tensor.
@@ -147,7 +147,7 @@ lattice thermal conductivity, already covered by kALDo, not Seebeck/ZT).
 
 Carried verbatim in the JSON `open_questions` field. The load-bearing ones:
 
-1. i-PI and eOn licenses must be confirmed before a rail is minted (credits
+1. i-PI and eOn licenses must be confirmed before a representation is minted (credits
    rule).
 2. Method-tagged siblings vs standalone nodes for the quantum estimators
    (QuantumHeatCapacity, QuantumKineticEnergy) - a kernel/tiering decision.
@@ -163,16 +163,16 @@ Carried verbatim in the JSON `open_questions` field. The load-bearing ones:
 
 Adversarial deep review of commit `160eb74`'s audit (three axes, top-10 rank).
 Default-to-distrust pass. Ground truth re-read at HEAD from
-`docs/data/codes.json` (**27 rails**), `docs/data/graph.json` (**98 nodes**),
+`docs/data/codes.json` (**27 representations**), `docs/data/graph.json` (**98 nodes**),
 `omai/map_data.py` (10 domains). Cookbook re-opened by WebFetch of
 `atomistic-cookbook.org` and each cited recipe page; licenses pulled from the
-five rail repos' own LICENSE files; citations checked against the publishers.
+five representation repos' own LICENSE files; citations checked against the publishers.
 **Em-dash grep over both files: zero.**
 
 ### Sweep verification
 
-- **Ground truth CONFIRMED.** 27 rails, 98 nodes. No `i-pi`/`plumed`/`cp2k`/
-  `eon`/`gromacs` key exists in `codes.json` (grep-verified): every rail
+- **Ground truth CONFIRMED.** 27 representations, 98 nodes. No `i-pi`/`plumed`/`cp2k`/
+  `eon`/`gromacs` key exists in `codes.json` (grep-verified): every representation
   candidate is genuinely absent. `PhononDOS` present, no electronic DOS.
   `HelmholtzFreeEnergy`, `MolarHelmholtzFreeEnergy`, `MolarGibbsEnergy`,
   `QHAGibbsEnergy` all present (all scalar). `ReactionBarrier[construction=
@@ -202,12 +202,12 @@ five rail repos' own LICENSE files; citations checked against the publishers.
   consistent with the JSON's "LAMMPS/i-PI" producer); thermal-conductivity-bte
   (kALDo, covered). **The sweep is trustworthy.**
 
-### The credits-readiness table (five rail candidates)
+### The credits-readiness table (five representation candidates)
 
 All five licenses verified from primary sources; each JSON entry now carries
 `credits_ready: true`. No invented DOIs. Open question 1 is **RESOLVED**.
 
-| Rail | License (verified 2026-07-11) | Canonical citation | DOI |
+| Representation | License (verified 2026-07-11) | Canonical citation | DOI |
 |---|---|---|---|
 | **i-PI** | **dual GPL-2.0 / MIT** (user's choice; `licenses/LICENSE.md`: "distributed under both the GPL and MIT licenses") | Y. Litman, V. Kapil, Y. M. Y. Feldman, et al., i-PI 3.0, J. Chem. Phys. **161**, 062504 (2024) | 10.1063/5.0215869 |
 | **PLUMED** | **LGPL-3.0** (`COPYING.LESSER`) | G. A. Tribello, M. Bonomi, D. Branduardi, C. Camilloni, G. Bussi, PLUMED 2, Comput. Phys. Commun. **185**, 604 (2014) | 10.1016/j.cpc.2013.09.018 |
@@ -298,7 +298,7 @@ four out-of-scope calls state their reasoning and it is **sound**.
 
 Full list in the JSON `orchestrator_decisions`. Load-bearing outcomes:
 
-1. **Rails credits-clear now.** All five rail candidate licenses + citations are
+1. **Representations credits-clear now.** All five representation candidate licenses + citations are
    verified and recorded; the credits rule no longer blocks any of them.
 2. **Kernel gate.** Multi-CV FES and ElectronDensity both need a field / multi-
    axis evidence kernel that does not exist yet. The 1-CV PMF is encodable under
@@ -314,19 +314,19 @@ Full list in the JSON `orchestrator_decisions`. Load-bearing outcomes:
 - **The kaldo delta lands first.** It is a same-family increment on the existing
   thermal-transport DAG; the cookbook slices open a **new** layer and should not
   preempt it.
-- **Slice 1: i-PI rail + PIMD Trajectory producer + QuantumKineticEnergy node +
-  QuantumHeatCapacity[method=pimd] producer variant.** One credits-clear rail
+- **Slice 1: i-PI representation + PIMD Trajectory producer + QuantumKineticEnergy node +
+  QuantumHeatCapacity[method=pimd] producer variant.** One credits-clear representation
   (dual GPL/MIT) unlocks the entire nuclear-quantum-effects layer, grounds an
   existing node (HeatCapacity) with a new estimator, and adds exactly one clean
   new node (QuantumKineticEnergy) with no false-merge and no kernel dependency.
   Highest value-per-encode, zero kernel blockers, adjacent to the MD/thermo core
   the kaldo delta just touched.
-- **Slice 2: PLUMED rail + 1-CV PMF node** (FreeEnergySurface restricted to one
+- **Slice 2: PLUMED representation + 1-CV PMF node** (FreeEnergySurface restricted to one
   collective variable). Biggest missing tier, credits-clear (LGPL-3.0); the
   1-CV restriction keeps it inside the current spectrum contract, so no kernel
   work is needed first. Defer multi-CV FES to the field kernel.
 - **Slice 3: ElectronicDOS node** (spectrum-layer), PhononDOS false-merge
-  guarded explicitly; parent of the existing BandGap; no new rail required (any
+  guarded explicitly; parent of the existing BandGap; no new representation required (any
   DFT engine or PET-MAD-DOS produces it).
 - **Then** (all credits-ready, ranked, kernel-permitting): eOn + second NEB
   producer, IRAbsorptionSpectrum + dipole-ACF, CP2K, PolarizabilityTensor,

@@ -1,7 +1,7 @@
 r"""mp-api / Materials Project adapter specs for the stability domain.
 
-The stability slice of the map's first DATABASE rail (see the module docstring
-in `omai.dft_ground_state.representation.mp_api` for what "database rail" means:
+The stability slice of the map's first DATABASE representation (see the module docstring
+in `omai.dft_ground_state.representation.mp_api` for what "database representation" means:
 MP retrieves precomputed VASP-workflow values, it does not run the producing
 operators). Anchored in `scans/mp-api-atomistic-skills.json` (deep review
 2026-07-09; emmet-core 0.85.1 fields read from source). Pins: mp-api 0.41.2 /

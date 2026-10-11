@@ -142,7 +142,7 @@ def run_pipeline(pdf_path: str | Path, *, client=None, map_version: str | None =
         # range that truncates, down to single pages; parts that succeed are
         # never re-run, the union machinery merges duplicates across chunk
         # boundaries, and pages offset back to whole-document numbering. A
-        # SINGLE page that overflows the budget raises honestly.
+        # SINGLE page that overflows the budget still raises.
         n = len(ingested.pages)
         work = [(lo, min(lo + 12, n)) for lo in range(0, n, 12)]
         detected = []

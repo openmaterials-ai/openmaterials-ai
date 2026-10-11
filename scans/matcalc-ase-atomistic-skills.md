@@ -60,23 +60,23 @@ the PES around that equilibrium. `run_pes_calc` dispatches to the ASE backend
 `get_forces()`, `get_stress(voigt=False)` (`backend/_ase.py:147-163`).
 
 > **matcalc = discretization/scheme layer over the MLIP PES.** Every node it
-> "produces" is already grounded by a rail (MLIP E/F/S, phonopy, phono3py,
+> "produces" is already grounded by a representation (MLIP E/F/S, phonopy, phono3py,
 > pymatgen). Its VALUE is the *discretization* (which strains, which volume grid,
-> which supercell/mesh), which is a scheme ON the operator, not a new rail.
+> which supercell/mesh), which is a scheme ON the operator, not a new representation.
 
-## Rail vs schemes: the recommendation (schemes-on-operators, like atomate2)
+## Representation vs schemes: the recommendation (schemes-on-operators, like atomate2)
 
 **Recommendation: encode matcalc as an `OperatorRepresentationSpec` (a
-scheme/discretization layer) on the operators, NOT as a separate rail.** This is
+scheme/discretization layer) on the operators, NOT as a separate representation.** This is
 the same treatment the orchestrator gave atomate2 (whose makers live in
-operator-spec schemes, no separate rail).
+operator-spec schemes, no separate representation).
 
-Evidence that matcalc is schemes, not a rail:
+Evidence that matcalc is schemes, not a representation:
 
 1. **It never mints a new unit basis of its own.** E/F/S come straight off the
    ASE calculator; phonons straight from phonopy; kappa straight from phono3py;
    EOS bulk modulus straight from pymatgen `BirchMurnaghan.b0_GPa`; elastic VRH
-   straight from pymatgen `ElasticTensor`. Every output node is rail-grounded
+   straight from pymatgen `ElasticTensor`. Every output node is representation-grounded
    already.
 2. **The calculators are thin orchestrators** of ASE/phonopy/pymatgen:
    `RelaxCalc` wraps `ase.optimize` + `FrechetCellFilter`; `MDCalc` wraps
@@ -88,7 +88,7 @@ Evidence that matcalc is schemes, not a rail:
    analog for the MLIP side.
 
 But matcalc is a **harder** case than atomate2, and the facts must be stated
-honestly:
+exactly:
 
 - **matcalc's fit IS physics.** `ElasticityCalc._elastic_tensor_from_strains`
   (`_elasticity.py:182-224`) does the `np.polyfit(strain, stress, 1)` ITSELF,
@@ -103,7 +103,7 @@ The correct reading of this is that matcalc carries **genuine, matcalc-owned
 discretization schemes** (strain grid, EOS volume grid, supercell / mesh /
 displacement, optimizer / fmax / cell-filter, ensemble), and those schemes belong
 ON the operator representation exactly as atomate2's INCAR flags do. This
-**reinforces** schemes-on-operators; it does not argue for a rail. Provenance of
+**reinforces** schemes-on-operators; it does not argue for a representation. Provenance of
 every derived node must record BOTH the matcalc driver+scheme AND the MLIP
 checkpoint (the double-provenance the mlip scan already flagged: matcalc is the
 "true producer" of elastic/EOS/phonon results, but only via the MLIP PES).
@@ -136,14 +136,14 @@ beyond hosting a calculator:
 vocabulary (`optimizer` in {FIRE, BFGS, ...}, `cell_filter` in {FrechetCellFilter,
 ...}, `ensemble` in the 13 MD variants), not new ase code entries. The
 Structure-via-relax and Trajectory-via-MD productions are ASE operations already
-grounded by other rails.
+grounded by other representations.
 
 ## Entry counts by status (13 entries after review)
 
 - **already-mapped: 6** - matcalc-relax-structure (`Structure`),
   matcalc-relax-energy-forces-stress (`TotalEnergy`/`Forces`/`Stress`),
   matcalc-phonon3-thermal-conductivity (`ThermalConductivity[rta]`,
-  `ForceConstants[order=3]`; drives phono3py rail), matcalc-md-trajectory
+  `ForceConstants[order=3]`; drives phono3py representation), matcalc-md-trajectory
   (`Trajectory`; the ASE-delta headline), matcalc-formation-cohesive-energy
   (`FormationEnergy`; capability-only), matcalc-surface-energy (`SurfaceEnergy`;
   capability-only).
@@ -230,7 +230,7 @@ grounded by other rails.
    `mat-surface-adsorption` (`AdsorptionCalc`), `mat-sample-pes-by-md` (`RelaxCalc`
    pre-relax only). Killed: `MDCalc`/`SurfaceCalc`/`EnergeticsCalc`/`PhononCalc-via-
    solid-free-energy` were never skill-driven.
-2. Rail vs schemes: recommendation is schemes-on-operators (like atomate2),
+2. Representation vs schemes: recommendation is schemes-on-operators (like atomate2),
    confirmed by the live `matcalc.units` read (mints no unit basis, only
    `eVA3ToGPa`). Orchestrator to decide WHERE the matcalc-scheme + MLIP-checkpoint
    double-provenance lands.

@@ -323,7 +323,7 @@ def test_new_units_carry_the_full_precision_factors():
 
 
 # --------------------------------------------------------------------------
-# The pymatgen representation rail.
+# The pymatgen representation.
 # --------------------------------------------------------------------------
 
 def test_pymatgen_covers_the_stability_and_magnetism_nodes():
@@ -337,8 +337,8 @@ def test_pymatgen_covers_the_stability_and_magnetism_nodes():
     assert pmg["MagneticMoment"]["unit"] == "mu_B"
 
 
-def test_pymatgen_rail_spans_the_catalogs_already_mapped_spaces():
-    """The pymatgen code rail covers the scan's already-mapped SPACES (the
+def test_pymatgen_representation_spans_the_catalogs_already_mapped_spaces():
+    """The pymatgen code representation covers the scan's already-mapped SPACES (the
     three promoted parameters CellVolume / AtomicMass / AtomCount have no
     Space to represent) plus the seven new nodes of the two contributions."""
     from omai.map_data import build_codes
@@ -548,16 +548,16 @@ def test_adsorption_edge_is_skipped_not_a_violation():
     ), report["violation"]
 
 
-def test_mat_surface_adsorption_is_the_rail_not_matcalc():
-    """Per the atomate2 ruling, matcalc mints no rail: the AdsorptionEnergy
-    coverage lands on the driving skill rail (mat-surface-adsorption), with
+def test_mat_surface_adsorption_is_the_representation_not_matcalc():
+    """Per the atomate2 ruling, matcalc mints no representation: the AdsorptionEnergy
+    coverage lands on the driving skill representation (mat-surface-adsorption), with
     matcalc recorded in the notes."""
     from omai.map_data import build_codes
 
     codes = build_codes(DOMAINS)
     assert "matcalc" not in codes
-    rail = codes["mat-surface-adsorption"]
-    assert rail["AdsorptionEnergy"]["unit"] == "ev"
+    representation = codes["mat-surface-adsorption"]
+    assert representation["AdsorptionEnergy"]["unit"] == "ev"
     from omai.stability.representation.mat_surface_adsorption import (
         MATCALC_ADSORPTION_ENERGY,
     )
@@ -694,7 +694,7 @@ def test_grain_boundary_edge_is_skipped_not_a_violation():
     ), report["violation"]
 
 
-def test_grain_boundary_energy_on_the_pymatgen_rail():
+def test_grain_boundary_energy_on_the_pymatgen_representation():
     from omai.map_data import build_codes
 
     codes = build_codes(DOMAINS)
@@ -774,8 +774,8 @@ def test_grain_boundary_energy_instances_pin_the_live_node_uid():
     assert "TensorNet" in s5["conditions"]["model"]
 
 
-def test_mattergen_and_diffcsp_are_structure_provenance_rails():
-    """The two structure-generation rails: each represents the Structure SOURCE
+def test_mattergen_and_diffcsp_are_structure_provenance_representations():
+    """The two structure-generation representations: each represents the Structure SOURCE
     node as a generator-provenance annotation, NOT a producing edge (Structure
     keeps zero inbound links)."""
     from omai.map_data import build_codes, build_graph_dict
@@ -783,7 +783,7 @@ def test_mattergen_and_diffcsp_are_structure_provenance_rails():
     codes = build_codes(DOMAINS)
     assert set(codes["mattergen"]) == {"Structure"}
     assert set(codes["diffcsp"]) == {"Structure"}
-    # smact earns no rail (env-only, zero call sites).
+    # smact earns no representation (env-only, zero call sites).
     assert "smact" not in codes
     # Structure stays a pure source: no link targets it.
     g = build_graph_dict(DOMAINS)

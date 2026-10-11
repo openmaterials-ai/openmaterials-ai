@@ -1,11 +1,11 @@
-"""The mp-api / Materials Project representation rail (mp-api scan, arXiv 2605.24002).
+"""The mp-api / Materials Project representation (mp-api scan, arXiv 2605.24002).
 
-The map's FIRST database rail: MP is a DATABASE, not an engine. Its artifacts
+The map's FIRST database representation: MP is a DATABASE, not an engine. Its artifacts
 are document-model records that mp_api.client.MPRester retrieves, each carrying
-an already-computed VASP-workflow value for a mapped quantity. The rail is
+an already-computed VASP-workflow value for a mapped quantity. The representation is
 REPRESENTATION-ONLY (no new nodes, no operator specs: MP retrieves, it does not
 run the producing operators) and cross-domain (dft, stability, mechanics,
-thermal share the one rail, exactly as the vasp rail does).
+thermal share the one representation, exactly as the vasp representation does).
 
 Anchored in scans/mp-api-atomistic-skills.json (deep review 2026-07-09,
 emmet-core 0.85.1 fields read from source). Two load-bearing unit traps:
@@ -25,16 +25,16 @@ from omai.operator.identity import node_id
 
 
 # --------------------------------------------------------------------------
-# The rail is a cross-domain DATABASE rail with exactly the review-verified
+# The representation is a cross-domain DATABASE representation with exactly the review-verified
 # space specs and no operator specs.
 # --------------------------------------------------------------------------
 
-def test_mp_api_rail_spans_four_domains_in_build_codes():
-    """The mp-api rail is cross-domain like the vasp rail: dft
+def test_mp_api_representation_spans_four_domains_in_build_codes():
+    """The mp-api representation is cross-domain like the vasp representation: dft
     (Structure/MagneticMoment/BandGap), stability
     (FormationEnergy/EnergyAboveHull/SurfaceEnergy/Voltage), mechanics
     (ElasticConstants/BulkModulus/ShearModulus/YoungsModulus/PoissonRatio),
-    thermal (DielectricTensor) = thirteen space specs on one rail."""
+    thermal (DielectricTensor) = thirteen space specs on one representation."""
     mp = build_codes(DOMAINS)["mp-api"]
     assert set(mp) == {
         "Structure", "MagneticMoment", "BandGap",
@@ -67,9 +67,9 @@ def test_mp_api_declared_units_are_the_review_verified_ones():
 
 def test_mp_api_declares_no_operator_specs():
     """MP retrieves precomputed values; it does not run the producing
-    operators, so the rail carries only SpaceRepresentationSpecs (the
+    operators, so the representation carries only SpaceRepresentationSpecs (the
     VASP-workflow provenance lives in the spec notes via thermo_type). No
-    OperatorRepresentationSpec anywhere in the rail's four modules."""
+    OperatorRepresentationSpec anywhere in the representation's four modules."""
     import importlib
     import pkgutil
 
@@ -89,7 +89,7 @@ def test_mp_api_declares_no_operator_specs():
                 obj = getattr(mod, attr)
                 if isinstance(obj, OperatorRepresentationSpec):
                     assert obj.representation_name != "mp-api", (
-                        f"mp-api rail must not carry operator specs: {attr}"
+                        f"mp-api representation must not carry operator specs: {attr}"
                     )
                 if (isinstance(obj, SpaceRepresentationSpec)
                         and obj.representation_name == "mp-api"):
@@ -161,8 +161,8 @@ def test_mp_api_band_gap_records_the_ks_gap_caveat():
     assert "thermo_type" in notes  # the provenance handle
 
 
-def test_mp_api_is_named_the_first_database_rail():
-    """The rail's identity as a DATABASE (not an engine) is stated plainly in
+def test_mp_api_is_named_the_first_database_representation():
+    """The representation's identity as a DATABASE (not an engine) is stated plainly in
     the notes, per the orchestrator decision."""
     from omai.dft_ground_state.representation.mp_api import MP_API_STRUCTURE
 
@@ -170,7 +170,7 @@ def test_mp_api_is_named_the_first_database_rail():
     assert "RETRIEVAL" in MP_API_STRUCTURE.notes
     from omai.dft_ground_state.representation import mp_api as dft_mp_api
     assert "DATABASE" in dft_mp_api.__doc__
-    assert "FIRST database rail" in dft_mp_api.__doc__
+    assert "FIRST database representation" in dft_mp_api.__doc__
 
 
 # --------------------------------------------------------------------------

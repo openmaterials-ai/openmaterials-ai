@@ -288,7 +288,7 @@ def test_mechanics_representation_package_discovery_finds_the_specs():
     (the finite-strain fit and the two isotropic contractions); vasp
     (2026-07-09, atomate2/VASP scan) one space spec (ElasticConstants, the
     OUTCAR IBRION=6 kbar route) and one operator spec (compute_elastic_constants);
-    mp-api (2026-07-09, the DATABASE rail) five space specs (the tensor and the
+    mp-api (2026-07-09, the DATABASE representation) five space specs (the tensor and the
     four scalar reductions, GPa moduli and SI-Pa Young's) and no operator specs;
     mat_equation_of_state (2026-07-10, matcalc/ASE scan) one space spec
     (BulkModulus, the EOS Birch-Murnaghan route) and one operator spec
@@ -418,9 +418,9 @@ def test_compute_bulk_modulus_eos_wiring_and_scheme():
     assert not compute_bulk_modulus_eos.is_executable_in_sympy
 
 
-def test_eos_bulk_modulus_rail_is_the_skill_not_matcalc():
+def test_eos_bulk_modulus_representation_is_the_skill_not_matcalc():
     """The EOS BulkModulus coverage lands on mat-equation-of-state (the driving
-    skill rail), not a matcalc rail (the atomate2 ruling)."""
+    skill representation), not a matcalc representation (the atomate2 ruling)."""
     from omai.map_data import build_codes
 
     codes = build_codes(DOMAINS)

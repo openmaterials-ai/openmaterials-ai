@@ -11,7 +11,7 @@ SI is the identity (dimScale SI SI d = 1), and conversions between any two unit
 systems round-trip (dimScale is transitive). These are the load-bearing facts
 that make "the map's values live in a definite unit system, provably" true.
 
-Scope is honest: physlib's dimScale is noncomputable and its UnitChoices has
+Scope is limited: physlib's dimScale is noncomputable and its UnitChoices has
 five bases (no mole), so this is the anchor, not a proof of every numeric
 conversion factor. The per-unit si_scale values remain the Python source of
 truth for actual conversion (tested against 29 codes); this file certifies the

@@ -198,7 +198,7 @@ MACE_SOLVE_GROUND_STATE = OperatorRepresentationSpec(
         "volume scan n_points, supercell / mesh / displacement, optimizer / "
         "fmax / cell_filter, all matcalc-owned discretizations) AND this MACE "
         "checkpoint (the true PES). matcalc mints no unit basis of its own "
-        "(only eVA3ToGPa, a scipy conversion), so it earns no rail; its "
+        "(only eVA3ToGPa, a scipy conversion), so it earns no representation; its "
         "discretization schemes ride the driven-node operator specs, this "
         "checkpoint is the physics, and both must be recorded for the derived "
         "value to be reproducible."

@@ -34,7 +34,7 @@ function resolveId(instances, hash) {
 
 // Resolve a full id or prefix against the projection, git-style.
 // {ok: true, entry} on a unique match; {ok: false, ambiguous: [ids...]} when
-// the prefix names several (honesty over guessing); {ok: false} on none.
+// the prefix names several (never a guess); {ok: false} on none.
 function resolvePrefix(instances, prefix) {
   const list = Array.isArray(instances) ? instances : [];
   const matches = [];
@@ -122,7 +122,7 @@ function permalinkHTML(entry, origin) {
 `;
 }
 
-// The honest empty state: names the hash verbatim, links to the map,
+// The empty state: names the hash verbatim, links to the map,
 // fabricates nothing.
 function notFoundHTML(hash, origin) {
   return `<!doctype html>
@@ -138,7 +138,7 @@ map.</p>
 `;
 }
 
-// The honest fork for an ambiguous prefix: name every match, pick nothing.
+// The fork for an ambiguous prefix: name every match, pick nothing.
 function ambiguousHTML(prefix, ids, origin) {
   const rows = ids
     .map((id) => `<li><a href="${esc(origin)}/l/${esc(id)}"><code>${esc(id.slice(0, 12))}</code></a></li>`)
@@ -234,7 +234,7 @@ version.</p>
 `;
 }
 
-// The honesty gate for the speaking form: the namespace in the URL must be
+// The namespace check for the speaking form: the namespace in the URL must be
 // the id's own in-hash source.
 function sourceMismatchHTML(claimedRef, entry, origin) {
   const actual = entrySourceRef(entry);

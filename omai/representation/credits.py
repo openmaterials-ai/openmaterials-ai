@@ -5,7 +5,7 @@ carry its license. A code representation that appears on the map without both is
 gap: the enforcement test (tests/test_code_credits.py) fails when a discovered
 representation_name has no CODE_CREDITS entry, when its citation or license is
 empty, or when its license is "UNKNOWN" without an explicit ALLOWED_UNKNOWN
-waiver. Future rails cannot land uncredited.
+waiver. Future representations cannot land uncredited.
 
 THE SOURCING BAR (how each field below was obtained):
 
@@ -25,13 +25,13 @@ THE SOURCING BAR (how each field below was obtained):
     verified against a fetch of the project's citation page. DOIs are recorded
     only when verified; an unverifiable reference keeps doi=None with a note.
 
-  * The mat-* skill rails (mat-elasticity, mat-diffusion-analysis,
+  * The mat-* skill representations (mat-elasticity, mat-diffusion-analysis,
     mat-equation-of-state, mat-surface-adsorption) are AtomisticSkills skills:
     they cite the AtomisticSkills paper (arXiv:2605.24002) and carry its MIT
-    license (AtomisticSkills/LICENSE). The underlying-code rails they drive
+    license (AtomisticSkills/LICENSE). The underlying-code representations they drive
     (mace, matgl, fairchem, ...) cite THAT code's own method paper.
 
-Schema per rail (keyed by representation_name):
+Schema per representation (keyed by representation_name):
 
     {
       "name": str,              # the code's display name, as its project writes it
@@ -384,7 +384,7 @@ CODE_CREDITS: dict[str, dict] = {
         "orcaforum / FACCTs (no open-source license file exists)",
         "url": "https://www.faccts.de/orca/",
     },
-    # --- AtomisticSkills skill rails (cite the AtomisticSkills paper) ---------
+    # --- AtomisticSkills skill representations (cite the AtomisticSkills paper) ---------
     "mat-elasticity": {
         "name": "AtomisticSkills mat-elasticity",
         "citation": "B. Deng, B. Li, M. Cox, et al., Harnessing AtomisticSkills "
@@ -443,10 +443,10 @@ CODE_CREDITS: dict[str, dict] = {
     },
 }
 
-# Per-rail overrides: a code can serve nodes through DIFFERENT methods, and a
+# Per-representation overrides: a code can serve nodes through DIFFERENT methods, and a
 # node's citation must name the method that actually produced it. Keyed by
 # (representation_name, node id as it appears on the map); each value meets the
 # same bar as a CODE_CREDITS entry. build_codes applies these after the
 # code-level credit, and the enforcement test fails on an override that points
-# at a rail/node pair not present on the map.
+# at a representation/node pair not present on the map.
 PER_NODE_CREDITS: dict[tuple[str, str], dict] = {}

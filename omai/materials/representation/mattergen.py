@@ -1,4 +1,4 @@
-r"""MatterGen adapter spec for the materials domain (a Structure PRODUCER rail).
+r"""MatterGen adapter spec for the materials domain (a Structure PRODUCER representation).
 
 The structure-generation scan (scans/structure-gen-atomistic-skills.json)
 catalogs MatterGen (ml-generative-mattergen), a diffusion model that SAMPLES
@@ -19,7 +19,7 @@ physics result. Making a generate_structure edge first-class would INVERT the
 source topology for an artifact that is always relaxed away, and would mis-model
 the conditioning (a training / steering LABEL) as a consumed field. If Phase 2
 ever wants a first-class edge it is a deliberate KERNEL decision, and even then
-the honest edge is generator -> Structure with conditioning as a LABEL, never an
+the correct edge is generator -> Structure with conditioning as a LABEL, never an
 edge from a property node.
 
 The generator-provenance SCHEMA carried by the notes below: {checkpoint /

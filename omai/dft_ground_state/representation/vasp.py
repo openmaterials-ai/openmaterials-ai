@@ -3,8 +3,8 @@ r"""VASP adapter specs for the DFT ground-state domain.
 VASP is the DFT engine AtomisticSkills (arXiv 2605.24002) drives through
 atomate2, anchored in `scans/atomate2-vasp-atomistic-skills.json` (review
 2026-07-09; every maker class and TaskDoc field verified against the atomate2
-0.1.4 and emmet-core 0.87.1 wheels). This is the "vasp" rail, NOT a separate
-"atomate2" rail: atomate2 is the workflow layer, and its maker classes and
+0.1.4 and emmet-core 0.87.1 wheels). This is the "vasp" representation, NOT a separate
+"atomate2" representation: atomate2 is the workflow layer, and its maker classes and
 TaskDoc paths are recorded inside these specs' code_api and notes. VASP is a
 SECOND representation of every node QE already grounds (TotalEnergy, Forces,
 Stress, Structure), plus MagneticMoment (pymatgen scan) and the electronic
@@ -125,7 +125,7 @@ VASP_FORCES = SpaceRepresentationSpec(
     notes=(
         "Per-atom Cartesian Hellmann-Feynman forces in eV/A (VASP native; "
         "emmet OutputDoc.forces 'units of eV/A'), shape (n_atoms, 3). Same "
-        "unit as the map's Forces node and the MLIP rails; QE grounds the "
+        "unit as the map's Forces node and the MLIP representations; QE grounds the "
         "same node in Ry/bohr (factor 25.71104309541616). "
         "Vasprun.forces[-1] takes the FINAL ionic step "
         "(vasp_parser.py:68-71); the finite-displacement route to "

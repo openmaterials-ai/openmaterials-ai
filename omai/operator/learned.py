@@ -96,7 +96,7 @@ class LearnedOperator(Operator):
     # mints a new model_ref: same topology, new claim.
     model_ref: str = ""
     # References to the label sources the model was trained on (dataset
-    # rails, paper refs, campaign hashes). Same citation discipline as
+    # representations, paper refs, campaign hashes). Same citation discipline as
     # evidence: a surrogate that cannot cite its labels does not enter.
     trained_on: tuple[str, ...] = ()
     # Prose statement of the domain of validity (material classes, ranges,

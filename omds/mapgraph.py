@@ -5,7 +5,7 @@ are near when few operators separate them. Distance is the shortest
 undirected path, capped at MAX_HOPS and normalized to [0, 1]. A qualified id
 that is not itself a node falls back to its base name; two ids sharing only
 the base name differ by QUALIFIER_PENALTY. Off-map ids compare as strings
-(0 or 1): honest degradation, never a guess. The graph is read-only here;
+(0 or 1): explicit degradation, never a guess. The graph is read-only here;
 metric bindings never touch the map files."""
 from __future__ import annotations
 

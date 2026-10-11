@@ -5,9 +5,9 @@ The AtomisticSkills mat-equation-of-state skill, driving matcalc 0.5.1's
 EOSCalc over an MLIP through the ASE calculator protocol, is the
 Birch-Murnaghan E(V) producer of the BulkModulus node along the Pattern C
 alternative route compute_bulk_modulus_eos. This is the "mat-equation-of-state"
-skill rail, NOT a separate "matcalc" rail: per the atomate2 ruling, matcalc is
+skill representation, NOT a separate "matcalc" representation: per the atomate2 ruling, matcalc is
 a driver layer that mints no unit basis of its own, so it lives in these specs'
-notes, not as a rail. Anchored in
+notes, not as a representation. Anchored in
 `scans/matcalc-ase-atomistic-skills.json` (deep review 2026-07-09, the entry
 matcalc-eos-bulk-modulus, package-source-verified against the pip-downloaded
 matcalc-0.5.1 sdist and re-anchored to the real skill script). AtomisticSkills
@@ -25,7 +25,7 @@ This is a SECOND estimator of the SAME BulkModulus node, distinct from the
 mat-elasticity ElasticityCalc bulk_modulus_vrh (elastic-tensor VRH route):
 the EOS-curvature K vs the elastic-average K, same node tag, two physics
 routes (the two-bulk-moduli trap). matcalc is a DRIVER LAYER (the atomate2
-ruling: it mints no unit basis of its own), so it earns no separate rail; the
+ruling: it mints no unit basis of its own), so it earns no separate representation; the
 volume-scan grid is the operator discretization on the edge, and the
 MLIP-checkpoint double-provenance lives on the mace / matgl / fairchem
 Potential specs.
@@ -93,7 +93,7 @@ MATCALC_COMPUTE_BULK_MODULUS_EOS = OperatorRepresentationSpec(
     },
     notes=(
         "Realized by matcalc EOSCalc (a driver over the MLIP PES, no separate "
-        "rail): the method=birch_murnaghan scheme is the EOS model, and the "
+        "representation): the method=birch_murnaghan scheme is the EOS model, and the "
         "volume-scan grid (n_points, max_abs_strain) is the matcalc-owned "
         "discretization on this edge. Pattern C alternative producer of "
         "BulkModulus, parallel to contract_bulk_modulus (the elastic-tensor "

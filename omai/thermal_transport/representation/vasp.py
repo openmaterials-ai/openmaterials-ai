@@ -5,7 +5,7 @@ linear-response tensors the non-analytic correction needs, anchored in
 `scans/atomate2-vasp-atomistic-skills.json` (review 2026-07-09). These are the
 DFT-domain PRODUCERS (VASP LEPSILON directly, via pymatgen Outcar) of the same
 BornCharges / DielectricTensor nodes the pymatgen scan catalogs and QE grounds;
-a cross-domain rail like the pymatgen encode placed on these thermal nodes.
+a cross-domain representation like the pymatgen encode placed on these thermal nodes.
 
   operator Space    VASP artifact                                 units
   ----------------  --------------------------------------------  -------------

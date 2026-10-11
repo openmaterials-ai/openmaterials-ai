@@ -20,7 +20,7 @@ def test_edges_render_with_quoted_labels_and_types():
     assert "classDef observable" in out
 
 
-def test_lineage_walks_upstream_and_caps_honestly():
+def test_lineage_walks_upstream_and_states_its_cap():
     out = mermaid_lineage("PhononDOS")
     assert "compute dos" in out and "Frequency" in out
     # a deep node hits the cap and SAYS so

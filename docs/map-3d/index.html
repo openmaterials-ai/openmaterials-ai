@@ -282,14 +282,14 @@ function renderGraph(graph, links){
   // the camera to that tier's plane so its nodes (e.g. Sources: Structure,
   // Potential, Temperature) are in front of you.
   (function(){
-    const rail=document.getElementById('tiers'); if(!rail) return;
+    const bar=document.getElementById('tiers'); if(!bar) return;
     tierList.slice().reverse().forEach(t=>{
       const b=document.createElement('button');
       b.type='button'; b.textContent=t.name; b.setAttribute('aria-label','Fly to the '+t.name+' tier');
       b.onclick=()=>{ const ti=tierIndex[t.name];
         const y=(ti-(nTiers-1)/2)*TIER_STEP;
         Graph.cameraPosition({x:0,y:y+TIER_STEP*0.6,z:420},{x:0,y:y,z:0},REDUCE?0:900); };
-      rail.appendChild(b);
+      bar.appendChild(b);
     });
   })();
 

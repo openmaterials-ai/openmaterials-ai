@@ -369,7 +369,7 @@ _BTE_DIRECT_FORMULA_SYSTEM = sp.Eq(
 # definition of M is available as `_M_DEFINITION` for any consumer that
 # wants to render or symbolically substitute it. Together they fully pin
 # down the linearized BTE — modulo the BZ-summation strategy for the
-# inner Σ_{ν''} and the outer Σ_{q'}, which remains an honest
+# inner Σ_{ν''} and the outer Σ_{q'}, which remains a free
 # discretization choice (declared on per-code OperatorRepresentationSpecs).
 _BTE_DIRECT_FORMULA = _BTE_DIRECT_FORMULA_SYSTEM
 
@@ -1620,7 +1620,7 @@ compute_participation_ratio = Operator(
 # eigenvector-projected flux S_ij (derived from the eigenvectors), and the
 # total per-mode linewidth as the pair broadening. Opaque applied function, so
 # not sympy-executable; the dimensional gate SKIPS it (the kaldo unit chain
-# fixes it at mm^2/s, L^2 T^-1, on the rail).
+# fixes it at mm^2/s, L^2 T^-1, on the representation).
 _D_mode = sp.Symbol("D_{mode}")
 _D_qhgk_fn = sp.Function("D^{QHGK}")
 _omega_arg = sp.Symbol(r"\omega")

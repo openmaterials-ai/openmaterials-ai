@@ -21,7 +21,7 @@ Convention traps this module pins down (review-verified):
     route is DIFFERENT: it applies c_ij *= -0.1 (elastic.py:518-519, kbar +
     the VASP-stress sign flip) because it fits the raw compression-positive
     VASP stress; the direct OUTCAR modulus needs only *0.1.
-  * The mapped matcalc route (pymatgen mechanics rail) fits MLIP stresses in
+  * The mapped matcalc route (pymatgen mechanics representation) fits MLIP stresses in
     eV/A^3 (canonical 160.21766339999996 -> GPa); this OUTCAR/kbar route is an
     alternate representation, an EXPECTED_AGREE with it.
 """
@@ -54,7 +54,7 @@ VASP_ELASTIC_CONSTANTS = SpaceRepresentationSpec(
         "c_ij *= -0.1 (elastic.py:518-519) to flip the raw "
         "compression-positive VASP stress it fits. An ALTERNATE "
         "representation of the same node the matcalc/MLIP route grounds in "
-        "eV/A^3 (pymatgen mechanics rail, canonical 160.21766339999996 -> "
+        "eV/A^3 (pymatgen mechanics representation, canonical 160.21766339999996 -> "
         "GPa): the two are an EXPECTED_AGREE pair (DFT vs MLIP elastic "
         "tensor). atomate2's ElasticMaker (atomate2.vasp.flows.elastic, "
         "VERIFIED present in the 0.1.4 wheel as ElasticMaker(BaseElasticMaker)) "

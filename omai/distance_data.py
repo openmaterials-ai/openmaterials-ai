@@ -14,7 +14,7 @@ Two sections:
   glass, deterministic FPS), so regeneration is byte-stable.
 - ``committed``: pairwise default-metric distances between committed
   configuration records, when two or more exist. Today the commons holds one
-  configuration, so this section carries the honest count and an empty list;
+  configuration, so this section carries the count and an empty list;
   it grows by itself as configurations land.
 
 The writer needs the ``distance`` extras (POT and friends); the build wraps

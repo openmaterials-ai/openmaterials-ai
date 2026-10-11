@@ -46,7 +46,7 @@ def test_emitted_plus_skipped_account_for_every_equational_operator():
     # Every equational operator is either emitted or skipped, with no overlap.
     assert emitted_ops.isdisjoint(skipped_ops)
     assert eq_ops <= (emitted_ops | skipped_ops)
-    # Coverage is honest: skip reasons are non-empty strings.
+    # Coverage is accounted for: skip reasons are non-empty strings.
     assert all(isinstance(r, str) and r for _, r in stats["skipped"])
 
 

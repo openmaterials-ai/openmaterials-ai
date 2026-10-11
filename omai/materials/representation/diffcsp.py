@@ -1,11 +1,11 @@
-r"""DiffCSP++ adapter spec for the materials domain (a Structure PRODUCER rail).
+r"""DiffCSP++ adapter spec for the materials domain (a Structure PRODUCER representation).
 
 The structure-generation scan (scans/structure-gen-atomistic-skills.json)
 catalogs DiffCSP++ (ml-generative-diffcsp), a diffusion model that predicts
 crystal structures either symmetry-constrained (CSP: exact composition from
 space group + Wyckoff letters + atom types, mp_csp / perov_csp / mpts_csp) or
 unconditionally (Gen: mp_gen / perov_gen / carbon_gen). Under the same
-orchestrator ruling as the mattergen rail, a generated structure is a
+orchestrator ruling as the mattergen representation, a generated structure is a
 REPRESENTATION-ONLY provenance annotation on the Structure SOURCE node, NOT a
 producing edge: a generator NEVER gets an inbound producing edge into Structure,
 and a generated CIF is an INPUT ARTIFACT (immediately relaxed then E_hull-
@@ -30,7 +30,7 @@ SMACT is env-only: SMACT==3.2.0 is an installed dependency of diffcsp-agent /
 adit-agent / mattergen-agent, but has ZERO call sites across all 126 skills (the
 .md-verified sense). It is a dimension-free composition-validity FILTER (charge
 neutrality AND electronegativity ordering), not a physics quantity and not a
-Structure producer, so it earns NO rail; it is recorded only as this note.
+Structure producer, so it earns NO representation; it is recorded only as this note.
 
 Anchored: diffcsp_server.py:54-107 (generate_structures_with_symmetry);
 diffcsp_wrapper.py:574-630 (pyxtal Group Wyckoff ops -> PyG Data);
@@ -68,7 +68,7 @@ DIFFCSP_STRUCTURE = SpaceRepresentationSpec(
         "the whole skill set, a Wyckoff-operator table INSIDE this producer "
         "(pyxtal produces nothing on the map, from_random unused). SMACT is "
         "ENV-ONLY (SMACT==3.2.0 installed, ZERO call sites in the .md-verified "
-        "sense): a dimension-free composition-validity FILTER, no rail, this "
+        "sense): a dimension-free composition-validity FILTER, no representation, this "
         "note only. TRAPS: step_lr is a Langevin sampler knob, NOT physics; the "
         "pre-relaxation CSL / P1 cell need not be in a symmetrized setting. The "
         "generated CIF is always immediately relaxed by an MLIP then E_hull-"

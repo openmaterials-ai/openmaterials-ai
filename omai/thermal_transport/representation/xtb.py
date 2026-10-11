@@ -7,7 +7,7 @@ harmonic-oscillator (RRHO) partition function and the block prints, among
 enthalpy and entropy, the molar heat capacity at the requested temperature.
 The committed DGEBA evidence instance (397.7 J/(K mol) at 300 K, gas phase,
 GFN2-xTB, 0 imaginary modes) names `xtb 6.7.1` in its in-hash conditions;
-this rail records the interface that reproduces it.
+this representation records the interface that reproduces it.
 """
 from __future__ import annotations
 

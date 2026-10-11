@@ -7,7 +7,7 @@ node's physlib Dimension has the right shared-base exponents, and (2) every
 emitted lemma states a dimensional identity that ACTUALLY HOLDS, which is
 exactly what Lean's `decide` checks. A false lemma would fail `decide` in
 Lean; here it fails this test first. The real `lake build` against physlib is
-the honest remaining step, run outside CI (lean/check.sh)."""
+the remaining step, run outside CI (lean/check.sh)."""
 import re
 
 from omai.map_data import DOMAINS
@@ -67,7 +67,7 @@ def test_export_pins_the_map_version():
     src, stats = build_export()
     assert stats["map_version"] and stats["map_version"] in src
     assert stats["nodes_exported"] > 50
-    assert stats["nodes_omitted"] >= 1  # the honest boundary is real
+    assert stats["nodes_omitted"] >= 1  # the boundary is real
 
 
 def test_seven_base_module_covers_exactly_the_omitted_nodes():

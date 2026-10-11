@@ -28,12 +28,12 @@ node (via ase.md integrators + ase.io TrajectoryWriter, 13 ensembles), and
 it produces relaxed Structures (via ase.optimize optimizers + ase.filters
 cell filters; that Structure spec lives in
 omai.dft_ground_state.representation.ase, where the Structure node lives, and
-build_codes merges it into this one "ase" rail). The Potential entry gained
+build_codes merges it into this one "ase" representation). The Potential entry gained
 the matcalc-driver scheme
 vocabulary (optimizer in {FIRE, BFGS}, cell_filter in {FrechetCellFilter,
 ExpCellFilter}, ensemble the 13 MD variants, fmax conventions per
-calculator). Per the atomate2 ruling, matcalc mints no separate rail: these
-schemes live on ase / MLIP operator specs, not a matcalc rail.
+calculator). Per the atomate2 ruling, matcalc mints no separate representation: these
+schemes live on ase / MLIP operator specs, not a matcalc representation.
 
 CODATA-generation boundary note (matcalc/ASE scan, verified live). ASE's
 own unit basis (ase.units) is CODATA-2014: ase.units.GPa = 160.21766208
@@ -95,7 +95,7 @@ ASE_POTENTIAL = SpaceRepresentationSpec(
         "run_ase reads get_stress(voigt=False), a 3x3 tensor (NOT an ASE "
         "Voigt-6). matcalc mints no unit basis of its own (only eVA3ToGPa, a "
         "scipy conversion): the atomate2 ruling applies, so these are "
-        "operator schemes, not a matcalc rail."
+        "operator schemes, not a matcalc representation."
     ),
 )
 

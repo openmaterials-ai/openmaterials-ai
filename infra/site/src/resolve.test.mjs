@@ -75,7 +75,7 @@ test("prefixes resolve git-style at the edge: unique, ambiguous, none", () => {
   }
 });
 
-test("source-first paths parse and resolve: listing, pair, mismatch honesty", () => {
+test("source-first paths parse and resolve: listing, pair, namespace mismatch", () => {
   const withSrc = instances.find((e) => e.source && /^[a-z][a-z0-9+.-]*:/.test(e.source.ref || ""));
   assert.ok(withSrc, "corpus has at least one scheme-sourced value");
   const ref = withSrc.source.ref;
@@ -95,7 +95,7 @@ test("source-first paths parse and resolve: listing, pair, mismatch honesty", ()
   const page = sourceListingHTML(ref, family, "https://openmaterials.ai");
   for (const e of family) assert.ok(page.includes(e.id.slice(0, 12)));
   assert.ok(page.includes(`${family.length} committed value`));
-  // the honesty gate: a claimed namespace that is not the id's own refuses
+  // the namespace check: a claimed namespace that is not the id's own refuses
   const other = instances.find((e) => entrySourceRef(e) !== ref);
   if (other) {
     const mism = sourceMismatchHTML(ref, other, "https://openmaterials.ai");

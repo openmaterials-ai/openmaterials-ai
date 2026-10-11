@@ -5,7 +5,7 @@ records ASE as a producer of a relaxed Structure beyond hosting a calculator.
 The Structure node lives in this (dft ground-state / materials) domain, so its
 ase representation spec lives here; the ase Potential and Trajectory specs (both
 thermal-transport nodes) live in omai.thermal_transport.representation.ase.
-Together they are the one "ase" rail (build_codes merges specs across all
+Together they are the one "ase" representation (build_codes merges specs across all
 domains' representation packages).
 
 A relaxed Structure is produced by an ase.optimize optimizer (FIRE default,

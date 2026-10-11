@@ -186,7 +186,7 @@ def test_dft_representation_package_discovery_finds_the_specs():
     modules and collect spec instances by introspection. QE contributes four
     space specs and one operator spec; pymatgen (2026-07-09) four space specs
     (Structure, TotalEnergy, Stress, MagneticMoment) and one operator spec
-    (compute_magnetic_moments); the three MLIP rails (2026-07-09) ground the
+    (compute_magnetic_moments); the three MLIP representations (2026-07-09) ground the
     shared Potential plus the ground-state E/F/S, matgl additionally the CHGNet
     MagneticMoment head, each with one solve_ground_state operator spec."""
     import importlib
@@ -221,7 +221,7 @@ def test_dft_representation_package_discovery_finds_the_specs():
     assert by_rep_space["pymatgen"] == {
         "Structure", "TotalEnergy", "Stress", "MagneticMoment"}
     assert by_rep_op["pymatgen"] == {"compute_magnetic_moments"}
-    # The three MLIP rails: each grounds Potential + TotalEnergy/Forces/Stress;
+    # The three MLIP representations: each grounds Potential + TotalEnergy/Forces/Stress;
     # matgl additionally carries the CHGNet MagneticMoment head.
     assert by_rep_space["mace"] == {
         "Potential", "TotalEnergy", "Forces", "Stress"}
@@ -241,7 +241,7 @@ def test_dft_representation_package_discovery_finds_the_specs():
     assert by_rep_op["vasp"] == {
         "solve_ground_state", "compute_band_gap", "compute_forces_hf",
         "compute_stress_cell"}
-    # The mp-api DATABASE rail (2026-07-09) grounds three dft-domain nodes by
+    # The mp-api DATABASE representation (2026-07-09) grounds three dft-domain nodes by
     # RETRIEVAL (Structure, MagneticMoment, BandGap) and carries no operator
     # specs (MP retrieves; it does not run the producing operators).
     assert by_rep_space["mp-api"] == {
@@ -296,7 +296,7 @@ def test_qe_solve_ground_state_declares_the_scf_discretizations():
 
 
 # --------------------------------------------------------------------------
-# The vasp rail (atomate2/VASP scan, arXiv 2605.24002): a SECOND representation
+# The vasp representation (atomate2/VASP scan, arXiv 2605.24002): a SECOND representation
 # of the QE-grounded ground state plus MagneticMoment and the new BandGap,
 # spanning three domains (dft, mechanics, thermal).
 # --------------------------------------------------------------------------
@@ -376,10 +376,10 @@ def test_vasp_solve_ground_state_declares_the_incar_discretizations():
     assert "StaticMaker" in VASP_SOLVE_GROUND_STATE.notes
 
 
-def test_vasp_rail_spans_three_domains_in_build_codes():
-    """The vasp rail is cross-domain (like the pymatgen encode): dft
+def test_vasp_representation_spans_three_domains_in_build_codes():
+    """The vasp representation is cross-domain (like the pymatgen encode): dft
     (Structure/E/F/S/MagneticMoment/BandGap), mechanics (ElasticConstants),
-    thermal (BornCharges/DielectricTensor) = nine space specs on one rail."""
+    thermal (BornCharges/DielectricTensor) = nine space specs on one representation."""
     from omai.map_data import build_codes
 
     vasp = build_codes(DOMAINS)["vasp"]
@@ -420,11 +420,11 @@ def test_vasp_thermal_response_tensors_are_the_lepsilon_producers():
 
 
 # --------------------------------------------------------------------------
-# The MLIP rails (mace / matgl / fairchem): representation-only, grounding the
+# The MLIP representations (mace / matgl / fairchem): representation-only, grounding the
 # shared Potential plus the ground-state E/F/S (matgl also MagneticMoment).
 # --------------------------------------------------------------------------
 
-def test_build_codes_has_the_three_mlip_rails_with_node_coverage():
+def test_build_codes_has_the_three_mlip_representations_with_node_coverage():
     from omai.map_data import build_codes
 
     codes = build_codes(DOMAINS)
@@ -436,7 +436,7 @@ def test_build_codes_has_the_three_mlip_rails_with_node_coverage():
 
 
 def test_mlip_efs_units_are_ase_ev_not_gpa():
-    """All three rails emit the ASE native units: eV per cell, eV/A, eV/A^3 -
+    """All three representations emit the ASE native units: eV per cell, eV/A, eV/A^3 -
     the stress is eV/A^3, NOT GPa (the matgl native GPa default is overridden
     in the wrapper). Potential is opaque and carries no unit."""
     from omai.dft_ground_state.representation.mace import (
@@ -556,7 +556,7 @@ def test_mace_notes_record_the_mat_elasticity_matcalc_provenance_chain():
 
 
 def test_mlip_potentials_ground_the_shared_potential_node():
-    """The three rails ground the SAME shared Potential node the thermal-transport
+    """The three representations ground the SAME shared Potential node the thermal-transport
     graph uses (imported via materials.shared_primitives), not a duplicate."""
     from omai.materials.operator.shared_primitives import POTENTIAL as SHARED
     from omai.dft_ground_state.representation.mace import MACE_POTENTIAL

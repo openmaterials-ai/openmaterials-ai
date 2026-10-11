@@ -1,7 +1,7 @@
 # kaldo DELTA: the QHGK/amorphous branch and beyond
 
 A **delta / gap analysis** (not a fresh survey) of kaldo's public API against the
-**32-node kaldo rail** in `docs/data/codes.json`. Triggered by a live finding:
+**32-node kaldo representation** in `docs/data/codes.json`. Triggered by a live finding:
 parsing the QHGK paper (Isaeva et al. 2019) surfaced modal diffusivity,
 participation ratio, generalized specific heat `c_nm`, mode-pair lifetimes, and
 generalized velocity matrix elements as unmappable, and kaldo computes at least
@@ -21,7 +21,7 @@ Source (read-only, ground truth): the vendored `kaldo/` clone. Key files:
 `ThermalExpansion` (tier Quasi-harmonic, `alpha_V = alpha^qha(G_qha)`, from
 `QHAGibbsEnergy`), `PhononDOS` (total only), plus the harmonic/BTE/kappa slice.
 
-## What kaldo computes beyond its rail
+## What kaldo computes beyond its representation
 
 kaldo is exercised as a single anharmonic-lattice-dynamics engine. Sweeping its
 public API turns up **two genuinely new nodes**, **three QHGK/Wigner internals**
@@ -93,8 +93,8 @@ A dimension-keyed merge would silently claim a phonon-mode heat diffusivity
 equals an atomic mass-diffusion coefficient. **VERDICT: mint a distinct-named
 node** (recommend `ModalDiffusivity` / `HeatModeDiffusivity`), kept apart by
 NAME, with `{basis: per_mode, physics: allen_feldman_qhgk_heat, indices: (q,nu)}`
-in its description prose. Its sum-over-modes relationship to `kappa_QHGK` is an
-honest contraction edge. HIGH priority - it is the object the QHGK paper is about.
+in its description prose. Its sum-over-modes relationship to `kappa_QHGK` is a
+contraction edge. HIGH priority - it is the object the QHGK paper is about.
 
 ## The QHGK decomposition question: leave it folded
 
@@ -166,7 +166,7 @@ QHGK: leave folded in the coherence-channel formula. No further Wigner nodes.
 variants, the three Wigner kappa variants, and `ThermalConductivity[transport_model=qhgk]`
 itself all match source. `population`, `sparse_phase/sparse_potential`,
 `_ps_gamma_and_gamma_tensor`, `_generalized_diffusivity`, `flux` are internal
-scaffolding, correctly absent from the rail.
+scaffolding, correctly absent from the representation.
 
 ## Units and conventions (from kaldo source)
 

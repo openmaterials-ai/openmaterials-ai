@@ -19,7 +19,7 @@ MD tier:
   * sample_quantum_heat_capacity -> HeatCapacity[method=pimd], scheme
     {method: pimd, estimator: double_virial}.
 
-The i-pi rail (representation_name 'i-pi') is the sixth Trajectory producer.
+The i-pi representation (representation_name 'i-pi') is the sixth Trajectory producer.
 
 Load-bearing proofs here:
   * the heat-capacity FAMILY: two HeatCapacity nodes, SAME heat_capacity tag, the
@@ -28,7 +28,7 @@ Load-bearing proofs here:
     DISTINCT scalar node with a DISTINCT tag (no false-merge);
   * both sampling edges are implicit (not sympy-executable) and SKIPPED by the
     dimensional gate;
-  * the i-pi rail is credits-clear (dual GPL/MIT) and serves both new nodes;
+  * the i-pi representation is credits-clear (dual GPL/MIT) and serves both new nodes;
   * the frozen log positions: records 212-215.
 """
 from __future__ import annotations
@@ -221,10 +221,10 @@ def test_new_nodes_carry_their_tier_in_the_graph():
 
 
 # --------------------------------------------------------------------------
-# The i-pi rail: coverage, units, credits.
+# The i-pi representation: coverage, units, credits.
 # --------------------------------------------------------------------------
 
-def test_ipi_rail_covers_the_nqe_layer():
+def test_ipi_representation_covers_the_nqe_layer():
     codes = build_codes(DOMAINS)
     assert "i-pi" in codes
     ipi = codes["i-pi"]
@@ -236,8 +236,8 @@ def test_ipi_rail_covers_the_nqe_layer():
     assert ipi["Temperature"]["unit"] == "kelvin"
 
 
-def test_ipi_rail_is_credits_clear():
-    """The credits enforcement (Giuseppe's rule): the i-pi rail carries a
+def test_ipi_representation_is_credits_clear():
+    """The credits enforcement (Giuseppe's rule): the i-pi representation carries a
     citation, a DOI, and its dual GPL/MIT license, flowing into codes.json."""
     from omai.representation.credits import CODE_CREDITS
 

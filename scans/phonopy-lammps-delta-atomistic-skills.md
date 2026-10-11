@@ -1,9 +1,9 @@
 # phonopy and LAMMPS deltas as used by AtomisticSkills: scan report
 
 A **delta / gap analysis** (not a fresh survey) of two codes already deeply
-mapped, phonopy (17 space specs on the harmonic rail, 18 nodes in `codes.json`)
-and LAMMPS (11 nodes on the thermal rail + `ElasticConstants`/`Pressure` on the
-mechanics rail), against what AtomisticSkills (arXiv 2605.24002) actually
+mapped, phonopy (17 space specs on the harmonic representation, 18 nodes in `codes.json`)
+and LAMMPS (11 nodes on the thermal representation + `ElasticConstants`/`Pressure` on the
+mechanics representation), against what AtomisticSkills (arXiv 2605.24002) actually
 exercises. Companion catalog: `scans/phonopy-lammps-delta-atomistic-skills.json`
 (15 entries).
 
@@ -37,23 +37,23 @@ The prior `scans/lammps-thermal.json` (30 entries) and
 `scans/matcalc-ase-atomistic-skills.json` (13 entries) are NOT re-cataloged here;
 this scan records only the delta and cross-references them.
 
-## Honest-coverage verdict on the existing rails
+## Coverage verdict on the existing representations
 
-**phonopy rail: HONEST, but scoped to the harmonic constant-V chain that
+**phonopy representation: ACCURATE, but scoped to the harmonic constant-V chain that
 AtomisticSkills over-runs.** The four confirmed nodes match exactly what the
 skills drive, and the docstring correctly hands QHA/anharmonic off. The gap is
-not dishonesty: the skills exercise phonopy **beyond** that chain (QHA via
+not an error: the skills exercise phonopy **beyond** that chain (QHA via
 `PhonopyQHA`, mode symmetry via `IrReps`, thermal displacements) and those
-outputs have no node. Coverage honest; scope incomplete.
+outputs have no node. Coverage accurate; scope incomplete.
 
-**LAMMPS rail: HONEST for its thermal-transport slice, but that slice is largely
-orthogonal to the skills.** The rail (and the `lammps-thermal` scan) center on
+**LAMMPS representation: ACCURATE for its thermal-transport slice, but that slice is largely
+orthogonal to the skills.** The representation (and the `lammps-thermal` scan) center on
 the KAPPA heat-flux / Green-Kubo / NEMD-reservoir machinery. **No AtomisticSkills
 skill touches any of it.** `mat-lammps-md` runs plain NPT/NVT MLIP-MD (glass
 melt/quench, Cu phase transition, adsorption relax) in **units metal**, producing
-Temperature / Trajectory / Pressure / TotalEnergy / **Density**. So the rail
-honestly covers its own slice, but the skill-relevant delta is small: a `Density`
-node and the metal-unit-style default (the rail's LJ/real anchoring is not the
+Temperature / Trajectory / Pressure / TotalEnergy / **Density**. So the representation
+accurately covers its own slice, but the skill-relevant delta is small: a `Density`
+node and the metal-unit-style default (the representation's LJ/real anchoring is not the
 skills' unit style).
 
 ## The QHA cluster proposal (the headline)
@@ -98,7 +98,7 @@ qha_eos_scan}` so that:
 - **`ThermalGruneisen` does NOT alias the existing MODE `Gruneisen`.** The
   existing node is `gamma_qnu`, `(q,nu)`-indexed, FC3-produced
   (`nodes.py:393-402`). The QHA `gamma(T)` is a single scalar per temperature: the
-  heat-capacity-weighted **contraction** of the mode gammas. Honest relationship:
+  heat-capacity-weighted **contraction** of the mode gammas. Correct relationship:
   an edge mode-`Gruneisen` -> `ThermalGruneisen`.
 
 `C_P` ships in two estimators (numerical `core.py:326`, polyfit `core.py:337`;
@@ -113,7 +113,7 @@ existing `BulkModulus` node by temperature rather than minting a second node
   calls `phonon.set_irreps(q=[0,0,0])` (`analyze_raman_modes.py:154-183`,
   phonopy `IrReps` at `irreps.py:57`) to tag each Gamma mode with its point-group
   irrep label and a Raman/IR-activity flag. Categorical annotation, not on the
-  rail. Non-symmorphic groups return `None` (skill falls back to `Unknown`).
+  representation. Non-symmorphic groups return `None` (skill falls back to `Unknown`).
 - **RamanIntensity (NEW, skill-driven).** Same skill builds Raman intensities
   from the bond-polarizability model (`:186-277`): `alpha_nu = sum_k (Z*_k .
   e_nu,k)/sqrt(m_k)`, consuming phonopy `Eigenvectors` x VASP `BornCharges` +
@@ -213,7 +213,7 @@ distrust. Every source anchor was re-opened in the vendored trees; the matcalc
 wrapper was re-read from `/tmp/mcsrc/matcalc-0.5.1/src/matcalc/_qha.py`; the
 guardrail mechanism was checked against the actual node-identity code, not the
 prose; every skill input was re-read line by line; the LAMMPS clone was grepped
-honestly. Graph checked against `docs/data/graph.json` at HEAD `65974f1`.
+in full. Graph checked against `docs/data/graph.json` at HEAD `65974f1`.
 
 **Snapshot correction.** The scan header records `git_head 3874add, node_count 74`.
 At review time HEAD is `65974f1` (this delta scan's own commit) and the graph is
@@ -281,7 +281,7 @@ are "per mole of PRIMITIVE CELLS." The precise fact:
 `phonopy/phonon/thermal_properties.py:664` labels the output "Thermal properties /
 unit cell (natom)"; the per-formula-unit reduction requires `divide_by_Z=True`
 (`:514-516,529-530`), whose **default is False**, and matcalc/`PhononCalc` does NOT
-set it. So the honest basis is **per mole of the phonopy CELL passed to
+set it. So the correct basis is **per mole of the phonopy CELL passed to
 PhonopyQHA (its natom), which in the matcalc path is the primitive/unit cell
 `PhononCalc` builds**, NOT per formula unit and NOT per mole of atoms. This is the
 load-bearing distinction for the CALPHAD cross-code compare (which is per mole of
@@ -301,7 +301,7 @@ called the field `gamma_qnu`; the field NAME is `gamma_G` but the INDEX signatur
 `gamma(T)` is `DIMENSIONLESS` indexed by **T only**, a different index signature,
 a different producer (EOS volume scan vs FC3), and it is the heat-capacity-weighted
 average of the mode gammas. It CANNOT alias the mode node (name-based identity + a
-different index signature); it is a genuine **contraction** of it. The honest
+different index signature); it is a genuine **contraction** of it. The correct
 `mode-Gruneisen -> ThermalGruneisen` edge stands. CONFIRMED.
 
 ### LAMMPS: unit style, no-KAPPA, nktv2p, minimize, Density
@@ -320,11 +320,11 @@ different index signature); it is a genuine **contraction** of it. The honest
   `CHGNet-MPtrj-2023.12.1-2.7M-PES` (not `...2023.12.1`). MACE differs: `pair_style
   mace no_domain_decomposition` (`in.na2si3o7:18`) + `pair_coeff * * ${model_file}
   Na Si O` (`:19`), there the model IS on pair_style. Corrected in the JSON.
-- **no skill touches KAPPA/heat-flux/GK: CONFIRMED.** Honest grep across all 126
+- **no skill touches KAPPA/heat-flux/GK: CONFIRMED.** A full grep across all 126
   skills: no `heat/flux`, `fix thermal/conductivity`, `green-kubo`, `NEMD` in any
   LAMMPS input. `mat-lattice-thermal-conductivity` has ZERO LAMMPS references (it is
   phono3py). The only LAMMPS input files in the whole skill set are the three
-  `mat-lammps-md/examples/*/in.*`. The KAPPA machinery the rail centers on is
+  `mat-lammps-md/examples/*/in.*`. The KAPPA machinery the representation centers on is
   untouched by every skill.
 - **nktv2p bar<->eV/A^3 chain: CONFIRMED.** `lammps/src/update.cpp:191` (`metal`
   block), `:197` `force->nktv2p = 1.6021765e6`, exactly the scan's value; this is
@@ -374,7 +374,7 @@ source, not these scan files.
    the quasi-harmonic group is cleaner and consistent with name-based identity.
    (This overrides the scan's "index the existing node" recommendation.)
 3. **The contraction edge.** ADD `Gruneisen (mode, (q,nu)) -> ThermalGruneisen (T)`
-   as a heat-capacity-weighted contraction. Honest, distinct index signatures,
+   as a heat-capacity-weighted contraction. Correct, distinct index signatures,
    distinct producers. Approved.
 4. **Density.** Admit as a **new minor scalar node `Density` (g/cm^3)**, skill-driven
    (quench densification), with a documented derivation `TotalMass/CellVolume`. Not

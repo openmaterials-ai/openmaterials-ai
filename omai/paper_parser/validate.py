@@ -22,7 +22,7 @@ Every surviving MAP claim must clear these gates:
   - duplicate: (node uid + material + approx value) already present in
     docs/data/instances/ -> flagged duplicate (already on the map).
 
-The quote gate is the one that proves the pipeline is honest: no claim survives
+The quote gate is the one that keeps the pipeline faithful to the source: no claim survives
 without a verbatim, page-located quote from the document.
 """
 from __future__ import annotations

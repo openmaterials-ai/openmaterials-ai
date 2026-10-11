@@ -345,10 +345,10 @@ def test_contribution_b_is_connected_through_formation_energy():
 
 
 # --------------------------------------------------------------------------
-# The rails: three new representations.
+# Three new representations.
 # --------------------------------------------------------------------------
 
-def test_pymatgen_analysis_diffusion_rail_covers_five_nodes():
+def test_pymatgen_analysis_diffusion_representation_covers_five_nodes():
     codes = build_codes(DOMAINS)
     pad = codes["pymatgen-analysis-diffusion"]
     # Four from the config-thermo scan; CarrierDensity added by the physics
@@ -361,7 +361,7 @@ def test_pymatgen_analysis_diffusion_rail_covers_five_nodes():
     assert pad["CarrierDensity"]["unit"] == "per_cm3"
 
 
-def test_smol_rail_covers_configurational_energy_and_the_potential_analog():
+def test_smol_representation_covers_configurational_energy_and_the_potential_analog():
     codes = build_codes(DOMAINS)
     smol = codes["smol"]
     assert set(smol) == {"ConfigurationalEnergy", "Potential"}
@@ -371,7 +371,7 @@ def test_smol_rail_covers_configurational_energy_and_the_potential_analog():
     assert smol["Potential"]["unit"] is None
 
 
-def test_rxn_network_rail_covers_reaction_energy():
+def test_rxn_network_representation_covers_reaction_energy():
     codes = build_codes(DOMAINS)
     rxn = codes["rxn-network"]
     assert set(rxn) == {"ReactionEnergy"}

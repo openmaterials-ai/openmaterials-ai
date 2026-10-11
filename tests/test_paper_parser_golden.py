@@ -1,6 +1,6 @@
 """Golden eval: run the REAL pipeline live against the FROZEN golden copy of
 the openmaterials paper (tests/golden/openmaterials-golden.pdf) and
-score it against the honestly-built expected set.
+score it against the expected set built from the extracted text.
 
 Skipped without an API key so the suite is green with and without a key. When a
 key is present, this makes a handful of claude-opus-4-8 calls (that is what the

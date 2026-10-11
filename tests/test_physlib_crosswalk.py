@@ -1,5 +1,5 @@
 """The physlib crosswalk: static, reviewed alignment of map nodes to Lean 4
-declarations. Schema validity, catalog closure, source honesty."""
+declarations. Schema validity, catalog closure, source fidelity."""
 import json
 import os
 import re
@@ -85,7 +85,7 @@ def test_resolve_surfaces_physlib(crosswalk):
     hit = next(h for h in hits if h["id"] == "Temperature")
     assert hit["physlib"] == crosswalk["nodes"]["Temperature"]
     assert hit["physlib"][0]["confidence"] == "exact"
-    # honest gap: a node without formal coverage carries no physlib key
+    # coverage gap: a node without formal coverage carries no physlib key
     gap = resolve("thermal-conductivity", sem)
     assert all("physlib" not in h for h in gap)
     assert physlib_for("ThermalConductivity") == []

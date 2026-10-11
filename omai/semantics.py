@@ -94,7 +94,7 @@ ALIASES: dict[str, tuple[str, ...]] = {
     "set-threshold": ("SetVoltage",),
     "retention-time": ("RetentionTime", "zero_bias_retention"),
     "state-retention": ("RetentionTime",),
-    # Honest NO-HOME markers live in the alignment files, not here: an alias
+    # NO-HOME markers live in the alignment files, not here: an alias
     # must point at something that exists (the gate below enforces it).
 }
 
@@ -112,8 +112,8 @@ _crosswalk_nodes: dict[str, list[dict]] | None = None
 
 
 def physlib_for(node_id: str) -> list[dict]:
-    """The physlib declarations formalizing a map node. Empty list means an
-    honest coverage gap (physlib is young), not an error."""
+    """The physlib declarations formalizing a map node. Empty list means a
+    coverage gap (physlib is young), not an error."""
     global _crosswalk_nodes
     if _crosswalk_nodes is None:
         _crosswalk_nodes = (json.loads(_CROSSWALK.read_text())["nodes"]
@@ -182,7 +182,7 @@ def resolve(label: str, semantics: list[dict], limit: int = 8) -> list[dict]:
 
     Scoring: exact curated alias 1.0; exact auto label 0.9; all query
     tokens contained in an element's token set 0.6 + coverage bonus;
-    empty result means NO-HOME (an honest coverage gap, not an error).
+    empty result means NO-HOME (a coverage gap, not an error).
     A node hit gains a "physlib" field when the reviewed crosswalk maps
     it to Lean 4 declarations (docs/data/physlib_crosswalk.json).
     """

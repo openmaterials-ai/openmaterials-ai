@@ -12,7 +12,7 @@ with physlib's `*_mul` lemmas. The generated file COMPILES against physlib
 identity in Python so a regression fails fast even where a Lean toolchain is
 absent.
 
-The bridge is honest about its boundary. physlib's Dimension has five base
+The bridge states its boundary. physlib's Dimension has five base
 fields (length, time, mass, charge, temperature); ours has seven
 (M, L, T, Th, N, I, J). The four shared bases map directly. Nodes whose
 dimension uses amount-of-substance (mole, N) or luminous intensity (J), which

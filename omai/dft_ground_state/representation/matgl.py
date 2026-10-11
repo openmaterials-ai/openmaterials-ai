@@ -224,7 +224,7 @@ MATGL_SOLVE_GROUND_STATE = OperatorRepresentationSpec(
         "scan n_points, supercell / mesh / displacement, optimizer / fmax / "
         "cell_filter, matcalc-owned discretizations) AND this matgl checkpoint "
         "(the true PES). matcalc mints no unit basis of its own, so it earns no "
-        "rail; the schemes ride the driven-node operator specs and this "
+        "representation; the schemes ride the driven-node operator specs and this "
         "checkpoint is the physics, both required for reproducibility."
     ),
 )

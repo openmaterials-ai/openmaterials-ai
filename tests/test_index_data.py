@@ -72,25 +72,25 @@ def test_write_index_emits_one_file_per_representation(tmp_path):
     assert set(files) == {f"{r}.json" for r in reps}
     # One file per representation; the count grows as domains add codes /
     # skills (the mechanics domain added the mat-elasticity skill, 10th rep;
-    # the pymatgen scan added the pymatgen rail, 11th; the MLIP-family scan
-    # added the mace / matgl / fairchem rails, 12th-14th; the atomate2/VASP scan
-    # added the vasp rail, 15th; the mp-api scan added the mp-api DATABASE rail,
-    # 16th; the pycalphad scan added the pycalphad rail, 17th; the matcalc/ASE
-    # scan added the ase Structure/Trajectory coverage and the two skill rails
+    # the pymatgen scan added the pymatgen representation, 11th; the MLIP-family scan
+    # added the mace / matgl / fairchem representations, 12th-14th; the atomate2/VASP scan
+    # added the vasp representation, 15th; the mp-api scan added the mp-api DATABASE representation,
+    # 16th; the pycalphad scan added the pycalphad representation, 17th; the matcalc/ASE
+    # scan added the ase Structure/Trajectory coverage and the two skill representations
     # mat-equation-of-state and mat-surface-adsorption, 18th-19th (matcalc
-    # itself is NOT a rail, the atomate2 ruling); the config-thermo scan added
+    # itself is NOT a representation, the atomate2 ruling); the config-thermo scan added
     # smol, rxn-network, and pymatgen-analysis-diffusion, 20th-22nd; the amset
-    # scan added the amset rail, 23rd; the molecular scan added the orca and
-    # openmm rails, 24th-25th; the characterization scan added the mattergen and
-    # diffcsp Structure-provenance rails, 26th-27th (the XRDCalculator note
-    # extended the existing pymatgen rail rather than opening a new one, and
-    # lobsterpy / smact deliberately earned no rail); the Atomistic Cookbook
-    # audit's nuclear-quantum-effects layer (i-PI slice) added the i-pi rail,
-    # 28th (2026-07-11); the PLUMED slice added the plumed rail, 29th; the MESCAL
-    # onboarding added the mescal coherent-transport rail, 30th (2026-07-13).
-    # A platform rail registered by the composites domain (2026-07-13) was
+    # scan added the amset representation, 23rd; the molecular scan added the orca and
+    # openmm representations, 24th-25th; the characterization scan added the mattergen and
+    # diffcsp Structure-provenance representations, 26th-27th (the XRDCalculator note
+    # extended the existing pymatgen representation rather than opening a new one, and
+    # lobsterpy / smact deliberately earned no representation); the Atomistic Cookbook
+    # audit's nuclear-quantum-effects layer (i-PI slice) added the i-pi representation,
+    # 28th (2026-07-11); the PLUMED slice added the plumed representation, 29th; the MESCAL
+    # onboarding added the mescal coherent-transport representation, 30th (2026-07-13).
+    # A platform representation registered by the composites domain (2026-07-13) was
     # removed 2026-07-22 (the composite formulas are the map's own closed-form
-    # edges); the xtb rail (the engine the GFN2-xTB thermo evidence names
+    # edges); the xtb representation (the engine the GFN2-xTB thermo evidence names
     # in-hash) landed the same day, reaching 31; the qe-d3q representation
     # (D3Q and thermal2 on Quantum ESPRESSO 7.5, 2026-10-01) makes it 32; the
     # meskal representation (MESKAL, 2026-10-04) makes it 33.

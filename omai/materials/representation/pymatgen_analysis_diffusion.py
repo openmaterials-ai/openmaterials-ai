@@ -60,7 +60,7 @@ PYMATGEN_DIFFUSION_DIFFUSIVITY = SpaceRepresentationSpec(
         "cm^2/s (analyzer.py:55; get_diffusivity_from_msd converts A^2/fs to "
         "cm^2/s by a factor of 10). The already-mapped Diffusivity node; the "
         "wheel-verified cm^2/s is unchanged from the mat-diffusion-analysis "
-        "rail. 1 cm^2/s = 1e16 A^2/s."
+        "representation. 1 cm^2/s = 1e16 A^2/s."
     ),
 )
 

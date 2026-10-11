@@ -172,7 +172,7 @@ MOLAR_HEAT_CAPACITY = ObservableSpace(
 # Per-mode harmonic thermodynamics (parallel to HeatCapacity). No code emits
 # these directly today; phonopy / phono3py compute them internally and
 # contract before exposing. The per-mode spaces are still declared at the
-# operator layer to keep the DAG honest and to give the contracted molar
+# operator layer to keep the DAG complete and to give the contracted molar
 # variants a well-defined source.
 
 HELMHOLTZ_FREE_ENERGY = ObservableSpace(

@@ -40,7 +40,7 @@ pseudopotential zero of the periodic codes; an MLIP molecular energy is on the
 per-element atom_refs zero. These molecular energetics must NEVER be numerically
 subtracted against a periodic per-cell TotalEnergy nor across constructions; the
 FORBIDDEN cross-substrate subtraction rule lives in the descriptions here and in
-the rail notes, not in a composite identity key.
+the representation notes, not in a composite identity key.
 
   * HOMOLUMOGap is the KS gap between two DISCRETE frontier molecular orbitals of
     a finite system. A COUSIN of the periodic BandGap (same ENERGY dimension, same

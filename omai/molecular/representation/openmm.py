@@ -6,7 +6,7 @@ in scans/md-chem-bio-atomistic-skills.json, 19 entries, deep-review verified
 drug-complex-system-builder (build_complex.py: System + force-field assembly),
 drug-protein-prep (openmm.app.Modeller + pdbfixer), drug-mmpbsa-gbsa (endpoint
 energies). A NEW engine class: classical force fields, distinct from the MLIP and
-DFT PES rails. OpenMM is not importable in the miniconda base env; all unit /
+DFT PES representations. OpenMM is not importable in the miniconda base env; all unit /
 usage claims anchor to the vendored skill scripts.
 
   operator Space   OpenMM artifact                                        native

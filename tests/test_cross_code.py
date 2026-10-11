@@ -2,7 +2,7 @@
 
 Two halves, mirroring the data-layer tests: real-data assertions that pin the
 five genuine groups in docs/data/instances.json, and synthetic negative guards
-that prove the honesty rule refuses apples-to-oranges pairs. The rule under test
+that prove the equivalence rule refuses apples-to-oranges pairs. The rule under test
 is stated in omai.cross_code: two instances compare only when their BASE variable
 (the [label] stripped), material, and PHYSICAL conditions (conditions minus the
 estimator keys method/scattering and minus the variable [label]) all match, and
