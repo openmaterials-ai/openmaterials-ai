@@ -172,12 +172,12 @@ def build_graph_dict(domains: tuple[Domain, ...]) -> dict:
 
 
 def build_codes(domains: tuple[Domain, ...]) -> dict:
-    # Every code rail we represent must be cited (paper/DOI) and carry its
+    # Every code representation on the map must be cited (paper/DOI) and carry its
     # license (Giuseppe's rule). credits.CODE_CREDITS is the single source of
-    # truth; a rail missing from it gets license "UNKNOWN" here AND the
-    # enforcement test (tests/test_code_credits.py) fails, so no rail can land
-    # uncredited. Credits attach to every per-space entry of the rail so the
-    # site can read them from any of a rail's rows.
+    # truth; a representation missing from it gets license "UNKNOWN" here AND the
+    # enforcement test (tests/test_code_credits.py) fails, so no representation can land
+    # uncredited. Credits attach to every per-space entry of the representation so the
+    # site can read them from any of a representation's rows.
     from omai.representation.adapter import SpaceRepresentationSpec
     from omai.representation.credits import CODE_CREDITS, PER_NODE_CREDITS
     codes: dict[str, dict[str, dict]] = {}

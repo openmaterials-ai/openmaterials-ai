@@ -32,7 +32,7 @@ Scope of this slice:
   * The two sampling edges (sample_quantum_kinetic_energy,
     sample_quantum_heat_capacity).
 
-Deferred to later slices (reasons carried in the rail notes below): PLUMED +
+Deferred to later slices (reasons carried in the representation notes below): PLUMED +
 1-CV PMF (metadynamics / free-energy surface, slice 2), isotope fractionation,
 the quantum momentum distributions (the spectrum layer), and the multi-CV free
 energy surface (the field-evidence kernel).
@@ -44,7 +44,7 @@ Credits (verified 2026-07-11, scans/cookbook-audit.json review table):
     J. Chem. Phys. 161, 062504 (2024); doi 10.1063/5.0215869.
   * URL: https://ipi-code.org.
 Registered in omai/representation/credits.py (CODE_CREDITS), which the
-enforcement test (tests/test_code_credits.py) requires for every rail.
+enforcement test (tests/test_code_credits.py) requires for every representation.
 """
 
 from __future__ import annotations
@@ -101,7 +101,7 @@ IPI_TRAJECTORY = SpaceRepresentationSpec(
         "the (ring-polymer) equations of motion and requests energies and forces "
         "from a FORCE PROVIDER over a socket. LAMMPS (fix ipi), CP2K, ASE, and "
         "metatomic models are the drivers in the Atomistic Cookbook recipes; the "
-        "Potential identity therefore rides on the driver's rail, not on i-PI. "
+        "Potential identity therefore rides on the driver's representation, not on i-PI. "
         "Per-bead positions and velocities are dumped via <trajectory> output "
         "elements; the centroid (the physically meaningful configuration) is "
         "available as the 'x_centroid' trajectory. GLE / PIGLET colored-noise "

@@ -1,6 +1,6 @@
 """Per-code adapter specs for the molecular domain.
 
-Two rails: orca (molecular quantum chemistry, the map's first molecular code) and
+Two representations: orca (molecular quantum chemistry, the map's first molecular code) and
 openmm (classical force-field MD, a new engine class). Both attach specs to
 pre-existing nodes (TotalEnergy, Forces, Temperature, Pressure, Trajectory) as
 well as the new molecular nodes (HOMOLUMOGap, ReactionBarrier). build_codes

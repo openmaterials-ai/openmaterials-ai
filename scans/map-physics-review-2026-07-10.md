@@ -122,7 +122,7 @@ off from the molar C_P/C_V by an N (mole) axis and an L^-4. So:
   sibling. Neither exists today.
 
 Verdict: **B-list / C-list, not A-list.** The physics is exact but the map is
-one node short of an honest encoding. Two honest options for the orchestrator:
+one node short of a complete encoding. Two options for the orchestrator:
   - (C) mint a `MolarVolume` node (m^3/mol, `(0,3,0,0,-1,0,0)`) = CellVolume x
     N_A / atoms-per-cell; then `C_P - C_V = T V_m alpha^2 B_T` is executable and
     also unlocks the *molar* Gruneisen route as a cross-check. This is the
@@ -143,7 +143,7 @@ This is **already encoded** as `fit_arrhenius`: `(Diffusivity, Temperature) ->
 ActivationEnergy`, and the edge already builds the real sympy Eq
 `D(T) = D_0 exp(-E_a/(k_B T))` with `D_0`, `E_a`, `k_B` as bare positive
 Symbols, `is_executable_in_sympy_override=False` (it is a regression, not a
-closed form). Assessment of the honest encoding:
+closed form). Assessment of the correct encoding:
 
 - The exponent's dimensionlessness is gate-provable:
   `E_a / (k_B T) = (1,2,-2,0) - [(1,2,-2,-1) + (0,0,0,1)] = (0,0,0,0,0,0,0)`.
@@ -152,8 +152,8 @@ closed form). Assessment of the honest encoding:
 - D_0 (the pre-exponential) has D_0 = D at 1/T -> 0, so D_0 carries the
   DIFFUSIVITY dimension `(0,2,-1,0,0,0,0)` (m^2/s). It is correctly a *scheme /
   fit parameter*, not a node: it is a property of the fitted D(T) curve, not an
-  independently-produced observable. Honest verdict: **leave as-is (D-list).**
-  The current encoding is already the honest one, a fit with the exponent's
+  independently-produced observable. Verdict: **leave as-is (D-list).**
+  The current encoding is already the correct one, a fit with the exponent's
   dimensionlessness provable. If anything is owed, it is only a note in the edge
   scheme that D_0 carries DIFFUSIVITY (documentation, not structure).
 
@@ -165,12 +165,12 @@ The number density n/V and the ionic charge z^2 are read off Structure and are
 folded into the opaque solver function; they are **not nodes and not surfaced
 Symbols**.
 
-Honest verdict: **keep opaque (D-list).** To make it executable in sympy you
+Verdict: **keep opaque (D-list).** To make it executable in sympy you
 would need carrier density n/V (an L^-3 quantity) and carrier charge z (a
 dimensionless integer times e) as first-class inputs. Neither is a node, and
 neither should be minted just for this: n/V is a per-species count over the
 opaque Structure (the same reason FormationEnergy's reference chemical
-potentials stay opaque), and z is an integer label. The dimensional honesty is
+potentials stay opaque), and z is an integer label. The dimensional consistency is
 already discharged in the config-thermo scan (the S/m = `(-1,-3,3,0,0,2,0)`
 result is verified twice there). The relation being *implicit* is the correct
 encoding: the map does not have the carrier-counting machinery, and inventing a
@@ -487,7 +487,7 @@ thermodynamics, doping), never solely to close one edge.
 - **D2. Nernst-Einstein stays implicit** (2d): no CarrierDensity node to close
   it, and minting one for a single consumer is unjustified re-mint cost.
 - **D3. Arrhenius stays a fit** (2c): D_0 is a curve parameter, not an
-  observable; the current encoding is already the honest one, exponent
+  observable; the current encoding is already the correct one, exponent
   dimensionlessness provable.
 - **D4. SeebeckCoefficient and intercalation Voltage stay unconnected**: they
   share the volt but are unrelated physics (thermopower vs electrochemical
@@ -496,7 +496,7 @@ thermodynamics, doping), never solely to close one edge.
   Bulk/Shear/Youngs moduli, Pressure) stay six tags: all pressures/moduli, the
   tag carries the distinction, no false merge.
 - **D6. C_P - C_V stays undecided pending C1**: exact identity, but the map is
-  one node (MolarVolume) short of an honest executable encoding; the intensive
+  one node (MolarVolume) short of a complete executable encoding; the intensive
   volumetric form needs a volumetric C_P sibling the map also lacks. Documented
   in prose today; wire it only after C1.
 

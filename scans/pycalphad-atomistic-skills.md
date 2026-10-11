@@ -263,7 +263,7 @@ exits 1 on both).
   **rounding up**, not a truncation (a truncation would give 8.3144). (2) The
   relative error recomputes to `(8.3145 - 8.31446261815324)/8.31446261815324 =
   4.496e-06 = 0.00045%`, ~4.5x the stated 0.0001%. Fixed in the JSON `value`,
-  the JSON `traps`, and unit-trap #5 here. Added the honest note: **negligible at
+  the JSON `traps`, and unit-trap #5 here. Added the note: **negligible at
   CALPHAD precision** (the assessed TDB parameters and the ideal-mixing term it
   multiplies carry uncertainties orders of magnitude larger). `variables.py:939`
   `si_gas_constant = R = Float(8.3145)` confirmed exact.

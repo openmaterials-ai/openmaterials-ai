@@ -10,7 +10,7 @@ parsers, not to a captured output file.
 
 Companion catalog: `scans/orca-atomistic-skills.json` (18 entries).
 
-The honesty question the task poses is carried per-entry: which quantities are the
+The identity question the task poses is carried per-entry: which quantities are the
 **same physics** as the periodic DFT slice (total energies, forces, frequencies)
 and which are **genuinely molecular-domain** (thermochemistry corrections,
 solvation, NMR/EPR, HOMO-LUMO). Answered in `physics_vs_periodic` per entry and

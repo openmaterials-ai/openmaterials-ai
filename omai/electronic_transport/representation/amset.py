@@ -144,7 +144,7 @@ AMSET_ELECTRONIC_THERMAL_CONDUCTIVITY = SpaceRepresentationSpec(
     },
     notes=(
         "Electronic thermal conductivity kappa_e, W/(m K) by the BoltzTraP2 "
-        "convention. HONESTY CAVEAT: amset itself does NOT confirm the unit: "
+        "convention. CAVEAT: amset itself does NOT confirm the unit: "
         "data.py:483 verbatim '# TODO: confirm unit of kappa', and data.py:484 "
         "serializes the header unit as '?' (the third entry of "
         "[('cond','S/m'),('seebeck','muV/K'),('kappa','?')]). W/(m K) is the "

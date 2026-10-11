@@ -6,7 +6,7 @@ difference of product and reactant enthalpies over conformer-searched
 global minima, per reaction event. The committed epoxy-cure evidence
 instances (glycidyl phenyl ether with aniline, -1.101722 eV, and with
 methylamine, -1.203292 eV) name `xtb 6.7.1` in their in-hash conditions;
-this rail records the interface that reproduces them.
+this representation records the interface that reproduces them.
 """
 from __future__ import annotations
 

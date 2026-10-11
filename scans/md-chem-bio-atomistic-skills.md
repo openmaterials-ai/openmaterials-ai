@@ -8,7 +8,7 @@ entirely unused). Companion catalog:
 `scans/md-chem-bio-atomistic-skills.json` (19 entries). Every claim anchors to a
 committed `file:line` in `AtomisticSkills/.agents/skills/`.
 
-Honest scoping is the whole task. Encode what carries map-relevant physics (the
+Strict scoping is the whole task. Encode what carries map-relevant physics (the
 MM-MD Trajectory and its thermodynamic observables, the barrier/BDE energies,
 the MSD). Catalog-only, with a crisp reason, for informatics (SMILES,
 fingerprints, descriptors, logP, conformers, docking scores) and bio-prep
@@ -37,7 +37,7 @@ claim was wrong and is corrected here. biopython alone is truly unused.
 **Two engine classes, not one.** The chem-* MD (chem-solution-md, chem-neb-barrier,
 chem-ts-optimization, chem-bond-dissociation) runs on **MLIPs through ASE**
 (`get_potential_energy`/`get_forces`, eV/Angstrom): its physics rides the existing
-MLIP `Potential` rail, the matcalc-scan domain. The drug-* MD
+MLIP `Potential` representation, the matcalc-scan domain. The drug-* MD
 (drug-protein-ligand-md, drug-mmpbsa-gbsa) runs on **classical force fields through
 OpenMM** (kJ/mol, kelvin, atm): a NEW engine class with a NEW checkpoint analog
 (the force-field set), on a fourth energy zero distinct from the MLIP PES.
@@ -104,7 +104,7 @@ dependence of diffusivity (a slope, not a PES barrier) despite the tempting name
 collision. Cross-engine numeric comparison is forbidden by the same energy-zero
 split the ORCA scan flagged (MLIP eV vs ORCA all-electron Hartree->eV).
 
-## The honest catalog-only reasons (crisply)
+## The catalog-only reasons (crisply)
 
 - **vina docking score:** the value of an EMPIRICAL scoring function (Vina/Vinardo/
   AD4 term weights regressed against experimental affinity), reported in kcal/mol

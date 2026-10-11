@@ -4,7 +4,7 @@ The quasi-harmonic thermodynamics are produced by phonopy.PhonopyQHA, driven by
 matcalc QHACalc (which wraps PhonopyQHA over an F(V,T) volume scan) and exercised
 by the AtomisticSkills mat-qha-thermal-expansion skill (arXiv 2605.24002,
 scripts/calculate_qha.py:33-41, eos='vinet', an 11-volume scan 0.95..1.05). The
-matcalc QHACalc driver carries no rail of its own; its result-dict keys and the
+matcalc QHACalc driver carries no representation of its own; its result-dict keys and the
 volume-scan discretization ride these phonopy operator specs.
 
 The PhonopyQHA property -> matcalc result key -> map node mapping (phonopy 3.5.1
@@ -141,7 +141,7 @@ PHONOPY_BULK_MODULUS_QHA = SpaceRepresentationSpec(
 
 # ---------------------------------------------------------------------------
 # Operator-level specs (the matcalc QHACalc F(V,T) volume-scan discretization
-# rides these phonopy operator specs; the driver carries no rail of its own).
+# rides these phonopy operator specs; the driver carries no representation of its own).
 # ---------------------------------------------------------------------------
 
 _QHA_SCAN_CHOICES = {
@@ -157,7 +157,7 @@ _QHA_SCAN_CHOICES = {
     ),
     "mlip_checkpoint": (
         "each per-volume PhononCalc carries the MLIP checkpoint provenance "
-        "(the same double-provenance as the harmonic phonon rail): the QHA "
+        "(the same double-provenance as the harmonic phonon representation): the QHA "
         "result inherits the checkpoint identity of the E(V) and F(V,T) inputs"
     ),
 }

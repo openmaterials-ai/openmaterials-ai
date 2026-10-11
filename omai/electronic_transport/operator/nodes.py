@@ -41,7 +41,7 @@ not a carrier label on it): the own tag gives it a distinct uid at the identity
 level, the firewall the amset scan mandates. amset's own source flags the unit
 as unconfirmed (data.py:483 '# TODO: confirm unit of kappa'; it serializes the
 header unit as '?'); W/(m K) is the BoltzTraP2 calc_Onsager_coefficients
-convention, recorded with that honesty caveat on the amset rail before any
+convention, recorded with that caveat on the amset representation before any
 cross-code EXPECTED_AGREE.
 
 StaticDielectricTensor is a THIRD distinct dielectric quantity: the static
@@ -60,7 +60,7 @@ arrays (data.py to_data writes the upper triangle xx,xy,xz,yy,yz,zz per
 (doping, T) row). The three transport nodes are served here as SCALARS
 (sigma, S, kappa_e), matching the config-thermo sibling's scalar shape for
 family consistency, with the (doping, T, 3, 3) tensor reality a
-representation-layer packing recorded on the amset rail; the single-number GaAs
+representation-layer packing recorded on the amset representation; the single-number GaAs
 mobility is a tensor_average (isotropic trace/3) at one (doping, T) point.
 """
 from __future__ import annotations

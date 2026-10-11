@@ -6,8 +6,8 @@ variable library (distances, angles, coordination numbers, SOAP-based order
 parameters), and the sum_hills reconstruction of a free-energy profile from the
 deposited Gaussian bias. It is a bias / analysis LAYER that rides MD engines: it
 patches into LAMMPS, GROMACS, and i-PI and computes collective variables and
-biases as they run. Honestly it is closer to a driver than to a standalone
-engine (it produces no atoms, no forces of its own). It earns a rail, unlike a
+biases as they run. It is closer to a driver than to a standalone
+engine (it produces no atoms, no forces of its own). It earns a representation, unlike a
 pure driver such as matcalc, because it PRODUCES a quantity no engine produces
 alone: the bias and, from it, the potential of mean force (the free-energy
 profile along a collective variable).
@@ -32,7 +32,7 @@ Scope of this slice:
   * PotentialOfMeanForce (sum_hills / reweighting output, kJ/mol native).
   * The sampling edge sample_pmf.
 
-Deferred to later slices (reasons carried in the rail notes below): the multi-CV
+Deferred to later slices (reasons carried in the representation notes below): the multi-CV
 free-energy surface (a scalar field over CV-space, the field-evidence kernel);
 the collective-variable ZOO as nodes (collective variables are COORDINATES, not
 observables, so they are axis descriptors, not evidence nodes); and PLUMED's
@@ -48,7 +48,7 @@ For a metadynamics encode PLUMED also asks (via its plumed-nest / CITATIONS
 mechanism) that the specific enhanced-sampling method paper be cited alongside
 PLUMED 2; that method DOI is left unknown-until-encode, not invented.
 Registered in omai/representation/credits.py (CODE_CREDITS), which the
-enforcement test (tests/test_code_credits.py) requires for every rail.
+enforcement test (tests/test_code_credits.py) requires for every representation.
 """
 
 from __future__ import annotations
@@ -79,10 +79,10 @@ PLUMED_TRAJECTORY = SpaceRepresentationSpec(
         "forcefield) and rides the engine's Trajectory, adding a bias force along "
         "the collective variables defined in the PLUMED input. So the Trajectory "
         "here is the host engine's (the Potential / force identity is the "
-        "engine's rail, not PLUMED's); PLUMED's contribution is the bias it "
+        "engine's representation, not PLUMED's); PLUMED's contribution is the bias it "
         "deposits and the free energy it reconstructs from it. Closer to a driver "
         "than an engine, but unlike a pure driver it produces a quantity no engine "
-        "produces alone (the bias / PMF), which is why it earns a rail. Cookbook "
+        "produces alone (the bias / PMF), which is why it earns a representation. Cookbook "
         "recipes: pi-metad (i-PI + PLUMED), metatomic-plumed."
     ),
 )
@@ -140,7 +140,7 @@ PLUMED_SAMPLE_PMF = OperatorRepresentationSpec(
         "cv_count=1). The umbrella-sampling route (RESTRAINT windows + WHAM) is the "
         "same target by a different bias. The reconstruction is an opaque "
         "functional of the biased Trajectory and the Temperature, so the "
-        "dimensional gate skips the sample_pmf edge; the PLUMED rail fixes the "
+        "dimensional gate skips the sample_pmf edge; the PLUMED representation fixes the "
         "output at ENERGY (kJ/mol). Deferred: the collective-variable zoo as nodes "
         "(CVs are coordinates, not observables), the multi-CV free-energy surface "
         "(the field kernel), and PLUMED's committor / rate analyses."

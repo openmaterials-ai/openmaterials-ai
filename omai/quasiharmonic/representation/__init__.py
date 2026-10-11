@@ -1,8 +1,8 @@
 """Per-code adapter specs for the quasi-harmonic domain.
 
-The phonopy rail: the QHA thermodynamics phonopy.PhonopyQHA emits, driven by
+The phonopy representation: the QHA thermodynamics phonopy.PhonopyQHA emits, driven by
 matcalc QHACalc and the mat-qha-thermal-expansion skill. matcalc QHACalc schemes
-ride the phonopy operator specs (the driver layer carries no rail of its own).
+ride the phonopy operator specs (the driver layer carries no representation of its own).
 """
 
 from omai.quasiharmonic.representation.phonopy import (

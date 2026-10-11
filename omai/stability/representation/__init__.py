@@ -12,5 +12,5 @@ level (per Principle 7):
   * `mat_surface_adsorption`: the mat-surface-adsorption skill (matcalc
     AdsorptionCalc adsorption-energy producer, eV); anchored in the
     matcalc/ASE scan. matcalc is the driver over the MLIP PES, recorded in
-    notes (no separate matcalc rail, the atomate2 ruling).
+    notes (no separate matcalc representation, the atomate2 ruling).
 """

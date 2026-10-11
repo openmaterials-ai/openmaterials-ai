@@ -299,7 +299,7 @@ CM3_PER_MOL = Unit("cm3_per_mol", VOLUME_PER_MOLE, 1e-6)
 # Canonical thermoelectric power-factor unit: watt per metre per kelvin squared
 # (W/(m K^2)), PF = sigma_e S^2. The SI unit is canonical with to_operator 1.0;
 # the common thermoelectrics convention muW/(cm K^2) is a representation-layer
-# packing left to a future thermoelectric rail (none serves PF directly today).
+# packing left to a future thermoelectric representation (none serves PF directly today).
 W_PER_M_K2 = Unit("w_per_m_k2", POWER_FACTOR, 1.0, si_scale=1.0)
 
 

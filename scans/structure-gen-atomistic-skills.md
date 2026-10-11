@@ -118,7 +118,7 @@ mp-api structures enter as sourced instances.
 provenance and a relaxation provenance. `Structure` stays a source node; the
 generator is a source ANNOTATION.
 
-**If Phase 2 wants an edge:** the honest edge is `generator -> Structure` with the
+**If Phase 2 wants an edge:** the correct edge is `generator -> Structure` with the
 generator an operator whose "input" is a stochastic seed + optional conditioning
 LABEL and whose scheme carries (checkpoint, guidance, seed). It would still NOT be
 an edge from a property NODE. This inverts the current source topology and should
@@ -298,7 +298,7 @@ committed analog, not yet exercised for a Structure-valued instance.
    dimensionless representation-only labels. `energy_above_hull` /
    `formation_energy` already exist (`registry.py:95-96`) as the real gates.
 6. **IF Phase 2 makes generators first-class edges,** treat it as a deliberate
-   kernel decision (it inverts the source topology); the honest edge is
+   kernel decision (it inverts the source topology); the correct edge is
    `generator -> Structure` with conditioning as a LABEL, never from a property
    node.
 7. **adit molecule branch and cross-generator diversity relations** stay out of

@@ -7,7 +7,7 @@ instances already contain: it finds sets of values that are the SAME observable,
 SAME material, and SAME physical conditions, differing only in the METHOD or
 CODE that produced them, and reports their spread.
 
-THE HONESTY CONTRACT (the equivalence rule):
+THE EQUIVALENCE RULE:
 Two instances are COMPARABLE iff they share the same BASE variable (the variable
 with its ``[label]`` suffix stripped: ThermalConductivity[bte_solver=rta] and
 ThermalConductivity[bte_solver=direct_inverse] share base ThermalConductivity),

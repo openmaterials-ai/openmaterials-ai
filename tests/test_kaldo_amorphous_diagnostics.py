@@ -23,7 +23,7 @@ Load-bearing proofs here:
   * the FALSE-MERGE guardrail: ModalDiffusivity and the mass-transport
     Diffusivity SHARE the DIFFUSIVITY (L^2 T^-1) dimension but are DISTINCT uids
     with DISTINCT tags (all three facts asserted);
-  * the kaldo rail grows 32 -> 34 and serves ModalDiffusivity in mm^2/s;
+  * the kaldo representation grows 32 -> 34 and serves ModalDiffusivity in mm^2/s;
   * the frozen log positions: records 208-211.
 """
 from __future__ import annotations
@@ -184,7 +184,7 @@ def test_modal_diffusivity_units_canonicalize():
 
 
 # --------------------------------------------------------------------------
-# The DAG gate, graph placement, and the kaldo rail.
+# The DAG gate, graph placement, and the kaldo representation.
 # --------------------------------------------------------------------------
 
 def test_unified_validate_dag_is_clean():
@@ -199,7 +199,7 @@ def test_new_nodes_carry_their_tiers_in_the_graph():
     assert tier_of["ModalDiffusivity"] == "Transport"
 
 
-def test_kaldo_rail_covers_both_new_nodes():
+def test_kaldo_representation_covers_both_new_nodes():
     codes = build_codes(DOMAINS)
     kaldo = codes["kaldo"]
     assert kaldo["ParticipationRatio"]["unit"] == "dimensionless"

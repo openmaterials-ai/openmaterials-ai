@@ -278,17 +278,17 @@ PYMATGEN_COMPUTE_GRAIN_BOUNDARY_ENERGY = OperatorRepresentationSpec(
 
 
 # ---------------------------------------------------------------------------
-# XRD note (pymatgen rail extension, representation-only; no XRDPattern node)
+# XRD note (pymatgen representation extension, representation-only; no XRDPattern node)
 # ---------------------------------------------------------------------------
 #
 # The characterization scan (scans/characterization-atomistic-skills.json)
 # catalogs pymatgen's XRDCalculator (mat-xrd-calculator) as a FUNCTION-VALUED
 # kinematic diffraction pattern I(2theta), DEFERRED to the spectrum layer (no
 # XRDPattern node is minted this slice, per orchestrator decision "XRDPattern
-# deferral"). Rather than open a new xrd rail for a deferred quantity, the
+# deferral"). Rather than open a new xrd representation for a deferred quantity, the
 # XRDCalculator design is recorded here as an extension NOTE on the existing
-# pymatgen rail (the calculator IS pymatgen), so no new representation_name and
-# no new rail are added:
+# pymatgen representation (the calculator IS pymatgen), so no new representation_name and
+# no new representation are added:
 #
 #   * CANONICAL AXIS. Store the pattern on the wavelength-independent d_hkl
 #     (Angstrom, d_hkl = 1/g_hkl, xrd.py:259) or Q = 4 pi sin(theta)/lambda

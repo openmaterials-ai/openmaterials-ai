@@ -9,7 +9,7 @@
 #      the exporter emits and asserts each one actually holds (the same thing
 #      Lean's `decide`/`simp` proves). A regression in the generator fails here
 #      first, in seconds, before the multi-minute Lean build even starts.
-#   2. The real `lake build` against physlib (the honest step). physlib is
+#   2. The real `lake build` against physlib (the proof itself). physlib is
 #      pinned by rev in lean/lakefile.toml; mathlib comes in transitively and
 #      is pulled from the mathlib build cache via `lake exe cache get`, so the
 #      runner compiles only openmaterials' own modules, not all of mathlib.

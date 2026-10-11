@@ -25,7 +25,7 @@ a structure. It is serialized to cluster_expansion.json (ClusterExpansion.load /
 .save) and re-loaded to drive Monte Carlo, the way an MLIP checkpoint drives MD.
 It is fitted to DFT / MLIP-labelled ordered structures via LassoCV /
 Sparse-Group-Lasso (fitting is EXTERNAL: sklearn / sparselm, smol carries no
-solver), targeting LOOCV < 10 meV/atom. So the smol rail maps the CE onto the
+solver), targeting LOOCV < 10 meV/atom. So the smol representation maps the CE onto the
 map's existing opaque Potential node, an MLIP-checkpoint sibling, and its
 PROVENANCE is the checkpoint schema {ce_file, cutoffs, fit_method (ls / lasso /
 ridge / sgl), LOOCV eV/prim, training-energy convention (total vs formation)}.

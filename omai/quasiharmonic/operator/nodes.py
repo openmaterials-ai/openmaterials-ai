@@ -43,7 +43,7 @@ in a composite identity key.
     alias the existing MODE Gruneisen (omai/thermal_transport/operator/nodes.py:
     field gamma_G, DIMENSIONLESS, indices (q,nu), FC2/FC3-produced): different
     index signature, different producer, kept apart by its thermal_gruneisen tag.
-    The honest relationship is a contraction edge mode-Gruneisen -> ThermalGruneisen.
+    The correct relationship is a contraction edge mode-Gruneisen -> ThermalGruneisen.
 
 Serving basis. The QHA thermodynamics are per mole of the phonopy CELL passed to
 PhonopyQHA (its natom); in the matcalc path PhononCalc primitivizes the structure,

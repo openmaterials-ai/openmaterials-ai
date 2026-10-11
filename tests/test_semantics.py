@@ -53,7 +53,7 @@ def test_resolution_acceptance_ra2_seed():
         assert resolve(form, _SEM)[0]["id"] == "ElectronicDOS"
 
 
-def test_no_home_is_an_honest_empty():
+def test_no_home_is_an_empty_result():
     assert resolve("neb-transition-state-calculation", _SEM) == []
 
 

@@ -3,7 +3,7 @@
   "title": "ORCA (molecular quantum chemistry) as used by AtomisticSkills",
   "arxiv": "2605.24002",
   "date": "2026-07-10",
-  "scanner_note": "SCAN stage only: catalog, not map code. This is the map's FIRST molecular code. The honesty question the task poses (which quantities are the SAME physics as the periodic DFT slice, and which are genuinely molecular-domain) is carried in each entry's 'per_what' and 'physics_vs_periodic' fields.",
+  "scanner_note": "SCAN stage only: catalog, not map code. This is the map's FIRST molecular code. The identity question the task poses (which quantities are the SAME physics as the periodic DFT slice, and which are genuinely molecular-domain) is carried in each entry's 'per_what' and 'physics_vs_periodic' fields.",
   "graph_snapshot": {
     "head": "671b092",
     "node_count": 77,
@@ -77,7 +77,7 @@
       "native_unit": "Hartree (Eh)",
       "served_unit": "eV (x27.211386245988)",
       "parsed_at": ["parse_orca_output.py:39-43 (final_energy_hartree, final_energy_eV)", "run_singlepoint.py:116-117 (results.energy, *HARTREE_TO_EV)", "run_orca_input.py:33,90-93 (FINAL SINGLE POINT ENERGY regex, *27.211386245988)", "run_optimization.py:189-190 (final energy at optimized geometry)"],
-      "per_what": "PER-MOLECULE (per whole finite system), extensive. This is the crux honesty question. The map's TotalEnergy is 'extensive: one scalar per simulation CELL' (dft_ground_state/operator/nodes.py:78-88). A molecular total energy is one scalar per MOLECULE. Same ENERGY dimension, same 'extensive scalar' shape, same KS-SCF physics; the basis differs (finite molecule with no PBC vs periodic cell).",
+      "per_what": "PER-MOLECULE (per whole finite system), extensive. This is the crux identity question. The map's TotalEnergy is 'extensive: one scalar per simulation CELL' (dft_ground_state/operator/nodes.py:78-88). A molecular total energy is one scalar per MOLECULE. Same ENERGY dimension, same 'extensive scalar' shape, same KS-SCF physics; the basis differs (finite molecule with no PBC vs periodic cell).",
       "physics_vs_periodic": "SAME physics (converged Kohn-Sham SCF total energy) EXCEPT: (a) no periodic boundary conditions, no k-point sum, no plane-wave/pseudopotential; ORCA is all-electron/ECP with atom-centered Gaussian basis (def2-SVP default); (b) the energy zero is the isolated-atoms/all-electron reference, NOT the pseudopotential reference the periodic codes use, so ORCA and QE/VASP total energies are NOT on the same absolute scale and must never be subtracted across codes; (c) additional physics ORCA can add: dispersion correction (parse_orca_output.py:53-55, dispersion_correction_hartree), nuclear repulsion (parse_orca_output.py:45-47), post-HF DLPNO-CCSD(T) correlation.",
       "proposal": "Same TotalEnergy node with a mandatory basis/provenance label (per-molecule vs per-cell, code, all-electron-vs-pseudopotential reference, basis_set, functional, dispersion). Do NOT mint a separate MolecularEnergy node: the dimension and observable shape are identical; the distinction is provenance metadata, exactly as BandGap already rides Potential provenance. But the label MUST block cross-reference subtraction of ORCA vs periodic totals.",
       "trap": "Hartree native; energy-zero reference differs from periodic codes; DLPNO-CCSD(T) total is a correlated energy not a DFT one (the parser labels the number 'final_energy' regardless of method).",

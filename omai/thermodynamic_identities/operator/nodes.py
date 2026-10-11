@@ -4,7 +4,7 @@ The whole-map physics review (scans/map-physics-review-2026-07-10.md) read the
 entire published map as a theoretical physicist and found the map's own prose was
 ahead of its wiring: several exact thermodynamic identities the node descriptions
 already STATE were not encoded as executable edges, and two textbook identities
-(the molar Gruneisen relation and C_P - C_V) were one node short of an honest
+(the molar Gruneisen relation and C_P - C_V) were one node short of a complete
 encoding. This slice closes that gap. It is special: EVERY edge is EXECUTABLE
 sympy the dimensional gate PROVES (no opaque solver functions), because these are
 identities that COMBINE the map's existing formulas, not new measurements.

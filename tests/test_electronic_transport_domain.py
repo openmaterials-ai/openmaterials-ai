@@ -321,10 +321,10 @@ def test_contribution_is_connected_through_pre_existing_and_chained_nodes():
 
 
 # --------------------------------------------------------------------------
-# The amset rail.
+# The amset representation.
 # --------------------------------------------------------------------------
 
-def test_amset_rail_covers_the_five_nodes_with_units():
+def test_amset_representation_covers_the_five_nodes_with_units():
     codes = build_codes(DOMAINS)
     amset = codes["amset"]
     assert set(amset) == {

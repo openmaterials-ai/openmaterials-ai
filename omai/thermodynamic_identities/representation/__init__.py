@@ -2,7 +2,7 @@
 
 This domain encodes identities that COMBINE the map's existing formulas, not new
 measurements, so no code emits its nodes directly (a code that reports ZT or a
-power factor does so through the underlying transport tensors, whose rails already
+power factor does so through the underlying transport tensors, whose representations already
 attach to the ElectricalConductivity / Seebeck / thermal-conductivity nodes this
 domain contracts). build_codes discovers SpaceRepresentationSpec objects here;
 there are none, which is correct and intentional. The package exists so the Domain

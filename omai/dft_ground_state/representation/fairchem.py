@@ -193,7 +193,7 @@ FAIRCHEM_SOLVE_GROUND_STATE = OperatorRepresentationSpec(
         "matcalc DRIVER + its scheme (strain grid, EOS volume scan n_points, "
         "supercell / mesh / displacement, optimizer / fmax / cell_filter, "
         "matcalc-owned discretizations) AND this fairchem checkpoint (the true "
-        "PES). matcalc mints no unit basis of its own, so it earns no rail; the "
+        "PES). matcalc mints no unit basis of its own, so it earns no representation; the "
         "schemes ride the driven-node operator specs and this checkpoint is the "
         "physics, both required for reproducibility."
     ),

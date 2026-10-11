@@ -15,7 +15,7 @@ mathematics a Lean proof of it would take:
   function symbol) or the edge carries no formula; there is nothing
   algebraic to prove, only the dimension and the lineage.
 
-The website renders ``docs/data/lean_roadmap.json``. The counts are an honest
+The website renders ``docs/data/lean_roadmap.json``. The counts are a plain
 statement of the frontier, not a coverage claim: ``hard`` and ``na`` rows say
 plainly what a proof would take and why none is shipped.
 """

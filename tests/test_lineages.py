@@ -819,7 +819,7 @@ def test_record_from_bundle_no_node_is_flagged_not_invented():
     """A bundle whose spec names NO map node (the common MCG case: specs carry
     template physics, not a map node id) is still recorded, but the writer does
     NOT invent a node. The light validator FLAGS it node-unresolved (valid, not
-    rejected): the honesty rule, whatever we have."""
+    rejected): the flag-not-reject rule, whatever we have."""
     # A real MCG-style spec: template physics params, no 'node'.
     man = _bundle(spec={"temperature_K": 300.0, "potential": "Si-NEP"})
     rec = lin.record_from_bundle(man, name_to_uid=_NAME_TO_UID)
@@ -1134,7 +1134,7 @@ def test_mirror_without_provider_is_valid():
 def test_record_light_no_node_no_artifacts_is_valid_and_flagged():
     """A light record with NO artifacts and NO node is valid (whatever we have):
     validate_light flags node-unresolved but does NOT reject. The lineage carries
-    the template + values honestly."""
+    the template + values as given."""
     rec = lin.record_light(lineage={"template": "gpumd",
                                    "conditions": {"T": 300.0},
                                    "values": {"pressure_GPa": 0.0}})

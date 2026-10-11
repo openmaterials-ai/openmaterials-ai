@@ -375,21 +375,21 @@ def test_contribution_is_one_connected_component():
 
 
 # --------------------------------------------------------------------------
-# The phonopy rail (QHA) and the graph placement.
+# The phonopy representation (QHA) and the graph placement.
 # --------------------------------------------------------------------------
 
-def test_phonopy_rail_covers_the_qha_nodes_with_units():
+def test_phonopy_representation_covers_the_qha_nodes_with_units():
     codes = build_codes(DOMAINS)
     phonopy = codes["phonopy"]
     assert phonopy["QHAGibbsEnergy"]["unit"] == "kJ_per_mol"
     assert phonopy["ThermalExpansion"]["unit"] == "per_kelvin"
     assert phonopy["HeatCapacityConstantP"]["unit"] == "J_per_K_per_mol"
     assert phonopy["ThermalGruneisen"]["unit"] == "dimensionless"
-    # The QHA route to BulkModulus rides the phonopy rail in GPa.
+    # The QHA route to BulkModulus rides the phonopy representation in GPa.
     assert phonopy["BulkModulus"]["unit"] == "GPa"
 
 
-def test_lammps_rail_covers_mass_density_in_g_per_cm3():
+def test_lammps_representation_covers_mass_density_in_g_per_cm3():
     codes = build_codes(DOMAINS)
     assert codes["lammps"]["MassDensity"]["unit"] == "gram_per_cm3"
 

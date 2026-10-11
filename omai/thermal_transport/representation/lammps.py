@@ -470,7 +470,7 @@ LAMMPS_CONTRACT_KAPPA_NEMD = OperatorRepresentationSpec(
     # these parameters; the run's `units` style decides (imposed_flux: metal
     # eV/ps, real kcal/(mol*fs), lj epsilon/tau; imposed_gradient: K/Angstrom
     # for metal/real, reduced for lj). declared_parameter_unit() raising is
-    # the honest signal here; declaring one token would repeat the
+    # the correct signal here; declaring one token would repeat the
     # hard-coding this spec used to have.
     notes=(
         "Canonical LAMMPS NEMD: `fix thermal/conductivity` (Müller-"

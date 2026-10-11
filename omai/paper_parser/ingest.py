@@ -58,7 +58,7 @@ def read_pdf(pdf_path: str | Path) -> Ingested:
     # LimitReachedError, live on a 55-page arXiv PDF 2026-07-12) must not
     # take down the whole corpus. A broken page contributes empty text and
     # is recorded; claims citing only broken pages die at the quote gate,
-    # which is the honest outcome (unverifiable is unusable).
+    # which is the intended outcome (unverifiable is unusable).
     for i, page in enumerate(reader.pages):
         try:
             pages_l.append(page.extract_text() or "")

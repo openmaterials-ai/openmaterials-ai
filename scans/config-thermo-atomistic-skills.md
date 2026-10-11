@@ -49,7 +49,7 @@ Statuses below are re-stated against the live 73-node graph.
   `diffusivity`, `activation_energy`, `mean_squared_displacement`.
 - **Still absent** (73-node graph): `IonicConductivity`, `ChargeDiffusivity`,
   `HavenRatio`, `ProbabilityDensity`, `ReactionEnergy`, `ClusterExpansion`.
-- **Now present** (landed since scan, the pycalphad encode + mp-api rail):
+- **Now present** (landed since scan, the pycalphad encode + mp-api representation):
   `ChemicalPotential` (`ENERGY_PER_MOLE`, J/mol, per mole of atoms,
   `omai/thermochemistry/operator/nodes.py:121`), `MolarGibbsEnergy`,
   `PhaseFraction`, `TransitionTemperature`, plus `EnergyAboveHull` and `Voltage`.
@@ -187,7 +187,7 @@ node.
 
 - **Diffusion trio already-mapped, unchanged.** `Diffusivity` (cm^2/s),
   `ActivationEnergy` (eV), `MeanSquaredDisplacement` (A^2 vs fs) map directly to
-  the `mat-diffusion-analysis` rail + pymatgen representation. Wheel-verified
+  the `mat-diffusion-analysis` representation + pymatgen representation. Wheel-verified
   units held.
 - **Diffusion extension**: `IonicConductivity` (new, mS/cm, above). Charge
   diffusivity (cm^2/s, collective vs tracer), the Haven ratio (dimensionless,
@@ -305,7 +305,7 @@ node.
   `SKILL.md:9-24`.
 - **Map side**: `omai/materials/operator/nodes.py:7-26` (Diffusivity,
   ActivationEnergy); `omai/materials/representation/mat_diffusion_analysis.py:7-21`
-  (D cm^2/s, E_a eV rail); `omai/materials/representation/pymatgen.py:13,69-71`
+  (D cm^2/s, E_a eV representation); `omai/materials/representation/pymatgen.py:13,69-71`
   (MSD A^2 vs fs); `omai/operator/dimensions.py:115,129` (ThermalConductivity vs
   DIFFUSIVITY); `omai/operator/dimensions.py:130-132` (Voltage, I=-1, the map's
   first electric-current axis); `omai/operator/registry.py:125-127`;

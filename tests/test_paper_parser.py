@@ -888,7 +888,7 @@ def test_map_payload_carries_deterministic_resolver_hint():
     assert "PhononDOS" in _resolve_hint("phonon density of states")
     qha = _resolve_hint("quasi-harmonic approximation")
     assert "QHAGibbsEnergy" in qha and "ThermalExpansion" in qha
-    assert _resolve_hint("atomic multipole partitioning") == []  # honest gap
+    assert _resolve_hint("atomic multipole partitioning") == []  # no node covers it
     assert _resolve_hint("") == []
 
     # the hint rides in the rendered claims payload
@@ -995,7 +995,7 @@ def test_review_batches_and_concatenates_verdicts():
     """A dense paper's surviving claims overflow a single 16k review output
     (live: kappa-limit, 2026-07-13): review now runs in REVIEW_BATCH_SIZE
     batches with global indices, and a refusal aborts the remaining batches
-    honestly (their claims carry no verdict)."""
+    cleanly (their claims carry no verdict)."""
     from omai.paper_parser import review as review_mod
 
     surviving = []

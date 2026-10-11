@@ -1,4 +1,4 @@
-"""The published distance data: registry-true, deterministic, honestly labeled.
+"""The published distance data: registry-true, deterministic, accurately labeled.
 
 docs/data/distances.json is derived data for the site's Distance tab: the
 metric registry read from omdc itself, the illustrative silicon zoo computed
@@ -52,7 +52,7 @@ def test_zoo_is_labeled_illustrative_and_complete():
         assert set(row["distances"].keys()) == ids, row["name"]
 
 
-def test_committed_section_counts_honestly():
+def test_committed_section_counts_match_the_pairs():
     d = json.loads(_DATA.read_text())
     c = d["committed"]
     n = c["configurations"]

@@ -1,7 +1,7 @@
 r"""mp-api / Materials Project adapter specs for the mechanics domain.
 
-The mechanics slice of the map's first DATABASE rail (see
-`omai.dft_ground_state.representation.mp_api` for what "database rail" means).
+The mechanics slice of the map's first DATABASE representation (see
+`omai.dft_ground_state.representation.mp_api` for what "database representation" means).
 Anchored in `scans/mp-api-atomistic-skills.json` (deep review 2026-07-09;
 emmet-core 0.85.1 elasticity.py read from source, the two load-bearing unit
 claims verified beyond the docstrings, in the emmet builder / pymatgen math).

@@ -1,18 +1,18 @@
 r"""mp-api / Materials Project adapter specs for the DFT ground-state domain.
 
-The map's FIRST database rail. Every other rail is an ENGINE (QE, VASP, LAMMPS,
+The map's FIRST database representation. Every other representation is an ENGINE (QE, VASP, LAMMPS,
 a MACE checkpoint): you run it and it produces a value. Materials Project is a
 DATABASE: its artifacts are document-model records that mp_api.client.MPRester
 retrieves, each carrying an already-computed value for a mapped quantity. Those
 values were themselves produced by VASP DFT workflows (MP's provenance is the
-atomate2/VASP stack the vasp rail catalogs), so MP is a RETRIEVAL representation
+atomate2/VASP stack the vasp representation catalogs), so MP is a RETRIEVAL representation
 of nodes the map already grounds, not a new producer.
 
 Anchored in `scans/mp-api-atomistic-skills.json` (+ .md, deep review
 2026-07-09; every emmet document field opened and read from the installed
 source). Pins: mp-api 0.41.2 / emmet-core 0.85.1. This is the DFT-ground-state
-slice of the cross-domain mp-api rail (dft, stability, mechanics, thermal share
-the one rail, exactly as the vasp rail does):
+slice of the cross-domain mp-api representation (dft, stability, mechanics, thermal share
+the one representation, exactly as the vasp representation does):
 
   operator Space   MP record field (endpoint)                     units
   ---------------  ---------------------------------------------  --------
@@ -84,7 +84,7 @@ MP_API_MAGNETIC_MOMENT = SpaceRepresentationSpec(
         "Per-site magnetic moments in Bohr magnetons from MP's spin-polarized "
         "ground state: MagnetismDoc.magmoms, a per-site list (magnetism.py:"
         "52-55), the same per-site MagneticMoment node VASP (Outcar) and the "
-        "pymatgen / matgl rails ground. MAGNETIZATION TRAP (this module's "
+        "pymatgen / matgl representations ground. MAGNETIZATION TRAP (this module's "
         "headline): the per-cell total_magnetization is a DIFFERENT quantity, "
         "NOT this node. It is abs()-ed at populate time (magnetism.py:81-83, "
         "in-source comment 'not necessarily == sum(magmoms)'), so the SIGN is "

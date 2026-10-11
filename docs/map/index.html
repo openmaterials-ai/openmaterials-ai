@@ -573,7 +573,7 @@ function syncHash(id){
   history.replaceState(null,'',h||location.pathname+location.search);
 }
 function applyHash(){
-  // #code=<name>: land with one code's rails lit (the codes bibliography links here)
+  // #code=<name>: land with one code's coverage lit (the codes bibliography links here)
   const codeRef=codeFromHash();
   if(codeRef && codesData[codeRef]){ if(activeCode!==codeRef) toggleCode(codeRef); return; }
   if(activeCode) toggleCode(activeCode); // the hash no longer names a code: clear the filter

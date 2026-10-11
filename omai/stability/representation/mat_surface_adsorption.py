@@ -4,9 +4,9 @@ stability domain.
 The AtomisticSkills mat-surface-adsorption skill, driving matcalc 0.5.1's
 AdsorptionCalc over an MLIP through the ASE calculator protocol, is the
 producer of the AdsorptionEnergy node. This is the "mat-surface-adsorption"
-skill rail, NOT a separate "matcalc" rail: per the atomate2 ruling, matcalc is
+skill representation, NOT a separate "matcalc" representation: per the atomate2 ruling, matcalc is
 a driver layer that mints no unit basis of its own, so it lives in these specs'
-notes, not as a rail. Anchored in
+notes, not as a representation. Anchored in
 `scans/matcalc-ase-atomistic-skills.json` (deep review 2026-07-09, the entry
 matcalc-adsorption-energy, package-source-verified against the pip-downloaded
 matcalc-0.5.1 sdist and re-anchored to the real skill script). AtomisticSkills
@@ -20,7 +20,7 @@ calc_adslabs).
                     adsorption_energy = E_adslab - E_slab - E_ads
 
 matcalc is a DRIVER LAYER (the atomate2 ruling applies: it mints no unit
-basis, only eVA3ToGPa, a scipy conversion), so it earns no separate rail; the
+basis, only eVA3ToGPa, a scipy conversion), so it earns no separate representation; the
 adsorption energy rides the ASE-calculator eV boundary. The matcalc scheme
 (slab / adslab / adsorbate relaxation, site enumeration, FIRE optimizer,
 fmax) is the operator discretization, recorded on the OperatorRepresentationSpec
@@ -91,7 +91,7 @@ MATCALC_COMPUTE_ADSORPTION_ENERGY = OperatorRepresentationSpec(
     },
     notes=(
         "Realized by matcalc AdsorptionCalc (a driver over the MLIP PES, no "
-        "separate rail): the reference_convention scheme "
+        "separate representation): the reference_convention scheme "
         "(adslab_minus_slab_minus_adsorbate) is what AdsorptionCalc computes; "
         "the slab / adslab / adsorbate relaxations, site enumeration, "
         "optimizer, and fmax are matcalc-owned discretization choices on this "

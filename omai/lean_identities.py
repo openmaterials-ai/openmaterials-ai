@@ -37,8 +37,8 @@ polynomial definitions (no denominator to clear) carry no algebraic content
 beyond their definition, exactly like a single-edge composition would, so they
 are recorded as skipped rather than emitted as a near-reflexive law. Everything
 that needs analysis (an integral, a sum, a special function) or is an opaque
-solver call is recorded in the skip list with an honest reason, so coverage is an
-honest, displayable number.
+solver call is recorded in the skip list with a stated reason, so coverage is an
+accurate, displayable number.
 
 CLI:  python -m omai.lean_identities  ->  writes lean/OpenMaterialsIdentities.lean
 """
@@ -333,7 +333,7 @@ def _law_lean(op):
 
 def _law_list():
     """A `law` theorem for every standalone rational operator across all domains
-    that is NOT already emitted as a composition, plus the skip list with honest
+    that is NOT already emitted as a composition, plus the skip list with stated
     per-operator reasons for the rest."""
     composition_ops = {t["op"] for t in _theorem_list()[0]}
     theorems, skipped = [], []

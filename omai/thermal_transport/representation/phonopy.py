@@ -20,7 +20,7 @@ References to the phonopy API (https://phonopy.github.io/phonopy/):
 
 The QUASI-HARMONIC (constant-pressure) side of phonopy, PhonopyQHA (driven by
 matcalc QHACalc, mat-qha-thermal-expansion), lives on this same 'phonopy' code
-rail but is declared in the quasi-harmonic domain's representation package
+representation but is declared in the quasi-harmonic domain's representation package
 (omai/quasiharmonic/representation/phonopy.py): the QHA Gibbs energy, thermal
 expansion (1/K), constant-pressure heat capacity, thermal Gruneisen, and the QHA
 route to BulkModulus (B(T), GPa). Those specs carry the kJ/mol per-phonopy-cell

@@ -6,7 +6,7 @@ anchored in scans/orca-atomistic-skills.json, 18 entries, deep-review verified
 quantity claim anchors to a committed skill file:line: the three
 chem-dft-orca-{singlepoint,optimization,advanced-calculation} skills, the shared
 src/utils/dft/orca_utils.py, and the pure-regex parse_orca_output.py that reads
-ORCA .out files. This is the map's FIRST molecular rail.
+ORCA .out files. This is the map's FIRST molecular representation.
 
   operator Space      ORCA artifact                                        native -> served
   ------------------  ---------------------------------------------------  ----------------
@@ -207,7 +207,7 @@ ORCA_MOLECULAR_FREQUENCY = SpaceRepresentationSpec(
         "cm^-1 is a spectroscopic WAVENUMBER nu-tilde = nu/c, NOT an angular "
         "frequency omega; the two share the FREQUENCY dimension only after the "
         "omega = 2*pi*c*nu-tilde bridge (the 2*pi*c factor is a representation "
-        "convention on this rail, not a dimension change). Indexed by mode m (the "
+        "convention on this representation, not a dimension change). Indexed by mode m (the "
         "`mode` kind), EXPLICITLY NOT the periodic phonon (q, nu) Frequency (a "
         "molecule has no Brillouin zone). Per-mode IR intensities in km/mol are a "
         "companion spectrum artifact (chem-spectrum-matcher), not this node. "

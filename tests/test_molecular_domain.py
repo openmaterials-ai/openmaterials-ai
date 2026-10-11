@@ -15,7 +15,7 @@ three implicit edges:
   * BondDissociationEnergy (compute_bond_dissociation): a labeled sibling of the
     solid-state ReactionEnergy on the per-molecule basis.
 
-Three nodes + three edges = records 175-180. Two rails land: orca (the map's
+Three nodes + three edges = records 175-180. Two representations land: orca (the map's
 first molecular code) and openmm (a new classical-force-field engine), both
 covering pre-existing nodes (TotalEnergy, Forces, Temperature, Pressure,
 Trajectory) as well as the new molecular nodes.
@@ -29,7 +29,7 @@ Load-bearing proofs here:
   * HOMOLUMOGap vs BandGap distinctness (the band / discrete-orbital category
     error);
   * the construction LABEL_KEY round-trips through the node identity;
-  * the orca / openmm rails auto-parametrize at the operator/representation
+  * the orca / openmm representations auto-parametrize at the operator/representation
     boundary (discovered specs, correct serving units).
 
 All three new edges carry opaque solver functions, classified SKIPPED by the
@@ -324,10 +324,10 @@ def test_contribution_is_one_connected_component():
 
 
 # --------------------------------------------------------------------------
-# The two rails (orca, openmm) auto-parametrize at the boundary.
+# The two representations (orca, openmm) auto-parametrize at the boundary.
 # --------------------------------------------------------------------------
 
-def test_orca_rail_covers_energy_forces_and_the_molecular_nodes():
+def test_orca_representation_covers_energy_forces_and_the_molecular_nodes():
     codes = build_codes(DOMAINS)
     orca = codes["orca"]
     assert orca["TotalEnergy"]["unit"] == "ev"
@@ -336,7 +336,7 @@ def test_orca_rail_covers_energy_forces_and_the_molecular_nodes():
     assert orca["ReactionBarrier[construction=neb_mep]"]["unit"] == "ev"
 
 
-def test_openmm_rail_covers_the_md_nodes_and_the_mm_total_energy():
+def test_openmm_representation_covers_the_md_nodes_and_the_mm_total_energy():
     codes = build_codes(DOMAINS)
     openmm = codes["openmm"]
     assert openmm["Temperature"]["unit"] == "kelvin"

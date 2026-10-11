@@ -7,7 +7,7 @@ COHP bonding analysis (`lobsterpy`, `atomate2-agent`), and phase-field evolution
 `scans/characterization-atomistic-skills.json` (12 entries). This is a SCAN: it
 catalogs, it does not map code.
 
-Three distinct substrates land here, and the honesty of the scan is in keeping
+Three distinct substrates land here, and the scan's rigor is in keeping
 them apart:
 
 - **XRD is FUNCTION-VALUED** (intensity vs a spectral axis) with scalar
@@ -106,7 +106,7 @@ Verified directly:
   QHA 164-174 had not landed, no race). **Em-dash grep zero** over both files.
 
 **The one correction** is the grain-boundary entry: committed real gamma_GB
-values exist (see the fipy honesty section below and the JSON
+values exist (see the fipy scope section below and the JSON
 `committed_example_values`), which the scan understated. All other entries stand
 exactly as scanned. Full per-entry verdicts and the orchestrator-decision list
 are in the JSON (`review_verdicts_2026_07_10`, `orchestrator_decisions_2026_07_10`).
@@ -201,7 +201,7 @@ fractions) come from `lobsterpy.cohp.analyze.Analysis` / `lobsterpy
 automatic-plot`, which the SKILL.md references but the committed code does not
 invoke: the scalars are one level deeper than the committed script.
 
-## fipy: the honesty verdict (DEFERRED, different substrate)
+## fipy: the scope verdict (DEFERRED, different substrate)
 
 **What fipy evolves.** The phase-field skills evolve CONTINUUM PDE FIELDS on a
 finite-volume mesh (`fipy.Grid2D` + `CellVariable`): (a) Allen-Cahn evolves a
@@ -214,7 +214,7 @@ are a GIF/PNG of the evolving field and, for grain growth, a scalar TIME SERIES
 (grain area vs time in grid-unit^2) demonstrating the v = M gamma K curvature
 law.
 
-**Honest answer.** A continuum field is a DIFFERENT SUBSTRATE from the map's
+**Answer.** A continuum field is a DIFFERENT SUBSTRATE from the map's
 per-material scalars: it is a mesoscale spatiotemporal STATE of a microstructure,
 not a property OF a material. The AtomisticSkills phase-field skills produce NO
 map-shaped per-material scalar as written: the order parameters and
@@ -244,7 +244,7 @@ and the producing edge scheme, exactly as the facet (hkl) does for
 cited only the SKILL.md literature comparison (Cu Sigma5 ~0.8-1.0 J/m^2 from MD).
 It MISSED the committed real example
 `mat-grain-boundary/examples/Cu-001-tilt-TensorNet/`, which ships
-`gb_energy_results.json` + `gb_summary_table.csv` + `README.md` with THREE honest
+`gb_energy_results.json` + `gb_summary_table.csv` + `README.md` with THREE
 MLIP-computed gamma_GB values (not literature): **Sigma5 (36.87 deg) 0.9768,
 Sigma13 (22.62 deg) 0.7759, Sigma25 (16.26 deg) 0.7196 J/m^2**. Full provenance:
 Cu FCC (MP mp-30), TensorNet-MatPES-r2SCAN-v2025.1-PES, bulk E/atom -10.825556

@@ -229,7 +229,7 @@ PYCALPHAD_CALPHAD_MOLAR_ENTROPY = SpaceRepresentationSpec(
         "(contract_gibbs_hts), the second producer of MolarGibbsEnergy; the "
         "three energy-side quantities (G_m, H_m, S_m) are all on the SAME "
         "per-mole-of-atoms constant-P SER basis, so the identity is "
-        "basis-honest. EXPLICITLY DISTINCT from the phonopy MolarEntropy "
+        "basis-consistent. EXPLICITLY DISTINCT from the phonopy MolarEntropy "
         "(constant-V per-mole-of-cells vibrational entropy, kJ/mol per K "
         "phonopy convention): same J/(K mol) exponent vector, different "
         "ensemble and basis, kept apart by the calphad_molar_entropy tag. Not "
