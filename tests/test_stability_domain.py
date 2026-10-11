@@ -45,7 +45,7 @@ def test_stability_domain_in_domains_between_mechanics_and_materials():
         "thermal_transport", "dft_ground_state", "mechanics", "stability",
         "thermochemistry", "quasiharmonic", "molecular",
         "electronic_transport", "materials", "thermodynamic_identities",
-        "composites", "analog_device_metrology"]
+        "composites", "analog_device_metrology", "cure_kinetics"]
 
 
 def test_stability_domain_declares_stability_tier():

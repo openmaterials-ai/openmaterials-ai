@@ -232,7 +232,7 @@ contract_gibbs_hts = Operator(
         "(1,2,-2,0,-1,0,0) = ENERGY_PER_MOLE, so H_m - T S_m is an Add of two "
         "equal ENERGY_PER_MOLE dimensions, matching G_m. All three "
         "energy-side quantities are on the SAME CALPHAD basis (per mole of "
-        "atoms, constant P, SER), so the identity is basis-honest. Closed-form "
+        "atoms, constant P, SER), so the identity is basis-consistent. Closed-form "
         "and sympy-executable."
     ),
 )

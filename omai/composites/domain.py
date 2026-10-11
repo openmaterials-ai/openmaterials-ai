@@ -14,6 +14,7 @@ SYMBOLS: dict[str, str] = {
     "DepolarizationFactor": r"L",
     "ThermalConductivity[effective_medium=nan,orientation=random]": r"\kappa_c",
     "ThermalConductivity[effective_medium=nan,orientation=aligned]": r"\kappa_c^{\parallel}",
+    "InterfaceConductance[transport_model=nemd]": r"G_{\mathrm{nemd}}",
 }
 
 COMPOSITES = Domain(

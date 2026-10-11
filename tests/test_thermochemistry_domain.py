@@ -45,7 +45,7 @@ def test_thermochemistry_domain_between_stability_and_materials():
         "thermal_transport", "dft_ground_state", "mechanics", "stability",
         "thermochemistry", "quasiharmonic", "molecular",
         "electronic_transport", "materials", "thermodynamic_identities",
-        "composites", "analog_device_metrology"]
+        "composites", "analog_device_metrology", "cure_kinetics"]
 
 
 def test_thermochemistry_declares_the_single_tier():
@@ -367,9 +367,12 @@ def test_map_has_one_hundred_nodes_and_fifteen_tiers():
     # Composite tier (2026-07-13), the 16th tier.
     g = build_graph_dict(DOMAINS)
     # 126 nodes and 17 tiers with the analog-device-metrology domain's eleven
-    # nodes and the Diffusion tier's MigrationBarrier (2026-10-05).
-    assert len(g["nodes"]) == 126
-    assert len(g["tiers"]) == 17
+    # nodes and the Diffusion tier's MigrationBarrier (2026-10-05). +1 for
+    # InterfaceConductance[transport_model=nemd] (Molecular dynamics, no new tier).
+    # +2 for the cure-kinetics domain's nodes in the new Cure kinetics tier, the
+    # 18th tier.
+    assert len(g["nodes"]) == 129
+    assert len(g["tiers"]) == 18
 
 
 # --------------------------------------------------------------------------

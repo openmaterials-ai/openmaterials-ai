@@ -168,8 +168,8 @@ ELECTRONIC_THERMAL_CONDUCTIVITY = ObservableSpace(
         "shared dimension. amset's own source flags the unit as unconfirmed "
         "(data.py:483 '# TODO: confirm unit of kappa'; it serializes the header "
         "unit as '?'); W/(m K) is the BoltzTraP2 calc_Onsager_coefficients "
-        "convention, and the honesty caveat (confirm against BoltzTraP2 before "
-        "any EXPECTED_AGREE) rides the amset rail. Served as the scalar "
+        "convention, and the caveat (confirm against BoltzTraP2 before "
+        "any EXPECTED_AGREE) rides the amset representation. Served as the scalar "
         "kappa_e; the amset (n_doping, n_temperature, 3, 3) tensor is a "
         "representation-layer packing."
     ),

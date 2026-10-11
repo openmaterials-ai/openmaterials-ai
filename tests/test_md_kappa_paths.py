@@ -5,10 +5,10 @@ ThermalConductivity — `green_kubo`, `nemd`, `hnemd` — and three
 contraction edges that close the cross-paradigm κ map.
 
 Adapter coverage extends `lammps` (green_kubo + nemd; HNEMD declared
-not-exposed) and `gpumd` (green_kubo + hnemd; NEMD declared
-not-exposed). The not-exposed entries are *also* OperatorRepresentationSpec
-instances — they're documented as routing through the other adapter,
-but they still appear in the audit.
+not-exposed) and `gpumd` (green_kubo + hnemd; its NEMD spec documents the
+direct two-reservoir ensembles and routes Müller-Plathe swapping through
+LAMMPS). Those entries are *also* OperatorRepresentationSpec instances, so
+they still appear in the audit.
 """
 
 from __future__ import annotations
@@ -177,7 +177,7 @@ def test_lammps_hnemd_is_documented_as_not_exposed():
 
 
 # ---------------------------------------------------------------------------
-# GPUMD coverage (green_kubo + hnemd; NEMD not-exposed)
+# GPUMD coverage (green_kubo + hnemd; Müller-Plathe NEMD routes through LAMMPS)
 # ---------------------------------------------------------------------------
 
 
@@ -210,17 +210,21 @@ def test_gpumd_covers_green_kubo_and_hnemd_edges():
     assert GPUMD_CONTRACT_KAPPA_HNEMD.operator is contract_kappa_hnemd
 
 
-def test_gpumd_nemd_is_documented_as_not_exposed():
+def test_gpumd_nemd_notes_name_the_two_reservoir_ensembles():
+    """GPUMD runs direct two-reservoir NEMD; only Müller-Plathe swapping (the
+    operator's declared scheme) routes through LAMMPS."""
     from omai.thermal_transport.representation.gpumd import GPUMD_CONTRACT_KAPPA_NEMD
 
     assert isinstance(GPUMD_CONTRACT_KAPPA_NEMD, OperatorRepresentationSpec)
     assert GPUMD_CONTRACT_KAPPA_NEMD.operator is contract_kappa_nemd
     notes = GPUMD_CONTRACT_KAPPA_NEMD.notes.lower()
-    assert "not exposed" in notes or "lammps" in notes
+    assert "not exposed" not in notes
+    for word in ("heat_lan", "heat_nhc", "heat_bdp", "muller_plathe", "lammps"):
+        assert word in notes
 
 
 # ---------------------------------------------------------------------------
-# MESCAL coherent-transport rail (Landauer). MESCAL joins for coherent transport
+# MESCAL coherent-transport representation (Landauer). MESCAL joins for coherent transport
 # the way kaldo enters for QHGK: it serves PhononTransmission and the Landauer
 # ThermalConductance.
 # ---------------------------------------------------------------------------
@@ -231,7 +235,7 @@ def test_mescal_appears_in_build_codes_with_phonon_transmission_mapped():
     from omai.thermal_transport.domain import THERMAL_TRANSPORT
 
     codes = build_codes((THERMAL_TRANSPORT,))
-    assert "mescal" in codes, "mescal rail missing from build_codes"
+    assert "mescal" in codes, "mescal representation missing from build_codes"
     mescal = codes["mescal"]
     # PhononTransmission is mapped (the observable every coherent method shares).
     assert "PhononTransmission" in mescal

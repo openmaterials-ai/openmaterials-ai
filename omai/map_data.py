@@ -617,11 +617,12 @@ def _domains() -> tuple[Domain, ...]:
         from omai.thermodynamic_identities.domain import THERMODYNAMIC_IDENTITIES
         from omai.composites.domain import COMPOSITES
         from omai.analog_device_metrology.domain import ANALOG_DEVICE_METROLOGY
+        from omai.cure_kinetics.domain import CURE_KINETICS
         _DOMAINS_CACHE = (THERMAL_TRANSPORT, DFT_GROUND_STATE, MECHANICS,
                           STABILITY, THERMOCHEMISTRY, QUASIHARMONIC,
                           MOLECULAR, ELECTRONIC_TRANSPORT, MATERIALS,
                           THERMODYNAMIC_IDENTITIES, COMPOSITES,
-                          ANALOG_DEVICE_METROLOGY)
+                          ANALOG_DEVICE_METROLOGY, CURE_KINETICS)
     return _DOMAINS_CACHE
 
 

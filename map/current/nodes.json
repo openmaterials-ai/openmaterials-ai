@@ -192,7 +192,7 @@
    "quantity": "configurational_energy"
   },
   "meta": {
-   "description": "Lattice-model energy of a configuration predicted by a cluster expansion: E = dot(coefs, correlations), the configurational-energetics analog of an MLIP potential energy on a structure. On a FIXED lattice and FIXED cell (relax_cell=False), reference-shifted by the training set (a total or a formation energy), so NOT a relaxed-structure DFT/MLIP TotalEnergy and NOT a per-atom FormationEnergy despite sharing the plain ENERGY dimension (1,2,-2,0,0,0,0); kept a distinct node by the configurational_energy quantity tag. BASIS is a per-instance caveat: extensive per supercell (processor.compute_property / predict default), per primitive cell (predict normalized=True, CV-RMSE in eV/prim), or per atom (eV/atom, what the grand-canonical-MC skill divides to report); which basis and which ECI training-energy reference an instance uses ride in the conditions, not the dimension. The cluster-expansion checkpoint that predicts it is a Potential-representation analog (the smol rail records it as an MLIP-checkpoint sibling), not minted as a node here.",
+   "description": "Lattice-model energy of a configuration predicted by a cluster expansion: E = dot(coefs, correlations), the configurational-energetics analog of an MLIP potential energy on a structure. On a FIXED lattice and FIXED cell (relax_cell=False), reference-shifted by the training set (a total or a formation energy), so NOT a relaxed-structure DFT/MLIP TotalEnergy and NOT a per-atom FormationEnergy despite sharing the plain ENERGY dimension (1,2,-2,0,0,0,0); kept a distinct node by the configurational_energy quantity tag. BASIS is a per-instance caveat: extensive per supercell (processor.compute_property / predict default), per primitive cell (predict normalized=True, CV-RMSE in eV/prim), or per atom (eV/atom, what the grand-canonical-MC skill divides to report); which basis and which ECI training-energy reference an instance uses ride in the conditions, not the dimension. The cluster-expansion checkpoint that predicts it is a Potential-representation analog (the smol representation records it as an MLIP-checkpoint sibling), not minted as a node here.",
    "name": "ConfigurationalEnergy",
    "symbol": "E_{\\mathrm{cfg}}",
    "tier": "Diffusion"
@@ -428,7 +428,7 @@
    "quantity": "thermal_gruneisen"
   },
   "meta": {
-   "description": "Macroscopic (thermal) Gruneisen parameter gamma(T) = alpha B V / C_V, a single SCALAR per temperature: the heat-capacity-weighted thermodynamic average of the mode Gruneisen parameters, phonopy PhonopyQHA's gruneisen_temperature (qha/core.py:355), matcalc QHACalc's gruneisen_parameters. Dimensionless. EXPLICITLY DISTINCT (a distinct uid by the thermal_gruneisen tag) from the existing MODE Gruneisen (field gamma_G, DIMENSIONLESS, indices (q,nu), computed from FC2/FC3 via the Maradudin-Fein expression): the mode node is (q,nu)-indexed and FC3-produced, this is a T-only scalar from the EOS volume scan, a genuine CONTRACTION of the mode gammas (the honest edge mode-Gruneisen -> ThermalGruneisen). Same DIMENSIONLESS dimension, different index signature and producer, kept apart by the name / quantity tag. Scalar, a function of T only.",
+   "description": "Macroscopic (thermal) Gruneisen parameter gamma(T) = alpha B V / C_V, a single SCALAR per temperature: the heat-capacity-weighted thermodynamic average of the mode Gruneisen parameters, phonopy PhonopyQHA's gruneisen_temperature (qha/core.py:355), matcalc QHACalc's gruneisen_parameters. Dimensionless. EXPLICITLY DISTINCT (a distinct uid by the thermal_gruneisen tag) from the existing MODE Gruneisen (field gamma_G, DIMENSIONLESS, indices (q,nu), computed from FC2/FC3 via the Maradudin-Fein expression): the mode node is (q,nu)-indexed and FC3-produced, this is a T-only scalar from the EOS volume scan, a genuine CONTRACTION of the mode gammas (the edge mode-Gruneisen -> ThermalGruneisen). Same DIMENSIONLESS dimension, different index signature and producer, kept apart by the name / quantity tag. Scalar, a function of T only.",
    "name": "ThermalGruneisen",
    "symbol": "\\gamma_{th}",
    "tier": "Quasi-harmonic"
@@ -1117,6 +1117,26 @@
   },
   "uid": "55eaa32f15db94d55448456fb26f1c3ecaafcc9a3da2947f1615258c492542ef"
  },
+ "5789aa6f8439e8b71b48197dd92c6f608f2bf3ca9900bc631d2321f5eded13cb": {
+  "identity": {
+   "fields": [
+    {
+     "dimension": "Th^1",
+     "indices": []
+    }
+   ],
+   "gauge": "observable",
+   "labels": {},
+   "quantity": "glass_transition_temperature"
+  },
+  "meta": {
+   "description": "Glass transition temperature T_g; Kelvin. Method-neutral: a measured T_g of any glass-forming material is evidence of this node. In a thermosetting network it rises with the degree of cure; the DiBenedetto edge maps a measured or computed degree of cure onto it.",
+   "name": "GlassTransitionTemperature",
+   "symbol": "T_g",
+   "tier": "Cure kinetics"
+  },
+  "uid": "5789aa6f8439e8b71b48197dd92c6f608f2bf3ca9900bc631d2321f5eded13cb"
+ },
  "5aa485c8eea2f4a2a9966f39589ad15e802327513f72c2366dc15605879b86ae": {
   "identity": {
    "fields": [
@@ -1635,7 +1655,7 @@
    "quantity": "electronic_thermal_conductivity"
   },
   "meta": {
-   "description": "Electronic contribution kappa_e to the thermal conductivity from carrier transport: the BoltzTraP2 Onsager electronic thermal conductivity over the interpolated band structure (transport.py:36-39, data.py:80). REUSES the THERMAL_CONDUCTIVITY dimension W/(m K) (M=1,L=1,T=-3,Theta=-1) shared with the map's nine lattice ThermalConductivity[*] nodes, but is a DISTINCT quantity: the two are the ADDITIVE contributions to the total measured thermal conductivity (kappa_total = kappa_lattice + kappa_electronic), from different carriers, operators, and domains. It carries its OWN electronic_thermal_conductivity quantity tag (not the lattice thermal_conductivity tag, not a carrier label on it) so it gets a distinct uid: the MANDATORY firewall against a false-merge on the shared dimension. amset's own source flags the unit as unconfirmed (data.py:483 '# TODO: confirm unit of kappa'; it serializes the header unit as '?'); W/(m K) is the BoltzTraP2 calc_Onsager_coefficients convention, and the honesty caveat (confirm against BoltzTraP2 before any EXPECTED_AGREE) rides the amset rail. Served as the scalar kappa_e; the amset (n_doping, n_temperature, 3, 3) tensor is a representation-layer packing.",
+   "description": "Electronic contribution kappa_e to the thermal conductivity from carrier transport: the BoltzTraP2 Onsager electronic thermal conductivity over the interpolated band structure (transport.py:36-39, data.py:80). REUSES the THERMAL_CONDUCTIVITY dimension W/(m K) (M=1,L=1,T=-3,Theta=-1) shared with the map's nine lattice ThermalConductivity[*] nodes, but is a DISTINCT quantity: the two are the ADDITIVE contributions to the total measured thermal conductivity (kappa_total = kappa_lattice + kappa_electronic), from different carriers, operators, and domains. It carries its OWN electronic_thermal_conductivity quantity tag (not the lattice thermal_conductivity tag, not a carrier label on it) so it gets a distinct uid: the MANDATORY firewall against a false-merge on the shared dimension. amset's own source flags the unit as unconfirmed (data.py:483 '# TODO: confirm unit of kappa'; it serializes the header unit as '?'); W/(m K) is the BoltzTraP2 calc_Onsager_coefficients convention, and the caveat (confirm against BoltzTraP2 before any EXPECTED_AGREE) rides the amset representation. Served as the scalar kappa_e; the amset (n_doping, n_temperature, 3, 3) tensor is a representation-layer packing.",
    "name": "ElectronicThermalConductivity",
    "symbol": "\\kappa_e",
    "tier": "Electronic transport"
@@ -1710,6 +1730,28 @@
   },
   "uid": "9c5a2fdedab6b668ccf5f2043fb4c29a982bcde5063fd6ac8633ee2c7858ecbf"
  },
+ "9dabd5c3e66ac0b87479050482b623c9d72de947eb2aa74730dcb7ad7b4c8d81": {
+  "identity": {
+   "fields": [
+    {
+     "dimension": "M^1 T^-3 Th^-1",
+     "indices": []
+    }
+   ],
+   "gauge": "observable",
+   "labels": {
+    "transport_model": "nemd"
+   },
+   "quantity": "interface_conductance"
+  },
+  "meta": {
+   "description": "Thermal boundary (Kapitza) conductance G of one solid-solid interface from non-equilibrium MD, with an imposed temperature difference or an imposed heat flux (the variant lives in the producing edge's nemd_method scheme, as for the NEMD kappa): G = q_int / Delta_T_int, the steady-state heat flux q_int (power per area) through the interface over the temperature jump Delta_T_int at the interface plane, extrapolated from linear fits to the temperature profile on each side. Dimension INTERFACE_CONDUCTANCE = W/(m^2 K). Same interface_conductance tag as the neutral InterfaceConductance, distinct by the transport_model=nemd label and not resolved onto it: the neutral node is a lumped, calibrated parameter, and a computed value reaches the mixing formulas through the shared tag, as ThermalConductivity[role=matrix] takes a computed or measured km. Classical (equipartition statistics) and size dependent (Liang and Keblinski, Phys. Rev. B 90, 075411 (2014)): the value moves with the lead lengths and the thermostat. Lineage conditions: T, the two materials and the interface structure (orientations, terminations, strain, bonding or intermixing), the potential, and the lead lengths (or extrapolated in 1/L). Params: timestep, steps, sampling, the thermostat and its coupling, n_atoms, cross-section, and the imposed temperature difference or heat flux (linear response).",
+   "name": "InterfaceConductance[transport_model=nemd]",
+   "symbol": "G_{\\mathrm{nemd}}",
+   "tier": "Molecular dynamics"
+  },
+  "uid": "9dabd5c3e66ac0b87479050482b623c9d72de947eb2aa74730dcb7ad7b4c8d81"
+ },
  "a03324d4def54619f16ee80ccf176b95a59808141651debabbf1611b7e3a12d5": {
   "identity": {
    "fields": [
@@ -1732,6 +1774,26 @@
    "tier": "Transport"
   },
   "uid": "a03324d4def54619f16ee80ccf176b95a59808141651debabbf1611b7e3a12d5"
+ },
+ "a0fea831928d4ff6617a0d102f74966d0ea4ce0a2e4cc160cbd362dd0fb8fc0a": {
+  "identity": {
+   "fields": [
+    {
+     "dimension": "1",
+     "indices": []
+    }
+   ],
+   "gauge": "observable",
+   "labels": {},
+   "quantity": "cure_conversion"
+  },
+  "meta": {
+   "description": "Degree of cure alpha of a thermosetting resin, the reacted fraction of its reactive groups (in DSC practice, the released fraction of the total reaction heat); dimensionless, 0 (uncured) to 1 (fully cured). Method-neutral: a measured conversion is evidence of this node. The kamal_cure_conversion edge is the single-(1 - alpha)^n Kamal-Sourour form only; with no diffusion control and constants fit to data before vitrification, its value is an upper bound throughout the hold, loosest near and past vitrification.",
+   "name": "CureConversion",
+   "symbol": "\\alpha",
+   "tier": "Cure kinetics"
+  },
+  "uid": "a0fea831928d4ff6617a0d102f74966d0ea4ce0a2e4cc160cbd362dd0fb8fc0a"
  },
  "a32e08f3d5a147643986f961b701aea560791721df573f09188a557da369fb4f": {
   "identity": {
@@ -2452,7 +2514,7 @@
    "quantity": "molecular_frequency"
   },
   "meta": {
-   "description": "Molecular normal-mode vibrational frequencies of a finite molecule: the 3N-6 (or 3N-5 for a linear molecule) discrete modes obtained by diagonalizing the mass-weighted Hessian, indexed by mode number m (the registered `mode` index kind). Dimension FREQUENCY (0,0,-1,0,0,0,0), served in wavenumbers cm^-1 native (the ORCA / quantum-chemistry convention). IMAGINARY modes are serialized as NEGATIVE frequencies (a mode whose Hessian eigenvalue is negative, an unstable direction); n_imaginary, the count of imaginary modes, is the SADDLE-ORDER diagnostic (a minimum has 0, a first-order transition state exactly 1). EXPLICITLY NOT the periodic phonon Frequency node (the (q, nu) = (qpoint, branch) dispersion omega_qnu over the Brillouin zone): a molecule has NO q and NO phonon branch (no periodicity, only the discrete mode index m), so the two never alias, kept apart by the molecular_frequency tag and the mode-index signature vs the phonon (qpoint, branch). CONVENTION CAVEAT: cm^-1 is a linear wavenumber (1 cm^-1 = c . 100 m^-1 = 0.0299792458 linear THz), NOT an angular frequency; the angular-vs-wavenumber factor 2 pi c is a representation-layer convention, recorded on the rail. The molecular thermochemistry (RRHO) bundle that consumes these modes for the partition function is the next named hook, now unblocked.",
+   "description": "Molecular normal-mode vibrational frequencies of a finite molecule: the 3N-6 (or 3N-5 for a linear molecule) discrete modes obtained by diagonalizing the mass-weighted Hessian, indexed by mode number m (the registered `mode` index kind). Dimension FREQUENCY (0,0,-1,0,0,0,0), served in wavenumbers cm^-1 native (the ORCA / quantum-chemistry convention). IMAGINARY modes are serialized as NEGATIVE frequencies (a mode whose Hessian eigenvalue is negative, an unstable direction); n_imaginary, the count of imaginary modes, is the SADDLE-ORDER diagnostic (a minimum has 0, a first-order transition state exactly 1). EXPLICITLY NOT the periodic phonon Frequency node (the (q, nu) = (qpoint, branch) dispersion omega_qnu over the Brillouin zone): a molecule has NO q and NO phonon branch (no periodicity, only the discrete mode index m), so the two never alias, kept apart by the molecular_frequency tag and the mode-index signature vs the phonon (qpoint, branch). CONVENTION CAVEAT: cm^-1 is a linear wavenumber (1 cm^-1 = c . 100 m^-1 = 0.0299792458 linear THz), NOT an angular frequency; the angular-vs-wavenumber factor 2 pi c is a representation-layer convention, recorded on the representation. The molecular thermochemistry (RRHO) bundle that consumes these modes for the partition function is the next named hook, now unblocked.",
    "name": "MolecularFrequency",
    "symbol": "\\nu_{\\mathrm{mol}}",
    "tier": "Molecular"

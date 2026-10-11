@@ -17,11 +17,14 @@ Load-bearing proofs here:
   * the Hasselman-Johnson second producer agrees with Nan-random at aspect ratio
     1 (a sphere) to machine precision (the redundant-route pattern);
   * zero loading returns the matrix conductivity exactly;
-  * the three closed-form edges (Nan random, Nan aligned, Hasselman-Johnson) are
-    classified OK (PROVEN) by the dimensional gate; the depolarization Piecewise
-    and the resolve identity are SKIPPED (both acceptable);
+  * the four closed-form edges (Nan random, Nan aligned, Hasselman-Johnson, and
+    the NEMD interface conductance) are classified OK (PROVEN) by the dimensional
+    gate; the depolarization Piecewise and the resolve identity are SKIPPED (both
+    acceptable);
   * the effective-kappa random node resolves onto the neutral ThermalConductivity
-    observable (the connectivity bridge), and the reference instance pins 1.2452.
+    observable (the connectivity bridge), and the reference instance pins 1.2452;
+  * the NEMD interface conductance has a producer and no resolve edge, and its
+    records pass the contribution gates on the store before them.
 """
 from __future__ import annotations
 
@@ -283,8 +286,9 @@ def test_hasselman_johnson_sympy_edge_matches_nan_sympy_edge_at_sphere():
 def test_nan_and_hj_edges_are_dimensionally_proven():
     """nan_effective_kappa, nan_effective_kappa_aligned, and hasselman_johnson
     are executable closed forms the dimensional gate PROVES (both sides land on
-    THERMAL_CONDUCTIVITY). The depolarization Piecewise and the resolve identity
-    are SKIPPED (acceptable: the gate only needs the dimensionless shape / the
+    THERMAL_CONDUCTIVITY), and so is the NEMD G = q_int / Delta_T_int
+    (W/(m^2 K)). The depolarization Piecewise and the resolve identity are
+    SKIPPED (acceptable: the gate only needs the dimensionless shape / the
     identity)."""
     edges = list(_domain_edges().values())
     rep = dimensional_report([], edges)
@@ -292,6 +296,7 @@ def test_nan_and_hj_edges_are_dimensionally_proven():
         "nan_effective_kappa",
         "nan_effective_kappa_aligned",
         "hasselman_johnson",
+        "contract_interface_conductance[transport_model=nemd]",
     }
     assert set(rep["skipped"]) == {
         "depolarization_factors",
@@ -363,6 +368,58 @@ def test_resolve_edge_targets_the_neutral_thermal_conductivity():
     assert [o.name for o in op.outputs] == ["ThermalConductivity"]
 
 
+def test_nemd_interface_conductance_has_a_producer_and_no_resolve():
+    """The NEMD estimator joins the interface_conductance family (label only),
+    is produced from (HeatCurrent, Temperature) like
+    contract_kappa[transport_model=nemd], is not resolved onto the neutral node
+    (which stays a source), and is a gpumd row."""
+    from omai.composites.representation.gpumd import GPUMD_INTERFACE_CONDUCTANCE_NEMD
+    from omai.operator.registry import quantity_tag_for
+    from omai.thermal_transport.operator.edges import contract_kappa_nemd
+
+    name = "InterfaceConductance[transport_model=nemd]"
+    nemd = _domain_nodes()[name]
+    neutral = _domain_nodes()["InterfaceConductance"]
+    assert node_id(nemd) == (
+        "9dabd5c3e66ac0b87479050482b623c9d72de947eb2aa74730dcb7ad7b4c8d81")
+    assert quantity_tag_for(name) == "interface_conductance"
+    assert nemd.labels == {"transport_model": "nemd"}
+    assert nemd.tier == "Molecular dynamics"
+    assert nemd.fields[0].dimension == neutral.fields[0].dimension
+    op = _domain_edges()["contract_interface_conductance[transport_model=nemd]"]
+    assert op.inputs == contract_kappa_nemd.inputs
+    assert op.outputs == (nemd,)
+    assert op.schemes == {"nemd_method": "direct_two_reservoir"}
+    # Scoped names: a bare q (wavevector) or Delta T would collide later.
+    assert {s.name for s in op.formula.free_symbols} == {
+        "G_{int}", r"q_{\mathrm{int}}", r"\Delta T_{\mathrm{int}}"}
+    all_edges = [e for d in DOMAINS for e in d.edges]
+    assert [e.name for e in all_edges if nemd in e.outputs] == [op.name]
+    assert not [e for e in all_edges if neutral in e.outputs]
+    assert GPUMD_INTERFACE_CONDUCTANCE_NEMD.space is nemd
+    assert "compute.out" in GPUMD_INTERFACE_CONDUCTANCE_NEMD.code_api["G_int"]
+
+
+def test_nemd_contribution_passes_the_gates_on_the_store_before_it():
+    """The add_node / add_edge records sync applies for the NEMD interface
+    conductance pass every P4 gate (dimensional included) against the
+    committed store read at seq 273, the head before them."""
+    from omai.gates import validate_contribution
+    from omai.genesis import genesis_records
+    from omai.operator.identity import edge_id
+    from omai.store import Store
+
+    nemd = _domain_nodes()["InterfaceConductance[transport_model=nemd]"]
+    op = _domain_edges()["contract_interface_conductance[transport_model=nemd]"]
+    new = {node_id(nemd), edge_id(op, node_id)}
+    records = [{"op": o, "payload": p} for o, p, _ in genesis_records()
+               if p["uid"] in new]
+    assert [r["op"] for r in records] == ["add_node", "add_edge"]
+    store = Store(Path(__file__).resolve().parents[1] / "map")
+    seq_273 = "5a967e980890683f110d5047c2c558aeb5dab104c99311272ed3472f18d80311"
+    assert validate_contribution(records, store.read(seq_273)) == []
+
+
 def test_dag_validates_with_the_composites_domain():
     nodes: list = []
     edges: list = []
@@ -403,9 +460,9 @@ def test_reference_instance_pins_the_nan_random_node():
     assert rec["node_uid"] == uid
 
 
-def test_no_platform_rail_on_the_map():
+def test_no_platform_representation_on_the_map():
     """The composite formulas are the map's own closed-form edges; the
-    partner platform is provenance on the evidence, never a code rail
+    partner platform is provenance on the evidence, never a code representation
     (removed 2026-07-22). The instances keep their source refs."""
     from omai.map_data import build_codes
     from omai.representation.credits import CODE_CREDITS
@@ -417,9 +474,9 @@ def test_no_platform_rail_on_the_map():
 
 def test_graph_totals_after_the_composites_domain():
     g = build_graph_dict(DOMAINS)
-    assert len(g["nodes"]) == 126  # 107 + 7 composite + 11 analog device metrology + MigrationBarrier
+    assert len(g["nodes"]) == 129  # 107 + 8 composite + 11 analog device metrology + MigrationBarrier + 2 cure kinetics
     ops = set()
     for d in DOMAINS:
         for op in d.edges:
             ops.add(op.name)
-    assert len(ops) == 124  # 109 + 5 composite + 10 analog device metrology edges
+    assert len(ops) == 127  # 109 + 6 composite + 10 analog device metrology + 2 cure-kinetics edges

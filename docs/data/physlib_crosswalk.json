@@ -243,6 +243,7 @@
   "DepolarizationFactor": [],
   "ThermalConductivity[effective_medium=nan,orientation=random]": [],
   "ThermalConductivity[effective_medium=nan,orientation=aligned]": [],
+  "InterfaceConductance[transport_model=nemd]": [],
   "CellVolume": [],
   "AtomicMass": [],
   "AtomCount": [],
@@ -257,6 +258,8 @@
   "ProgrammingPulseEnergy": [],
   "MigrationBarrier": [],
   "SetVoltage": [],
-  "RetentionTime": []
+  "RetentionTime": [],
+  "CureConversion": [],
+  "GlassTransitionTemperature": []
  }
 }

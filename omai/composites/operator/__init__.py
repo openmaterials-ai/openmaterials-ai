@@ -4,7 +4,7 @@ Importing this package registers the domain's formula-symbol vocabulary and its
 symbol-dimension bindings as side effects (mirroring the thermodynamic-identities /
 electronic-transport / mechanics packages), so validate_dag and the dimensional
 gate see this domain's symbols. Here that side effect is load-bearing: four of the
-five edges are executable closed forms the dimensional gate PROVES, so the new
+six edges are executable closed forms the dimensional gate PROVES, so the new
 field-symbol dimension bindings must be live before the gate runs.
 """
 from omai.composites.operator import vocabulary as _vocabulary  # registers formula symbols

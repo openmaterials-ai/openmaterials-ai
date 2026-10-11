@@ -1,7 +1,8 @@
 r"""Operators (edges) of the composites (effective-medium) domain.
 
 Five edges implementing the composite effective thermal conductivity of a
-filled matrix with interfacial (Kapitza) resistance:
+filled matrix with interfacial (Kapitza) resistance, and the NEMD producer of
+a computed interface conductance:
 
   depolarization_factors          : () -> DepolarizationFactor
   nan_effective_kappa             : (matrix, filler, interface, fraction,
@@ -12,6 +13,9 @@ filled matrix with interfacial (Kapitza) resistance:
                                      -> effective[orientation=random]  (2nd producer)
   resolve_effective_conductivity  : (effective[orientation=random])
                                      -> ThermalConductivity (neutral observable)
+  contract_interface_conductance[transport_model=nemd]
+                                  : (HeatCurrent, Temperature)
+                                     -> InterfaceConductance[transport_model=nemd]
 
 Physics (Nan et al., J. Appl. Phys. 81, 6692 (1997)) with the interface as a
 per-direction series film (Nan et al., Appl. Phys. Lett. 85, 3549 (2004) form):
@@ -37,7 +41,9 @@ and the numeric branches are exercised by the domain test and served by the
 representation adapter. resolve_effective_conductivity is the identity edge that
 anchors the composite result onto the neutral ThermalConductivity observable
 (the connectivity bridge to the pre-existing map, the resolve_thermal_conductivity
-precedent).
+precedent). The NEMD interface conductance gets no such edge: approximant routes
+relate through the shared tag (record 221); resolve_effective_conductivity is the
+one exception, this domain's connectivity bridge.
 
 Symbols (all bound in dimensions_registry so the gate proves the four closed
 forms): k_m (THERMAL_CONDUCTIVITY, matrix), the filler tensor kappa_f[alpha,beta]
@@ -46,7 +52,10 @@ whose diagonal gives k_{11} = kappa_f[1,1] and k_{33} = kappa_f[3,3]
 f_{vol} / L_{11} / L_{33} (DIMENSIONLESS), and the outputs kappa_c
 (THERMAL_CONDUCTIVITY). The Hasselman-Johnson edge additionally uses a_{rad}
 (LENGTH, the sphere radius) and reads the filler diagonal k_{33} (= k_{11} for
-the isotropic sphere it models).
+the isotropic sphere it models). The NEMD edge uses q_{\mathrm{int}} (heat
+flux, W/m^2) and \Delta T_{\mathrm{int}} (TEMPERATURE, the jump at the interface
+plane), scoped names so they cannot collide with a wavevector q or another
+temperature difference.
 """
 from __future__ import annotations
 
@@ -59,10 +68,15 @@ from omai.composites.operator.nodes import (
     EFFECTIVE_CONDUCTIVITY_RANDOM,
     FILLER_CONDUCTIVITY,
     FILLER_VOLUME_FRACTION,
+    INTERFACE_CONDUCTANCE_NEMD,
     INTERFACE_CONDUCTANCE_NODE,
     MATRIX_CONDUCTIVITY,
 )
-from omai.thermal_transport.operator.nodes import THERMAL_CONDUCTIVITY
+from omai.thermal_transport.operator.nodes import (
+    HEAT_CURRENT,
+    TEMPERATURE_STATE,
+    THERMAL_CONDUCTIVITY,
+)
 
 
 # ---------------------------------------------------------------------------
@@ -286,10 +300,45 @@ resolve_effective_conductivity = Operator(
     ),
 )
 
+# ---------------------------------------------------------------------------
+# NEMD interface conductance, in the form of contract_kappa[transport_model=nemd]
+# (HeatCurrent, Temperature in; schematic Eq out). q_{\mathrm{int}} is the
+# steady-state heat flux through the interface (J is the map's HeatCurrent
+# symbol) and \Delta T_{\mathrm{int}} the temperature jump at the interface
+# plane. No edge onto the neutral InterfaceConductance (see the module
+# docstring).
+# ---------------------------------------------------------------------------
+
+_q = sp.Symbol(r"q_{\mathrm{int}}", positive=True)          # heat flux, W/m^2
+_dT = sp.Symbol(r"\Delta T_{\mathrm{int}}", positive=True)  # interface temperature jump, TEMPERATURE
+
+contract_interface_conductance_nemd = Operator(
+    name="contract_interface_conductance[transport_model=nemd]",
+    inputs=(HEAT_CURRENT, TEMPERATURE_STATE),
+    outputs=(INTERFACE_CONDUCTANCE_NEMD,),
+    schemes={"nemd_method": "direct_two_reservoir"},
+    formula=sp.Eq(_G, _q / _dT),
+    description=(
+        "Direct two-reservoir NEMD interface conductance G = q_int / "
+        "Delta_T_int: the steady-state heat flux q_int (W/m^2) through the "
+        "interface over the temperature jump Delta_T_int at the interface "
+        "plane, from linear fits to the temperature profile on each side, not "
+        "the thermostat setpoints. Schematic, in the form of "
+        "contract_kappa[transport_model=nemd]: q_int comes from the heat "
+        "current (or the reservoirs' energy exchange rate over the "
+        "cross-section) and Delta_T_int from the binned temperature profile. "
+        "The result is classical and size dependent, so no edge resolves it "
+        "onto the neutral InterfaceConductance (the lumped, calibrated "
+        "parameter): approximant routes relate through the shared "
+        "interface_conductance tag, the resolve_thermal_conductivity ruling."
+    ),
+)
+
 EDGES: tuple[Operator, ...] = (
     depolarization_factors,
     nan_effective_kappa,
     nan_effective_kappa_aligned,
     hasselman_johnson,
     resolve_effective_conductivity,
+    contract_interface_conductance_nemd,
 )

@@ -31,9 +31,11 @@ Scope added in P3 of phase 2 (MD-based κ paths):
   * HNEMD κ via `compute_hnemd` — GPUMD's signature method. Writes
     `kappa.out` (running κ_xx, κ_yy, κ_zz under the homogeneous driving
     force F_e).
-  * NEMD κ — *not exposed* in GPUMD directly. Users either fall back to
-    LAMMPS (`fix thermal/conductivity`) or use HNEMD as the GPUMD-native
-    alternative. Documented as not-exposed in the adapter audit.
+  * Direct NEMD: GPUMD runs direct two-reservoir NEMD (`ensemble heat_lan`,
+    `heat_nhc`, `heat_bdp`: local source and sink thermostats, with the
+    temperature profile and the exchanged energies in compute.out). Only
+    Müller-Plathe swapping (`fix thermal/conductivity`) routes through
+    LAMMPS. No gpumd row is registered for the NEMD κ node.
 
 Out of scope:
   * EMD κ via tighter ensemble averaging.
@@ -326,14 +328,14 @@ GPUMD_CONTRACT_KAPPA_NEMD = OperatorRepresentationSpec(
     operator=contract_kappa_nemd,
     representation_name="gpumd",
     notes=(
-        "Not exposed by GPUMD. GPUMD's design choice is to favour HNEMD "
-        "over direct NEMD — the homogeneous driving force avoids the "
-        "boundary thermostats and reservoir artefacts that direct NEMD "
-        "introduces. Users wanting direct/Müller-Plathe NEMD on a "
-        "GPUMD-trained NEP potential typically port the NEP to LAMMPS "
-        "(via the `pair_style nep` interface) and run `fix "
-        "thermal/conductivity` there. Documented here for the adapter "
-        "audit; the canonical NEMD path is the LAMMPS adapter's "
-        "LAMMPS_CONTRACT_KAPPA_NEMD."
+        "GPUMD runs direct two-reservoir NEMD: `ensemble heat_lan` (or "
+        "`heat_nhc`, `heat_bdp`) thermostats a source group at T + delta_T "
+        "and a sink group at T - delta_T, and `compute ... temperature` "
+        "writes the group temperatures and the energies the two thermostats "
+        "exchanged to compute.out. This operator's declared scheme is "
+        "Müller-Plathe swapping (nemd_method=muller_plathe), which GPUMD "
+        "does not implement; that route goes through LAMMPS (`fix "
+        "thermal/conductivity`), LAMMPS_CONTRACT_KAPPA_NEMD. No gpumd row "
+        "is registered for the NEMD κ node."
     ),
 )

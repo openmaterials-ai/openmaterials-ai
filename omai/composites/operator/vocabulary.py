@@ -22,6 +22,10 @@ thermal_transport), so all are declared here on their producing / owning node.
     Bruggeman-Nan terms of Nan 1997), and the aligned node its transverse
     companion \kappa_c^{al11}, exactly as MolarVolume carries the V_{cell} its
     producing formula reads (formula-adjacent symbols live on the owning space).
+  * InterfaceConductance[transport_model=nemd] carries G_{int} and the heat
+    flux q_{\mathrm{int}} and interface temperature jump \Delta T_{\mathrm{int}}
+    its producing NEMD formula reads (scoped names: a bare q or \Delta T would
+    collide with the wavevector or another temperature difference).
 """
 from __future__ import annotations
 
@@ -37,4 +41,6 @@ register_space_symbols({
         r"\kappa_c", "kc_{11}", "kc_{33}", r"\beta_{11}", r"\beta_{33}"},
     "ThermalConductivity[effective_medium=nan,orientation=aligned]": {
         r"\kappa_c", r"\kappa_c^{al11}"},
+    "InterfaceConductance[transport_model=nemd]": {
+        "G_{int}", r"q_{\mathrm{int}}", r"\Delta T_{\mathrm{int}}"},
 })

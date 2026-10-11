@@ -1273,6 +1273,17 @@
 "uid": "fc292985123b709c76547dc02721e60797cf5693fbad40b874826291314d5dd3"
 },
 {
+"curated": [],
+"id": "InterfaceConductance[transport_model=nemd]",
+"kind": "node",
+"labels": [
+"G_{\\mathrm{nemd}}",
+"InterfaceConductance[transport_model=nemd]",
+"interface conductance transport model nemd"
+],
+"uid": "9dabd5c3e66ac0b87479050482b623c9d72de947eb2aa74730dcb7ad7b4c8d81"
+},
+{
 "curated": [
 "analog-conductance",
 "conductance-state",
@@ -1428,6 +1439,35 @@
 "retention time"
 ],
 "uid": "4280779257128d9b63d9180e7b7b03ab80beac66ee35480b178a09fa46b289f2"
+},
+{
+"curated": [
+"cure-kinetics",
+"degree-of-cure",
+"extent-of-cure"
+],
+"id": "CureConversion",
+"kind": "node",
+"labels": [
+"CureConversion",
+"\\alpha",
+"cure conversion"
+],
+"uid": "a0fea831928d4ff6617a0d102f74966d0ea4ce0a2e4cc160cbd362dd0fb8fc0a"
+},
+{
+"curated": [
+"cure-kinetics",
+"glass-transition-temperature"
+],
+"id": "GlassTransitionTemperature",
+"kind": "node",
+"labels": [
+"GlassTransitionTemperature",
+"T_g",
+"glass transition temperature"
+],
+"uid": "5789aa6f8439e8b71b48197dd92c6f608f2bf3ca9900bc631d2321f5eded13cb"
 },
 {
 "curated": [],
@@ -2550,6 +2590,16 @@
 "uid": null
 },
 {
+"curated": [],
+"id": "contract_interface_conductance[transport_model=nemd]",
+"kind": "edge",
+"labels": [
+"contract interface conductance transport model nemd",
+"contract_interface_conductance[transport_model=nemd]"
+],
+"uid": null
+},
+{
 "curated": [
 "conductance-state"
 ],
@@ -2664,6 +2714,30 @@
 "labels": [
 "zero bias retention",
 "zero_bias_retention"
+],
+"uid": null
+},
+{
+"curated": [
+"cure-kinetics"
+],
+"id": "kamal_cure_conversion",
+"kind": "edge",
+"labels": [
+"kamal cure conversion",
+"kamal_cure_conversion"
+],
+"uid": null
+},
+{
+"curated": [
+"cure-kinetics"
+],
+"id": "dibenedetto_glass_transition",
+"kind": "edge",
+"labels": [
+"dibenedetto glass transition",
+"dibenedetto_glass_transition"
 ],
 "uid": null
 },

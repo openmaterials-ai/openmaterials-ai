@@ -10,7 +10,7 @@ that lumps interface chemistry and dispersion quality, whose reciprocal
 R = 1/G gives the Kapitza radius a_K = km/G (a length), the crossover below which
 adding a conductive filler LOWERS the composite conductivity.
 
-Seven nodes:
+Eight nodes:
 
   Node                                                   quantity tag           dimension                indices
   -----------------------------------------------------  ---------------------  -----------------------  -----------------
@@ -21,6 +21,7 @@ Seven nodes:
   DepolarizationFactor                                   depolarization_factor  DIMENSIONLESS            ()
   ThermalConductivity[effective_medium=nan,orientation=random]   thermal_conductivity   THERMAL_CONDUCTIVITY  ()
   ThermalConductivity[effective_medium=nan,orientation=aligned]  thermal_conductivity   THERMAL_CONDUCTIVITY  ()
+  InterfaceConductance[transport_model=nemd]             interface_conductance  INTERFACE_CONDUCTANCE    ()
 
 The four ThermalConductivity[...] nodes all JOIN the thermal_conductivity family
 (the SAME thermal_conductivity tag and THERMAL_CONDUCTIVITY dimension as the
@@ -194,6 +195,36 @@ EFFECTIVE_CONDUCTIVITY_ALIGNED = ObservableSpace(
     ),
 )
 
+INTERFACE_CONDUCTANCE_NEMD = ObservableSpace(
+    name="InterfaceConductance[transport_model=nemd]",
+    fields=(Field("G_int", INTERFACE_CONDUCTANCE, indices=()),),
+    labels={"transport_model": "nemd"},
+    tier="Molecular dynamics",
+    description=(
+        "Thermal boundary (Kapitza) conductance G of one solid-solid interface "
+        "from non-equilibrium MD, with an imposed temperature difference or an "
+        "imposed heat flux (the variant lives in the producing edge's "
+        "nemd_method scheme, as for the NEMD kappa): G = q_int / Delta_T_int, "
+        "the steady-state heat flux q_int (power per area) through the "
+        "interface over the temperature jump Delta_T_int at the interface "
+        "plane, extrapolated from linear fits to the temperature profile on "
+        "each side. Dimension INTERFACE_CONDUCTANCE = W/(m^2 K). Same "
+        "interface_conductance tag as the neutral InterfaceConductance, "
+        "distinct by the transport_model=nemd label and not resolved onto it: "
+        "the neutral node is a lumped, calibrated parameter, and a computed "
+        "value reaches the mixing formulas through the shared tag, as "
+        "ThermalConductivity[role=matrix] takes a computed or measured km. "
+        "Classical (equipartition statistics) and size dependent (Liang and "
+        "Keblinski, Phys. Rev. B 90, 075411 (2014)): the value moves with the "
+        "lead lengths and the thermostat. Lineage conditions: T, the two "
+        "materials and the interface structure (orientations, terminations, "
+        "strain, bonding or intermixing), the potential, and the lead lengths "
+        "(or extrapolated in 1/L). Params: timestep, steps, sampling, the "
+        "thermostat and its coupling, n_atoms, cross-section, and the imposed "
+        "temperature difference or heat flux (linear response)."
+    ),
+)
+
 NODES: tuple[Space, ...] = (
     MATRIX_CONDUCTIVITY,
     FILLER_CONDUCTIVITY,
@@ -202,4 +233,5 @@ NODES: tuple[Space, ...] = (
     DEPOLARIZATION_FACTOR,
     EFFECTIVE_CONDUCTIVITY_RANDOM,
     EFFECTIVE_CONDUCTIVITY_ALIGNED,
+    INTERFACE_CONDUCTANCE_NEMD,
 )

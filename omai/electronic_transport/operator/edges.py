@@ -192,7 +192,7 @@ compute_electronic_thermal_conductivity = Operator(
         "elastic tensor, phonon frequencies; deformation potentials and dense "
         "bands deferred). amset's own source flags the kappa unit as unconfirmed "
         "(data.py:483 '# TODO: confirm unit of kappa'; header '?'); W/(m K) is "
-        "the BoltzTraP2 convention, carried with that caveat on the rail. The "
+        "the BoltzTraP2 convention, carried with that caveat on the representation. The "
         "schemes record the iterative-BTE method, the adp_imp_pop scattering, "
         "and the boltztrap2 interpolation. Implicit, so not sympy-executable."
     ),

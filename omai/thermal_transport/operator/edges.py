@@ -1699,7 +1699,7 @@ sample_quantum_kinetic_energy = Operator(
         "the ring-polymer bead centroid. An ensemble average over the beads of "
         "the sampled trajectory, opaque as a closed form (E_K^{cv}[r(t), T]), so "
         "not sympy-executable; the dimensional gate SKIPS it (i-PI fixes the "
-        "output at ENERGY on the rail). PIMD (method=pimd) is the path-integral "
+        "output at ENERGY on the representation). PIMD (method=pimd) is the path-integral "
         "producer variant of the classical run_md Trajectory: the same Trajectory "
         "node, sampled with ring-polymer beads instead of a single classical "
         "replica, from which the quantum estimator is read. Complementary to the "
@@ -1738,7 +1738,7 @@ sample_quantum_heat_capacity = Operator(
         "liquids / anharmonic systems (the harmonic mode-sum route is not). Opaque "
         "as a closed form (C_V^{pimd}[r(t), T]), so not sympy-executable; the "
         "dimensional gate SKIPS it (i-PI fixes the output at "
-        "ENERGY_PER_TEMPERATURE on the rail)."
+        "ENERGY_PER_TEMPERATURE on the representation)."
     ),
 )
 
@@ -1782,7 +1782,7 @@ sample_pmf = Operator(
         "sum_hills reconstructs F(s) from the accumulated hills) or umbrella "
         "sampling combined with WHAM. An opaque reconstruction functional of the "
         "sampled biased Trajectory and the Temperature (F_pmf[r(t), T]), so not "
-        "sympy-executable; the dimensional gate SKIPS it (the PLUMED rail fixes "
+        "sympy-executable; the dimensional gate SKIPS it (the PLUMED representation fixes "
         "the output at ENERGY). Produces PotentialOfMeanForce, the free-energy "
         "profile along one reaction coordinate, whose function-valuedness lives in "
         "the spectrum layer (the collective variable is the record's axis). The "
