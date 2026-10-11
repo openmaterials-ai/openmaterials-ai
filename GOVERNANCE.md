@@ -64,6 +64,12 @@ each of these stages, not to any company, including Da Vinci Labs.
 * Every mapped code's own citation and license is recorded in its representation
   (`docs/data/codes.json`); crediting upstream science is a gate, not a
   courtesy.
+* Private overlays (an owner's additions to the map, kept by the owner;
+  `docs/specs/models-releases-overlays.md`): an overlay is not a
+  contribution; nothing in it is licensed to the initiative until registered
+  by pull request. CC BY 4.0 has no share-alike term, so a private overlay is
+  permitted; a shared record credits the map through its `lineage_version`.
+  The initiative keeps no list of overlays or namespaces.
 
 ## Data ownership and fairness
 

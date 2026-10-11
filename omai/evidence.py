@@ -299,19 +299,25 @@ def check_releases(files: dict[str, dict], representations) -> dict[str, dict]:
 
 def code_releases(roots: list[Path] | None = None) -> dict[str, dict]:
     """``{representation: {aliases, releases}}`` for every representation
-    of the roots, the first root holding a representation winning."""
+    of the roots (a data directory's ``codes.json``, when it has one, and its
+    release files; a registry file's ``code``), each root's aliases and
+    releases appended in root order, so an overlay may add a release of a
+    public code."""
     out: dict[str, dict] = {}
     for root in default_roots() if roots is None else roots:
         root = Path(root)
         if root.is_dir():
             files = release_files(root)
-            reps = json.loads((root / "codes.json").read_text())
+            listed = root / "codes.json"
+            reps = json.loads(listed.read_text()) if listed.is_file() else {}
             codes = {rep: files.get(rep) or {"aliases": [], "releases": []}
-                     for rep in reps}
+                     for rep in {**reps, **files}}
         else:
             codes = json.loads(root.read_text()).get("code", {})
         for rep, entry in codes.items():
-            out.setdefault(rep, entry)
+            have = out.setdefault(rep, {"aliases": [], "releases": []})
+            for key in ("aliases", "releases"):
+                have[key] = have[key] + [x for x in entry[key] if x not in have[key]]
     return out
 
 

@@ -40,6 +40,10 @@ The gates, in check order:
    is a skip (never a guess); a raised ``DimensionalViolation`` is an error.
    Edges without a ``formula_srepr`` skip.
 
+The registries gates 1, 5 and 6 read are a parameter, ``vocabulary`` (default
+:data:`VOCABULARY`, the public ones), so an overlay's contribution is checked
+against the public tables plus the entries it adds (``omai.overlays``).
+
 Determinism: nothing here reads the clock or any source of randomness (mirroring
 the store). The gates are pure over (records, current).
 """
@@ -47,18 +51,22 @@ from __future__ import annotations
 
 import sympy as sp
 
-from omai.operator.dimcheck import DimensionalViolation, dimension_of
+from omai.operator.dimcheck import SYMBOL_DIMENSIONS, DimensionalViolation, dimension_of
 from omai.operator.identity import (
     edge_uid_from_identity,
     node_uid_from_identity,
 )
 from omai.operator.registry import GAUGE_GROUPS, INDEX_KINDS, LABEL_KEYS, QUANTITY_TAGS
 
-__all__ = ["validate_contribution"]
+__all__ = ["VOCABULARY", "validate_contribution"]
 
-# The registered index kinds are the *values* of INDEX_KINDS (node identity
-# stores kinds, not names). Gauge kinds are the two HiddenSpace kinds.
-_REGISTERED_INDEX_KINDS = frozenset(INDEX_KINDS.values())
+# The public controlled vocabulary, one table per registry the gates read:
+# quantity tags, index kinds (name -> kind; node identity stores the kinds),
+# label keys -> values, gauge groups, symbol base name -> Dimension (filled as
+# the domains import). Gauge kinds are the two HiddenSpace kinds.
+VOCABULARY = {"quantity_tags": QUANTITY_TAGS, "index_kinds": INDEX_KINDS,
+              "label_keys": LABEL_KEYS, "gauge_groups": GAUGE_GROUPS,
+              "symbol_dimensions": SYMBOL_DIMENSIONS}
 _HIDDEN_KINDS = frozenset({"scaffolding", "approximation"})
 
 
@@ -66,7 +74,8 @@ _HIDDEN_KINDS = frozenset({"scaffolding", "approximation"})
 # Gate 1: registry.
 # --------------------------------------------------------------------------
 
-def _check_registry(records: list[dict]) -> list[str]:
+def _check_registry(records: list[dict], vocabulary: dict) -> list[str]:
+    index_kinds = set(vocabulary["index_kinds"].values())
     problems: list[str] = []
     for rec in records:
         op = rec["op"]
@@ -75,18 +84,18 @@ def _check_registry(records: list[dict]) -> list[str]:
             ident = payload.get("identity", {})
             uid12 = str(payload.get("uid", ""))[:12]
             quantity = ident.get("quantity")
-            if quantity not in QUANTITY_TAGS:
+            if quantity not in vocabulary["quantity_tags"]:
                 problems.append(
                     f"[registry] node {uid12}: unregistered quantity tag "
                     f"{quantity!r}")
             for field in ident.get("fields", []):
                 for kind in field.get("indices", []):
-                    if kind not in _REGISTERED_INDEX_KINDS:
+                    if kind not in index_kinds:
                         problems.append(
                             f"[registry] node {uid12}: unregistered index kind "
                             f"{kind!r}")
             for key, value in ident.get("labels", {}).items():
-                allowed = LABEL_KEYS.get(key)
+                allowed = vocabulary["label_keys"].get(key)
                 if allowed is None:
                     problems.append(
                         f"[registry] node {uid12}: unregistered label key "
@@ -98,7 +107,7 @@ def _check_registry(records: list[dict]) -> list[str]:
             gauge = ident.get("gauge", "")
             if isinstance(gauge, str) and gauge.startswith("hidden/"):
                 parts = gauge.split("/")
-                if len(parts) == 3 and parts[2] not in GAUGE_GROUPS:
+                if len(parts) == 3 and parts[2] not in vocabulary["gauge_groups"]:
                     problems.append(
                         f"[registry] node {uid12}: unregistered gauge group "
                         f"{parts[2]!r}")
@@ -258,7 +267,7 @@ def _check_connectivity(records: list[dict], current: dict, no_ops: set[int]
 # Gate 5: gauge.
 # --------------------------------------------------------------------------
 
-def _check_gauge(records: list[dict]) -> list[str]:
+def _check_gauge(records: list[dict], vocabulary: dict) -> list[str]:
     problems: list[str] = []
     for rec in records:
         if rec["op"] != "add_node":
@@ -273,7 +282,7 @@ def _check_gauge(records: list[dict]) -> list[str]:
             len(parts) == 3
             and parts[0] == "hidden"
             and parts[1] in _HIDDEN_KINDS
-            and parts[2] in GAUGE_GROUPS)
+            and parts[2] in vocabulary["gauge_groups"])
         if not well_formed:
             problems.append(
                 f"[gauge] node {uid12}: gauge class {gauge!r} is not "
@@ -286,7 +295,8 @@ def _check_gauge(records: list[dict]) -> list[str]:
 # Gate 6: dimensional.
 # --------------------------------------------------------------------------
 
-def _check_dimensional(records: list[dict]) -> list[str]:
+def _check_dimensional(records: list[dict], vocabulary: dict) -> list[str]:
+    symbols = vocabulary["symbol_dimensions"]
     problems: list[str] = []
     for rec in records:
         if rec["op"] != "add_edge":
@@ -304,8 +314,8 @@ def _check_dimensional(records: list[dict]) -> list[str]:
         if not isinstance(expr, sp.Eq):
             continue
         try:
-            lhs_dim = dimension_of(expr.lhs)
-            rhs_dim = dimension_of(expr.rhs)
+            lhs_dim = dimension_of(expr.lhs, symbols)
+            rhs_dim = dimension_of(expr.rhs, symbols)
         except DimensionalViolation as exc:
             problems.append(f"[dimensional] edge {uid12}: {exc}")
             continue
@@ -322,24 +332,27 @@ def _check_dimensional(records: list[dict]) -> list[str]:
 # The public entry.
 # --------------------------------------------------------------------------
 
-def validate_contribution(records: list[dict], current: dict) -> list[str]:
+def validate_contribution(records: list[dict], current: dict,
+                          vocabulary: dict | None = None) -> list[str]:
     """Validate a contribution against a materialized map; return problems.
 
     ``records`` is the ordered list ``[{"op": ..., "payload": ...}, ...]``;
     ``current`` is the ``Store.read()`` shape ``{"nodes": {uid: entry},
-    "edges": {uid: entry}}``. Returns [] when admissible, else one problem per
+    "edges": {uid: entry}}``; ``vocabulary`` has the tables of
+    :data:`VOCABULARY` (the default). Returns [] when admissible, else one problem per
     issue, each prefixed by the failing gate name in brackets. Gates run in the
     documented order; the identity gate also computes the exact-convergence
     no-op set consumed by connectivity.
     """
+    vocabulary = VOCABULARY if vocabulary is None else vocabulary
     problems: list[str] = []
-    problems.extend(_check_registry(records))
+    problems.extend(_check_registry(records, vocabulary))
     identity_problems, no_ops = _check_identity(records, current)
     problems.extend(identity_problems)
     problems.extend(_check_reachability(records, current))
     problems.extend(_check_connectivity(records, current, no_ops))
-    problems.extend(_check_gauge(records))
-    problems.extend(_check_dimensional(records))
+    problems.extend(_check_gauge(records, vocabulary))
+    problems.extend(_check_dimensional(records, vocabulary))
     return problems
 
 

@@ -128,6 +128,7 @@ def genesis_records() -> list[tuple[str, dict, str]]:
                     "symbol": symbols.get(s.name, s.name),
                     "description": s.description,
                     "tier": s.tier,
+                    **({"names": list(s.names)} if s.names else {}),
                 },
             }
             records.append(("add_node", payload, f"genesis: node {s.name}"))

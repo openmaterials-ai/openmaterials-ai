@@ -12,7 +12,7 @@ Diff semantics:
 
 * **add**       a Python-side element whose uid is absent from the store.
 * **edit_meta** the same uid with differing metadata (name / symbol /
-  description / tier for nodes; name / description / formula_srepr /
+  description / tier / names for nodes; name / description / formula_srepr /
   formula_latex / schemes for edges), carrying only the changed keys. Because
   the formula fingerprint is part of the edge identity, two elements sharing a
   uid necessarily share a formula, so a formula change never surfaces here.
@@ -43,7 +43,7 @@ __all__ = ["compute_sync", "main"]
 _STORE_ROOT = Path("map")
 
 # Meta keys that participate in the edit_meta diff, per element kind.
-_NODE_META_KEYS = ("name", "symbol", "description", "tier")
+_NODE_META_KEYS = ("name", "symbol", "description", "tier", "names")
 _EDGE_META_KEYS = ("name", "description", "formula_srepr", "formula_latex",
                    "schemes")
 

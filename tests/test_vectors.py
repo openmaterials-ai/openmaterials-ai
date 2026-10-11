@@ -60,7 +60,7 @@ RELEASE_VECTORS = _load("releases.json")
 @pytest.mark.parametrize("name", ["lineage_ids.json", "records.json",
                                   "render.json", "configurations.json",
                                   "models.json", "releases.json",
-                                  "private.json"])
+                                  "private.json", "overlay.json"])
 def test_committed_vectors_equal_a_fresh_generation(name):
     fresh = gen_vectors.generate()[name]
     committed = (VECTORS / name).read_text()
@@ -319,3 +319,13 @@ def test_registered_releases_are_append_only():
     for code, entry in frozen.items():
         assert live[code]["releases"][:len(entry["releases"])] == entry["releases"], code
         assert set(entry["aliases"]) <= set(live[code]["aliases"]), code
+
+
+def test_the_overlay_vector_reproduces_through_overlay_version(tmp_path):
+    from omai.overlays import overlay_version
+
+    vector = _load("overlay.json")
+    for path, text in vector["files"].items():
+        (tmp_path / path).parent.mkdir(parents=True, exist_ok=True)
+        (tmp_path / path).write_bytes(text.encode("utf-8"))
+    assert overlay_version(tmp_path) == vector["overlay_version"]
