@@ -71,7 +71,7 @@ validator holds a lineage to "whatever we have". When the lineage names a ``node
 it must resolve against the live map by BOTH id and content uid (the instances
 node-pin discipline: a stale pin is a mismatch, not a silent pass); when it does
 NOT, the record is valid and simply carries its template plus values, FLAGGED as
-node-unresolved rather than rejected (the honesty rule). Artifact pointers, when
+node-unresolved rather than rejected (the flag-not-reject rule). Artifact pointers, when
 present, must be well-formed: ``path`` and ``role`` non-empty, ``url`` a string
 if present, ``sha256`` a 64-hex string if present; nothing about artifacts is
 mandatory. The heavy validator (:func:`_validate`) additionally checks the
@@ -880,7 +880,7 @@ def validate_light(record: dict, *, name_to_uid: dict | None = None,
                    where: str = "<record>", config_dir: Path | None = None,
                    instances_dir: Path | None = None,
                    roots: list[Path] | None = None) -> dict:
-    """Validate a LIGHT record and return a report (honest about gaps).
+    """Validate a LIGHT record and return a report (reports gaps).
 
     The light contract, "whatever we have":
 
@@ -890,7 +890,7 @@ def validate_light(record: dict, *, name_to_uid: dict | None = None,
       id and, if a ``node_uid`` pin is present, by uid (the P3 instances
       node-pin discipline: a stale pin is a mismatch, never a silent pass). When
       the lineage names NO node, the record is VALID and simply node-unresolved:
-      the report says so, and nothing is rejected (the honesty rule).
+      the report says so, and nothing is rejected (the flag-not-reject rule).
     - ``artifacts`` (when present) are well-formed pointers (path+role required,
       url/sha256 shape-checked); nothing about artifacts is mandatory and an
       empty or absent list is normal.
@@ -1030,7 +1030,7 @@ def record_light(*, lineage, execution=None, artifacts=None, mirrors=None,
         The asked computation. Recognized keys (all optional except that the
         lineage must be a non-empty object): ``node`` (a map node id, present when
         a map node is known) with an optional ``node_uid`` pin; ``material``;
-        ``template`` (the code family, the honest fallback when there is no map
+        ``template`` (the code family, the generic fallback when there is no map
         node); ``conditions``; ``params``; ``hyperparameters``; setup ``values``.
         Floats in conditions/params/hyperparameters/values are rounded to
         :data:`FLOAT_DECIMALS` for identity.
@@ -1227,7 +1227,7 @@ def _normalize_member(record, *, where: str) -> dict:
     wire-tolerant subset of :func:`validate_light`: the lineage must be a
     non-empty object (via :func:`record_lineage`, which also rejects the
     ambiguous lineage+recipe pair), a stated ``id`` must equal the id recomputed
-    from the lineage (identity honesty), ``lineage.source`` when present must
+    from the lineage (identity fidelity), ``lineage.source`` when present must
     match the source grammar, and artifact pointers when present must be
     well-formed (:func:`_validate_pointers`). It does NOT resolve the node
     against the live map: a shared link minted against an older map version must
@@ -1407,7 +1407,7 @@ def record_simulation(*, lineage, execution, artifacts, results=None, mirrors=No
         ``material`` ({name, optional configuration uid}), ``conditions``,
         ``params``. Identity is this lineage, canonicalized by :func:`lineage_id`.
     execution : dict
-        What ran: ``code`` (codes rail; required, a non-empty string),
+        What ran: ``code`` (a codes.json representation; required, a non-empty string),
         ``code_version``, ``container_digest`` (the per-run image digest),
         ``runner``, ``wall_time_s``, ``seeds``. Stored, outside identity.
     artifacts : list[dict]
@@ -1570,7 +1570,7 @@ def _lineage_from_bundle(manifest: dict) -> dict:
     against the live map; the spec itself is always kept under ``lineage.spec``
     so nothing the host asked is dropped. A spec that names NO node leaves
     ``lineage.node`` absent: the writer never invents a node id, and
-    :func:`_validate` reports the gap (the honesty rule, a bundle without a
+    :func:`_validate` reports the gap (the flag-not-reject rule, a bundle without a
     resolvable map node is recorded but flagged).
     """
     template = manifest.get("template")
@@ -1619,7 +1619,7 @@ def _bundle_artifacts(manifest: dict, *, where: str) -> list[dict]:
     carrying a ``sha256`` is kept as a verifiable pointer (the byte claim rides
     along for :func:`verify_bundle_bytes`); one lacking a sha256 becomes a plain
     pointer ``{path, role?, url?, bytes?}``, outside identity exactly like the
-    light path. A missing ``role`` defaults to ``"artifact"`` (the honest generic
+    light path. A missing ``role`` defaults to ``"artifact"`` (the generic default
     role) rather than being rejected: a bundle enriches a record with bytes, it
     is never required to complete it. Identity is the lineage regardless
     (:func:`lineage_id`), so no artifact, checksummed or not, changes the id.
@@ -1664,7 +1664,7 @@ def record_from_bundle(manifest: dict, *, mirrors: dict | None = None,
     pointers, but it is never required: this path no longer refuses a bundle
     whose artifacts lack a sha256.
 
-    The mapping (honest, never inventing what the bundle did not carry):
+    The mapping (never inventing what the bundle did not carry):
 
     - ``lineage`` comes from ``template`` + ``spec`` (:func:`_lineage_from_bundle`).
       If the spec names a map ``node`` (and optionally ``material``,
