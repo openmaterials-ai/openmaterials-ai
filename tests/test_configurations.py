@@ -391,3 +391,19 @@ def test_committed_distances_skip_a_retracted_configuration(tmp_path, monkeypatc
     assert pairs["configurations"] == 2
     assert [(p["a"]["name"], p["b"]["name"]) for p in pairs["pairs"]] == [
         ("kept", "also kept")]
+
+
+def test_a_retracted_cell_takes_no_new_provenance(tmp_path):
+    source = [{"kind": "database", "ref": "fixture", "detail": "synthetic"}]
+    uid = cfg.record_configuration(_primitive_si(), "Si", source, config_dir=tmp_path)
+    (path,) = tmp_path.glob("*.json")
+    record = json.loads(path.read_text())
+    record["retracted"] = {"date": "2026-10-11", "reason": "rights holder request"}
+    path.write_text(json.dumps(record))
+    again = [{"kind": "database", "ref": "fixture", "detail": "again"}]
+    with pytest.raises(cfg.ConfigurationError,
+                       match="retracted on 2026-10-11: rights holder request; "
+                             "cite or submit a different cell"):
+        cfg.record_configuration(_primitive_si(), "Si", again, config_dir=tmp_path)
+    assert json.loads(path.read_text())["provenance"] == source
+    assert uid == record["canonical"]["uid"]

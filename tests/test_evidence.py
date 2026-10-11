@@ -184,4 +184,25 @@ def test_a_retracted_record_still_resolves_and_the_registry_lists_it(tmp_path):
     assert resolve("model", A, [tmp_path]) == "models/gone.json"
     registry = build_registry(tmp_path)
     assert registry["model"] == {A: "models/gone.json", B: "models/gone.json"}
-    assert registry["retracted"] == {"model": [A, B]}
+    assert registry["retracted"] == {"model": {A: gone, B: gone}}
+
+
+def test_a_citation_of_a_retracted_uid_is_reported_not_refused(tmp_path):
+    from omai.lineages import lineage_id, validate_light
+    from omai.map_data import build_registry
+
+    gone = {"date": "2026-10-11", "reason": "removed on the rights holder's request"}
+    (tmp_path / "models").mkdir()
+    (tmp_path / "models" / "gone.json").write_text(json.dumps(_model(retracted=gone)))
+    (tmp_path / "codes.json").write_text("{}")
+    registry = tmp_path / "registry.json"
+    registry.write_text(json.dumps(build_registry(tmp_path)))
+    lineage = {"template": "fixture", "conditions": {"potential_sha256": A}}
+    for root in (tmp_path, registry):
+        report = validate_light({"id": lineage_id(lineage), "lineage": lineage},
+                                roots=[root])
+        assert report["retracted_citations"] == [{
+            "field": "conditions.potential_sha256", "uid": A,
+            "reason": "retracted 2026-10-11: removed on the rights holder's request"}]
+    report = validate_light({"lineage": {"template": "fixture"}}, roots=[registry])
+    assert report["retracted_citations"] == []

@@ -310,10 +310,14 @@ not a subset of the cited model's `elements`.
   model and configuration record files gain an optional `retracted` field,
   `{date, reason}` (`date` YYYY-MM-DD), checked with the record's kind; a
   retracted uid still resolves, so no record breaks, and it is never served as
-  current: `registry.json` lists it under `retracted` (`{kind: [uid,
-  ...aliases]}`, present only when a record is retracted),
-  `configurations.json` carries the field so the playground marks the cell,
-  and the committed-configuration distances skip it.
+  current: `registry.json` lists it under `retracted` (`{kind: {uid:
+  {date, reason}}}` over each uid and alias, present only when a record is
+  retracted), `configurations.json` carries the field so the playground marks
+  the cell, and the committed-configuration distances skip it.
+  `validate_light` reports a citation of a retracted uid under
+  `retracted_citations` (`[{field, uid, reason}]`), never refusing it;
+  `record_configuration` refuses to add provenance to a retracted record
+  (cite or submit a different cell).
 
 ## 8. Design decisions
 

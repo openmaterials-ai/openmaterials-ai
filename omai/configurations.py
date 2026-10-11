@@ -322,7 +322,7 @@ def record_configuration(structure_or_file, name, provenance, *,
     Raises
     ------
     ConfigurationError
-        On invalid structure input.
+        On invalid structure input, or a cell identical to a retracted record.
     DuplicateFlag
         When a StructureMatcher-equivalent but not hash-identical record exists.
     """
@@ -342,6 +342,11 @@ def record_configuration(structure_or_file, name, provenance, *,
         raise ConfigurationError("provenance must be a non-empty list of sources")
 
     existing_path, existing_record = _dedup_gate(structure, uid, config_dir)
+    gone = (existing_record or {}).get("retracted")
+    if gone:
+        raise ConfigurationError(
+            f"configuration {uid[:12]} was retracted on {gone.get('date')}: "
+            f"{gone.get('reason')}; cite or submit a different cell")
     if existing_record is not None:
         # Hash-identical: append provenance / external ids, keep one record.
         changed = False

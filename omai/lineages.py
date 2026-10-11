@@ -843,11 +843,13 @@ def validate_light(record: dict, *, name_to_uid: dict | None = None,
     - ``execution`` and ``results`` are OPTIONAL enrichment: each is validated
       only when present.
     - ``execution.registry`` rows that do not resolve to a registered code
-      release are reported (:func:`release_check`), never refused.
+      release are reported (:func:`release_check`), never refused; so are
+      cited configurations and models whose record is retracted (they still
+      resolve).
 
     Returns a report ``{"id", "node_resolved": bool, "node": <id or None>,
     "artifact_count": int, "unresolved_registry_rows": [{id, version,
-    reason}]}``. Raises :class:`LineageError` only on a genuinely
+    reason}], "retracted_citations": [{field, uid, reason}]}``. Raises :class:`LineageError` only on a genuinely
     malformed record (bad lineage, stated-id mismatch, a stale node pin, a
     cited uid that resolves nowhere and is not listed, a malformed marker, or a
     malformed pointer); a node-unresolved record is a normal return, not a
@@ -922,7 +924,22 @@ def validate_light(record: dict, *, name_to_uid: dict | None = None,
         "node": node,
         "artifact_count": len(artifacts) if isinstance(artifacts, list) else 0,
         "unresolved_registry_rows": release_check(record.get("execution")),
+        "retracted_citations": _retracted_citations(lineage, roots, where=where),
     }
+
+
+def _retracted_citations(lineage, roots, *, where: str) -> list[dict]:
+    """Each configuration or model the lineage cites whose record is
+    retracted, ``{field, uid, reason}``: a report, never a refusal."""
+    from omai.evidence import _lookup
+
+    out = []
+    for kind, field, uid, _ in _citations(lineage, where=where):
+        gone = (_lookup(kind, uid, roots) or (None, None))[1]
+        if gone:
+            out.append({"field": field, "uid": uid,
+                        "reason": f"retracted {gone['date']}: {gone['reason']}"})
+    return out
 
 
 # --------------------------------------------------------------------------

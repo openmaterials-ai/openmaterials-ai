@@ -208,6 +208,14 @@ def resolve(kind: str, uid: str, roots: list[Path] | None = None) -> str | None:
     """Where a registered uid or alias lives, as the record's path under its
     data root (``models/nep89-20250409.json``); None when no root registers
     it. A root that does not exist raises FileNotFoundError."""
+    hit = _lookup(kind, uid, roots)
+    return hit[0] if hit else None
+
+
+def _lookup(kind: str, uid: str, roots: list[Path] | None) -> tuple | None:
+    """``(path, retracted)`` for the first root registering a uid or alias,
+    ``retracted`` the record's ``{date, reason}`` or None; None when no root
+    registers it."""
     for root in default_roots() if roots is None else roots:
         root = Path(root)
         if root.is_dir():
@@ -215,11 +223,12 @@ def resolve(kind: str, uid: str, roots: list[Path] | None = None) -> str | None:
             # validator resolves many uids in a loop.
             for path, record in records(kind, root):
                 if uid in record_uids(kind, record):
-                    return path
+                    return path, record.get("retracted")
         else:
-            hit = json.loads(root.read_text()).get(kind, {}).get(uid)
+            doc = json.loads(root.read_text())
+            hit = doc.get(kind, {}).get(uid)
             if hit is not None:
-                return hit
+                return hit, doc.get("retracted", {}).get(kind, {}).get(uid)
     return None
 
 
