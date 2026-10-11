@@ -64,10 +64,13 @@ def test_the_contribution_is_checked_with_the_overlay_vocabulary():
     assert validate_contribution(FILES["map.json"], current, vocabulary) == []
 
 
-def test_overlay_version_covers_every_file_except_overlay_json(tmp_path):
+def test_overlay_version_covers_every_file_except_overlay_json_and_hidden_ones(tmp_path):
     root = _overlay(tmp_path)
     version = overlay_version(root)
     (root / "overlay.json").write_text(json.dumps(FILES["overlay.json"], indent=4))
+    (root / ".DS_Store").write_bytes(b"\0synthetic")
+    (root / "models" / ".hidden").mkdir()
+    (root / "models" / ".hidden" / "x.json").write_text("{}")
     assert overlay_version(root) == version
     (root / "notes.txt").write_text("a synthetic note\n")
     assert overlay_version(root) != version
@@ -110,14 +113,18 @@ _CODE = FILES["codes.json"]["example:code"]["example:SyntheticQuantity"]
     ({"registry.json": {**_REGISTRY, "symbol_dimensions": {"x_example": [0, 1]}}},
      "malformed"),
     ({"models__si-tersoff.json": (_DATA_DIR / "models" / "si-tersoff.json").read_text()},
-     "is public"),
+     "is public .*: remove the overlay copy"),
     ({"codes.json": {"code": {NODE: _CODE}}}, "names each code"),
     ({"codes.json": {"example:code": {NODE: {**_CODE, "license": ""}}}},
      "names each code"),
     ({"releases__kaldo.json": {"aliases": [], "releases": [_release("2.2.1")]}},
      "names two commits"),
-    ({"releases__example:code.json": {"aliases": ["kaldo"], "releases": [_release("1")]}},
+    ({"releases__example__code.json": {"aliases": ["kaldo"], "releases": [_release("1")]}},
      "names a representation"),
+    ({"codes.json": {"example:code": {NODE: _CODE, "example:Missing": _CODE}}},
+     "covers 'example:Missing', which neither the public map nor the overlay"),
+    ({"codes.json": {"example:code": {NODE: _CODE, "NoSuchNode": _CODE}}},
+     "covers 'NoSuchNode'"),
 ])
 def test_an_overlay_is_refused(tmp_path, edits, match):
     with pytest.raises(OverlayError, match=match):
@@ -139,13 +146,14 @@ def test_a_second_overlay_may_not_reuse_a_namespace_or_vocabulary(tmp_path):
 
 
 def test_an_overlay_registers_releases_of_its_code_and_of_a_public_one(tmp_path):
+    # the fixture registers example:code 1.0 at releases/example/code.json
     root = _overlay(tmp_path, **{
         "releases__kaldo.json": {"aliases": [], "releases": [_release("2.2.1-example")]},
-        "releases__example:code.json": {"aliases": [], "releases": [_release("1.0")]}})
+        "codes.json": {"example:code": {NODE: _CODE, "Temperature": _CODE}}})
     roots = [_DATA_DIR, root]
     load(roots)
     rows = {"registry": [{"id": "kaldo", "version": "2.2.1-example"},
-                         {"id": "example:code", "version": "1.0"}]}
+                         {"id": "example:code", "version": "v1.0"}]}
     assert lin.release_check(rows, roots=roots) == []
     assert [r["reason"] for r in lin.release_check(rows)] == [
         "version not registered", "not a representation"]

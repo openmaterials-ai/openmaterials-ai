@@ -251,9 +251,11 @@ def _is_date(value) -> bool:
 
 def release_files(data_dir: Path) -> dict[str, dict]:
     """``{representation: {aliases, releases}}`` as authored under
-    ``<data_dir>/releases/``."""
-    return {f.stem: json.loads(f.read_text())
-            for f in sorted((Path(data_dir) / "releases").glob("*.json"))}
+    ``<data_dir>/releases/``: ``<rep>.json``, or ``<ns>/<code>.json`` for an
+    overlay code named ``ns:code`` (no colon in any path)."""
+    root = Path(data_dir) / "releases"
+    return {":".join(f.relative_to(root).with_suffix("").parts): json.loads(f.read_text())
+            for f in sorted([*root.glob("*.json"), *root.glob("*/*.json")])}
 
 
 def check_releases(files: dict[str, dict], representations) -> dict[str, dict]:
@@ -265,7 +267,7 @@ def check_releases(files: dict[str, dict], representations) -> dict[str, dict]:
     version or tag string names two commits."""
     owner: dict[str, str] = {}
     for rep, doc in files.items():
-        where = f"releases/{rep}.json"
+        where = f"releases/{rep.replace(':', '/')}.json"
         if rep not in representations:
             raise EvidenceError(f"{where}: {rep!r} is not a representation")
         if (not isinstance(doc, dict) or set(doc) != {"aliases", "releases"}

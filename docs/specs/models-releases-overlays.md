@@ -239,11 +239,15 @@ not a subset of the cited model's `elements`.
   the overlay is validated against. `overlay_version` is computed, never
   stored: the sha256 of the canonical JSON `{"base": base_graph_version,
   "files": [[path, sha256], ...]}` over every overlay file except
-  `overlay.json`, paths sorted.
+  `overlay.json` and hidden files (a path component starting with `.`), paths
+  sorted.
 - An overlay representation is data in the `codes.json` shape (per covered
   node: `api`, `unit` and the credits row `citation`, `doi`, `license`,
-  `url`; `citation` and `license` required), plus its releases under
-  `releases/`. An overlay may also register a release of a public code.
+  `url`; `citation` and `license` required), plus its releases at
+  `releases/<ns>/<code>.json` (no colon in any path). Every node it covers is
+  a node of the public map at `base_graph_version` (the live map where `map/`
+  is absent) or of the overlay. An overlay may also register a release of a
+  public code at `releases/<code>.json`.
 - Every lineage validator and writer that resolves a uid (`_validate`,
   `validate_light`, `record_light`, `record_simulation`, and the evidence
   check that replaced `_validate_configuration`) takes `roots: list[Path] |
@@ -258,7 +262,8 @@ not a subset of the cited model's `elements`.
   the public map at `base_graph_version` (connectivity included). An overlay
   node or edge whose uid the public map holds at that base, and an overlay
   configuration or model whose uid is public, are refused (cite the public
-  one). Identity never carries the namespace: every vocabulary entry an
+  one; once an overlay record is published, the refusal names the fix: remove
+  the overlay copy). Identity never carries the namespace: every vocabulary entry an
   overlay adds goes in its `registry.json`, in the tables of
   `omai.gates.VOCABULARY` (`quantity_tags`, `index_kinds`, `label_keys`,
   `gauge_groups`, and `symbol_dimensions`, a symbol to its seven SI exponents:

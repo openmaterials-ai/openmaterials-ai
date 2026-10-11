@@ -13,9 +13,10 @@ files:
 
 and, as under ``docs/data/``, ``codes.json`` (its representations, credits
 included), ``releases/``, ``configurations/`` and ``models/``. Names carry the
-namespace (``ns:Name`` for a node, ``ns:code`` for a representation); identity
-never does, so a node keeps its uid when published and keeps ``ns:Name`` among
-its ``names``. ``overlay_version`` is computed, never stored.
+namespace (``ns:Name`` for a node, ``ns:code`` for a representation, whose
+releases live at ``releases/<ns>/<code>.json``); identity never does, so a
+node keeps its uid when published and keeps ``ns:Name`` among its ``names``.
+``overlay_version`` is computed, never stored.
 
 ``roots`` list the public root first, then overlays. :func:`load` checks every
 overlay among them; each lineage validator and writer given ``roots`` runs it,
@@ -56,12 +57,14 @@ class Overlay(NamedTuple):
 def overlay_version(root) -> str:
     """The sha256 of the canonical JSON ``{"base": base_graph_version,
     "files": [[path, sha256], ...]}`` over every file of the overlay except
-    ``overlay.json``, paths relative, POSIX and sorted."""
+    ``overlay.json`` and hidden ones (a path component starting with "."),
+    paths relative, POSIX and sorted."""
     root = Path(root)
     base = json.loads((root / "overlay.json").read_text())["base_graph_version"]
     files = sorted([p.relative_to(root).as_posix(),
                     hashlib.sha256(p.read_bytes()).hexdigest()]
-                   for p in root.rglob("*") if p.is_file())
+                   for p in root.rglob("*") if p.is_file()
+                   and not any(part.startswith(".") for part in p.relative_to(root).parts))
     blob = canonical_json({"base": base,
                            "files": [f for f in files if f[0] != "overlay.json"]})
     return hashlib.sha256(blob.encode("utf-8")).hexdigest()
@@ -86,7 +89,9 @@ def load(roots) -> list[Overlay]:
     - a node, edge, configuration or model whose uid is public (cite the
       public one);
     - a code not named ``ns:code`` or not credited (citation and license on
-      every node it covers); a malformed release file; one (code, version)
+      every node it covers), or covering a node neither the public map at the
+      base (the live map where ``map/`` is absent) nor the overlay holds; a
+      malformed release file; one (code, version)
       naming two commits, or one alias naming two codes, across all roots.
     """
     from omai.evidence import (
@@ -130,8 +135,8 @@ def load(roots) -> list[Overlay]:
             raise OverlayError(f"{where}: another loaded overlay holds this namespace")
         added = _read(root / "registry.json", {})
         held = _vocabulary(held, added, where)
-        names = _check_map(_read(root / "map.json", []), ns, base,
-                           _vocabulary(VOCABULARY, added, where), where)
+        names, public_names = _check_map(_read(root / "map.json", []), ns, base,
+                                         _vocabulary(VOCABULARY, added, where), where)
         codes = _read(root / "codes.json", {})
         if not isinstance(codes, dict) or not all(
                 code.startswith(f"{ns}:") and isinstance(nodes, dict) and nodes
@@ -140,13 +145,22 @@ def load(roots) -> list[Overlay]:
                 for code, nodes in codes.items()):
             raise OverlayError(f"{where}: codes.json names each code '{ns}:code' "
                                f"and credits it (citation, license) on every node")
+        for code, nodes in codes.items():
+            for node in nodes:
+                if node not in names and node not in public_names:
+                    raise OverlayError(f"{where}: {code} covers {node!r}, which "
+                                       f"neither the public map nor the overlay holds")
         try:
             check_releases(release_files(root), [*public_codes, *codes])
             for kind in KINDS:
                 for path, record in records(kind, root):
                     check(kind, record, where=path)
-                    if any(resolve(kind, uid, public) for uid in record_uids(kind, record)):
-                        raise OverlayError(f"{path} is public; cite the public record")
+                    public_uid = next((u for u in record_uids(kind, record)
+                                       if resolve(kind, u, public)), None)
+                    if public_uid:
+                        raise OverlayError(
+                            f"{path} is public (uid {public_uid[:12]}): remove the "
+                            f"overlay copy and cite the public record")
         except EvidenceError as exc:
             raise OverlayError(f"{where}: {exc}") from None
         _union(code_releases([root]), where, commits, owners)
@@ -188,9 +202,11 @@ def _vocabulary(base: dict, added, where: str) -> dict:
     return out
 
 
-def _check_map(contribution, ns: str, base: str, vocabulary: dict, where: str) -> dict:
+def _check_map(contribution, ns: str, base: str, vocabulary: dict,
+               where: str) -> tuple[dict, set]:
     """``{ns:Name: uid}`` for the nodes an overlay's map part adds, after its
-    checks."""
+    checks, and the public node names at the base (the live map's where
+    ``map/`` is absent)."""
     from omai.gates import no_op_indices, validate_contribution
     from omai.store import Store
 
@@ -210,7 +226,10 @@ def _check_map(contribution, ns: str, base: str, vocabulary: dict, where: str) -
                                    f"starting '{ns}:'")
             names[name] = r["payload"].get("uid")
     if not (_STORE / "log.jsonl").is_file():
-        return names
+        from omai.map_data import _domains
+        return names, {n for d in _domains()
+                       for n in (*(s.name for s in d.nodes),
+                                 *(p[0] for p in d.param_promotions))}
     try:
         current = Store(_STORE).read(base)
     except ValueError:
@@ -222,7 +241,7 @@ def _check_map(contribution, ns: str, base: str, vocabulary: dict, where: str) -
     if no_op_indices(contribution, current):
         raise OverlayError(f"{where}: map.json adds a uid the public map holds "
                            f"at its base; cite the public one")
-    return names
+    return names, {e["meta"].get("name") for e in current["nodes"].values()}
 
 
 def _union(codes: dict, where: str, commits: dict, owners: dict) -> None:

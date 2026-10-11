@@ -646,7 +646,8 @@ def build_private() -> dict:
 
 # The fixture overlay (omai.overlays), synthetic: namespace "example", one
 # quantity reached from the public Temperature node by one edge whose symbol
-# dimension the overlay adds, one model and one code. Validated against the
+# dimension the overlay adds, one model, one code and one release of it
+# (releases/<ns>/<code>.json: no colon in any path). Validated against the
 # public store head below; the log is append-only, so it stays a version.
 _OVERLAY_BASE = "5a967e980890683f110d5047c2c558aeb5dab104c99311272ed3472f18d80311"
 _TEMPERATURE = "63f9bd32d94d77e12afbb96f5b1b7a870de6b1f5805213b7f3c3ff227da301f0"
@@ -686,6 +687,10 @@ def _overlay_files() -> dict:
             "name": "example:code", "api": "example.synthetic", "unit": "K",
             "citation": "A synthetic code.", "doi": None, "license": "CC0-1.0",
             "url": None}}},
+        "releases/example/code.json": {"aliases": [], "releases": [{
+            "version": "1.0", "tag": "v1.0", "commit": "a" * 40,
+            "released": "2026-10-11", "spdx": "CC0-1.0",
+            "license_source": "synthetic"}]},
         "models/synthetic.json": {
             "uid": digest, "node": "Potential", "name": "synthetic",
             "family": "synthetic", "format": "synthetic.txt", "elements": ["Si"],
