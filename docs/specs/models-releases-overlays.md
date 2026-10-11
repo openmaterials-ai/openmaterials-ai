@@ -307,9 +307,13 @@ not a subset of the cited model's `elements`.
   re-keying change takes the minor version; the release notes list each
   re-keyed id.
 - Retraction (GOVERNANCE.md allows removal on a rights holder's request):
-  model and configuration record files gain an optional `retracted` field; a
+  model and configuration record files gain an optional `retracted` field,
+  `{date, reason}` (`date` YYYY-MM-DD), checked with the record's kind; a
   retracted uid still resolves, so no record breaks, and it is never served as
-  current.
+  current: `registry.json` lists it under `retracted` (`{kind: [uid,
+  ...aliases]}`, present only when a record is retracted),
+  `configurations.json` carries the field so the playground marks the cell,
+  and the committed-configuration distances skip it.
 
 ## 8. Design decisions
 

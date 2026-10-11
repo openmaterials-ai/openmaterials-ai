@@ -1598,6 +1598,8 @@ function configSummaryHTML(rec){
   var row = function(label, value){
     rows.push('<dt>' + esc(label) + '</dt><dd>' + esc(value) + '</dd>');
   };
+  // a retracted cell still resolves, so a record citing it renders, marked
+  if (rec.retracted) row('retracted', rec.retracted.date + ': ' + rec.retracted.reason);
   if (rec.formula) row('formula', rec.formula);
   if (canon.spacegroup != null) row('space group', canon.spacegroup);
   var natoms = rec.natoms != null ? rec.natoms : canon.natoms_primitive;

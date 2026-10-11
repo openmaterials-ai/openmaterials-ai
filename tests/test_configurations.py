@@ -370,3 +370,24 @@ def test_load_accepts_a_former_uid_kept_as_an_alias():
                         .read_text())
     (alias,) = record["canonical"]["aliases"]
     assert cfg.canonical_uid(cfg.load(alias)) == record["canonical"]["uid"]
+
+
+def test_committed_distances_skip_a_retracted_configuration(tmp_path, monkeypatch):
+    import sys
+    import types
+
+    from omai import distance_data
+
+    cell = {"canonical": {"uid": "a" * 64}, "structure": _primitive_si().as_dict()}
+    gone = {"date": "2026-10-11", "reason": "removed on the rights holder's request"}
+    (tmp_path / "data").mkdir()
+    (tmp_path / "data" / "configurations.json").write_text(json.dumps(
+        [{**cell, "name": "kept"}, {**cell, "name": "gone", "retracted": gone},
+         {**cell, "name": "also kept"}]))
+    monkeypatch.setattr(distance_data, "_DOCS", tmp_path)
+    monkeypatch.setitem(sys.modules, "omdc",
+                        types.SimpleNamespace(distance=lambda *a, **k: 0.0))
+    pairs = distance_data._committed_pairs()
+    assert pairs["configurations"] == 2
+    assert [(p["a"]["name"], p["b"]["name"]) for p in pairs["pairs"]] == [
+        ("kept", "also kept")]

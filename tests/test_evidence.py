@@ -161,3 +161,27 @@ def test_the_registry_ships_in_the_wheel():
     pyproject = Path(__file__).resolve().parents[1] / "pyproject.toml"
     data = tomllib.loads(pyproject.read_text())["tool"]["setuptools"]["package-data"]
     assert "data/*.json" in data["omai"]
+
+
+def test_a_retracted_record_still_resolves_and_the_registry_lists_it(tmp_path):
+    from omai.map_data import build_registry
+
+    gone = {"date": "2026-10-11", "reason": "removed on the rights holder's request"}
+    assert check("model", _model(retracted=gone), where="m") == A
+    assert check("configuration", {"canonical": {"uid": A}, "retracted": gone},
+                 where="c") == A
+    for bad in (None, {"date": "2026-10-11"}, {**gone, "by": "x"},
+                {**gone, "date": "11/10/2026"}, {**gone, "reason": ""}):
+        for kind, record in (("model", _model(retracted=bad)),
+                             ("configuration", {"canonical": {"uid": A},
+                                                "retracted": bad})):
+            with pytest.raises(EvidenceError):
+                check(kind, record, where="r")
+    (tmp_path / "models").mkdir()
+    (tmp_path / "models" / "gone.json").write_text(
+        json.dumps(_model(retracted=gone, aliases=[B])))
+    (tmp_path / "codes.json").write_text("{}")
+    assert resolve("model", A, [tmp_path]) == "models/gone.json"
+    registry = build_registry(tmp_path)
+    assert registry["model"] == {A: "models/gone.json", B: "models/gone.json"}
+    assert registry["retracted"] == {"model": [A, B]}

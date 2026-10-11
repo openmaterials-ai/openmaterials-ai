@@ -111,5 +111,8 @@ commitments of the initiative, not courtesies.
   are described and credited, never vendored. Material whose license
   does not permit this kind of inclusion does not enter. A rights
   holder who believes something entered in error can open an issue: the
-  record is removed from the current view of the map, and the
-  append-only log records the retraction.
+  record is removed from the current view of the map and is never served
+  as current, but it still resolves, so nothing that cites it breaks. The
+  append-only log records the retraction of a map change; a model or
+  configuration record gains a `retracted` field with the date and the
+  reason.

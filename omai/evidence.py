@@ -37,7 +37,10 @@ pointers, never the files. :func:`resolve` looks a uid or an alias up in a
 list of roots, in order: a data directory (``docs/data/`` in a source tree) or
 a registry file (``omai/data/registry.json``, written by ``omai.map_data`` and
 shipped in the wheel, and published as ``docs/data/registry.json``). An
-unregistered uid resolves to None; nothing is refused here. The lineage
+unregistered uid resolves to None; nothing is refused here. A record of either
+kind may carry ``retracted: {date, reason}`` (removed on a rights holder's
+request, GOVERNANCE.md): its uid still resolves, so no record citing it breaks,
+and it is never served as current. The lineage
 validators refuse a cited uid that resolves nowhere unless the record lists
 it in its top-level ``unregistered`` marker, and :func:`private_reasons` says
 why a record cites evidence that is not public.
@@ -134,13 +137,21 @@ def records(kind: str, data_dir: Path) -> list[tuple[str, dict]]:
 def check(kind: str, record: dict, *, where: str) -> str:
     """A record's uid, after the checks its kind defines.
 
-    Every kind: the uid and each alias are 64 lowercase hex. A model
+    Every kind: the uid and each alias are 64 lowercase hex, and
+    ``retracted``, when present, is ``{date: YYYY-MM-DD, reason}``. A model
     additionally reproduces its uid from its files (configurations reproduce
     theirs through ``omai.configurations``, which needs spglib).
     """
     uids = record_uids(kind, record)
     if not all(isinstance(u, str) and _HEX64.fullmatch(u) for u in uids):
         raise EvidenceError(f"{where}: uid and aliases must be 64 lowercase hex")
+    gone = record.get("retracted")
+    if "retracted" in record and not (
+            isinstance(gone, dict) and set(gone) == {"date", "reason"}
+            and isinstance(gone["date"], str) and _DATE.fullmatch(gone["date"])
+            and isinstance(gone["reason"], str) and gone["reason"]):
+        raise EvidenceError(f"{where}: retracted must be {{date: YYYY-MM-DD, "
+                            f"reason}}")
     uid = uids[0]
     if kind == "model":
         _check_model(record, uid, where=where)
