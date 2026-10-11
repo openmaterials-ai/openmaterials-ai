@@ -70,9 +70,10 @@ include = ["omai*", "omdc*", "omds*"]
 # their own canonicalization against these files, so a consumer that pip
 # installs omai must get them without cloning the repository. data/ holds the
 # registry of configuration and model uids, which an installed package
-# resolves against (the wheel ships no docs/data/).
+# resolves against (the wheel ships no docs/data/). data/private-members.js is
+# docs/assets/private-members.js byte for byte, for consumers to vendor.
 [tool.setuptools.package-data]
-omai = ["vectors/*.json", "tools/*.json", "data/*.json"]
+omai = ["vectors/*.json", "tools/*.json", "data/*.json", "data/private-members.js"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

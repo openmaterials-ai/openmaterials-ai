@@ -314,7 +314,8 @@ same id as the same lineage without them. Writers omit a field that is None
 `unregistered` is present and not `[]`, or whose `overlay_version` is not
 null, or that cites under a citation key a uid the registry does not hold,
 cites private evidence (`private_reasons`; `docs/assets/private-members.js`
-is the same predicate for the site).
+is the same predicate for the site, shipped in the wheel byte for byte as
+`omai/data/private-members.js`).
 
 A record's `execution.registry` rows name the codes that ran. A row resolves
 when its `id` is a representation or one of its aliases (`quantum-espresso`

@@ -2,9 +2,12 @@
 pytest does not collect it): with no docs/data/ beside the package, the
 registry the wheel ships resolves the committed Si configuration uid and its
 former uid, and the binding model check refuses an unlisted private uid on
-both writers, a SetVoltage calibration included."""
+both writers, a SetVoltage calibration included. The wheel ships the site's
+private-evidence predicate, docs/assets/private-members.js, byte for byte."""
 import json
 import tempfile
+from importlib import resources
+from pathlib import Path
 
 import omai.evidence as ev
 from omai.lineages import LineageError, record_light, record_simulation, unregistered_for
@@ -31,6 +34,9 @@ assert ev.private_reasons(record) == [
     {"field": "unregistered", "kind": "model"},
     {"field": "conditions.potential_sha256", "kind": "model"}]
 assert json.loads(ev.REGISTRY.read_text())["citation_keys"]["SetVoltage"] == ["calibration_sha256"]
+predicate = resources.files("omai").joinpath("data", "private-members.js")
+site = Path(__file__).resolve().parents[1] / "docs" / "assets" / "private-members.js"
+assert predicate.read_bytes() == site.read_bytes(), predicate
 print("installed wheel ok:", ev.REGISTRY)
 
 # The strict writer, on the live map the wheel builds: a SetVoltage record
