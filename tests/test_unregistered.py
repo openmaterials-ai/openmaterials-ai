@@ -12,6 +12,7 @@ from __future__ import annotations
 import json
 import shutil
 import subprocess
+from importlib import resources
 from pathlib import Path
 
 import pytest
@@ -264,6 +265,13 @@ def test_the_registry_is_published_under_docs_data_with_the_citation_keys():
     keys = json.loads(published)["citation_keys"]
     assert keys == {node: list(k) for node, k in CITATION_KEYS.items()}
     assert keys["SetVoltage"] == ["calibration_sha256"]
+
+
+def test_the_wheel_ships_the_site_predicate_byte_for_byte():
+    shipped = resources.files("omai").joinpath("data", "private-members.js")
+    site = _REPO / "docs" / "assets" / "private-members.js"
+    assert shipped.read_bytes() == site.read_bytes(), (
+        "omai/data/private-members.js differs from docs/assets/private-members.js: copy the site file")
 
 
 _PRIVATE = json.loads((_REPO / "omai" / "vectors" / "private.json").read_text())

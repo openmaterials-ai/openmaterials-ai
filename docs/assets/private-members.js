@@ -1,3 +1,7 @@
+// privateReasons(member, registry): input one record of a lineage envelope and
+// the parsed data/registry.json; output its reasons [{field, kind}], [] if none.
+// The wheel ships this file byte for byte as omai/data/private-members.js.
+//
 // Why a lineage record cites evidence that is not in the public registry: the
 // predicate the site Worker's short-link store and the playground share, so a
 // refusal and a label name the same members and fields. A mirror of
