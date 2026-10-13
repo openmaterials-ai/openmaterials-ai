@@ -63,6 +63,10 @@ class Space:
     aliases: tuple[str, ...] = ()
     """Former uids of this node (a re-minted identity keeps them so every
     pin minted before the re-mint still resolves). Not part of identity."""
+    names: tuple[str, ...] = ()
+    """Former names of this node: the ``ns:Name`` it had in the private
+    overlay it was published from, so a record minted against the overlay
+    keeps resolving. Not part of identity."""
 
     def __hash__(self) -> int:
         return hash(self.name)

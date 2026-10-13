@@ -267,7 +267,9 @@ shipped here.
 | `omai.evidence.code_releases(roots=None)` | `{representation: {aliases, releases}}` for every representation. |
 | `omai.evidence.private_reasons(record, registry=None)` | Why a record cites evidence that is not public, `[{field, kind}]`; `[]` when it cites none. |
 | `omai.lineages.unregistered_for(lineage, roots=None)` | The `unregistered` list a producer declares: each cited configuration or model uid no root registers, as `{kind, uid}`. |
-| `omai.lineages.release_check(execution, codes=None)` | The `execution.registry` rows that resolve to no registered release, each with its reason; a report that refuses nothing. |
+| `omai.lineages.release_check(execution, codes=None, roots=None)` | The `execution.registry` rows that resolve to no registered release, each with its reason; a report that refuses nothing. |
+| `omai.overlays.load(roots)` | The private overlays among `roots`, checked against the public root and each other; a refused one raises `OverlayError`. |
+| `omai.overlays.overlay_version(root)` | An overlay's version: the sha256 of its base and every file but `overlay.json`. |
 
 The schema is a SHAPE gate. That `id` equals `lineage_id(lineage)`, that the
 node resolves against the live map, and the contribution gates in

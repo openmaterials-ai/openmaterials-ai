@@ -101,6 +101,8 @@ def build_graph_dict(domains: tuple[Domain, ...]) -> dict:
                 "uid": node_id(s),
                 # former uids of a re-minted node, only where there are any
                 **({"aliases": list(s.aliases)} if s.aliases else {}),
+                # former names (ns:Name from an overlay), only where there are any
+                **({"names": list(s.names)} if s.names else {}),
             })
 
     # Content-addressed edge uid per operator name, per domain. Several links
@@ -168,6 +170,12 @@ def build_graph_dict(domains: tuple[Domain, ...]) -> dict:
             seen_tiers.add(name)
             tiers.append({"name": name, "order": len(tiers), "description": desc})
 
+    kept = [k for n in nodes for k in n.get("names", ())]
+    if not all(":" in k for k in kept):
+        raise ValueError("a kept node name is ns:Name")
+    named = [n["id"] for n in nodes] + kept
+    if len(named) != len(set(named)):
+        raise ValueError("node names and kept names are unique")
     return {"nodes": nodes, "links": links, "tiers": tiers}
 
 

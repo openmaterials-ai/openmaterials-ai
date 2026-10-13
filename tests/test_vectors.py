@@ -60,7 +60,7 @@ RELEASE_VECTORS = _load("releases.json")
 @pytest.mark.parametrize("name", ["lineage_ids.json", "records.json",
                                   "render.json", "configurations.json",
                                   "models.json", "releases.json",
-                                  "private.json"])
+                                  "private.json", "overlay.json"])
 def test_committed_vectors_equal_a_fresh_generation(name):
     fresh = gen_vectors.generate()[name]
     committed = (VECTORS / name).read_text()

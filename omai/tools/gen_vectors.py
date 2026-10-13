@@ -37,7 +37,10 @@ ids, never retyped:
   when the cases were cut, copied into the vector beside them.
 
 The private-evidence cases (``private.json``) and the fixture registry they
-are checked against are defined in this file: shapes, not data.
+are checked against are defined in this file: shapes, not data. So is the
+fixture overlay (``overlay.json``), synthetic throughout: its files as text and
+the ``overlay_version`` :func:`omai.overlays.overlay_version` computes over
+them, written to a temporary directory.
 
 Each input carries the id it was pinned with; the generator RECOMPUTES the id
 and refuses to write when the two disagree. A changed id is a defect in the
@@ -641,6 +644,79 @@ def build_private() -> dict:
                                    for name, registry in _REFUSED_REGISTRIES]}
 
 
+# The fixture overlay (omai.overlays), synthetic: namespace "example", one
+# quantity reached from the public Temperature node by one edge whose symbol
+# dimension the overlay adds, one model, one code and one release of it
+# (releases/<ns>/<code>.json: no colon in any path). Validated against the
+# public store head below; the log is append-only, so it stays a version.
+_OVERLAY_BASE = "5a967e980890683f110d5047c2c558aeb5dab104c99311272ed3472f18d80311"
+_TEMPERATURE = "63f9bd32d94d77e12afbb96f5b1b7a870de6b1f5805213b7f3c3ff227da301f0"
+_OVERLAY_MODEL = "synthetic overlay model\n"
+
+
+def _overlay_files() -> dict:
+    import sympy as sp
+
+    from omai.operator.identity import edge_uid_from_identity, node_uid_from_identity
+
+    node = {"quantity": "example_synthetic_quantity",
+            "fields": [{"dimension": "Th^1", "indices": []}],
+            "gauge": "observable", "labels": {}}
+    node_uid = node_uid_from_identity(node)
+    formula = sp.Eq(sp.Symbol("x_example"), sp.Symbol("T"))
+    edge = {"output": node_uid, "outputs": [node_uid], "inputs": [_TEMPERATURE],
+            "formula": sp.srepr(formula), "schemes": {}}
+    model = _OVERLAY_MODEL.encode("utf-8")
+    digest = hashlib.sha256(model).hexdigest()
+    return {
+        "overlay.json": {"namespace": "example", "base_graph_version": _OVERLAY_BASE},
+        "registry.json": {
+            "quantity_tags": {"example_synthetic_quantity": "A synthetic quantity."},
+            "symbol_dimensions": {"x_example": [0, 0, 0, 1, 0, 0, 0]}},
+        "map.json": [
+            {"op": "add_node", "payload": {"uid": node_uid, "identity": node, "meta": {
+                "name": "example:SyntheticQuantity", "symbol": "x_example",
+                "description": "A synthetic quantity.", "tier": ""}}},
+            {"op": "add_edge", "payload": {
+                "uid": edge_uid_from_identity(edge), "identity": edge, "meta": {
+                    "name": "example:synthetic_from_temperature",
+                    "description": "A synthetic edge.",
+                    "formula_srepr": sp.srepr(formula),
+                    "formula_latex": sp.latex(formula), "schemes": {}}}}],
+        "codes.json": {"example:code": {"example:SyntheticQuantity": {
+            "name": "example:code", "api": "example.synthetic", "unit": "K",
+            "citation": "A synthetic code.", "doi": None, "license": "CC0-1.0",
+            "url": None}}},
+        "releases/example/code.json": {"aliases": [], "releases": [{
+            "version": "1.0", "tag": "v1.0", "commit": "a" * 40,
+            "released": "2026-10-11", "spdx": "CC0-1.0",
+            "license_source": "synthetic"}]},
+        "models/synthetic.json": {
+            "uid": digest, "node": "Potential", "name": "synthetic",
+            "family": "synthetic", "format": "synthetic.txt", "elements": ["Si"],
+            "files": [{"path": "synthetic.txt", "role": "model", "sha256": digest,
+                       "bytes": len(model)}],
+            "license": {"spdx": "CC0-1.0", "license_source": "synthetic"},
+            "citation": "A synthetic model.", "doi": None,
+            "provenance": [{"kind": "fixture", "ref": "omai.tools.gen_vectors",
+                            "detail": "synthetic"}]},
+    }
+
+
+def build_overlay() -> dict:
+    """The fixture overlay as ``{path: text}`` and its ``overlay_version``."""
+    import tempfile
+
+    from omai.overlays import overlay_version
+
+    files = {path: _dump(doc) for path, doc in _overlay_files().items()}
+    with tempfile.TemporaryDirectory() as tmp:
+        for path, text in files.items():
+            (Path(tmp) / path).parent.mkdir(parents=True, exist_ok=True)
+            (Path(tmp) / path).write_bytes(text.encode("utf-8"))
+        return {"files": files, "overlay_version": overlay_version(tmp)}
+
+
 def generate() -> dict[str, str]:
     """The vector files as ``{filename: text}``, without writing anything."""
     inputs = json.loads(_INPUTS.read_text())
@@ -652,6 +728,7 @@ def generate() -> dict[str, str]:
         "models.json": _dump(build_models()),
         "releases.json": _dump(build_releases(inputs)),
         "private.json": _dump(build_private()),
+        "overlay.json": _dump(build_overlay()),
     }
 
 

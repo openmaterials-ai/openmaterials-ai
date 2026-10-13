@@ -71,7 +71,7 @@ validator holds a lineage to "whatever we have". When the lineage names a ``node
 it must resolve against the live map by BOTH id and content uid (the instances
 node-pin discipline: a stale pin is a mismatch, not a silent pass); when it does
 NOT, the record is valid and simply carries its template plus values, FLAGGED as
-node-unresolved rather than rejected (the honesty rule). Artifact pointers, when
+node-unresolved rather than rejected (the flag-not-reject rule). Artifact pointers, when
 present, must be well-formed: ``path`` and ``role`` non-empty, ``url`` a string
 if present, ``sha256`` a 64-hex string if present; nothing about artifacts is
 mandatory. The heavy validator (:func:`_validate`) additionally checks the
@@ -549,7 +549,8 @@ def _former_uids(node: str) -> tuple[str, ...]:
     """The former uids a re-minted node keeps as aliases; a pin minted before
     the re-mint still resolves."""
     from omai.map_data import _domains
-    return next((s.aliases for d in _domains() for s in d.nodes if s.name == node), ())
+    return next((s.aliases for d in _domains() for s in d.nodes
+                 if node in (s.name, *s.names)), ())
 
 
 def _validate_markers(record: dict, *, where: str) -> set:
@@ -620,6 +621,7 @@ def unregistered_for(lineage: dict, roots: list[Path] | None = None) -> list[dic
     :func:`record_simulation`; ``[]`` when everything cited is registered."""
     from omai.evidence import resolve
 
+    _overlays(roots)  # an overlay is checked before its files are read
     out: list[dict] = []
     for kind, _, uid, _ in _citations(lineage, where="unregistered_for"):
         entry = {"kind": kind, "uid": uid}
@@ -669,7 +671,78 @@ def _in_config_dir(uid: str, config_dir: Path) -> bool:
     return False
 
 
-def release_check(execution, codes: dict | None = None) -> list[dict]:
+def _overlays(roots) -> list:
+    """The overlays among ``roots``, checked (:func:`omai.overlays.load`)."""
+    # ponytail: re-checks on every call (a map replay at the base, tens of ms);
+    # cache by overlay_version if a host validates records in bulk.
+    from omai.overlays import load
+    return load(roots) if roots else []
+
+
+def _names(name_to_uid, overlays=(), domains=None) -> dict:
+    """Node name -> uid: ``name_to_uid``, else the live map's (each node's
+    name and the ``names`` it keeps from the overlay it was published from),
+    plus every loaded overlay's ``ns:Name``. An overlay name the map holds
+    for another uid raises; the same uid is the published node."""
+    if name_to_uid is None:
+        from omai.map_data import _domains, build_graph_dict
+        nodes = build_graph_dict(domains if domains is not None else _domains())["nodes"]
+        name_to_uid = {name: n["uid"] for n in nodes
+                       for name in (n["id"], *n.get("names", ()))}
+    out = dict(name_to_uid)
+    for o in overlays:
+        for name, uid in o.names.items():
+            if out.setdefault(name, uid) != uid:
+                raise LineageError(
+                    f"overlay {o.namespace!r}: {name!r} is public node "
+                    f"{out[name][:12]}, not {str(uid)[:12]}; rename or drop it in the overlay")
+    return out
+
+
+def _overlay_used(lineage, overlays, *, where: str):
+    """The overlay a lineage is made against: the one naming its node or
+    holding a uid it cites; None for the public map. A record is made against
+    one overlay at most."""
+    from omai.evidence import resolve
+
+    cited = _citations(lineage, where=where)
+    node = lineage.get("node")
+    used = [o for o in overlays if (isinstance(node, str) and node in o.names)
+            or any(resolve(kind, uid, [o.root]) for kind, _, uid, _ in cited)]
+    if len(used) > 1:
+        raise LineageError(f"{where}: the lineage uses overlays "
+                           f"{sorted(o.namespace for o in used)}; a record is "
+                           f"made against one")
+    return used[0] if used else None
+
+
+def _validate_overlay_fields(record, lineage, overlays, *, where: str) -> None:
+    """A record made against an overlay carries ``lineage_version`` and
+    ``overlay_version``: it is private, and names the map it extends."""
+    used = _overlay_used(lineage, overlays, where=where)
+    if used is not None and not {"lineage_version", "overlay_version"} <= set(record):
+        raise LineageError(f"{where}: a record made against overlay "
+                           f"{used.namespace!r} carries lineage_version and "
+                           f"overlay_version")
+
+
+def _overlay_versions(lineage, overlays, lineage_version, overlay_version, *,
+                      where: str) -> tuple:
+    """The writers' version fields: for a lineage made against an overlay,
+    each one left None is filled, ``lineage_version`` from the overlay's base
+    map and ``overlay_version`` from its files."""
+    used = _overlay_used(lineage, overlays, where=where)
+    if used is not None:
+        from omai.map_data import _lineage_version
+        if lineage_version is None:
+            lineage_version = _lineage_version(used.base)
+        if overlay_version is None:
+            overlay_version = used.version
+    return lineage_version, overlay_version
+
+
+def release_check(execution, codes: dict | None = None,
+                  roots: list[Path] | None = None) -> list[dict]:
     """The ``execution.registry`` rows that do not resolve to a registered
     code release, each ``{id, version, reason}``. A report: nothing refuses.
 
@@ -678,7 +751,8 @@ def release_check(execution, codes: dict | None = None) -> list[dict]:
     resolves only when the execution carries ``image_digest`` or
     ``container_digest`` and the code has no registered release. ``codes`` is
     ``{representation: {aliases, releases}}``, default
-    :func:`omai.evidence.code_releases`. Only object rows are read.
+    :func:`omai.evidence.code_releases` over ``roots``. Only object rows are
+    read.
     """
     rows = execution.get("registry") if isinstance(execution, dict) else None
     rows = [r for r in rows if isinstance(r, dict)] if isinstance(rows, list) else []
@@ -686,7 +760,8 @@ def release_check(execution, codes: dict | None = None) -> list[dict]:
         return []
     if codes is None:
         from omai.evidence import code_releases
-        codes = code_releases()
+        _overlays(roots)  # an overlay is checked before its files are read
+        codes = code_releases(roots)
     owner = {name: rep for rep, entry in codes.items()
              for name in (rep, *entry["aliases"])}
     digest = execution.get("image_digest") or execution.get("container_digest")
@@ -800,9 +875,12 @@ def _validate(record: dict, *, name_to_uid: dict, where: str,
             f"recomputed from the claim {record_id[:12]} "
             f"(location must be out of the hash; put urls in 'mirrors')")
 
+    overlays = _overlays(roots)
+    name_to_uid = _names(name_to_uid, overlays)
     _validate_lineage_node(lineage, name_to_uid, where=where)
     _validate_evidence(lineage, _validate_markers(record, where=where),
                        roots=roots, config_dir=config_dir, where=where)
+    _validate_overlay_fields(record, lineage, overlays, where=where)
     _validate_mirrors(record.get("mirrors"), where=where)
     _validate_results(record.get("results"), record_id, name_to_uid, where=where,
                       instances_dir=instances_dir)
@@ -813,7 +891,7 @@ def validate_light(record: dict, *, name_to_uid: dict | None = None,
                    where: str = "<record>", config_dir: Path | None = None,
                    instances_dir: Path | None = None,
                    roots: list[Path] | None = None) -> dict:
-    """Validate a LIGHT record and return a report (honest about gaps).
+    """Validate a LIGHT record and return a report (reports gaps).
 
     The light contract, "whatever we have":
 
@@ -823,7 +901,7 @@ def validate_light(record: dict, *, name_to_uid: dict | None = None,
       id and, if a ``node_uid`` pin is present, by uid (the P3 instances
       node-pin discipline: a stale pin is a mismatch, never a silent pass). When
       the lineage names NO node, the record is VALID and simply node-unresolved:
-      the report says so, and nothing is rejected (the honesty rule).
+      the report says so, and nothing is rejected (the flag-not-reject rule).
     - ``artifacts`` (when present) are well-formed pointers (path+role required,
       url/sha256 shape-checked); nothing about artifacts is mandatory and an
       empty or absent list is normal.
@@ -840,6 +918,11 @@ def validate_light(record: dict, *, name_to_uid: dict | None = None,
       an error. A lineage citing nothing is unaffected.
     - ``unregistered``, ``lineage_version`` and ``overlay_version`` (outside
       identity) are well-formed when present (:func:`_validate_markers`).
+    - ``roots`` may list private overlays after the public root
+      (:mod:`omai.overlays`): each must pass :func:`omai.overlays.load`
+      (``OverlayError`` otherwise), its ``ns:Name`` nodes resolve, and a
+      record made against one carries ``lineage_version`` and
+      ``overlay_version``.
     - ``execution`` and ``results`` are OPTIONAL enrichment: each is validated
       only when present.
     - ``execution.registry`` rows that do not resolve to a registered code
@@ -869,13 +952,11 @@ def validate_light(record: dict, *, name_to_uid: dict | None = None,
             f"recomputed from the lineage {record_id[:12]} (identity is the "
             f"lineage alone; artifacts/execution/mirrors must be out of the hash)")
 
+    overlays = _overlays(roots)
     node = lineage.get("node")
     node_resolved = False
     if node is not None:
-        if name_to_uid is None:
-            from omai.map_data import _domains, build_graph_dict
-            name_to_uid = {n["id"]: n["uid"]
-                           for n in build_graph_dict(_domains())["nodes"]}
+        name_to_uid = _names(name_to_uid, overlays)
         _validate_lineage_node(lineage, name_to_uid, where=where)
         node_resolved = True
     # else: node-unresolved. Valid. The record carries its template + values.
@@ -910,11 +991,9 @@ def validate_light(record: dict, *, name_to_uid: dict | None = None,
     # record lists it as unregistered.
     _validate_evidence(lineage, _validate_markers(record, where=where),
                        roots=roots, config_dir=config_dir, where=where)
+    _validate_overlay_fields(record, lineage, overlays, where=where)
     if record.get("results") is not None:
-        if name_to_uid is None:
-            from omai.map_data import _domains, build_graph_dict
-            name_to_uid = {n["id"]: n["uid"]
-                           for n in build_graph_dict(_domains())["nodes"]}
+        name_to_uid = _names(name_to_uid, overlays)
         _validate_results(record["results"], record_id, name_to_uid,
                           where=where, instances_dir=instances_dir)
 
@@ -923,7 +1002,8 @@ def validate_light(record: dict, *, name_to_uid: dict | None = None,
         "node_resolved": node_resolved,
         "node": node,
         "artifact_count": len(artifacts) if isinstance(artifacts, list) else 0,
-        "unresolved_registry_rows": release_check(record.get("execution")),
+        "unresolved_registry_rows": release_check(record.get("execution"),
+                                                  roots=roots),
         "retracted_citations": _retracted_citations(lineage, roots, where=where),
     }
 
@@ -961,7 +1041,7 @@ def record_light(*, lineage, execution=None, artifacts=None, mirrors=None,
         The asked computation. Recognized keys (all optional except that the
         lineage must be a non-empty object): ``node`` (a map node id, present when
         a map node is known) with an optional ``node_uid`` pin; ``material``;
-        ``template`` (the code family, the honest fallback when there is no map
+        ``template`` (the code family, the generic fallback when there is no map
         node); ``conditions``; ``params``; ``hyperparameters``; setup ``values``.
         Floats in conditions/params/hyperparameters/values are rounded to
         :data:`FLOAT_DECIMALS` for identity.
@@ -994,7 +1074,8 @@ def record_light(*, lineage, execution=None, artifacts=None, mirrors=None,
     roots : list[Path] | None
         Where cited configuration and model uids resolve (default:
         ``docs/data/`` in a source tree, the registry the wheel ships in an
-        installed package).
+        installed package); private overlays listed after the public root
+        extend the map (:mod:`omai.overlays`).
     unregistered : list[dict] | None
         ``[{kind, uid}]``: each cited configuration or model uid that no root
         registers (:func:`unregistered_for` computes it). Outside identity;
@@ -1002,7 +1083,9 @@ def record_light(*, lineage, execution=None, artifacts=None, mirrors=None,
     lineage_version, overlay_version : str | None
         The commons map version the record was made against (``version`` in
         docs/data/version.json, not the store head), and the private overlay
-        it used (0.2.1). Outside identity; omitted when None.
+        it used. Outside identity; omitted when None, except that a lineage
+        made against an overlay in ``roots`` gets each one left None from
+        the overlay (its base map's lineage_version, its overlay_version).
 
     Returns
     -------
@@ -1028,13 +1111,10 @@ def record_light(*, lineage, execution=None, artifacts=None, mirrors=None,
     # Pin the live node uid when the lineage names a node but carried no pin, so a
     # later validation is a real match. A node-less lineage never resolves a map.
     # The pin is part of the lineage, so the id is computed AFTER it is attached.
+    overlays = _overlays(roots)
     node = lineage.get("node")
     if isinstance(node, str) and lineage.get("node_uid") is None:
-        if name_to_uid is None:
-            from omai.map_data import _domains, build_graph_dict
-            doms = domains if domains is not None else _domains()
-            name_to_uid = {n["id"]: n["uid"]
-                           for n in build_graph_dict(doms)["nodes"]}
+        name_to_uid = _names(name_to_uid, overlays, domains)
         if node in name_to_uid:
             lineage = dict(lineage)
             lineage["node_uid"] = name_to_uid[node]
@@ -1051,6 +1131,8 @@ def record_light(*, lineage, execution=None, artifacts=None, mirrors=None,
         record["mirrors"] = mirrors
     if results is not None:
         record["results"] = results
+    lineage_version, overlay_version = _overlay_versions(
+        lineage, overlays, lineage_version, overlay_version, where=where)
     _set_markers(record, unregistered, lineage_version, overlay_version)
 
     validate_light(record, name_to_uid=name_to_uid, where=where,
@@ -1156,7 +1238,7 @@ def _normalize_member(record, *, where: str) -> dict:
     wire-tolerant subset of :func:`validate_light`: the lineage must be a
     non-empty object (via :func:`record_lineage`, which also rejects the
     ambiguous lineage+recipe pair), a stated ``id`` must equal the id recomputed
-    from the lineage (identity honesty), ``lineage.source`` when present must
+    from the lineage (identity fidelity), ``lineage.source`` when present must
     match the source grammar, and artifact pointers when present must be
     well-formed (:func:`_validate_pointers`). It does NOT resolve the node
     against the live map: a shared link minted against an older map version must
@@ -1336,7 +1418,7 @@ def record_simulation(*, lineage, execution, artifacts, results=None, mirrors=No
         ``material`` ({name, optional configuration uid}), ``conditions``,
         ``params``. Identity is this lineage, canonicalized by :func:`lineage_id`.
     execution : dict
-        What ran: ``code`` (codes rail; required, a non-empty string),
+        What ran: ``code`` (a codes.json representation; required, a non-empty string),
         ``code_version``, ``container_digest`` (the per-run image digest),
         ``runner``, ``wall_time_s``, ``seeds``. Stored, outside identity.
     artifacts : list[dict]
@@ -1376,10 +1458,8 @@ def record_simulation(*, lineage, execution, artifacts, results=None, mirrors=No
     LineageError
         On any validation failure.
     """
-    if name_to_uid is None:
-        from omai.map_data import _domains, build_graph_dict
-        doms = domains if domains is not None else _domains()
-        name_to_uid = {n["id"]: n["uid"] for n in build_graph_dict(doms)["nodes"]}
+    overlays = _overlays(roots)
+    name_to_uid = _names(name_to_uid, overlays, domains)
 
     where = lineage.get("node", "<simulation>") if isinstance(lineage, dict) else "<simulation>"
     _validate_manifest(artifacts, where=where)
@@ -1398,6 +1478,8 @@ def record_simulation(*, lineage, execution, artifacts, results=None, mirrors=No
         record["results"] = results
     if mirrors is not None:
         record["mirrors"] = mirrors
+    lineage_version, overlay_version = _overlay_versions(
+        lineage, overlays, lineage_version, overlay_version, where=where)
     _set_markers(record, unregistered, lineage_version, overlay_version)
 
     # Full validation on the assembled record (id pin, node pin, cited
@@ -1499,7 +1581,7 @@ def _lineage_from_bundle(manifest: dict) -> dict:
     against the live map; the spec itself is always kept under ``lineage.spec``
     so nothing the host asked is dropped. A spec that names NO node leaves
     ``lineage.node`` absent: the writer never invents a node id, and
-    :func:`_validate` reports the gap (the honesty rule, a bundle without a
+    :func:`_validate` reports the gap (the flag-not-reject rule, a bundle without a
     resolvable map node is recorded but flagged).
     """
     template = manifest.get("template")
@@ -1548,7 +1630,7 @@ def _bundle_artifacts(manifest: dict, *, where: str) -> list[dict]:
     carrying a ``sha256`` is kept as a verifiable pointer (the byte claim rides
     along for :func:`verify_bundle_bytes`); one lacking a sha256 becomes a plain
     pointer ``{path, role?, url?, bytes?}``, outside identity exactly like the
-    light path. A missing ``role`` defaults to ``"artifact"`` (the honest generic
+    light path. A missing ``role`` defaults to ``"artifact"`` (the generic default
     role) rather than being rejected: a bundle enriches a record with bytes, it
     is never required to complete it. Identity is the lineage regardless
     (:func:`lineage_id`), so no artifact, checksummed or not, changes the id.
@@ -1593,7 +1675,7 @@ def record_from_bundle(manifest: dict, *, mirrors: dict | None = None,
     pointers, but it is never required: this path no longer refuses a bundle
     whose artifacts lack a sha256.
 
-    The mapping (honest, never inventing what the bundle did not carry):
+    The mapping (never inventing what the bundle did not carry):
 
     - ``lineage`` comes from ``template`` + ``spec`` (:func:`_lineage_from_bundle`).
       If the spec names a map ``node`` (and optionally ``material``,

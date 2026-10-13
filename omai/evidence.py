@@ -129,10 +129,12 @@ def record_uids(kind: str, record: dict) -> list:
 
 
 def records(kind: str, data_dir: Path) -> list[tuple[str, dict]]:
-    """``(path relative to data_dir, record)`` for every record of a kind."""
+    """``(path relative to data_dir, record)`` for every record of a kind;
+    a hidden file (name starting with ".") is not a record."""
     directory = KINDS[kind].directory
     return [(f"{directory}/{f.name}", json.loads(f.read_text()))
-            for f in sorted((Path(data_dir) / directory).glob("*.json"))]
+            for f in sorted((Path(data_dir) / directory).glob("*.json"))
+            if not f.name.startswith(".")]
 
 
 def check(kind: str, record: dict, *, where: str) -> str:
@@ -208,7 +210,9 @@ def default_roots() -> list[Path]:
 def resolve(kind: str, uid: str, roots: list[Path] | None = None) -> str | None:
     """Where a registered uid or alias lives, as the record's path under its
     data root (``models/nep89-20250409.json``); None when no root registers
-    it. A root that does not exist raises FileNotFoundError."""
+    it. A root that does not exist raises FileNotFoundError. Roots are
+    trusted: a caller checks an overlay among them with
+    :func:`omai.overlays.load` first, as the lineage functions do."""
     hit = _lookup(kind, uid, roots)
     return hit[0] if hit else None
 
@@ -251,9 +255,12 @@ def _is_date(value) -> bool:
 
 def release_files(data_dir: Path) -> dict[str, dict]:
     """``{representation: {aliases, releases}}`` as authored under
-    ``<data_dir>/releases/``."""
-    return {f.stem: json.loads(f.read_text())
-            for f in sorted((Path(data_dir) / "releases").glob("*.json"))}
+    ``<data_dir>/releases/``: ``<rep>.json``, or ``<ns>/<code>.json`` for an
+    overlay code named ``ns:code`` (no colon in any path)."""
+    root = Path(data_dir) / "releases"
+    return {":".join(f.relative_to(root).with_suffix("").parts): json.loads(f.read_text())
+            for f in sorted([*root.glob("*.json"), *root.glob("*/*.json")])
+            if not any(p.startswith(".") for p in f.relative_to(root).parts)}
 
 
 def check_releases(files: dict[str, dict], representations) -> dict[str, dict]:
@@ -265,7 +272,7 @@ def check_releases(files: dict[str, dict], representations) -> dict[str, dict]:
     version or tag string names two commits."""
     owner: dict[str, str] = {}
     for rep, doc in files.items():
-        where = f"releases/{rep}.json"
+        where = f"releases/{rep.replace(':', '/')}.json"
         if rep not in representations:
             raise EvidenceError(f"{where}: {rep!r} is not a representation")
         if (not isinstance(doc, dict) or set(doc) != {"aliases", "releases"}
@@ -299,19 +306,25 @@ def check_releases(files: dict[str, dict], representations) -> dict[str, dict]:
 
 def code_releases(roots: list[Path] | None = None) -> dict[str, dict]:
     """``{representation: {aliases, releases}}`` for every representation
-    of the roots, the first root holding a representation winning."""
+    of the roots (a data directory's ``codes.json``, when it has one, and its
+    release files; a registry file's ``code``), each root's aliases and
+    releases appended in root order, so an overlay may add a release of a
+    public code."""
     out: dict[str, dict] = {}
     for root in default_roots() if roots is None else roots:
         root = Path(root)
         if root.is_dir():
             files = release_files(root)
-            reps = json.loads((root / "codes.json").read_text())
+            listed = root / "codes.json"
+            reps = json.loads(listed.read_text()) if listed.is_file() else {}
             codes = {rep: files.get(rep) or {"aliases": [], "releases": []}
-                     for rep in reps}
+                     for rep in {**reps, **files}}
         else:
             codes = json.loads(root.read_text()).get("code", {})
         for rep, entry in codes.items():
-            out.setdefault(rep, entry)
+            have = out.setdefault(rep, {"aliases": [], "releases": []})
+            for key in ("aliases", "releases"):
+                have[key] = have[key] + [x for x in entry[key] if x not in have[key]]
     return out
 
 

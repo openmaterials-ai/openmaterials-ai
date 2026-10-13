@@ -231,44 +231,70 @@ not a subset of the cited model's `elements`.
 
 ## 6. Private overlays
 
+- An overlay is a directory laid out as a data root (`docs/data/`):
+  `overlay.json`, `map.json` (its map part), `registry.json` (its
+  vocabulary), and `codes.json`, `releases/`, `configurations/` and `models/`
+  as under `docs/data/`. `omai.overlays` implements it.
 - `overlay.json` holds `{namespace, base_graph_version}`, the public store head
   the overlay is validated against. `overlay_version` is computed, never
   stored: the sha256 of the canonical JSON `{"base": base_graph_version,
   "files": [[path, sha256], ...]}` over every overlay file except
-  `overlay.json`, paths sorted.
-- An overlay representation is data: the index entry shape `{representation,
-  covers: [{node, uid, api, unit}]}` plus a credits row and its releases.
-  Every lineage validator and writer that resolves a uid (`_validate`,
-  `validate_light`, `record_light`, `record_simulation`,
-  `_validate_configuration`) gains `roots: list[Path] | None` (public root
-  first, then overlays); `config_dir` stays, deprecated, as a root holding
-  only configurations; `configurations.py` keeps its API. `roots` also extends
-  `name_to_uid` with overlay node names and the aliases of published nodes.
+  `overlay.json` and hidden files (a path component starting with `.`), paths
+  sorted. Hidden files are never read as records or releases either, and an
+  overlay holding a symlink is refused.
+- An overlay representation is data in the `codes.json` shape (per covered
+  node: `api`, `unit` and the credits row `citation`, `doi`, `license`,
+  `url`; `citation` and `license` required), plus its releases at
+  `releases/<ns>/<code>.json` (no colon in any path). Every node it covers is
+  a node of the public map at `base_graph_version` (the live map where `map/`
+  is absent) or of the overlay. An overlay may also register a release of a
+  public code at `releases/<code>.json`.
+- Every lineage validator and writer that resolves a uid (`_validate`,
+  `validate_light`, `record_light`, `record_simulation`, and the evidence
+  check that replaced `_validate_configuration`) takes `roots: list[Path] |
+  None` (public root first, then overlays) and checks the overlays among them
+  with `omai.overlays.load` before reading them; `config_dir` stays,
+  deprecated, as a root holding only configurations; `configurations.py`
+  keeps its API. `roots` also extends `name_to_uid` with overlay node names
+  and the names published nodes keep; `release_check` reads releases over
+  `roots`, each root's releases appended in order.
 - Add only: an overlay's map part is a contribution `[{op, payload}]` of
   `add_node` and `add_edge` only, validated by `validate_contribution` against
   the public map at `base_graph_version` (connectivity included). An overlay
-  record whose uid is public is refused (cite the public one). Identity never
-  carries the namespace: every vocabulary entry an overlay adds (quantity
-  tags, label keys, label values, index kinds, gauge groups and symbol
-  dimensions: every registry `_check_registry` reads) goes in its
-  `registry.json` (add only; a string the public registry or another loaded
-  overlay holds is refused), and `validate_contribution` takes that
-  vocabulary as a parameter instead of reading module constants, so a node
-  keeps its uid when published. Names carry the namespace (`ns:Name`,
-  `ns:code`). A published node keeps `ns:Name` as an alias that
-  `_validate_lineage_node` resolves, so records minted against the overlay
-  keep their ids; aliases are declared on the node in the operator layer, so
-  `omai.sync` carries them into map meta and `build_graph_dict` emits them
-  into `name_to_uid`. Release versions are not content-addressed: the union
-  refuses one (code, version) with two commits.
-- A record made against an overlay carries `lineage_version` (the write key
+  node or edge whose uid the public map holds at that base, and an overlay
+  configuration or model whose uid is public, are refused (cite the public
+  one; once an overlay record is published, the refusal names the fix: remove
+  the overlay copy). Identity never carries the namespace: every vocabulary entry an
+  overlay adds goes in its `registry.json`, in the tables of
+  `omai.gates.VOCABULARY` (`quantity_tags`, `index_kinds`, `label_keys`,
+  `gauge_groups`, and `symbol_dimensions`, a symbol to its seven SI exponents:
+  every registry the gates read). Add only: an entry the public registry or
+  another loaded overlay holds is refused (for a label, a value its key
+  already has). `validate_contribution` takes the vocabulary as a parameter
+  (default `omai.gates.VOCABULARY`, the public tables), so a node keeps its
+  uid when published. Names carry the namespace (`ns:Name`, `ns:code`). A
+  published node keeps `ns:Name` among its `names` (`Space.names` in the
+  operator layer), which `omai.sync` carries into map meta and
+  `build_graph_dict` emits, so `_validate_lineage_node` resolves it and
+  records minted against the overlay keep their ids. A kept name contains
+  `:`, and names are unique across node ids and kept names. An overlay name
+  the public map holds for a different uid is refused; the same uid is the
+  published node. Release versions are not
+  content-addressed: the union of the public root and the overlays refuses
+  one (code, version) with two commits, and one alias naming two codes.
+  Where `map/` is absent (an installed wheel) the map part is validated
+  against the live map; the base is not checked.
+- A record made against an overlay (its node is an overlay name, or it cites
+  an overlay configuration or model) carries `lineage_version` (the write key
   `FORMAT_DESCRIPTOR` already declares) and `overlay_version`, top-level,
-  outside identity.
-- Namespaces: the overlay owner chooses one; the commons keeps no list (a list
-  would publish who holds overlays). A host refuses duplicates among its
-  accounts and the loader refuses two overlays with one namespace. An owner
-  who does not want to be named uses an opaque namespace, since it survives
-  publication as an alias.
+  outside identity. The writers fill each one left unset (`lineage_version`
+  of the base map under the library's format rules); the validators refuse a
+  record without them. A record is made against one overlay.
+- Namespaces: the overlay owner chooses one (lowercase alphanumerics and
+  hyphens); the commons keeps no list (a list would publish who holds
+  overlays). A host refuses duplicates among its accounts and the loader
+  refuses two overlays with one namespace. An owner who does not want to be
+  named uses an opaque namespace, since it survives publication as a name.
 - Governance (added to GOVERNANCE.md): an overlay is not a contribution;
   nothing in it is licensed to the initiative until registered by pull
   request. CC BY 4.0 has no share-alike term, so a private overlay is
