@@ -259,7 +259,7 @@ shipped here.
 | `omai.lineages.record_simulation(...)` | Writes a strict, checksummed record. |
 | `omai.schema.simulation_record_schema()` | The SimulationRecord as JSON Schema draft 2020-12, closed objects. |
 | `omai.schema.validate_record(record)` | Every schema violation as a readable message; an empty list means valid. |
-| `omai.render.render_kappa / render_molar_cp / render_reaction_energy` | A typed result to a map evidence `Instance`. |
+| `omai.render.render_kappa / render_molar_cp / render_reaction_energy / render_composite_kappa / render_interface_conductance / render_cure_conversion / render_glass_transition` | A typed result to a map evidence `Instance`. |
 | `omai.render.provenance(run_ref=None, what, map_version=...)` | The `Source` every rendered instance carries, stamping the graph version (`graph_version` in version.json) passed as `map_version`. |
 | `omai.evidence.resolve(kind, uid, roots=None)` | Where a registered configuration or model uid lives; None when no root registers it. |
 | `omai.evidence.model_uid(digests)` | A model's uid: the sha256 of its one evaluated file, or of the sorted manifest of several. |
@@ -345,8 +345,8 @@ writer refuses them. The registry ships the releases under `code`.
   the Cut 1 proof record exactly as the platform served it (real production
   bytes, so the vectors pin the shape a producer emits and not only the
   shapes this repository invents).
-- `render.json`: 10 renderer inputs and the instances they render to, in both
-  producer forms. Six carry no `run_ref`: the form the platform serves, where
+- `render.json`: 15 renderer inputs and the instances they render to, in both
+  producer forms. Eleven carry no `run_ref`: the form the platform serves, where
   `source.ref` is the bare provider and the detail names no run, because a
   public share page carries no run identity. One of those, `kappa_served_proof`,
   equals the result stored for the Cut 1 proof run in every field but the
@@ -384,6 +384,10 @@ the licence provenance of what ran, not a list of registry hosts. 0.1.0
 declared it as an array of strings and refused every record the platform
 serves; 0.1.1 fixes that. A result instance may also carry an optional
 `configuration` uid, which the renderer emits for a configuration-pinned run.
+
+**Number types.** A lineage hashes numbers as written: 1200 and 1200.0 are
+different lineages. Each producer emits every field with one fixed JSON type;
+omai's renderers enforce their own.
 
 **Versioning.** Semantic versioning, with identity treated as the strongest
 promise: a change to `lineage_id`, to the canonical JSON, or to a vector's id

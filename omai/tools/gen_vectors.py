@@ -54,6 +54,10 @@ from pathlib import Path
 
 from omai.lineages import canonical_id, lineage_id
 from omai.render import (
+    render_composite_kappa,
+    render_cure_conversion,
+    render_glass_transition,
+    render_interface_conductance,
     render_kappa,
     render_molar_cp,
     render_reaction_energy,
@@ -265,6 +269,27 @@ def build_records(inputs: dict) -> list[dict]:
     return out
 
 
+# One isothermal hold, rendered onto both cure nodes. The rate-law constants
+# are synthetic; the DiBenedetto constants are Rosetti et al., Materials 11,
+# 1960 (2018), and final_tg_K is that relation at final_conversion.
+_CURE_RESULT = {"schedule_name": "synthetic resin hold",
+                "method": "kamal_dibenedetto_isothermal",
+                "cure_temperature_K": 433.15, "hold_time_s": 3600.0,
+                "alpha_0": 0.0,
+                "kinetics": {"a1_pref_per_s": 1.0e5, "e1_J_per_mol": 7.0e4,
+                             "a2_pref_per_s": 1.0e6, "e2_J_per_mol": 6.0e4,
+                             "m": 0.5, "n": 1.5, "l_order": None,
+                             "amax_per_K": None, "bmax": None},
+                "tg": {"tg0_K": 262.35, "tg_inf_K": 489.15,
+                       "lam": 0.5094339622641509},
+                "final_conversion": 0.912345, "final_tg_K": 453.1636,
+                "vitrification_time_s": 2710.55}
+
+# The interface run inputs, synthetic.
+_TBC_RESULT = {"interface_name": "Si/Ge", "method": "nemd", "temperature_K": 300.0,
+               "tbc_MW_per_m2K": 312.3456, "lead_length_nm": 4.4, "nx": 4,
+               "ny": 4, "delta_T_K": 30.0, "strain_pct_b": 4.2}
+
 # The renderer inputs. Two producers are represented, because both exist:
 #
 # - The PLATFORM form (no run_ref): what the MCG worker serves. The ref is the
@@ -358,12 +383,48 @@ _RENDER_CASES = [
                 "de_elec_kJ_per_mol": -107.9},
      "kwargs": {"run_ref": "cure-dh-gpe-methylamine-gfn2",
                 "material": "C9H10O2 (glycidyl phenyl ether)"}},
+    # The composite, interface and cure renderers in the platform form. The
+    # composite inputs are the commons reference formulation's (its committed
+    # instance pins 1.2452), with its integer-valued inputs as committed; the
+    # renderer writes every number as a float.
+    {"name": "composite_kappa_reference_formulation",
+     "function": "render_composite_kappa",
+     "result": {"composite_name": "DGEBA epoxy + 5 vol% GNP (reference formulation)",
+                "method": "nan_emt_interfacial_series",
+                "kappa_random_W_per_mK": 1.2452, "matrix_kappa_W_per_mK": 0.2,
+                "filler": {"kappa_11_W_per_mK": 1200, "kappa_33_W_per_mK": 6,
+                           "d1_um": 5, "d3_um": 0.02},
+                "volume_fraction": 0.05,
+                "interface_conductance_MW_per_m2K": 25,
+                "kapitza_radius_nm": 8.0},
+     "kwargs": {}},
+    {"name": "interface_conductance_nemd_with_spread",
+     "function": "render_interface_conductance",
+     "result": {**_TBC_RESULT, "tbc_std_MW_per_m2K": 12.34567},
+     "kwargs": {"potential": "NEP89"}},
+    # A single run reports std 0: no uncertainty key, no "+/-" term.
+    {"name": "interface_conductance_nemd_no_spread",
+     "function": "render_interface_conductance",
+     "result": {**_TBC_RESULT, "tbc_std_MW_per_m2K": 0.0},
+     "kwargs": {"potential": "NEP89"}},
+    {"name": "cure_conversion_vitrified_in_hold",
+     "function": "render_cure_conversion",
+     "result": _CURE_RESULT,
+     "kwargs": {}},
+    {"name": "glass_transition_end_of_hold",
+     "function": "render_glass_transition",
+     "result": _CURE_RESULT,
+     "kwargs": {}},
 ]
 
 _RENDERERS = {
     "render_kappa": render_kappa,
     "render_molar_cp": render_molar_cp,
     "render_reaction_energy": render_reaction_energy,
+    "render_composite_kappa": render_composite_kappa,
+    "render_interface_conductance": render_interface_conductance,
+    "render_cure_conversion": render_cure_conversion,
+    "render_glass_transition": render_glass_transition,
 }
 
 
