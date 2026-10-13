@@ -547,7 +547,8 @@ def build_releases(inputs: dict) -> dict:
 # model no registry holds, 3 a registered configuration, 4 its former uid,
 # 5 a configuration no registry holds. Codes are fixtures too: fixture-public
 # (alias fixture-alias) has a registered release, fixture-private's row marks
-# its source private, and no row names fixture-unlisted.
+# it private, no row names fixture-unlisted, and fixture-model-1.0 is the
+# release label of model 1.
 _M, _U, _C, _A, _V = ("1" * 64, "2" * 64, "3" * 64, "4" * 64, "5" * 64)
 _PRIVATE_REGISTRY = {
     # The bound table itself: both predicates refuse any other.
@@ -555,10 +556,11 @@ _PRIVATE_REGISTRY = {
                       "SetVoltage": ["calibration_sha256"]},
     "code": {"fixture-public": {"aliases": ["fixture-alias"],
                                 "releases": [{"version": "1.0", "tag": "v1.0"}]},
-             "fixture-private": {"aliases": [], "releases": [], "source": "private"}},
+             "fixture-private": {"aliases": [], "releases": [], "visibility": "private"}},
     "configuration": {_C: "configurations/fixture.json",
                       _A: "configurations/fixture.json"},
     "model": {_M: "models/fixture.json"},
+    "model_labels": {"fixture-model-1.0": _M},
 }
 
 
@@ -623,6 +625,8 @@ _PRIVATE_CASES = [
     ("code_unlisted", _ran(("fixture-unlisted", "1.0"))),
     ("code_rows_malformed", _ran(1, {}, {"id": ["fixture-public"]}, ("__proto__", None))),
     ("code_rows_not_a_list", _member(execution={"code": "fixture", "registry": {}})),
+    ("model_row", _ran(("fixture-public", "1.0"), ("fixture-model", "fixture-model-1.0"))),
+    ("model_row_label_unknown", _ran(("fixture-model", "fixture-model-9.9"))),
     ("calibration_and_code_unlisted",
      _ran(("fixture-unlisted", "1.0"), conditions={"calibration_sha256": _U},
           unregistered=[{"kind": "model", "uid": _U}])),
@@ -644,6 +648,8 @@ _REFUSED_REGISTRIES = [
     ("citation_keys_extra_node", {**_PRIVATE_REGISTRY, "citation_keys": {
         **_PRIVATE_REGISTRY["citation_keys"], "Structure": ["structure_sha256"]}}),
     ("code_missing", {k: v for k, v in _PRIVATE_REGISTRY.items() if k != "code"}),
+    ("model_labels_missing",
+     {k: v for k, v in _PRIVATE_REGISTRY.items() if k != "model_labels"}),
 ]
 
 

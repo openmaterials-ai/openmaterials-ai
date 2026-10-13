@@ -315,11 +315,14 @@ def test_the_shipped_registry_is_the_default():
 
 
 def test_the_shipped_registry_checks_the_code_not_its_release():
-    def ran(code):
+    def ran(*rows):
         return _record(_lineage(), execution={
-            "code": "fixture", "registry": [{"id": code, "version": "v4.7"}]})
-    assert private_reasons(ran("gpumd")) == private_reasons(ran("quantum-espresso")) == []
-    assert private_reasons(ran("fixture-unlisted")) == [
+            "code": "fixture", "registry": [{"id": i, "version": v} for i, v in rows]})
+    assert private_reasons(ran(("gpumd", "v4.7"))) == private_reasons(
+        ran(("quantum-espresso", "v4.7"))) == []
+    # The platform lists the model an engine evaluates beside its code.
+    assert private_reasons(ran(("gpumd", "3.9.5"), ("nep89", "nep89_20250409"))) == []
+    assert private_reasons(ran(("fixture-unlisted", "v4.7"))) == [
         {"field": "execution.registry", "kind": "code"}]
 
 

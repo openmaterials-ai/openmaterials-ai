@@ -15,8 +15,9 @@
 //     registered model uid
 //   - execution.registry present: one reason per row whose id is no
 //     representation or alias in registry.code, or whose code row has a
-//     source other than "public" (absent: public); a non-list is one reason.
-//     Kind "code"; the code is checked, never its release
+//     visibility other than "public" (absent: public); a non-list is one
+//     reason. Kind "code"; the code is checked, never its release. A row whose
+//     version is a key of registry.model_labels names a model and gives none
 //   - a member that is not an object: field "record"
 // `registry` is data/registry.json. One lacking its tables, or whose
 // citation_keys is not exactly BOUND (the keys omai.evidence.CITATION_KEYS
@@ -42,10 +43,10 @@ const bindsExactly = (table) =>
 export function privateReasons(member, registry) {
   if (
     !isObj(registry) ||
-    !["citation_keys", "code", "configuration", "model"].every((t) => isObj(registry[t])) ||
+    !["citation_keys", "code", "configuration", "model", "model_labels"].every((t) => isObj(registry[t])) ||
     !bindsExactly(registry.citation_keys)
   ) {
-    throw new Error("registry lacks code, configuration or model, or its citation_keys is not the bound table");
+    throw new Error("registry lacks code, configuration, model or model_labels, or its citation_keys is not the bound table");
   }
   if (!isObj(member)) return [{ field: "record", kind: null }];
   const out = [];
@@ -83,9 +84,11 @@ export function privateReasons(member, registry) {
       for (const name of [rep, ...(Array.isArray(entry.aliases) ? entry.aliases : [])]) codes.set(name, entry);
     }
     const rows = member.execution.registry;
-    for (const row of Array.isArray(rows) ? rows : [null]) {
-      const entry = isObj(row) && typeof row.id === "string" ? codes.get(row.id) : undefined;
-      if (!entry || (has(entry, "source") ? entry.source : "public") !== "public") {
+    for (const item of Array.isArray(rows) ? rows : [null]) {
+      const row = isObj(item) ? item : {};
+      if (typeof row.version === "string" && has(registry.model_labels, row.version)) continue;
+      const entry = typeof row.id === "string" ? codes.get(row.id) : undefined;
+      if (!entry || (has(entry, "visibility") ? entry.visibility : "public") !== "public") {
         out.push({ field: "execution.registry", kind: "code" });
       }
     }

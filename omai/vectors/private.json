@@ -768,6 +768,57 @@
      "code": "fixture",
      "registry": [
       {
+       "id": "fixture-public",
+       "version": "1.0"
+      },
+      {
+       "id": "fixture-model",
+       "version": "fixture-model-1.0"
+      }
+     ]
+    },
+    "lineage": {
+     "conditions": {
+      "T_K": 300
+     },
+     "node": "SetVoltage"
+    }
+   },
+   "name": "model_row",
+   "reasons": []
+  },
+  {
+   "member": {
+    "execution": {
+     "code": "fixture",
+     "registry": [
+      {
+       "id": "fixture-model",
+       "version": "fixture-model-9.9"
+      }
+     ]
+    },
+    "lineage": {
+     "conditions": {
+      "T_K": 300
+     },
+     "node": "SetVoltage"
+    }
+   },
+   "name": "model_row_label_unknown",
+   "reasons": [
+    {
+     "field": "execution.registry",
+     "kind": "code"
+    }
+   ]
+  },
+  {
+   "member": {
+    "execution": {
+     "code": "fixture",
+     "registry": [
+      {
        "id": "fixture-unlisted",
        "version": "1.0"
       }
@@ -814,7 +865,7 @@
      "fixture-private": {
       "aliases": [],
       "releases": [],
-      "source": "private"
+      "visibility": "private"
      },
      "fixture-public": {
       "aliases": [
@@ -834,6 +885,9 @@
     },
     "model": {
      "1111111111111111111111111111111111111111111111111111111111111111": "models/fixture.json"
+    },
+    "model_labels": {
+     "fixture-model-1.0": "1111111111111111111111111111111111111111111111111111111111111111"
     }
    }
   },
@@ -847,7 +901,7 @@
      "fixture-private": {
       "aliases": [],
       "releases": [],
-      "source": "private"
+      "visibility": "private"
      },
      "fixture-public": {
       "aliases": [
@@ -867,6 +921,9 @@
     },
     "model": {
      "1111111111111111111111111111111111111111111111111111111111111111": "models/fixture.json"
+    },
+    "model_labels": {
+     "fixture-model-1.0": "1111111111111111111111111111111111111111111111111111111111111111"
     }
    }
   },
@@ -884,7 +941,7 @@
      "fixture-private": {
       "aliases": [],
       "releases": [],
-      "source": "private"
+      "visibility": "private"
      },
      "fixture-public": {
       "aliases": [
@@ -904,6 +961,9 @@
     },
     "model": {
      "1111111111111111111111111111111111111111111111111111111111111111": "models/fixture.json"
+    },
+    "model_labels": {
+     "fixture-model-1.0": "1111111111111111111111111111111111111111111111111111111111111111"
     }
    }
   },
@@ -915,7 +975,7 @@
      "fixture-private": {
       "aliases": [],
       "releases": [],
-      "source": "private"
+      "visibility": "private"
      },
      "fixture-public": {
       "aliases": [
@@ -935,6 +995,9 @@
     },
     "model": {
      "1111111111111111111111111111111111111111111111111111111111111111": "models/fixture.json"
+    },
+    "model_labels": {
+     "fixture-model-1.0": "1111111111111111111111111111111111111111111111111111111111111111"
     }
    }
   },
@@ -951,7 +1014,7 @@
      "fixture-private": {
       "aliases": [],
       "releases": [],
-      "source": "private"
+      "visibility": "private"
      },
      "fixture-public": {
       "aliases": [
@@ -971,6 +1034,9 @@
     },
     "model": {
      "1111111111111111111111111111111111111111111111111111111111111111": "models/fixture.json"
+    },
+    "model_labels": {
+     "fixture-model-1.0": "1111111111111111111111111111111111111111111111111111111111111111"
     }
    }
   },
@@ -993,7 +1059,7 @@
      "fixture-private": {
       "aliases": [],
       "releases": [],
-      "source": "private"
+      "visibility": "private"
      },
      "fixture-public": {
       "aliases": [
@@ -1013,6 +1079,9 @@
     },
     "model": {
      "1111111111111111111111111111111111111111111111111111111111111111": "models/fixture.json"
+    },
+    "model_labels": {
+     "fixture-model-1.0": "1111111111111111111111111111111111111111111111111111111111111111"
     }
    }
   },
@@ -1027,6 +1096,48 @@
      "SetVoltage": [
       "calibration_sha256"
      ]
+    },
+    "configuration": {
+     "3333333333333333333333333333333333333333333333333333333333333333": "configurations/fixture.json",
+     "4444444444444444444444444444444444444444444444444444444444444444": "configurations/fixture.json"
+    },
+    "model": {
+     "1111111111111111111111111111111111111111111111111111111111111111": "models/fixture.json"
+    },
+    "model_labels": {
+     "fixture-model-1.0": "1111111111111111111111111111111111111111111111111111111111111111"
+    }
+   }
+  },
+  {
+   "name": "model_labels_missing",
+   "registry": {
+    "citation_keys": {
+     "Potential": [
+      "potential_sha256",
+      "base_potential_sha256"
+     ],
+     "SetVoltage": [
+      "calibration_sha256"
+     ]
+    },
+    "code": {
+     "fixture-private": {
+      "aliases": [],
+      "releases": [],
+      "visibility": "private"
+     },
+     "fixture-public": {
+      "aliases": [
+       "fixture-alias"
+      ],
+      "releases": [
+       {
+        "tag": "v1.0",
+        "version": "1.0"
+       }
+      ]
+     }
     },
     "configuration": {
      "3333333333333333333333333333333333333333333333333333333333333333": "configurations/fixture.json",
@@ -1052,7 +1163,7 @@
    "fixture-private": {
     "aliases": [],
     "releases": [],
-    "source": "private"
+    "visibility": "private"
    },
    "fixture-public": {
     "aliases": [
@@ -1072,6 +1183,9 @@
   },
   "model": {
    "1111111111111111111111111111111111111111111111111111111111111111": "models/fixture.json"
+  },
+  "model_labels": {
+   "fixture-model-1.0": "1111111111111111111111111111111111111111111111111111111111111111"
   }
  }
 }
