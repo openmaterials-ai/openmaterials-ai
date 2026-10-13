@@ -407,3 +407,20 @@ def test_a_retracted_cell_takes_no_new_provenance(tmp_path):
         cfg.record_configuration(_primitive_si(), "Si", again, config_dir=tmp_path)
     assert json.loads(path.read_text())["provenance"] == source
     assert uid == record["canonical"]["uid"]
+
+
+def test_a_retracted_cell_is_no_merge_target(tmp_path):
+    from pymatgen.core import Lattice, Structure
+
+    source = [{"kind": "database", "ref": "fixture", "detail": "synthetic"}]
+    cfg.record_configuration(_primitive_si(), "Si", source, config_dir=tmp_path)
+    (path,) = tmp_path.glob("*.json")
+    record = json.loads(path.read_text())
+    record["retracted"] = {"date": "2026-10-11", "reason": "rights holder request"}
+    path.write_text(json.dumps(record))
+    # matcher-equivalent, not hash-identical (as in the DuplicateFlag test)
+    a = 5.4437 * 1.005
+    lat = Lattice([[0, a / 2, a / 2], [a / 2, 0, a / 2], [a / 2, a / 2, 0]])
+    scaled = Structure(lat, ["Si", "Si"], [[0, 0, 0], [0.25, 0.25, 0.25]])
+    uid = cfg.record_configuration(scaled, "Si scaled", source, config_dir=tmp_path)
+    assert uid == cfg.canonical_uid(scaled) and len(list(tmp_path.glob("*.json"))) == 2

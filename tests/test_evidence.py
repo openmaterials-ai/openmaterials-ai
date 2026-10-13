@@ -171,7 +171,9 @@ def test_a_retracted_record_still_resolves_and_the_registry_lists_it(tmp_path):
     assert check("configuration", {"canonical": {"uid": A}, "retracted": gone},
                  where="c") == A
     for bad in (None, {"date": "2026-10-11"}, {**gone, "by": "x"},
-                {**gone, "date": "11/10/2026"}, {**gone, "reason": ""}):
+                {**gone, "date": "11/10/2026"}, {**gone, "date": "2026-13-45"},
+                {**gone, "date": "\u0662026-10-11"}, {**gone, "reason": ""},
+                {**gone, "reason": " "}):
         for kind, record in (("model", _model(retracted=bad)),
                              ("configuration", {"canonical": {"uid": A},
                                                 "retracted": bad})):

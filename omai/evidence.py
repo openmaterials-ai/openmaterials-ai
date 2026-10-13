@@ -60,6 +60,7 @@ from __future__ import annotations
 import hashlib
 import json
 import re
+from datetime import date
 from pathlib import Path
 from typing import NamedTuple
 
@@ -148,8 +149,8 @@ def check(kind: str, record: dict, *, where: str) -> str:
     gone = record.get("retracted")
     if "retracted" in record and not (
             isinstance(gone, dict) and set(gone) == {"date", "reason"}
-            and isinstance(gone["date"], str) and _DATE.fullmatch(gone["date"])
-            and isinstance(gone["reason"], str) and gone["reason"]):
+            and _is_date(gone["date"])
+            and isinstance(gone["reason"], str) and gone["reason"].strip()):
         raise EvidenceError(f"{where}: retracted must be {{date: YYYY-MM-DD, "
                             f"reason}}")
     uid = uids[0]
@@ -234,7 +235,18 @@ def _lookup(kind: str, uid: str, roots: list[Path] | None) -> tuple | None:
 
 RELEASE_KEYS = ("version", "tag", "commit", "released", "spdx", "license_source")
 _COMMIT = re.compile(r"[0-9a-f]{40}")
-_DATE = re.compile(r"\d{4}-\d{2}-\d{2}")
+_DATE = re.compile(r"[0-9]{4}-[0-9]{2}-[0-9]{2}")
+
+
+def _is_date(value) -> bool:
+    """``value`` is a real calendar date written YYYY-MM-DD in ASCII digits."""
+    if not (isinstance(value, str) and _DATE.fullmatch(value)):
+        return False
+    try:
+        date.fromisoformat(value)
+    except ValueError:
+        return False
+    return True
 
 
 def release_files(data_dir: Path) -> dict[str, dict]:

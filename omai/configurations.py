@@ -258,6 +258,8 @@ def _dedup_gate(structure, uid: str, config_dir: Path):
 
     matcher = StructureMatcher(attempt_supercell=False)
     for path, record in _existing_records(config_dir):
+        if record.get("retracted"):
+            continue  # a retracted cell takes no provenance, so it is no merge target
         other = _load_structure_from_record(record)
         if other is None or isinstance(other, Molecule) or not _is_ordered(other):
             continue
