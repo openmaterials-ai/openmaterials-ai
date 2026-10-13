@@ -31,7 +31,7 @@
    "schemes": {}
   },
   "meta": {
-   "description": "Molar volume V_m = N_A V_cell: the CellVolume promoted parameter scaled to a per-mole-of-cells volume by Avogadro's number N_A (a registered formula constant carrying dimension N^-1, exactly as k_B carries ENERGY_PER_TEMPERATURE in the dimcheck registry, so N_A is honest in the gate). The gate proves it: N_A (0,0,0,0,-1,0,0) . V_cell (0,3,0,0,0,0,0) = (0,3,0,0,-1,0,0) = VOLUME_PER_MOLE, matching MolarVolume. Encoded as a nullary producer that reads the promoted V_{cell} parameter (the map wires CellVolume to every consumer through its symbol in the formula, the provide_CellVolume link, since CellVolume is a promoted parameter and not an ObservableSpace node). ON THE PHONON MOLAR BASIS (per mole of primitive cells, the same cells as the molar C_V / C_P); to cross-code to per mole of ATOMS, divide by atoms-per-cell. The one node the review found the map needed to make the molar Gruneisen and C_P - C_V identities executable. Closed-form and sympy-executable.",
+   "description": "Molar volume V_m = N_A V_cell: the CellVolume promoted parameter scaled to a per-mole-of-cells volume by Avogadro's number N_A (a registered formula constant carrying dimension N^-1, exactly as k_B carries ENERGY_PER_TEMPERATURE in the dimcheck registry, so the gate checks N_A's dimension). The gate proves it: N_A (0,0,0,0,-1,0,0) . V_cell (0,3,0,0,0,0,0) = (0,3,0,0,-1,0,0) = VOLUME_PER_MOLE, matching MolarVolume. Encoded as a nullary producer that reads the promoted V_{cell} parameter (the map wires CellVolume to every consumer through its symbol in the formula, the provide_CellVolume link, since CellVolume is a promoted parameter and not an ObservableSpace node). ON THE PHONON MOLAR BASIS (per mole of primitive cells, the same cells as the molar C_V / C_P); to cross-code to per mole of ATOMS, divide by atoms-per-cell. The one node the review found the map needed to make the molar Gruneisen and C_P - C_V identities executable. Closed-form and sympy-executable.",
    "formula_latex": "V_{m} = N_{A} V_{cell}",
    "formula_srepr": "Equality(Symbol('V_m'), Mul(Symbol('N_A'), Symbol('V_{cell}', positive=True)))",
    "name": "contract_molar_volume",
@@ -138,6 +138,31 @@
    "schemes": {}
   },
   "uid": "0888c8ca7d7127d39bd7181a531fb1e773221ff5eba025c309772952ba5f4f16"
+ },
+ "0b2784cfd1c1758e66988322d83589700be6f7b1184c6f36a8d073eda43b57e1": {
+  "identity": {
+   "formula": "Equality(Symbol('t_{cure}', nonnegative=True), Integral(Mul(Pow(Add(Integer(1), Mul(Integer(-1), Symbol(\"\\\\alpha'\", nonnegative=True))), Mul(Integer(-1), Symbol('n_{cure}', nonnegative=True))), Pow(Add(Mul(Symbol('A_{1,cure}', nonnegative=True), exp(Mul(Integer(-1), Symbol('E_{1,cure}', positive=True), Pow(Symbol('N_A', positive=True), Integer(-1)), Pow(Symbol('T', positive=True), Integer(-1)), Pow(Symbol('k_B', positive=True), Integer(-1))))), Mul(Symbol('A_{2,cure}', positive=True), Pow(Symbol(\"\\\\alpha'\", nonnegative=True), Symbol('m_{cure}', nonnegative=True)), exp(Mul(Integer(-1), Symbol('E_{2,cure}', positive=True), Pow(Symbol('N_A', positive=True), Integer(-1)), Pow(Symbol('T', positive=True), Integer(-1)), Pow(Symbol('k_B', positive=True), Integer(-1)))))), Integer(-1))), Tuple(Symbol(\"\\\\alpha'\", nonnegative=True), Symbol('\\\\alpha_{0,cure}', nonnegative=True), Symbol('\\\\alpha_{cure}', nonnegative=True))))",
+   "inputs": [
+    "63f9bd32d94d77e12afbb96f5b1b7a870de6b1f5805213b7f3c3ff227da301f0"
+   ],
+   "output": "a0fea831928d4ff6617a0d102f74966d0ea4ce0a2e4cc160cbd362dd0fb8fc0a",
+   "outputs": [
+    "a0fea831928d4ff6617a0d102f74966d0ea4ce0a2e4cc160cbd362dd0fb8fc0a"
+   ],
+   "schemes": {
+    "method": "kamal_sourour"
+   }
+  },
+  "meta": {
+   "description": "Isothermal Kamal-Sourour cure in the single-(1 - alpha)^n form: d alpha/dt = (k_1 + k_2 alpha^m)(1 - alpha)^n, k_i = A_i exp(-E_i / (R T)), R = N_A k_B (Kamal and Sourour, Polym. Eng. Sci. 13, 59 (1973), doi:10.1002/pen.760130110). Separate exponents on the two terms, a temperature-dependent maximum conversion, and diffusion factors are other models. At constant T the law separates: t_cure = integral from alpha_0 to alpha of d alpha' / rate(alpha'), implicit in alpha, so not sympy-executable; the dimensional gate proves both sides are a time. A_1 = 0 (pure autocatalysis) needs alpha_0 > 0. With no diffusion control and constants fit to data before vitrification, the value is an upper bound throughout the hold, loosest near and past vitrification; constants fit across vitrification absorb the slowdown and bound nothing.",
+   "formula_latex": "t_{cure} = \\int\\limits_{\\alpha_{0,cure}}^{\\alpha_{cure}} \\frac{\\left(1 - \\alpha'\\right)^{- n_{cure}}}{A_{1,cure} e^{- \\frac{E_{1,cure}}{N_{A} T k_{B}}} + A_{2,cure} \\alpha'^{m_{cure}} e^{- \\frac{E_{2,cure}}{N_{A} T k_{B}}}}\\, d\\alpha'",
+   "formula_srepr": "Equality(Symbol('t_{cure}', nonnegative=True), Integral(Mul(Pow(Add(Integer(1), Mul(Integer(-1), Symbol(\"\\\\alpha'\", nonnegative=True))), Mul(Integer(-1), Symbol('n_{cure}', nonnegative=True))), Pow(Add(Mul(Symbol('A_{1,cure}', nonnegative=True), exp(Mul(Integer(-1), Symbol('E_{1,cure}', positive=True), Pow(Symbol('N_A', positive=True), Integer(-1)), Pow(Symbol('T', positive=True), Integer(-1)), Pow(Symbol('k_B', positive=True), Integer(-1))))), Mul(Symbol('A_{2,cure}', positive=True), Pow(Symbol(\"\\\\alpha'\", nonnegative=True), Symbol('m_{cure}', nonnegative=True)), exp(Mul(Integer(-1), Symbol('E_{2,cure}', positive=True), Pow(Symbol('N_A', positive=True), Integer(-1)), Pow(Symbol('T', positive=True), Integer(-1)), Pow(Symbol('k_B', positive=True), Integer(-1)))))), Integer(-1))), Tuple(Symbol(\"\\\\alpha'\", nonnegative=True), Symbol('\\\\alpha_{0,cure}', nonnegative=True), Symbol('\\\\alpha_{cure}', nonnegative=True))))",
+   "name": "kamal_cure_conversion",
+   "schemes": {
+    "method": "kamal_sourour"
+   }
+  },
+  "uid": "0b2784cfd1c1758e66988322d83589700be6f7b1184c6f36a8d073eda43b57e1"
  },
  "1038d2249c062baff931bbc06138496d90157bb4365334cae8c5092866e9b6a4": {
   "identity": {
@@ -790,7 +815,7 @@
    }
   },
   "meta": {
-   "description": "One-collective-variable potential of mean force F(s) = -k_B T ln P(s) reconstructed from an enhanced-sampling Trajectory (scheme method=metadynamics_or_umbrella, cv_count=1): a metadynamics run (PLUMED deposits a Gaussian bias along the chosen collective variable; sum_hills reconstructs F(s) from the accumulated hills) or umbrella sampling combined with WHAM. An opaque reconstruction functional of the sampled biased Trajectory and the Temperature (F_pmf[r(t), T]), so not sympy-executable; the dimensional gate SKIPS it (the PLUMED rail fixes the output at ENERGY). Produces PotentialOfMeanForce, the free-energy profile along one reaction coordinate, whose function-valuedness lives in the spectrum layer (the collective variable is the record's axis). The cv_count=1 scheme is deliberate: the multi-CV free-energy surface is a scalar field over CV-space, deferred to the field-evidence kernel.",
+   "description": "One-collective-variable potential of mean force F(s) = -k_B T ln P(s) reconstructed from an enhanced-sampling Trajectory (scheme method=metadynamics_or_umbrella, cv_count=1): a metadynamics run (PLUMED deposits a Gaussian bias along the chosen collective variable; sum_hills reconstructs F(s) from the accumulated hills) or umbrella sampling combined with WHAM. An opaque reconstruction functional of the sampled biased Trajectory and the Temperature (F_pmf[r(t), T]), so not sympy-executable; the dimensional gate SKIPS it (the PLUMED representation fixes the output at ENERGY). Produces PotentialOfMeanForce, the free-energy profile along one reaction coordinate, whose function-valuedness lives in the spectrum layer (the collective variable is the record's axis). The cv_count=1 scheme is deliberate: the multi-CV free-energy surface is a scalar field over CV-space, deferred to the field-evidence kernel.",
    "formula_latex": "F = F_{pmf}{\\left(r,T \\right)}",
    "formula_srepr": "Equality(Symbol('F'), Function('F_pmf')(Symbol('r'), Symbol('T', positive=True)))",
    "name": "sample_pmf",
@@ -844,6 +869,32 @@
    "schemes": {}
   },
   "uid": "4517674f602a29f64ecc7140384fc486ee295233ce03ca7dc6bbec7eb00a91c2"
+ },
+ "46112f04a2831058c99b74c42a6daa0484ff1bcd14fce01c08deec4b05ffe73b": {
+  "identity": {
+   "formula": "Equality(Symbol('G_{int}', positive=True), Mul(Pow(Symbol('\\\\Delta T_{\\\\mathrm{int}}', positive=True), Integer(-1)), Symbol('q_{\\\\mathrm{int}}', positive=True)))",
+   "inputs": [
+    "63f9bd32d94d77e12afbb96f5b1b7a870de6b1f5805213b7f3c3ff227da301f0",
+    "aab7019fbc014398b74ece01428527aa95e89da6f6d51efc0323b0acf59248c6"
+   ],
+   "output": "9dabd5c3e66ac0b87479050482b623c9d72de947eb2aa74730dcb7ad7b4c8d81",
+   "outputs": [
+    "9dabd5c3e66ac0b87479050482b623c9d72de947eb2aa74730dcb7ad7b4c8d81"
+   ],
+   "schemes": {
+    "nemd_method": "direct_two_reservoir"
+   }
+  },
+  "meta": {
+   "description": "Direct two-reservoir NEMD interface conductance G = q_int / Delta_T_int: the steady-state heat flux q_int (W/m^2) through the interface over the temperature jump Delta_T_int at the interface plane, from linear fits to the temperature profile on each side, not the thermostat setpoints. Schematic, in the form of contract_kappa[transport_model=nemd]: q_int comes from the heat current (or the reservoirs' energy exchange rate over the cross-section) and Delta_T_int from the binned temperature profile. The result is classical and size dependent, so no edge resolves it onto the neutral InterfaceConductance (the lumped, calibrated parameter): approximant routes relate through the shared interface_conductance tag, the resolve_thermal_conductivity ruling.",
+   "formula_latex": "G_{int} = \\frac{q_{\\mathrm{int}}}{\\Delta T_{\\mathrm{int}}}",
+   "formula_srepr": "Equality(Symbol('G_{int}', positive=True), Mul(Pow(Symbol('\\\\Delta T_{\\\\mathrm{int}}', positive=True), Integer(-1)), Symbol('q_{\\\\mathrm{int}}', positive=True)))",
+   "name": "contract_interface_conductance[transport_model=nemd]",
+   "schemes": {
+    "nemd_method": "direct_two_reservoir"
+   }
+  },
+  "uid": "46112f04a2831058c99b74c42a6daa0484ff1bcd14fce01c08deec4b05ffe73b"
  },
  "4e11a6ef1474661ab6ea320a5c99e8774edbe32b5a4dcdb13d97fda4b108995e": {
   "identity": {
@@ -1161,6 +1212,31 @@
    "schemes": {}
   },
   "uid": "67d4d9c1ad01e2aa1705e54ed9edb2d1a0ce601aa0e7c9929a7ba7cbd7259f28"
+ },
+ "68e156cfe2da68f22c0e5c3c0bdc6426ce2fad2aa8a25714d90d79343d8d2ed4": {
+  "identity": {
+   "formula": "Equality(Symbol('T_g', positive=True), Add(Symbol('T_{g0}', positive=True), Mul(Symbol('\\\\alpha_{cure}', nonnegative=True), Symbol('\\\\lambda_{DiB}', positive=True), Add(Mul(Integer(-1), Symbol('T_{g0}', positive=True)), Symbol('T_{g\\\\infty}', positive=True)), Pow(Add(Mul(Integer(-1), Symbol('\\\\alpha_{cure}', nonnegative=True), Add(Integer(1), Mul(Integer(-1), Symbol('\\\\lambda_{DiB}', positive=True)))), Integer(1)), Integer(-1)))))",
+   "inputs": [
+    "a0fea831928d4ff6617a0d102f74966d0ea4ce0a2e4cc160cbd362dd0fb8fc0a"
+   ],
+   "output": "5789aa6f8439e8b71b48197dd92c6f608f2bf3ca9900bc631d2321f5eded13cb",
+   "outputs": [
+    "5789aa6f8439e8b71b48197dd92c6f608f2bf3ca9900bc631d2321f5eded13cb"
+   ],
+   "schemes": {
+    "method": "dibenedetto_pascault_williams"
+   }
+  },
+  "meta": {
+   "description": "DiBenedetto relation, Pascault-Williams form: (T_g - T_g0) / (T_g_inf - T_g0) = lambda alpha / (1 - (1 - lambda) alpha) (DiBenedetto, J. Polym. Sci. B 25, 1949 (1987), doi:10.1002/polb.1987.090250914; Pascault and Williams, J. Polym. Sci. B 28, 85 (1990), doi:10.1002/polb.1990.090280107). T_g0 (uncured), T_g_inf (fully cured), and lambda (identified with Delta C_p_inf / Delta C_p0) ride in conditions. Takes any degree of cure, measured or computed; alpha = 0 gives T_g0 and alpha = 1 gives T_g_inf for any lambda.",
+   "formula_latex": "T_{g} = T_{g0} + \\frac{\\alpha_{cure} \\lambda_{DiB} \\left(- T_{g0} + T_{g\\infty}\\right)}{- \\alpha_{cure} \\left(1 - \\lambda_{DiB}\\right) + 1}",
+   "formula_srepr": "Equality(Symbol('T_g', positive=True), Add(Symbol('T_{g0}', positive=True), Mul(Symbol('\\\\alpha_{cure}', nonnegative=True), Symbol('\\\\lambda_{DiB}', positive=True), Add(Mul(Integer(-1), Symbol('T_{g0}', positive=True)), Symbol('T_{g\\\\infty}', positive=True)), Pow(Add(Mul(Integer(-1), Symbol('\\\\alpha_{cure}', nonnegative=True), Add(Integer(1), Mul(Integer(-1), Symbol('\\\\lambda_{DiB}', positive=True)))), Integer(1)), Integer(-1)))))",
+   "name": "dibenedetto_glass_transition",
+   "schemes": {
+    "method": "dibenedetto_pascault_williams"
+   }
+  },
+  "uid": "68e156cfe2da68f22c0e5c3c0bdc6426ce2fad2aa8a25714d90d79343d8d2ed4"
  },
  "692d823ec06a56ba59453ff8650d602fc72d1aac991aae3e572b236e5a269306": {
   "identity": {
@@ -1636,7 +1712,7 @@
    }
   },
   "meta": {
-   "description": "Constant-volume heat capacity C_V from a PIMD Trajectory via the scaled-coordinates (double-virial) estimator (scheme estimator=double_virial): C_V = k_B beta^2 (<eps_v^2> - <eps_v>^2 - <eps_v'>) (i-PI heat-capacity recipe), an ensemble average over the ring-polymer beads. Produces the method-tagged HeatCapacity[method=pimd] variant: SAME heat_capacity tag and ENERGY_PER_TEMPERATURE dimension as the harmonic HeatCapacity, the quantum fluctuation estimator valid for liquids / anharmonic systems (the harmonic mode-sum route is not). Opaque as a closed form (C_V^{pimd}[r(t), T]), so not sympy-executable; the dimensional gate SKIPS it (i-PI fixes the output at ENERGY_PER_TEMPERATURE on the rail).",
+   "description": "Constant-volume heat capacity C_V from a PIMD Trajectory via the scaled-coordinates (double-virial) estimator (scheme estimator=double_virial): C_V = k_B beta^2 (<eps_v^2> - <eps_v>^2 - <eps_v'>) (i-PI heat-capacity recipe), an ensemble average over the ring-polymer beads. Produces the method-tagged HeatCapacity[method=pimd] variant: SAME heat_capacity tag and ENERGY_PER_TEMPERATURE dimension as the harmonic HeatCapacity, the quantum fluctuation estimator valid for liquids / anharmonic systems (the harmonic mode-sum route is not). Opaque as a closed form (C_V^{pimd}[r(t), T]), so not sympy-executable; the dimensional gate SKIPS it (i-PI fixes the output at ENERGY_PER_TEMPERATURE on the representation).",
    "formula_latex": "C_{V} = C_V^{pimd}{\\left(r,T \\right)}",
    "formula_srepr": "Equality(Symbol('C_V'), Function('C_V^{pimd}')(Symbol('r'), Symbol('T', positive=True)))",
    "name": "sample_quantum_heat_capacity",
@@ -2000,7 +2076,7 @@
    }
   },
   "meta": {
-   "description": "Nuclear quantum kinetic energy from a PIMD Trajectory via the centroid-virial estimator (scheme estimator=centroid_virial): <E_K> = (3/2) N k_B T + (1/2N) <sum_i (q_i - q_c) . dV/dq_i>, with q_c the ring-polymer bead centroid. An ensemble average over the beads of the sampled trajectory, opaque as a closed form (E_K^{cv}[r(t), T]), so not sympy-executable; the dimensional gate SKIPS it (i-PI fixes the output at ENERGY on the rail). PIMD (method=pimd) is the path-integral producer variant of the classical run_md Trajectory: the same Trajectory node, sampled with ring-polymer beads instead of a single classical replica, from which the quantum estimator is read. Complementary to the classical 3/2 N k_B T equipartition kinetic energy it exceeds.",
+   "description": "Nuclear quantum kinetic energy from a PIMD Trajectory via the centroid-virial estimator (scheme estimator=centroid_virial): <E_K> = (3/2) N k_B T + (1/2N) <sum_i (q_i - q_c) . dV/dq_i>, with q_c the ring-polymer bead centroid. An ensemble average over the beads of the sampled trajectory, opaque as a closed form (E_K^{cv}[r(t), T]), so not sympy-executable; the dimensional gate SKIPS it (i-PI fixes the output at ENERGY on the representation). PIMD (method=pimd) is the path-integral producer variant of the classical run_md Trajectory: the same Trajectory node, sampled with ring-polymer beads instead of a single classical replica, from which the quantum estimator is read. Complementary to the classical 3/2 N k_B T equipartition kinetic energy it exceeds.",
    "formula_latex": "E_{K} = E_K^{cv}{\\left(r,T \\right)}",
    "formula_srepr": "Equality(Symbol('E_K'), Function('E_K^{cv}')(Symbol('r'), Symbol('T', positive=True)))",
    "name": "sample_quantum_kinetic_energy",
@@ -2142,7 +2218,7 @@
    "schemes": {}
   },
   "meta": {
-   "description": "The executable Gibbs identity G_m = H_m - T S_m: the assessed molar Gibbs energy from the molar enthalpy, the temperature, and the constant-P assessed molar entropy, the exact thermodynamic definition of the Gibbs free energy the CALPHAD model itself carries (H_m = G_m + T S_m, so G_m = H_m - T S_m). SECOND PRODUCER (Pattern C) of MolarGibbsEnergy alongside solve_equilibrium (the direct global Gibbs minimization that returns GM): two routes to the SAME assessed G_m that MUST agree numerically (H_m and S_m are themselves GM's Legendre transform and T-derivative), the redundant-route pattern BulkModulus (three producers) and PhononDOS (two) already bless. The gate PROVES it: T S_m = (0,0,0,1,0,0,0) . (1,2,-2,-1,-1,0,0) = (1,2,-2,0,-1,0,0) = ENERGY_PER_MOLE, so H_m - T S_m is an Add of two equal ENERGY_PER_MOLE dimensions, matching G_m. All three energy-side quantities are on the SAME CALPHAD basis (per mole of atoms, constant P, SER), so the identity is basis-honest. Closed-form and sympy-executable.",
+   "description": "The executable Gibbs identity G_m = H_m - T S_m: the assessed molar Gibbs energy from the molar enthalpy, the temperature, and the constant-P assessed molar entropy, the exact thermodynamic definition of the Gibbs free energy the CALPHAD model itself carries (H_m = G_m + T S_m, so G_m = H_m - T S_m). SECOND PRODUCER (Pattern C) of MolarGibbsEnergy alongside solve_equilibrium (the direct global Gibbs minimization that returns GM): two routes to the SAME assessed G_m that MUST agree numerically (H_m and S_m are themselves GM's Legendre transform and T-derivative), the redundant-route pattern BulkModulus (three producers) and PhononDOS (two) already bless. The gate PROVES it: T S_m = (0,0,0,1,0,0,0) . (1,2,-2,-1,-1,0,0) = (1,2,-2,0,-1,0,0) = ENERGY_PER_MOLE, so H_m - T S_m is an Add of two equal ENERGY_PER_MOLE dimensions, matching G_m. All three energy-side quantities are on the SAME CALPHAD basis (per mole of atoms, constant P, SER), so the identity is basis-consistent. Closed-form and sympy-executable.",
    "formula_latex": "G_{m} = H_{m} - S_{m} T",
    "formula_srepr": "Equality(Symbol('G_m'), Add(Symbol('H_m'), Mul(Integer(-1), Symbol('S_m'), Symbol('T'))))",
    "name": "contract_gibbs_hts",
@@ -3138,7 +3214,7 @@
    }
   },
   "meta": {
-   "description": "Electronic thermal conductivity kappa_e = kappa_e^{bte}[Structure, eps_0, C, omega]: the BoltzTraP2 Onsager electronic thermal conductivity over the amset-interpolated band structure with the same scattering model, the electronic partner of the lattice thermal conductivity (kappa_total = lattice + electronic). kappa_e^{bte} is opaque over the same four inputs (static dielectric, full rank-4 elastic tensor, phonon frequencies; deformation potentials and dense bands deferred). amset's own source flags the kappa unit as unconfirmed (data.py:483 '# TODO: confirm unit of kappa'; header '?'); W/(m K) is the BoltzTraP2 convention, carried with that caveat on the rail. The schemes record the iterative-BTE method, the adp_imp_pop scattering, and the boltztrap2 interpolation. Implicit, so not sympy-executable.",
+   "description": "Electronic thermal conductivity kappa_e = kappa_e^{bte}[Structure, eps_0, C, omega]: the BoltzTraP2 Onsager electronic thermal conductivity over the amset-interpolated band structure with the same scattering model, the electronic partner of the lattice thermal conductivity (kappa_total = lattice + electronic). kappa_e^{bte} is opaque over the same four inputs (static dielectric, full rank-4 elastic tensor, phonon frequencies; deformation potentials and dense bands deferred). amset's own source flags the kappa unit as unconfirmed (data.py:483 '# TODO: confirm unit of kappa'; header '?'); W/(m K) is the BoltzTraP2 convention, carried with that caveat on the representation. The schemes record the iterative-BTE method, the adp_imp_pop scattering, and the boltztrap2 interpolation. Implicit, so not sympy-executable.",
    "formula_latex": "\\kappa_{e} = \\kappa_e^{bte}{\\left(\\mathcal{S},\\varepsilon_{0},C,\\omega \\right)}",
    "formula_srepr": "Equality(Symbol('\\\\kappa_e'), Function('\\\\kappa_e^{bte}')(Symbol('\\\\mathcal{S}'), Symbol('\\\\varepsilon_0'), Symbol('C'), Symbol('\\\\omega')))",
    "name": "compute_electronic_thermal_conductivity",

@@ -94,6 +94,13 @@ ALIASES: dict[str, tuple[str, ...]] = {
     "set-threshold": ("SetVoltage",),
     "retention-time": ("RetentionTime", "zero_bias_retention"),
     "state-retention": ("RetentionTime",),
+    "degree-of-cure": ("CureConversion",),
+    "extent-of-cure": ("CureConversion",),
+    "cure-kinetics": (
+        "CureConversion", "GlassTransitionTemperature",
+        "kamal_cure_conversion", "dibenedetto_glass_transition",
+    ),
+    "glass-transition-temperature": ("GlassTransitionTemperature",),
     # NO-HOME markers live in the alignment files, not here: an alias
     # must point at something that exists (the gate below enforces it).
 }

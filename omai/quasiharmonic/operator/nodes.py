@@ -142,7 +142,7 @@ THERMAL_GRUNEISEN = ObservableSpace(
         "(field gamma_G, DIMENSIONLESS, indices (q,nu), computed from FC2/FC3 via "
         "the Maradudin-Fein expression): the mode node is (q,nu)-indexed and "
         "FC3-produced, this is a T-only scalar from the EOS volume scan, a genuine "
-        "CONTRACTION of the mode gammas (the honest edge mode-Gruneisen -> "
+        "CONTRACTION of the mode gammas (the edge mode-Gruneisen -> "
         "ThermalGruneisen). Same DIMENSIONLESS dimension, different index "
         "signature and producer, kept apart by the name / quantity tag. Scalar, a "
         "function of T only."

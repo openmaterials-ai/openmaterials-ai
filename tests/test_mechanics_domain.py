@@ -42,7 +42,7 @@ def test_mechanics_domain_in_domains_between_ground_state_and_stability():
         "thermal_transport", "dft_ground_state", "mechanics", "stability",
         "thermochemistry", "quasiharmonic", "molecular",
         "electronic_transport", "materials", "thermodynamic_identities",
-        "composites", "analog_device_metrology"]
+        "composites", "analog_device_metrology", "cure_kinetics"]
 
 
 def test_mechanics_domain_declares_mechanics_tier():
@@ -157,8 +157,10 @@ def test_no_node_uid_collisions_at_105_nodes():
     # two effective-medium outputs [effective_medium=nan,orientation=random] and
     # [effective_medium=nan,orientation=aligned]. 126 with the
     # analog-device-metrology domain's eleven nodes and MigrationBarrier (2026-10-05).
+    # 127 with InterfaceConductance[transport_model=nemd] (Molecular dynamics tier).
+    # 129 with the cure-kinetics domain's two nodes in the new Cure kinetics tier.
     g = build_graph_dict(DOMAINS)
-    assert len(g["nodes"]) == 126
+    assert len(g["nodes"]) == 129
     uids = [n["uid"] for n in g["nodes"]]
     assert len(set(uids)) == len(uids), "node uid collision"
 

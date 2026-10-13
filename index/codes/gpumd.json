@@ -1,7 +1,7 @@
 {
  "representation": "gpumd",
- "lineage_version": "9d1d276358598cf193c41de54b9bb5b2c982104758dfe089181546046f239217",
- "map_version": "5a967e980890683f110d5047c2c558aeb5dab104c99311272ed3472f18d80311",
+ "lineage_version": "61a981c02604f2165e2a138be7d62ee33f3d52dc96d5b458f80188cc60dff233",
+ "map_version": "baf99346621bee3269400670c5044dac03c89e0bf7cd0dff673593344540852c",
  "covers": [
   {
    "node": "HeatCurrent",
@@ -13,6 +13,12 @@
    "node": "HeatCurrentACF",
    "uid": "d8f44a4cce5e3dfea1ec9329189d49ac70e33d69cab222e2679f7791a30613ac",
    "api": "run.in: compute_hac <Ns> <Nc> <out_steps>  \u2192  hac.out",
+   "unit": null
+  },
+  {
+   "node": "InterfaceConductance[transport_model=nemd]",
+   "uid": "9dabd5c3e66ac0b87479050482b623c9d72de947eb2aa74730dcb7ad7b4c8d81",
+   "api": "run.in: ensemble heat_lan <T> <T_coup> <delta_T> <label_source> <label_sink> + compute 0 <sample_interval> <output_interval> temperature  \u2192  compute.out",
    "unit": null
   },
   {

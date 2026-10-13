@@ -192,7 +192,7 @@ MOLECULAR_FREQUENCY = ObservableSpace(
         "vs the phonon (qpoint, branch). CONVENTION CAVEAT: cm^-1 is a linear "
         "wavenumber (1 cm^-1 = c . 100 m^-1 = 0.0299792458 linear THz), NOT an "
         "angular frequency; the angular-vs-wavenumber factor 2 pi c is a "
-        "representation-layer convention, recorded on the rail. The molecular "
+        "representation-layer convention, recorded on the representation. The molecular "
         "thermochemistry (RRHO) bundle that consumes these modes for the "
         "partition function is the next named hook, now unblocked."
     ),

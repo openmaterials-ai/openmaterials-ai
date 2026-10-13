@@ -170,7 +170,7 @@ CONFIGURATIONAL_ENERGY = ObservableSpace(
         "what the grand-canonical-MC skill divides to report); which basis and "
         "which ECI training-energy reference an instance uses ride in the "
         "conditions, not the dimension. The cluster-expansion checkpoint that "
-        "predicts it is a Potential-representation analog (the smol rail records "
+        "predicts it is a Potential-representation analog (the smol representation records "
         "it as an MLIP-checkpoint sibling), not minted as a node here."
     ),
     tier="Diffusion",
