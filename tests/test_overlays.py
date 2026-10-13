@@ -294,5 +294,5 @@ def test_an_overlay_name_may_not_rename_a_public_node(tmp_path):
 def test_kept_names_are_namespaced_and_unique(names):
     from omai.map_data import build_graph_dict
 
-    with pytest.raises(AssertionError):
+    with pytest.raises(ValueError):
         build_graph_dict(_temperature_named(names))
