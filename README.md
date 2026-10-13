@@ -315,6 +315,10 @@ same id as the same lineage without them. Writers omit a field that is None
 (and an empty `unregistered`) and refuse a malformed one. A record whose
 `unregistered` is present and not `[]`, or whose `overlay_version` is not
 null, or that cites under a citation key a uid the registry does not hold,
+or whose `execution.registry` names a code with no registry row or with a
+row marked `"visibility": "private"` (the code is checked, never its
+release; a row whose version is a registered model's `release_label` names
+that model),
 cites private evidence (`private_reasons`; `docs/assets/private-members.js`
 is the same predicate for the site, shipped in the wheel byte for byte as
 `omai/data/private-members.js`).

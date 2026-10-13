@@ -916,7 +916,10 @@ def build_registry(data_dir: Path | None = None) -> dict:
     under which a lineage cites a model, which the site reads to tell a record
     citing unregistered evidence. ``retracted``, present when a record is,
     is ``{kind: {uid: {date, reason}}}`` over each uid and alias: those uids
-    still resolve, and a reader never offers them as current."""
+    still resolve, and a reader never offers them as current. ``model_labels``
+    is ``{release_label: uid}`` over the model records that state one: an
+    ``execution.registry`` row whose version is a label names that model, not
+    a code."""
     from omai.evidence import (
         CITATION_KEYS,
         KINDS,
@@ -943,6 +946,8 @@ def build_registry(data_dir: Path | None = None) -> dict:
                 if "retracted" in record:
                     registry.setdefault("retracted", {}).setdefault(
                         kind, {})[uid] = record["retracted"]
+    registry["model_labels"] = {r["release_label"]: r["uid"]
+                                for _, r in records("model", data_dir) if r.get("release_label")}
     return registry
 
 

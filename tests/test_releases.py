@@ -38,6 +38,13 @@ def test_check_releases_lists_every_representation_and_refuses_malformed_files()
             check_releases(files, ["x", "y"])
 
 
+def test_a_release_file_may_mark_its_code_private():
+    doc = {"aliases": [], "releases": [_RELEASE], "visibility": "private"}
+    assert check_releases({"x": doc}, ["x"])["x"]["visibility"] == "private"
+    with pytest.raises(EvidenceError):
+        check_releases({"x": {**doc, "visibility": "secret"}}, ["x"])
+
+
 def test_releases_resolve_alike_from_the_source_tree_and_the_registry():
     tree, shipped = code_releases([_DATA_DIR]), code_releases([REGISTRY])
     assert tree == shipped

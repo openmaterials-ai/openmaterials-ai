@@ -314,6 +314,18 @@ def test_the_shipped_registry_is_the_default():
         {"field": "conditions.potential_sha256", "kind": "model"}]
 
 
+def test_the_shipped_registry_checks_the_code_not_its_release():
+    def ran(*rows):
+        return _record(_lineage(), execution={
+            "code": "fixture", "registry": [{"id": i, "version": v} for i, v in rows]})
+    assert private_reasons(ran(("gpumd", "v4.7"))) == private_reasons(
+        ran(("quantum-espresso", "v4.7"))) == []
+    # The platform lists the model an engine evaluates beside its code.
+    assert private_reasons(ran(("gpumd", "3.9.5"), ("nep89", "nep89_20250409"))) == []
+    assert private_reasons(ran(("fixture-unlisted", "v4.7"))) == [
+        {"field": "execution.registry", "kind": "code"}]
+
+
 def test_the_site_predicate_agrees_under_node():
     node = shutil.which("node")
     if not node:

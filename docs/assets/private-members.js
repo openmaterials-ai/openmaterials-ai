@@ -13,6 +13,11 @@
 //   - lineage.material.configuration ("sha256:" stripped) not in the registry
 //   - a registry citation key in lineage.conditions whose value is not a
 //     registered model uid
+//   - execution.registry present: one reason per row whose id is no
+//     representation or alias in registry.code, or whose code row has a
+//     visibility other than "public" (absent: public); a non-list is one
+//     reason. Kind "code"; the code is checked, never its release. A row whose
+//     version is a key of registry.model_labels names a model and gives none
 //   - a member that is not an object: field "record"
 // `registry` is data/registry.json. One lacking its tables, or whose
 // citation_keys is not exactly BOUND (the keys omai.evidence.CITATION_KEYS
@@ -38,10 +43,10 @@ const bindsExactly = (table) =>
 export function privateReasons(member, registry) {
   if (
     !isObj(registry) ||
-    !["citation_keys", "configuration", "model"].every((t) => isObj(registry[t])) ||
+    !["citation_keys", "code", "configuration", "model", "model_labels"].every((t) => isObj(registry[t])) ||
     !bindsExactly(registry.citation_keys)
   ) {
-    throw new Error("registry lacks configuration or model, or its citation_keys is not the bound table");
+    throw new Error("registry lacks code, configuration, model or model_labels, or its citation_keys is not the bound table");
   }
   if (!isObj(member)) return [{ field: "record", kind: null }];
   const out = [];
@@ -72,12 +77,28 @@ export function privateReasons(member, registry) {
       }
     }
   }
+  if (isObj(member.execution) && has(member.execution, "registry")) {
+    const codes = new Map();
+    for (const [rep, entry] of Object.entries(registry.code)) {
+      if (!isObj(entry)) continue;
+      for (const name of [rep, ...(Array.isArray(entry.aliases) ? entry.aliases : [])]) codes.set(name, entry);
+    }
+    const rows = member.execution.registry;
+    for (const item of Array.isArray(rows) ? rows : [null]) {
+      const row = isObj(item) ? item : {};
+      if (typeof row.version === "string" && has(registry.model_labels, row.version)) continue;
+      const entry = typeof row.id === "string" ? codes.get(row.id) : undefined;
+      if (!entry || (has(entry, "visibility") ? entry.visibility : "public") !== "public") {
+        out.push({ field: "execution.registry", kind: "code" });
+      }
+    }
+  }
   return out;
 }
 
 // The reader's label for lineage n (numbered from 1) given its reasons, "" when
 // there are none: one wording for the playground and the Worker's shell.
-const WORDS = { configuration: "a configuration", model: "a model", node: "a map node" };
+const WORDS = { configuration: "a configuration", model: "a model", node: "a map node", code: "a code" };
 export function memberLabel(n, reasons) {
   const kinds = [...new Set(reasons.map((r) => WORDS[r.kind] || "evidence"))];
   if (!kinds.length) return "";
