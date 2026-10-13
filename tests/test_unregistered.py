@@ -314,6 +314,15 @@ def test_the_shipped_registry_is_the_default():
         {"field": "conditions.potential_sha256", "kind": "model"}]
 
 
+def test_the_shipped_registry_checks_the_code_not_its_release():
+    def ran(code):
+        return _record(_lineage(), execution={
+            "code": "fixture", "registry": [{"id": code, "version": "v4.7"}]})
+    assert private_reasons(ran("gpumd")) == private_reasons(ran("quantum-espresso")) == []
+    assert private_reasons(ran("fixture-unlisted")) == [
+        {"field": "execution.registry", "kind": "code"}]
+
+
 def test_the_site_predicate_agrees_under_node():
     node = shutil.which("node")
     if not node:

@@ -180,7 +180,10 @@ not a subset of the cited model's `elements`.
 - Releases are authored as data in `docs/data/releases/<representation>.json`:
   an append-only list of `{version, tag, commit, released, spdx,
   license_source}`, plus `aliases`, the registry row ids that name the
-  representation (`quantum-espresso` for `qe`). `omai.index_data` projects
+  representation (`quantum-espresso` for `qe`), and an optional `source`,
+  `"private"` for a code whose source is not public (absent: public), which
+  the private-evidence predicate reads per code, never per release.
+  `omai.index_data` projects
   them into `index/codes/<rep>.json` and `omai.map_data` into
   `docs/data/codes.json`. The licence is read at each release, since it can
   change between releases.

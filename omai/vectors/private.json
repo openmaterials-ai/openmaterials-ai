@@ -576,6 +576,231 @@
      "kind": null
     }
    ]
+  },
+  {
+   "member": {
+    "execution": {
+     "code": "fixture",
+     "registry": [
+      {
+       "id": "fixture-public",
+       "version": "1.0"
+      }
+     ]
+    },
+    "lineage": {
+     "conditions": {
+      "T_K": 300
+     },
+     "node": "SetVoltage"
+    }
+   },
+   "name": "code_public",
+   "reasons": []
+  },
+  {
+   "member": {
+    "execution": {
+     "code": "fixture",
+     "registry": [
+      {
+       "id": "fixture-public",
+       "version": "9.9"
+      }
+     ]
+    },
+    "lineage": {
+     "conditions": {
+      "T_K": 300
+     },
+     "node": "SetVoltage"
+    }
+   },
+   "name": "code_public_release_unregistered",
+   "reasons": []
+  },
+  {
+   "member": {
+    "execution": {
+     "code": "fixture",
+     "registry": [
+      {
+       "id": "fixture-alias",
+       "version": null
+      }
+     ]
+    },
+    "lineage": {
+     "conditions": {
+      "T_K": 300
+     },
+     "node": "SetVoltage"
+    }
+   },
+   "name": "code_alias",
+   "reasons": []
+  },
+  {
+   "member": {
+    "execution": {
+     "code": "fixture",
+     "registry": [
+      {
+       "id": "fixture-public",
+       "version": "1.0"
+      },
+      {
+       "id": "fixture-private",
+       "version": "1.0"
+      }
+     ]
+    },
+    "lineage": {
+     "conditions": {
+      "T_K": 300
+     },
+     "node": "SetVoltage"
+    }
+   },
+   "name": "code_private",
+   "reasons": [
+    {
+     "field": "execution.registry",
+     "kind": "code"
+    }
+   ]
+  },
+  {
+   "member": {
+    "execution": {
+     "code": "fixture",
+     "registry": [
+      {
+       "id": "fixture-unlisted",
+       "version": "1.0"
+      }
+     ]
+    },
+    "lineage": {
+     "conditions": {
+      "T_K": 300
+     },
+     "node": "SetVoltage"
+    }
+   },
+   "name": "code_unlisted",
+   "reasons": [
+    {
+     "field": "execution.registry",
+     "kind": "code"
+    }
+   ]
+  },
+  {
+   "member": {
+    "execution": {
+     "code": "fixture",
+     "registry": [
+      1,
+      {},
+      {
+       "id": [
+        "fixture-public"
+       ]
+      },
+      {
+       "id": "__proto__",
+       "version": null
+      }
+     ]
+    },
+    "lineage": {
+     "conditions": {
+      "T_K": 300
+     },
+     "node": "SetVoltage"
+    }
+   },
+   "name": "code_rows_malformed",
+   "reasons": [
+    {
+     "field": "execution.registry",
+     "kind": "code"
+    },
+    {
+     "field": "execution.registry",
+     "kind": "code"
+    },
+    {
+     "field": "execution.registry",
+     "kind": "code"
+    },
+    {
+     "field": "execution.registry",
+     "kind": "code"
+    }
+   ]
+  },
+  {
+   "member": {
+    "execution": {
+     "code": "fixture",
+     "registry": {}
+    },
+    "lineage": {
+     "conditions": {
+      "T_K": 300
+     },
+     "node": "SetVoltage"
+    }
+   },
+   "name": "code_rows_not_a_list",
+   "reasons": [
+    {
+     "field": "execution.registry",
+     "kind": "code"
+    }
+   ]
+  },
+  {
+   "member": {
+    "execution": {
+     "code": "fixture",
+     "registry": [
+      {
+       "id": "fixture-unlisted",
+       "version": "1.0"
+      }
+     ]
+    },
+    "lineage": {
+     "conditions": {
+      "calibration_sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+     },
+     "node": "SetVoltage"
+    },
+    "unregistered": [
+     {
+      "kind": "model",
+      "uid": "2222222222222222222222222222222222222222222222222222222222222222"
+     }
+    ]
+   },
+   "name": "calibration_and_code_unlisted",
+   "reasons": [
+    {
+     "field": "unregistered",
+     "kind": "model"
+    },
+    {
+     "field": "conditions.calibration_sha256",
+     "kind": "model"
+    },
+    {
+     "field": "execution.registry",
+     "kind": "code"
+    }
+   ]
   }
  ],
  "refused_registries": [
@@ -584,6 +809,24 @@
    "registry": {
     "citation_keys": {
      "Potential": "potential_sha256"
+    },
+    "code": {
+     "fixture-private": {
+      "aliases": [],
+      "releases": [],
+      "source": "private"
+     },
+     "fixture-public": {
+      "aliases": [
+       "fixture-alias"
+      ],
+      "releases": [
+       {
+        "tag": "v1.0",
+        "version": "1.0"
+       }
+      ]
+     }
     },
     "configuration": {
      "3333333333333333333333333333333333333333333333333333333333333333": "configurations/fixture.json",
@@ -599,6 +842,24 @@
    "registry": {
     "citation_keys": {
      "Potential": []
+    },
+    "code": {
+     "fixture-private": {
+      "aliases": [],
+      "releases": [],
+      "source": "private"
+     },
+     "fixture-public": {
+      "aliases": [
+       "fixture-alias"
+      ],
+      "releases": [
+       {
+        "tag": "v1.0",
+        "version": "1.0"
+       }
+      ]
+     }
     },
     "configuration": {
      "3333333333333333333333333333333333333333333333333333333333333333": "configurations/fixture.json",
@@ -619,6 +880,24 @@
       ]
      ]
     },
+    "code": {
+     "fixture-private": {
+      "aliases": [],
+      "releases": [],
+      "source": "private"
+     },
+     "fixture-public": {
+      "aliases": [
+       "fixture-alias"
+      ],
+      "releases": [
+       {
+        "tag": "v1.0",
+        "version": "1.0"
+       }
+      ]
+     }
+    },
     "configuration": {
      "3333333333333333333333333333333333333333333333333333333333333333": "configurations/fixture.json",
      "4444444444444444444444444444444444444444444444444444444444444444": "configurations/fixture.json"
@@ -632,6 +911,24 @@
    "name": "citation_keys_empty",
    "registry": {
     "citation_keys": {},
+    "code": {
+     "fixture-private": {
+      "aliases": [],
+      "releases": [],
+      "source": "private"
+     },
+     "fixture-public": {
+      "aliases": [
+       "fixture-alias"
+      ],
+      "releases": [
+       {
+        "tag": "v1.0",
+        "version": "1.0"
+       }
+      ]
+     }
+    },
     "configuration": {
      "3333333333333333333333333333333333333333333333333333333333333333": "configurations/fixture.json",
      "4444444444444444444444444444444444444444444444444444444444444444": "configurations/fixture.json"
@@ -649,6 +946,24 @@
       "potential_sha256",
       "base_potential_sha256"
      ]
+    },
+    "code": {
+     "fixture-private": {
+      "aliases": [],
+      "releases": [],
+      "source": "private"
+     },
+     "fixture-public": {
+      "aliases": [
+       "fixture-alias"
+      ],
+      "releases": [
+       {
+        "tag": "v1.0",
+        "version": "1.0"
+       }
+      ]
+     }
     },
     "configuration": {
      "3333333333333333333333333333333333333333333333333333333333333333": "configurations/fixture.json",
@@ -674,6 +989,45 @@
       "structure_sha256"
      ]
     },
+    "code": {
+     "fixture-private": {
+      "aliases": [],
+      "releases": [],
+      "source": "private"
+     },
+     "fixture-public": {
+      "aliases": [
+       "fixture-alias"
+      ],
+      "releases": [
+       {
+        "tag": "v1.0",
+        "version": "1.0"
+       }
+      ]
+     }
+    },
+    "configuration": {
+     "3333333333333333333333333333333333333333333333333333333333333333": "configurations/fixture.json",
+     "4444444444444444444444444444444444444444444444444444444444444444": "configurations/fixture.json"
+    },
+    "model": {
+     "1111111111111111111111111111111111111111111111111111111111111111": "models/fixture.json"
+    }
+   }
+  },
+  {
+   "name": "code_missing",
+   "registry": {
+    "citation_keys": {
+     "Potential": [
+      "potential_sha256",
+      "base_potential_sha256"
+     ],
+     "SetVoltage": [
+      "calibration_sha256"
+     ]
+    },
     "configuration": {
      "3333333333333333333333333333333333333333333333333333333333333333": "configurations/fixture.json",
      "4444444444444444444444444444444444444444444444444444444444444444": "configurations/fixture.json"
@@ -693,6 +1047,24 @@
    "SetVoltage": [
     "calibration_sha256"
    ]
+  },
+  "code": {
+   "fixture-private": {
+    "aliases": [],
+    "releases": [],
+    "source": "private"
+   },
+   "fixture-public": {
+    "aliases": [
+     "fixture-alias"
+    ],
+    "releases": [
+     {
+      "tag": "v1.0",
+      "version": "1.0"
+     }
+    ]
+   }
   },
   "configuration": {
    "3333333333333333333333333333333333333333333333333333333333333333": "configurations/fixture.json",

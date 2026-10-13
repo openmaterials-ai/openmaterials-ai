@@ -53,7 +53,9 @@ append-only list of :data:`RELEASE_KEYS`, the licence read at that release's
 tag and ``released`` the tag date in UTC (the tagger date of an annotated tag,
 else the date of the tagged commit). :func:`code_releases` reads them from the same roots and lists every
 representation (``codes.json``), with empty lists where none is registered;
-the registry file holds them under ``code``.
+the registry file holds them under ``code``. A release file may also
+carry ``source``: ``"private"`` for a code whose source is not public;
+absent or ``"public"``, the code is public. :func:`private_reasons` reads it.
 """
 from __future__ import annotations
 
@@ -265,7 +267,8 @@ def release_files(data_dir: Path) -> dict[str, dict]:
 
 def check_releases(files: dict[str, dict], representations) -> dict[str, dict]:
     """``{representation: {aliases, releases}}`` for every representation,
-    after checking each release file: it names a representation; each alias
+    after checking each release file: it names a representation; ``source``,
+    when present, is ``"public"`` or ``"private"``; each alias
     is neither a representation nor another's alias; each release is exactly
     :data:`RELEASE_KEYS`, non-empty strings, ``commit`` 40 lowercase hex,
     ``released`` YYYY-MM-DD, its ``version`` unique within the file; no
@@ -275,11 +278,12 @@ def check_releases(files: dict[str, dict], representations) -> dict[str, dict]:
         where = f"releases/{rep.replace(':', '/')}.json"
         if rep not in representations:
             raise EvidenceError(f"{where}: {rep!r} is not a representation")
-        if (not isinstance(doc, dict) or set(doc) != {"aliases", "releases"}
+        if (not isinstance(doc, dict) or set(doc) - {"source"} != {"aliases", "releases"}
+                or doc.get("source", "public") not in ("public", "private")
                 or not isinstance(doc["aliases"], list)
                 or not isinstance(doc["releases"], list) or not doc["releases"]):
-            raise EvidenceError(f"{where}: must be {{aliases, releases}} with "
-                                f"at least one release")
+            raise EvidenceError(f"{where}: must be {{aliases, releases, source?}} "
+                                f"with at least one release")
         for alias in doc["aliases"]:
             if (not isinstance(alias, str) or not alias
                     or alias in representations or alias in owner):
@@ -351,6 +355,11 @@ def private_reasons(record, registry: dict | None = None) -> list[dict]:
     - any key of ``registry["citation_keys"]`` present in
       ``lineage.conditions`` whose value is not a registered model uid:
       ``field`` ``conditions.<key>``, kind ``model``.
+    - ``execution.registry`` present: one reason per row whose ``id`` is no
+      representation or alias of ``registry["code"]``, or whose code row has
+      a ``source`` other than ``"public"`` (absent: public); a value that is
+      not a list is one reason. Field ``execution.registry``, kind ``code``.
+      The code is checked, never its release.
     - a record that is not an object: field ``record``, kind None.
 
     ``registry`` is a registry.json document (default: the one this package
@@ -367,10 +376,10 @@ def private_reasons(record, registry: dict | None = None) -> list[dict]:
         registry = json.loads(REGISTRY.read_text())
     if not (isinstance(registry, dict)
             and all(isinstance(registry.get(t), dict)
-                    for t in ("citation_keys", "configuration", "model"))
+                    for t in ("citation_keys", "code", "configuration", "model"))
             and registry["citation_keys"] == {
                 node: list(keys) for node, keys in CITATION_KEYS.items()}):
-        raise ValueError("registry lacks configuration or model, or its "
+        raise ValueError("registry lacks code, configuration or model, or its "
                          "citation_keys is not CITATION_KEYS")
     if not isinstance(record, dict):
         return [{"field": "record", "kind": None}]
@@ -404,4 +413,16 @@ def private_reasons(record, registry: dict | None = None) -> list[dict]:
             if key in conditions and not (isinstance(uid, str)
                                           and uid in registry["model"]):
                 out.append({"field": f"conditions.{key}", "kind": "model"})
+    execution = record.get("execution")
+    if isinstance(execution, dict) and "registry" in execution:
+        codes = {name: entry for rep, entry in registry["code"].items()
+                 if isinstance(entry, dict)
+                 for name in (rep, *(entry["aliases"] if isinstance(
+                     entry.get("aliases"), list) else []))}
+        rows = execution["registry"]
+        for row in rows if isinstance(rows, list) else [None]:
+            code = row.get("id") if isinstance(row, dict) else None
+            entry = codes.get(code) if isinstance(code, str) else None
+            if entry is None or entry.get("source", "public") != "public":
+                out.append({"field": "execution.registry", "kind": "code"})
     return out

@@ -545,12 +545,17 @@ def build_releases(inputs: dict) -> dict:
 # docs/assets/private-members.js): record shapes and the reasons each gives
 # against a fixture registry. Uids are fixtures: 1 a registered model, 2 a
 # model no registry holds, 3 a registered configuration, 4 its former uid,
-# 5 a configuration no registry holds.
+# 5 a configuration no registry holds. Codes are fixtures too: fixture-public
+# (alias fixture-alias) has a registered release, fixture-private's row marks
+# its source private, and no row names fixture-unlisted.
 _M, _U, _C, _A, _V = ("1" * 64, "2" * 64, "3" * 64, "4" * 64, "5" * 64)
 _PRIVATE_REGISTRY = {
     # The bound table itself: both predicates refuse any other.
     "citation_keys": {"Potential": ["potential_sha256", "base_potential_sha256"],
                       "SetVoltage": ["calibration_sha256"]},
+    "code": {"fixture-public": {"aliases": ["fixture-alias"],
+                                "releases": [{"version": "1.0", "tag": "v1.0"}]},
+             "fixture-private": {"aliases": [], "releases": [], "source": "private"}},
     "configuration": {_C: "configurations/fixture.json",
                       _A: "configurations/fixture.json"},
     "model": {_M: "models/fixture.json"},
@@ -562,6 +567,12 @@ def _member(conditions=None, material=None, **top):
     if material is not None:
         lineage["material"] = material
     return {"lineage": lineage, **top}
+
+
+def _ran(*rows, conditions=None, **top):
+    """A member whose execution.registry rows are ``(id, version)`` pairs or raw values."""
+    rows = [{"id": r[0], "version": r[1]} if isinstance(r, tuple) else r for r in rows]
+    return _member(conditions, execution={"code": "fixture", "registry": rows}, **top)
 
 
 _PRIVATE_CASES = [
@@ -605,6 +616,16 @@ _PRIVATE_CASES = [
     ("conditions_not_an_object",
      {"lineage": {"conditions": ["potential_sha256"]}}),
     ("member_not_an_object", "x"),
+    ("code_public", _ran(("fixture-public", "1.0"))),
+    ("code_public_release_unregistered", _ran(("fixture-public", "9.9"))),
+    ("code_alias", _ran(("fixture-alias", None))),
+    ("code_private", _ran(("fixture-public", "1.0"), ("fixture-private", "1.0"))),
+    ("code_unlisted", _ran(("fixture-unlisted", "1.0"))),
+    ("code_rows_malformed", _ran(1, {}, {"id": ["fixture-public"]}, ("__proto__", None))),
+    ("code_rows_not_a_list", _member(execution={"code": "fixture", "registry": {}})),
+    ("calibration_and_code_unlisted",
+     _ran(("fixture-unlisted", "1.0"), conditions={"calibration_sha256": _U},
+          unregistered=[{"kind": "model", "uid": _U}])),
 ]
 
 
@@ -622,6 +643,7 @@ _REFUSED_REGISTRIES = [
         "Potential": ["potential_sha256", "base_potential_sha256"]}}),
     ("citation_keys_extra_node", {**_PRIVATE_REGISTRY, "citation_keys": {
         **_PRIVATE_REGISTRY["citation_keys"], "Structure": ["structure_sha256"]}}),
+    ("code_missing", {k: v for k, v in _PRIVATE_REGISTRY.items() if k != "code"}),
 ]
 
 

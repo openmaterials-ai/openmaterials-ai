@@ -43,4 +43,6 @@ test("the label names each kind once, is empty without reasons, and never claims
     "Lineage 1 cites a configuration and a model that are not in the public registry; its values cannot be checked against the commons.");
   assert.strictEqual(memberLabel(2, [{ field: "overlay_version", kind: "node" }]),
     "Lineage 2 cites a map node that is not in the public registry; its values cannot be checked against the commons.");
+  assert.strictEqual(memberLabel(4, [{ field: "execution.registry", kind: "code" }]),
+    "Lineage 4 cites a code that is not in the public registry; its values cannot be checked against the commons.");
 });
