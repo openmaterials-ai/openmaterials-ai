@@ -60,14 +60,22 @@ def overlay_version(root) -> str:
     ``overlay.json`` and hidden ones (a path component starting with "."),
     paths relative, POSIX and sorted."""
     root = Path(root)
-    base = json.loads((root / "overlay.json").read_text())["base_graph_version"]
     files = sorted([p.relative_to(root).as_posix(),
-                    hashlib.sha256(p.read_bytes()).hexdigest()]
-                   for p in root.rglob("*") if p.is_file()
-                   and not any(part.startswith(".") for part in p.relative_to(root).parts))
+                    hashlib.sha256(p.read_bytes()).hexdigest()] for p in _files(root))
+    base = json.loads((root / "overlay.json").read_text())["base_graph_version"]
     blob = canonical_json({"base": base,
                            "files": [f for f in files if f[0] != "overlay.json"]})
     return hashlib.sha256(blob.encode("utf-8")).hexdigest()
+
+
+def _files(root: Path) -> list[Path]:
+    """Every file under an overlay root but hidden ones (a path component
+    starting with "."); a symlink anywhere under it is refused."""
+    paths = list(root.rglob("*"))
+    if root.is_symlink() or any(p.is_symlink() for p in paths):
+        raise OverlayError(f"{root}: an overlay holds no symlinks")
+    return [p for p in paths if p.is_file()
+            and not any(part.startswith(".") for part in p.relative_to(root).parts)]
 
 
 def _read(path: Path, default):
@@ -79,13 +87,15 @@ def load(roots) -> list[Overlay]:
     checked; the other roots are the public ones (default:
     :func:`omai.evidence.default_roots`). Refused, as :class:`OverlayError`:
 
+    - a symlink anywhere in the overlay;
     - a malformed ``overlay.json`` (namespace lowercase alphanumerics and
       hyphens), or two overlays with one namespace;
     - a vocabulary entry the public registries or an earlier overlay holds;
     - a map part that is not add-only, a node not named ``ns:Name``, or one
       failing ``validate_contribution`` against the public map at
       ``base_graph_version`` with the public vocabulary plus the overlay's
-      (where ``map/`` exists; the wheel ships no map log);
+      (where ``map/`` is absent, as in a wheel, against the live map, the
+      base unchecked);
     - a node, edge, configuration or model whose uid is public (cite the
       public one);
     - a code not named ``ns:code`` or not credited (citation and license on
@@ -121,6 +131,7 @@ def load(roots) -> list[Overlay]:
     held = VOCABULARY
     out: list[Overlay] = []
     for root in paths:
+        _files(root)  # refuses symlinks before anything is read
         meta = _read(root / "overlay.json", None)
         ns = meta.get("namespace") if isinstance(meta, dict) else None
         base = meta.get("base_graph_version") if isinstance(meta, dict) else None
@@ -205,8 +216,9 @@ def _vocabulary(base: dict, added, where: str) -> dict:
 def _check_map(contribution, ns: str, base: str, vocabulary: dict,
                where: str) -> tuple[dict, set]:
     """``{ns:Name: uid}`` for the nodes an overlay's map part adds, after its
-    checks, and the public node names at the base (the live map's where
-    ``map/`` is absent)."""
+    checks, and the public node names at the base. Where ``map/`` is absent
+    (a wheel ships no map log) the live map stands in and the base is not
+    checked."""
     from omai.gates import no_op_indices, validate_contribution
     from omai.store import Store
 
@@ -225,16 +237,15 @@ def _check_map(contribution, ns: str, base: str, vocabulary: dict,
                 raise OverlayError(f"{where}: node {name!r} needs a unique name "
                                    f"starting '{ns}:'")
             names[name] = r["payload"].get("uid")
-    if not (_STORE / "log.jsonl").is_file():
-        from omai.map_data import _domains
-        return names, {n for d in _domains()
-                       for n in (*(s.name for s in d.nodes),
-                                 *(p[0] for p in d.param_promotions))}
-    try:
-        current = Store(_STORE).read(base)
-    except ValueError:
-        raise OverlayError(f"{where}: base_graph_version {base[:12]} is not a "
-                           f"version of the public map") from None
+    if (_STORE / "log.jsonl").is_file():
+        try:
+            current = Store(_STORE).read(base)
+        except ValueError:
+            raise OverlayError(f"{where}: base_graph_version {base[:12]} is not a "
+                               f"version of the public map") from None
+    else:
+        from omai.sync import _python_side
+        current = dict(zip(("nodes", "edges"), _python_side()))
     problems = validate_contribution(contribution, current, vocabulary)
     if problems:
         raise OverlayError(f"{where}: map.json: " + "; ".join(problems))

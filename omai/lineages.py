@@ -549,7 +549,8 @@ def _former_uids(node: str) -> tuple[str, ...]:
     """The former uids a re-minted node keeps as aliases; a pin minted before
     the re-mint still resolves."""
     from omai.map_data import _domains
-    return next((s.aliases for d in _domains() for s in d.nodes if s.name == node), ())
+    return next((s.aliases for d in _domains() for s in d.nodes
+                 if node in (s.name, *s.names)), ())
 
 
 def _validate_markers(record: dict, *, where: str) -> set:
@@ -620,6 +621,7 @@ def unregistered_for(lineage: dict, roots: list[Path] | None = None) -> list[dic
     :func:`record_simulation`; ``[]`` when everything cited is registered."""
     from omai.evidence import resolve
 
+    _overlays(roots)  # an overlay is checked before its files are read
     out: list[dict] = []
     for kind, _, uid, _ in _citations(lineage, where="unregistered_for"):
         entry = {"kind": kind, "uid": uid}
@@ -680,13 +682,21 @@ def _overlays(roots) -> list:
 def _names(name_to_uid, overlays=(), domains=None) -> dict:
     """Node name -> uid: ``name_to_uid``, else the live map's (each node's
     name and the ``names`` it keeps from the overlay it was published from),
-    plus every loaded overlay's ``ns:Name``."""
+    plus every loaded overlay's ``ns:Name``. An overlay name the map holds
+    for another uid raises; the same uid is the published node."""
     if name_to_uid is None:
         from omai.map_data import _domains, build_graph_dict
         nodes = build_graph_dict(domains if domains is not None else _domains())["nodes"]
         name_to_uid = {name: n["uid"] for n in nodes
                        for name in (n["id"], *n.get("names", ()))}
-    return {**name_to_uid, **{k: v for o in overlays for k, v in o.names.items()}}
+    out = dict(name_to_uid)
+    for o in overlays:
+        for name, uid in o.names.items():
+            if out.setdefault(name, uid) != uid:
+                raise LineageError(
+                    f"overlay {o.namespace!r}: {name!r} is public node "
+                    f"{out[name][:12]}, not {str(uid)[:12]}; rename or drop it in the overlay")
+    return out
 
 
 def _overlay_used(lineage, overlays, *, where: str):
@@ -750,6 +760,7 @@ def release_check(execution, codes: dict | None = None,
         return []
     if codes is None:
         from omai.evidence import code_releases
+        _overlays(roots)  # an overlay is checked before its files are read
         codes = code_releases(roots)
     owner = {name: rep for rep, entry in codes.items()
              for name in (rep, *entry["aliases"])}

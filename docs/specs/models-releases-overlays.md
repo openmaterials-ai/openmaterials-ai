@@ -240,7 +240,8 @@ not a subset of the cited model's `elements`.
   stored: the sha256 of the canonical JSON `{"base": base_graph_version,
   "files": [[path, sha256], ...]}` over every overlay file except
   `overlay.json` and hidden files (a path component starting with `.`), paths
-  sorted.
+  sorted. Hidden files are never read as records or releases either, and an
+  overlay holding a symlink is refused.
 - An overlay representation is data in the `codes.json` shape (per covered
   node: `api`, `unit` and the credits row `citation`, `doi`, `license`,
   `url`; `citation` and `license` required), plus its releases at
@@ -275,10 +276,14 @@ not a subset of the cited model's `elements`.
   published node keeps `ns:Name` among its `names` (`Space.names` in the
   operator layer), which `omai.sync` carries into map meta and
   `build_graph_dict` emits, so `_validate_lineage_node` resolves it and
-  records minted against the overlay keep their ids. Release versions are not
+  records minted against the overlay keep their ids. A kept name contains
+  `:`, and names are unique across node ids and kept names. An overlay name
+  the public map holds for a different uid is refused; the same uid is the
+  published node. Release versions are not
   content-addressed: the union of the public root and the overlays refuses
   one (code, version) with two commits, and one alias naming two codes.
-  Where `map/` is absent (an installed wheel) the map part is not validated.
+  Where `map/` is absent (an installed wheel) the map part is validated
+  against the live map; the base is not checked.
 - A record made against an overlay (its node is an overlay name, or it cites
   an overlay configuration or model) carries `lineage_version` (the write key
   `FORMAT_DESCRIPTOR` already declares) and `overlay_version`, top-level,

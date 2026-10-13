@@ -170,6 +170,10 @@ def build_graph_dict(domains: tuple[Domain, ...]) -> dict:
             seen_tiers.add(name)
             tiers.append({"name": name, "order": len(tiers), "description": desc})
 
+    kept = [k for n in nodes for k in n.get("names", ())]
+    assert all(":" in k for k in kept), "a kept node name is ns:Name"
+    named = [n["id"] for n in nodes] + kept
+    assert len(named) == len(set(named)), "node names and kept names are unique"
     return {"nodes": nodes, "links": links, "tiers": tiers}
 
 

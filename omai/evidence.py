@@ -129,10 +129,12 @@ def record_uids(kind: str, record: dict) -> list:
 
 
 def records(kind: str, data_dir: Path) -> list[tuple[str, dict]]:
-    """``(path relative to data_dir, record)`` for every record of a kind."""
+    """``(path relative to data_dir, record)`` for every record of a kind;
+    a hidden file (name starting with ".") is not a record."""
     directory = KINDS[kind].directory
     return [(f"{directory}/{f.name}", json.loads(f.read_text()))
-            for f in sorted((Path(data_dir) / directory).glob("*.json"))]
+            for f in sorted((Path(data_dir) / directory).glob("*.json"))
+            if not f.name.startswith(".")]
 
 
 def check(kind: str, record: dict, *, where: str) -> str:
@@ -208,7 +210,9 @@ def default_roots() -> list[Path]:
 def resolve(kind: str, uid: str, roots: list[Path] | None = None) -> str | None:
     """Where a registered uid or alias lives, as the record's path under its
     data root (``models/nep89-20250409.json``); None when no root registers
-    it. A root that does not exist raises FileNotFoundError."""
+    it. A root that does not exist raises FileNotFoundError. Roots are
+    trusted: a caller checks an overlay among them with
+    :func:`omai.overlays.load` first, as the lineage functions do."""
     hit = _lookup(kind, uid, roots)
     return hit[0] if hit else None
 
@@ -255,7 +259,8 @@ def release_files(data_dir: Path) -> dict[str, dict]:
     overlay code named ``ns:code`` (no colon in any path)."""
     root = Path(data_dir) / "releases"
     return {":".join(f.relative_to(root).with_suffix("").parts): json.loads(f.read_text())
-            for f in sorted([*root.glob("*.json"), *root.glob("*/*.json")])}
+            for f in sorted([*root.glob("*.json"), *root.glob("*/*.json")])
+            if not any(p.startswith(".") for p in f.relative_to(root).parts)}
 
 
 def check_releases(files: dict[str, dict], representations) -> dict[str, dict]:

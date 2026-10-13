@@ -30,12 +30,19 @@ COMMIT = "1" * 40
 
 def _overlay(root: Path, **edits) -> Path:
     """The fixture overlay under ``root``: its exact files, each ``edits``
-    entry (``/`` written as ``__``) replacing one, None deleting it."""
+    entry (``/`` written as ``__``) replacing one, None deleting it, "symlink"
+    linking it to a file outside the overlay."""
     files = {**VECTOR["files"], **{path.replace("__", "/"): doc
                                    for path, doc in edits.items()}}
     for path, doc in files.items():
-        if doc is not None:
-            (root / path).parent.mkdir(parents=True, exist_ok=True)
+        if doc is None:
+            continue
+        (root / path).parent.mkdir(parents=True, exist_ok=True)
+        if doc == "symlink":
+            outside = root.parent / f"{root.name}-outside.json"
+            outside.write_text(VECTOR["files"]["models/synthetic.json"])
+            (root / path).symlink_to(outside)
+        else:
             (root / path).write_text(doc if isinstance(doc, str) else json.dumps(doc))
     return root
 
@@ -121,6 +128,11 @@ _CODE = FILES["codes.json"]["example:code"]["example:SyntheticQuantity"]
      "names two commits"),
     ({"releases__example__code.json": {"aliases": ["kaldo"], "releases": [_release("1")]}},
      "names a representation"),
+    ({"releases__example__code.json": {"aliases": ["quantum-espresso"],
+                                        "releases": [_release("1.0")]}},
+     "alias 'quantum-espresso' already names 'qe'"),
+    ({"models__synthetic.json": None, "models__link.json": "symlink"},
+     "no symlinks"),
     ({"codes.json": {"example:code": {NODE: _CODE, "example:Missing": _CODE}}},
      "covers 'example:Missing', which neither the public map nor the overlay"),
     ({"codes.json": {"example:code": {NODE: _CODE, "NoSuchNode": _CODE}}},
@@ -230,3 +242,57 @@ def test_sync_carries_a_node_name_into_map_meta(monkeypatch):
     proposal = compute_sync(Store(_REPO / "map").read())
     assert {"op": "edit_meta", "payload": {
         "uid": TEMPERATURE, "meta": {"names": ["example:Temperature"]}}} in proposal["edit_meta"]
+
+
+@pytest.mark.parametrize("payload", [
+    # a forged node carrying a public uid
+    {"op": "add_node", "payload": {"uid": TEMPERATURE, "identity": {
+        "fields": [], "gauge": "observable", "labels": {}, "quantity": "example_synthetic_quantity"},
+        "meta": {"name": "example:Forged"}}},
+    # a junk edge
+    {"op": "add_edge", "payload": {"uid": "0" * 64, "identity": {
+        "inputs": ["1" * 64], "outputs": ["2" * 64], "output": "2" * 64,
+        "formula": "none", "schemes": {}}, "meta": {"name": "example:junk"}}},
+])
+def test_without_a_map_log_the_live_map_checks_the_contribution(tmp_path, monkeypatch, payload):
+    import omai.overlays
+
+    monkeypatch.setattr(omai.overlays, "_STORE", tmp_path / "no-map")
+    (overlay,) = load([_DATA_DIR, _overlay(tmp_path / "ok")])
+    assert overlay.names == {NODE: NODE_UID}
+    with pytest.raises(OverlayError, match="map.json"):
+        load([_DATA_DIR, _overlay(tmp_path / "bad", **{"map.json": _MAP + [payload]})])
+
+
+def test_overlay_version_refuses_a_symlink(tmp_path):
+    with pytest.raises(OverlayError, match="no symlinks"):
+        overlay_version(_overlay(tmp_path / "o", **{"models__link.json": "symlink"}))
+
+
+def test_a_hidden_record_is_not_a_record(tmp_path):
+    from omai.evidence import resolve
+
+    root = _overlay(tmp_path, **{"models__synthetic.json": None,
+                                 "models__.synthetic.json": FILES["models/synthetic.json"]})
+    (overlay,) = load([_DATA_DIR, root])
+    assert resolve("model", MODEL, [root]) is None
+    assert overlay.version == overlay_version(_overlay(tmp_path / "bare",
+                                                       **{"models__synthetic.json": None}))
+
+
+def test_an_overlay_name_may_not_rename_a_public_node(tmp_path):
+    roots = [_DATA_DIR, _overlay(tmp_path)]
+    record = lin.record_light(lineage={"node": NODE}, name_to_uid=NAME_TO_UID, roots=roots)
+    # the published node, same uid: fine
+    lin.validate_light(record, name_to_uid={**NAME_TO_UID, NODE: NODE_UID}, roots=roots)
+    with pytest.raises(lin.LineageError, match="rename or drop it in the overlay"):
+        lin.validate_light(record, name_to_uid={**NAME_TO_UID, NODE: TEMPERATURE},
+                           roots=roots)
+
+
+@pytest.mark.parametrize("names", [("Temperature2",), ("example:T", "example:T")])
+def test_kept_names_are_namespaced_and_unique(names):
+    from omai.map_data import build_graph_dict
+
+    with pytest.raises(AssertionError):
+        build_graph_dict(_temperature_named(names))
