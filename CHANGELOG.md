@@ -5,6 +5,124 @@ mints, for consumers. Versioning follows README.md ("Versioning"): before 1.0
 an identity change takes the minor version, and this file lists every re-keyed
 id.
 
+## 0.3.0
+
+Every consumer pins `openmaterials-ai==0.3.0`. A consumer that runs the
+private-evidence predicate (`omai.evidence.private_reasons`, or the
+`private-members.js` it vendors) gives it a registry with the `code` and
+`model_labels` tables: the `registry.json` this release ships and publishes
+has both, a 0.2.0 copy has neither, so a bundled registry is updated with the
+predicate. A record made against a private overlay carries `lineage_version`
+and `overlay_version`: `record_light` and `record_simulation` fill them from
+the overlay in `roots`, and the validators refuse such a record without them.
+
+0.2.0 deferred overlays, retraction and the composite and cure renderers to
+0.2.1. A new renderer or schema field takes the minor version (README.md,
+"Versioning"), so they ship as 0.3.0.
+
+### Breaking
+
+- `omai.evidence.private_reasons` raises ValueError, and `private-members.js`
+  throws, on a registry without the `code` and `model_labels` tables.
+- Both predicates check the code that ran: an `execution.registry` row whose
+  `id` is no representation or alias in the registry's `code` table, or whose
+  code row has a `visibility` other than `"public"`, gives
+  `{field: "execution.registry", kind: "code"}`, and a non-list
+  `execution.registry` gives one. A record 0.2.0 reported as public can now
+  report private. The release is never checked, and a row whose `version` is
+  a key of `model_labels` names a model and gives no code reason.
+- The packaged external-solve request `omai/tools/kaldo-direct-bte-si.json`
+  pins the new graph version, so its `request_id` moves from `f54665faafd9`
+  to `9c65fd692c45`. A request minted against graph `5a967e980890` fails as a
+  stale map version.
+- `lineage_version` (`version` in docs/data/version.json) moves from
+  `9d1d27635859` to `61a981c02604`, and the graph version from
+  `5a967e980890` to `baf99346621b`; `format_rules_version` stays
+  `227566bf55a0`.
+
+### Re-keyed ids
+
+None. Every id in `omai/vectors/*.json` (lineage, record, render, model,
+configuration, release and private-evidence cases), every committed instance
+id and every configuration and model uid is unchanged from 0.2.0. The map log
+gains records 274-289 (six `add_node` and `add_edge`, ten `edit_meta`) and
+supersedes nothing, so no node or edge uid moves. Only the packaged request's
+`request_id` moves, with the graph version (see Breaking).
+
+### Added
+
+- Private overlays (`omai.overlays`): a directory laid out like `docs/data/`
+  plus `overlay.json` (`{namespace, base_graph_version}`), `map.json` (an
+  add-only contribution of `add_node` and `add_edge`) and `registry.json` (the
+  vocabulary it adds). `omai.overlays.load(roots)` checks each overlay listed
+  in `roots` after the public root and raises `OverlayError` on public uids,
+  public node names held for another uid, vocabulary collisions, a reused
+  namespace, unnamespaced names, uncredited codes, covered nodes the map does
+  not hold, symlinks, and one (code, version) naming two commits.
+  `overlay_version(root)` is the sha256 over the base and every non-hidden
+  file but `overlay.json`, computed, never stored. The lineage validators and
+  writers, `release_check` (new `roots` parameter) and `unregistered_for`
+  load the overlays in their `roots`; `ns:Name` nodes resolve, and a record is
+  made against one overlay at most. Overlay code releases live at
+  `releases/<ns>/<code>.json`. A published node keeps its overlay name in
+  `Space.names` and in an optional `names` list on its graph.json node.
+  GOVERNANCE.md states the overlay rules. Vector: `overlay.json`, a synthetic
+  overlay's files and its `overlay_version`.
+- `omai.gates.VOCABULARY` and a `vocabulary` parameter on
+  `validate_contribution` (default the public tables).
+- Retraction: a model or configuration record may carry
+  `retracted: {date, reason}` (a real `YYYY-MM-DD` date, a non-blank reason).
+  A retracted uid still resolves, so no record citing it breaks, and it is
+  never served as current. `registry.json` lists retracted uids and aliases
+  under `retracted` (`{kind: {uid: {date, reason}}}`, present only when a
+  record is retracted; none is). `validate_light` reports citations of
+  retracted uids under `retracted_citations` (`[{field, uid, reason}]`) and
+  never refuses them. `record_configuration` refuses new provenance for a
+  retracted cell, and the duplicate matcher skips it. `configurations.json`
+  carries the field.
+- Renderers in `omai.render`: `render_composite_kappa`,
+  `render_interface_conductance` (keyword `potential` required),
+  `render_cure_conversion` and `render_glass_transition`. Each requires every
+  input its conditions hold and raises KeyError when one is missing or the
+  method has no map node (aemd and neg_gk for the interface; any rate law but
+  Kamal-Sourour for `CureConversion`); the cure renderers raise ValueError for
+  a conversion outside [0, 1]. Each coerces its own number types, so an id
+  never depends on how a producer typed 1200 or 1200.0, drops a zero spread,
+  writes 4 significant figures in the detail, and cites rate-law and
+  DiBenedetto parameters by sha256, never by value. `render.json` gains five
+  vectors (15).
+- Map: `InterfaceConductance[transport_model=nemd]` (Molecular dynamics tier,
+  W/(m^2 K)) with its two-reservoir NEMD edge and a gpumd representation row;
+  the Cure kinetics tier with `CureConversion` and
+  `GlassTransitionTemperature`, produced by the Kamal-Sourour edge and the
+  DiBenedetto edge in the Pascault-Williams form.
+- Code visibility: a release file may carry
+  `"visibility": "public" | "private"` (absent: public); `check_releases`
+  refuses any other value. Every committed release file is public.
+- `registry.json` gains `model_labels`, `{release_label: uid}` from the model
+  records (`nep89_20250409`); the `model` table is unchanged.
+- The wheel ships `omai/data/private-members.js`,
+  `docs/assets/private-members.js` byte for byte, read with
+  `importlib.resources.files("omai")`.
+- `omai/vectors/private.json`: ten code cases (42 in all) and two refused
+  registries (`code_missing`, `model_labels_missing`); its fixture registry
+  gains `code` and `model_labels`.
+
+### Changed
+
+- The map: 129 nodes, 127 operators, 18 tiers, store head `baf99346621b`
+  (289 records). Ten node and edge descriptions move to plain terms as
+  `edit_meta` records.
+- Wording: plain terms in docstrings, comments, test names and the document;
+  no behavior changes.
+- `omai.evidence.code_releases(roots)` appends each root's aliases and
+  releases in root order (0.2.0 kept the first root holding a
+  representation), so an overlay may add a release of a public code. Hidden
+  files (a path component starting with ".") are not records or releases.
+- README.md: number types in lineage identity (1200 and 1200.0 are
+  different lineages). docs/openmaterials.tex describes what ships and states
+  this map version.
+
 ## 0.2.0
 
 Every consumer that validates records pins `openmaterials-ai==0.2.0` before
