@@ -167,7 +167,7 @@ python -m omai.paper_parser path/to/paper.pdf --apply --yes</pre>
           <div><dt class="mono"><a href="../data/semantics.json">semantics.json</a></dt><dd><code>[{id, uid, kind, labels, curated}]</code><br>The labels per node and edge that the resolver matches.</dd></div>
           <div><dt class="mono"><a href="../data/instances.json">instances.json</a></dt><dd><code>[{id, variable, material, conditions, value, units, uncertainty, source {kind, ref, detail}, node_uid}]</code><br>Evidence: measured or computed values attached to nodes.</dd></div>
           <div><dt class="mono"><a href="../data/spectra.json">spectra.json</a></dt><dd><code>[{variable, axis, values}]</code><br>Function-valued evidence (densities of states, profiles).</dd></div>
-          <div><dt class="mono"><a href="../data/configurations.json">configurations.json</a></dt><dd><code>[{name, structure, canonical}]</code><br>Atomic structures (pymatgen payload), the evaluation points.</dd></div>
+          <div><dt class="mono"><a href="../data/configurations.json">configurations.json</a></dt><dd><code>[{name, structure, canonical, retracted?}]</code><br>Atomic structures (pymatgen payload), the evaluation points. A retracted structure still resolves and is marked.</dd></div>
           <div><dt class="mono"><a href="../data/version.json">version.json</a></dt><dd><code>{version, graph_version, format_rules_version, genesis}</code><br>The map version, graph version, and genesis hash.</dd></div>
         </dl>
       </section>

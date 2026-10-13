@@ -37,7 +37,10 @@ pointers, never the files. :func:`resolve` looks a uid or an alias up in a
 list of roots, in order: a data directory (``docs/data/`` in a source tree) or
 a registry file (``omai/data/registry.json``, written by ``omai.map_data`` and
 shipped in the wheel, and published as ``docs/data/registry.json``). An
-unregistered uid resolves to None; nothing is refused here. The lineage
+unregistered uid resolves to None; nothing is refused here. A record of either
+kind may carry ``retracted: {date, reason}`` (removed on a rights holder's
+request, GOVERNANCE.md): its uid still resolves, so no record citing it breaks,
+and it is never served as current. The lineage
 validators refuse a cited uid that resolves nowhere unless the record lists
 it in its top-level ``unregistered`` marker, and :func:`private_reasons` says
 why a record cites evidence that is not public.
@@ -57,6 +60,7 @@ from __future__ import annotations
 import hashlib
 import json
 import re
+from datetime import date
 from pathlib import Path
 from typing import NamedTuple
 
@@ -134,13 +138,21 @@ def records(kind: str, data_dir: Path) -> list[tuple[str, dict]]:
 def check(kind: str, record: dict, *, where: str) -> str:
     """A record's uid, after the checks its kind defines.
 
-    Every kind: the uid and each alias are 64 lowercase hex. A model
+    Every kind: the uid and each alias are 64 lowercase hex, and
+    ``retracted``, when present, is ``{date: YYYY-MM-DD, reason}``. A model
     additionally reproduces its uid from its files (configurations reproduce
     theirs through ``omai.configurations``, which needs spglib).
     """
     uids = record_uids(kind, record)
     if not all(isinstance(u, str) and _HEX64.fullmatch(u) for u in uids):
         raise EvidenceError(f"{where}: uid and aliases must be 64 lowercase hex")
+    gone = record.get("retracted")
+    if "retracted" in record and not (
+            isinstance(gone, dict) and set(gone) == {"date", "reason"}
+            and _is_date(gone["date"])
+            and isinstance(gone["reason"], str) and gone["reason"].strip()):
+        raise EvidenceError(f"{where}: retracted must be {{date: YYYY-MM-DD, "
+                            f"reason}}")
     uid = uids[0]
     if kind == "model":
         _check_model(record, uid, where=where)
@@ -197,6 +209,14 @@ def resolve(kind: str, uid: str, roots: list[Path] | None = None) -> str | None:
     """Where a registered uid or alias lives, as the record's path under its
     data root (``models/nep89-20250409.json``); None when no root registers
     it. A root that does not exist raises FileNotFoundError."""
+    hit = _lookup(kind, uid, roots)
+    return hit[0] if hit else None
+
+
+def _lookup(kind: str, uid: str, roots: list[Path] | None) -> tuple | None:
+    """``(path, retracted)`` for the first root registering a uid or alias,
+    ``retracted`` the record's ``{date, reason}`` or None; None when no root
+    registers it."""
     for root in default_roots() if roots is None else roots:
         root = Path(root)
         if root.is_dir():
@@ -204,17 +224,29 @@ def resolve(kind: str, uid: str, roots: list[Path] | None = None) -> str | None:
             # validator resolves many uids in a loop.
             for path, record in records(kind, root):
                 if uid in record_uids(kind, record):
-                    return path
+                    return path, record.get("retracted")
         else:
-            hit = json.loads(root.read_text()).get(kind, {}).get(uid)
+            doc = json.loads(root.read_text())
+            hit = doc.get(kind, {}).get(uid)
             if hit is not None:
-                return hit
+                return hit, doc.get("retracted", {}).get(kind, {}).get(uid)
     return None
 
 
 RELEASE_KEYS = ("version", "tag", "commit", "released", "spdx", "license_source")
 _COMMIT = re.compile(r"[0-9a-f]{40}")
-_DATE = re.compile(r"\d{4}-\d{2}-\d{2}")
+_DATE = re.compile(r"[0-9]{4}-[0-9]{2}-[0-9]{2}")
+
+
+def _is_date(value) -> bool:
+    """``value`` is a real calendar date written YYYY-MM-DD in ASCII digits."""
+    if not (isinstance(value, str) and _DATE.fullmatch(value)):
+        return False
+    try:
+        date.fromisoformat(value)
+    except ValueError:
+        return False
+    return True
 
 
 def release_files(data_dir: Path) -> dict[str, dict]:

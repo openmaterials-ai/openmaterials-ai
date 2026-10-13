@@ -873,6 +873,8 @@ def build_configurations(config_dir: Path | None = None) -> list[dict]:
             "files": rec.get("files"),
             "node_uid": structure_uid,
             "file": f.name,
+            # a retracted cell still resolves; the site marks it, never lists it
+            **({"retracted": rec["retracted"]} if "retracted" in rec else {}),
         }
         payload = rec.get("structure")
         # Keep the full structure dict only for small ordered cells; larger cells
@@ -904,7 +906,9 @@ def build_registry(data_dir: Path | None = None) -> dict:
     codes.json, checked by omai.evidence.check_releases. ``citation_keys``
     is ``{node: [condition keys]}``, omai.evidence.CITATION_KEYS: the keys
     under which a lineage cites a model, which the site reads to tell a record
-    citing unregistered evidence."""
+    citing unregistered evidence. ``retracted``, present when a record is,
+    is ``{kind: {uid: {date, reason}}}`` over each uid and alias: those uids
+    still resolve, and a reader never offers them as current."""
     from omai.evidence import (
         CITATION_KEYS,
         KINDS,
@@ -928,6 +932,9 @@ def build_registry(data_dir: Path | None = None) -> dict:
                 if uid in entries:
                     raise ValueError(f"{path}: uid {uid[:12]} is already {entries[uid]}")
                 entries[uid] = path
+                if "retracted" in record:
+                    registry.setdefault("retracted", {}).setdefault(
+                        kind, {})[uid] = record["retracted"]
     return registry
 
 

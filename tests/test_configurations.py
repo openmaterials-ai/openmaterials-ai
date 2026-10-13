@@ -370,3 +370,57 @@ def test_load_accepts_a_former_uid_kept_as_an_alias():
                         .read_text())
     (alias,) = record["canonical"]["aliases"]
     assert cfg.canonical_uid(cfg.load(alias)) == record["canonical"]["uid"]
+
+
+def test_committed_distances_skip_a_retracted_configuration(tmp_path, monkeypatch):
+    import sys
+    import types
+
+    from omai import distance_data
+
+    cell = {"canonical": {"uid": "a" * 64}, "structure": _primitive_si().as_dict()}
+    gone = {"date": "2026-10-11", "reason": "removed on the rights holder's request"}
+    (tmp_path / "data").mkdir()
+    (tmp_path / "data" / "configurations.json").write_text(json.dumps(
+        [{**cell, "name": "kept"}, {**cell, "name": "gone", "retracted": gone},
+         {**cell, "name": "also kept"}]))
+    monkeypatch.setattr(distance_data, "_DOCS", tmp_path)
+    monkeypatch.setitem(sys.modules, "omdc",
+                        types.SimpleNamespace(distance=lambda *a, **k: 0.0))
+    pairs = distance_data._committed_pairs()
+    assert pairs["configurations"] == 2
+    assert [(p["a"]["name"], p["b"]["name"]) for p in pairs["pairs"]] == [
+        ("kept", "also kept")]
+
+
+def test_a_retracted_cell_takes_no_new_provenance(tmp_path):
+    source = [{"kind": "database", "ref": "fixture", "detail": "synthetic"}]
+    uid = cfg.record_configuration(_primitive_si(), "Si", source, config_dir=tmp_path)
+    (path,) = tmp_path.glob("*.json")
+    record = json.loads(path.read_text())
+    record["retracted"] = {"date": "2026-10-11", "reason": "rights holder request"}
+    path.write_text(json.dumps(record))
+    again = [{"kind": "database", "ref": "fixture", "detail": "again"}]
+    with pytest.raises(cfg.ConfigurationError,
+                       match="retracted on 2026-10-11: rights holder request; "
+                             "cite or submit a different cell"):
+        cfg.record_configuration(_primitive_si(), "Si", again, config_dir=tmp_path)
+    assert json.loads(path.read_text())["provenance"] == source
+    assert uid == record["canonical"]["uid"]
+
+
+def test_a_retracted_cell_is_no_merge_target(tmp_path):
+    from pymatgen.core import Lattice, Structure
+
+    source = [{"kind": "database", "ref": "fixture", "detail": "synthetic"}]
+    cfg.record_configuration(_primitive_si(), "Si", source, config_dir=tmp_path)
+    (path,) = tmp_path.glob("*.json")
+    record = json.loads(path.read_text())
+    record["retracted"] = {"date": "2026-10-11", "reason": "rights holder request"}
+    path.write_text(json.dumps(record))
+    # matcher-equivalent, not hash-identical (as in the DuplicateFlag test)
+    a = 5.4437 * 1.005
+    lat = Lattice([[0, a / 2, a / 2], [a / 2, 0, a / 2], [a / 2, a / 2, 0]])
+    scaled = Structure(lat, ["Si", "Si"], [[0, 0, 0], [0.25, 0.25, 0.25]])
+    uid = cfg.record_configuration(scaled, "Si scaled", source, config_dir=tmp_path)
+    assert uid == cfg.canonical_uid(scaled) and len(list(tmp_path.glob("*.json"))) == 2

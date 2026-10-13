@@ -103,6 +103,8 @@ def _committed_pairs():
     configs = json.loads(cfg_path.read_text()) if cfg_path.exists() else []
     usable = []
     for c in configs if isinstance(configs, list) else []:
+        if c.get("retracted"):
+            continue
         st = c.get("structure")
         uid = (c.get("canonical") or {}).get("uid")
         if st and uid:

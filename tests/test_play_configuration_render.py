@@ -44,6 +44,16 @@ def test_configuration_bundle_carries_the_fields_the_card_renders():
     assert lattice["a"] and lattice["b"] and lattice["c"]
 
 
+def test_the_bundle_carries_a_retraction(tmp_path):
+    gone = {"date": "2026-10-11", "reason": "removed on the rights holder's request"}
+    (tmp_path / "cell.json").write_text(json.dumps(
+        {"name": "cell", "canonical": {"uid": "a" * 64}, "retracted": gone}))
+    (tmp_path / "kept.json").write_text(json.dumps(
+        {"name": "kept", "canonical": {"uid": "b" * 64}}))
+    cell, kept = build_configurations(tmp_path)
+    assert cell["retracted"] == gone and "retracted" not in kept
+
+
 def test_committed_bundle_matches_the_builder():
     """The page fetches the committed docs/data/configurations.json at load, so it
     must equal what build_configurations produces (else the card resolves against
@@ -123,6 +133,9 @@ def test_resolver_js_resolves_a_pin_and_degrades_gracefully():
         "const primitive={canonical:{natoms_primitive:4}};\n"
         "out.primitiveFallback=/<dd>4 [(]primitive[)]<\\/dd>/.test(configSummaryHTML(primitive));\n"
         "out.absentEmpty=configSummaryHTML(null)===''&&configSummaryHTML({})==='';\n"
+        "out.retracted=/<dt>retracted<\\/dt><dd>2026-10-11: request<\\/dd>/.test("
+        "configSummaryHTML({retracted:{date:'2026-10-11',reason:'request'}}))&&"
+        "!/retracted/.test(summary);\n"
         "out.plainRows=!/class=|<span|<canvas|<img/.test(summary);\n"
         "console.log(JSON.stringify(out));\n"
     ) % (json.dumps(bundle), json.dumps(si_uid), json.dumps(si_alias), helpers)
