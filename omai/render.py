@@ -34,12 +34,18 @@ the commons graph version (``graph_version`` in docs/data/version.json), not
 the map version (``version``). A caller holding the old pydantic object passes
 it directly; a caller holding parsed JSON passes the dict.
 
+The composite, interface-conductance and cure renderers take MCG's
+CompositeKappaResult, TBCResult and CureScheduleResult the same way, and write
+their detail numbers to 4 significant figures as the kappa detail does.
+
 Every instance pins the graph version it was rendered against in
 source.detail, per the commons' provenance rule.
 """
 
 from __future__ import annotations
 
+import hashlib
+import json
 import math
 import re
 from dataclasses import dataclass
@@ -58,6 +64,28 @@ KAPPA_NODE = {
     "bte_rta": "ThermalConductivity[bte_solver=rta]",
     "bte_direct_inverse": "ThermalConductivity[bte_solver=direct_inverse]",
 }
+
+# CompositeKappaResult.method -> map node: the orientation-averaged value.
+COMPOSITE_KAPPA_NODE = {
+    "nan_emt_interfacial_series":
+        "ThermalConductivity[effective_medium=nan,orientation=random]",
+}
+
+# TBCResult.method -> map node; aemd and neg_gk have no node.
+INTERFACE_CONDUCTANCE_NODE = {
+    "nemd": "InterfaceConductance[transport_model=nemd]",
+}
+
+# Rate-law parameters (MCG's KamalParameters): the six every form needs. With
+# none of l_order (the Karkanas-Partridge form), amax_per_K and bmax (a fitted
+# maximum conversion) set, they are the Kamal-Sourour law the map's
+# kamal_cure_conversion edge models.
+KAMAL_KEYS = ("a1_pref_per_s", "e1_J_per_mol", "a2_pref_per_s",
+              "e2_J_per_mol", "m", "n")
+KINETICS_HASH_KEYS = KAMAL_KEYS + ("l_order", "amax_per_K", "bmax")
+
+# DiBenedetto parameters (MCG's TgParameters).
+TG_KEYS = ("tg0_K", "tg_inf_K", "lam")
 
 # The graph version stamped when a caller names none. An instance must state
 # what it was rendered against; "unknown" says so plainly instead of implying a
@@ -184,6 +212,15 @@ def _get(result, name, default=None):
     return getattr(result, name, default)
 
 
+def _spread(std) -> float | None:
+    """A reported spread, or None when there is none: a spread of 0 (a
+    single-seed run computed none) is not exactness, so the uncertainty key is
+    dropped and the detail writes no "+/-" term."""
+    if isinstance(std, (int, float)) and not isinstance(std, bool) and std > 0:
+        return std
+    return None
+
+
 def render_kappa(result, *, run_ref: str | None = None,
                  potential: str | None = None,
                  map_version: str = UNKNOWN_MAP_VERSION) -> Instance:
@@ -213,18 +250,15 @@ def render_kappa(result, *, run_ref: str | None = None,
     }
     if potential:
         conditions["potential"] = potential
-    # A spread of 0 (a single-seed run computed none) is not exactness: the
-    # key is dropped and the detail writes no "+/-" term.
-    has_std = isinstance(kappa_std, (int, float)) and not isinstance(
-        kappa_std, bool) and kappa_std > 0
-    std_text = f" +/- {_sig4(kappa_std)}" if has_std else ""
+    std = _spread(kappa_std)
+    std_text = f" +/- {_sig4(std)}" if std is not None else ""
     return Instance(
         variable=node,
         material=material_name,
         conditions=conditions,
         value=kappa,
         units="W/(m K)",
-        uncertainty=kappa_std if has_std else None,
+        uncertainty=std,
         source=provenance(
             run_ref,
             f"Bulk {material_name} kappa ({method.upper()}, "
@@ -312,6 +346,236 @@ def render_reaction_energy(result, *, run_ref: str | None = None,
             f"Reaction enthalpy dH(298 K) of {reaction or reaction_name} "
             f"({dh298} kJ/mol = {dh_ev} eV per reaction "
             "event, GFN2-xTB) from a",
+            map_version=map_version,
+        ),
+    )
+
+
+
+def _req(result, name):
+    """A required field: KeyError when it is absent or None."""
+    value = _get(result, name)
+    if value is None:
+        raise KeyError(name)
+    return value
+
+
+def _params(result, name: str, keys: tuple[str, ...]) -> dict:
+    """A parameter set as a plain dict with None dropped; KeyError when the set
+    or one of ``keys`` is missing."""
+    raw = _req(result, name)
+    params = {k: v for k, v in (raw if isinstance(raw, dict) else vars(raw)).items()
+              if v is not None}
+    for key in keys:
+        if key not in params:
+            raise KeyError(f"{name}.{key}")
+    return params
+
+
+def _sha256(params: dict, keys: tuple[str, ...]) -> str:
+    """sha256 of the canonical JSON of ``keys`` in a parameter set, each as a
+    float, absent ones dropped. Unrounded, so any change in a constant changes
+    the hash; other keys (a kb citation) never enter it. Conditions carry this,
+    not the numbers: a fit may be private."""
+    blob = json.dumps({k: float(params[k]) for k in keys if k in params},
+                      sort_keys=True, separators=(",", ":"))
+    return hashlib.sha256(blob.encode("utf-8")).hexdigest()
+
+
+def _kinetics_model(params: dict) -> str:
+    """The rate law a parameter set runs, from the parameters alone."""
+    law = "karkanas_partridge" if "l_order" in params else "kamal_sourour"
+    capped = "amax_per_K" in params or "bmax" in params
+    return law + ("_amax" if capped else "")
+
+
+def _conversion(result) -> float:
+    """The hold's final degree of cure; ValueError outside [0, 1]."""
+    x = _req(result, "final_conversion")
+    if not 0 <= x <= 1:
+        raise ValueError(f"degree of cure {x} is outside [0, 1]")
+    return x
+
+
+def render_composite_kappa(result, *, run_ref: str | None = None,
+                           map_version: str = UNKNOWN_MAP_VERSION) -> Instance:
+    """Orientation-averaged effective conductivity of a filled matrix onto the
+    random-orientation composite node.
+
+    ``result`` carries ``method``, ``composite_name``,
+    ``kappa_random_W_per_mK``, ``matrix_kappa_W_per_mK``, ``filler``
+    (``kappa_11_W_per_mK``, ``kappa_33_W_per_mK``, ``d1_um``, ``d3_um``),
+    ``interface_conductance_MW_per_m2K``, ``volume_fraction`` and
+    ``kapitza_radius_nm`` (MCG's CompositeKappaResult). The conditions are the
+    key set of the commons reference instance, every number a float so the
+    id does not depend on how the caller typed it. The aligned pair has its
+    own node and is not rendered here; the closed form reports no spread.
+
+    Raises KeyError for a method the map does not model or a missing input.
+    """
+    method = _req(result, "method")
+    node = COMPOSITE_KAPPA_NODE[method]
+    filler = _params(result, "filler",
+                     ("kappa_11_W_per_mK", "kappa_33_W_per_mK", "d1_um", "d3_um"))
+    name = _req(result, "composite_name")
+    kappa = _req(result, "kappa_random_W_per_mK")
+    f = float(_req(result, "volume_fraction"))
+    return Instance(
+        variable=node,
+        material=name,
+        conditions={
+            "km_W_per_mK": float(_req(result, "matrix_kappa_W_per_mK")),
+            "k11_W_per_mK": float(filler["kappa_11_W_per_mK"]),
+            "k33_W_per_mK": float(filler["kappa_33_W_per_mK"]),
+            "d1_um": float(filler["d1_um"]),
+            "d3_um": float(filler["d3_um"]),
+            "G_MW_per_m2K": float(_req(result, "interface_conductance_MW_per_m2K")),
+            "f": f,
+            "orientation": "random",
+            "kapitza_radius_nm": float(_req(result, "kapitza_radius_nm")),
+        },
+        value=kappa,
+        units="W/(m K)",
+        source=provenance(
+            run_ref,
+            f"Effective kappa of {name} (Nan EMT, random orientation, "
+            f"f={f:g}, {_sig4(kappa)} W/(m K)) from a",
+            map_version=map_version,
+        ),
+    )
+
+
+def render_interface_conductance(result, *, potential: str,
+                                 run_ref: str | None = None,
+                                 map_version: str = UNKNOWN_MAP_VERSION) -> Instance:
+    """Thermal boundary conductance of one interface onto the method-specific
+    node, in MW/(m^2 K) as the platform reports it.
+
+    ``result`` carries ``method``, ``interface_name``, ``temperature_K``,
+    ``tbc_MW_per_m2K``, ``tbc_std_MW_per_m2K``, ``lead_length_nm`` (each
+    side's length along the transport axis), ``nx`` and ``ny`` (the
+    cross-section in cells), ``delta_T_K`` (the thermostat offset) and
+    ``strain_pct_b`` (MCG's TBCResult). The value depends on all of them and
+    on ``potential``, so each is required. The spread follows render_kappa.
+
+    Raises KeyError for a method the map does not model (aemd, neg_gk) or a
+    missing input.
+    """
+    if not potential:
+        raise KeyError("potential")
+    method = _req(result, "method")
+    node = INTERFACE_CONDUCTANCE_NODE[method]
+    name = _req(result, "interface_name")
+    temperature_K = _req(result, "temperature_K")
+    g = _req(result, "tbc_MW_per_m2K")
+    std = _spread(_get(result, "tbc_std_MW_per_m2K"))
+    std_text = f" +/- {_sig4(std)}" if std is not None else ""
+    return Instance(
+        variable=node,
+        material=name,
+        conditions={
+            "T": f"{temperature_K:g} K",
+            "method": method,
+            "potential": potential,
+            "lead_length_nm": float(_req(result, "lead_length_nm")),
+            "nx": int(_req(result, "nx")),
+            "ny": int(_req(result, "ny")),
+            "delta_T_K": float(_req(result, "delta_T_K")),
+            "strain_pct_b": float(_req(result, "strain_pct_b")),
+        },
+        value=g,
+        units="MW/(m^2 K)",
+        uncertainty=std,
+        source=provenance(
+            run_ref,
+            f"Interface conductance of {name} ({method.upper()}, "
+            f"{_sig4(g)}{std_text} MW/(m^2 K) at {temperature_K:g} K) from a",
+            map_version=map_version,
+        ),
+    )
+
+
+def render_cure_conversion(result, *, run_ref: str | None = None,
+                           map_version: str = UNKNOWN_MAP_VERSION) -> Instance:
+    """Degree of cure at the end of one isothermal hold onto CureConversion.
+
+    ``result`` carries ``schedule_name``, ``cure_temperature_K``,
+    ``hold_time_s``, ``alpha_0``, ``kinetics`` (the rate-law parameters that
+    ran), ``final_conversion`` and ``vitrification_time_s`` (MCG's
+    CureScheduleResult). The model is read from the parameters, never from a
+    method label: only the Kamal-Sourour form renders, and the conditions carry
+    the parameters' sha256, not their values.
+
+    Raises KeyError for any other rate law or a missing input, ValueError for
+    a conversion outside [0, 1].
+    """
+    kinetics = _params(result, "kinetics", KAMAL_KEYS)
+    model = _kinetics_model(kinetics)
+    if model != "kamal_sourour":
+        raise KeyError(model)
+    name = _req(result, "schedule_name")
+    temperature_K = _req(result, "cure_temperature_K")
+    hold_s = _req(result, "hold_time_s")
+    x = _conversion(result)
+    t_vit = _get(result, "vitrification_time_s")
+    vit_text = ("" if t_vit is None else
+                f"; vitrification at {_sig4(t_vit)} s, past which it is an upper "
+                "bound for constants fit before vitrification")
+    return Instance(
+        variable="CureConversion",
+        material=name,
+        conditions={
+            "method": model,
+            "T": f"{temperature_K:g} K",
+            "hold_time": f"{hold_s:g} s",
+            "alpha_0": float(_req(result, "alpha_0")),
+            "kinetics_params_sha256": _sha256(kinetics, KINETICS_HASH_KEYS),
+        },
+        value=x,
+        units="dimensionless",
+        source=provenance(
+            run_ref,
+            f"Degree of cure of {name} after a {hold_s:g} s hold at "
+            f"{temperature_K:g} K (Kamal-Sourour, {_sig4(x)}{vit_text}) from a",
+            map_version=map_version,
+        ),
+    )
+
+
+def render_glass_transition(result, *, run_ref: str | None = None,
+                            map_version: str = UNKNOWN_MAP_VERSION) -> Instance:
+    """Glass transition temperature at the hold's final degree of cure onto
+    GlassTransitionTemperature, through the DiBenedetto relation.
+
+    ``result`` carries ``schedule_name``, ``tg`` (the DiBenedetto parameters),
+    ``kinetics`` (any rate law), ``final_conversion`` and ``final_tg_K``
+    (MCG's CureScheduleResult). The conditions name the rate law that set the
+    conversion and carry both parameter sets' sha256.
+
+    Raises KeyError for a missing input, ValueError for a conversion outside
+    [0, 1].
+    """
+    tg_params = _params(result, "tg", TG_KEYS)
+    kinetics = _params(result, "kinetics", KAMAL_KEYS)
+    name = _req(result, "schedule_name")
+    x = _conversion(result)
+    tg = _req(result, "final_tg_K")
+    return Instance(
+        variable="GlassTransitionTemperature",
+        material=name,
+        conditions={
+            "method": "dibenedetto_pascault_williams",
+            "conversion": float(x),
+            "tg_params_sha256": _sha256(tg_params, TG_KEYS),
+            "kinetics_model": _kinetics_model(kinetics),
+            "kinetics_params_sha256": _sha256(kinetics, KINETICS_HASH_KEYS),
+        },
+        value=tg,
+        units="K",
+        source=provenance(
+            run_ref,
+            f"Glass transition temperature of {name} at degree of cure "
+            f"{_sig4(x)} (DiBenedetto, {_sig4(tg)} K) from a",
             map_version=map_version,
         ),
     )

@@ -354,5 +354,236 @@
    "dh298_kJ_per_mol": -116.1,
    "reaction_name": "glycidyl phenyl ether + methylamine -> 1-(methylamino)-3-phenoxy-2-propanol"
   }
+ },
+ {
+  "filename": "dgeba-epoxy-5-vol-gnp-reference-formulation-thermalconductivity-effective-medium-nan-orientation-random-materialscodegraph.json",
+  "function": "render_composite_kappa",
+  "instance": {
+   "conditions": {
+    "G_MW_per_m2K": 25.0,
+    "d1_um": 5.0,
+    "d3_um": 0.02,
+    "f": 0.05,
+    "k11_W_per_mK": 1200.0,
+    "k33_W_per_mK": 6.0,
+    "kapitza_radius_nm": 8.0,
+    "km_W_per_mK": 0.2,
+    "orientation": "random"
+   },
+   "material": "DGEBA epoxy + 5 vol% GNP (reference formulation)",
+   "source": {
+    "detail": "Effective kappa of DGEBA epoxy + 5 vol% GNP (reference formulation) (Nan EMT, random orientation, f=0.05, 1.245 W/(m K)) from a MaterialsCodeGraph run; rendered against openmaterials graph version 9802d9e854c915eb47d867575730a556ab7f4a565e392bf5b29da58338f08434.",
+    "kind": "simulation",
+    "ref": "materialscodegraph"
+   },
+   "units": "W/(m K)",
+   "value": 1.2452,
+   "variable": "ThermalConductivity[effective_medium=nan,orientation=random]"
+  },
+  "kwargs": {},
+  "map_version": "9802d9e854c915eb47d867575730a556ab7f4a565e392bf5b29da58338f08434",
+  "name": "composite_kappa_reference_formulation",
+  "result": {
+   "composite_name": "DGEBA epoxy + 5 vol% GNP (reference formulation)",
+   "filler": {
+    "d1_um": 5,
+    "d3_um": 0.02,
+    "kappa_11_W_per_mK": 1200,
+    "kappa_33_W_per_mK": 6
+   },
+   "interface_conductance_MW_per_m2K": 25,
+   "kapitza_radius_nm": 8.0,
+   "kappa_random_W_per_mK": 1.2452,
+   "matrix_kappa_W_per_mK": 0.2,
+   "method": "nan_emt_interfacial_series",
+   "volume_fraction": 0.05
+  }
+ },
+ {
+  "filename": "si-ge-interfaceconductance-transport-model-nemd-materialscodegraph.json",
+  "function": "render_interface_conductance",
+  "instance": {
+   "conditions": {
+    "T": "300 K",
+    "delta_T_K": 30.0,
+    "lead_length_nm": 4.4,
+    "method": "nemd",
+    "nx": 4,
+    "ny": 4,
+    "potential": "NEP89",
+    "strain_pct_b": 4.2
+   },
+   "material": "Si/Ge",
+   "source": {
+    "detail": "Interface conductance of Si/Ge (NEMD, 312.3 +/- 12.35 MW/(m^2 K) at 300 K) from a MaterialsCodeGraph run; rendered against openmaterials graph version 9802d9e854c915eb47d867575730a556ab7f4a565e392bf5b29da58338f08434.",
+    "kind": "simulation",
+    "ref": "materialscodegraph"
+   },
+   "uncertainty": 12.34567,
+   "units": "MW/(m^2 K)",
+   "value": 312.3456,
+   "variable": "InterfaceConductance[transport_model=nemd]"
+  },
+  "kwargs": {
+   "potential": "NEP89"
+  },
+  "map_version": "9802d9e854c915eb47d867575730a556ab7f4a565e392bf5b29da58338f08434",
+  "name": "interface_conductance_nemd_with_spread",
+  "result": {
+   "delta_T_K": 30.0,
+   "interface_name": "Si/Ge",
+   "lead_length_nm": 4.4,
+   "method": "nemd",
+   "nx": 4,
+   "ny": 4,
+   "strain_pct_b": 4.2,
+   "tbc_MW_per_m2K": 312.3456,
+   "tbc_std_MW_per_m2K": 12.34567,
+   "temperature_K": 300.0
+  }
+ },
+ {
+  "filename": "si-ge-interfaceconductance-transport-model-nemd-materialscodegraph.json",
+  "function": "render_interface_conductance",
+  "instance": {
+   "conditions": {
+    "T": "300 K",
+    "delta_T_K": 30.0,
+    "lead_length_nm": 4.4,
+    "method": "nemd",
+    "nx": 4,
+    "ny": 4,
+    "potential": "NEP89",
+    "strain_pct_b": 4.2
+   },
+   "material": "Si/Ge",
+   "source": {
+    "detail": "Interface conductance of Si/Ge (NEMD, 312.3 MW/(m^2 K) at 300 K) from a MaterialsCodeGraph run; rendered against openmaterials graph version 9802d9e854c915eb47d867575730a556ab7f4a565e392bf5b29da58338f08434.",
+    "kind": "simulation",
+    "ref": "materialscodegraph"
+   },
+   "units": "MW/(m^2 K)",
+   "value": 312.3456,
+   "variable": "InterfaceConductance[transport_model=nemd]"
+  },
+  "kwargs": {
+   "potential": "NEP89"
+  },
+  "map_version": "9802d9e854c915eb47d867575730a556ab7f4a565e392bf5b29da58338f08434",
+  "name": "interface_conductance_nemd_no_spread",
+  "result": {
+   "delta_T_K": 30.0,
+   "interface_name": "Si/Ge",
+   "lead_length_nm": 4.4,
+   "method": "nemd",
+   "nx": 4,
+   "ny": 4,
+   "strain_pct_b": 4.2,
+   "tbc_MW_per_m2K": 312.3456,
+   "tbc_std_MW_per_m2K": 0.0,
+   "temperature_K": 300.0
+  }
+ },
+ {
+  "filename": "synthetic-resin-hold-cureconversion-materialscodegraph.json",
+  "function": "render_cure_conversion",
+  "instance": {
+   "conditions": {
+    "T": "433.15 K",
+    "alpha_0": 0.0,
+    "hold_time": "3600 s",
+    "kinetics_params_sha256": "c39d0d766eadd36b7d18013022e32d93d5716a67435a55c1e5ab29ab6b2a5dc6",
+    "method": "kamal_sourour"
+   },
+   "material": "synthetic resin hold",
+   "source": {
+    "detail": "Degree of cure of synthetic resin hold after a 3600 s hold at 433.15 K (Kamal-Sourour, 0.9123; vitrification at 2711 s, past which it is an upper bound for constants fit before vitrification) from a MaterialsCodeGraph run; rendered against openmaterials graph version 9802d9e854c915eb47d867575730a556ab7f4a565e392bf5b29da58338f08434.",
+    "kind": "simulation",
+    "ref": "materialscodegraph"
+   },
+   "units": "dimensionless",
+   "value": 0.912345,
+   "variable": "CureConversion"
+  },
+  "kwargs": {},
+  "map_version": "9802d9e854c915eb47d867575730a556ab7f4a565e392bf5b29da58338f08434",
+  "name": "cure_conversion_vitrified_in_hold",
+  "result": {
+   "alpha_0": 0.0,
+   "cure_temperature_K": 433.15,
+   "final_conversion": 0.912345,
+   "final_tg_K": 453.1636,
+   "hold_time_s": 3600.0,
+   "kinetics": {
+    "a1_pref_per_s": 100000.0,
+    "a2_pref_per_s": 1000000.0,
+    "amax_per_K": null,
+    "bmax": null,
+    "e1_J_per_mol": 70000.0,
+    "e2_J_per_mol": 60000.0,
+    "l_order": null,
+    "m": 0.5,
+    "n": 1.5
+   },
+   "method": "kamal_dibenedetto_isothermal",
+   "schedule_name": "synthetic resin hold",
+   "tg": {
+    "lam": 0.5094339622641509,
+    "tg0_K": 262.35,
+    "tg_inf_K": 489.15
+   },
+   "vitrification_time_s": 2710.55
+  }
+ },
+ {
+  "filename": "synthetic-resin-hold-glasstransitiontemperature-materialscodegraph.json",
+  "function": "render_glass_transition",
+  "instance": {
+   "conditions": {
+    "conversion": 0.912345,
+    "kinetics_model": "kamal_sourour",
+    "kinetics_params_sha256": "c39d0d766eadd36b7d18013022e32d93d5716a67435a55c1e5ab29ab6b2a5dc6",
+    "method": "dibenedetto_pascault_williams",
+    "tg_params_sha256": "ed8a396a0ad135f595edf25a5182e5516bf78f42b25733748304134984a6b40b"
+   },
+   "material": "synthetic resin hold",
+   "source": {
+    "detail": "Glass transition temperature of synthetic resin hold at degree of cure 0.9123 (DiBenedetto, 453.2 K) from a MaterialsCodeGraph run; rendered against openmaterials graph version 9802d9e854c915eb47d867575730a556ab7f4a565e392bf5b29da58338f08434.",
+    "kind": "simulation",
+    "ref": "materialscodegraph"
+   },
+   "units": "K",
+   "value": 453.1636,
+   "variable": "GlassTransitionTemperature"
+  },
+  "kwargs": {},
+  "map_version": "9802d9e854c915eb47d867575730a556ab7f4a565e392bf5b29da58338f08434",
+  "name": "glass_transition_end_of_hold",
+  "result": {
+   "alpha_0": 0.0,
+   "cure_temperature_K": 433.15,
+   "final_conversion": 0.912345,
+   "final_tg_K": 453.1636,
+   "hold_time_s": 3600.0,
+   "kinetics": {
+    "a1_pref_per_s": 100000.0,
+    "a2_pref_per_s": 1000000.0,
+    "amax_per_K": null,
+    "bmax": null,
+    "e1_J_per_mol": 70000.0,
+    "e2_J_per_mol": 60000.0,
+    "l_order": null,
+    "m": 0.5,
+    "n": 1.5
+   },
+   "method": "kamal_dibenedetto_isothermal",
+   "schedule_name": "synthetic resin hold",
+   "tg": {
+    "lam": 0.5094339622641509,
+    "tg0_K": 262.35,
+    "tg_inf_K": 489.15
+   },
+   "vitrification_time_s": 2710.55
+  }
  }
 ]

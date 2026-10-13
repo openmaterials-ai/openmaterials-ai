@@ -20,6 +20,10 @@ import pytest
 
 from omai.lineages import canonical_id, lineage_id
 from omai.render import (
+    render_composite_kappa,
+    render_cure_conversion,
+    render_glass_transition,
+    render_interface_conductance,
     render_kappa,
     render_molar_cp,
     render_reaction_energy,
@@ -32,6 +36,10 @@ RENDERERS = {
     "render_kappa": render_kappa,
     "render_molar_cp": render_molar_cp,
     "render_reaction_energy": render_reaction_energy,
+    "render_composite_kappa": render_composite_kappa,
+    "render_interface_conductance": render_interface_conductance,
+    "render_cure_conversion": render_cure_conversion,
+    "render_glass_transition": render_glass_transition,
 }
 
 
@@ -122,6 +130,49 @@ def test_render_vector_reproduces_through_the_public_renderer(vector):
                         **vector["kwargs"])
     assert instance.to_json_dict() == vector["instance"]
     assert instance.filename() == vector["filename"]
+
+
+# Display unit -> registered unit, for the units the renderers emit.
+_RENDER_UNITS = {"W/(m K)": "W_per_m_per_K", "J/(K mol)": "J_per_K_per_mol",
+                 "eV": "ev", "MW/(m^2 K)": "MW_per_m2_k",
+                 "dimensionless": "dimensionless", "K": "kelvin"}
+
+
+def test_every_rendered_variable_is_a_node_in_the_units_of_its_dimension():
+    from omai.map_data import DOMAINS, build_graph_dict
+    from omai.representation.units import UNITS
+
+    nodes = {n["id"] for n in build_graph_dict(DOMAINS)["nodes"]}
+    dims = {s.name: s.fields[0].dimension for d in DOMAINS for s in d.nodes}
+    for v in RENDER_VECTORS:
+        inst = v["instance"]
+        assert inst["variable"] in nodes, v["name"]
+        unit = UNITS[_RENDER_UNITS[inst["units"]]]
+        assert unit.dimension == dims[inst["variable"]], v["name"]
+
+
+def test_the_composite_vector_is_the_nan_edge_at_its_conditions():
+    import sympy as sp
+
+    from omai.composites.operator.edges import depolarization_factors, nan_effective_kappa
+
+    for v in (v for v in RENDER_VECTORS if v["function"] == "render_composite_kappa"):
+        c = v["instance"]["conditions"]
+        l33 = float(depolarization_factors.formula.rhs.subs(
+            sp.Symbol("p", positive=True), c["d3_um"] / c["d1_um"]))
+        value = float(nan_effective_kappa.formula.rhs.subs({
+            sp.Symbol("k_m", positive=True): c["km_W_per_mK"],
+            sp.IndexedBase("k_f")[1, 1]: c["k11_W_per_mK"],
+            sp.IndexedBase("k_f")[3, 3]: c["k33_W_per_mK"],
+            sp.Symbol("G_{int}", positive=True): c["G_MW_per_m2K"] * 1e6,
+            sp.Symbol("d_1", positive=True): c["d1_um"] * 1e-6,
+            sp.Symbol("d_3", positive=True): c["d3_um"] * 1e-6,
+            sp.Symbol("f_{vol}", nonnegative=True): c["f"],
+            sp.Symbol("L_{11}"): (1 - l33) / 2,
+            sp.Symbol("L_{33}"): l33,
+        }))
+        # The commons conformance tolerance for this node.
+        assert abs(value - v["instance"]["value"]) < 0.001, v["name"]
 
 
 # --- the vector set is the one the consumers need ---------------------------

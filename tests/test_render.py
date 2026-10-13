@@ -7,10 +7,15 @@ rather than quietly reshape evidence already committed to the map.
 
 from __future__ import annotations
 
+import hashlib
+import json
 from dataclasses import dataclass
+from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
+from omai.lineages import lineage_id
 from omai.render import (
     KAPPA_NODE,
     Instance,
@@ -18,6 +23,10 @@ from omai.render import (
     _sig4,
     kj_per_mol_to_ev,
     provenance,
+    render_composite_kappa,
+    render_cure_conversion,
+    render_glass_transition,
+    render_interface_conductance,
     render_kappa,
     render_molar_cp,
     render_reaction_energy,
@@ -260,3 +269,219 @@ def test_instance_filename_is_the_map_kebab_convention():
 def test_slugify_collapses_non_alphanumeric_runs():
     assert slugify("C21H24O4 (DGEBA)") == "c21h24o4-dgeba"
     assert slugify("") == ""
+
+
+
+# The composite inputs are the commons reference formulation's (its committed
+# instance pins 1.2452); the aligned pair, the interface numbers and the rate-law
+# constants are synthetic. The DiBenedetto constants are Rosetti et al.,
+# Materials 11, 1960 (2018) (see test_cure_kinetics_domain.py).
+_REFERENCE = next((Path(__file__).resolve().parents[1] / "docs" / "data" / "instances").glob(
+    "dgeba-epoxy-5-vol-gnp-reference-formulation-*.json"))
+
+
+def composite(**over) -> dict:
+    base = {"composite_name": "DGEBA epoxy + 5 vol% GNP (reference formulation)",
+            "method": "nan_emt_interfacial_series",
+            "kappa_random_W_per_mK": 1.2452, "kappa_aligned_11_W_per_mK": 2.5,
+            "kappa_aligned_33_W_per_mK": 0.25, "matrix_kappa_W_per_mK": 0.2,
+            "filler": {"kappa_11_W_per_mK": 1200, "kappa_33_W_per_mK": 6,
+                       "d1_um": 5, "d3_um": 0.02},
+            "volume_fraction": 0.05, "interface_conductance_MW_per_m2K": 25,
+            "kapitza_radius_nm": 8.0}
+    base.update(over)
+    return base
+
+
+def test_composite_kappa_renders_the_committed_reference_conditions():
+    # The committed b13e25c6 is a hand-written commons record the platform
+    # cannot mint (its value sits in the lineage), so the check is on the
+    # conditions, not on that id.
+    inst = render_composite_kappa(composite(), map_version=MAP_VERSION)
+    committed = json.loads(_REFERENCE.read_text())["lineage"]
+    assert (inst.variable, inst.material) == (committed["node"], committed["material"])
+    assert list(inst.conditions) == list(committed["conditions"])
+    assert inst.conditions == committed["conditions"]
+    assert all(isinstance(v, float) for k, v in inst.conditions.items()
+               if k != "orientation")
+    assert "uncertainty" not in inst.to_json_dict()
+    assert "(Nan EMT, random orientation, f=0.05, 1.245 W/(m K))" in inst.source.detail
+
+
+def test_composite_kappa_id_does_not_depend_on_number_typing():
+    as_float = composite(filler={"kappa_11_W_per_mK": 1200.0, "kappa_33_W_per_mK": 6.0,
+                                 "d1_um": 5.0, "d3_um": 0.02},
+                         interface_conductance_MW_per_m2K=25.0)
+    assert _id(render_composite_kappa(as_float)) == _id(render_composite_kappa(composite()))
+
+
+def test_composite_kappa_refuses_an_unmodeled_method_or_a_missing_filler():
+    with pytest.raises(KeyError):
+        render_composite_kappa(composite(method="maxwell_garnett"))
+    with pytest.raises(KeyError):
+        render_composite_kappa(composite(filler=None))
+    for key in ("kappa_11_W_per_mK", "kappa_33_W_per_mK", "d1_um", "d3_um"):
+        filler = {k: v for k, v in composite()["filler"].items() if k != key}
+        with pytest.raises(KeyError):
+            render_composite_kappa(composite(filler=filler))
+
+
+_TBC_INPUTS = ("lead_length_nm", "nx", "ny", "delta_T_K", "strain_pct_b")
+
+
+def tbc(**over) -> dict:
+    base = {"interface_name": "Si/Ge", "method": "nemd", "temperature_K": 300.0,
+            "tbc_MW_per_m2K": 312.3456, "tbc_std_MW_per_m2K": 12.34567,
+            "lead_length_nm": 4.4, "nx": 4, "ny": 4, "delta_T_K": 30.0,
+            "strain_pct_b": 4.2}
+    base.update(over)
+    return base
+
+
+def test_interface_conductance_renders_the_nemd_node_in_mw():
+    inst = render_interface_conductance(tbc(), potential="NEP89",
+                                        map_version=MAP_VERSION)
+    assert inst.variable == "InterfaceConductance[transport_model=nemd]"
+    assert (inst.material, inst.value, inst.units, inst.uncertainty) == (
+        "Si/Ge", 312.3456, "MW/(m^2 K)", 12.34567)
+    assert inst.conditions == {"T": "300 K", "method": "nemd", "potential": "NEP89",
+                               "lead_length_nm": 4.4, "nx": 4, "ny": 4,
+                               "delta_T_K": 30.0, "strain_pct_b": 4.2}
+    assert ("Interface conductance of Si/Ge (NEMD, 312.3 +/- 12.35 MW/(m^2 K) "
+            "at 300 K) from a") in inst.source.detail
+
+
+def test_interface_conductance_requires_the_potential_and_the_run_inputs():
+    with pytest.raises(TypeError):
+        render_interface_conductance(tbc())
+    with pytest.raises(KeyError):
+        render_interface_conductance(tbc(), potential="")
+    for key in _TBC_INPUTS:
+        with pytest.raises(KeyError, match=key):
+            render_interface_conductance(tbc(**{key: None}), potential="NEP89")
+
+
+def test_interface_conductance_drops_an_absent_spread():
+    for std in (0.0, None):
+        inst = render_interface_conductance(tbc(tbc_std_MW_per_m2K=std),
+                                            potential="NEP89")
+        assert "uncertainty" not in inst.to_json_dict()
+        assert "+/-" not in inst.source.detail
+
+
+def test_interface_conductance_refuses_methods_the_map_does_not_model():
+    for method in ("aemd", "neg_gk"):
+        with pytest.raises(KeyError):
+            render_interface_conductance(tbc(method=method), potential="NEP89")
+
+
+_KAMAL = {"a1_pref_per_s": 1.0e5, "e1_J_per_mol": 7.0e4, "a2_pref_per_s": 1.0e6,
+          "e2_J_per_mol": 6.0e4, "m": 0.5, "n": 1.5}
+
+
+def cure(kinetics=None, **over) -> dict:
+    base = {"schedule_name": "synthetic resin hold",
+            "method": "kamal_dibenedetto_isothermal",
+            "cure_temperature_K": 433.15, "hold_time_s": 3600.0, "alpha_0": 0.0,
+            "kinetics": {**_KAMAL, "l_order": None, "amax_per_K": None,
+                         "bmax": None, **(kinetics or {})},
+            "tg": {"tg0_K": 262.35, "tg_inf_K": 489.15, "lam": 27 / 53},
+            "kinetics_source": "explicit parameters from spec",
+            "final_conversion": 0.912345, "final_tg_K": 453.1636,
+            "vitrification_time_s": 2710.55}
+    base.update(over)
+    return base
+
+
+def _id(inst) -> str:
+    return lineage_id({"node": inst.variable, "material": inst.material,
+                       "conditions": inst.conditions})
+
+
+def test_cure_conversion_renders_the_kamal_sourour_hold():
+    inst = render_cure_conversion(cure(), map_version=MAP_VERSION)
+    assert inst.variable == "CureConversion"
+    assert (inst.material, inst.value, inst.units) == (
+        "synthetic resin hold", 0.912345, "dimensionless")
+    # None dropped, keys sorted, floats as a lineage rounds them.
+    digest = hashlib.sha256(json.dumps(_KAMAL, sort_keys=True,
+                                       separators=(",", ":")).encode()).hexdigest()
+    assert inst.conditions == {"method": "kamal_sourour", "T": "433.15 K",
+                               "hold_time": "3600 s", "alpha_0": 0.0,
+                               "kinetics_params_sha256": digest}
+    assert "uncertainty" not in inst.to_json_dict()
+    assert ("(Kamal-Sourour, 0.9123; vitrification at 2711 s, past which it is an "
+            "upper bound for constants fit before vitrification)") in inst.source.detail
+    assert "vitrification" not in render_cure_conversion(
+        cure(vitrification_time_s=None)).source.detail
+
+
+def test_cure_conversion_reads_the_parameters_never_the_method_label():
+    same = render_cure_conversion(cure(method="anything", kinetics_source="kb: x"))
+    assert same.to_json_dict() == render_cure_conversion(cure()).to_json_dict()
+    as_object = cure(kinetics=None)
+    as_object["kinetics"] = SimpleNamespace(**as_object["kinetics"])
+    assert render_cure_conversion(as_object).conditions == render_cure_conversion(cure()).conditions
+
+
+def test_cure_conversion_refuses_other_rate_laws_and_missing_parameters():
+    for other in ({"l_order": 1.2}, {"amax_per_K": 0.05, "bmax": 20.0}):
+        with pytest.raises(KeyError):
+            render_cure_conversion(cure(kinetics=other))
+    with pytest.raises(KeyError):
+        render_cure_conversion(cure(kinetics={"m": None}))
+    for key in ("kinetics", "alpha_0", "cure_temperature_K", "hold_time_s"):
+        missing = {**cure(), key: None}
+        with pytest.raises(KeyError):
+            render_cure_conversion(missing)
+
+
+def test_the_parameter_hash_is_unrounded_typed_and_keyed():
+    def digest(**kinetics):
+        return render_cure_conversion(cure(kinetics=kinetics)).conditions[
+            "kinetics_params_sha256"]
+    # Constants below the lineage rounding still separate.
+    assert digest(a1_pref_per_s=2e-7) != digest(a1_pref_per_s=2e-7 + 1e-8)
+    assert digest(m=2) == digest(m=2.0)
+    assert digest(source="kb: a citation") == digest()
+
+
+def test_cure_parameters_enter_the_id():
+    base = render_cure_conversion(cure())
+    other = render_cure_conversion(cure(kinetics={"a1_pref_per_s": 2.0e5}))
+    assert other.value == base.value and _id(other) != _id(base)
+    tg = render_glass_transition(cure())
+    tg_other = render_glass_transition(cure(tg={"tg0_K": 262.35, "tg_inf_K": 489.15,
+                                                "lam": 0.6}))
+    assert tg_other.value == tg.value and _id(tg_other) != _id(tg)
+
+
+def test_a_conversion_out_of_range_is_refused_by_both_cure_renderers():
+    for render in (render_cure_conversion, render_glass_transition):
+        for x in (-0.01, 1.2, float("nan")):
+            with pytest.raises(ValueError, match="outside"):
+                render(cure(final_conversion=x))
+
+
+def test_glass_transition_renders_dibenedetto_with_the_kinetics_named():
+    inst = render_glass_transition(cure(), map_version=MAP_VERSION)
+    assert inst.variable == "GlassTransitionTemperature"
+    assert (inst.value, inst.units) == (453.1636, "K")
+    conversion = render_cure_conversion(cure())
+    assert set(inst.conditions) == {"method", "conversion", "tg_params_sha256",
+                                    "kinetics_model", "kinetics_params_sha256"}
+    assert inst.conditions["method"] == "dibenedetto_pascault_williams"
+    assert inst.conditions["conversion"] == 0.912345
+    assert inst.conditions["kinetics_model"] == "kamal_sourour"
+    assert (inst.conditions["kinetics_params_sha256"]
+            == conversion.conditions["kinetics_params_sha256"])
+    assert "at degree of cure 0.9123 (DiBenedetto, 453.2 K) from a" in inst.source.detail
+    # Any rate law may set the conversion; the conditions name it.
+    for other, model in (({"l_order": 1.2}, "karkanas_partridge"),
+                         ({"amax_per_K": 0.05, "bmax": 20.0}, "kamal_sourour_amax"),
+                         ({"l_order": 1.2, "amax_per_K": 0.05, "bmax": 20.0},
+                          "karkanas_partridge_amax")):
+        assert render_glass_transition(cure(kinetics=other)).conditions[
+            "kinetics_model"] == model
+    with pytest.raises(KeyError):
+        render_glass_transition(cure(tg=None))
