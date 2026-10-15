@@ -452,9 +452,10 @@ def render_interface_conductance(result, *, potential: str,
     node, in MW/(m^2 K) as the platform reports it.
 
     ``result`` carries ``method``, ``interface_name``, ``temperature_K``,
-    ``tbc_MW_per_m2K``, ``tbc_std_MW_per_m2K``, ``lead_length_nm`` (each
-    side's length along the transport axis), ``nx`` and ``ny`` (the
-    cross-section in cells), ``delta_T_K`` (the thermostat offset) and
+    ``tbc_MW_per_m2K``, ``tbc_std_MW_per_m2K``, ``lead_length_nm`` (side
+    A's length along the transport axis; B has as many cells at its own
+    spacing), ``nx`` and ``ny`` (the cross-section in cells), ``delta_T_K``
+    (the thermostat offset) and
     ``strain_pct_b`` (MCG's TBCResult). The value depends on all of them and
     on ``potential``, so each is required. The spread follows render_kappa.
 

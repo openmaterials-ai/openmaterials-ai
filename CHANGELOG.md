@@ -5,6 +5,12 @@ mints, for consumers. Versioning follows README.md ("Versioning"): before 1.0
 an identity change takes the minor version, and this file lists every re-keyed
 id.
 
+## Unreleased
+
+- `meskal` is a private code: its release file carries `"visibility":
+  "private"`, since its source has no public repository. A record whose
+  `execution.registry` names it gives the `code` reason.
+
 ## 0.3.0
 
 Every consumer pins `openmaterials-ai==0.3.0`. A consumer that runs the
