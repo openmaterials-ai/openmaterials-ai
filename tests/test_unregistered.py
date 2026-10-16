@@ -324,6 +324,9 @@ def test_the_shipped_registry_checks_the_code_not_its_release():
     assert private_reasons(ran(("gpumd", "3.9.5"), ("nep89", "nep89_20250409"))) == []
     assert private_reasons(ran(("fixture-unlisted", "v4.7"))) == [
         {"field": "execution.registry", "kind": "code"}]
+    # MESKAL's source is not public (docs/data/releases/meskal.json).
+    assert private_reasons(ran(("meskal", "1.1.0"))) == [
+        {"field": "execution.registry", "kind": "code"}]
 
 
 def test_the_site_predicate_agrees_under_node():

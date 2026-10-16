@@ -8,8 +8,13 @@ id.
 ## Unreleased
 
 - `meskal` is a private code: its release file carries `"visibility":
-  "private"`, since its source has no public repository. A record whose
-  `execution.registry` names it gives the `code` reason.
+  "private"`, since its source has no public repository, and
+  `docs/data/codes.json` and `index/codes/meskal.json` carry the same key. A
+  record whose `execution.registry` names it gives
+  `{field: "execution.registry", kind: "code"}`: a MESKAL record that
+  0.3.0 reported public now reports private. The site reads the live
+  registry; a consumer with a bundled 0.3.0 registry disagrees with it until
+  it takes the next release. No id changes.
 
 ## 0.3.0
 
