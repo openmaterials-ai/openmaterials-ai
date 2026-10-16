@@ -406,7 +406,7 @@ supersede). CHANGELOG.md lists each re-keyed id. Adding a schema
 field, a renderer, or a vector is a minor version. Widening a schema field to
 accept a shape real producers already emit is a patch, since it can only turn a
 spurious rejection into an acceptance. Consumers pin an exact version
-(`openmaterials-ai==0.3.0`).
+(`openmaterials-ai==0.3.1`).
 
 ## Install
 
