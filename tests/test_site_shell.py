@@ -3,7 +3,7 @@
 The static records on the home page equal the files they quote, the
 machine-readable files point only at real pages, the 404 page forwards the
 short links the site hands out, and no page on the shell loads a retired font
-or a third-party font host.
+or a third-party font host (Geist retired on 2026-10-15, D-072).
 """
 from __future__ import annotations
 
@@ -31,34 +31,32 @@ def _ledger(html_text):
             for dt, dd in re.findall(r"<dt>(.*?)</dt><dd[^>]*>(.*?)</dd>", html_text, re.S)}
 
 
-def test_the_datum_card_equals_its_instance():
-    card = re.search(r'<article class="card datum" data-instance="([0-9a-f]{64})">(.*?)</article>', HOME, re.S)
-    assert card, "no datum card"
-    by_id = {i["id"]: i for i in json.loads((DOCS / "data/instances.json").read_text())}
-    inst = by_id[card.group(1)]
-    figure = re.search(r'<p class="figure">([^<]+)<span class="unit">([^<]+)</span></p>', card.group(2))
-    assert float(figure.group(1)) == inst["value"] and figure.group(2) == inst["units"]
-    rows = _ledger(card.group(2))
-    # rows use names: the quantity in words, conditions with units, sources by author and year
-    base = inst["variable"].split("[")[0]
-    assert rows["Quantity"] == re.sub(r"(?<=[a-z])(?=[A-Z])", " ", base).capitalize()
-    assert rows["Material"] == inst["material"]
-    cond = inst["conditions"]
-    assert rows["Conditions"].startswith(f'{cond["T"]} K, ')
-    assert all(str(v) in rows["Conditions"] for k, v in cond.items() if k != "T")
-    who, year = rows["Source"].split(", ")[0].rsplit(" ", 1)
-    assert who.replace(" et al.", "") in inst["source"]["detail"] and f"({year})" in inst["source"]["detail"]
-    assert rows["Id"] == inst["id"]
-    # the measurement shown beside it is the committed one, on the same quantity and material
-    mid = re.search(r'<dd data-instance="([0-9a-f]{64})">', card.group(2)).group(1)
-    meas = by_id[mid]
-    assert meas["source"]["kind"] == "measurement"
-    assert meas["variable"] == base and meas["material"] == inst["material"].split(" ")[0]
-    assert rows["Measured"].startswith(f'{meas["value"]:g} {meas["units"]}, ')
-    who, year = rows["Measured"].split(", ", 1)[1].rsplit(" ", 1)
-    assert meas["source"]["detail"].startswith(who) and f"({year})" in meas["source"]["detail"]
-    assert f'play/#id={inst["id"]}' in card.group(2) and f'play/#id={mid}' in card.group(2)
-    assert 'href="https://materialscodegraph.com/?ref=omai-home#hero-connect"' in card.group(2)
+def _silicon_near_300(inst):
+    """The selection home Fig. 1 draws: crystalline silicon, 270 to 310 K."""
+    def t(c):
+        return float(re.match(r"[0-9.]+", str(c.get("T", c.get("temperature_K")))).group())
+    return sorted((i for i in inst if i["variable"].startswith("ThermalConductivity")
+                   and re.fullmatch(r"Si( \(diamond\))?", i["material"]) and 270 <= t(i["conditions"]) <= 310),
+                  key=lambda i: i["value"])
+
+
+def test_fig1_fallback_rows_equal_the_instances():
+    """The rows the page shows before its script runs equal what the script draws."""
+    fig = re.search(r'<figure class="fig datum" id="fig-1"[^>]*>(.*?)</figure>', HOME, re.S)
+    assert fig, "no Fig. 1"
+    rows = _ledger(fig.group(1))
+    pts = _silicon_near_300(json.loads((DOCS / "data/instances.json").read_text()))
+    meas = [i for i in pts if i["source"]["kind"] == "measurement"]
+    paper = [i for i in pts if i["source"]["kind"] != "measurement" and i["source"]["ref"].startswith("paper:")]
+    runs = [i for i in pts if i not in meas and i not in paper]
+    assert rows["Measured"] == ", ".join(f'{i["value"]:.3g}' for i in meas)
+    assert rows["Published calculations"] == ", ".join(
+        f'{float(f"{i["value"]:.3g}"):g}' + ("" if float(str(i["conditions"]["T"]).split()[0]) == 300 else f' ({i["conditions"]["T"]} K)')
+        for i in paper)
+    assert rows["Recorded runs"] == f'{float(f"{runs[0]["value"]:.3g}"):g} to {float(f"{runs[-1]["value"]:.3g}"):g}'
+    for m in re.findall(r'play/#id=([0-9a-f]{64})', fig.group(1)):
+        assert m in {i["id"] for i in pts}, m
+    assert 'href="https://materialscodegraph.com/?ref=omai-home#hero-connect"' in fig.group(1)
 
 
 def test_the_contribute_block_is_the_committed_file():
@@ -68,7 +66,7 @@ def test_the_contribute_block_is_the_committed_file():
     path, body = fig.groups()
     shown = json.loads(html.unescape(body))
     assert shown == json.loads((DOCS / path).read_text())
-    assert f'data-instance="{shown["id"]}"' in HOME, "the example is the datum card's record"
+    assert f'play/#id={shown["id"]}' in HOME, "the example is a record Fig. 1 links"
 
 
 _FORWARD = r"""
@@ -126,7 +124,8 @@ def test_shell_pages_link_only_to_files_that_exist():
         s = (DOCS / rel).read_text()
         assert "fonts.googleapis" not in s and "fonts.gstatic" not in s, rel
         assert not re.search(r"Fraunces|Public Sans|IBM Plex|vendor/(inter|source-serif-4|jetbrains-mono)/", s), rel
-        assert "assets/fonts/Geist-Variable.woff2" in s and "assets/site.css" in s, rel
+        assert not re.search(r"Geist[-\w]*\.woff2|geist\.css", s), rel
+        assert "assets/fonts/newsreader-latin.woff2" in s and "assets/site.css" in s, rel
         base = "https://openmaterials.ai/" + rel
         for ref in re.findall(r'(?:href|src)="([^"#]+)', s):
             if "'" in ref:   # a URL a page script assembles at run time

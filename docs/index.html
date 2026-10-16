@@ -6,8 +6,8 @@
 <title>OpenMaterials | A versioned, content-addressed map of physical quantities</title>
 <meta name="description" content="OpenMaterials is a versioned, content-addressed map of physical quantities and formulas. Simulated and measured values attach to it with their provenance. Data is CC BY 4.0 and code is Apache 2.0.">
 <link rel="canonical" href="https://openmaterials.ai/">
-<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#F4F1EA" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0F0E0C" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <meta property="og:type" content="website">
@@ -20,8 +20,8 @@
 <meta property="og:image:alt" content="The openmaterials.ai mark and wordmark above the line &quot;A versioned map of physics.&quot; A smaller line gives the licenses: map data CC BY 4.0 and code Apache 2.0.">
 <meta name="twitter:card" content="summary_large_image">
 <script>try{const t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch{}</script>
-<link rel="preload" href="assets/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="assets/fonts/GeistMono-Variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/newsreader-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/jetbrains-mono-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/site.css">
 <script type="application/ld+json" id="om-jsonld">
 {"@context": "https://schema.org", "@graph": [
@@ -58,24 +58,27 @@
         <a class="btn btn--primary" href="map/">Open the map</a>
         <a class="btn btn--secondary" href="#contribute">Contribute a value</a>
       </div>
-    </div>
-    <article class="card datum" data-instance="f735a05c14db39676b46e7f1100c55152afb7bf49cea79c9e1f61b8de075c619">
-      <p class="eyebrow">Committed value</p>
-      <p class="figure">147 <span class="unit">W/(m K)</span></p>
-      <dl class="ledger">
-        <div><dt>Quantity</dt><dd>Thermal conductivity</dd></div>
-        <div><dt>Material</dt><dd>Si (diamond)</dd></div>
-        <div><dt>Conditions</dt><dd>300 K, quantum statistics, direct inversion of scattering matrix, 19x19x19 q-grid, DFPT LDA</dd></div>
-        <div><dt>Source</dt><dd><a href="https://doi.org/10.1063/5.0020443">Barbalinardo et al. 2020</a>, kALDo</dd></div>
-        <div><dt>Id</dt><dd class="mono">f735a05c14db39676b46e7f1100c55152afb7bf49cea79c9e1f61b8de075c619</dd></div>
-        <div><dt>Measured</dt><dd data-instance="55ee996282a678f8e01cff39eb1973ca18f17440f6aa80662cff5dd6c32ebe1b"><a href="play/#id=55ee996282a678f8e01cff39eb1973ca18f17440f6aa80662cff5dd6c32ebe1b">156 W/(m K)</a>, Glassbrenner and Slack 1964</dd></div>
+      <dl class="ledger stamp">
+        <div><dt>Map version</dt><dd class="mono"><span data-bind="version12">61a981c02604</span></dd></div>
+        <div><dt>Quantities</dt><dd class="mono"><span data-bind="n-nodes">129</span></dd></div>
+        <div><dt>Codes</dt><dd class="mono"><span data-bind="codes">33</span></dd></div>
+        <div><dt>Values</dt><dd class="mono"><span data-bind="n-values">93</span>, <span data-bind="n-meas">6</span> of them measured</dd></div>
       </dl>
+    </div>
+    <figure class="fig datum" id="fig-1" aria-labelledby="fig-1-cap">
+      <p class="eyebrow fig-label"><b>Fig. 1</b>Silicon near 300 K, every value on the map</p>
+      <div class="fig-plot" id="fig-1-plot" aria-hidden="true"></div>
+      <dl class="fig-rows" id="fig-1-rows">
+        <div><dt>Measured</dt><dd><a href="play/#id=55ee996282a678f8e01cff39eb1973ca18f17440f6aa80662cff5dd6c32ebe1b">156</a></dd></div>
+        <div><dt>Published calculations</dt><dd>118, 123, 140, <a href="play/#id=f735a05c14db39676b46e7f1100c55152afb7bf49cea79c9e1f61b8de075c619">147</a>, 166 (277 K)</dd></div>
+        <div><dt>Recorded runs</dt><dd>16.7 to 380</dd></div>
+      </dl>
+      <figcaption id="fig-1-cap"><span id="fig-1-text">Every thermal conductivity value for crystalline silicon between 270 and 310 K on the map, in W/(m K), read from <a href="data/instances.json">instances.json</a> when the page loads. One measurement, by Glassbrenner and Slack (1964). The published calculations differ by statistics (quantum or classical) and solver (direct inversion or RTA). The recorded runs all use the Tersoff potential on small meshes and supercells: they check codes against each other, and their absolute values are not predictions.</span> Each value keeps its conditions, so the spread is explained rather than averaged away.</figcaption>
       <div class="cta-row">
-        <a class="btn btn--secondary btn--sm" href="https://materialscodegraph.com/?ref=omai-home#hero-connect">Run it for your material</a>
-        <a class="btn btn--secondary btn--sm" href="play/#id=f735a05c14db39676b46e7f1100c55152afb7bf49cea79c9e1f61b8de075c619">Open the datasheet</a>
-        <a class="btn btn--secondary btn--sm" href="map-trace/#node=ThermalConductivity%5Bbte_solver%3Ddirect_inverse%5D">Trace it</a>
+        <a class="btn btn--secondary btn--sm" href="https://materialscodegraph.com/?ref=omai-home#hero-connect">Compute it for your material</a>
+        <a class="btn btn--secondary btn--sm" href="agreement/">Compare codes on one quantity</a>
       </div>
-    </article>
+    </figure>
   </section>
 
   <section id="fits">
@@ -266,13 +269,17 @@
       count(g.nodes, is('type', 'hidden')) + ' hidden, ' + count(g.nodes, is('type', 'parameter')) + ' parameter)');
     put('#s-links', g.links.length + ' (' + (g.links.length - params) + ' formula, ' + params + ' parameter)');
     put('#s-tiers', g.tiers.length);
+    put('[data-bind="n-nodes"]', g.nodes.length);
   }).catch(skip);
   get('data/lean_roadmap.json').then(function (r) { put('#s-ops', r.rows.length); }).catch(skip);
   get('data/codes.json').then(function (c) { put('[data-bind="codes"]', Object.keys(c).length); }).catch(skip);
   get('data/instances.json').then(function (v) {
     put('#s-values', v.length);
+    put('[data-bind="n-values"]', v.length);
     put('#s-sim', count(v, kind('simulation')));
     put('#s-meas', count(v, kind('measurement')));
+    put('[data-bind="n-meas"]', count(v, kind('measurement')));
+    figure1(v);
   }).catch(skip);
   get('data/lean.json').then(function (l) {
     put('[data-bind="lean-nodes"]', Object.keys(l.nodes).length);
@@ -280,6 +287,60 @@
     put('[data-bind="lean-idents"]', Object.keys(l.identities).length);
   }).catch(skip);
   get('data/version.json').then(function (v) { put('[data-bind="version12"]', String(v.version).slice(0, 12)); }).catch(skip);
+  /* Fig. 1: crystalline silicon's thermal conductivity between 270 and 310 K, one dot per value,
+     on a log axis, grouped by where the value comes from. Each dot opens its datasheet. */
+  function figure1(all) {
+    var NS = 'http://www.w3.org/2000/svg', ROWS = ['Measured', 'Published calculations', 'Recorded runs'];
+    function T(c) { var t = c.T != null ? c.T : c.temperature_K; return parseFloat(t); }
+    var pts = all.filter(function (x) {
+      return /^ThermalConductivity/.test(x.variable) && /^Si( \(diamond\))?$/.test(x.material) && T(x.conditions) >= 270 && T(x.conditions) <= 310;
+    }).map(function (x) {
+      var row = x.source.kind === 'measurement' ? 0 : /^paper:/.test(x.source.ref) ? 1 : 2;
+      return { id: x.id, v: +x.value, row: row, t: T(x.conditions), tip: (+x.value).toPrecision(4) + ' ' + x.units + ', ' + x.source.ref + ', ' + T(x.conditions) + ' K' };
+    }).sort(function (a, b) { return a.v - b.v; });
+    if (!pts.length) return;
+    var W = 460, L = 132, R = 450, rowH = 44, top = 14, H = top + ROWS.length * rowH + 30;
+    function X(v) { return L + (Math.log10(v) - 1) / (Math.log10(500) - 1) * (R - L); }
+    function el(tag, at, parent) { var e = document.createElementNS(NS, tag); for (var k in at) e.setAttribute(k, at[k]); if (parent) parent.appendChild(e); return e; }
+    var svg = el('svg', { viewBox: '0 0 ' + W + ' ' + H, class: 'fig1' });
+    var meas = pts.filter(function (p) { return p.row === 0; })[0];
+    ROWS.forEach(function (name, r) {
+      var y = top + r * rowH + rowH / 2;
+      el('line', { x1: L, x2: R, y1: y, y2: y, class: 'row-rule' }, svg);
+      el('text', { x: 0, y: y + 4, class: 'row-lab' }, svg).textContent = name;
+    });
+    [10, 30, 100, 300].forEach(function (v) {
+      var x = X(v), y = top + ROWS.length * rowH;
+      el('line', { x1: x, x2: x, y1: top, y2: y + 4, class: 'grid' }, svg);
+      el('text', { x: x, y: y + 18, 'text-anchor': 'middle', class: 'tick' }, svg).textContent = v;
+    });
+    if (meas) el('line', { x1: X(meas.v), x2: X(meas.v), y1: top - 6, y2: top + ROWS.length * rowH, class: 'meas-line' }, svg);
+    var last = {};
+    pts.forEach(function (p) {
+      var x = X(p.v), y = top + p.row * rowH + rowH / 2, k = p.row;
+      if (last[k] != null && x - last[k].x < 9) { last[k].n += 1; y += (last[k].n % 2 ? -1 : 1) * 8; } else last[k] = { x: x, n: 0 };
+      last[k].x = x;
+      var a = el('a', { href: 'play/#id=' + p.id }, svg);
+      el('title', {}, a).textContent = p.tip;
+      el('circle', { cx: x, cy: y, r: p.row === 0 ? 6 : 4.5, class: 'dot dot--' + p.row }, a);
+    });
+    var plot = document.getElementById('fig-1-plot');
+    plot.textContent = ''; plot.appendChild(svg);
+    var rows = document.getElementById('fig-1-rows');
+    rows.textContent = '';
+    ROWS.forEach(function (name, r) {
+      var mine = pts.filter(function (p) { return p.row === r; });
+      if (!mine.length) return;
+      var div = document.createElement('div'), dt = document.createElement('dt'), dd = document.createElement('dd');
+      dt.textContent = name;
+      mine.forEach(function (p, i) {
+        if (i) dd.appendChild(document.createTextNode(', '));
+        var a = document.createElement('a'); a.href = 'play/#id=' + p.id; a.textContent = +p.v.toPrecision(3) + (p.t !== 300 ? ' (' + p.t + ' K)' : '');
+        dd.appendChild(a);
+      });
+      div.appendChild(dt); div.appendChild(dd); rows.appendChild(div);
+    });
+  }
   var d = new Date();   // the Cite block's access date is the reader's today
   put('[data-bind="today"]', d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'));
 })();
