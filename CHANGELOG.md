@@ -10,13 +10,14 @@ id.
 Every consumer pins `openmaterials-ai==0.3.1`.
 
 - `meskal` is a private code: its release file carries `"visibility":
-  "private"`, since its source has no public repository, and
-  `docs/data/codes.json` and `index/codes/meskal.json` carry the same key. A
-  record whose `execution.registry` names it gives
-  `{field: "execution.registry", kind: "code"}`: a MESKAL record that
-  0.3.0 reported public now reports private. The site reads the live
-  registry; a consumer with a bundled 0.3.0 registry disagrees with it until
-  it takes 0.3.1. No id changes.
+  "private"`, since its source has no public repository, and `registry.json`
+  (shipped as `omai/data/registry.json`), `docs/data/codes.json` and
+  `index/codes/meskal.json` carry the same key. A record whose
+  `execution.registry` names it gives
+  `{field: "execution.registry", kind: "code"}`: a MESKAL record with no
+  other private evidence, public under 0.3.0, is now private. The site reads
+  the live registry; a consumer with a bundled 0.3.0 registry disagrees with
+  it until it takes 0.3.1. No id changes.
 - `render_interface_conductance` documents `lead_length_nm` as side A's length
   (the first material of `interface_name`); values and ids are unchanged.
 
