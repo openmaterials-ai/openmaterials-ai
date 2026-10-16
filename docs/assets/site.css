@@ -345,3 +345,5 @@ body.app { --font-sans: var(--font-mono); }
 .fig .cta-row { margin-top: 20px; }
 .hero .stamp { margin-top: 36px; max-width: 520px; }
 @media (max-width: 600px) { .fig-rows > div { grid-template-columns: minmax(0, 1fr); gap: 2px; } }
+.fig .src { display: block; margin-top: 8px; font: 400 12px/18px var(--font-mono); color: var(--ink-3, var(--ink-2)); }
+.fig .cta-row .note { flex-basis: 100%; margin: 0; font: 400 12px/18px var(--font-mono); color: var(--ink-2); }

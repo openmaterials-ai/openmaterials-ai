@@ -3,7 +3,7 @@
 The static records on the home page equal the files they quote, the
 machine-readable files point only at real pages, the 404 page forwards the
 short links the site hands out, and no page on the shell loads a retired font
-or a third-party font host (Geist retired on 2026-10-15, D-072).
+or a third-party font host.
 """
 from __future__ import annotations
 
@@ -41,7 +41,8 @@ def _silicon_near_300(inst):
 
 
 def test_fig1_fallback_rows_equal_the_instances():
-    """The rows the page shows before its script runs equal what the script draws."""
+    """The rows Fig. 1 shows before its script runs summarize the values the script draws:
+    each group's values (the recorded runs as a range), each linked id on its own value."""
     fig = re.search(r'<figure class="fig datum" id="fig-1"[^>]*>(.*?)</figure>', HOME, re.S)
     assert fig, "no Fig. 1"
     rows = _ledger(fig.group(1))
@@ -49,13 +50,19 @@ def test_fig1_fallback_rows_equal_the_instances():
     meas = [i for i in pts if i["source"]["kind"] == "measurement"]
     paper = [i for i in pts if i["source"]["kind"] != "measurement" and i["source"]["ref"].startswith("paper:")]
     runs = [i for i in pts if i not in meas and i not in paper]
-    assert rows["Measured"] == ", ".join(f'{i["value"]:.3g}' for i in meas)
-    assert rows["Published calculations"] == ", ".join(
-        f'{float(f"{i["value"]:.3g}"):g}' + ("" if float(str(i["conditions"]["T"]).split()[0]) == 300 else f' ({i["conditions"]["T"]} K)')
-        for i in paper)
-    assert rows["Recorded runs"] == f'{float(f"{runs[0]["value"]:.3g}"):g} to {float(f"{runs[-1]["value"]:.3g}"):g}'
-    for m in re.findall(r'play/#id=([0-9a-f]{64})', fig.group(1)):
-        assert m in {i["id"] for i in pts}, m
+    def g3(v):
+        return f"{float(format(v, '.3g')):g}"
+
+    def temp(i):
+        t = float(str(i["conditions"]["T"]).split()[0])
+        return "" if t == 300 else f" ({t:g} K)"
+
+    assert rows["Measured"] == ", ".join(g3(i["value"]) for i in meas)
+    assert rows["Published calculations"] == ", ".join(g3(i["value"]) + temp(i) for i in paper)
+    assert rows["Recorded runs"] == f"{g3(runs[0]['value'])} to {g3(runs[-1]['value'])}"
+    by_id = {i["id"]: i for i in pts}
+    for m, shown in re.findall(r'play/#id=([0-9a-f]{64})">([^<]+)<', fig.group(1)):
+        assert m in by_id and g3(by_id[m]["value"]) == shown, (m, shown)
     assert 'href="https://materialscodegraph.com/?ref=omai-home#hero-connect"' in fig.group(1)
 
 
@@ -161,7 +168,8 @@ def test_the_home_static_text_equals_the_data():
         got = re.search(r'id="%s">([^<]*)<' % el_id, HOME)
         assert got and got.group(1) == want, f"#{el_id}: {got and got.group(1)!r} != {want!r}"
     binds = {"codes": len(codes), "lean-nodes": len(lean["nodes"]), "lean-edges": len(lean["edges"]),
-             "lean-idents": len(lean["identities"]), "version12": ver["version"][:12]}
+             "lean-idents": len(lean["identities"]), "version12": ver["version"][:12],
+             "n-nodes": len(g["nodes"]), "n-values": len(inst), "n-meas": kinds.count("measurement")}
     for bind, want in binds.items():
         got = re.findall(r'data-bind="%s">([^<]*)<' % bind, HOME)
         assert got and set(got) == {str(want)}, f"data-bind={bind}: {got} != {want}"

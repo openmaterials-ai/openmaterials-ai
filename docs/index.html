@@ -73,9 +73,10 @@
         <div><dt>Published calculations</dt><dd>118, 123, 140, <a href="play/#id=f735a05c14db39676b46e7f1100c55152afb7bf49cea79c9e1f61b8de075c619">147</a>, 166 (277 K)</dd></div>
         <div><dt>Recorded runs</dt><dd>16.7 to 380</dd></div>
       </dl>
-      <figcaption id="fig-1-cap"><span id="fig-1-text">Every thermal conductivity value for crystalline silicon between 270 and 310 K on the map, in W/(m K), read from <a href="data/instances.json">instances.json</a> when the page loads. One measurement, by Glassbrenner and Slack (1964). The published calculations differ by statistics (quantum or classical) and solver (direct inversion or RTA). The recorded runs all use the Tersoff potential on small meshes and supercells: they check codes against each other, and their absolute values are not predictions.</span> Each value keeps its conditions, so the spread is explained rather than averaged away.</figcaption>
+      <figcaption id="fig-1-cap">Every thermal conductivity value for crystalline silicon between 270 and 310 K on the map, in W/(m K), on a log axis. One measurement, by Glassbrenner and Slack (1964). The published calculations differ in statistics (quantum or classical) and solver (direct inversion or RTA), and Esfarjani et al. (2011) also in force constants and temperature (277 K). The recorded runs use the Tersoff potential to test codes, not to predict silicon. Four of them, from 17 to 27 W/(m K) on an 8 x 8 x 8 mesh, sit far below published Tersoff values for a cause their records do not yet establish; on those settings kALDo and phono3py differ by 11 to 16%. Each value keeps its conditions, and an incomplete record says so.
+        <span class="src">Source: <a href="data/instances.json">instances.json</a>, map version <span data-bind="version12">61a981c02604</span>.</span></figcaption>
       <div class="cta-row">
-        <a class="btn btn--secondary btn--sm" href="https://materialscodegraph.com/?ref=omai-home#hero-connect">Compute it for your material</a>
+        <a class="btn btn--secondary btn--sm" href="https://materialscodegraph.com/?ref=omai-home#hero-connect">Price a calculation on MaterialsCodeGraph</a>
         <a class="btn btn--secondary btn--sm" href="agreement/">Compare codes on one quantity</a>
       </div>
     </figure>
@@ -293,14 +294,14 @@
     var NS = 'http://www.w3.org/2000/svg', ROWS = ['Measured', 'Published calculations', 'Recorded runs'];
     function T(c) { var t = c.T != null ? c.T : c.temperature_K; return parseFloat(t); }
     var pts = all.filter(function (x) {
-      return /^ThermalConductivity/.test(x.variable) && /^Si( \(diamond\))?$/.test(x.material) && T(x.conditions) >= 270 && T(x.conditions) <= 310;
+      return /^ThermalConductivity/.test(x.variable) && /^Si( \(diamond\))?$/.test(x.material) && T(x.conditions) >= 270 && T(x.conditions) <= 310 && +x.value > 0;
     }).map(function (x) {
       var row = x.source.kind === 'measurement' ? 0 : /^paper:/.test(x.source.ref) ? 1 : 2;
       return { id: x.id, v: +x.value, row: row, t: T(x.conditions), tip: (+x.value).toPrecision(4) + ' ' + x.units + ', ' + x.source.ref + ', ' + T(x.conditions) + ' K' };
     }).sort(function (a, b) { return a.v - b.v; });
     if (!pts.length) return;
-    var W = 460, L = 132, R = 450, rowH = 44, top = 14, H = top + ROWS.length * rowH + 30;
-    function X(v) { return L + (Math.log10(v) - 1) / (Math.log10(500) - 1) * (R - L); }
+    var W = 480, L = 166, R = 470, rowH = 44, top = 14, LO = 10, HI = 500, H = top + ROWS.length * rowH + 30;
+    function X(v) { v = Math.min(HI, Math.max(LO, v)); return L + (Math.log10(v) - Math.log10(LO)) / (Math.log10(HI) - Math.log10(LO)) * (R - L); }
     function el(tag, at, parent) { var e = document.createElementNS(NS, tag); for (var k in at) e.setAttribute(k, at[k]); if (parent) parent.appendChild(e); return e; }
     var svg = el('svg', { viewBox: '0 0 ' + W + ' ' + H, class: 'fig1' });
     var meas = pts.filter(function (p) { return p.row === 0; })[0];
@@ -320,7 +321,7 @@
       var x = X(p.v), y = top + p.row * rowH + rowH / 2, k = p.row;
       if (last[k] != null && x - last[k].x < 9) { last[k].n += 1; y += (last[k].n % 2 ? -1 : 1) * 8; } else last[k] = { x: x, n: 0 };
       last[k].x = x;
-      var a = el('a', { href: 'play/#id=' + p.id }, svg);
+      var a = el('a', { href: 'play/#id=' + p.id, tabindex: '-1' }, svg);   // the rows below carry the same links for keyboards
       el('title', {}, a).textContent = p.tip;
       el('circle', { cx: x, cy: y, r: p.row === 0 ? 6 : 4.5, class: 'dot dot--' + p.row }, a);
     });
