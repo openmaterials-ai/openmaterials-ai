@@ -11,6 +11,13 @@ id.
   source repository is not public, and the credits `url` is null; they cited
   a repository and a page that are not public. The licence read at v1.1.0
   (BSD-3-Clause) is unchanged. No id changes.
+- The `mescal` representation is removed: MESCAL is MESKAL's former name, and
+  `meskal` maps the same two nodes (PhononTransmission and the Landauer
+  ThermalConductance). `mescal` is an alias of `meskal` in its release file, so
+  a record whose `execution.registry` names `mescal` resolves to MESKAL and,
+  MESKAL being private, gets `{field: "execution.registry", kind: "code"}`
+  (public before). The three MESCAL values keep their ids. Removed API: `omai.thermal_transport.representation.mescal` and the
+  `MESCAL_*` names.
 
 ## 0.3.1
 

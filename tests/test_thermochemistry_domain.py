@@ -439,11 +439,12 @@ def test_pycalphad_is_a_representation_and_the_config_thermo_scan_added_three_re
     # edges); the xtb representation (the engine the GFN2-xTB thermo evidence names
     # in-hash) landed the same day, reaching 31; the qe-d3q representation
     # (D3Q and thermal2 on Quantum ESPRESSO 7.5, 2026-10-01) makes it 32; the
-    # meskal representation (MESKAL, 2026-10-04) makes it 33.
-    assert len(codes) == 33
+    # meskal representation (MESKAL, 2026-10-04) makes it 33; mescal, MESKAL's
+    # former name, became its alias (2026-10-17), leaving 32.
+    assert len(codes) == 32
     assert "materialscodegraph" not in codes
     assert "xtb" in codes
-    assert "mescal" in codes
+    assert "mescal" not in codes
     assert "pycalphad" in codes
     assert "mat-equation-of-state" in codes
     assert "mat-surface-adsorption" in codes

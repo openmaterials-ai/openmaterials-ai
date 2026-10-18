@@ -254,7 +254,7 @@ shape is already here.
 \section{Where we are, and what is next}
 
 Today the framework is real and growing. It has an operator layer and a
-representation layer, 33 ingested representations (kaldo, phono3py, phonopy,
+representation layer, 32 ingested representations (kaldo, phono3py, phonopy,
 pymatgen, ShengBTE, MESKAL, Quantum ESPRESSO, D3Q, VASP, LAMMPS, GPUMD, i-PI, xtb, the
 machine-learned potentials matgl / MACE / fairchem, the database representation mp-api,
 and the CALPHAD, amset, ORCA, OpenMM, and AtomisticSkills mat-* / chem-*
@@ -510,7 +510,7 @@ three exists today; the other two are designed and not yet built.
   \item The code parser will import a codebase as a representation: mapping the
   code's input, output, and intermediate files and key lines onto the nodes and
   edges the code implements (structure), and letting a run of the code be recorded
-  as an instance (values). The 33 representations on today's map were authored by
+  as an instance (values). The 32 representations on today's map were authored by
   hand against this contract; the parser that automates the mapping is not yet
   built.
   \item The run parser will read a concrete run and record its inputs (from the
@@ -833,7 +833,7 @@ the reviewers decide what enters the commons.
 
 Today's map is one hundred eighty-nine change records past v1, its frozen genesis version:
 126 typed quantities plus 3 promoted
-parameters, the symbolic formula on every relational edge, 33 representations
+parameters, the symbolic formula on every relational edge, 32 representations
 mapped (kaldo 34 variables, phono3py 31, phonopy 22, pymatgen 22, ShengBTE 20,
 MESKAL 18, QE 14, mp-api 13, LAMMPS 12, VASP 10, GPUMD 9, pycalphad 7, i-PI 4, and a further
 twenty codes and mat-* / chem-* skills at five or fewer each), and real instances
@@ -2083,8 +2083,8 @@ sense.}
 
 \subsection{Representation functors (codes)}
 
-Each adapter is a representation functor over the operator DAG. Seventeen
-adapter modules are now ingested in the thermal-transport domain alone (33
+Each adapter is a representation functor over the operator DAG. Sixteen
+adapter modules are now ingested in the thermal-transport domain alone (32
 representations map the whole graph), in three tiers. The four BTE / harmonic codes that consume
 force constants:
 
@@ -2462,7 +2462,7 @@ We have committed to Python for Sprint 1. The trade-offs were:
 
 The operator layer is an architectural commitment, not an implementation. The implementation
 began as a Python skeleton plus adapters for three thermal-transport codes and has since grown
-to the map of Part~\ref{part:status}, which holds 33 representations. The
+to the map of Part~\ref{part:status}, which holds 32 representations. The
 artifact that motivates the project (a paper-worthy demonstration of cross-code reconciliation
 and decomposed error bounds for lattice thermal conductivity) is downstream of the operator layer but
 is the operator layer's first proof-of-value.
@@ -3135,12 +3135,12 @@ numbers:
         rendered-link count exceeds the operator count because the site graph
         draws one link per (input $\to$ output) pair while an operator with
         several inputs is a single edge in the store.
-  \item \textbf{Representations.} 33 codes mapped, with per-code variable coverage:
+  \item \textbf{Representations.} 32 codes mapped, with per-code variable coverage:
         kaldo 34, phono3py 31, phonopy 22, pymatgen 22, ShengBTE 20, MESKAL 18,
         Quantum ESPRESSO 14, mp-api 13, LAMMPS 12, VASP 10, GPUMD 9, pycalphad 7, matgl 5,
         mat-elasticity 5, amset 5, ORCA 5, pymatgen-analysis-diffusion 5, D3Q 5,
         i-PI 4, fairchem 4, MACE 4, OpenMM 4, ASE 3,
-        mat-diffusion-analysis 2, mescal 2, plumed 2, smol 2, xtb 2,
+        mat-diffusion-analysis 2, plumed 2, smol 2, xtb 2,
         mat-equation-of-state 1, mat-surface-adsorption 1, rxn-network 1,
         diffcsp 1, mattergen 1.
   \item \textbf{Instances.} 93 recorded values, 87 simulation and 6 measurement.
@@ -3230,7 +3230,6 @@ MACE                         & 4  & MIT \\
 OpenMM                       & 4  & MIT (LGPL parts) \\
 ASE                          & 3  & LGPL-2.1-or-later \\
 mat-diffusion-analysis       & 2  & MIT \\
-mescal                       & 2  & MIT \\
 plumed                       & 2  & LGPL-3.0 \\
 xtb                          & 2  & LGPL-3.0 \\
 smol                         & 2  & BSD-3-Clause \\
@@ -3267,7 +3266,7 @@ citation or a license, so no future representation can land uncredited.
 
 The principal code representations on the map are cited below (the remaining
 representations,
-i-PI, PLUMED, MESCAL, D3Q, and MESKAL, carry their citations in
+i-PI, PLUMED, D3Q, and MESKAL, carry their citations in
 \texttt{omai/representation/credits.py}, the single source of truth the
 enforcement test reads). Where one code serves nodes through different
 methods, a per-node override (\texttt{PER\_NODE\_CREDITS}) carries the

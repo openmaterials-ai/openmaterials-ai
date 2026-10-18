@@ -24,10 +24,6 @@ from omai.thermal_transport.representation.kaldo import (
     KALDO_THERMAL_CONDUCTIVITY_RTA,
     kaldo_compute_linewidth_spec,
 )
-from omai.thermal_transport.representation.mescal import (
-    MESCAL_PHONON_TRANSMISSION,
-    MESCAL_THERMAL_CONDUCTANCE_LANDAUER,
-)
 from omai.thermal_transport.representation.meskal import (
     MESKAL_BOUNDARY_LINEWIDTH,
     MESKAL_COMPUTE_FORCE_CONSTANTS_3,
@@ -142,8 +138,6 @@ __all__ = [
     "KALDO_THERMAL_CONDUCTIVITY_DIRECT",
     "KALDO_THERMAL_CONDUCTIVITY_RTA",
     "kaldo_compute_linewidth_spec",
-    "MESCAL_PHONON_TRANSMISSION",
-    "MESCAL_THERMAL_CONDUCTANCE_LANDAUER",
     "MESKAL_BOUNDARY_LINEWIDTH",
     "MESKAL_COMPUTE_FORCE_CONSTANTS_3",
     "MESKAL_COMPUTE_LINEWIDTH",
