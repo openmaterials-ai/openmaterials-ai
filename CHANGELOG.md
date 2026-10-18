@@ -13,7 +13,9 @@ operators and graph_version (baf99346) are unchanged.
 - `meskal`: the release's `license_source` and the code's credits say the
   source repository is not public, and the credits `url` is null; they cited
   a repository and a page that are not public. The licence read at v1.1.0
-  (BSD-3-Clause) is unchanged. No id changes.
+  (BSD-3-Clause) is unchanged. Release entries stay append-only: an entry's
+  `license_source` text may now be corrected, while `version`, `tag`,
+  `commit`, `released` and `spdx` never change.
 - The `mescal` representation is removed (`docs/data/codes.json` and
   `registry.json` lose the key; `index/codes/mescal.json` is deleted): MESCAL
   is MESKAL's former name and `meskal` maps the same two nodes. `mescal` is an
@@ -22,8 +24,8 @@ operators and graph_version (baf99346) are unchanged.
   reported), and `private_reasons` gives
   `{field: "execution.registry", kind: "code"}` (public before). The three
   MESCAL values keep their ids. Removed API:
-  `omai.thermal_transport.representation.mescal` and the `MESCAL_*` names;
-  this takes the minor version.
+  `omai.thermal_transport.representation.mescal`, the `MESCAL_*` names and
+  `CODE_CREDITS["mescal"]`; this takes the minor version.
 - `omai.cure_kinetics.evaluate`: `cure_conversion` evaluates
   kamal_cure_conversion as its own integral (Gauss-Legendre in
   s = ln(alpha / (1 - alpha)) and a Newton root, no time step; other rate laws
@@ -36,8 +38,8 @@ operators and graph_version (baf99346) are unchanged.
   names `openmaterials-ai` now resolves to a representation: `private_reasons`
   gives `[]` for it (a code reason before) and `release_check` reports
   "version not registered" (before: "not a representation") until a release
-  entry lists that version. The map, its operators and every id are
-  unchanged; a new public name and a representation take the minor version.
+  entry lists that version. A new public name and a representation take the
+  minor version.
 - `omai.composites.evaluate`: `nan_kappa_random` and `nan_kappa_aligned`
   (the aligned node's declared value, al33) evaluate the Nan edges at a
   composite record's conditions (`NAN_KEYS`), with the interface as a
@@ -45,8 +47,7 @@ operators and graph_version (baf99346) are unchanged.
   derived; a `kapitza_radius_nm` that disagrees with it is refused.
   `aligned_tensor_components` also returns al11, which is not a node value.
   The representation `openmaterials-ai` now also covers the two Nan nodes
-  (still 33 representations). The map, its operators and every id are
-  unchanged.
+  (still 33 representations).
 
 ## 0.3.1
 
