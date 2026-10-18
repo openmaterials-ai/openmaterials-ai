@@ -22,7 +22,7 @@ stewarded by OpenMaterials-AI, a foundation in formation.
 
 At map version 61a981c02604 the map has 129 typed quantities (115 observable, 11
 hidden, 3 parameter), 293 links (254 formula, 39 parameter), and 127 operators
-in 18 tiers. It holds representations for 32 codes and 93 committed values (87
+in 18 tiers. It holds representations for 33 codes and 93 committed values (87
 from simulations, 6 from measurements). The [codes
 bibliography](https://openmaterials.ai/codes/) lists each code with its
 interface, citation, and license. Browse it in 2D at
@@ -403,7 +403,8 @@ version. A re-keyed configuration or model record keeps its old uid under
 `aliases` and a re-keyed map node keeps it as a node alias, which every
 resolver accepts; a re-keyed edge keeps none (the map log records the
 supersede). CHANGELOG.md lists each re-keyed id. Adding a schema
-field, a renderer, or a vector is a minor version. Widening a schema field to
+field, a renderer, a vector, a public name or a representation is a minor
+version. Widening a schema field to
 accept a shape real producers already emit is a patch, since it can only turn a
 spurious rejection into an acceptance. Removing a public name is a minor
 version before 1.0. Consumers pin an exact version

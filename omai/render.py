@@ -372,14 +372,19 @@ def _params(result, name: str, keys: tuple[str, ...]) -> dict:
     return params
 
 
+def canonical_params(params: dict, keys: tuple[str, ...]) -> bytes:
+    """The canonical JSON of ``keys`` in a parameter set, each as a float,
+    absent or None ones dropped, sorted, no spaces: the bytes whose sha256 a record's
+    conditions carry. Other keys (a kb citation) never enter it."""
+    return json.dumps({k: float(params[k]) for k in keys if params.get(k) is not None},
+                      sort_keys=True, separators=(",", ":")).encode("utf-8")
+
+
 def _sha256(params: dict, keys: tuple[str, ...]) -> str:
-    """sha256 of the canonical JSON of ``keys`` in a parameter set, each as a
-    float, absent ones dropped. Unrounded, so any change in a constant changes
-    the hash; other keys (a kb citation) never enter it. Conditions carry this,
-    not the numbers: a fit may be private."""
-    blob = json.dumps({k: float(params[k]) for k in keys if k in params},
-                      sort_keys=True, separators=(",", ":"))
-    return hashlib.sha256(blob.encode("utf-8")).hexdigest()
+    """sha256 of canonical_params. Unrounded, so any change in a constant
+    changes the hash. Conditions carry this, not the numbers: a fit may be
+    private."""
+    return hashlib.sha256(canonical_params(params, keys)).hexdigest()
 
 
 def _kinetics_model(params: dict) -> str:

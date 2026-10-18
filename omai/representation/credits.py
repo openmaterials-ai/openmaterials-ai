@@ -332,6 +332,18 @@ CODE_CREDITS: dict[str, dict] = {
         "Comput. Mol. Sci.)",
         "url": "https://github.com/grimme-lab/xtb",
     },
+    # --- cure kinetics ------------------------------------------------------
+    "openmaterials-ai": {
+        "name": "openmaterials-ai",
+        "citation": "G. Barbalinardo, openmaterials.ai: a versioned, "
+        "content-addressed map of physics (CITATION.cff), the openmaterials-ai "
+        "package (software)",
+        "doi": None,
+        "license": "Apache-2.0 AND CC-BY-4.0",
+        "license_source": "pyproject.toml license expression and the LICENSE, "
+        "LICENSE-DATA and NOTICE files (code Apache-2.0, map data CC BY 4.0)",
+        "url": "https://github.com/openmaterials-ai/openmaterials-ai",
+    },
     # --- thermochemistry -----------------------------------------------------
     "pycalphad": {
         "name": "pycalphad",

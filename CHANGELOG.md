@@ -21,6 +21,20 @@ id.
   MESCAL values keep their ids. Removed API:
   `omai.thermal_transport.representation.mescal` and the `MESCAL_*` names;
   this takes the minor version.
+- `omai.cure_kinetics.evaluate`: `cure_conversion` evaluates
+  kamal_cure_conversion as its own integral (Gauss-Legendre in
+  s = ln(alpha / (1 - alpha)) and a Newton root, no time step; other rate laws
+  refused) and `glass_transition_temperature` evaluates
+  dibenedetto_glass_transition. They are registered as the representation
+  `openmaterials-ai` on CureConversion and GlassTransitionTemperature (33
+  representations). `omai.render.canonical_params` returns the bytes whose
+  sha256 a record's `kinetics_params_sha256` and `tg_params_sha256` carry,
+  and drops keys whose value is None. A record whose `execution.registry` row
+  names `openmaterials-ai` now resolves to a representation: `private_reasons`
+  gives `[]` for it (a code reason before) and `release_check` reports
+  "version not registered" (before: "not a representation") until a release
+  entry lists that version. The map, its operators and every id are
+  unchanged; a new public name and a representation take the minor version.
 
 ## 0.3.1
 
