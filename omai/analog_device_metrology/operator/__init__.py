@@ -4,9 +4,10 @@ Importing this package registers the domain's formula-symbol vocabulary and its
 symbol-dimension bindings as side effects (mirroring the electronic-transport /
 thermodynamic-identities / mechanics / thermochemistry packages), so validate_dag
 and the dimensional gate see this domain's symbols. Here the side effect is
-load-bearing for the ten closed-form edges: their field-symbol dimension
+load-bearing for the eleven closed-form edges: their field-symbol dimension
 bindings must be live before the dimensional gate runs so the formulas are
-proven, not skipped.
+proven, not skipped. The separate external classifier intentionally remains
+non-executable here and dimension-skipped.
 """
 # ruff: noqa: F401  (dimensions_registry / vocabulary are imported for their
 # import-time registration side effects; they are intentionally unused names.)

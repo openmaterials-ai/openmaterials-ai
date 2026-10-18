@@ -1,10 +1,9 @@
-"""Tests for the analog-device-metrology contributions (records 250-257, 258-259,
-260-267 and 268-273).
+"""Tests for the analog-device-metrology definitions and store contributions.
 
 A definitional domain: the conductance family of analog resistive devices, the
 error of an analog dot product, the contact barrier with the work function and
-electron affinity that set it, and the energy of a programming pulse; nine nodes
-and eight closed-form edges the dimensional gate proves and apply_edge runs. It
+electron affinity that set it, and the energy of a programming pulse; fourteen
+nodes, eleven proved closed forms, and one external benchmark operator. It
 connects to the map through ElectricalConductivity[carrier=electronic]. No code
 representation attaches; two measured work functions (Hou et al. 2025) do.
 """
@@ -36,6 +35,9 @@ _NODES = {
     "ProgrammingPulseEnergy": "programming_pulse_energy",
     "SetVoltage": "set_voltage",
     "RetentionTime": "retention_time",
+    "ConductanceRelaxationTime": "conductance_relaxation_time",
+    "InterfaceTrapRelaxationTime": "interface_trap_relaxation_time",
+    "ClassificationAccuracy": "classification_accuracy",
 }
 _EDGES = (
     "contract_device_conductance",
@@ -48,6 +50,8 @@ _EDGES = (
     "dissipate_pulse_energy",
     "ramp_set_voltage",
     "zero_bias_retention",
+    "subthreshold_conductance_tangent_time",
+    "evaluate_reservoir_classification",
 )
 _EV = 1.602176634e-19  # J; ENERGY values enter in the canonical joule
 _KB = 1.380649e-23  # J/K
@@ -72,7 +76,7 @@ def _rep(space, symbol, data):
                           observable_name=symbol, data=np.asarray(data), is_operator=True)
 
 
-def test_the_eleven_nodes_and_ten_edges():
+def test_the_fourteen_nodes_and_twelve_edges():
     from omai.analog_device_metrology.operator import EDGES, NODES
 
     assert [s.name for s in NODES] == list(_NODES)
@@ -81,7 +85,7 @@ def test_the_eleven_nodes_and_ten_edges():
         assert node_identity(s)["quantity"] == _NODES[s.name], s.name
         want = {"band_carrier": "electron"} if s.name.startswith("SchottkyBarrierHeight") else {}
         assert s.labels == want, s.name
-    assert len({node_id(s) for s in NODES}) == 11
+    assert len({node_id(s) for s in NODES}) == 14
 
 
 def test_conductance_is_the_siemens_and_not_a_conductivity():
@@ -98,11 +102,17 @@ def test_conductance_is_the_siemens_and_not_a_conductivity():
     assert CONDUCTANCE_STATE.fields[0].dimension.exponents != sigma.exponents
 
 
-def test_every_edge_is_dimensionally_proven_and_bridged():
+def test_closed_forms_are_proven_and_only_the_classifier_is_external():
     from omai.analog_device_metrology.operator import EDGES
 
     report = dimensional_report(*_all_nodes_edges())
+    external = [op for op in EDGES if not op.is_executable_in_sympy]
+    assert [op.name for op in external] == ["evaluate_reservoir_classification"]
     for op in EDGES:
+        if op in external:
+            assert op.name in report["skipped"], (op.name, report)
+            assert op.name not in report["ok"], (op.name, report)
+            continue
         assert op.name in report["ok"], (op.name, report)
         assert op.is_executable_in_sympy, op.name
         bridge = _dimensional_bridge(op)
@@ -214,6 +224,9 @@ def test_semantic_aliases_resolve_to_the_nodes():
                          "migration barrier": "MigrationBarrier",
                          "set voltage": "SetVoltage",
                          "retention time": "RetentionTime",
+                         "conductance relaxation time": "ConductanceRelaxationTime",
+                         "interface trap relaxation time": "InterfaceTrapRelaxationTime",
+                         "classification accuracy": "ClassificationAccuracy",
                          }.items():
         hits = resolve(phrase, sem, limit=3)
         assert any(h["id"] == node for h in hits), (phrase, hits)

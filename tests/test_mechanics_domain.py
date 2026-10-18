@@ -160,7 +160,7 @@ def test_no_node_uid_collisions_at_105_nodes():
     # 127 with InterfaceConductance[transport_model=nemd] (Molecular dynamics tier).
     # 129 with the cure-kinetics domain's two nodes in the new Cure kinetics tier.
     g = build_graph_dict(DOMAINS)
-    assert len(g["nodes"]) == 129
+    assert len(g["nodes"]) == 132
     uids = [n["uid"] for n in g["nodes"]]
     assert len(set(uids)) == len(uids), "node uid collision"
 

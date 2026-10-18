@@ -1,6 +1,8 @@
 r"""Operators (edges) of the analog-device-metrology domain.
 
-Ten closed forms the dimensional gate proves and apply_edge runs. Each operand
+Eleven closed forms the dimensional gate proves and apply_edge runs, plus an
+external reservoir-classification operator (not dimensionally proved or
+executable by apply_edge). Each closed-form operand
 is a typed input's field symbol, a dimensioned Parameter on the edge or a
 universal constant (k_B, q_e). As everywhere on the map, validity statements are
 documented, not enforced by apply_edge.
@@ -28,6 +30,13 @@ documented, not enforced by apply_edge.
                                    - gamma k_B T / alpha_F
   zero_bias_retention          MigrationBarrier, Temperature -> RetentionTime
                                                        tau = exp(E_m / k_B T) / nu_0
+  subthreshold_conductance_tangent_time
+                              InterfaceTrapRelaxationTime, ConductanceState
+                               -> ConductanceRelaxationTime
+                                                       tau_G = tau_it / ln(G_c/G_eq)
+  evaluate_reservoir_classification
+                              ConductanceState response family -> ClassificationAccuracy
+                                                       A_cls = F_RC({G}) (external)
 
 contract_device_conductance connects the domain to the map through the
 electronic conductivity; the other nodes are one or two edges from ConductanceState.
@@ -37,11 +46,14 @@ from __future__ import annotations
 import sympy as sp
 
 from omai.analog_device_metrology.operator.nodes import (
+    CLASSIFICATION_ACCURACY,
     CONDUCTANCE_DRIFT_EXPONENT,
+    CONDUCTANCE_RELAXATION_TIME,
     CONDUCTANCE_STATE,
     CONDUCTANCE_WINDOW,
     DOT_PRODUCT_ERROR,
     ELECTRON_AFFINITY,
+    INTERFACE_TRAP_RELAXATION_TIME,
     PROGRAMMING_PULSE_ENERGY,
     RETENTION_TIME,
     SCHOTTKY_BARRIER_HEIGHT,
@@ -322,6 +334,82 @@ zero_bias_retention = Operator(
     ),
 )
 
+_tau_G = sp.Symbol("tau_G")                  # ConductanceRelaxationTime
+_tau_it = sp.Symbol("tau_it")                # InterfaceTrapRelaxationTime
+_G_eq = sp.Symbol("G_eq")                    # equilibrium at the same read conditions
+_A_cls = sp.Symbol("A_cls")                  # ClassificationAccuracy
+_reservoir_classifier = sp.Function("F_RC")  # external protocol-conditioned evaluation
+
+subthreshold_conductance_tangent_time = Operator(
+    name="subthreshold_conductance_tangent_time",
+    inputs=(INTERFACE_TRAP_RELAXATION_TIME, CONDUCTANCE_STATE),
+    outputs=(CONDUCTANCE_RELAXATION_TIME,),
+    parameters=(Parameter("G_eq", CONDUCTANCE),),
+    schemes={"criterion": "tangent_to_zero", "regime": "subthreshold_single_mode"},
+    formula=sp.Eq(_tau_G, _tau_it / sp.log(_G_c / _G_eq)),
+    description=(
+        "Initial tangent time of raw conductance extrapolated to zero: "
+        "tau_G = -G_c/Gdot(0) = tau_it/ln(G_c/G_eq). For one trap-occupation "
+        "departure u(t)=u(0) exp(-t/tau_it) and constant exponential "
+        "subthreshold transduction, G(t)=G_eq exp[A exp(-t/tau_it)], "
+        "A=ln(G_c/G_eq). G_c is the conductance immediately after programming "
+        "transients; G_eq is the fully equilibrated conductance at the SAME "
+        "fixed read biases and temperature. Valid only for finite tau_it>0 "
+        "and G_c>G_eq>0, a single first-order occupation mode, constant "
+        "transduction and transport prefactor, and no unaccounted additive "
+        "current. Both conductances must use the same unit (canonical "
+        "siemens); both times use canonical ps (1 s is 1e12). A pre-pulse "
+        "baseline or a last observed point need not be equilibrium. This "
+        "is NOT a global exponential fit of G, a 1/e crossing, a tangent "
+        "to G_eq, or a defect-migration relation. The tangent to G_eq "
+        "would have the extra factor (1-G_eq/G_c). Even one occupation "
+        "mode gives a local raw-G tangent time growing as exp(t/tau_it), "
+        "so slowing conductance decay alone does not prove distributed "
+        "trap times. A trap-time distribution or an arbitrary fitted "
+        "effective time is outside this edge's regime. These physical "
+        "validity restrictions are documented, not runtime-enforced by "
+        "apply_edge."
+    ),
+)
+
+evaluate_reservoir_classification = Operator(
+    name="evaluate_reservoir_classification",
+    inputs=(CONDUCTANCE_STATE,),
+    outputs=(CLASSIFICATION_ACCURACY,),
+    schemes={"method": "reservoir_linear_readout"},
+    formula=sp.Eq(_A_cls, _reservoir_classifier(_G_c)),
+    auxiliary_formulas=(
+        r"X_{di}=G^{\mathrm{final}}_{di}-G^{\mathrm{initial}}_{di}",
+        r"\widehat y_i=\operatorname{argmax}_c\,\sigma((W\widetilde X_i)_c)",
+        r"A_{cls}=\frac{1}{N_{test}}\sum_{i=1}^{N_{test}}"
+        r"\mathbf{1}[\widehat y_i=y_i]",
+    ),
+    is_executable_in_sympy_override=False,
+    description=(
+        "External evaluation of a reservoir's linear-readout classification "
+        "accuracy, A_cls=F_RC({G}). The ConductanceState input denotes the "
+        "complete protocol-conditioned family of initial and final "
+        "conductances across devices, input streams and trials, NOT one "
+        "scalar. Features X are final-minus-initial conductance changes; "
+        "Xtilde includes the declared bias feature. Fit W on the declared "
+        "training data only, then predict held-out labels by the largest "
+        "sigmoid output with a declared deterministic tie rule and average "
+        "the correct-label indicator over test examples. The frozen protocol "
+        "must supply dataset/version, labels, splits, pulse/read/reset "
+        "encoding, feature units/normalization, bias construction, sigmoid "
+        "scaling, training algorithm, noise, random draws and aggregation. "
+        "For inverse-sigmoid/pseudoinverse training, W=S Xtilde^+ with "
+        "S=sigmoid_inverse(Y); target levels must be finite and strictly "
+        "inside (0,1), not assumed to be literal binary endpoints. Missing "
+        "protocol or raw-response provenance prevents a replication claim. "
+        "This is a formal external-operator contract: the opaque function "
+        "is dimension-skipped and apply_edge requires an external solve. "
+        "No simulation implementation, dataset or runnable representation "
+        "is registered by this edge. A conductance relaxation scalar alone "
+        "cannot produce this metric."
+    ),
+)
+
 EDGES: tuple[Operator, ...] = (
     contract_device_conductance,
     contract_conductance_window,
@@ -333,4 +421,6 @@ EDGES: tuple[Operator, ...] = (
     dissipate_pulse_energy,
     ramp_set_voltage,
     zero_bias_retention,
+    subthreshold_conductance_tangent_time,
+    evaluate_reservoir_classification,
 )

@@ -127,6 +127,26 @@
   },
   "uid": "0bc59239b7ed9882c822aae5818ec2c5449e656ab9897c32d45103b9d51a7b56"
  },
+ "0e10474b38987a0d5d3c77580649f461281a6a587093401a60781aab4bdf219d": {
+  "identity": {
+   "fields": [
+    {
+     "dimension": "1",
+     "indices": []
+    }
+   ],
+   "gauge": "observable",
+   "labels": {},
+   "quantity": "classification_accuracy"
+  },
+  "meta": {
+   "description": "Top-1 correct-classification fraction on a named benchmark: the number of correctly predicted labels divided by the number of test examples, in [0, 1]. DIMENSIONLESS, not percent. A system observable, not an intrinsic material property. Dataset and version, label space, encoding, feature units and normalization, device/read protocol, training and evaluation construction, readout, noise, tie rule, random sampling and aggregation ride in instance conditions. Compare only matching protocols and estimators; a macro class average equals the pooled fraction for balanced class counts; they need not agree for imbalanced classes. A median or percentile of repeated accuracies must state that aggregation and is not interchangeable with the pooled fraction. Distinguish measured, simulated and hybrid evidence in the record's provenance. Neither one conductance value nor a relaxation-time scalar determines classification accuracy.",
+   "name": "ClassificationAccuracy",
+   "symbol": "A_{cls}",
+   "tier": "Analog device metrology"
+  },
+  "uid": "0e10474b38987a0d5d3c77580649f461281a6a587093401a60781aab4bdf219d"
+ },
  "0f08fcb37791dc7cc3e0e0ee5c611abbefc5075867719b275fcaa77ada4f1ac2": {
   "identity": {
    "fields": [
@@ -1328,6 +1348,26 @@
   },
   "uid": "7164425d1695208e46171b5030c938c3545c180b57018d51748d0507f9f08135"
  },
+ "72bddad977642e53ed5cc05d9eec037d77a96a2c3232db16f5f4b4eaaff0b971": {
+  "identity": {
+   "fields": [
+    {
+     "dimension": "T^1",
+     "indices": []
+    }
+   ],
+   "gauge": "observable",
+   "labels": {},
+   "quantity": "conductance_relaxation_time"
+  },
+  "meta": {
+   "description": "Positive characteristic time of a programmed device's conductance relaxation under a stated read protocol. TIME. Programming history, read and gate biases with their schedule, temperature, time origin, reference conductance, extraction criterion and time window, and assumed or fitted decay law ride in instance conditions. An initial tangent extrapolated to zero conductance (-G/dG_dt), a tangent to a nonzero equilibrium baseline, a specified 1/e crossing, and a fitted time constant are different criteria, not interchangeable values. State whether raw or excess conductance is used and specify any baseline. NOT RetentionTime (zero-bias first-passage survival), InterfaceTrapRelaxationTime (trap occupation), or the dimensionless power-law ConductanceDriftExponent. Conductance can be a nonlinear function of trap occupation, so its relaxation time need not equal an underlying trap time.",
+   "name": "ConductanceRelaxationTime",
+   "symbol": "\\tau_G",
+   "tier": "Analog device metrology"
+  },
+  "uid": "72bddad977642e53ed5cc05d9eec037d77a96a2c3232db16f5f4b4eaaff0b971"
+ },
  "73372380af126dde147e403f69339b87ee2f938a896dd5b56e9100c055dc8f93": {
   "identity": {
    "fields": [
@@ -2478,6 +2518,26 @@
    "tier": "Analog device metrology"
   },
   "uid": "d9c306ec2d77f10a80335d58a2f12a09124ef4a0061ddf1ae18c90c3ef597aef"
+ },
+ "d9e8d6ad94a3bd0629bc56fd2fbc5a6555e2866c3ff667aefd714ad75a27a491": {
+  "identity": {
+   "fields": [
+    {
+     "dimension": "T^1",
+     "indices": []
+    }
+   ],
+   "gauge": "observable",
+   "labels": {},
+   "quantity": "interface_trap_relaxation_time"
+  },
+  "meta": {
+   "description": "Relaxation time of a specified interface-trap occupation departure u from equilibrium at fixed bias and temperature: du/dt = -u/tau_it for one first-order mode. TIME. With constant capture rate c and emission rate e, df/dt = c(1-f)-ef gives tau_it = 1/(c+e), not the capture-only time unless emission is negligible. Trap population, biases, temperature, initial occupation, equilibrium definition, extraction method and time interval ride in instance conditions. A distribution of capture/emission times does not define one unique constant; an effective fitted time must state its model and interval and is not automatically an input to the single-mode conductance relation. NOT a conductance decay time or defect-migration survival time.",
+   "name": "InterfaceTrapRelaxationTime",
+   "symbol": "\\tau_{it}",
+   "tier": "Analog device metrology"
+  },
+  "uid": "d9e8d6ad94a3bd0629bc56fd2fbc5a6555e2866c3ff667aefd714ad75a27a491"
  },
  "db1df71467f5a79440f849704ac20a33573ed4e270b5ebba59549272b2475239": {
   "identity": {
