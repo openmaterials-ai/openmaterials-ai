@@ -86,7 +86,6 @@ CODE_CREDITS: dict[str, dict] = {
         "license_source": "tag v1.1.0, read 2026-10-04: LICENSE (BSD 3-Clause "
         "License), pyproject.toml and CITATION.cff (BSD-3-Clause); the source "
         "repository is not public",
-        # No public home: the source repository is private.
         "url": None,
     },
     "shengbte": {
