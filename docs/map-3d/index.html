@@ -29,8 +29,8 @@
      nodes are the typed quantities, edges are the producing dependencies, and
      HEIGHT encodes tier progression (Sources lowest, later tiers higher). An app
      page: header, toolbar, the scene with the tier list, legend and panel
-     floating over it. Colors are the site.css tokens (each var() carries the
-     light value as its fallback); the scene reads them through #tokenProbe. */
+     floating over it. Colors are the site.css tokens (each var() carries a
+     fallback for when site.css fails to load); the scene reads them through #tokenProbe. */
   *{box-sizing:border-box;}
   html,body{overscroll-behavior:none;}
   body.app{height:100vh;height:100dvh;margin:0;display:flex;flex-direction:column;overflow:hidden;background:var(--page,#FFFFFF);color:var(--ink,#171717);font:400 14px/20px var(--font-sans,ui-sans-serif,system-ui,sans-serif);-webkit-font-smoothing:antialiased;}

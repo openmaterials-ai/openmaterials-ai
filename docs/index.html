@@ -50,7 +50,7 @@
 <div data-site-header></div>
 
 <main class="frame" id="main">
-  <section class="hero featured">
+  <section class="hero">
     <div class="hero-text">
       <h1>A versioned map of physics.</h1>
       <p class="lede">OpenMaterials is a typed graph of physical quantities and the formulas that relate them. Representations of <span data-bind="codes">33</span> codes and workflows connect their outputs to its nodes, and values from simulations and measurements attach to those nodes with their provenance and a content hash.</p>
@@ -73,7 +73,7 @@
         <div><dt>Published calculations</dt><dd>118, 123, 140, <a href="play/#id=f735a05c14db39676b46e7f1100c55152afb7bf49cea79c9e1f61b8de075c619">147</a>, 166 (277 K)</dd></div>
         <div><dt>Recorded runs</dt><dd>16.7 to 380</dd></div>
       </dl>
-      <figcaption id="fig-1-cap">Every thermal conductivity value for crystalline silicon between 270 and 310 K on the map, in W/(m K), on a log axis. One measurement, by Glassbrenner and Slack (1964). The published calculations differ in statistics (quantum or classical) and solver (direct inversion or RTA), and Esfarjani et al. (2011) also in force constants and temperature (277 K). The recorded runs use the Tersoff potential to test codes, not to predict silicon. Four of them, 17 to 27 W/(m K), sit an order of magnitude below the other four and below published Tersoff values, for a cause their records do not yet establish; between themselves kALDo and phono3py differ by 11 to 16%, relative to phono3py. Each value keeps its conditions, and an incomplete record says so.
+      <figcaption id="fig-1-cap">Every thermal conductivity value for crystalline silicon between 270 and 310 K on the map, in W/(m K), on a log axis. One measurement, by Glassbrenner and Slack (1964). The published calculations differ in statistics (quantum or classical) and solver (direct inversion or RTA), and Esfarjani et al. (2011) also in force constants and temperature (277 K). The recorded runs use the Tersoff potential to test codes, not to predict silicon. Four of them, 17 to 27 W/(m K), sit an order of magnitude below the other four and below published Tersoff values, for a cause their records do not yet establish; within those four, kALDo runs 11 to 16% above phono3py with the same solver. Each value keeps its conditions, and an incomplete record says so.
         <span class="src">Source: <a href="data/instances.json">instances.json</a>, map version <span data-bind="version12">61a981c02604</span>.</span></figcaption>
       <div class="cta-row">
         <a class="btn btn--secondary btn--sm" href="https://materialscodegraph.com/?ref=omai-home#hero-connect">Price a calculation on MaterialsCodeGraph</a>
@@ -143,7 +143,7 @@
     </div>
   </section>
 
-  <section class="featured" id="map">
+  <section id="map">
     <div class="section-head">
       <h2>The map</h2>
     </div>

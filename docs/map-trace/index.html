@@ -28,7 +28,7 @@
   /* The tracer, an app page: header, toolbar, a full-bleed canvas with the
      panel, path bar and legend floating over it. The tracing classes
      (.up/.down/.dest/.sel) are the behavior; colors are the site.css tokens,
-     each var() with the light value as its fallback.
+     each var() with a fallback for when site.css fails to load.
        up   = ink (what it is built from); amber stays for measurements
        down = observable indigo (what it feeds)
        dest = indigo outline (a terminal observable, at rest)
