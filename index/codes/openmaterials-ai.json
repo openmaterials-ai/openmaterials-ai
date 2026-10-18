@@ -1,0 +1,19 @@
+{
+ "representation": "openmaterials-ai",
+ "lineage_version": "61a981c02604f2165e2a138be7d62ee33f3d52dc96d5b458f80188cc60dff233",
+ "map_version": "baf99346621bee3269400670c5044dac03c89e0bf7cd0dff673593344540852c",
+ "covers": [
+  {
+   "node": "CureConversion",
+   "uid": "a0fea831928d4ff6617a0d102f74966d0ea4ce0a2e4cc160cbd362dd0fb8fc0a",
+   "api": "omai.cure_kinetics.evaluate.cure_conversion",
+   "unit": "dimensionless"
+  },
+  {
+   "node": "GlassTransitionTemperature",
+   "uid": "5789aa6f8439e8b71b48197dd92c6f608f2bf3ca9900bc631d2321f5eded13cb",
+   "api": "omai.cure_kinetics.evaluate.glass_transition_temperature",
+   "unit": "kelvin"
+  }
+ ]
+}
