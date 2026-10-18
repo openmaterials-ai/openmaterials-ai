@@ -1,7 +1,7 @@
 """The Nan effective-medium evaluators (omai.composites.evaluate) against the
 map's own edges, the commons reference target, and two limits.
 
-The platelet and fiber sets are FILLERS test inputs; the sphere set uses
+The platelet and fiber sets are synthetic test inputs; the sphere set uses
 generic literature values for an alumina-filled epoxy (illustrative).
 """
 from __future__ import annotations
