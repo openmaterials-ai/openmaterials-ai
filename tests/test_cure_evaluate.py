@@ -189,7 +189,7 @@ def test_canonical_bytes():
 
 def test_registered_as_the_code_openmaterials_ai():
     entry = build_codes(DOMAINS)["openmaterials-ai"]
-    assert set(entry) == {"CureConversion", "GlassTransitionTemperature"}
+    assert {"CureConversion", "GlassTransitionTemperature"} <= set(entry)
     assert entry["CureConversion"]["api"] == "omai.cure_kinetics.evaluate.cure_conversion"
     assert entry["GlassTransitionTemperature"]["unit"] == "kelvin"
 

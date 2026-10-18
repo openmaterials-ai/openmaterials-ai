@@ -14,6 +14,18 @@
    "uid": "5789aa6f8439e8b71b48197dd92c6f608f2bf3ca9900bc631d2321f5eded13cb",
    "api": "omai.cure_kinetics.evaluate.glass_transition_temperature",
    "unit": "kelvin"
+  },
+  {
+   "node": "ThermalConductivity[effective_medium=nan,orientation=aligned]",
+   "uid": "fc292985123b709c76547dc02721e60797cf5693fbad40b874826291314d5dd3",
+   "api": "omai.composites.evaluate.nan_kappa_aligned",
+   "unit": "W_per_m_per_K"
+  },
+  {
+   "node": "ThermalConductivity[effective_medium=nan,orientation=random]",
+   "uid": "8cee68745e003909cd8e65688628af53a35c0803ace3f330394bbf0edf338d7b",
+   "api": "omai.composites.evaluate.nan_kappa_random",
+   "unit": "W_per_m_per_K"
   }
  ]
 }

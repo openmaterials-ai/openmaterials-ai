@@ -35,6 +35,15 @@ id.
   "version not registered" (before: "not a representation") until a release
   entry lists that version. The map, its operators and every id are
   unchanged; a new public name and a representation take the minor version.
+- `omai.composites.evaluate`: `nan_kappa_random` and `nan_kappa_aligned`
+  (the aligned node's declared value, al33) evaluate the Nan edges at a
+  composite record's conditions (`NAN_KEYS`), with the interface as a
+  per-direction series film (the 2004 form). The Kapitza radius is km / G,
+  derived; a `kapitza_radius_nm` that disagrees with it is refused.
+  `aligned_tensor_components` also returns al11, which is not a node value.
+  The representation `openmaterials-ai` now also covers the two Nan nodes
+  (still 33 representations). The map, its operators and every id are
+  unchanged.
 
 ## 0.3.1
 
