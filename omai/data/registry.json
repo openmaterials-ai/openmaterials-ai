@@ -113,7 +113,7 @@
    "releases": [
     {
      "commit": "d97531d0cccb8a9950782534801973082f0642d1",
-     "license_source": "https://github.com/gbarbalinardo/meskal/tree/v1.1.0 (private repository: LICENSE, BSD 3-Clause License; pyproject.toml and CITATION.cff, BSD-3-Clause); public: https://giuseppe.barbalinardo.com/meskal/ (License section, BSD-3-Clause)",
+     "license_source": "tag v1.1.0: LICENSE, BSD 3-Clause License; pyproject.toml and CITATION.cff, BSD-3-Clause; the source repository is not public",
      "released": "2026-09-02",
      "spdx": "BSD-3-Clause",
      "tag": "v1.1.0",

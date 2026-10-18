@@ -44,6 +44,8 @@ def test_credits_and_the_release_row_carry_bsd_3_clause_at_v1_1_0():
     (row,) = code_releases()["meskal"]["releases"]
     assert row["spdx"] == "BSD-3-Clause" and row["version"] == "1.1.0" and row["tag"] == "v1.1.0"
     assert row["commit"] == "d97531d0cccb8a9950782534801973082f0642d1"
+    # The source is not public: no link to it anywhere.
+    assert cr["url"] is None and "http" not in cr["license_source"] + row["license_source"]
 
 
 def test_conventions_follow_kaldo():

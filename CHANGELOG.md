@@ -5,6 +5,13 @@ mints, for consumers. Versioning follows README.md ("Versioning"): before 1.0
 an identity change takes the minor version, and this file lists every re-keyed
 id.
 
+## Unreleased
+
+- `meskal`: the release's `license_source` and the code's credits say the
+  source repository is not public, and the credits `url` is null; they cited
+  a repository and a page that are not public. The licence read at v1.1.0
+  (BSD-3-Clause) is unchanged. No id changes.
+
 ## 0.3.1
 
 Every consumer pins `openmaterials-ai==0.3.1`.

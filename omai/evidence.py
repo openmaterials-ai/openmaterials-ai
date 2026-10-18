@@ -49,7 +49,9 @@ Code releases are not content-addressed: a code's identity is its name and
 release. They are authored in ``releases/<representation>.json`` under the
 data root as ``{aliases, releases}``: ``aliases`` the registry row ids that
 name the representation (``quantum-espresso`` for ``qe``), ``releases`` an
-append-only list of :data:`RELEASE_KEYS`, the licence read at that release's
+append-only list of :data:`RELEASE_KEYS` (an entry is never removed and its
+version, tag, commit, released and spdx never change; its license_source text
+may be corrected), the licence read at that release's
 tag and ``released`` the tag date in UTC (the tagger date of an annotated tag,
 else the date of the tagged commit). :func:`code_releases` reads them from the same roots and lists every
 representation (``codes.json``), with empty lists where none is registered;

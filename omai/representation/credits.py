@@ -83,11 +83,10 @@ CODE_CREDITS: dict[str, dict] = {
         # CITATION.cff cites the software itself; no paper or DOI yet.
         "doi": None,
         "license": "BSD-3-Clause",
-        "license_source": "gbarbalinardo/meskal tag v1.1.0, read 2026-10-04 "
-        "through gh api: LICENSE (BSD 3-Clause License), pyproject.toml and "
-        "CITATION.cff (BSD-3-Clause); the documentation site's License "
-        "section states BSD-3-Clause",
-        "url": "https://giuseppe.barbalinardo.com/meskal/",
+        "license_source": "tag v1.1.0, read 2026-10-04: LICENSE (BSD 3-Clause "
+        "License), pyproject.toml and CITATION.cff (BSD-3-Clause); the source "
+        "repository is not public",
+        "url": None,
     },
     "shengbte": {
         "name": "ShengBTE",
