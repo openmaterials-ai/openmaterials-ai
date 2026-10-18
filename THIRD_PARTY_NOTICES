@@ -1,56 +1,35 @@
 THIRD-PARTY NOTICES
 ===================
 
-This project redistributes the following third-party components. Each remains
-the property of its respective copyright holder and is distributed under its
-own license. The authoritative version list is docs/assets/vendor/VERSIONS.md.
+The public site under docs/ redistributes the components below. Each stays the
+property of its copyright holders under its own license; the full license texts
+are in docs/assets/vendor/LICENSES/ and docs/assets/fonts/, which the site serves
+next to the files they cover. Versions and sources: docs/assets/vendor/VERSIONS.md.
 
-For each component below, the upstream LICENSE text and copyright notice should
-be retained in that component's vendored directory. Where a license identifier
-or copyright line is marked TODO, it must be filled in from the upstream release
-before distribution; it is intentionally left blank here rather than guessed.
+KaTeX 0.16.9, docs/assets/vendor/katex/ (scripts, CSS, and fonts)
+  License: MIT. Copyright (c) 2013-2020 Khan Academy and other contributors.
+  Text: docs/assets/vendor/LICENSES/katex.txt
+  Modified: the CSS @font-face src lists keep only the woff2 files.
 
-Vendored under docs/assets/vendor/:
+dagre 0.8.5, docs/assets/vendor/dagre.min.js
+  License: MIT. Copyright (c) 2012-2014 Chris Pettitt.
+  Embeds graphlib (MIT, Chris Pettitt) and lodash (MIT, OpenJS Foundation and
+  other contributors).
+  Text: docs/assets/vendor/LICENSES/dagre.txt
 
-- KaTeX 0.16.9
-  Upstream: https://github.com/KaTeX/KaTeX
-  License: TODO (confirm and copy upstream LICENSE)
+3d-force-graph 1.80.0, docs/assets/vendor/3d-force-graph/3d-force-graph.min.js
+  License: MIT. Copyright (c) 2017 Vasco Asturiano.
+  Embeds three.js (MIT, three.js authors) and 33 other packages under MIT, ISC
+  (the d3 modules, Mike Bostock), and BSD-3-Clause (ngraph, Andrei Kashcha).
+  Text, one section per package: docs/assets/vendor/LICENSES/3d-force-graph.txt
 
-- dagre 0.8.5
-  Upstream: https://github.com/dagrejs/dagre
-  License: TODO (confirm and copy upstream LICENSE)
+pdf.js (pdfjs-dist 4.10.38), docs/assets/vendor/pdfjs/
+  License: Apache-2.0. Copyright Mozilla Foundation. Unmodified.
+  Text: docs/assets/vendor/LICENSES/pdfjs.txt
 
-- 3d-force-graph 1.80.0
-  Upstream: https://github.com/vasturiano/3d-force-graph
-  License: TODO (confirm and copy upstream LICENSE)
+Newsreader (Production Type) and JetBrains Mono (JetBrains), docs/assets/fonts/
+  License: OFL-1.1. Subset to the latin and greek ranges, as Google Fonts serves them.
+  Texts: docs/assets/fonts/OFL-Newsreader.txt, docs/assets/fonts/OFL-JetBrainsMono.txt
 
-- reveal.js 5.1.0
-  Upstream: https://github.com/hakimel/reveal.js
-  License: TODO (confirm and copy upstream LICENSE)
-
-- pdf.js 4.10.38
-  Upstream: https://github.com/mozilla/pdf.js
-  License: TODO (confirm and copy upstream LICENSE)
-
-- @anthropic-ai/sdk 0.110.0
-  Upstream: https://github.com/anthropics/anthropic-sdk-typescript
-  License: TODO (confirm and copy upstream LICENSE)
-  Note: import paths in the vendored copy have been MODIFIED from upstream.
-  Verify the upstream license permits modification and that any required
-  change/notice preservation is satisfied.
-
-  Vendored dependencies of the @anthropic-ai/sdk copy:
-  - standardwebhooks 1.0.0
-    License: TODO (confirm and copy upstream LICENSE)
-  - @stablelib/base64 1.0.1
-    License: TODO (confirm and copy upstream LICENSE)
-  - fast-sha256 1.3.0
-    License: TODO (confirm and copy upstream LICENSE)
-
-- Google Fonts (vendored web fonts)
-  Confirm the specific font families and their licenses (for example, the SIL
-  Open Font License or Apache-2.0, depending on the family) and retain each
-  font's license file.
-
-The Python source in this repository is licensed under Apache-2.0 (see LICENSE).
-The map data is licensed under CC BY 4.0 (see LICENSE-DATA).
+The project's own code is Apache-2.0 (LICENSE); the map data is CC BY 4.0
+(LICENSE-DATA).
