@@ -49,8 +49,8 @@ def test_releases_resolve_alike_from_the_source_tree_and_the_registry():
     tree, shipped = code_releases([_DATA_DIR]), code_releases([REGISTRY])
     assert tree == shipped
     assert set(tree) == set(json.loads((_DATA_DIR / "codes.json").read_text()))
-    assert set(release_files(_DATA_DIR)) == {"gpumd", "kaldo", "lammps", "meskal", "phono3py",
-                                             "qe", "qe-d3q"}
+    assert set(release_files(_DATA_DIR)) == {"gpumd", "kaldo", "lammps", "meskal",
+                                             "openmaterials-ai", "phono3py", "qe", "qe-d3q"}
     assert tree["qe"]["aliases"] == ["quantum-espresso"]
     assert tree["xtb"] == {"aliases": [], "releases": []}
 
@@ -60,6 +60,7 @@ def test_the_backfill_registers_each_pair_under_its_exact_string():
                    ("kaldo", "2.2.1"), ("phono3py", "4.4.0"),
                    ("lammps", "2025.7.22.4.0"))
     assert lin.release_check(pinned) == []
+    assert lin.release_check(_rows(("openmaterials-ai", "0.4.0"))) == []
     assert lin.release_check(_rows(("gpumd", "v4.7"))) == [
         {"id": "gpumd", "version": "v4.7", "reason": "version not registered"}]
 

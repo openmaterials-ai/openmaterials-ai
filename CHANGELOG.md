@@ -5,6 +5,14 @@ mints, for consumers. Versioning follows README.md ("Versioning"): before 1.0
 an identity change takes the minor version, and this file lists every re-keyed
 id.
 
+## Unreleased
+
+- `docs/data/releases/openmaterials-ai.json` registers 0.4.0 (tag v0.4.0), so
+  `release_check` resolves an `execution.registry` row naming
+  `openmaterials-ai` 0.4.0 against the live registry. The 0.4.0 wheel's
+  bundled registry predates the tag and still reports it unregistered. No id
+  changes.
+
 ## 0.4.0
 
 Every consumer pins `openmaterials-ai==0.4.0`. No id changes: the map, its
