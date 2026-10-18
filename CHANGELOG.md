@@ -5,7 +5,10 @@ mints, for consumers. Versioning follows README.md ("Versioning"): before 1.0
 an identity change takes the minor version, and this file lists every re-keyed
 id.
 
-## Unreleased
+## 0.4.0
+
+Every consumer pins `openmaterials-ai==0.4.0`. No id changes: the map, its
+operators and graph_version (baf99346) are unchanged.
 
 - `meskal`: the release's `license_source` and the code's credits say the
   source repository is not public, and the credits `url` is null; they cited
