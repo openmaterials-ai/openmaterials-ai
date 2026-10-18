@@ -224,29 +224,21 @@ def test_gpumd_nemd_notes_name_the_two_reservoir_ensembles():
 
 
 # ---------------------------------------------------------------------------
-# MESCAL coherent-transport representation (Landauer). MESCAL joins for coherent transport
-# the way kaldo enters for QHGK: it serves PhononTransmission and the Landauer
-# ThermalConductance.
+# Coherent transport (Landauer): MESKAL serves PhononTransmission and the
+# Landauer ThermalConductance. MESCAL is MESKAL's former name, an alias.
 # ---------------------------------------------------------------------------
 
 
-def test_mescal_appears_in_build_codes_with_phonon_transmission_mapped():
+def test_meskal_maps_the_coherent_transport_nodes_and_mescal_is_its_alias():
     from omai.map_data import build_codes, build_graph_dict
     from omai.thermal_transport.domain import THERMAL_TRANSPORT
 
     codes = build_codes((THERMAL_TRANSPORT,))
-    assert "mescal" in codes, "mescal representation missing from build_codes"
-    mescal = codes["mescal"]
-    # PhononTransmission is mapped (the observable every coherent method shares).
-    assert "PhononTransmission" in mescal
-    assert mescal["PhononTransmission"]["unit"] == "dimensionless"
-    # The Landauer conductance is served in nW/K and credited (MIT license).
+    assert "mescal" not in codes
     landauer = "ThermalConductance[transport_model=landauer]"
-    assert landauer in mescal
-    assert mescal[landauer]["unit"] == "nW_per_K"
-    assert mescal[landauer]["license"] == "MIT"
-    # Not public: no url, so no page links MESCAL to MESKAL's repository.
-    assert all(e["url"] is None for e in mescal.values())
+    meskal = codes["meskal"]
+    assert {"PhononTransmission", landauer} <= set(meskal)
+    assert all(e["aliases"] == ["mescal"] for e in meskal.values())
     # The mapped variables are real nodes on the map.
     ids = {n["id"] for n in build_graph_dict((THERMAL_TRANSPORT,))["nodes"]}
     assert "PhononTransmission" in ids and landauer in ids
@@ -254,7 +246,7 @@ def test_mescal_appears_in_build_codes_with_phonon_transmission_mapped():
 
 def test_thermal_conductance_unit_tokens_resolve():
     """W/K is the canonical thermal-conductance unit (si_scale 1); nW/K is
-    MESCAL's native serving unit and carries to_operator 1e-9 to it."""
+    MESKAL's serving unit and carries to_operator 1e-9 to it."""
     from omai.operator.dimensions import THERMAL_CONDUCTANCE
     from omai.representation.units import UNITS, conversion_factor
 

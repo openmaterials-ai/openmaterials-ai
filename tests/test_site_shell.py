@@ -257,5 +257,7 @@ def test_the_home_names_codes_that_ran_values():
     inst, codes = _data("instances.json"), _data("codes.json")
     ran = {i["source"]["ref"].split("-")[0] for i in inst} | {str(i["conditions"].get("code", "")).split(" ")[0] for i in inst}
     named = re.search(r"Values come from published papers and from runs of ([^.<]+)\.", HOME).group(1)
-    for key in ("kaldo", "phono3py", "qe", "mescal", "xtb"):
+    alias = {a: rep for rep, e in codes.items() for a in next(iter(e.values())).get("aliases", [])}
+    ran |= {alias[k] for k in ran if k in alias}
+    for key in ("kaldo", "phono3py", "qe", "meskal", "xtb"):
         assert key in ran and next(iter(codes[key].values()))["name"] in named, key

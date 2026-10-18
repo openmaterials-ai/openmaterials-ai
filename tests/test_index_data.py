@@ -93,9 +93,10 @@ def test_write_index_emits_one_file_per_representation(tmp_path):
     # edges); the xtb representation (the engine the GFN2-xTB thermo evidence names
     # in-hash) landed the same day, reaching 31; the qe-d3q representation
     # (D3Q and thermal2 on Quantum ESPRESSO 7.5, 2026-10-01) makes it 32; the
-    # meskal representation (MESKAL, 2026-10-04) makes it 33.
+    # meskal representation (MESKAL, 2026-10-04) makes it 33; mescal, MESKAL's
+    # former name, became its alias (2026-10-17), leaving 32.
     assert len(files) == len(reps)
-    assert len(files) == 33
+    assert len(files) == 32
 
 
 def test_each_index_entry_uid_matches_live_node_id(tmp_path):

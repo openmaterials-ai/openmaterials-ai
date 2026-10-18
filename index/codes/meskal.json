@@ -112,7 +112,9 @@
    "unit": "W_per_m_per_K"
   }
  ],
- "aliases": [],
+ "aliases": [
+  "mescal"
+ ],
  "releases": [
   {
    "commit": "d97531d0cccb8a9950782534801973082f0642d1",

@@ -962,7 +962,7 @@ compute_kappa_qhgk = Operator(
 
 
 # Coherent phonon transport (Landauer). PhononTransmission is a source-tier
-# observable a coherent-transport code (MESCAL) emits directly from its
+# observable a coherent-transport code (MESKAL) emits directly from its
 # lead/junction S-matrix; like the other source nodes (Potential, Temperature,
 # ForceConstants) it is produced by a nullary provide_ edge. The Landauer
 # conductance then integrates it against the Bose-Einstein energy window.

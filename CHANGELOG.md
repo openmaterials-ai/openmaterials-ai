@@ -11,6 +11,16 @@ id.
   source repository is not public, and the credits `url` is null; they cited
   a repository and a page that are not public. The licence read at v1.1.0
   (BSD-3-Clause) is unchanged. No id changes.
+- The `mescal` representation is removed (`docs/data/codes.json` and
+  `registry.json` lose the key; `index/codes/mescal.json` is deleted): MESCAL
+  is MESKAL's former name and `meskal` maps the same two nodes. `mescal` is an
+  alias of `meskal`, so `release_check` resolves an `execution.registry` row
+  naming it against MESKAL's releases (a null-version row with a digest is now
+  reported), and `private_reasons` gives
+  `{field: "execution.registry", kind: "code"}` (public before). The three
+  MESCAL values keep their ids. Removed API:
+  `omai.thermal_transport.representation.mescal` and the `MESCAL_*` names;
+  this takes the minor version.
 
 ## 0.3.1
 
