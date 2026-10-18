@@ -7,6 +7,20 @@ id.
 
 ## Unreleased
 
+- The analog-device-metrology domain adds `ConductanceRelaxationTime`,
+  `InterfaceTrapRelaxationTime` and benchmark-qualified
+  `ClassificationAccuracy`. `subthreshold_conductance_tangent_time` evaluates
+  the initial raw-conductance tangent under a single-mode subthreshold model;
+  `evaluate_reservoir_classification` is an external response-family contract,
+  not an executable classifier. No literature values or code coverage are added.
+  Existing node, edge and evidence ids, record-format rules and private-evidence
+  handling are unchanged. The graph version moves from `baf99346621b` to
+  `0c9e4a65d31f`, and the unified lineage version from `61a981c02604` to
+  `95138cc2c127`. The packaged kaldo external-solve fixture is re-minted against
+  that graph, moving its `request_id` from `9c65fd692c45` to `0a67c380a225`;
+  its scientific lineage and `lineage_id` are unchanged. Requests pinned to the
+  former graph fail the existing stale-version gate. New public definitions
+  take the next minor package version; this entry does not publish a release.
 - `meskal`: the release's `license_source` and the code's credits say the
   source repository is not public, and the credits `url` is null; they cited
   a repository and a page that are not public. The licence read at v1.1.0

@@ -17,4 +17,7 @@ register_space_symbols({
     "ProgrammingPulseEnergy": {"E_{pulse}"},
     "SetVoltage": {"V_{set}"},
     "RetentionTime": {r"\tau_{ret}"},
+    "ConductanceRelaxationTime": {"tau_G"},
+    "InterfaceTrapRelaxationTime": {"tau_it"},
+    "ClassificationAccuracy": {"A_cls"},
 })

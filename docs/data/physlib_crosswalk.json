@@ -259,6 +259,9 @@
   "MigrationBarrier": [],
   "SetVoltage": [],
   "RetentionTime": [],
+  "ConductanceRelaxationTime": [],
+  "InterfaceTrapRelaxationTime": [],
+  "ClassificationAccuracy": [],
   "CureConversion": [],
   "GlassTransitionTemperature": []
  }

@@ -1050,6 +1050,31 @@
   },
   "uid": "5495d20eea478bf7e68e39211a5881ed9e1ba5bb0d8bda8d0b943c03e69a9a6c"
  },
+ "557f968b85bdc45e519be10b1f5648d2d50005c4b18092f0435a0c74768a797a": {
+  "identity": {
+   "formula": "Equality(Symbol('A_cls'), Function('F_RC')(Symbol('G_c')))",
+   "inputs": [
+    "325f09352a8872995fe6ab0a40b9df8780a778389fa0fe00ebcbd9ef7758f4a3"
+   ],
+   "output": "0e10474b38987a0d5d3c77580649f461281a6a587093401a60781aab4bdf219d",
+   "outputs": [
+    "0e10474b38987a0d5d3c77580649f461281a6a587093401a60781aab4bdf219d"
+   ],
+   "schemes": {
+    "method": "reservoir_linear_readout"
+   }
+  },
+  "meta": {
+   "description": "External evaluation of a reservoir's linear-readout classification accuracy, A_cls=F_RC({G}). The ConductanceState input denotes the complete protocol-conditioned family of initial and final conductances across devices, input streams and trials, NOT one scalar. Features X are final-minus-initial conductance changes; Xtilde includes the declared bias feature. Fit W on the declared training data only, then predict held-out labels by the largest sigmoid output with a declared deterministic tie rule and average the correct-label indicator over test examples. The frozen protocol must supply dataset/version, labels, splits, pulse/read/reset encoding, feature units/normalization, bias construction, sigmoid scaling, training algorithm, noise, random draws and aggregation. For inverse-sigmoid/pseudoinverse training, W=S Xtilde^+ with S=sigmoid_inverse(Y); target levels must be finite and strictly inside (0,1), not assumed to be literal binary endpoints. Missing protocol or raw-response provenance prevents a replication claim. This is a formal external-operator contract: the opaque function is dimension-skipped and apply_edge requires an external solve. No simulation implementation, dataset or runnable representation is registered by this edge. A conductance relaxation scalar alone cannot produce this metric.",
+   "formula_latex": "A_{cls} = F_{RC}{\\left(G_{c} \\right)}",
+   "formula_srepr": "Equality(Symbol('A_cls'), Function('F_RC')(Symbol('G_c')))",
+   "name": "evaluate_reservoir_classification",
+   "schemes": {
+    "method": "reservoir_linear_readout"
+   }
+  },
+  "uid": "557f968b85bdc45e519be10b1f5648d2d50005c4b18092f0435a0c74768a797a"
+ },
  "58a959a412e7f92ec955cad34321812f5df453e9db8dcf4f8eb706f109bdf09a": {
   "identity": {
    "formula": "Equality(Symbol('G_c'), Mul(Symbol('P_th'), Symbol('T'), Pow(Symbol('k_B'), Integer(-1)), Symbol('q_e'), exp(Mul(Integer(-1), Pow(Symbol('T'), Integer(-1)), Symbol('\\\\Phi_{Bn}'), Pow(Symbol('k_B'), Integer(-1))))))",
@@ -3137,6 +3162,34 @@
    "schemes": {}
   },
   "uid": "f4a8562c1bf037775616e93ace8d78be9cda7338810339c51a41a2662c756079"
+ },
+ "f98ab6a713f029111d0c63c1017b87934ee2d50296f1e0a49289217cb20495eb": {
+  "identity": {
+   "formula": "Equality(Symbol('tau_G'), Mul(Symbol('tau_it'), Pow(log(Mul(Symbol('G_c'), Pow(Symbol('G_eq'), Integer(-1)))), Integer(-1))))",
+   "inputs": [
+    "325f09352a8872995fe6ab0a40b9df8780a778389fa0fe00ebcbd9ef7758f4a3",
+    "d9e8d6ad94a3bd0629bc56fd2fbc5a6555e2866c3ff667aefd714ad75a27a491"
+   ],
+   "output": "72bddad977642e53ed5cc05d9eec037d77a96a2c3232db16f5f4b4eaaff0b971",
+   "outputs": [
+    "72bddad977642e53ed5cc05d9eec037d77a96a2c3232db16f5f4b4eaaff0b971"
+   ],
+   "schemes": {
+    "criterion": "tangent_to_zero",
+    "regime": "subthreshold_single_mode"
+   }
+  },
+  "meta": {
+   "description": "Initial tangent time of raw conductance extrapolated to zero: tau_G = -G_c/Gdot(0) = tau_it/ln(G_c/G_eq). For one trap-occupation departure u(t)=u(0) exp(-t/tau_it) and constant exponential subthreshold transduction, G(t)=G_eq exp[A exp(-t/tau_it)], A=ln(G_c/G_eq). G_c is the conductance immediately after programming transients; G_eq is the fully equilibrated conductance at the SAME fixed read biases and temperature. Valid only for finite tau_it>0 and G_c>G_eq>0, a single first-order occupation mode, constant transduction and transport prefactor, and no unaccounted additive current. Both conductances must use the same unit (canonical siemens); both times use canonical ps (1 s is 1e12). A pre-pulse baseline or a last observed point need not be equilibrium. This is NOT a global exponential fit of G, a 1/e crossing, a tangent to G_eq, or a defect-migration relation. The tangent to G_eq would have the extra factor (1-G_eq/G_c). Even one occupation mode gives a local raw-G tangent time growing as exp(t/tau_it), so slowing conductance decay alone does not prove distributed trap times. A trap-time distribution or an arbitrary fitted effective time is outside this edge's regime. These physical validity restrictions are documented, not runtime-enforced by apply_edge.",
+   "formula_latex": "\\tau_{G} = \\frac{\\tau_{it}}{\\log{\\left(\\frac{G_{c}}{G_{eq}} \\right)}}",
+   "formula_srepr": "Equality(Symbol('tau_G'), Mul(Symbol('tau_it'), Pow(log(Mul(Symbol('G_c'), Pow(Symbol('G_eq'), Integer(-1)))), Integer(-1))))",
+   "name": "subthreshold_conductance_tangent_time",
+   "schemes": {
+    "criterion": "tangent_to_zero",
+    "regime": "subthreshold_single_mode"
+   }
+  },
+  "uid": "f98ab6a713f029111d0c63c1017b87934ee2d50296f1e0a49289217cb20495eb"
  },
  "fd0c5bbfc433db7ed55562ae46c06b3880389135fa84225a10c0687269251352": {
   "identity": {

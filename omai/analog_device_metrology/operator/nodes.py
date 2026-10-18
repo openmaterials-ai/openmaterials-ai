@@ -6,7 +6,9 @@ per-level spread and the error of an analog dot product; the contact barrier
 that sets a Schottky device's conductance with the work function and electron
 affinity that set the barrier; the energy of a programming pulse; and the set voltage
 and retention time of a device switched by a defect hop, from the materials
-domain's MigrationBarrier. The domain
+domain's MigrationBarrier; biased conductance and interface-trap relaxation;
+and benchmark-qualified classification accuracy from a conductance response
+family. The domain
 is definitional: it holds the quantities and the closed forms that relate them.
 No code representation attaches yet; two measured work functions do.
 
@@ -29,6 +31,9 @@ state ride in an instance's conditions, not in the node identity.
   ProgrammingPulseEnergy       programming_pulse_energy        ENERGY
   SetVoltage                   set_voltage                     VOLTAGE
   RetentionTime                retention_time                  TIME
+  ConductanceRelaxationTime    conductance_relaxation_time      TIME
+  InterfaceTrapRelaxationTime  interface_trap_relaxation_time   TIME
+  ClassificationAccuracy       classification_accuracy          DIMENSIONLESS
 
 CONDUCTANCE (the siemens, M^-1 L^-2 T^3 I^2) differs from the per-length
 ELECTRICAL_CONDUCTIVITY (S/m) by one length axis, the same conductance versus
@@ -210,6 +215,71 @@ RETENTION_TIME = ObservableSpace(
     ),
 )
 
+CONDUCTANCE_RELAXATION_TIME = ObservableSpace(
+    name="ConductanceRelaxationTime",
+    fields=(Field("tau_G", TIME, indices=()),),
+    tier=_TIER,
+    description=(
+        "Positive characteristic time of a programmed device's conductance "
+        "relaxation under a stated read protocol. TIME. Programming history, "
+        "read and gate biases with their schedule, temperature, time origin, "
+        "reference conductance, extraction criterion and time window, and "
+        "assumed or fitted decay law ride in instance conditions. An initial "
+        "tangent extrapolated to zero conductance (-G/dG_dt), a tangent to a "
+        "nonzero equilibrium baseline, a specified 1/e crossing, and a fitted "
+        "time constant are different criteria, not interchangeable values. "
+        "State whether raw or excess conductance is used and specify any "
+        "baseline. NOT RetentionTime (zero-bias first-passage survival), "
+        "InterfaceTrapRelaxationTime (trap occupation), or the dimensionless "
+        "power-law ConductanceDriftExponent. Conductance can be a nonlinear "
+        "function of trap occupation, so its relaxation time need not equal "
+        "an underlying trap time."
+    ),
+)
+
+INTERFACE_TRAP_RELAXATION_TIME = ObservableSpace(
+    name="InterfaceTrapRelaxationTime",
+    fields=(Field("tau_it", TIME, indices=()),),
+    tier=_TIER,
+    description=(
+        "Relaxation time of a specified interface-trap occupation departure "
+        "u from equilibrium at fixed bias and temperature: du/dt = -u/tau_it "
+        "for one first-order mode. TIME. With constant capture rate c and "
+        "emission rate e, df/dt = c(1-f)-ef gives tau_it = 1/(c+e), not the "
+        "capture-only time unless emission is negligible. Trap population, "
+        "biases, temperature, initial occupation, equilibrium definition, "
+        "extraction method and time interval ride in instance conditions. "
+        "A distribution of capture/emission times does not define one unique "
+        "constant; an effective fitted time must state its model and interval "
+        "and is not automatically an input to the single-mode conductance "
+        "relation. NOT a conductance decay time or defect-migration survival "
+        "time."
+    ),
+)
+
+CLASSIFICATION_ACCURACY = ObservableSpace(
+    name="ClassificationAccuracy",
+    fields=(Field("A_cls", DIMENSIONLESS, indices=()),),
+    tier=_TIER,
+    description=(
+        "Top-1 correct-classification fraction on a named benchmark: the "
+        "number of correctly predicted labels divided by the number of test "
+        "examples, in [0, 1]. DIMENSIONLESS, not percent. A system observable, "
+        "not an intrinsic material property. Dataset and version, label "
+        "space, encoding, feature units and normalization, device/read "
+        "protocol, training and evaluation construction, readout, noise, "
+        "tie rule, random sampling and aggregation ride in instance "
+        "conditions. Compare only matching protocols and estimators; a "
+        "macro class average equals the pooled fraction for balanced class "
+        "counts; they need not agree for imbalanced classes. A median or "
+        "percentile of repeated accuracies must "
+        "state that aggregation and is not interchangeable with the pooled "
+        "fraction. Distinguish measured, simulated and hybrid evidence in "
+        "the record's provenance. Neither one conductance value nor a "
+        "relaxation-time scalar determines classification accuracy."
+    ),
+)
+
 NODES: tuple[Space, ...] = (
     CONDUCTANCE_STATE,
     CONDUCTANCE_WINDOW,
@@ -222,4 +292,7 @@ NODES: tuple[Space, ...] = (
     PROGRAMMING_PULSE_ENERGY,
     SET_VOLTAGE,
     RETENTION_TIME,
+    CONDUCTANCE_RELAXATION_TIME,
+    INTERFACE_TRAP_RELAXATION_TIME,
+    CLASSIFICATION_ACCURACY,
 )
