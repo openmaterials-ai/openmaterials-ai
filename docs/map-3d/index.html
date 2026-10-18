@@ -33,7 +33,7 @@
      light value as its fallback); the scene reads them through #tokenProbe. */
   *{box-sizing:border-box;}
   html,body{overscroll-behavior:none;}
-  body.app{height:100vh;height:100dvh;margin:0;display:flex;flex-direction:column;overflow:hidden;background:var(--page,#FFFFFF);color:var(--ink,#171717);font:400 14px/20px var(--font-sans,"Geist","Geist Fallback",ui-sans-serif,system-ui,sans-serif);-webkit-font-smoothing:antialiased;}
+  body.app{height:100vh;height:100dvh;margin:0;display:flex;flex-direction:column;overflow:hidden;background:var(--page,#FFFFFF);color:var(--ink,#171717);font:400 14px/20px var(--font-sans,ui-sans-serif,system-ui,sans-serif);-webkit-font-smoothing:antialiased;}
   :focus-visible{outline:2px solid var(--ink,#171717);outline-offset:2px;}
   /* toolbar */
   .toolbar{flex:none;display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:8px var(--inset,16px);border-bottom:1px solid var(--line,#EBEBEB);background:var(--page,#FFFFFF);}
@@ -76,7 +76,7 @@
   .om-panel .x:hover{background:var(--surface-2,#F2F2F2);}
   .om-panel-label{margin:16px 0 8px;font-size:12px;line-height:16px;font-weight:500;letter-spacing:0;text-transform:none;color:var(--ink-2,#4D4D4D);}
   .om-panel .sym{font-size:28px;color:var(--ink,#171717);}
-  .om-panel .badge,.om-panel .tiertag{display:inline-flex;align-items:center;height:24px;padding:0 10px;margin-left:8px;border-radius:9999px;background:var(--surface-2,#F2F2F2);color:var(--ink,#171717);font-family:var(--font-sans,"Geist",ui-sans-serif,system-ui,sans-serif);font-size:12px;font-weight:500;vertical-align:middle;}
+  .om-panel .badge,.om-panel .tiertag{display:inline-flex;align-items:center;height:24px;padding:0 10px;margin-left:8px;border-radius:9999px;background:var(--surface-2,#F2F2F2);color:var(--ink,#171717);font-family:var(--font-sans,ui-sans-serif,system-ui,sans-serif);font-size:12px;font-weight:500;vertical-align:middle;}
   .om-panel .tiertag{color:var(--ink-2,#4D4D4D);}
   .om-panel .name{font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);color:var(--ink-2,#4D4D4D);font-size:13px;margin:8px 0 0;overflow-wrap:anywhere;}
   .formula{background:var(--surface,#FAFAFA);border:1px solid var(--line,#EBEBEB);border-radius:var(--radius,6px);padding:12px;overflow-x:auto;}

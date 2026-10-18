@@ -1,7 +1,6 @@
-/* openmaterials.ai on the notebook-instrument system of 2026-10-15 (D-072, Brand/site-redesign-2026-10-15.md),
-   which replaced the visual clauses of D-051. One stylesheet for every page. Fonts OFL 1.1 (fonts/OFL-*.txt). */
+/* openmaterials.ai on the notebook-instrument system (D-072, Brand/site-redesign-2026-10-15.md);
+   one stylesheet for every page. Fonts OFL 1.1 (fonts/OFL-*.txt). */
 @font-face { font-family: "Newsreader"; font-style: normal; font-weight: 200 800; font-display: swap; src: url(fonts/newsreader-latin.woff2) format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
-@font-face { font-family: "Newsreader"; font-style: italic; font-weight: 200 800; font-display: swap; src: url(fonts/newsreader-italic-latin.woff2) format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
 @font-face { font-family: "JetBrains Mono"; font-style: normal; font-weight: 100 800; font-display: swap; src: url(fonts/jetbrains-mono-latin.woff2) format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
 @font-face { font-family: "JetBrains Mono"; font-style: normal; font-weight: 100 800; font-display: swap; src: url(fonts/jetbrains-mono-greek.woff2) format("woff2"); unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF; }
 
@@ -14,7 +13,6 @@
   --ink:       light-dark(#1C1A17, #ECE7DD);
   --ink-2:     light-dark(#57524A, #A9A293);
   --line:      light-dark(#DDD7CB, #2B2824);
-  --cross:     light-dark(#B3AC9F, #5A554D);
   --edge:      light-dark(#8E877B, #7A746A);
   --focus:     var(--ink);
   --accent:    light-dark(#4F46E5, #908BEF);
@@ -36,14 +34,13 @@
   --head-gap: 48px;
   --header-h: 64px;
   --radius: 2px;
-  --cross-size: 15px;
   --ease: cubic-bezier(.4, 0, .2, 1);
   --dur: 150ms;
 }
 :root[data-theme="light"] { color-scheme: light; }
 :root[data-theme="dark"]  { color-scheme: dark; }
 @media (min-width: 601px) { :root { --margin: 32px; --inset: 40px; --section-y: 96px; --head-gap: 64px; } }
-@media (min-width: 961px) { :root { --inset: 48px; --section-y: 120px; --head-gap: 72px; --cross-size: 21px; } }
+@media (min-width: 961px) { :root { --inset: 48px; --section-y: 120px; --head-gap: 72px; } }
 
 *, *::before, *::after { box-sizing: border-box; }
 html { background: var(--page); color: var(--ink); scroll-padding-top: var(--header-h); -webkit-text-size-adjust: 100%; }
@@ -86,17 +83,15 @@ a:hover { text-decoration-color: currentColor; }
 .skip-link:not(:focus) { width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 
-/* 3. Layout: one 1080 px frame with 1 px guides; each section is one frame row */
+/* 3. Layout: one 1080 px frame; each section is one frame row */
 .frame, .site-header .wrap, .site-footer .wrap { width: min(var(--frame), 100% - 2 * var(--margin)); margin-inline: auto; }
 .frame > section { padding: var(--section-y) var(--inset); border-bottom: 1px solid var(--line); }
-@media (min-width: 601px) { main.frame { border-inline: 0; } }
 .grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 24px; }
 .grid > * { grid-column: 1 / -1; min-width: 0; }
 @media (max-width: 600px) { .at-601 { display: none !important; } }
 @media (max-width: 960px) { .at-961 { display: none !important; } }
 @media (min-width: 601px) { .below-601 { display: none !important; } }
 
-.featured { position: relative; }
 
 /* Header (spec 2.3). The mount is the sticky box, since a sticky child cannot leave its
    parent. The row (mark, wordmark, four links, version pill, GitHub) needs about 690 px,
@@ -125,7 +120,7 @@ a:hover { text-decoration-color: currentColor; }
   .menu { display: none; }
 }
 
-/* Buttons. Large is a full pill, small is 6 px; one accent fill per page, at opening and close.
+/* Buttons, 2 px corners; one accent fill per page, at opening and close.
    The playground's om- buttons are the same rules (spec 2.6). */
 .btn, .om-btn, .om-btn-primary, .om-btn-sm { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 40px; padding: 0 16px; border: 0; border-radius: var(--radius);
   font: 600 13px/24px var(--font-mono); text-decoration: none; white-space: nowrap; cursor: pointer; transition: background-color var(--dur) var(--ease), color var(--dur) var(--ease), box-shadow var(--dur) var(--ease); }
@@ -229,9 +224,6 @@ a:hover { text-decoration-color: currentColor; }
 .hero { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 48px 24px; align-items: start; }
 .hero > * { grid-column: 1 / -1; min-width: 0; }
 .hero .lede { margin-top: 24px; }
-.datum .figure { margin-top: 8px; }
-.datum .unit { color: var(--ink-2); font-size: 16px; }
-.datum .ledger { margin-top: 16px; }
 .datum .cta-row { margin-top: 24px; }
 .split { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 48px 24px; align-items: start; }
 .split > * { grid-column: 1 / -1; min-width: 0; }
@@ -326,12 +318,12 @@ body.app { --font-sans: var(--font-mono); }
 /* Home Fig. 1 (D-072): the figure grammar, one value per dot */
 .fig { margin: 0; padding-top: 12px; border-top: 1px solid var(--ink); min-width: 0; }
 .fig-label b { color: var(--accent); font-weight: 600; margin-right: 10px; }
-.fig-plot { margin-top: 16px; }
+.fig-plot { margin-top: 16px; max-width: 560px; }
 .fig1 { width: 100%; height: auto; display: block; overflow: visible; }
 .fig1 text { font: 500 11px var(--font-mono); fill: var(--ink-2); }
 .fig1 .row-lab { font-size: 11.5px; fill: var(--ink); }
 .fig1 .row-rule { stroke: var(--line); }
-.fig1 .grid { stroke: var(--line); stroke-dasharray: 2 3; }
+.fig1 .gridline { stroke: var(--line); stroke-dasharray: 2 3; }
 .fig1 .meas-line { stroke: var(--ink); stroke-width: 1; stroke-dasharray: 3 3; }
 .fig1 .dot--0 { fill: var(--page); stroke: var(--ink); stroke-width: 1.6; }
 .fig1 .dot--1 { fill: var(--accent); }
@@ -345,5 +337,4 @@ body.app { --font-sans: var(--font-mono); }
 .fig .cta-row { margin-top: 20px; }
 .hero .stamp { margin-top: 36px; max-width: 520px; }
 @media (max-width: 600px) { .fig-rows > div { grid-template-columns: minmax(0, 1fr); gap: 2px; } }
-.fig .src { display: block; margin-top: 8px; font: 400 12px/18px var(--font-mono); color: var(--ink-3, var(--ink-2)); }
-.fig .cta-row .note { flex-basis: 100%; margin: 0; font: 400 12px/18px var(--font-mono); color: var(--ink-2); }
+.fig .src { display: block; margin-top: 8px; font: 400 12px/18px var(--font-mono); color: var(--ink-2); }
