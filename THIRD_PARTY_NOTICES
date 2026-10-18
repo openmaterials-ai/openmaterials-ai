@@ -6,8 +6,10 @@ property of its copyright holders under its own license; the full license texts
 are in docs/assets/vendor/LICENSES/ and docs/assets/fonts/, which the site serves
 next to the files they cover. Versions and sources: docs/assets/vendor/VERSIONS.md.
 
-KaTeX 0.16.9, docs/assets/vendor/katex/ (scripts, CSS, and fonts)
-  License: MIT. Copyright (c) 2013-2020 Khan Academy and other contributors.
+KaTeX 0.16.9, docs/assets/vendor/katex/
+  Scripts and CSS: MIT. Copyright (c) 2013-2020 Khan Academy and other contributors.
+  Fonts (dist/fonts/): OFL-1.1. Copyright (c) 2009-2010 Design Science, Inc. and
+  (c) 2014-2018 Khan Academy, Reserved Font Names KaTeX_*; unmodified.
   Text: docs/assets/vendor/LICENSES/katex.txt
   Modified: the CSS @font-face src lists keep only the woff2 files.
 
@@ -19,12 +21,15 @@ dagre 0.8.5, docs/assets/vendor/dagre.min.js
 
 3d-force-graph 1.80.0, docs/assets/vendor/3d-force-graph/3d-force-graph.min.js
   License: MIT. Copyright (c) 2017 Vasco Asturiano.
-  Embeds three.js (MIT, three.js authors) and 33 other packages under MIT, ISC
-  (the d3 modules, Mike Bostock), and BSD-3-Clause (ngraph, Andrei Kashcha).
+  Embeds three.js (MIT, three.js authors) and 34 other packages under MIT, ISC
+  (the d3 modules, Mike Bostock), and BSD-3-Clause (ngraph, Andrei Kashcha);
+  d3-scale-chromatic's ColorBrewer schemes are Apache-2.0 (text in pdfjs.txt).
   Text, one section per package: docs/assets/vendor/LICENSES/3d-force-graph.txt
 
 pdf.js (pdfjs-dist 4.10.38), docs/assets/vendor/pdfjs/
   License: Apache-2.0. Copyright Mozilla Foundation. Unmodified.
+  Embeds OpenJPEG (BSD-2-Clause, Universite catholique de Louvain and other
+  contributors), compiled to WebAssembly.
   Text: docs/assets/vendor/LICENSES/pdfjs.txt
 
 Newsreader (Production Type) and JetBrains Mono (JetBrains), docs/assets/fonts/

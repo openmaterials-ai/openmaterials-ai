@@ -1,7 +1,8 @@
 # Vendored assets
 
 Every third-party asset the public site depends on is committed here so the
-site loads no third-party files at runtime. Downloaded from the official
+site loads no third-party files at runtime (the map-lab prototypes still
+load KaTeX and dagre from jsDelivr). Downloaded from the official
 jsDelivr npm CDN and Google Fonts at build time. Licenses: THIRD_PARTY_NOTICES
 at the repository root and the texts in LICENSES/.
 
