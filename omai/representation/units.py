@@ -115,8 +115,8 @@ KM_PER_S = Unit("km_per_s", LENGTH_TIMES_FREQUENCY, 10.0)
 W_PER_M_PER_K = Unit("W_per_m_per_K", THERMAL_CONDUCTIVITY, 1.0, si_scale=1.0)
 
 
-# Canonical thermal-conductance unit: W/K (the Landauer G(T)). MESCAL's
-# eskm_tools.landauer emits G in nW/K (1 nW/K = 1e-9 W/K), so nW_per_K carries
+# Canonical thermal-conductance unit: W/K (the Landauer G(T)). MESKAL's
+# landauer_conductance emits G in nW/K (1 nW/K = 1e-9 W/K), so nW_per_K carries
 # to_operator 1e-9 to the canonical W/K.
 W_PER_K = Unit("W_per_K", THERMAL_CONDUCTANCE, 1.0, si_scale=1.0)
 NW_PER_K = Unit("nW_per_K", THERMAL_CONDUCTANCE, 1e-9)

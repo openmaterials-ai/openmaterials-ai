@@ -405,7 +405,8 @@ resolver accepts; a re-keyed edge keeps none (the map log records the
 supersede). CHANGELOG.md lists each re-keyed id. Adding a schema
 field, a renderer, or a vector is a minor version. Widening a schema field to
 accept a shape real producers already emit is a patch, since it can only turn a
-spurious rejection into an acceptance. Consumers pin an exact version
+spurious rejection into an acceptance. Removing a public name is a minor
+version before 1.0. Consumers pin an exact version
 (`openmaterials-ai==0.3.1`).
 
 ## Install

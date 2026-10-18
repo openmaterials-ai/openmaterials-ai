@@ -8,6 +8,9 @@ QHGK for amorphous solids, and an open-system Green's-function route. Importing
 meskal enables float64. The facts below are read from the v1.1.0 sources; its
 stages are validated against goldens that kALDo produced
 (examples/generate_reference_goldens.py), whose array conventions it keeps.
+Its alias mescal names the former MESCAL; the committed coherent-transport
+values under that name came from direct mode matching, not the Caroli route
+below.
 
   operator Space                                  MESKAL function
   ----------------------------------------------  -----------------------------------------

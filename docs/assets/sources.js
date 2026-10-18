@@ -27,10 +27,18 @@ var Sources = (function () {
     return out;
   }
 
+  // A codes.json key for k: k itself, else the code that lists k among its release aliases
+  // (mescal names meskal); '' when neither.
+  function codeKey(k, codes) {
+    if (!codes || !k) return '';
+    if (codes[k]) return k;
+    for (var c in codes) if (((Object.values(codes[c])[0] || {}).aliases || []).indexOf(k) >= 0) return c;
+    return '';
+  }
   // A code's display name: the `name` its codes.json node entries carry, else its key. Every
   // code-name read on the site goes through here.
   function codeName(key, codes) {
-    return (Object.values((codes && codes[key]) || {})[0] || {}).name || key;
+    return (Object.values((codes && codes[codeKey(key, codes) || key]) || {})[0] || {}).name || key;
   }
 
   // A source's title: the shortest citation its records carry (a curator note that precedes a
@@ -42,7 +50,8 @@ var Sources = (function () {
       if (c && (!best || c.length < best.length)) best = c;
     });
     var ref = recs.length && recs[0].source ? recs[0].source.ref : '';
-    return best || (codes && codes[ref] ? codeName(ref, codes) + ' run' : '');
+    var key = codeKey(ref, codes);
+    return best || (key ? codeName(key, codes) + ' run' : '');
   }
 
   // Refs that differ only in a numbered suffix (ethanol-bond0 to -bond7) are one source.
@@ -97,7 +106,7 @@ var Sources = (function () {
   function methodLine(r, codes) {
     var lin = r.lineage || r, c = lin.conditions || {}, ref = r.source ? r.source.ref : '';
     var cv = String(c.code || '').split(' ');
-    var key = codes && codes[cv[0]] ? cv[0] : (codes && codes[ref] ? ref : cv[0]);
+    var key = codeKey(cv[0], codes) || codeKey(ref, codes) || cv[0];
     var who = key ? [codeName(key, codes), c.code_version || cv.slice(1).join(' ')].filter(Boolean).join(' ') : '';
     var pot = c.potential || c.potential_name || c.potential_file;
     var how = pot ? 'the ' + String(pot).replace(/^[A-Z][a-z]?\./, '').replace(/^./, function (x) { return x.toUpperCase(); }) + ' potential'

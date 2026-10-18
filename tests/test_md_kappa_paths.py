@@ -246,7 +246,7 @@ def test_meskal_maps_the_coherent_transport_nodes_and_mescal_is_its_alias():
 
 def test_thermal_conductance_unit_tokens_resolve():
     """W/K is the canonical thermal-conductance unit (si_scale 1); nW/K is
-    MESCAL's native serving unit and carries to_operator 1e-9 to it."""
+    MESKAL's serving unit and carries to_operator 1e-9 to it."""
     from omai.operator.dimensions import THERMAL_CONDUCTANCE
     from omai.representation.units import UNITS, conversion_factor
 
