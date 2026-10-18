@@ -17,7 +17,7 @@ Google Fonts at build time.
 | standardwebhooks (SDK dep) | 1.0.0 | `anthropic/standardwebhooks.mjs` | `cdn.jsdelivr.net/npm/standardwebhooks@1.0.0/+esm` |
 | @stablelib/base64 (SDK dep) | 1.0.1 | `anthropic/stablelib-base64.mjs` | `cdn.jsdelivr.net/npm/@stablelib/base64@1.0.1/+esm` |
 | fast-sha256 (SDK dep) | 1.3.0 | `anthropic/fast-sha256.mjs` | `cdn.jsdelivr.net/npm/fast-sha256@1.3.0/+esm` |
-| Geist, Geist Mono | 1.7.2 | `../fonts/Geist-Variable.woff2` (69,760 bytes), `../fonts/GeistMono-Variable.woff2` (71,596 bytes), `../fonts/geist.css`, `../fonts/OFL.txt` | github.com/vercel/geist-font, tag v1.7.2, `packages/next/dist/fonts/geist-sans` and `geist-mono` (OFL 1.1) |
+| Newsreader, JetBrains Mono | Google Fonts, 2026-10-15 (Newsreader v26, JetBrains Mono v24) | `../fonts/newsreader-latin.woff2` (131,848 bytes), `../fonts/jetbrains-mono-latin.woff2` (40,480 bytes), `../fonts/jetbrains-mono-greek.woff2` (9,084 bytes), `../fonts/OFL-Newsreader.txt`, `../fonts/OFL-JetBrainsMono.txt` | fonts.gstatic.com latin and greek subsets of github.com/productiontype/Newsreader and github.com/JetBrains/JetBrainsMono (OFL 1.1) |
 | Inter | v20 (Google Fonts) | `inter/inter.css`, `inter/inter-{400,500,600,700,800}-{latin,latin-ext}.woff2` (10) | Google Fonts `css2?family=Inter:wght@400;500;600;700;800` |
 | Source Serif 4 | v14 (Google Fonts) | `source-serif-4/source-serif-4.css`, `source-serif-4-{600,700}-latin.woff2`, `source-serif-4-400italic-latin.woff2` (3) | Google Fonts `css2?family=Source+Serif+4` (static per-weight latin instances) |
 | JetBrains Mono | v24 (Google Fonts) | `jetbrains-mono/jetbrains-mono.css`, `jetbrains-mono-{400,500}-latin.woff2` (2) | Google Fonts `css2?family=JetBrains+Mono:wght@400;500` (static per-weight latin instances) |
