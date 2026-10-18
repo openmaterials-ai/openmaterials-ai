@@ -95,11 +95,14 @@ def cure_conversion(kinetics: dict, temperature_K: float, hold_time_s: float,
         lo = math.log(alpha_0 / (1.0 - alpha_0))
     else:
         # From alpha = 0 the rate starts at r0 > 0. Start where alpha < e^-40
-        # and k_2 alpha^m < e^-40 k_1, so the time to reach alpha is alpha / r0
-        # to float precision.
+        # and k_2 alpha^m < e^-40 k_1 (not below s = -700), so the time to
+        # reach alpha is alpha / r0 to float precision.
+        # ponytail: the -700 floor keeps exp finite; for k_1 below about
+        # 1e-290 /s the start time is overestimated. Integrate from a
+        # log-spaced start if such rates ever matter.
         lo = -_S_FULL
         if m > 0 and k2 > 0:
-            lo = max(min(lo, (math.log(k1 / k2) - _S_FULL) / m), -700.0)
+            lo = max(min(lo, (math.log(k1) - math.log(k2) - _S_FULL) / m), -700.0)
         remaining -= 1.0 / (1.0 + math.exp(-lo)) / r0
         if remaining <= 0:
             return r0 * hold_time_s

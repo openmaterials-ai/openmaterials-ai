@@ -94,22 +94,21 @@ def test_first_order_limit():
             assert abs(cure_conversion(p, 350.0, t, a0) - exact) < 1e-12
 
 
-@pytest.mark.parametrize("a1_pref,temperature_K", [(1e3, 360.0), (1e-30, 300.0)])
-def test_autocatalytic_closed_form_from_zero(a1_pref, temperature_K):
+@pytest.mark.parametrize("p,temperature_K", [
+    (dict(a1_pref_per_s=1e3, e1_J_per_mol=5e4, a2_pref_per_s=1e5, e2_J_per_mol=5e4, m=1.0, n=1.0), 360.0),
+    # k1 / k2 = 1e-27: the start from alpha = 0 is set by k_2 alpha^m, not by alpha alone.
+    (dict(a1_pref_per_s=1e-30, e1_J_per_mol=0.0, a2_pref_per_s=1e-3, e2_J_per_mol=0.0, m=1.0, n=1.0), 300.0),
+])
+def test_autocatalytic_closed_form_from_zero(p, temperature_K):
     # m = 1, n = 1 separates by partial fractions:
     # t = [ln((k1 + k2 a) / (k1 + k2 a0)) - ln((1 - a) / (1 - a0))] / (k1 + k2).
-    # The second case has k1 / k2 = 1e-27, where the start from alpha = 0 is
-    # set by k_2 alpha^m, not by alpha alone.
-    e = 0.0 if a1_pref == 1e-30 else 5e4
-    p = dict(a1_pref_per_s=a1_pref, e1_J_per_mol=e, a2_pref_per_s=1e-3 if e == 0 else 1e5,
-             e2_J_per_mol=e, m=1.0, n=1.0)
-    k1 = _k(p["a1_pref_per_s"], e, temperature_K)
-    k2 = _k(p["a2_pref_per_s"], e, temperature_K)
+    k1 = _k(p["a1_pref_per_s"], p["e1_J_per_mol"], temperature_K)
+    k2 = _k(p["a2_pref_per_s"], p["e2_J_per_mol"], temperature_K)
     for a0 in (0.0, 1e-4):
         for a in (0.01, 0.5, 0.99):
             t = (math.log((k1 + k2 * a) / (k1 + k2 * a0))
                  - math.log((1 - a) / (1 - a0))) / (k1 + k2)
-            assert abs(cure_conversion(p, temperature_K, t, a0) - a) < 1e-10
+            assert abs(cure_conversion(p, temperature_K, t, a0) - a) < 1e-12
     # A hold too short to reach the start point: alpha = k1 t.
     assert cure_conversion(p, temperature_K, 1e-30, 0.0) == pytest.approx(k1 * 1e-30, rel=1e-12)
 
@@ -193,3 +192,10 @@ def test_registered_as_the_code_openmaterials_ai():
     assert set(entry) == {"CureConversion", "GlassTransitionTemperature"}
     assert entry["CureConversion"]["api"] == "omai.cure_kinetics.evaluate.cure_conversion"
     assert entry["GlassTransitionTemperature"]["unit"] == "kelvin"
+
+
+def test_a_subnormal_first_rate_does_not_raise():
+    # k1 / k2 underflows to 0; the start point uses log(k1) - log(k2).
+    p = dict(a1_pref_per_s=1e-320, e1_J_per_mol=0.0, a2_pref_per_s=1e5,
+             e2_J_per_mol=0.0, m=1.0, n=1.0)
+    assert 0.0 <= cure_conversion(p, 300.0, 3600.0, 0.0) <= 1.0
