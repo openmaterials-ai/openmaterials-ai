@@ -408,7 +408,7 @@ version. Widening a schema field to
 accept a shape real producers already emit is a patch, since it can only turn a
 spurious rejection into an acceptance. Removing a public name is a minor
 version before 1.0. Consumers pin an exact version
-(`openmaterials-ai==0.3.1`).
+(`openmaterials-ai==0.4.0`).
 
 ## Install
 
