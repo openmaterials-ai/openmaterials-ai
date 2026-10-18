@@ -27,5 +27,16 @@
    "api": "omai.composites.evaluate.nan_kappa_random",
    "unit": "W_per_m_per_K"
   }
+ ],
+ "aliases": [],
+ "releases": [
+  {
+   "commit": "9dc55652c16478bf4b64e8f15c6dcd3939580bba",
+   "license_source": "https://github.com/openmaterials-ai/openmaterials-ai/tree/v0.4.0 (LICENSE, Apache License 2.0; LICENSE-DATA, CC BY 4.0 for the map data, including the package's copy under omai/data/; pyproject.toml license Apache-2.0 AND CC-BY-4.0)",
+   "released": "2026-10-18",
+   "spdx": "Apache-2.0 AND CC-BY-4.0",
+   "tag": "v0.4.0",
+   "version": "0.4.0"
+  }
  ]
 }
