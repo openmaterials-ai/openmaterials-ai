@@ -203,6 +203,7 @@ QUANTITY_TAGS: dict[str, str] = {
     "cure_conversion": "Degree of cure alpha of a thermosetting resin, the reacted fraction of its reactive groups (in DSC practice, the released fraction of the total reaction heat), 0 (uncured) to 1 (fully cured); DIMENSIONLESS.",
     "glass_transition_temperature": "Glass transition temperature T_g, where an amorphous material, or the amorphous fraction of a semicrystalline one, passes between the glassy and the rubbery or liquid state; TEMPERATURE. A kinetic, rate-dependent transition, distinct from the equilibrium transition_temperature.",
     "potential_fit_error": "Validation error (energy, force and virial RMSE on held-out reference labels) of a fitted interatomic potential.",
+    "potential_uncertainty_exceedance": "Fraction of a molecular dynamics run's uncertainty checks at which the largest per-atom force spread of a committee of machine-learned potentials exceeds a threshold sigma; DIMENSIONLESS, in [0, 1]. Evidence for the active-learning convergence of a fitted potential at the run's conditions, not a property of the material.",
 }
 
 
@@ -333,8 +334,11 @@ LABEL_KEYS: dict[str, frozenset[str]] = {
     # harmonic mode-sum vs the PIMD fluctuation), a different axis. Collision-
     # free against every other label key (order, bte_solver, transport_model,
     # channel, wrt, carrier, construction, contribution): no key or value
-    # overlaps ('pimd' appears in no other value set).
-    "method": frozenset({"pimd"}),
+    # overlaps ('pimd' appears in no other value set). Also committee_force_spread:
+    # the PotentialUncertaintyExceedance[method=committee_force_spread] node, the
+    # fraction of an MD run's checks at which the force spread of a committee of
+    # potentials exceeds a threshold (no other value set holds it).
+    "method": frozenset({"pimd", "committee_force_spread"}),
     # The ROLE a thermal conductivity plays as an INPUT to a composite
     # effective-medium calculation: matrix (the continuous host phase km) vs
     # filler (the dispersed inclusion phase, anisotropic k11/k33). Both join the

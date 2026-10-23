@@ -945,6 +945,22 @@ POTENTIAL_OF_MEAN_FORCE = ObservableSpace(
     tier="Molecular dynamics",
 )
 
+POTENTIAL_UNCERTAINTY_EXCEEDANCE = ObservableSpace(
+    name="PotentialUncertaintyExceedance[method=committee_force_spread]",
+    fields=(Field("f_sigma", DIMENSIONLESS, indices=()),),
+    labels={"method": "committee_force_spread"},
+    tier="Molecular dynamics",
+    description=(
+        "Fraction of a molecular dynamics run's uncertainty checks at which the largest "
+        "per-atom force spread of a committee of machine-learned potentials, "
+        "sqrt(sum over x, y, z of the committee variance of the force component), "
+        "exceeds a threshold sigma (eV/A). Dimensionless, in [0, 1]. Conditions: "
+        "temperature, strain or pressure, the committee members' sha256, sigma, the check "
+        "interval and the MD steps. Evidence for the active-learning convergence of a "
+        "fitted potential at those conditions, not a property of the material."
+    ),
+)
+
 
 NODES: tuple[Space, ...] = (
     POTENTIAL,
@@ -1010,4 +1026,6 @@ NODES: tuple[Space, ...] = (
     HEAT_CAPACITY_PIMD,
     # Enhanced-sampling free energy (Cookbook Slice 2, PLUMED, record 216)
     POTENTIAL_OF_MEAN_FORCE,
+    # NEP active learning: committee force-spread exceedance of an MD run
+    POTENTIAL_UNCERTAINTY_EXCEEDANCE,
 )

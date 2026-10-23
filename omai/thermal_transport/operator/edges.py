@@ -74,6 +74,8 @@ from omai.thermal_transport.operator.nodes import (
     HEAT_CAPACITY_PIMD,
     # Enhanced-sampling free energy (Cookbook Slice 2, PLUMED, record 216)
     POTENTIAL_OF_MEAN_FORCE,
+    # NEP active learning
+    POTENTIAL_UNCERTAINTY_EXCEEDANCE,
 )
 
 
@@ -1792,6 +1794,44 @@ sample_pmf = Operator(
 )
 
 
+# ---------------------------------------------------------------------------
+# NEP active learning. One producing edge for the committee force-spread
+# exceedance, from the Potential (the committee is a set of Potentials) and the
+# MD Trajectory it was sampled on. The Trajectory is a HiddenSpace, so the value
+# is a gauge-invariant fraction over the run's uncertainty checks. An opaque
+# functional of the committee and the sampled positions, so not
+# sympy-executable and the dimensional gate SKIPS it, like sample_pmf.
+# ---------------------------------------------------------------------------
+
+# compute_potential_uncertainty_exceedance: f_sigma = f^{exc}[V({u}), r(t)].
+_f_sigma = sp.Symbol(r"f_{\sigma}")
+_f_exc_fn = sp.Function("f^{exc}")
+
+_COMPUTE_POTENTIAL_UNCERTAINTY_EXCEEDANCE_FORMULA = sp.Eq(
+    _f_sigma,
+    _f_exc_fn(_V_pot(_u_set), _r_traj_arg),
+)
+
+compute_potential_uncertainty_exceedance = Operator(
+    name="compute_potential_uncertainty_exceedance",
+    inputs=(POTENTIAL, TRAJECTORY),
+    outputs=(POTENTIAL_UNCERTAINTY_EXCEEDANCE,),
+    formula=_COMPUTE_POTENTIAL_UNCERTAINTY_EXCEEDANCE_FORMULA,
+    is_executable_in_sympy_override=False,
+    description=(
+        "Fraction of an MD run's uncertainty checks at which the committee force "
+        "spread exceeds a threshold sigma: f_sigma = f^{exc}[V, r(t)]. The Potential "
+        "input stands for the committee members (the family-of-values convention: "
+        "each member's sha256 rides in the value's conditions), all evaluated on "
+        "the frames of the Trajectory. At each check the largest per-atom spread "
+        "sqrt(sum over x, y, z of the committee variance of the force component) "
+        "is compared with sigma (eV/A); f_sigma is the fraction of checks above "
+        "it. Opaque as a closed form, so not sympy-executable; the dimensional gate "
+        "SKIPS it (the output is DIMENSIONLESS, in [0, 1])."
+    ),
+)
+
+
 EDGES: tuple[Operator, ...] = (
     provide_potential,
     provide_temperature,
@@ -1854,4 +1894,6 @@ EDGES: tuple[Operator, ...] = (
     sample_quantum_heat_capacity,
     # Enhanced-sampling free energy (Cookbook Slice 2, PLUMED, record 217)
     sample_pmf,
+    # NEP active learning
+    compute_potential_uncertainty_exceedance,
 )

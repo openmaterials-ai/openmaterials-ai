@@ -73,6 +73,7 @@ from omai.thermal_transport.operator.nodes import (
     MEAN_SQUARED_DISPLACEMENT,
     POTENTIAL,
     POTENTIAL_FIT_ERROR,
+    POTENTIAL_UNCERTAINTY_EXCEEDANCE,
     THERMAL_CONDUCTIVITY_GREEN_KUBO,
     THERMAL_CONDUCTIVITY_HNEMD,
     TRAJECTORY,
@@ -111,6 +112,21 @@ GPUMD_POTENTIAL_FIT_ERROR = SpaceRepresentationSpec(
         "prediction mode; the RMSE over those pairs is the validation error. "
         "loss.out's training-set RMSE columns are not this node: they are "
         "measured on the data the model was fitted to."
+    ),
+)
+
+
+GPUMD_POTENTIAL_UNCERTAINTY_EXCEEDANCE = SpaceRepresentationSpec(
+    space=POTENTIAL_UNCERTAINTY_EXCEEDANCE,
+    representation_name="gpumd",
+    code_api={
+        "f_sigma": "run.in: active <check_interval> 0 0 0 <sigma> with one potential line per committee member; fraction of active.out rows whose column 2 exceeds sigma",
+    },
+    notes=(
+        "With several potentials in run.in, the `active` keyword writes one row "
+        "per check to active.out (step, largest per-atom force spread in eV/A) "
+        "and the frames above the threshold to active.xyz. The node value is the "
+        "fraction of active.out rows above sigma."
     ),
 )
 

@@ -370,8 +370,9 @@ def test_map_has_one_hundred_nodes_and_fifteen_tiers():
     # nodes and the Diffusion tier's MigrationBarrier (2026-10-05). +1 for
     # InterfaceConductance[transport_model=nemd] (Molecular dynamics, no new tier).
     # +2 for the cure-kinetics domain's nodes in the new Cure kinetics tier, the
-    # 18th tier. +1 for PotentialFitError (Sources tier, no new tier).
-    assert len(g["nodes"]) == 130
+    # 18th tier. +1 for PotentialFitError (Sources tier, no new tier). +1 for
+    # PotentialUncertaintyExceedance[method=committee_force_spread] (Molecular dynamics, no new tier).
+    assert len(g["nodes"]) == 131
     assert len(g["tiers"]) == 18
 
 
