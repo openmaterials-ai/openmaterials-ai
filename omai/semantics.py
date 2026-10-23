@@ -101,6 +101,13 @@ ALIASES: dict[str, tuple[str, ...]] = {
         "kamal_cure_conversion", "dibenedetto_glass_transition",
     ),
     "glass-transition-temperature": ("GlassTransitionTemperature",),
+    # Held-out errors of a fitted potential.
+    "validation-rmse": ("PotentialEnergyFitError", "PotentialForceFitError",
+                        "PotentialVirialFitError"),
+    "test-set-rmse": ("PotentialEnergyFitError", "PotentialForceFitError",
+                      "PotentialVirialFitError"),
+    "holdout-error": ("PotentialEnergyFitError", "PotentialForceFitError",
+                      "PotentialVirialFitError"),
     # NO-HOME markers live in the alignment files, not here: an alias
     # must point at something that exists (the gate below enforces it).
 }

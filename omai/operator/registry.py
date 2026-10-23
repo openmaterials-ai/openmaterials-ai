@@ -202,6 +202,9 @@ QUANTITY_TAGS: dict[str, str] = {
     "state_coefficient_of_variation": "Coefficient of variation c = sigma_G/mu_G of a programmed conductance level across cells or cycles, stated in instance conditions with the target level and protocol; DIMENSIONLESS.",
     "cure_conversion": "Degree of cure alpha of a thermosetting resin, the reacted fraction of its reactive groups (in DSC practice, the released fraction of the total reaction heat), 0 (uncured) to 1 (fully cured); DIMENSIONLESS.",
     "glass_transition_temperature": "Glass transition temperature T_g, where an amorphous material, or the amorphous fraction of a semicrystalline one, passes between the glassy and the rubbery or liquid state; TEMPERATURE. A kinetic, rate-dependent transition, distinct from the equilibrium transition_temperature.",
+    "potential_energy_fit_error": "Raw RMSE of the per-atom energy of a fitted interatomic potential against held-out reference energies, no per-atom offset removed; ENERGY (eV/atom). The error on the held-out labels' distribution, not a measure of accuracy outside it.",
+    "potential_force_fit_error": "Raw RMSE of the Cartesian force components of a fitted interatomic potential against held-out reference forces; FORCE (eV/A). The error on the held-out labels' distribution, not a measure of accuracy outside it.",
+    "potential_virial_fit_error": "Raw RMSE of the per-atom virial components of a fitted interatomic potential against held-out reference virials (from the reference stress); ENERGY (eV/atom). The error on the held-out labels' distribution, not a measure of accuracy outside it.",
 }
 
 

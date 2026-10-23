@@ -55,7 +55,8 @@ def test_dft_nodes_are_structure_energy_forces_stress_moments():
 
     assert [s.name for s in NODES] == [
         "Structure", "TotalEnergy", "Forces", "Stress", "MagneticMoment",
-        "BandGap"]
+        "BandGap", "PotentialEnergyFitError", "PotentialForceFitError",
+        "PotentialVirialFitError"]
 
 
 def test_dft_edges_are_the_ground_state_operators():
@@ -66,7 +67,9 @@ def test_dft_edges_are_the_ground_state_operators():
     assert [op.name for op in EDGES] == [
         "solve_ground_state", "compute_forces_hf", "compute_stress_cell",
         "compute_fc2_finite_displacement", "compute_magnetic_moments",
-        "compute_band_gap"]
+        "compute_band_gap", "compute_potential_energy_fit_error",
+        "compute_potential_force_fit_error",
+        "compute_potential_virial_fit_error"]
 
 
 def test_structure_is_imported_from_shared_primitives():
@@ -252,10 +255,16 @@ def test_dft_representation_package_discovery_finds_the_specs():
     # Trajectory specs live in the thermal-transport package. No operator spec.
     assert by_rep_space["ase"] == {"Structure"}
     assert "ase" not in by_rep_op
+    # gpumd (2026-10-23): the three held-out fit errors, read from nep
+    # prediction mode; no operator spec.
+    assert by_rep_space["gpumd"] == {
+        "PotentialEnergyFitError", "PotentialForceFitError",
+        "PotentialVirialFitError"}
+    assert "gpumd" not in by_rep_op
     # 8 (qe 4 + pymatgen 4) + mace 4 + matgl 5 + fairchem 4 + vasp 7 + mp-api 3
-    # + ase 1 = 32 space specs; 2 (qe, pymatgen operator) + 3 MLIP + 4 vasp = 9
-    # operator specs (mp-api and ase add none).
-    assert len(space_specs) == 32, [a for a, _ in space_specs]
+    # + ase 1 + gpumd 3 = 35 space specs; 2 (qe, pymatgen operator) + 3 MLIP +
+    # 4 vasp = 9 operator specs (mp-api, ase and gpumd add none).
+    assert len(space_specs) == 35, [a for a, _ in space_specs]
     assert len(op_specs) == 9, [a for a, _ in op_specs]
 
 
