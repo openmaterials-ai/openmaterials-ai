@@ -260,6 +260,8 @@
   "SetVoltage": [],
   "RetentionTime": [],
   "CureConversion": [],
-  "GlassTransitionTemperature": []
+  "GlassTransitionTemperature": [],
+  "PotentialFitError": [],
+  "PotentialUncertaintyExceedance[method=committee_force_spread]": []
  }
 }

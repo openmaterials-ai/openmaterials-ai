@@ -14,6 +14,17 @@
 },
 {
 "curated": [],
+"id": "PotentialFitError",
+"kind": "node",
+"labels": [
+"PotentialFitError",
+"\\epsilon_V",
+"potential fit error"
+],
+"uid": "5ec39e6a46ba8c8b250ec6c359a10fc8fdfb769ee5f9b23f60b628b767cba099"
+},
+{
+"curated": [],
 "id": "Temperature",
 "kind": "node",
 "labels": [
@@ -619,6 +630,17 @@
 "potential of mean force"
 ],
 "uid": "7a4fd6ca35f412c375006146204be07210a037901b0e4fb33e1805f243c74b6a"
+},
+{
+"curated": [],
+"id": "PotentialUncertaintyExceedance[method=committee_force_spread]",
+"kind": "node",
+"labels": [
+"PotentialUncertaintyExceedance[method=committee_force_spread]",
+"f_{\\sigma}",
+"potential uncertainty exceedance method committee force spread"
+],
+"uid": "e382fb86bf6c620d5af35954c8f189650ee0ca02dc3c389ed13cb533be8b76d9"
 },
 {
 "curated": [
@@ -2005,6 +2027,16 @@
 "uid": null
 },
 {
+"curated": [],
+"id": "compute_potential_uncertainty_exceedance",
+"kind": "edge",
+"labels": [
+"compute potential uncertainty exceedance",
+"compute_potential_uncertainty_exceedance"
+],
+"uid": null
+},
+{
 "curated": [
 "periodic-dft-electronic-structure-calculation",
 "structure-relaxation"
@@ -2064,6 +2096,16 @@
 "labels": [
 "compute band gap",
 "compute_band_gap"
+],
+"uid": null
+},
+{
+"curated": [],
+"id": "compute_potential_fit_error",
+"kind": "edge",
+"labels": [
+"compute potential fit error",
+"compute_potential_fit_error"
 ],
 "uid": null
 },

@@ -2500,6 +2500,28 @@
   },
   "uid": "ccd6d5886ed78dc12e752ceb9d573aba2e79cdb99b147ee186abdbf16f4d11a2"
  },
+ "cdd7b5cc99b5cc279c21df1c1e6b179a7eafb368b4b5f1d154fbd30d64fa8aef": {
+  "identity": {
+   "formula": "Equality(Symbol('f_{\\\\sigma}'), Function('f^{exc}')(Function('V')(Symbol('\\\\{u\\\\}')), Symbol('r')))",
+   "inputs": [
+    "12cde23e9a333fdd03313c4cdbd82d51033f9bb3bd505466a8db5360faf166b4",
+    "80a4273845e09207860e06db18d1f1ee5670a9b9c8b1020a99928c872878f901"
+   ],
+   "output": "e382fb86bf6c620d5af35954c8f189650ee0ca02dc3c389ed13cb533be8b76d9",
+   "outputs": [
+    "e382fb86bf6c620d5af35954c8f189650ee0ca02dc3c389ed13cb533be8b76d9"
+   ],
+   "schemes": {}
+  },
+  "meta": {
+   "description": "Fraction of an MD run's uncertainty checks at which the committee force spread exceeds a threshold sigma: f_sigma = f^{exc}[V, r(t)]. The Potential input stands for the committee members (the family-of-values convention: each member's sha256 rides in the value's conditions), all evaluated on the frames of the Trajectory. At each check the largest per-atom spread sqrt(sum over x, y, z of the committee variance of the force component) is compared with sigma (eV/A); f_sigma is the fraction of checks above it. Opaque as a closed form, so not sympy-executable; the dimensional gate SKIPS it (the output is DIMENSIONLESS, in [0, 1]).",
+   "formula_latex": "f_{\\sigma} = f^{exc}{\\left(V{\\left(\\{u\\} \\right)},r \\right)}",
+   "formula_srepr": "Equality(Symbol('f_{\\\\sigma}'), Function('f^{exc}')(Function('V')(Symbol('\\\\{u\\\\}')), Symbol('r')))",
+   "name": "compute_potential_uncertainty_exceedance",
+   "schemes": {}
+  },
+  "uid": "cdd7b5cc99b5cc279c21df1c1e6b179a7eafb368b4b5f1d154fbd30d64fa8aef"
+ },
  "ce45fb09bf9c3f8076a2064b90853e163f80b20a3f5c7506af913c560accbc53": {
   "identity": {
    "formula": "Equality(Indexed(IndexedBase(Symbol('e')), Symbol('\\\\mathbf{q}'), Symbol('\\\\nu', integer=True)), Mul(Symbol('\\\\hbar', positive=True), Add(Function('n_{BE}')(Mul(Pow(Symbol('T', positive=True), Integer(-1)), Symbol('\\\\hbar', positive=True), Pow(Symbol('k_B', positive=True), Integer(-1)), Indexed(IndexedBase(Symbol('\\\\omega')), Symbol('\\\\mathbf{q}'), Symbol('\\\\nu', integer=True)))), Rational(1, 2)), Indexed(IndexedBase(Symbol('\\\\omega')), Symbol('\\\\mathbf{q}'), Symbol('\\\\nu', integer=True))))",
@@ -2903,6 +2925,30 @@
    }
   },
   "uid": "dee3e5f2230cae44c646c62985260fc103745cc44d0b1c2a87fe0a72ca675a97"
+ },
+ "dfe425d8c49a291b3275dcf8f1092feff36486d03f7c1393860d4041826fdaa9": {
+  "identity": {
+   "formula": "Equality(Symbol('\\\\epsilon_V'), Function('\\\\epsilon^{val}')(Symbol('V'), Symbol('E_{tot}'), Indexed(IndexedBase(Symbol('F^{at}')), Symbol('i', integer=True), Symbol('\\\\alpha', integer=True)), Indexed(IndexedBase(Symbol('\\\\sigma')), Symbol('\\\\alpha', integer=True), Symbol('\\\\beta', integer=True))))",
+   "inputs": [
+    "183e66d4e443326d2c346a0327cdb125026bd8f6a91a9bb97b61265fcade7e85",
+    "80a4273845e09207860e06db18d1f1ee5670a9b9c8b1020a99928c872878f901",
+    "9c5a2fdedab6b668ccf5f2043fb4c29a982bcde5063fd6ac8633ee2c7858ecbf",
+    "cf5a36298543de2027b173b757d38d80b38b66a85d2d3a56f55097e3da0e9a5e"
+   ],
+   "output": "5ec39e6a46ba8c8b250ec6c359a10fc8fdfb769ee5f9b23f60b628b767cba099",
+   "outputs": [
+    "5ec39e6a46ba8c8b250ec6c359a10fc8fdfb769ee5f9b23f60b628b767cba099"
+   ],
+   "schemes": {}
+  },
+  "meta": {
+   "description": "Validation error of a fitted interatomic potential: epsilon_V = epsilon^{val}[V, E_tot, F^{at}, sigma], the root-mean-square error (rmse_E per atom, rmse_F over Cartesian components, rmse_V per atom) of the energies, forces and virials evaluated under the Potential V against reference labels over a held-out set. TotalEnergy, Forces and Stress stand for the family of reference labels over the held-out structures (the family-of-values convention of compute_fc2_finite_displacement), each value carrying its structure in its conditions; the reference virial follows from Stress and the cell volume (V_cell sigma, up to the code's sign convention), so Stress is the virial input. The Potential input is the fitted model, evaluated on the same structures (TotalEnergy, Forces and Stress are also produced under an MLIP Potential by solve_ground_state). An opaque functional over the held-out set, so not sympy-executable; the dimensional gate SKIPS it. Held-out means not in the training set: the training-set error is a different quantity and is not this edge.",
+   "formula_latex": "\\epsilon_{V} = \\epsilon^{val}{\\left(V,E_{tot},{F^{at}}_{i,\\alpha},{\\sigma}_{\\alpha,\\beta} \\right)}",
+   "formula_srepr": "Equality(Symbol('\\\\epsilon_V'), Function('\\\\epsilon^{val}')(Symbol('V'), Symbol('E_{tot}'), Indexed(IndexedBase(Symbol('F^{at}')), Symbol('i', integer=True), Symbol('\\\\alpha', integer=True)), Indexed(IndexedBase(Symbol('\\\\sigma')), Symbol('\\\\alpha', integer=True), Symbol('\\\\beta', integer=True))))",
+   "name": "compute_potential_fit_error",
+   "schemes": {}
+  },
+  "uid": "dfe425d8c49a291b3275dcf8f1092feff36486d03f7c1393860d4041826fdaa9"
  },
  "e5d0388c6c18b3fb6cb08647ddaf431bfb39e60f33e0abd1ecdd2cb0c05575ee": {
   "identity": {

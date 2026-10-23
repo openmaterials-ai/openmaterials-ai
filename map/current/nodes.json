@@ -1200,6 +1200,34 @@
   },
   "uid": "5d35f8f6975629291c51d432d3b137fb5bd92165706d37dbab71366a4714b71d"
  },
+ "5ec39e6a46ba8c8b250ec6c359a10fc8fdfb769ee5f9b23f60b628b767cba099": {
+  "identity": {
+   "fields": [
+    {
+     "dimension": "M^1 L^1 T^-2",
+     "indices": []
+    },
+    {
+     "dimension": "M^1 L^2 T^-2",
+     "indices": []
+    },
+    {
+     "dimension": "M^1 L^2 T^-2",
+     "indices": []
+    }
+   ],
+   "gauge": "observable",
+   "labels": {},
+   "quantity": "potential_fit_error"
+  },
+  "meta": {
+   "description": "Validation error of a fitted interatomic potential against reference labels it was not trained on: the root-mean-square error of the energy per atom (rmse_E, ENERGY), of the Cartesian force components (rmse_F, FORCE) and of the virial per atom (rmse_V, ENERGY) over a held-out set. A property of one Potential on one dataset, so the model form, the base model it was fine-tuned from, the training-set and holdout sha256 and the reference method's settings hash ride in instance conditions. Distinct from the Potential node, which stays an opaque label: this node is the evidence that the label is fit for a material.",
+   "name": "PotentialFitError",
+   "symbol": "\\epsilon_V",
+   "tier": "Sources"
+  },
+  "uid": "5ec39e6a46ba8c8b250ec6c359a10fc8fdfb769ee5f9b23f60b628b767cba099"
+ },
  "600d0860290d3326202768db7249339c34ac675deb2ee8528a92207d3878b00c": {
   "identity": {
    "fields": [
@@ -2542,6 +2570,28 @@
    "tier": "Harmonic"
   },
   "uid": "e14b6cdd007ca3af971aa52880811138606efdb47e30d5a26c2335903ce796f3"
+ },
+ "e382fb86bf6c620d5af35954c8f189650ee0ca02dc3c389ed13cb533be8b76d9": {
+  "identity": {
+   "fields": [
+    {
+     "dimension": "1",
+     "indices": []
+    }
+   ],
+   "gauge": "observable",
+   "labels": {
+    "method": "committee_force_spread"
+   },
+   "quantity": "potential_uncertainty_exceedance"
+  },
+  "meta": {
+   "description": "Fraction of a molecular dynamics run's uncertainty checks at which the largest per-atom force spread of a committee of machine-learned potentials, sqrt(sum over x, y, z of the committee variance of the force component), exceeds a threshold sigma (eV/A). Dimensionless, in [0, 1]. Conditions: temperature, strain or pressure, the committee members' sha256, sigma, the check interval and the MD steps. Evidence for the active-learning convergence of a fitted potential at those conditions, not a property of the material.",
+   "name": "PotentialUncertaintyExceedance[method=committee_force_spread]",
+   "symbol": "f_{\\sigma}",
+   "tier": "Molecular dynamics"
+  },
+  "uid": "e382fb86bf6c620d5af35954c8f189650ee0ca02dc3c389ed13cb533be8b76d9"
  },
  "e3ba3f3522daaaa0a91c35e0302be3bc11c00c176a6090863c45b3c2664fed37": {
   "identity": {
