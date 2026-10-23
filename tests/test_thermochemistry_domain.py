@@ -371,7 +371,9 @@ def test_map_has_one_hundred_nodes_and_fifteen_tiers():
     # InterfaceConductance[transport_model=nemd] (Molecular dynamics, no new tier).
     # +2 for the cure-kinetics domain's nodes in the new Cure kinetics tier, the
     # 18th tier. +3 for the potential fit errors (Ground state, no new tier).
-    assert len(g["nodes"]) == 132
+    # +1 for PotentialUncertaintyExceedance[method=committee_force_spread]
+    # (Molecular dynamics, no new tier).
+    assert len(g["nodes"]) == 133
     assert len(g["tiers"]) == 18
 
 

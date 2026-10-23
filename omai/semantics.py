@@ -108,6 +108,15 @@ ALIASES: dict[str, tuple[str, ...]] = {
                       "PotentialVirialFitError"),
     "holdout-error": ("PotentialEnergyFitError", "PotentialForceFitError",
                       "PotentialVirialFitError"),
+    # Committee force spread of an MD run (active learning).
+    "model-deviation": (
+        "PotentialUncertaintyExceedance[method=committee_force_spread]",
+        "compute_potential_uncertainty_exceedance",
+    ),
+    "query-by-committee": (
+        "PotentialUncertaintyExceedance[method=committee_force_spread]",
+        "compute_potential_uncertainty_exceedance",
+    ),
     # NO-HOME markers live in the alignment files, not here: an alias
     # must point at something that exists (the gate below enforces it).
 }

@@ -182,4 +182,8 @@ register_space_symbols({
     # reconstruction applied-function name (F_pmf) is a sympy Function, not a free
     # symbol, so only the output LHS symbol needs registering here.
     "PotentialOfMeanForce": {"F"},
+    # compute_potential_uncertainty_exceedance has LHS f_sigma and reads the
+    # Trajectory positions r and the Potential members V({u}) through the input
+    # spaces; f^{exc} is a sympy Function, so only the LHS needs registering.
+    "PotentialUncertaintyExceedance[method=committee_force_spread]": {r"f_{\sigma}"},
 })
