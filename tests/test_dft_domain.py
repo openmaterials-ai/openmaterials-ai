@@ -66,7 +66,7 @@ def test_dft_edges_are_the_ground_state_operators():
     assert [op.name for op in EDGES] == [
         "solve_ground_state", "compute_forces_hf", "compute_stress_cell",
         "compute_fc2_finite_displacement", "compute_magnetic_moments",
-        "compute_band_gap"]
+        "compute_band_gap", "compute_potential_fit_error"]
 
 
 def test_structure_is_imported_from_shared_primitives():

@@ -479,4 +479,4 @@ def test_graph_totals_after_the_composites_domain():
     for d in DOMAINS:
         for op in d.edges:
             ops.add(op.name)
-    assert len(ops) == 127  # 109 + 6 composite + 10 analog device metrology + 2 cure-kinetics edges
+    assert len(ops) == 128  # 109 + 6 composite + 10 analog device metrology + 2 cure-kinetics edges + compute_potential_fit_error

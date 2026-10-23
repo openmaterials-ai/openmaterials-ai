@@ -1,6 +1,6 @@
 r"""Operators (edges) of the DFT ground-state domain.
 
-Six edges, all implicit (is_executable_in_sympy_override=False): the
+Seven edges, all implicit (is_executable_in_sympy_override=False): the
 Kohn-Sham SCF solve, the two response derivatives (Hellmann-Feynman forces,
 cell stress) a DFT engine reports alongside the energy, the
 finite-displacement route from Forces to the second-order force constants
@@ -9,7 +9,10 @@ thermal-transport chain), the spin-polarized per-site magnetic moments
 (added 2026-07-09 from the pymatgen scan, the same (Structure, Potential)
 signature as the SCF solve), and the electronic band gap (added 2026-07-09
 from the atomate2/VASP scan, the same (Structure, Potential) signature: one
-more response read off a band-structure run).
+more response read off a band-structure run), and the held-out validation
+error of a fitted potential against reference labels
+(compute_potential_fit_error, whose output PotentialFitError is a
+thermal_transport Sources node).
 
 Symbol choices are deliberately distinct from the thermal domain's globals to
 avoid collisions in the shared dimension / vocabulary registries: E_{tot} and
@@ -31,7 +34,11 @@ from omai.dft_ground_state.operator.nodes import (
     STRUCTURE,
     TOTAL_ENERGY,
 )
-from omai.thermal_transport.operator.nodes import FORCE_CONSTANTS_2, POTENTIAL
+from omai.thermal_transport.operator.nodes import (
+    FORCE_CONSTANTS_2,
+    POTENTIAL,
+    POTENTIAL_FIT_ERROR,
+)
 
 
 # ---------------------------------------------------------------------------
@@ -64,6 +71,10 @@ _m_KS = sp.Function(r"m^{KS}")
 # produces it, the same (S, V) signature as the SCF solve.
 _E_gap = sp.Symbol("E_{gap}")
 _E_gap_KS = sp.Function(r"E^{gap}_{KS}")
+# Held-out validation error of a fitted potential (\epsilon_V) and the opaque
+# RMSE functional over the held-out set that produces it.
+_eps_V = sp.Symbol(r"\epsilon_V")
+_eps_val = sp.Function(r"\epsilon^{val}")
 
 
 # ---------------------------------------------------------------------------
@@ -185,6 +196,36 @@ compute_band_gap = Operator(
     ),
 )
 
+compute_potential_fit_error = Operator(
+    name="compute_potential_fit_error",
+    inputs=(POTENTIAL, TOTAL_ENERGY, FORCES, STRESS),
+    outputs=(POTENTIAL_FIT_ERROR,),
+    formula=sp.Eq(
+        _eps_V,
+        _eps_val(_V_sym, _E_tot, _F_at[_i, _alpha], _sigma[_alpha, _beta]),
+    ),
+    is_executable_in_sympy_override=False,
+    description=(
+        "Validation error of a fitted interatomic potential: epsilon_V = "
+        "epsilon^{val}[V, E_tot, F^{at}, sigma], the root-mean-square error "
+        "(rmse_E per atom, rmse_F over Cartesian components, rmse_V per atom) "
+        "of the energies, forces and virials evaluated under the Potential V "
+        "against reference labels over a held-out set. TotalEnergy, Forces and Stress "
+        "stand for the family of reference labels over the held-out "
+        "structures (the family-of-values convention of "
+        "compute_fc2_finite_displacement), each value carrying its structure "
+        "in its conditions; the reference virial follows from Stress and the "
+        "cell volume (V_cell sigma, up to the code's sign convention), so "
+        "Stress is the virial input. The Potential input is the fitted model, "
+        "evaluated on the same structures (TotalEnergy, Forces and Stress are "
+        "also produced under an MLIP Potential by solve_ground_state). An "
+        "opaque functional over the held-out set, so not sympy-executable; "
+        "the dimensional gate SKIPS it. Held-out means not in the training "
+        "set: the training-set error is a different quantity and is not this "
+        "edge."
+    ),
+)
+
 EDGES: tuple[Operator, ...] = (
     solve_ground_state,
     compute_forces_hf,
@@ -192,4 +233,5 @@ EDGES: tuple[Operator, ...] = (
     compute_fc2_finite_displacement,
     compute_magnetic_moments,
     compute_band_gap,
+    compute_potential_fit_error,
 )
