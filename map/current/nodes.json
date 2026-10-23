@@ -1514,6 +1514,26 @@
   },
   "uid": "81288248a2b40f0abfe78b058ffa4025a0312324e8af26b801017b9a0971961e"
  },
+ "833c3db3fbd145b45ed051cd6eaf782d7555518a0634f524b9ceee7fe49245e0": {
+  "identity": {
+   "fields": [
+    {
+     "dimension": "M^1 L^1 T^-2",
+     "indices": []
+    }
+   ],
+   "gauge": "observable",
+   "labels": {},
+   "quantity": "potential_force_fit_error"
+  },
+  "meta": {
+   "description": "Force error of a fitted interatomic potential on held-out reference labels: the root-mean-square over every Cartesian component of every atom of the held-out structures of F_V - F in eV/A, the difference between the force evaluated with the Potential V and the reference Forces. Raw RMSE on held-out labels. It is the error on the held-out labels' distribution: how close the potential's values are to the reference method's on held-out structures from the same dataset, not a measure of accuracy on configurations or properties outside that distribution. Conditions: the model form and sha256, the base model it was fine-tuned from (if any), the training-set and held-out-set sha256, and the reference method's settings hash.",
+   "name": "PotentialForceFitError",
+   "symbol": "\\epsilon_F",
+   "tier": "Ground state"
+  },
+  "uid": "833c3db3fbd145b45ed051cd6eaf782d7555518a0634f524b9ceee7fe49245e0"
+ },
  "8932e3cbadef74a82802b43fd1d25328cb40e6136c90df3b6a4a998e77f9567b": {
   "identity": {
    "fields": [
@@ -1601,6 +1621,26 @@
    "tier": "Composite"
   },
   "uid": "8cee68745e003909cd8e65688628af53a35c0803ace3f330394bbf0edf338d7b"
+ },
+ "8d85a09e82115bdd601be2ded9450446a9cdbdf0364bc88f421215019d00677a": {
+  "identity": {
+   "fields": [
+    {
+     "dimension": "M^1 L^2 T^-2",
+     "indices": []
+    }
+   ],
+   "gauge": "observable",
+   "labels": {},
+   "quantity": "potential_virial_fit_error"
+  },
+  "meta": {
+   "description": "Virial error of a fitted interatomic potential on held-out reference labels: the root-mean-square over the six independent components of each held-out structure that carries a reference stress of (W_V - W)/N in eV/atom, the per-atom difference between the virial evaluated with the Potential V and the reference virial W = V_cell sigma, with sigma the reference Stress in its pressure convention. Structures without a reference stress are left out. Raw RMSE on held-out labels. It is the error on the held-out labels' distribution: how close the potential's values are to the reference method's on held-out structures from the same dataset, not a measure of accuracy on configurations or properties outside that distribution. Conditions: the model form and sha256, the base model it was fine-tuned from (if any), the training-set and held-out-set sha256, and the reference method's settings hash.",
+   "name": "PotentialVirialFitError",
+   "symbol": "\\epsilon_W",
+   "tier": "Ground state"
+  },
+  "uid": "8d85a09e82115bdd601be2ded9450446a9cdbdf0364bc88f421215019d00677a"
  },
  "910d47d67a7308728e2f7d211a08c1590239c7b802cd75128f00cd103a719b84": {
   "identity": {
@@ -2410,6 +2450,26 @@
   },
   "uid": "d3e529fd2e7fa0a009440c21bd64949d6326c04eaa109fbed4cafac798608118"
  },
+ "d3f969394ab79173ea4afe796f00bc4b941141aa5f781e90fb3217e945f70755": {
+  "identity": {
+   "fields": [
+    {
+     "dimension": "M^1 L^2 T^-2",
+     "indices": []
+    }
+   ],
+   "gauge": "observable",
+   "labels": {},
+   "quantity": "potential_energy_fit_error"
+  },
+  "meta": {
+   "description": "Energy error of a fitted interatomic potential on held-out reference labels: the root-mean-square over the held-out structures of (E_V - E_tot)/N in eV/atom, the per-atom difference between the energy evaluated with the Potential V and the reference TotalEnergy. Raw RMSE: no per-atom offset is removed, so a constant shift between the model and the labels counts as error (GPUMD's test-set convention; its training-set energy RMSE removes the mean offset and is not this node). It is the error on the held-out labels' distribution: how close the potential's values are to the reference method's on held-out structures from the same dataset, not a measure of accuracy on configurations or properties outside that distribution. Conditions: the model form and sha256, the base model it was fine-tuned from (if any), the training-set and held-out-set sha256, and the reference method's settings hash.",
+   "name": "PotentialEnergyFitError",
+   "symbol": "\\epsilon_E",
+   "tier": "Ground state"
+  },
+  "uid": "d3f969394ab79173ea4afe796f00bc4b941141aa5f781e90fb3217e945f70755"
+ },
  "d79d88d53266c147ea8d806cdbd30df309199469351ee13bcc9040a98745ebc4": {
   "identity": {
    "fields": [
@@ -2542,6 +2602,28 @@
    "tier": "Harmonic"
   },
   "uid": "e14b6cdd007ca3af971aa52880811138606efdb47e30d5a26c2335903ce796f3"
+ },
+ "e382fb86bf6c620d5af35954c8f189650ee0ca02dc3c389ed13cb533be8b76d9": {
+  "identity": {
+   "fields": [
+    {
+     "dimension": "1",
+     "indices": []
+    }
+   ],
+   "gauge": "observable",
+   "labels": {
+    "method": "committee_force_spread"
+   },
+   "quantity": "potential_uncertainty_exceedance"
+  },
+  "meta": {
+   "description": "Fraction of the uncertainty checks of one molecular dynamics run at which the committee force spread exceeds a threshold sigma (eV/A). At each check the spread is the largest, over the atoms, of the per-atom value sqrt(sum over x, y, z of the committee variance of the force component), the population variance (divided by M) over all M members, the driving member included; f_sigma is the fraction of checks above sigma. Dimensionless, in [0, 1], one value per run. As a maximum over atoms it grows with the atom count at a fixed per-atom error distribution, so the value is size dependent. Conditions: the starting structure (configuration uid, or the cell, composition and positions), the committee size M and each member's sha256, the member that drives the MD (forces from the others are evaluated on its frames), the ensemble with its thermostat or barostat and the time step, the random seed (initial velocities, thermostat noise), the steps run before the checked run, the temperature, strain or pressure, sigma, the check interval and the number of MD steps. Used as an active-learning stopping criterion: a low value means a small spread among the members' forces on the sampled configurations, not that the potential is accurate there. Not a property of the material.",
+   "name": "PotentialUncertaintyExceedance[method=committee_force_spread]",
+   "symbol": "f_{\\sigma}",
+   "tier": "Molecular dynamics"
+  },
+  "uid": "e382fb86bf6c620d5af35954c8f189650ee0ca02dc3c389ed13cb533be8b76d9"
  },
  "e3ba3f3522daaaa0a91c35e0302be3bc11c00c176a6090863c45b3c2664fed37": {
   "identity": {
