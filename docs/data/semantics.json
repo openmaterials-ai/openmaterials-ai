@@ -622,6 +622,21 @@
 },
 {
 "curated": [
+"max-force-deviation",
+"model-deviation",
+"query-by-committee"
+],
+"id": "PotentialUncertaintyExceedance[method=committee_force_spread]",
+"kind": "node",
+"labels": [
+"PotentialUncertaintyExceedance[method=committee_force_spread]",
+"f_{\\sigma}",
+"potential uncertainty exceedance method committee force spread"
+],
+"uid": "e382fb86bf6c620d5af35954c8f189650ee0ca02dc3c389ed13cb533be8b76d9"
+},
+{
+"curated": [
 "structure-relaxation"
 ],
 "id": "Structure",
@@ -689,6 +704,51 @@
 "band gap"
 ],
 "uid": "7164425d1695208e46171b5030c938c3545c180b57018d51748d0507f9f08135"
+},
+{
+"curated": [
+"holdout-error",
+"test-set-rmse",
+"validation-rmse"
+],
+"id": "PotentialEnergyFitError",
+"kind": "node",
+"labels": [
+"PotentialEnergyFitError",
+"\\epsilon_E",
+"potential energy fit error"
+],
+"uid": "d3f969394ab79173ea4afe796f00bc4b941141aa5f781e90fb3217e945f70755"
+},
+{
+"curated": [
+"holdout-error",
+"test-set-rmse",
+"validation-rmse"
+],
+"id": "PotentialForceFitError",
+"kind": "node",
+"labels": [
+"PotentialForceFitError",
+"\\epsilon_F",
+"potential force fit error"
+],
+"uid": "833c3db3fbd145b45ed051cd6eaf782d7555518a0634f524b9ceee7fe49245e0"
+},
+{
+"curated": [
+"holdout-error",
+"test-set-rmse",
+"validation-rmse"
+],
+"id": "PotentialVirialFitError",
+"kind": "node",
+"labels": [
+"PotentialVirialFitError",
+"\\epsilon_W",
+"potential virial fit error"
+],
+"uid": "8d85a09e82115bdd601be2ded9450446a9cdbdf0364bc88f421215019d00677a"
 },
 {
 "curated": [
@@ -2006,6 +2066,19 @@
 },
 {
 "curated": [
+"model-deviation",
+"query-by-committee"
+],
+"id": "compute_potential_uncertainty_exceedance",
+"kind": "edge",
+"labels": [
+"compute potential uncertainty exceedance",
+"compute_potential_uncertainty_exceedance"
+],
+"uid": null
+},
+{
+"curated": [
 "periodic-dft-electronic-structure-calculation",
 "structure-relaxation"
 ],
@@ -2064,6 +2137,36 @@
 "labels": [
 "compute band gap",
 "compute_band_gap"
+],
+"uid": null
+},
+{
+"curated": [],
+"id": "compute_potential_energy_fit_error",
+"kind": "edge",
+"labels": [
+"compute potential energy fit error",
+"compute_potential_energy_fit_error"
+],
+"uid": null
+},
+{
+"curated": [],
+"id": "compute_potential_force_fit_error",
+"kind": "edge",
+"labels": [
+"compute potential force fit error",
+"compute_potential_force_fit_error"
+],
+"uid": null
+},
+{
+"curated": [],
+"id": "compute_potential_virial_fit_error",
+"kind": "edge",
+"labels": [
+"compute potential virial fit error",
+"compute_potential_virial_fit_error"
 ],
 "uid": null
 },

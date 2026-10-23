@@ -1,7 +1,7 @@
 {
  "representation": "vasp",
- "lineage_version": "61a981c02604f2165e2a138be7d62ee33f3d52dc96d5b458f80188cc60dff233",
- "map_version": "baf99346621bee3269400670c5044dac03c89e0bf7cd0dff673593344540852c",
+ "lineage_version": "2bfeadffaf09a5a595d040c4030be33873ae0cf5a12601104815a4f11e719e4a",
+ "map_version": "915c3185033faf34df86be6540158b1320bc07478cffeac20b5640d59129edd8",
  "covers": [
   {
    "node": "BandGap",
