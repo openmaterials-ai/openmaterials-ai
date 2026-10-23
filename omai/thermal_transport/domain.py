@@ -42,6 +42,7 @@ from omai.thermal_transport.operator import edges as _edges
 # Matches the IndexedBase symbols the operator-layer formulas are written in.
 SYMBOLS = {
     "Potential": r"V",
+    "PotentialFitError": r"\epsilon_V",
     "Temperature": r"T",
     "ThermalConductivity": r"\kappa",
     "BornCharges": r"Z^{*}",

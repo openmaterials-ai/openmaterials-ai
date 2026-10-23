@@ -21,7 +21,7 @@ from omai.thermal_transport.operator import (
 
 
 def test_node_count():
-    assert len(NODES) == 54
+    assert len(NODES) == 55
 
 
 def test_edge_count():

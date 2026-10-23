@@ -474,7 +474,7 @@ def test_no_platform_representation_on_the_map():
 
 def test_graph_totals_after_the_composites_domain():
     g = build_graph_dict(DOMAINS)
-    assert len(g["nodes"]) == 129  # 107 + 8 composite + 11 analog device metrology + MigrationBarrier + 2 cure kinetics
+    assert len(g["nodes"]) == 130  # 107 + 8 composite + 11 analog device metrology + MigrationBarrier + 2 cure kinetics + PotentialFitError
     ops = set()
     for d in DOMAINS:
         for op in d.edges:

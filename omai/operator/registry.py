@@ -202,6 +202,7 @@ QUANTITY_TAGS: dict[str, str] = {
     "state_coefficient_of_variation": "Coefficient of variation c = sigma_G/mu_G of a programmed conductance level across cells or cycles, stated in instance conditions with the target level and protocol; DIMENSIONLESS.",
     "cure_conversion": "Degree of cure alpha of a thermosetting resin, the reacted fraction of its reactive groups (in DSC practice, the released fraction of the total reaction heat), 0 (uncured) to 1 (fully cured); DIMENSIONLESS.",
     "glass_transition_temperature": "Glass transition temperature T_g, where an amorphous material, or the amorphous fraction of a semicrystalline one, passes between the glassy and the rubbery or liquid state; TEMPERATURE. A kinetic, rate-dependent transition, distinct from the equilibrium transition_temperature.",
+    "potential_fit_error": "Validation error (energy, force and virial RMSE on held-out reference labels) of a fitted interatomic potential.",
 }
 
 

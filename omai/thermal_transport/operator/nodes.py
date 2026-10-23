@@ -36,6 +36,7 @@ from omai.operator.dimensions import (
     ENERGY_PER_TEMPERATURE_PER_MOLE,
     ENERGY_PER_TEMPERATURE_PER_VOLUME,
     ENERGY_TIMES_LENGTH_PER_TIME,
+    FORCE,
     FREQUENCY,
     FREQUENCY_SQUARED,
     INVERSE_FREQUENCY,
@@ -60,6 +61,28 @@ POTENTIAL = ObservableSpace(
     fields=(Field("potential", OPAQUE, indices=()),),
     description="Born-Oppenheimer potential of the material; in Phase 1 an opaque label.",
     tier="Sources",
+)
+
+POTENTIAL_FIT_ERROR = ObservableSpace(
+    name="PotentialFitError",
+    fields=(
+        Field("rmse_E", ENERGY, indices=()),
+        Field("rmse_F", FORCE, indices=()),
+        Field("rmse_V", ENERGY, indices=()),
+    ),
+    tier="Sources",
+    description=(
+        "Validation error of a fitted interatomic potential against reference "
+        "labels it was not trained on: the root-mean-square error of the "
+        "energy per atom (rmse_E, ENERGY), of the Cartesian force components "
+        "(rmse_F, FORCE) and of the virial per atom (rmse_V, ENERGY) over a "
+        "held-out set. A property of one Potential on one dataset, so the "
+        "model form, the base model it was fine-tuned from, the training-set "
+        "and holdout sha256 and the reference method's settings hash ride in "
+        "instance conditions. Distinct from the Potential node, which stays an "
+        "opaque label: this node is the evidence that the label is fit for a "
+        "material."
+    ),
 )
 
 TEMPERATURE_STATE = ObservableSpace(
@@ -925,6 +948,7 @@ POTENTIAL_OF_MEAN_FORCE = ObservableSpace(
 
 NODES: tuple[Space, ...] = (
     POTENTIAL,
+    POTENTIAL_FIT_ERROR,
     TEMPERATURE_STATE,
     FORCE_CONSTANTS_2,
     FORCE_CONSTANTS_3,

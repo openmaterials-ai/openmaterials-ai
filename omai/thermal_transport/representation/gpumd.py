@@ -72,6 +72,7 @@ from omai.thermal_transport.operator.nodes import (
     HEAT_CURRENT_ACF,
     MEAN_SQUARED_DISPLACEMENT,
     POTENTIAL,
+    POTENTIAL_FIT_ERROR,
     THERMAL_CONDUCTIVITY_GREEN_KUBO,
     THERMAL_CONDUCTIVITY_HNEMD,
     TRAJECTORY,
@@ -92,6 +93,24 @@ GPUMD_POTENTIAL = SpaceRepresentationSpec(
         "training run); EAM, Tersoff, SW are also supported as classical "
         "alternatives. NEP files carry the trained weights and the "
         "elemental-pair cutoffs; the file *is* the Potential."
+    ),
+)
+
+
+GPUMD_POTENTIAL_FIT_ERROR = SpaceRepresentationSpec(
+    space=POTENTIAL_FIT_ERROR,
+    representation_name="gpumd",
+    code_api={
+        "rmse_E": "nep (prediction 1) on the holdout set: energy_test.out, RMSE of columns 1 vs 2",
+        "rmse_F": "nep (prediction 1): force_test.out, RMSE over the 3 component pairs",
+        "rmse_V": "nep (prediction 1): virial_test.out, RMSE over the 6 component pairs",
+    },
+    notes=(
+        "GPUMD's `nep` executable writes per-structure predicted vs reference "
+        "energies, forces and virials for the test set (test.xyz) in "
+        "prediction mode; the RMSE over those pairs is the validation error. "
+        "loss.out's training-set RMSE columns are not this node: they are "
+        "measured on the data the model was fitted to."
     ),
 )
 

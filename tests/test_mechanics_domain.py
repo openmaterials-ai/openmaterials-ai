@@ -159,8 +159,9 @@ def test_no_node_uid_collisions_at_105_nodes():
     # analog-device-metrology domain's eleven nodes and MigrationBarrier (2026-10-05).
     # 127 with InterfaceConductance[transport_model=nemd] (Molecular dynamics tier).
     # 129 with the cure-kinetics domain's two nodes in the new Cure kinetics tier.
+    # 130 with PotentialFitError (Sources tier, no new tier).
     g = build_graph_dict(DOMAINS)
-    assert len(g["nodes"]) == 129
+    assert len(g["nodes"]) == 130
     uids = [n["uid"] for n in g["nodes"]]
     assert len(set(uids)) == len(uids), "node uid collision"
 
