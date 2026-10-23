@@ -922,6 +922,32 @@ POTENTIAL_OF_MEAN_FORCE = ObservableSpace(
     tier="Molecular dynamics",
 )
 
+POTENTIAL_UNCERTAINTY_EXCEEDANCE = ObservableSpace(
+    name="PotentialUncertaintyExceedance[method=committee_force_spread]",
+    fields=(Field("f_sigma", DIMENSIONLESS, indices=()),),
+    labels={"method": "committee_force_spread"},
+    tier="Molecular dynamics",
+    description=(
+        "Fraction of the uncertainty checks of one molecular dynamics run at "
+        "which the committee force spread exceeds a threshold sigma (eV/A). "
+        "At each check the spread is the largest, over the atoms, of the "
+        "per-atom value sqrt(sum over x, y, z of the committee variance of the "
+        "force component), the variance taken over all M members of the "
+        "committee; f_sigma is the fraction of checks above sigma. "
+        "Dimensionless, in [0, 1], one value per run. As a maximum over atoms "
+        "it grows with the atom count at a fixed per-atom error distribution, "
+        "so the value is size dependent. Conditions: the starting structure "
+        "(configuration uid, or the cell and atom count), the committee size M "
+        "and each member's sha256, the member that drives the MD (forces from "
+        "the others are evaluated on its frames), the ensemble with its "
+        "thermostat or barostat and the time step, the temperature, strain or "
+        "pressure, sigma, the check interval and the number of MD steps. Used "
+        "as an active-learning stopping criterion: a low value means a small "
+        "spread among the members' forces on the sampled configurations, not "
+        "that the potential is accurate there. Not a property of the material."
+    ),
+)
+
 
 NODES: tuple[Space, ...] = (
     POTENTIAL,
@@ -986,4 +1012,6 @@ NODES: tuple[Space, ...] = (
     HEAT_CAPACITY_PIMD,
     # Enhanced-sampling free energy (Cookbook Slice 2, PLUMED, record 216)
     POTENTIAL_OF_MEAN_FORCE,
+    # Committee force-spread exceedance of one MD run (NEP active learning)
+    POTENTIAL_UNCERTAINTY_EXCEEDANCE,
 )
