@@ -39,10 +39,10 @@
       return '<div><dt>' + esc(label(key)) + '</dt><dd>' + esc(b.conventions[key]) + '</dd></div>';
     }).join('');
     var proof = compiled ? '<h4>Compiled declarations</h4>' + list(b.evidence.declarations) +
-      '<p><a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/main/' + esc(b.evidence.source_path) + '">Bridge source</a> · ' +
-      '<a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/main/' + esc(b.evidence.build_record) + '">Build and axiom evidence</a></p>' +
-      '<p>Scope is the stated interpretation and hypotheses, not arbitrary tensors or numerical implementations.</p>' :
-      '<p class="notice gnote">Source correspondence only. No OMAI equivalence proof is claimed by this record.</p>';
+      '<p><a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/1a382762b5eb6f0a82bdfe3c18eda3f94a720b44/' + esc(b.evidence.source_path) + '">Bridge source</a> · ' +
+      '<a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/1a382762b5eb6f0a82bdfe3c18eda3f94a720b44/' + esc(b.evidence.build_record) + '">Build record and axiom audit</a></p>' +
+      '<p>The proof applies under the stated interpretation and hypotheses. It does not cover arbitrary tensors or verify numerical implementations.</p>' :
+      '<p class="notice gnote">Source correspondence only; this record contains no OMAI equivalence proof.</p>';
     return '<section class="binding"><h3>' + esc(b.id) + '</h3><p class="tags">' + esc(label(b.relation)) + ' · ' +
       (compiled ? 'Compiled bridge' : 'Source correspondence') + '</p><p>' + esc(b.statement) + '</p>' + proof +
       '<h4>Pinned upstream declarations</h4><ul>' + sources + '</ul><h4>Conditions</h4>' + list(b.conditions) +
@@ -51,7 +51,7 @@
   }
   function rowHtml(row) {
     var details = row.bindings.map(bindingHtml).join('') || '<p class="notice gnote">' + esc(row.reason) + '</p>';
-    var formula = row.formula_latex ? '<h3>Authoritative operator formula</h3><pre class="formula-source">' + esc(row.formula_latex) + '</pre>' : '';
+    var formula = row.formula_latex ? '<h3>Operator formula</h3><pre class="formula-source">' + esc(row.formula_latex) + '</pre>' : '';
     var uid = '<p class="uid">Scientific UID: <code>' + esc(row.uid) + '</code></p>';
     var link = row.kind === 'node' ? '<p><a href="../../map/#node=' + encodeURIComponent(row.id) + '">Open quantity on the map</a></p>' : '';
     return '<details class="inventory-row"><summary><span class="row-kind">' + esc(row.kind) + '</span> <strong>' + esc(row.id) +

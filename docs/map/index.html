@@ -544,11 +544,11 @@ function selectNode(node){
   const bindingRow=formulaBindings.nodes[id];
   if(bindingRow){
     const count=bindingRow.binding_ids.length;
-    h+='<div class="om-panel-label">Physlib formula bridge</div><p><a href="../lean/bridge/#node='+encodeURIComponent(id)+'">'+(count?count+' reviewed correspondences':'Explicit correspondence gap')+'</a></p>';
-    h+='<p class="muted">Source links, conditions, and compiled proof evidence are distinguished in each record.</p>';
+    h+='<div class="om-panel-label">Physlib formula bridge</div><p><a href="../lean/bridge/#node='+encodeURIComponent(id)+'">'+(count?count+' reviewed correspondence'+(count===1?'':'s'):'No correspondence established')+'</a></p>';
+    h+='<p class="muted">Each record lists the conditions and whether it contains a source link or a compiled proof.</p>';
     [...new Set(fl.map(f=>f.op).filter(Boolean))].forEach(op=>{
       const row=formulaBindings.operators[op];
-      if(row) h+='<p><a href="../lean/bridge/#operator='+encodeURIComponent(op)+'">'+esc(opName(op))+'</a>: '+(row.binding_ids.length?row.binding_ids.length+' correspondences':'gap')+'</p>';
+      if(row) h+='<p><a href="../lean/bridge/#operator='+encodeURIComponent(op)+'">'+esc(opName(op))+'</a>: '+(row.binding_ids.length?row.binding_ids.length+' correspondence'+(row.binding_ids.length===1?'':'s'):'gap')+'</p>';
     });
   }
   if(ins.length){ h+='<div class="om-panel-label">Built from</div><div class="chips">'+ins.map(chip).join('')+'</div>'; }

@@ -2,9 +2,9 @@
 
 This package retains the reviewed Physlib revision
 `a74414af9cf713084dd59943fa706980cb7573de` and Lean 4.31.0. It is a
-compatibility target, not the current upstream API. The additive
-[current formula bridge](bridge/README.md) uses its own dependency pins and
-build evidence; the historical proofs do not validate that newer package.
+compatibility target, not the current upstream API. The
+[current formula bridge](bridge/README.md) has separate dependency pins and
+build records; it must be built and checked separately.
 
 `lean/` is a standalone lake package (`openmaterials`, library `OpenMaterials`)
 holding the map's generated proof layer. It depends on
@@ -27,13 +27,13 @@ Generated modules (do not edit by hand; regenerate with
 - `OpenMaterialsIdentities.lean` (Tier 2, `omai.lean_identities`): the
   executable identities as real-valued composition theorems, Mathlib only
   (`ring` / `field_simp`).
-- `OpenMaterialsUnits.lean` (`omai.lean_units`): the units bridge, anchoring
-  the map's SI-canonical convention against physlib's `UnitChoices.dimScale`.
+- `OpenMaterialsUnits.lean` (`omai.lean_units`): an SI-to-SI scale identity
+  using physlib's `UnitChoices.dimScale`.
 
 The historical units theorem proves the generic SI-to-SI scale identity.
 It does **not** establish that all stored OMAI values are SI numbers: canonical
 representations include linear THz and angstrom-derived units. See the current
-bridge's explicit unit and angular-frequency interpretation requirements.
+bridge's unit and angular-frequency conventions.
 
 **Verified.** The package builds against physlib with zero errors and zero
 sorries. `tests/test_physlean_export.py` re-checks every Tier 1 identity in

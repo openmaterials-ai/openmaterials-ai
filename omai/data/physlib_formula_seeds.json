@@ -38,7 +38,7 @@
         }
       ],
       "conditions": [
-        "Consume a valid ThermoelectricMaterial; identify OMAI scalar sigma_e with M.sigma and Seebeck with M.S.",
+        "Use a ThermoelectricMaterial satisfying its field constraints; identify OMAI scalar sigma_e with M.sigma and Seebeck with M.S.",
         "Strict positivity additionally requires S != 0."
       ],
       "conventions": {
@@ -48,7 +48,7 @@
         "frequency_convention": "not applicable",
         "unit_embedding": "sigma in S/m; S in V/K; kappa in W/(m K); absolute T in K; PF in W/(m K^2); zT dimensionless.",
         "held_fixed": "All coefficients evaluated at the same T, carrier density/doping, composition, and model.",
-        "admissibility": "sigma > 0, kappa_l > 0, kappa_e >= 0; no fabricated thermal coefficients.",
+        "admissibility": "sigma > 0, kappa_l > 0, kappa_e >= 0; coefficients must describe the material.",
         "reference_energy": "not applicable",
         "qpoint_weighting": "not applicable"
       },
@@ -98,7 +98,7 @@
       ],
       "conditions": [
         "sigma > 0 and kappa_e >= 0; S may have either sign.",
-        "Provide real independently justified kappa_l > 0 to complete the material, not an invented filler value."
+        "Provide an independently justified lattice conductivity kappa_l > 0."
       ],
       "conventions": {
         "model_scope": "Isotropic scalar thermoelectric material in linear response at one shared operating point.",
@@ -107,12 +107,12 @@
         "frequency_convention": "not applicable",
         "unit_embedding": "sigma in S/m; S in V/K; kappa in W/(m K); absolute T in K; PF in W/(m K^2); zT dimensionless.",
         "held_fixed": "All coefficients evaluated at the same T, carrier density/doping, composition, and model.",
-        "admissibility": "sigma > 0, kappa_l > 0, kappa_e >= 0; no fabricated thermal coefficients.",
+        "admissibility": "sigma > 0, kappa_l > 0, kappa_e >= 0; coefficients must describe the material.",
         "reference_energy": "not applicable",
         "qpoint_weighting": "not applicable"
       },
       "remaining_obligations": [
-        "Bind representations/units/operating point and certify physical sign conditions; no upstream BTE or ab-initio producer theorem is identified."
+        "Identify the representations, units and operating point, and verify the sign conditions; no upstream BTE or ab-initio producer theorem is identified."
       ],
       "evidence": {
         "kind": "source_correspondence"
@@ -165,7 +165,7 @@
         "frequency_convention": "not applicable",
         "unit_embedding": "sigma in S/m; S in V/K; kappa in W/(m K); absolute T in K; PF in W/(m K^2); zT dimensionless.",
         "held_fixed": "All coefficients evaluated at the same T, carrier density/doping, composition, and model.",
-        "admissibility": "sigma > 0, kappa_l > 0, kappa_e >= 0; no fabricated thermal coefficients.",
+        "admissibility": "sigma > 0, kappa_l > 0, kappa_e >= 0; coefficients must describe the material.",
         "reference_energy": "not applicable",
         "qpoint_weighting": "not applicable"
       },
@@ -240,7 +240,7 @@
         "frequency_convention": "not applicable",
         "unit_embedding": "sigma in S/m; S in V/K; kappa in W/(m K); absolute T in K; PF in W/(m K^2); zT dimensionless.",
         "held_fixed": "All coefficients evaluated at the same T, carrier density/doping, composition, and model.",
-        "admissibility": "sigma > 0, kappa_l > 0, kappa_e >= 0; no fabricated thermal coefficients.",
+        "admissibility": "sigma > 0, kappa_l > 0, kappa_e >= 0; coefficients must describe the material.",
         "reference_energy": "not applicable",
         "qpoint_weighting": "not applicable"
       },
@@ -277,7 +277,7 @@
         }
       ],
       "relation": "conditional",
-      "statement": "OMAI single-mode HelmholtzFreeEnergy is a candidate interpretation of CanonicalEnsemble.helmholtzFreeEnergy after oscillator model and closed-form derivation obligations are discharged.",
+      "statement": "OMAI single-mode HelmholtzFreeEnergy is a candidate interpretation of CanonicalEnsemble.helmholtzFreeEnergy once the oscillator model and its closed-form formulas have been proved.",
       "sources": [
         {
           "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
@@ -337,7 +337,7 @@
         }
       ],
       "relation": "conditional",
-      "statement": "OMAI single-mode InternalEnergy is a candidate interpretation of CanonicalEnsemble.meanEnergy after oscillator model and closed-form derivation obligations are discharged.",
+      "statement": "OMAI single-mode InternalEnergy is a candidate interpretation of CanonicalEnsemble.meanEnergy once the oscillator model and its closed-form formulas have been proved.",
       "sources": [
         {
           "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
@@ -397,7 +397,7 @@
         }
       ],
       "relation": "conditional",
-      "statement": "OMAI single-mode Entropy is a candidate interpretation of CanonicalEnsemble.thermodynamicEntropy after oscillator model and closed-form derivation obligations are discharged.",
+      "statement": "OMAI single-mode Entropy is a candidate interpretation of CanonicalEnsemble.thermodynamicEntropy once the oscillator model and its closed-form formulas have been proved.",
       "sources": [
         {
           "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
@@ -457,7 +457,7 @@
         }
       ],
       "relation": "conditional",
-      "statement": "OMAI single-mode HeatCapacity is a candidate interpretation of CanonicalEnsemble.heatCapacity after oscillator model and closed-form derivation obligations are discharged.",
+      "statement": "OMAI single-mode HeatCapacity is a candidate interpretation of CanonicalEnsemble.heatCapacity once the oscillator model and its closed-form formulas have been proved.",
       "sources": [
         {
           "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
@@ -513,7 +513,7 @@
         }
       ],
       "relation": "conditional",
-      "statement": "Physlib independent-ensemble additivity supplies a starting theorem for the OMAI finite mode sum; OMAI molar/q normalization is an additional explicit layer.",
+      "statement": "Physlib independent-ensemble additivity supplies a starting theorem for the OMAI finite mode sum; the OMAI molar scale and q-point normalization still need proof.",
       "sources": [
         {
           "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
@@ -535,7 +535,7 @@
         "component_scope": "Finite collection of independent stable (q,nu) modes.",
         "normalization_basis": "N_A/N_q times the mode sum: per mole of primitive cells, never per mole of atoms.",
         "frequency_convention": "Symbolic omega is angular rad/s. Canonical linear THz requires omega=2*pi*10^12*nu_THz, not value identity.",
-        "unit_embedding": "Energy in J, entropy/heat capacity in J/K, temperature in K; hbar and kB in consistent SI values.",
+        "unit_embedding": "Single-mode energy in J; after N_A/N_q normalization, molar energy in J/mol of primitive cells (and molar entropy/heat capacity in J/(mol K)). Temperature in K; hbar and kB use consistent SI values.",
         "held_fixed": "Mode spectrum, q weights, and cell volume fixed when differentiating in T.",
         "admissibility": "T>0, omega>0, hbar>0, kB>0; zero/imaginary/unstable modes excluded and not assigned totalized Lean values.",
         "reference_energy": "Includes oscillator zero-point energy hbar*omega/2.",
@@ -564,7 +564,7 @@
         }
       ],
       "relation": "conditional",
-      "statement": "Physlib independent-ensemble additivity supplies a starting theorem for the OMAI finite mode sum; OMAI molar/q normalization is an additional explicit layer.",
+      "statement": "Physlib independent-ensemble additivity supplies a starting theorem for the OMAI finite mode sum; the OMAI molar scale and q-point normalization still need proof.",
       "sources": [
         {
           "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
@@ -586,7 +586,7 @@
         "component_scope": "Finite collection of independent stable (q,nu) modes.",
         "normalization_basis": "N_A/N_q times the mode sum: per mole of primitive cells, never per mole of atoms.",
         "frequency_convention": "Symbolic omega is angular rad/s. Canonical linear THz requires omega=2*pi*10^12*nu_THz, not value identity.",
-        "unit_embedding": "Energy in J, entropy/heat capacity in J/K, temperature in K; hbar and kB in consistent SI values.",
+        "unit_embedding": "Single-mode energy in J; after N_A/N_q normalization, molar energy in J/mol of primitive cells (and molar entropy/heat capacity in J/(mol K)). Temperature in K; hbar and kB use consistent SI values.",
         "held_fixed": "Mode spectrum, q weights, and cell volume fixed when differentiating in T.",
         "admissibility": "T>0, omega>0, hbar>0, kB>0; zero/imaginary/unstable modes excluded and not assigned totalized Lean values.",
         "reference_energy": "Includes oscillator zero-point energy hbar*omega/2.",
@@ -893,7 +893,7 @@
       "materials": "No matching current Physlib Einstein-MSD, Arrhenius, Nernst-Einstein, or cluster-expansion formula theorem identified.",
       "thermodynamic_identities": "No current Physlib matching molar-volume, Gruneisen, or Cp-Cv response derivation identified; thermoelectric mappings are separately classified.",
       "composites": "No matching current Physlib Nan/Hasselman-Johnson/depolarization/interfacial NEMD formula model identified.",
-      "analog_device_metrology": "No matching current Physlib device conductance/drift/programming-error/thermionic/Schottky/ramp/retention model identified.",
+      "analog_device_metrology": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention.",
       "cure_kinetics": "No matching current Physlib Kamal cure or DiBenedetto glass-transition model identified."
     },
     "nodes": {},

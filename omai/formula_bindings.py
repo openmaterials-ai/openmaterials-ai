@@ -14,8 +14,10 @@ import argparse
 import copy
 import hashlib
 import json
+import os
 import re
 import subprocess
+import tempfile
 from functools import lru_cache
 from importlib import resources
 from pathlib import Path
@@ -88,7 +90,7 @@ def _gap_reason(kind: str, row: dict, inventory: dict, reasons: dict) -> str:
     applicable = list(dict.fromkeys(domain_reasons[d] for d in domains if d in domain_reasons))
     return " ".join(applicable) or (
         "No reviewed formula-level Physlib correspondence at this revision. "
-        "This is an explicit bridge coverage gap, not a claim that the quantity is absent upstream."
+        "The quantity may still occur elsewhere in Physlib."
     )
 
 
@@ -144,7 +146,7 @@ def build_formula_bindings(seeds: dict | None = None) -> dict:
         for row in inventory[key]:
             row["binding_ids"] = sorted(by_target.get((kind, row["id"]), []))
             row["status"] = "mapped" if row["binding_ids"] else "gap"
-            row["reason"] = ("Reviewed correspondence; see each binding's conditions and evidence."
+            row["reason"] = ("See the conditions and evidence for each mapping."
                              if row["binding_ids"] else _gap_reason(kind, row, inventory, reasons))
     payload = {
         "schema_version": 1,
@@ -281,7 +283,11 @@ def validate_formula_bindings(payload: dict, *, check_catalog: bool = False,
 
 
 def verify_source_references(payload: dict, physlib_path: Path) -> None:
-    """Check pinned clone revision and exact declaration start lines, not proofs."""
+    """Check pinned source files and declaration lines, not qualified names or proofs.
+
+    Use ``verify_compiled_source_names`` to check fully qualified names and their
+    defining modules in Lean's compiled environment.
+    """
     revision = subprocess.run(["git", "-C", str(physlib_path), "rev-parse", "HEAD"],
                               check=True, capture_output=True, text=True).stdout.strip()
     if revision != payload["upstream"]["revision"]:
@@ -311,6 +317,58 @@ def verify_source_references(payload: dict, physlib_path: Path) -> None:
                        + r"(?=\s|[({:]|$)")
             if source["line"] > len(lines) or not re.search(pattern, lines[source["line"] - 1]):
                 raise ValueError(f"source declaration/line mismatch: {source['name']}")
+
+
+def verify_compiled_source_names(payload: dict, lean_package: Path) -> None:
+    """Check declaration names and defining modules with the pinned Lean compiler.
+
+    This checks source references, not formula equivalence. The probe is temporary
+    and is not part of the OMAI bridge's theorem or coverage counts.
+    """
+    lean_package = lean_package.resolve()
+    if (lean_package / "lean-toolchain").read_text().strip() != payload["upstream"]["lean_toolchain"]:
+        raise ValueError("source-name audit toolchain differs from reviewed source metadata")
+    verify_source_references(payload, lean_package / ".lake/packages/physlib")
+    declarations = sorted({(source["name"], source["module"])
+                           for binding in payload["bindings"] for source in binding["sources"]})
+    # Accept ordinary dotted Lean identifiers, including Unicode and primes.
+    # Reject quoted identifiers and control characters rather than inserting
+    # arbitrary metadata text into an executable Lean command.
+    identifier = r"(?:[^\W\d]|_)[\w']*(?:\.(?:[^\W\d]|_)[\w']*)*"
+    for name, module in declarations:
+        if not re.fullmatch(identifier, name) or not re.fullmatch(identifier, module):
+            raise ValueError(f"unsupported source declaration identifier: {name!r}")
+    modules = sorted({module for _, module in declarations})
+    if not declarations:
+        return
+    environment = os.environ.copy()
+    environment.setdefault("LEAN_NUM_THREADS", "4")
+    environment.setdefault("MATHLIB_NO_CACHE_ON_UPDATE", "1")
+    subprocess.run(["lake", "build", "--wfail", *["+" + module for module in modules]],
+                   cwd=lean_package, check=True, env=environment)
+    imports = "\n".join("import " + module for module in modules)
+    pairs = ",\n    ".join(f"(`{name}, `{module})" for name, module in declarations)
+    probe_source = imports + "\n" + """import Lean
+open Lean Elab Command
+run_cmd do
+  let env ← getEnv
+  let expected : List (Name × Name) := [
+    """ + pairs + """
+  ]
+  for (name, expectedModule) in expected do
+    let some index := env.getModuleIdxFor? name
+      | throwError m!"Source declaration is absent: {name}"
+    let actualModule := env.header.moduleNames[index.toNat]!
+    unless actualModule == expectedModule do
+      throwError m!"Source declaration {name} belongs to {actualModule}, not {expectedModule}"
+"""
+    with tempfile.TemporaryDirectory(prefix="source-names-", dir=lean_package / ".lake") as directory:
+        probe = Path(directory) / "SourceNames.lean"
+        probe.write_text(probe_source)
+        result = subprocess.run(["lake", "env", "lean", str(probe)], cwd=lean_package,
+                                text=True, capture_output=True, env=environment)
+        if result.returncode:
+            raise ValueError("compiled source declaration audit failed:\n" + result.stdout + result.stderr)
 
 
 @lru_cache(maxsize=1)
@@ -352,11 +410,15 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--check", action="store_true", help="check committed artifacts without writing")
     parser.add_argument("--physlib-path", type=Path, help="read-only pinned source clone for declaration audit")
+    parser.add_argument("--lean-package", type=Path,
+                        help="pinned Lean package for compiled declaration-name/module audit")
     args = parser.parse_args()
     payload = build_formula_bindings()
     validate_formula_bindings(payload, check_catalog=True, proof_root=_REPO)
     if args.physlib_path is not None:
         verify_source_references(payload, args.physlib_path)
+    if args.lean_package is not None:
+        verify_compiled_source_names(payload, args.lean_package)
     if args.check:
         expected = json.dumps(payload, indent=2, ensure_ascii=False) + "\n"
         for path in (_REPO / "omai/data/formula_bindings.json", _REPO / "docs/data/formula_bindings.json"):

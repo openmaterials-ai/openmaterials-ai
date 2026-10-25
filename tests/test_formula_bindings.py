@@ -1,4 +1,4 @@
-"""Evidence-aware formula bridge: live IDs, explicit gaps and pinned sources."""
+"""Check formula mappings against catalog IDs, pinned sources, and build records."""
 from __future__ import annotations
 
 import copy
@@ -17,6 +17,7 @@ from omai.formula_bindings import (
     formula_bindings_for,
     validate_formula_bindings,
     verify_source_references,
+    verify_compiled_source_names,
 )
 from omai.map_data import DOMAINS, build_graph_dict
 from omai.operator.identity import edge_id, formula_fingerprint, node_id
@@ -263,3 +264,37 @@ def test_current_source_references(payload):
     if not path:
         pytest.skip("PHYSLIB_BRIDGE_PATH not set to the pinned current Physlib source")
     verify_source_references(payload, Path(path))
+
+
+def test_compiled_source_names_and_modules(payload):
+    package = os.environ.get("PHYSLIB_BRIDGE_PACKAGE")
+    if not package:
+        pytest.skip("PHYSLIB_BRIDGE_PACKAGE not set to the pinned Lean package")
+    verify_compiled_source_names(payload, Path(package))
+
+
+def test_compiled_source_audit_rejects_nonexistent_namespace(payload):
+    package = os.environ.get("PHYSLIB_BRIDGE_PACKAGE")
+    if not package:
+        pytest.skip("PHYSLIB_BRIDGE_PACKAGE not set to the pinned Lean package")
+    mutated = copy.deepcopy(payload)
+    source = mutated["bindings"][0]["sources"][0]
+    source["name"] = "NonexistentReviewNamespace." + source["name"].rsplit(".", 1)[-1]
+    # The source file and leaf-name line still match; the compiled name must not.
+    verify_source_references(mutated, Path(package) / ".lake/packages/physlib")
+    with pytest.raises(ValueError, match="Source declaration is absent"):
+        verify_compiled_source_names(mutated, Path(package))
+
+
+def test_compiled_source_audit_rejects_wrong_defining_module(payload, monkeypatch):
+    package = os.environ.get("PHYSLIB_BRIDGE_PACKAGE")
+    if not package:
+        pytest.skip("PHYSLIB_BRIDGE_PACKAGE not set to the pinned Lean package")
+    mutated = copy.deepcopy(payload)
+    source = next(source for binding in mutated["bindings"] for source in binding["sources"]
+                  if source["name"] == "Temperature")
+    source["module"] = "Physlib.CondensedMatter.Thermoelectric.Basic"
+    # Isolate the compiled ownership check from the earlier file/line check.
+    monkeypatch.setattr("omai.formula_bindings.verify_source_references", lambda *_: None)
+    with pytest.raises(ValueError, match="belongs to .* not"):
+        verify_compiled_source_names(mutated, Path(package))

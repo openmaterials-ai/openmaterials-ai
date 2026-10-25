@@ -2539,19 +2539,19 @@ Four longer-term directions follow naturally from the design:
 \end{itemize}
 
 \paragraph{Current formula bridge.}
-The additive \texttt{lean/bridge/} package targets Physlib revision
+The \texttt{lean/bridge/} package targets Physlib revision
 \texttt{8ddcc004043c5b537e4225fa763121c176b62a4a} on Lean~4.35.0,
 independently of the historical package above. It uses the upstream
 seven-base \texttt{ISQDimensionBase}; current Physlib no longer needs an
 OMAI-specific extension to represent amount of substance or luminous intensity.
-An explicit named-basis mapping preserves OMAI's dimension order and treats
+The mapping names each basis to preserve OMAI's dimension order and treats
 electric current as a base, with charge derived as current times time.
 The \href{https://openmaterials.ai/lean/bridge/}{formula-bridge inventory}
 records existing quantity and operator identities, formula fingerprints,
 pinned source declarations, models, units, normalizations, hypotheses, and
-unproved obligations. Coverage includes explicit gaps, not only successful links.
-Source correspondence, dimensional encoding, algebraic consistency, and compiled
-model identification are separate evidence categories. The original scientific
+remaining proof obligations. It also records gaps where no correspondence was
+established. Source correspondence, dimensional encoding, algebraic consistency,
+and compiled model identification are reported separately. The original scientific
 identities, formulas and lineage rules remain unchanged.
 
 A scalar thermoelectric definition does not identify an arbitrary conductivity

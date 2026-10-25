@@ -271,7 +271,7 @@
         }
       ],
       "relation": "conditional",
-      "statement": "OMAI single-mode Entropy is a candidate interpretation of CanonicalEnsemble.thermodynamicEntropy after oscillator model and closed-form derivation obligations are discharged.",
+      "statement": "OMAI single-mode Entropy is a candidate interpretation of CanonicalEnsemble.thermodynamicEntropy once the oscillator model and its closed-form formulas have been proved.",
       "sources": [
         {
           "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
@@ -334,7 +334,7 @@
         }
       ],
       "relation": "conditional",
-      "statement": "OMAI single-mode HelmholtzFreeEnergy is a candidate interpretation of CanonicalEnsemble.helmholtzFreeEnergy after oscillator model and closed-form derivation obligations are discharged.",
+      "statement": "OMAI single-mode HelmholtzFreeEnergy is a candidate interpretation of CanonicalEnsemble.helmholtzFreeEnergy once the oscillator model and its closed-form formulas have been proved.",
       "sources": [
         {
           "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
@@ -397,7 +397,7 @@
         }
       ],
       "relation": "conditional",
-      "statement": "OMAI single-mode HeatCapacity is a candidate interpretation of CanonicalEnsemble.heatCapacity after oscillator model and closed-form derivation obligations are discharged.",
+      "statement": "OMAI single-mode HeatCapacity is a candidate interpretation of CanonicalEnsemble.heatCapacity once the oscillator model and its closed-form formulas have been proved.",
       "sources": [
         {
           "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
@@ -455,7 +455,7 @@
         }
       ],
       "relation": "conditional",
-      "statement": "OMAI single-mode InternalEnergy is a candidate interpretation of CanonicalEnsemble.meanEnergy after oscillator model and closed-form derivation obligations are discharged.",
+      "statement": "OMAI single-mode InternalEnergy is a candidate interpretation of CanonicalEnsemble.meanEnergy once the oscillator model and its closed-form formulas have been proved.",
       "sources": [
         {
           "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
@@ -518,7 +518,7 @@
         }
       ],
       "relation": "conditional",
-      "statement": "Physlib independent-ensemble additivity supplies a starting theorem for the OMAI finite mode sum; OMAI molar/q normalization is an additional explicit layer.",
+      "statement": "Physlib independent-ensemble additivity supplies a starting theorem for the OMAI finite mode sum; the OMAI molar scale and q-point normalization still need proof.",
       "sources": [
         {
           "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
@@ -541,7 +541,7 @@
         "component_scope": "Finite collection of independent stable (q,nu) modes.",
         "normalization_basis": "N_A/N_q times the mode sum: per mole of primitive cells, never per mole of atoms.",
         "frequency_convention": "Symbolic omega is angular rad/s. Canonical linear THz requires omega=2*pi*10^12*nu_THz, not value identity.",
-        "unit_embedding": "Energy in J, entropy/heat capacity in J/K, temperature in K; hbar and kB in consistent SI values.",
+        "unit_embedding": "Single-mode energy in J; after N_A/N_q normalization, molar energy in J/mol of primitive cells (and molar entropy/heat capacity in J/(mol K)). Temperature in K; hbar and kB use consistent SI values.",
         "held_fixed": "Mode spectrum, q weights, and cell volume fixed when differentiating in T.",
         "admissibility": "T>0, omega>0, hbar>0, kB>0; zero/imaginary/unstable modes excluded and not assigned totalized Lean values.",
         "reference_energy": "Includes oscillator zero-point energy hbar*omega/2.",
@@ -570,7 +570,7 @@
         }
       ],
       "relation": "conditional",
-      "statement": "Physlib independent-ensemble additivity supplies a starting theorem for the OMAI finite mode sum; OMAI molar/q normalization is an additional explicit layer.",
+      "statement": "Physlib independent-ensemble additivity supplies a starting theorem for the OMAI finite mode sum; the OMAI molar scale and q-point normalization still need proof.",
       "sources": [
         {
           "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
@@ -593,7 +593,7 @@
         "component_scope": "Finite collection of independent stable (q,nu) modes.",
         "normalization_basis": "N_A/N_q times the mode sum: per mole of primitive cells, never per mole of atoms.",
         "frequency_convention": "Symbolic omega is angular rad/s. Canonical linear THz requires omega=2*pi*10^12*nu_THz, not value identity.",
-        "unit_embedding": "Energy in J, entropy/heat capacity in J/K, temperature in K; hbar and kB in consistent SI values.",
+        "unit_embedding": "Single-mode energy in J; after N_A/N_q normalization, molar energy in J/mol of primitive cells (and molar entropy/heat capacity in J/(mol K)). Temperature in K; hbar and kB use consistent SI values.",
         "held_fixed": "Mode spectrum, q weights, and cell volume fixed when differentiating in T.",
         "admissibility": "T>0, omega>0, hbar>0, kB>0; zero/imaginary/unstable modes excluded and not assigned totalized Lean values.",
         "reference_energy": "Includes oscillator zero-point energy hbar*omega/2.",
@@ -706,7 +706,7 @@
         "frequency_convention": "not applicable",
         "unit_embedding": "sigma in S/m; S in V/K; kappa in W/(m K); absolute T in K; PF in W/(m K^2); zT dimensionless.",
         "held_fixed": "All coefficients evaluated at the same T, carrier density/doping, composition, and model.",
-        "admissibility": "sigma > 0, kappa_l > 0, kappa_e >= 0; no fabricated thermal coefficients.",
+        "admissibility": "sigma > 0, kappa_l > 0, kappa_e >= 0; coefficients must describe the material.",
         "reference_energy": "not applicable",
         "qpoint_weighting": "not applicable"
       },
@@ -759,7 +759,7 @@
       ],
       "conditions": [
         "sigma > 0 and kappa_e >= 0; S may have either sign.",
-        "Provide real independently justified kappa_l > 0 to complete the material, not an invented filler value."
+        "Provide an independently justified lattice conductivity kappa_l > 0."
       ],
       "conventions": {
         "model_scope": "Isotropic scalar thermoelectric material in linear response at one shared operating point.",
@@ -768,12 +768,12 @@
         "frequency_convention": "not applicable",
         "unit_embedding": "sigma in S/m; S in V/K; kappa in W/(m K); absolute T in K; PF in W/(m K^2); zT dimensionless.",
         "held_fixed": "All coefficients evaluated at the same T, carrier density/doping, composition, and model.",
-        "admissibility": "sigma > 0, kappa_l > 0, kappa_e >= 0; no fabricated thermal coefficients.",
+        "admissibility": "sigma > 0, kappa_l > 0, kappa_e >= 0; coefficients must describe the material.",
         "reference_energy": "not applicable",
         "qpoint_weighting": "not applicable"
       },
       "remaining_obligations": [
-        "Bind representations/units/operating point and certify physical sign conditions; no upstream BTE or ab-initio producer theorem is identified."
+        "Identify the representations, units and operating point, and verify the sign conditions; no upstream BTE or ab-initio producer theorem is identified."
       ],
       "evidence": {
         "kind": "source_correspondence"
@@ -813,7 +813,7 @@
         }
       ],
       "conditions": [
-        "Consume a valid ThermoelectricMaterial; identify OMAI scalar sigma_e with M.sigma and Seebeck with M.S.",
+        "Use a ThermoelectricMaterial satisfying its field constraints; identify OMAI scalar sigma_e with M.sigma and Seebeck with M.S.",
         "Strict positivity additionally requires S != 0."
       ],
       "conventions": {
@@ -823,7 +823,7 @@
         "frequency_convention": "not applicable",
         "unit_embedding": "sigma in S/m; S in V/K; kappa in W/(m K); absolute T in K; PF in W/(m K^2); zT dimensionless.",
         "held_fixed": "All coefficients evaluated at the same T, carrier density/doping, composition, and model.",
-        "admissibility": "sigma > 0, kappa_l > 0, kappa_e >= 0; no fabricated thermal coefficients.",
+        "admissibility": "sigma > 0, kappa_l > 0, kappa_e >= 0; coefficients must describe the material.",
         "reference_energy": "not applicable",
         "qpoint_weighting": "not applicable"
       },
@@ -891,7 +891,7 @@
         "frequency_convention": "not applicable",
         "unit_embedding": "sigma in S/m; S in V/K; kappa in W/(m K); absolute T in K; PF in W/(m K^2); zT dimensionless.",
         "held_fixed": "All coefficients evaluated at the same T, carrier density/doping, composition, and model.",
-        "admissibility": "sigma > 0, kappa_l > 0, kappa_e >= 0; no fabricated thermal coefficients.",
+        "admissibility": "sigma > 0, kappa_l > 0, kappa_e >= 0; coefficients must describe the material.",
         "reference_energy": "not applicable",
         "qpoint_weighting": "not applicable"
       },
@@ -940,14 +940,14 @@
         "uid": "f1261195ad64911510ec9839d2e373c5cbda670f65a8a0c4437e37ff0a7838df",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No reviewed formula-level Physlib correspondence at this revision. This is an explicit bridge coverage gap, not a claim that the quantity is absent upstream."
+        "reason": "No reviewed formula-level Physlib correspondence at this revision. The quantity may still occur elsewhere in Physlib."
       },
       {
         "id": "AtomicMass",
         "uid": "12fb1ed0f109f6dd198199dde8ed169edc25c04ee12813e0612a96675784830c",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No reviewed formula-level Physlib correspondence at this revision. This is an explicit bridge coverage gap, not a claim that the quantity is absent upstream."
+        "reason": "No reviewed formula-level Physlib correspondence at this revision. The quantity may still occur elsewhere in Physlib."
       },
       {
         "id": "BandGap",
@@ -1010,7 +1010,7 @@
         "uid": "cd81fd8a1d62a1484f3057647d23aa780500de44175ae4e686e189a3ca5b36b2",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No reviewed formula-level Physlib correspondence at this revision. This is an explicit bridge coverage gap, not a claim that the quantity is absent upstream."
+        "reason": "No reviewed formula-level Physlib correspondence at this revision. The quantity may still occur elsewhere in Physlib."
       },
       {
         "id": "ChemicalPotential",
@@ -1024,21 +1024,21 @@
         "uid": "d9c306ec2d77f10a80335d58a2f12a09124ef4a0061ddf1ae18c90c3ef597aef",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No matching current Physlib device conductance/drift/programming-error/thermionic/Schottky/ramp/retention model identified."
+        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention."
       },
       {
         "id": "ConductanceState",
         "uid": "325f09352a8872995fe6ab0a40b9df8780a778389fa0fe00ebcbd9ef7758f4a3",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No matching current Physlib device conductance/drift/programming-error/thermionic/Schottky/ramp/retention model identified."
+        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention."
       },
       {
         "id": "ConductanceWindow",
         "uid": "ec3515d40f800b3c58242b644285b045dcfaec8102799a44dea2a61a9783673c",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No matching current Physlib device conductance/drift/programming-error/thermionic/Schottky/ramp/retention model identified."
+        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention."
       },
       {
         "id": "ConfigurationalEnergy",
@@ -1094,7 +1094,7 @@
         "uid": "1e6467a5b03397510e0d7f33403fd1cb42de5ea579e1f36b074d8dbbc620da20",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No matching current Physlib device conductance/drift/programming-error/thermionic/Schottky/ramp/retention model identified."
+        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention."
       },
       {
         "id": "DynamicalMatrix",
@@ -1124,7 +1124,7 @@
           "thermoelectric-input-coefficients"
         ],
         "status": "mapped",
-        "reason": "Reviewed correspondence; see each binding's conditions and evidence."
+        "reason": "See the conditions and evidence for each mapping."
       },
       {
         "id": "ElectricalConductivity[carrier=ionic]",
@@ -1138,7 +1138,7 @@
         "uid": "0bc59239b7ed9882c822aae5818ec2c5449e656ab9897c32d45103b9d51a7b56",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No matching current Physlib device conductance/drift/programming-error/thermionic/Schottky/ramp/retention model identified."
+        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention."
       },
       {
         "id": "ElectronicDOS",
@@ -1154,7 +1154,7 @@
           "thermoelectric-input-coefficients"
         ],
         "status": "mapped",
-        "reason": "Reviewed correspondence; see each binding's conditions and evidence."
+        "reason": "See the conditions and evidence for each mapping."
       },
       {
         "id": "EnergyAboveHull",
@@ -1170,7 +1170,7 @@
           "harmonic-mode-entropy"
         ],
         "status": "mapped",
-        "reason": "Reviewed correspondence; see each binding's conditions and evidence."
+        "reason": "See the conditions and evidence for each mapping."
       },
       {
         "id": "FillerVolumeFraction",
@@ -1200,7 +1200,7 @@
           "classical-harmonic-potential-force"
         ],
         "status": "mapped",
-        "reason": "Reviewed correspondence; see each binding's conditions and evidence."
+        "reason": "See the conditions and evidence for each mapping."
       },
       {
         "id": "FormationEnergy",
@@ -1216,7 +1216,7 @@
           "classical-harmonic-frequency"
         ],
         "status": "mapped",
-        "reason": "Reviewed correspondence; see each binding's conditions and evidence."
+        "reason": "See the conditions and evidence for each mapping."
       },
       {
         "id": "GlassTransitionTemperature",
@@ -1260,7 +1260,7 @@
           "harmonic-mode-heat-capacity"
         ],
         "status": "mapped",
-        "reason": "Reviewed correspondence; see each binding's conditions and evidence."
+        "reason": "See the conditions and evidence for each mapping."
       },
       {
         "id": "HeatCapacityConstantP",
@@ -1297,7 +1297,7 @@
           "harmonic-mode-free-energy"
         ],
         "status": "mapped",
-        "reason": "Reviewed correspondence; see each binding's conditions and evidence."
+        "reason": "See the conditions and evidence for each mapping."
       },
       {
         "id": "InterfaceConductance",
@@ -1320,7 +1320,7 @@
           "harmonic-mode-internal-energy"
         ],
         "status": "mapped",
-        "reason": "Reviewed correspondence; see each binding's conditions and evidence."
+        "reason": "See the conditions and evidence for each mapping."
       },
       {
         "id": "IsotopeAbundances",
@@ -1397,7 +1397,7 @@
         "uid": "c59c8d2bc372392cff55803e7b8b742878dac82f3ab7623bd267acd006d23d07",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No matching current Physlib device conductance/drift/programming-error/thermionic/Schottky/ramp/retention model identified."
+        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention."
       },
       {
         "id": "ModalDiffusivity",
@@ -1441,7 +1441,7 @@
           "harmonic-molar-free-energy"
         ],
         "status": "mapped",
-        "reason": "Reviewed correspondence; see each binding's conditions and evidence."
+        "reason": "See the conditions and evidence for each mapping."
       },
       {
         "id": "MolarInternalEnergy",
@@ -1450,7 +1450,7 @@
           "harmonic-molar-internal-energy"
         ],
         "status": "mapped",
-        "reason": "Reviewed correspondence; see each binding's conditions and evidence."
+        "reason": "See the conditions and evidence for each mapping."
       },
       {
         "id": "MolarVolume",
@@ -1466,7 +1466,7 @@
           "classical-harmonic-frequency"
         ],
         "status": "mapped",
-        "reason": "Reviewed correspondence; see each binding's conditions and evidence."
+        "reason": "See the conditions and evidence for each mapping."
       },
       {
         "id": "ParticipationRatio",
@@ -1517,7 +1517,7 @@
           "classical-harmonic-potential-force"
         ],
         "status": "mapped",
-        "reason": "Reviewed correspondence; see each binding's conditions and evidence."
+        "reason": "See the conditions and evidence for each mapping."
       },
       {
         "id": "PotentialOfMeanForce",
@@ -1533,7 +1533,7 @@
           "thermoelectric-power-factor"
         ],
         "status": "mapped",
-        "reason": "Reviewed correspondence; see each binding's conditions and evidence."
+        "reason": "See the conditions and evidence for each mapping."
       },
       {
         "id": "Pressure",
@@ -1542,14 +1542,14 @@
           "thermodynamic-pressure"
         ],
         "status": "mapped",
-        "reason": "Reviewed correspondence; see each binding's conditions and evidence."
+        "reason": "See the conditions and evidence for each mapping."
       },
       {
         "id": "ProgrammingPulseEnergy",
         "uid": "4dc358661b8a847db69d30a786b2b1475f1a291809bb34f55612d3203975be34",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No matching current Physlib device conductance/drift/programming-error/thermionic/Schottky/ramp/retention model identified."
+        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention."
       },
       {
         "id": "QHAGibbsEnergy",
@@ -1584,14 +1584,14 @@
         "uid": "4280779257128d9b63d9180e7b7b03ab80beac66ee35480b178a09fa46b289f2",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No matching current Physlib device conductance/drift/programming-error/thermionic/Schottky/ramp/retention model identified."
+        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention."
       },
       {
         "id": "SchottkyBarrierHeight[band_carrier=electron]",
         "uid": "a9e6a79e618d279fa3030c939d079eb130aa60268b1fc07a40393bec703496ca",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No matching current Physlib device conductance/drift/programming-error/thermionic/Schottky/ramp/retention model identified."
+        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention."
       },
       {
         "id": "SeebeckCoefficient",
@@ -1600,14 +1600,14 @@
           "thermoelectric-input-coefficients"
         ],
         "status": "mapped",
-        "reason": "Reviewed correspondence; see each binding's conditions and evidence."
+        "reason": "See the conditions and evidence for each mapping."
       },
       {
         "id": "SetVoltage",
         "uid": "5b46cb4fc1bf84f1fa97e2b52a352694f5c98c856e9b9034763243994a1c2d21",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No matching current Physlib device conductance/drift/programming-error/thermionic/Schottky/ramp/retention model identified."
+        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention."
       },
       {
         "id": "ShearModulus",
@@ -1621,7 +1621,7 @@
         "uid": "165019489c9bfee532b8ff4c164d71f2a16516a933f3f40950554bdc8a0f84a5",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No matching current Physlib device conductance/drift/programming-error/thermionic/Schottky/ramp/retention model identified."
+        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention."
       },
       {
         "id": "StaticDielectricTensor",
@@ -1637,7 +1637,7 @@
           "continuum-stress-sign"
         ],
         "status": "mapped",
-        "reason": "Reviewed correspondence; see each binding's conditions and evidence."
+        "reason": "See the conditions and evidence for each mapping."
       },
       {
         "id": "Structure",
@@ -1646,7 +1646,7 @@
           "abstract-crystal-structure"
         ],
         "status": "mapped",
-        "reason": "Reviewed correspondence; see each binding's conditions and evidence."
+        "reason": "See the conditions and evidence for each mapping."
       },
       {
         "id": "SurfaceEnergy",
@@ -1662,7 +1662,7 @@
           "absolute-temperature"
         ],
         "status": "mapped",
-        "reason": "Reviewed correspondence; see each binding's conditions and evidence."
+        "reason": "See the conditions and evidence for each mapping."
       },
       {
         "id": "ThermalConductance[transport_model=landauer]",
@@ -1685,7 +1685,7 @@
           "thermoelectric-total-conductivity"
         ],
         "status": "mapped",
-        "reason": "Reviewed correspondence; see each binding's conditions and evidence."
+        "reason": "See the conditions and evidence for each mapping."
       },
       {
         "id": "ThermalConductivity[bte_solver=rta]",
@@ -1701,7 +1701,7 @@
           "thermoelectric-total-conductivity"
         ],
         "status": "mapped",
-        "reason": "Reviewed correspondence; see each binding's conditions and evidence."
+        "reason": "See the conditions and evidence for each mapping."
       },
       {
         "id": "ThermalConductivity[effective_medium=nan,orientation=aligned]",
@@ -1841,7 +1841,7 @@
         "uid": "bb5595d7a9f8f599458906c16f1b5ad255d70e7dc4a2001e54c626da2fc0ca70",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No matching current Physlib device conductance/drift/programming-error/thermionic/Schottky/ramp/retention model identified."
+        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention."
       },
       {
         "id": "YoungsModulus",
@@ -1857,7 +1857,7 @@
           "thermoelectric-figure-of-merit"
         ],
         "status": "mapped",
-        "reason": "Reviewed correspondence; see each binding's conditions and evidence."
+        "reason": "See the conditions and evidence for each mapping."
       }
     ],
     "operators": [
@@ -1875,7 +1875,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No matching current Physlib device conductance/drift/programming-error/thermionic/Schottky/ramp/retention model identified."
+        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention."
       },
       {
         "id": "apply_nac_correction",
@@ -2289,7 +2289,7 @@
           "harmonic-mode-entropy"
         ],
         "status": "mapped",
-        "reason": "Reviewed correspondence; see each binding's conditions and evidence."
+        "reason": "See the conditions and evidence for each mapping."
       },
       {
         "id": "compute_fc2_finite_displacement",
@@ -2391,7 +2391,7 @@
           "harmonic-mode-free-energy"
         ],
         "status": "mapped",
-        "reason": "Reviewed correspondence; see each binding's conditions and evidence."
+        "reason": "See the conditions and evidence for each mapping."
       },
       {
         "id": "compute_grain_boundary_energy",
@@ -2464,7 +2464,7 @@
           "harmonic-mode-heat-capacity"
         ],
         "status": "mapped",
-        "reason": "Reviewed correspondence; see each binding's conditions and evidence."
+        "reason": "See the conditions and evidence for each mapping."
       },
       {
         "id": "compute_heat_capacity_p",
@@ -2549,7 +2549,7 @@
           "harmonic-mode-internal-energy"
         ],
         "status": "mapped",
-        "reason": "Reviewed correspondence; see each binding's conditions and evidence."
+        "reason": "See the conditions and evidence for each mapping."
       },
       {
         "id": "compute_ionic_conductivity",
@@ -2998,7 +2998,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No matching current Physlib device conductance/drift/programming-error/thermionic/Schottky/ramp/retention model identified."
+        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention."
       },
       {
         "id": "contract_cumulative_kappa[wrt=mfp]",
@@ -3067,7 +3067,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No matching current Physlib device conductance/drift/programming-error/thermionic/Schottky/ramp/retention model identified."
+        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention."
       },
       {
         "id": "contract_diffusivity",
@@ -3259,7 +3259,7 @@
           "harmonic-molar-free-energy"
         ],
         "status": "mapped",
-        "reason": "Reviewed correspondence; see each binding's conditions and evidence."
+        "reason": "See the conditions and evidence for each mapping."
       },
       {
         "id": "contract_molar_heat_capacity",
@@ -3293,7 +3293,7 @@
           "harmonic-molar-internal-energy"
         ],
         "status": "mapped",
-        "reason": "Reviewed correspondence; see each binding's conditions and evidence."
+        "reason": "See the conditions and evidence for each mapping."
       },
       {
         "id": "contract_molar_volume",
@@ -3343,7 +3343,7 @@
           "thermoelectric-power-factor"
         ],
         "status": "mapped",
-        "reason": "Reviewed correspondence; see each binding's conditions and evidence."
+        "reason": "See the conditions and evidence for each mapping."
       },
       {
         "id": "contract_pressure",
@@ -3361,7 +3361,7 @@
           "continuum-stress-sign"
         ],
         "status": "mapped",
-        "reason": "Reviewed correspondence; see each binding's conditions and evidence."
+        "reason": "See the conditions and evidence for each mapping."
       },
       {
         "id": "contract_shear_modulus",
@@ -3393,7 +3393,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No matching current Physlib device conductance/drift/programming-error/thermionic/Schottky/ramp/retention model identified."
+        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention."
       },
       {
         "id": "contract_thermal_gruneisen",
@@ -3481,7 +3481,7 @@
           "thermoelectric-figure-of-merit"
         ],
         "status": "mapped",
-        "reason": "Reviewed correspondence; see each binding's conditions and evidence."
+        "reason": "See the conditions and evidence for each mapping."
       },
       {
         "id": "depolarization_factors",
@@ -3527,7 +3527,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No matching current Physlib device conductance/drift/programming-error/thermionic/Schottky/ramp/retention model identified."
+        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention."
       },
       {
         "id": "emit_thermionic_conductance",
@@ -3544,7 +3544,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No matching current Physlib device conductance/drift/programming-error/thermionic/Schottky/ramp/retention model identified."
+        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention."
       },
       {
         "id": "fit_arrhenius",
@@ -3685,7 +3685,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No matching current Physlib device conductance/drift/programming-error/thermionic/Schottky/ramp/retention model identified."
+        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention."
       },
       {
         "id": "provide_born_charges",
@@ -3786,7 +3786,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No matching current Physlib device conductance/drift/programming-error/thermionic/Schottky/ramp/retention model identified."
+        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention."
       },
       {
         "id": "resolve_effective_conductivity",
@@ -3903,7 +3903,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No matching current Physlib device conductance/drift/programming-error/thermionic/Schottky/ramp/retention model identified."
+        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention."
       },
       {
         "id": "solve_bte[bte_solver=direct_inverse]",
@@ -4013,7 +4013,7 @@
           "thermoelectric-total-conductivity"
         ],
         "status": "mapped",
-        "reason": "Reviewed correspondence; see each binding's conditions and evidence."
+        "reason": "See the conditions and evidence for each mapping."
       },
       {
         "id": "zero_bias_retention",
@@ -4030,7 +4030,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No matching current Physlib device conductance/drift/programming-error/thermionic/Schottky/ramp/retention model identified."
+        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention."
       }
     ]
   },

@@ -127,7 +127,7 @@ print(node_id(THERMAL_CONDUCTIVITY)[:12], THERMAL_CONDUCTIVITY.fields[0].dimensi
 # a03324d4def5 thermal_conductivity</pre>
         </div>
         <p>The historical dimensional layer is exported to Lean. <code>python -m omai.physlean_export</code> writes <code>lean/OpenMaterials.lean</code> against the retained Physlib pin on Lean 4.31.0. It declares dimensions and proves selected input-product dimension equalities. <code>OpenMaterialsIdentities.lean</code> proves real-valued algebraic consequences and compositions under stated assumptions. The SI-to-SI unit theorem does not assert that every stored value is in SI; representations also use units such as linear THz and angstroms.</p>
-        <p>The <a href="../lean/bridge/">current formula bridge</a> uses upstream seven-base ISQ dimensions in an independent package. Its inventory attaches model-specific source mappings and proof evidence to existing scientific identities, including explicit coverage gaps. A source link is not an equivalence proof: inspect the assumptions, normalization, tensor scope, and remaining obligations before applying a theorem. The map displays links to these reviewed records alongside its formulas.</p>
+        <p>The <a href="../lean/bridge/">current formula bridge</a> uses upstream seven-base ISQ dimensions in an independent package. Its inventory lists source mappings, compiled proofs, and gaps for existing scientific identities. A source link is not an equivalence proof: inspect the assumptions, normalization, tensor scope, and remaining obligations before applying a theorem. The map links to these records beside its formulas.</p>
       </section>
 
       <section class="gsec" id="mermaid">

@@ -63,6 +63,9 @@ jobs:
       - name: Verify deterministic build evidence
         run: git diff --exit-code -- lean/bridge/build-evidence.json
       - name: Verify reviewed sources, identities and published artifacts
+        env:
+          PHYSLIB_BRIDGE_PACKAGE: lean/bridge
+          PHYSLIB_BRIDGE_PATH: lean/bridge/.lake/packages/physlib
         run: |
-          python -m omai.formula_bindings --check --physlib-path lean/bridge/.lake/packages/physlib
+          python -m omai.formula_bindings --check --physlib-path lean/bridge/.lake/packages/physlib --lean-package lean/bridge
           python -m pytest tests/test_formula_bindings.py tests/test_physlib_dimensions.py tests/test_physlib_semantic_contract.py -q
