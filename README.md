@@ -351,12 +351,12 @@ credit.
 `validate_light` reports unresolved rows under `unresolved_registry_rows`; no
 writer refuses them. The registry ships the releases under `code`.
 
-**The vectors.** `omai/vectors/*.json` ship inside the wheel.
-
-External graph-frontier consumers can use the additive
+External graph-frontier consumers can use the
 [stable external-solve snapshot API](docs/external-solve-snapshots.md) to carry
 one detached, validated request through capability binding and planning.
 Existing dictionary APIs and wire identities remain unchanged.
+
+**The vectors.** `omai/vectors/*.json` ship inside the wheel.
 
 - `lineage_ids.json`: 32 lineages, each with its canonical JSON, `lineage_id`,
   and `canonical_id` with and without an execution block. Sources: the four
