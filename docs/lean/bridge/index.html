@@ -104,10 +104,17 @@
           and refer to the primitive cell. The SI result is J/(m³ K); an Å³ input requires the exact factor
           <code>10^-30</code>. The molar relation is <code>C_vol = C_mol/(N_A*V_cell)</code>.
           The two proofs cover one operator, not two.</p>
-        <p><a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/7acfabac5867f2cb7200eb02e0897fdc1f580ce8/lean/bridge/OMAIPhyslibHarmonicEnsemble.lean">Single-mode proofs</a>,
-          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/7acfabac5867f2cb7200eb02e0897fdc1f580ce8/lean/bridge/OMAIPhyslibHarmonicSums.lean">molar contraction proofs</a>,
-          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/7acfabac5867f2cb7200eb02e0897fdc1f580ce8/lean/bridge/harmonic-ensemble-formula-contract.json">reviewed formula contract</a>, and
-          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/7acfabac5867f2cb7200eb02e0897fdc1f580ce8/lean/bridge/build-evidence.json">build record and axiom audit</a>.
+        <p><a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/dcd570fd8898d58f559c6d85c59ede8ac34e2b02/lean/bridge/OMAIPhyslibHarmonicEnsemble.lean">Single-mode proofs</a>,
+          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/dcd570fd8898d58f559c6d85c59ede8ac34e2b02/lean/bridge/OMAIPhyslibHarmonicSums.lean">molar contraction proofs</a>,
+          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/dcd570fd8898d58f559c6d85c59ede8ac34e2b02/lean/bridge/OMAIPhyslibHarmonicProduct.lean">joint-ensemble proofs</a>,
+          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/dcd570fd8898d58f559c6d85c59ede8ac34e2b02/lean/bridge/OMAIPhyslibHarmonicDensity.lean">single-mode volumetric proof</a>,
+          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/dcd570fd8898d58f559c6d85c59ede8ac34e2b02/lean/bridge/OMAIPhyslibJointDensity.lean">joint volumetric proof</a>,
+          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/dcd570fd8898d58f559c6d85c59ede8ac34e2b02/lean/bridge/build-evidence.json">build record and axiom audit</a>.</p>
+        <p>Reviewed formula contracts: <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/dcd570fd8898d58f559c6d85c59ede8ac34e2b02/lean/bridge/harmonic-ensemble-formula-contract.json">single-mode</a>,
+          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/dcd570fd8898d58f559c6d85c59ede8ac34e2b02/lean/bridge/harmonic-sums-formula-contract.json">molar contractions</a>,
+          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/dcd570fd8898d58f559c6d85c59ede8ac34e2b02/lean/bridge/harmonic-product-formula-contract.json">joint ensemble</a>,
+          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/dcd570fd8898d58f559c6d85c59ede8ac34e2b02/lean/bridge/harmonic-density-formula-contract.json">single-mode volumetric</a>,
+          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/dcd570fd8898d58f559c6d85c59ede8ac34e2b02/lean/bridge/joint-density-formula-contract.json">joint volumetric</a>.
           Formula contracts pin the reviewed endpoints and Lean source; they do not automatically translate formulas into proofs.</p>
       </section>
       <section class="gsec" id="scope">
@@ -127,7 +134,7 @@
       <section class="gsec" id="reproduce">
         <h2>Reproduce and inspect</h2>
         <p>The <a href="../../data/formula_bindings.json">machine-readable inventory</a> is generated from the reviewed mapping records shipped with OMAI and its existing scientific identities.
-          <a href="https://github.com/openmaterials-ai/openmaterials-ai/tree/main/lean/bridge">Current Lean source and build instructions</a>
+          <a href="https://github.com/openmaterials-ai/openmaterials-ai/tree/dcd570fd8898d58f559c6d85c59ede8ac34e2b02/lean/bridge">Reviewed Lean source and build instructions</a>
           are separate from the retained historical package.</p>
         <pre class="formula-source">python -m omai.formula_bindings --check
 python -m omai.formula_bindings --check --physlib-path /path/to/pinned/physlib
