@@ -617,7 +617,7 @@ function showFormalNavigator(state){
   state=state||{}; captionEl.hidden=true;
   let exactDeclaration=state.declaration||'', exactModule=state.module||'';
   const modules=[...new Set(formalDeclarations.map(row=>row.module))].sort();
-  let h=closeBtn()+'<h2 class="tier">PhysLean / Physlib</h2><p class="muted">Physlib is PhysLean’s Lean library. Follow a declaration to its OMAI quantities or operators. These references are not computation edges or inverse proofs.</p>';
+  let h=closeBtn()+'<h2 class="tier">PhysLean / Physlib</h2><p class="muted">Physlib combines the former PhysLean and Lean-QuantumInfo libraries. Follow a declaration to its OMAI quantities or operators. These references are not computation edges or inverse proofs.</p>';
   h+='<div class="formal-filters"><label>Declaration or OMAI target<input type="search" id="formal-search" placeholder="Search references"></label>';
   h+='<label>Module<select id="formal-module"><option value="">All modules</option>'+modules.map(module=>'<option value="'+attr(module)+'">'+esc(module)+'</option>').join('')+'</select></label>';
   h+='<label>Binding evidence<select id="formal-evidence"><option value="">All</option><option value="compiled_bridge">Compiled bridges</option><option value="source_correspondence">Source-only</option></select></label></div>';
