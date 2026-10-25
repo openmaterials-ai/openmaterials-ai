@@ -211,9 +211,21 @@ with coverage counts from the published export, and the
 operator on the map by what a proof of its formula would take, from
 generator-provable algebra to the open analysis frontier (Brillouin-zone
 sums, correlation integrals). A hand-reviewed
-[crosswalk](https://openmaterials.ai/data/physlib_crosswalk.json) links map
-nodes to the physlib declarations that formalize the same concept, so
-`resolve()` can hand an agent the formal lemma alongside the formula.
+[historical crosswalk](https://openmaterials.ai/data/physlib_crosswalk.json)
+preserves source correspondences at the old dependency pin. Its `exact` labels
+do not establish model-specific equivalence, particularly for per-mode phonon
+quantities versus generic ensemble definitions.
+
+The additive [current formula bridge](https://openmaterials.ai/lean/bridge/)
+inventories every quantity and operator, including explicit gaps. Each mapping
+records the scientific identity, formula fingerprint, pinned Physlib declarations,
+model, units, normalization, hypotheses, and outstanding proof obligations.
+`omai.formula_bindings` exposes this package-shipped metadata; the resolver adds it
+without replacing its existing fields. Source correspondences and compiled bridge
+theorems are separate evidence categories. `lean/bridge/` uses current Physlib's
+seven-base ISQ dimension system and has an independent pinned build, leaving the
+historical `lean/` package intact. A formal-model theorem does not validate a
+numerical implementation or license a tensor-to-scalar conversion.
 
 ## A slice of the map, as Mermaid
 

@@ -203,6 +203,7 @@ let VB={x:0,y:0,w:1000,h:1000}, GW=1000, GH=1000;
 const LABEL_UNITS=22, MIN_SCALE=12/LABEL_UNITS, DEFAULT_SCALE=0.75;   // 16.5 px labels at rest
 let BANDS_TOP=0, lastFocus=null, lastAnchor=null, lastHits=[];
 let leanData={nodes:{},edges:{}};
+let formulaBindings={nodes:{},operators:{}};
 let nodeById={}, parents={}, children={}, symHtml={}, pos={},
     codesData={}, activeCode=null, tierList=[], tierIndex={}, edgeList=[],
     depth='overview';   // 'overview' | 'expanded' | 'focused'
@@ -254,7 +255,8 @@ Promise.all([
   fetch('../data/graph.json').then(r=>r.json()),
   fetch('../data/codes.json').then(r=>r.json()).catch(()=>({})),
   fetch('../data/semantics.json').then(r=>r.json()).catch(()=>[]),
-  fetch('../data/lean.json').then(r=>r.json()).catch(()=>({nodes:{},edges:{}}))
+  fetch('../data/lean.json').then(r=>r.json()).catch(()=>({nodes:{},edges:{}})),
+  fetch('../data/formula_bindings.json').then(r=>r.ok?r.json():null).catch(()=>null)
 ]).then(build).catch(e=> err('The map data did not load: '+e));
 
 // The semantic index: a node/edge's surface labels (auto + curated), keyed by
@@ -262,8 +264,11 @@ Promise.all([
 // stays MVC-pure; resolveLabels (map-words.js) mirrors omai/semantics.resolve.
 let semById={};
 
-function build([graph, codes, semantics, lean]){
+function build([graph, codes, semantics, lean, bindings]){
   leanData = lean || {nodes:{},edges:{}};
+  ['nodes','operators'].forEach(kind=>{
+    ((bindings&&bindings.inventory&&bindings.inventory[kind])||[]).forEach(row=>{ formulaBindings[kind][row.id]=row; });
+  });
   (semantics||[]).forEach(e=>{ semById[e.id]=e; });
   codesData = codes || {};
   graph.nodes.forEach(n=>{ nodeById[n.id]=n; symHtml[n.id]=tex(n.symbol); });
@@ -536,6 +541,16 @@ function selectNode(node){
   }
   const lv=leanData.nodes&&leanData.nodes[node.id];
   if(lv){ h+='<div class="om-panel-label"><span class="lean-badge">Lean dimension</span></div><pre class="lean-line">'+esc(lv.lean)+'</pre>'; }
+  const bindingRow=formulaBindings.nodes[id];
+  if(bindingRow){
+    const count=bindingRow.binding_ids.length;
+    h+='<div class="om-panel-label">Physlib formula bridge</div><p><a href="../lean/bridge/#node='+encodeURIComponent(id)+'">'+(count?count+' reviewed correspondences':'Explicit correspondence gap')+'</a></p>';
+    h+='<p class="muted">Source links, conditions, and compiled proof evidence are distinguished in each record.</p>';
+    [...new Set(fl.map(f=>f.op).filter(Boolean))].forEach(op=>{
+      const row=formulaBindings.operators[op];
+      if(row) h+='<p><a href="../lean/bridge/#operator='+encodeURIComponent(op)+'">'+esc(opName(op))+'</a>: '+(row.binding_ids.length?row.binding_ids.length+' correspondences':'gap')+'</p>';
+    });
+  }
   if(ins.length){ h+='<div class="om-panel-label">Built from</div><div class="chips">'+ins.map(chip).join('')+'</div>'; }
   if(outs.length){ h+='<div class="om-panel-label">Feeds</div><div class="chips">'+outs.map(chip).join('')+'</div>'; }
   h+=mappedByHtml(id);

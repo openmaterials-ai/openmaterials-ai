@@ -58,3 +58,14 @@ with tempfile.TemporaryDirectory() as sim_dir:
                              artifacts=artifacts, sim_dir=sim_dir, unregistered=declared)
     assert json.loads(open(path).read())["unregistered"] == declared
 print("installed wheel ok: record_simulation")
+
+# Current formula correspondences are package resources: they must not
+# disappear when the source checkout's docs/data directory is absent.
+from omai.formula_bindings import formula_bindings_for
+
+formula_rows = formula_bindings_for("PowerFactor", kind="node")
+assert formula_rows, "installed wheel lost its reviewed formula bridge"
+assert all(row["evidence"]["kind"] in ("source_correspondence", "compiled_bridge")
+           for row in formula_rows)
+assert formula_bindings_for("contract_power_factor", kind="operator")
+print("installed wheel ok: formula bridge resources")

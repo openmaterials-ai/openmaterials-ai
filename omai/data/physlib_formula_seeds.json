@@ -1,0 +1,902 @@
+{
+  "schema_version": 1,
+  "upstream": {
+    "repository": "https://github.com/leanprover-community/physlib",
+    "revision": "8ddcc004043c5b537e4225fa763121c176b62a4a",
+    "lean_toolchain": "leanprover/lean4:v4.35.0"
+  },
+  "bindings": [
+    {
+      "id": "thermoelectric-power-factor",
+      "targets": [
+        {
+          "kind": "operator",
+          "id": "contract_power_factor",
+          "uid": "692d823ec06a56ba59453ff8650d602fc72d1aac991aae3e572b236e5a269306",
+          "formula_sha256": "0b12a94e400c0db0bfa5be59bc424b1869508be637badb889fb29d42fd6b39c7"
+        },
+        {
+          "kind": "node",
+          "id": "PowerFactor",
+          "uid": "6c2382614be093f934d4f830419db9d60d32610041a8c213b677efc42f6a98ee"
+        }
+      ],
+      "relation": "exact_definition",
+      "statement": "Under the declared scalar field interpretation, OMAI PF = sigma_e*S^2 is Physlib ThermoelectricMaterial.powerFactor.",
+      "sources": [
+        {
+          "module": "Physlib.CondensedMatter.Thermoelectric.Basic",
+          "name": "CondensedMatter.ThermoelectricMaterial.powerFactor",
+          "kind": "def",
+          "line": 125
+        },
+        {
+          "module": "Physlib.CondensedMatter.Thermoelectric.Basic",
+          "name": "CondensedMatter.ThermoelectricMaterial.powerFactor_pos",
+          "kind": "lemma",
+          "line": 128
+        }
+      ],
+      "conditions": [
+        "Consume a valid ThermoelectricMaterial; identify OMAI scalar sigma_e with M.sigma and Seebeck with M.S.",
+        "Strict positivity additionally requires S != 0."
+      ],
+      "conventions": {
+        "model_scope": "Isotropic scalar thermoelectric material in linear response at one shared operating point.",
+        "component_scope": "Scalar electronic conductivity and Seebeck; lattice and total conductivity use only an explicitly isotropic diagonal specialization, never arbitrary tensor entries or trace averaging.",
+        "normalization_basis": "Intensive bulk transport coefficients, not device conductance.",
+        "frequency_convention": "not applicable",
+        "unit_embedding": "sigma in S/m; S in V/K; kappa in W/(m K); absolute T in K; PF in W/(m K^2); zT dimensionless.",
+        "held_fixed": "All coefficients evaluated at the same T, carrier density/doping, composition, and model.",
+        "admissibility": "sigma > 0, kappa_l > 0, kappa_e >= 0; no fabricated thermal coefficients.",
+        "reference_energy": "not applicable",
+        "qpoint_weighting": "not applicable"
+      },
+      "remaining_obligations": [
+        "The reviewed scalar formula interpretation and positivity transfer are compiled. Numerical electronic transport producers, finite precision, and physical adequacy are not certified."
+      ],
+      "evidence": {
+        "kind": "compiled_bridge",
+        "module": "OMAIPhyslibSemantics",
+        "declarations": [
+          "OMAI.PhyslibBridge.powerFactor_eq_physlib",
+          "OMAI.PhyslibBridge.powerFactor_pos"
+        ],
+        "source_path": "lean/bridge/OMAIPhyslibSemantics.lean",
+        "source_sha256": "9ce9bbe14c751333465a9f08bdb5319f369361e136f2f8233e8e72e6614797a5",
+        "build_record": "lean/bridge/build-evidence.json"
+      }
+    },
+    {
+      "id": "thermoelectric-input-coefficients",
+      "targets": [
+        {
+          "kind": "node",
+          "id": "ElectricalConductivity[carrier=electronic]",
+          "uid": "c4a81f649b3964aed4d4b3c48dfec4f252958c9560332286e2105b175794144b"
+        },
+        {
+          "kind": "node",
+          "id": "SeebeckCoefficient",
+          "uid": "80778c5d6cb9f0d1dd23d5c6cd6059acea161892532ce7c581c7477257debf02"
+        },
+        {
+          "kind": "node",
+          "id": "ElectronicThermalConductivity",
+          "uid": "960b38ae04ecc9fbaacb02d9ae832f15e84b8cac0563e7f6a62ddf32c61d725c"
+        }
+      ],
+      "relation": "conditional",
+      "statement": "The OMAI scalar electronic transport quantities can supply the sigma, S, and kappa_e fields of a valid Physlib thermoelectric material at the same operating point.",
+      "sources": [
+        {
+          "module": "Physlib.CondensedMatter.Thermoelectric.Basic",
+          "name": "CondensedMatter.ThermoelectricMaterial",
+          "kind": "structure",
+          "line": 102
+        }
+      ],
+      "conditions": [
+        "sigma > 0 and kappa_e >= 0; S may have either sign.",
+        "Provide real independently justified kappa_l > 0 to complete the material, not an invented filler value."
+      ],
+      "conventions": {
+        "model_scope": "Isotropic scalar thermoelectric material in linear response at one shared operating point.",
+        "component_scope": "Scalar electronic conductivity and Seebeck; lattice and total conductivity use only an explicitly isotropic diagonal specialization, never arbitrary tensor entries or trace averaging.",
+        "normalization_basis": "Intensive bulk transport coefficients, not device conductance.",
+        "frequency_convention": "not applicable",
+        "unit_embedding": "sigma in S/m; S in V/K; kappa in W/(m K); absolute T in K; PF in W/(m K^2); zT dimensionless.",
+        "held_fixed": "All coefficients evaluated at the same T, carrier density/doping, composition, and model.",
+        "admissibility": "sigma > 0, kappa_l > 0, kappa_e >= 0; no fabricated thermal coefficients.",
+        "reference_energy": "not applicable",
+        "qpoint_weighting": "not applicable"
+      },
+      "remaining_obligations": [
+        "Bind representations/units/operating point and certify physical sign conditions; no upstream BTE or ab-initio producer theorem is identified."
+      ],
+      "evidence": {
+        "kind": "source_correspondence"
+      }
+    },
+    {
+      "id": "thermoelectric-total-conductivity",
+      "targets": [
+        {
+          "kind": "operator",
+          "id": "sum_thermal_conductivity",
+          "uid": "e5d0388c6c18b3fb6cb08647ddaf431bfb39e60f33e0abd1ecdd2cb0c05575ee",
+          "formula_sha256": "05612b74df513ca263a0cbb8a80f9c5f703dceced4703b2bb1f8adf76ff8f28e"
+        },
+        {
+          "kind": "node",
+          "id": "ThermalConductivity[bte_solver=direct_inverse]",
+          "uid": "a369d33e9643b9f8766b111cde72c44fbf34a13ae46dfab31e1afab1c2129ca9"
+        },
+        {
+          "kind": "node",
+          "id": "ThermalConductivity[contribution=total]",
+          "uid": "2931c0e41adb40b9ce80f5169881f3a266a2e85d5b280223914fb3b61628aea9"
+        }
+      ],
+      "relation": "conditional",
+      "statement": "OMAI lattice-plus-electronic conductivity agrees with Physlib totalThermalConductivity only after an explicit isotropic scalar interpretation of the rank-two lattice and total nodes.",
+      "sources": [
+        {
+          "module": "Physlib.CondensedMatter.Thermoelectric.Basic",
+          "name": "CondensedMatter.ThermoelectricMaterial.totalThermalConductivity",
+          "kind": "def",
+          "line": 143
+        },
+        {
+          "module": "Physlib.CondensedMatter.Thermoelectric.Basic",
+          "name": "CondensedMatter.ThermoelectricMaterial.totalThermalConductivity_pos",
+          "kind": "lemma",
+          "line": 146
+        }
+      ],
+      "conditions": [
+        "Lattice tensor is kappa_l times the identity; electronic scalar is interpreted as kappa_e times the identity.",
+        "kappa_l > 0 and kappa_e >= 0; coefficients share operating point and normalization."
+      ],
+      "conventions": {
+        "model_scope": "Isotropic scalar thermoelectric material in linear response at one shared operating point.",
+        "component_scope": "Scalar electronic conductivity and Seebeck; lattice and total conductivity use only an explicitly isotropic diagonal specialization, never arbitrary tensor entries or trace averaging.",
+        "normalization_basis": "Intensive bulk transport coefficients, not device conductance.",
+        "frequency_convention": "not applicable",
+        "unit_embedding": "sigma in S/m; S in V/K; kappa in W/(m K); absolute T in K; PF in W/(m K^2); zT dimensionless.",
+        "held_fixed": "All coefficients evaluated at the same T, carrier density/doping, composition, and model.",
+        "admissibility": "sigma > 0, kappa_l > 0, kappa_e >= 0; no fabricated thermal coefficients.",
+        "reference_energy": "not applicable",
+        "qpoint_weighting": "not applicable"
+      },
+      "remaining_obligations": [
+        "The scalar formula and explicitly isotropic tensor embedding are compiled. Identifying a specific simulation tensor as isotropic and proving BTE/adapter correctness remain outside this result."
+      ],
+      "evidence": {
+        "kind": "compiled_bridge",
+        "module": "OMAIPhyslibSemantics",
+        "declarations": [
+          "OMAI.PhyslibBridge.totalThermalConductivity_eq_physlib",
+          "OMAI.PhyslibBridge.totalThermalConductivity_pos",
+          "OMAI.PhyslibBridge.isotropic_total_conductivity"
+        ],
+        "source_path": "lean/bridge/OMAIPhyslibSemantics.lean",
+        "source_sha256": "9ce9bbe14c751333465a9f08bdb5319f369361e136f2f8233e8e72e6614797a5",
+        "build_record": "lean/bridge/build-evidence.json"
+      }
+    },
+    {
+      "id": "thermoelectric-figure-of-merit",
+      "targets": [
+        {
+          "kind": "operator",
+          "id": "contract_zt",
+          "uid": "ff8a1d876f02c91d2c28a2ebecd11217c9496adc0b928b06ff13847bb6ac427b",
+          "formula_sha256": "261e8f1f0c68d1d4aca31e5984b597032ab4f2a3a3e0aa7b84beb577e095ae16"
+        },
+        {
+          "kind": "node",
+          "id": "ZT",
+          "uid": "cf5879d2e17024fb396d83e19e71852f6cedf446fcf9d2feb81eb994e3e66e3a"
+        }
+      ],
+      "relation": "conditional",
+      "statement": "OMAI zT = PF*T/kappa_total agrees with Physlib figureOfMerit in the explicitly scalar isotropic thermoelectric model.",
+      "sources": [
+        {
+          "module": "Physlib.CondensedMatter.Thermoelectric.Basic",
+          "name": "CondensedMatter.ThermoelectricMaterial.figureOfMerit",
+          "kind": "def",
+          "line": 158
+        },
+        {
+          "module": "Physlib.CondensedMatter.Thermoelectric.Basic",
+          "name": "CondensedMatter.ThermoelectricMaterial.figureOfMerit_eq",
+          "kind": "lemma",
+          "line": 169
+        },
+        {
+          "module": "Physlib.CondensedMatter.Thermoelectric.Basic",
+          "name": "CondensedMatter.ThermoelectricMaterial.figureOfMerit_pos",
+          "kind": "lemma",
+          "line": 182
+        },
+        {
+          "module": "Physlib.CondensedMatter.Thermoelectric.Basic",
+          "name": "CondensedMatter.ThermoelectricMaterial.figureOfMerit_le_of_le",
+          "kind": "lemma",
+          "line": 200
+        }
+      ],
+      "conditions": [
+        "Valid material gives strictly positive total thermal conductivity.",
+        "Positive zT requires T > 0 and S != 0.",
+        "Lattice-only monotonicity requires positive replacement kappa_l, ordered lattice coefficients, T >= 0, and all other coefficients fixed."
+      ],
+      "conventions": {
+        "model_scope": "Isotropic scalar thermoelectric material in linear response at one shared operating point.",
+        "component_scope": "Scalar electronic conductivity and Seebeck; lattice and total conductivity use only an explicitly isotropic diagonal specialization, never arbitrary tensor entries or trace averaging.",
+        "normalization_basis": "Intensive bulk transport coefficients, not device conductance.",
+        "frequency_convention": "not applicable",
+        "unit_embedding": "sigma in S/m; S in V/K; kappa in W/(m K); absolute T in K; PF in W/(m K^2); zT dimensionless.",
+        "held_fixed": "All coefficients evaluated at the same T, carrier density/doping, composition, and model.",
+        "admissibility": "sigma > 0, kappa_l > 0, kappa_e >= 0; no fabricated thermal coefficients.",
+        "reference_energy": "not applicable",
+        "qpoint_weighting": "not applicable"
+      },
+      "remaining_obligations": [
+        "The scalar/isotropic formula, positivity, and fixed-other-coefficients lattice monotonicity are compiled. Arbitrary anisotropic zT, numerical solver correctness, and causal effects of material interventions are not proved."
+      ],
+      "evidence": {
+        "kind": "compiled_bridge",
+        "module": "OMAIPhyslibSemantics",
+        "declarations": [
+          "OMAI.PhyslibBridge.figureOfMerit_eq_physlib",
+          "OMAI.PhyslibBridge.figureOfMerit_pos",
+          "OMAI.PhyslibBridge.figureOfMerit_le_of_lattice_le",
+          "OMAI.PhyslibBridge.isotropic_figureOfMerit_eq_physlib"
+        ],
+        "source_path": "lean/bridge/OMAIPhyslibSemantics.lean",
+        "source_sha256": "9ce9bbe14c751333465a9f08bdb5319f369361e136f2f8233e8e72e6614797a5",
+        "build_record": "lean/bridge/build-evidence.json"
+      }
+    },
+    {
+      "id": "harmonic-mode-free-energy",
+      "targets": [
+        {
+          "kind": "operator",
+          "id": "compute_free_energy",
+          "uid": "b15ffc57501399eb9f1a0081d34ec1e16b579134c884d6dcf0b05434924e02eb",
+          "formula_sha256": "919246645690d2a35e9330824756ff2cb9bae8fb4dfffa4b5f93b953a4ce178b"
+        },
+        {
+          "kind": "node",
+          "id": "HelmholtzFreeEnergy",
+          "uid": "38b082d42f5136a903752e5425c65c112c90bc564693ddb929ef3f175d9d96d8"
+        }
+      ],
+      "relation": "conditional",
+      "statement": "OMAI single-mode HelmholtzFreeEnergy is a candidate interpretation of CanonicalEnsemble.helmholtzFreeEnergy after oscillator model and closed-form derivation obligations are discharged.",
+      "sources": [
+        {
+          "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+          "name": "CanonicalEnsemble.helmholtzFreeEnergy",
+          "kind": "def",
+          "line": 680
+        },
+        {
+          "module": "Physlib.QuantumMechanics.HarmonicOscillator.OneDimension.TISE",
+          "name": "QuantumMechanics.OneDimension.HarmonicOscillator.eigenValue",
+          "kind": "def",
+          "line": 29
+        },
+        {
+          "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
+          "name": "CanonicalEnsemble.helmholtzFreeEnergy_eq_meanEnergy_sub_temp_mul_thermodynamicEntropy",
+          "kind": "theorem",
+          "line": 173
+        }
+      ],
+      "conditions": [
+        "Construct a canonical ensemble on Nat with counting measure and the stated harmonic spectrum.",
+        "Prove finite nonzero Boltzmann measure and integrability of energy for T>0.",
+        "Bind n_BE(x)=1/(exp(x)-1), with x=hbar*omega/(kB*T), and positive log argument."
+      ],
+      "conventions": {
+        "model_scope": "Independent stable quantum harmonic mode at fixed volume, with countably infinite levels E_n=hbar*omega*(n+1/2).",
+        "component_scope": "One fixed (q,nu) mode; no mixing of mode-indexed values and extensive ensemble values.",
+        "normalization_basis": "One oscillator; counting measure with dof=0 or explicitly equivalent phase-space normalization.",
+        "frequency_convention": "Symbolic omega is angular rad/s. Canonical linear THz requires omega=2*pi*10^12*nu_THz, not value identity.",
+        "unit_embedding": "Energy in J, entropy/heat capacity in J/K, temperature in K; hbar and kB in consistent SI values.",
+        "held_fixed": "Mode spectrum, q weights, and cell volume fixed when differentiating in T.",
+        "admissibility": "T>0, omega>0, hbar>0, kB>0; zero/imaginary/unstable modes excluded and not assigned totalized Lean values.",
+        "reference_energy": "Includes oscillator zero-point energy hbar*omega/2.",
+        "qpoint_weighting": "No q sum at the single-mode stage."
+      },
+      "remaining_obligations": [
+        "Derive the oscillator partition sum and identify the actual OMAI closed form with the named ensemble quantity; the spectrum theorem alone does not identify thermodynamics."
+      ],
+      "evidence": {
+        "kind": "source_correspondence"
+      }
+    },
+    {
+      "id": "harmonic-mode-internal-energy",
+      "targets": [
+        {
+          "kind": "operator",
+          "id": "compute_internal_energy",
+          "uid": "ce45fb09bf9c3f8076a2064b90853e163f80b20a3f5c7506af913c560accbc53",
+          "formula_sha256": "6f0d545bd77043c0fa3b62ff5f97422a626b5ddd71b88baffe4d562b94d8f280"
+        },
+        {
+          "kind": "node",
+          "id": "InternalEnergy",
+          "uid": "4e9c9eb989aa721167806f40b353dbb75aedba068a1a486eeef178f77432108d"
+        }
+      ],
+      "relation": "conditional",
+      "statement": "OMAI single-mode InternalEnergy is a candidate interpretation of CanonicalEnsemble.meanEnergy after oscillator model and closed-form derivation obligations are discharged.",
+      "sources": [
+        {
+          "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+          "name": "CanonicalEnsemble.meanEnergy",
+          "kind": "def",
+          "line": 519
+        },
+        {
+          "module": "Physlib.QuantumMechanics.HarmonicOscillator.OneDimension.TISE",
+          "name": "QuantumMechanics.OneDimension.HarmonicOscillator.eigenValue",
+          "kind": "def",
+          "line": 29
+        },
+        {
+          "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
+          "name": "CanonicalEnsemble.helmholtzFreeEnergy_eq_meanEnergy_sub_temp_mul_thermodynamicEntropy",
+          "kind": "theorem",
+          "line": 173
+        }
+      ],
+      "conditions": [
+        "Construct a canonical ensemble on Nat with counting measure and the stated harmonic spectrum.",
+        "Prove finite nonzero Boltzmann measure and integrability of energy for T>0.",
+        "Bind n_BE(x)=1/(exp(x)-1), with x=hbar*omega/(kB*T), and positive log argument."
+      ],
+      "conventions": {
+        "model_scope": "Independent stable quantum harmonic mode at fixed volume, with countably infinite levels E_n=hbar*omega*(n+1/2).",
+        "component_scope": "One fixed (q,nu) mode; no mixing of mode-indexed values and extensive ensemble values.",
+        "normalization_basis": "One oscillator; counting measure with dof=0 or explicitly equivalent phase-space normalization.",
+        "frequency_convention": "Symbolic omega is angular rad/s. Canonical linear THz requires omega=2*pi*10^12*nu_THz, not value identity.",
+        "unit_embedding": "Energy in J, entropy/heat capacity in J/K, temperature in K; hbar and kB in consistent SI values.",
+        "held_fixed": "Mode spectrum, q weights, and cell volume fixed when differentiating in T.",
+        "admissibility": "T>0, omega>0, hbar>0, kB>0; zero/imaginary/unstable modes excluded and not assigned totalized Lean values.",
+        "reference_energy": "Includes oscillator zero-point energy hbar*omega/2.",
+        "qpoint_weighting": "No q sum at the single-mode stage."
+      },
+      "remaining_obligations": [
+        "Derive the oscillator partition sum and identify the actual OMAI closed form with the named ensemble quantity; the spectrum theorem alone does not identify thermodynamics."
+      ],
+      "evidence": {
+        "kind": "source_correspondence"
+      }
+    },
+    {
+      "id": "harmonic-mode-entropy",
+      "targets": [
+        {
+          "kind": "operator",
+          "id": "compute_entropy",
+          "uid": "40d04377570142198d0a7f3d505de3b8fa6fdcf0418622be679aceec11b13264",
+          "formula_sha256": "a1368172bfefa61b76a34da3b474fa48f11a728e01b851f0abf1961cd53e61c7"
+        },
+        {
+          "kind": "node",
+          "id": "Entropy",
+          "uid": "5aa485c8eea2f4a2a9966f39589ad15e802327513f72c2366dc15605879b86ae"
+        }
+      ],
+      "relation": "conditional",
+      "statement": "OMAI single-mode Entropy is a candidate interpretation of CanonicalEnsemble.thermodynamicEntropy after oscillator model and closed-form derivation obligations are discharged.",
+      "sources": [
+        {
+          "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+          "name": "CanonicalEnsemble.thermodynamicEntropy",
+          "kind": "def",
+          "line": 800
+        },
+        {
+          "module": "Physlib.QuantumMechanics.HarmonicOscillator.OneDimension.TISE",
+          "name": "QuantumMechanics.OneDimension.HarmonicOscillator.eigenValue",
+          "kind": "def",
+          "line": 29
+        },
+        {
+          "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
+          "name": "CanonicalEnsemble.helmholtzFreeEnergy_eq_meanEnergy_sub_temp_mul_thermodynamicEntropy",
+          "kind": "theorem",
+          "line": 173
+        }
+      ],
+      "conditions": [
+        "Construct a canonical ensemble on Nat with counting measure and the stated harmonic spectrum.",
+        "Prove finite nonzero Boltzmann measure and integrability of energy for T>0.",
+        "Bind n_BE(x)=1/(exp(x)-1), with x=hbar*omega/(kB*T), and positive log argument."
+      ],
+      "conventions": {
+        "model_scope": "Independent stable quantum harmonic mode at fixed volume, with countably infinite levels E_n=hbar*omega*(n+1/2).",
+        "component_scope": "One fixed (q,nu) mode; no mixing of mode-indexed values and extensive ensemble values.",
+        "normalization_basis": "One oscillator; counting measure with dof=0 or explicitly equivalent phase-space normalization.",
+        "frequency_convention": "Symbolic omega is angular rad/s. Canonical linear THz requires omega=2*pi*10^12*nu_THz, not value identity.",
+        "unit_embedding": "Energy in J, entropy/heat capacity in J/K, temperature in K; hbar and kB in consistent SI values.",
+        "held_fixed": "Mode spectrum, q weights, and cell volume fixed when differentiating in T.",
+        "admissibility": "T>0, omega>0, hbar>0, kB>0; zero/imaginary/unstable modes excluded and not assigned totalized Lean values.",
+        "reference_energy": "Includes oscillator zero-point energy hbar*omega/2.",
+        "qpoint_weighting": "No q sum at the single-mode stage."
+      },
+      "remaining_obligations": [
+        "Derive the oscillator partition sum and identify the actual OMAI closed form with the named ensemble quantity; the spectrum theorem alone does not identify thermodynamics."
+      ],
+      "evidence": {
+        "kind": "source_correspondence"
+      }
+    },
+    {
+      "id": "harmonic-mode-heat-capacity",
+      "targets": [
+        {
+          "kind": "operator",
+          "id": "compute_heat_capacity",
+          "uid": "3662d6183de400b2337d314499e31dd473b7b2ea3994290f21046e36bdcedfdb",
+          "formula_sha256": "b28a7bc9aae3f2172b22319465791fdb88fcfc5f7c0b8c3fcdfac99a9ded8bd9"
+        },
+        {
+          "kind": "node",
+          "id": "HeatCapacity",
+          "uid": "343adfdb0717f7f81ae52cc5fca8279ff84a9715ba19b5630d405453682b12f9"
+        }
+      ],
+      "relation": "conditional",
+      "statement": "OMAI single-mode HeatCapacity is a candidate interpretation of CanonicalEnsemble.heatCapacity after oscillator model and closed-form derivation obligations are discharged.",
+      "sources": [
+        {
+          "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
+          "name": "CanonicalEnsemble.heatCapacity",
+          "kind": "def",
+          "line": 417
+        },
+        {
+          "module": "Physlib.QuantumMechanics.HarmonicOscillator.OneDimension.TISE",
+          "name": "QuantumMechanics.OneDimension.HarmonicOscillator.eigenValue",
+          "kind": "def",
+          "line": 29
+        }
+      ],
+      "conditions": [
+        "Construct a canonical ensemble on Nat with counting measure and the stated harmonic spectrum.",
+        "Prove finite nonzero Boltzmann measure and integrability of energy for T>0.",
+        "Bind n_BE(x)=1/(exp(x)-1), with x=hbar*omega/(kB*T), and positive log argument.",
+        "Prove differentiability/derivative interchange for the infinite-state model; finite-ensemble FDT cannot be applied to Nat."
+      ],
+      "conventions": {
+        "model_scope": "Independent stable quantum harmonic mode at fixed volume, with countably infinite levels E_n=hbar*omega*(n+1/2).",
+        "component_scope": "One fixed (q,nu) mode; no mixing of mode-indexed values and extensive ensemble values.",
+        "normalization_basis": "One oscillator; counting measure with dof=0 or explicitly equivalent phase-space normalization.",
+        "frequency_convention": "Symbolic omega is angular rad/s. Canonical linear THz requires omega=2*pi*10^12*nu_THz, not value identity.",
+        "unit_embedding": "Energy in J, entropy/heat capacity in J/K, temperature in K; hbar and kB in consistent SI values.",
+        "held_fixed": "Mode spectrum, q weights, and cell volume fixed when differentiating in T.",
+        "admissibility": "T>0, omega>0, hbar>0, kB>0; zero/imaginary/unstable modes excluded and not assigned totalized Lean values.",
+        "reference_energy": "Includes oscillator zero-point energy hbar*omega/2.",
+        "qpoint_weighting": "No q sum at the single-mode stage."
+      },
+      "remaining_obligations": [
+        "Derive the oscillator partition sum and identify the actual OMAI closed form with the named ensemble quantity; the spectrum theorem alone does not identify thermodynamics.",
+        "Prove c=dU/dT and equivalence of the sinh and exponential heat-capacity forms; no statistical-model heat-capacity proof is claimed."
+      ],
+      "evidence": {
+        "kind": "source_correspondence"
+      }
+    },
+    {
+      "id": "harmonic-molar-free-energy",
+      "targets": [
+        {
+          "kind": "operator",
+          "id": "contract_molar_free_energy",
+          "uid": "9d4ded802829a8b2fe5544556eeb81534fe39e3ceae5efac0065e7ddcf3da152",
+          "formula_sha256": "dbff2ebb2aece334d4cbf8a8ad1928d48e3660a69d64cb8b73746b54dedeb5b0"
+        },
+        {
+          "kind": "node",
+          "id": "MolarHelmholtzFreeEnergy",
+          "uid": "419335bd5f3a1949576e608e4147d8f18bef980a69a9c6b99199f812c806b7be"
+        }
+      ],
+      "relation": "conditional",
+      "statement": "Physlib independent-ensemble additivity supplies a starting theorem for the OMAI finite mode sum; OMAI molar/q normalization is an additional explicit layer.",
+      "sources": [
+        {
+          "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+          "name": "CanonicalEnsemble.helmholtzFreeEnergy_add",
+          "kind": "lemma",
+          "line": 705
+        }
+      ],
+      "conditions": [
+        "Construct a canonical ensemble on Nat with counting measure and the stated harmonic spectrum.",
+        "Prove finite nonzero Boltzmann measure and integrability of energy for T>0.",
+        "Bind n_BE(x)=1/(exp(x)-1), with x=hbar*omega/(kB*T), and positive log argument.",
+        "Prove mode-wise semantic identification first.",
+        "For free-energy addition use equal phaseSpaceunit; for energy addition prove both energy-integrability conditions.",
+        "Use a finite mode product and N_q>0; retain molar cell basis and explicit N_A scale."
+      ],
+      "conventions": {
+        "model_scope": "Independent stable quantum harmonic mode at fixed volume, with countably infinite levels E_n=hbar*omega*(n+1/2).",
+        "component_scope": "Finite collection of independent stable (q,nu) modes.",
+        "normalization_basis": "N_A/N_q times the mode sum: per mole of primitive cells, never per mole of atoms.",
+        "frequency_convention": "Symbolic omega is angular rad/s. Canonical linear THz requires omega=2*pi*10^12*nu_THz, not value identity.",
+        "unit_embedding": "Energy in J, entropy/heat capacity in J/K, temperature in K; hbar and kB in consistent SI values.",
+        "held_fixed": "Mode spectrum, q weights, and cell volume fixed when differentiating in T.",
+        "admissibility": "T>0, omega>0, hbar>0, kB>0; zero/imaginary/unstable modes excluded and not assigned totalized Lean values.",
+        "reference_energy": "Includes oscillator zero-point energy hbar*omega/2.",
+        "qpoint_weighting": "Uniform q weight 1/N_q, N_q>0, summed over all branches."
+      },
+      "remaining_obligations": [
+        "Prove finite-mode induction and N_A/N_q normalization bridge; upstream additivity alone is not the OMAI molar formula theorem."
+      ],
+      "evidence": {
+        "kind": "source_correspondence"
+      }
+    },
+    {
+      "id": "harmonic-molar-internal-energy",
+      "targets": [
+        {
+          "kind": "operator",
+          "id": "contract_molar_internal_energy",
+          "uid": "77d1268cd072ac2acfbf95872ae6a8acc0a20ac9e196dfe7256048ad9f5f8f2d",
+          "formula_sha256": "2df3e3d6b3c9796f181b1cd476cf85250ee59ca8d440c2a20770ef2bfe0d8065"
+        },
+        {
+          "kind": "node",
+          "id": "MolarInternalEnergy",
+          "uid": "220926f4974baec5c511f5acae2c9c4e09a8276d41c1314391b91dec537ef2fb"
+        }
+      ],
+      "relation": "conditional",
+      "statement": "Physlib independent-ensemble additivity supplies a starting theorem for the OMAI finite mode sum; OMAI molar/q normalization is an additional explicit layer.",
+      "sources": [
+        {
+          "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+          "name": "CanonicalEnsemble.meanEnergy_add",
+          "kind": "lemma",
+          "line": 529
+        }
+      ],
+      "conditions": [
+        "Construct a canonical ensemble on Nat with counting measure and the stated harmonic spectrum.",
+        "Prove finite nonzero Boltzmann measure and integrability of energy for T>0.",
+        "Bind n_BE(x)=1/(exp(x)-1), with x=hbar*omega/(kB*T), and positive log argument.",
+        "Prove mode-wise semantic identification first.",
+        "For free-energy addition use equal phaseSpaceunit; for energy addition prove both energy-integrability conditions.",
+        "Use a finite mode product and N_q>0; retain molar cell basis and explicit N_A scale."
+      ],
+      "conventions": {
+        "model_scope": "Independent stable quantum harmonic mode at fixed volume, with countably infinite levels E_n=hbar*omega*(n+1/2).",
+        "component_scope": "Finite collection of independent stable (q,nu) modes.",
+        "normalization_basis": "N_A/N_q times the mode sum: per mole of primitive cells, never per mole of atoms.",
+        "frequency_convention": "Symbolic omega is angular rad/s. Canonical linear THz requires omega=2*pi*10^12*nu_THz, not value identity.",
+        "unit_embedding": "Energy in J, entropy/heat capacity in J/K, temperature in K; hbar and kB in consistent SI values.",
+        "held_fixed": "Mode spectrum, q weights, and cell volume fixed when differentiating in T.",
+        "admissibility": "T>0, omega>0, hbar>0, kB>0; zero/imaginary/unstable modes excluded and not assigned totalized Lean values.",
+        "reference_energy": "Includes oscillator zero-point energy hbar*omega/2.",
+        "qpoint_weighting": "Uniform q weight 1/N_q, N_q>0, summed over all branches."
+      },
+      "remaining_obligations": [
+        "Prove finite-mode induction and N_A/N_q normalization bridge; upstream additivity alone is not the OMAI molar formula theorem."
+      ],
+      "evidence": {
+        "kind": "source_correspondence"
+      }
+    },
+    {
+      "id": "absolute-temperature",
+      "targets": [
+        {
+          "kind": "node",
+          "id": "Temperature",
+          "uid": "63f9bd32d94d77e12afbb96f5b1b7a870de6b1f5805213b7f3c3ff227da301f0"
+        }
+      ],
+      "relation": "conditional",
+      "statement": "An OMAI nonnegative absolute-temperature scalar can be wrapped as Physlib Temperature; beta uses the same kB convention.",
+      "sources": [
+        {
+          "module": "Physlib.Thermodynamics.Temperature.Basic",
+          "name": "Temperature",
+          "kind": "structure",
+          "line": 32
+        },
+        {
+          "module": "Physlib.Thermodynamics.Temperature.Basic",
+          "name": "Temperature.β",
+          "kind": "def",
+          "line": 59
+        }
+      ],
+      "conditions": [
+        "T >= 0 for the carrier type; T>0 for inverse-temperature formulas."
+      ],
+      "conventions": {
+        "model_scope": "Absolute thermodynamic temperature.",
+        "component_scope": "Scalar operating-point value.",
+        "normalization_basis": "Absolute zero at zero.",
+        "frequency_convention": "not applicable",
+        "unit_embedding": "Kelvin or an explicitly consistent absolute-temperature scale; no Celsius offset.",
+        "held_fixed": "not applicable",
+        "admissibility": "Nonnegative carrier; strict positivity for beta-based laws.",
+        "reference_energy": "not applicable",
+        "qpoint_weighting": "not applicable"
+      },
+      "remaining_obligations": [
+        "Formalize the OMAI real-value-to-nonnegative-Temperature adapter and unit convention; wrapping a value does not prove a physical model."
+      ],
+      "evidence": {
+        "kind": "source_correspondence"
+      }
+    },
+    {
+      "id": "classical-harmonic-frequency",
+      "targets": [
+        {
+          "kind": "node",
+          "id": "Frequency",
+          "uid": "fa262448f625b62f5a8c6934518bb8ddc5d3a5a5ce69203b3e2f6b10b21cc4b8"
+        },
+        {
+          "kind": "node",
+          "id": "MolecularFrequency",
+          "uid": "e1270ea9a293c9107226bf831f60985f5525a0c386dca70841743bdc5d082c26"
+        }
+      ],
+      "relation": "conceptual",
+      "statement": "The positive scalar spring oscillator frequency sqrt(k/m) is a restricted model related to harmonic vibrational frequencies; it is not a lattice dynamical-matrix or molecular Hessian identification.",
+      "sources": [
+        {
+          "module": "Physlib.ClassicalMechanics.HarmonicOscillator.Basic",
+          "name": "ClassicalMechanics.HarmonicOscillator.ω",
+          "kind": "def",
+          "line": 156
+        },
+        {
+          "module": "Physlib.ClassicalMechanics.HarmonicOscillator.Basic",
+          "name": "ClassicalMechanics.HarmonicOscillator.ω_sq",
+          "kind": "lemma",
+          "line": 163
+        }
+      ],
+      "conditions": [
+        "Single oscillator spring constant k>0 and mass m>0."
+      ],
+      "conventions": {
+        "model_scope": "One-dimensional positive-mass, positive-spring classical oscillator only.",
+        "component_scope": "Scalar oscillator; no mode eigenvector or crystal index identification.",
+        "normalization_basis": "not applicable",
+        "frequency_convention": "Angular omega; linear THz and molecular wavenumber require explicit conversions.",
+        "unit_embedding": "Consistent spring/mass/time units.",
+        "held_fixed": "not applicable",
+        "admissibility": "Stable positive frequency.",
+        "reference_energy": "not applicable",
+        "qpoint_weighting": "not applicable"
+      },
+      "remaining_obligations": [
+        "Construct the mass-weighted mode or molecular-Hessian interpretation and prove the unit conversion before claiming a formula match."
+      ],
+      "evidence": {
+        "kind": "source_correspondence"
+      }
+    },
+    {
+      "id": "classical-harmonic-potential-force",
+      "targets": [
+        {
+          "kind": "node",
+          "id": "Potential",
+          "uid": "80a4273845e09207860e06db18d1f1ee5670a9b9c8b1020a99928c872878f901"
+        },
+        {
+          "kind": "node",
+          "id": "Forces",
+          "uid": "9c5a2fdedab6b668ccf5f2043fb4c29a982bcde5063fd6ac8633ee2c7858ecbf"
+        }
+      ],
+      "relation": "conceptual",
+      "statement": "Physlib harmonic potential and linear restoring force illustrate a restricted conservative-force model, not OMAI general interatomic potentials or a DFT Hellmann-Feynman theorem.",
+      "sources": [
+        {
+          "module": "Physlib.ClassicalMechanics.HarmonicOscillator.Basic",
+          "name": "ClassicalMechanics.HarmonicOscillator.potentialEnergy",
+          "kind": "def",
+          "line": 200
+        },
+        {
+          "module": "Physlib.ClassicalMechanics.HarmonicOscillator.Basic",
+          "name": "ClassicalMechanics.HarmonicOscillator.force",
+          "kind": "def",
+          "line": 451
+        },
+        {
+          "module": "Physlib.ClassicalMechanics.HarmonicOscillator.Basic",
+          "name": "ClassicalMechanics.HarmonicOscillator.force_eq_linear",
+          "kind": "lemma",
+          "line": 464
+        }
+      ],
+      "conditions": [
+        "Single scalar spring k>0 and mass m>0; no claim for arbitrary atomistic potentials."
+      ],
+      "conventions": {
+        "model_scope": "One-dimensional Hooke-law oscillator.",
+        "component_scope": "One coordinate, not arbitrary atom-indexed force arrays.",
+        "normalization_basis": "not applicable",
+        "frequency_convention": "not applicable",
+        "unit_embedding": "Consistent energy, length, and force units.",
+        "held_fixed": "not applicable",
+        "admissibility": "not applicable",
+        "reference_energy": "Potential k*x^2/2 with reference at equilibrium.",
+        "qpoint_weighting": "not applicable"
+      },
+      "remaining_obligations": [
+        "Prove an atomistic restriction/coordinate interpretation before reusing these declarations as a model-specific OMAI result."
+      ],
+      "evidence": {
+        "kind": "source_correspondence"
+      }
+    },
+    {
+      "id": "abstract-crystal-structure",
+      "targets": [
+        {
+          "kind": "node",
+          "id": "Structure",
+          "uid": "db1df71467f5a79440f849704ac20a33573ed4e270b5ebba59549272b2475239"
+        }
+      ],
+      "relation": "conceptual",
+      "statement": "Physlib Crystal represents periodicity by an additive-group action with a finite fundamental domain; OMAI Structure includes geometric/material content not yet identified.",
+      "sources": [
+        {
+          "module": "Physlib.CondensedMatter.Crystal.Basic",
+          "name": "Physlib.CondensedMatter.Crystal",
+          "kind": "structure",
+          "line": 65
+        }
+      ],
+      "conditions": [
+        "Choose the translation group and site equivalence matching the actual structure."
+      ],
+      "conventions": {
+        "model_scope": "Abstract periodic crystal, not arbitrary nonperiodic/molecular structure.",
+        "component_scope": "Sites and finite unit-cell representatives.",
+        "normalization_basis": "Unit-cell correspondence must be explicit.",
+        "frequency_convention": "not applicable",
+        "unit_embedding": "Metric coordinates, cell vectors, and species are extra interpretation data.",
+        "held_fixed": "not applicable",
+        "admissibility": "not applicable",
+        "reference_energy": "not applicable",
+        "qpoint_weighting": "not applicable"
+      },
+      "remaining_obligations": [
+        "Construct metric/species/cell identification; do not infer cell volume, atom counts, or electronic operators from abstract periodicity."
+      ],
+      "evidence": {
+        "kind": "source_correspondence"
+      }
+    },
+    {
+      "id": "thermodynamic-pressure",
+      "targets": [
+        {
+          "kind": "node",
+          "id": "Pressure",
+          "uid": "4ca6efdb874d146a6cca564c7a8a0504ee8868ae5890d4c33abddc147423d6f1"
+        }
+      ],
+      "relation": "conceptual",
+      "statement": "Physlib pressure is minus the volume derivative of Helmholtz free energy; OMAI pressure is a compressive stress trace, so their equality needs a thermodynamic stress interpretation.",
+      "sources": [
+        {
+          "module": "Physlib.StatisticalMechanics.MicroCanonicalEnsemble.ThermoQuantities",
+          "name": "NVEHamiltonian.pressure",
+          "kind": "def",
+          "line": 219
+        }
+      ],
+      "conditions": [
+        "Fixed composition and T, differentiable free energy in volume, compatible mechanical equilibrium and stress convention."
+      ],
+      "conventions": {
+        "model_scope": "Equilibrium system described by an NVEHamiltonian family.",
+        "component_scope": "Scalar pressure; no automatic equality to arbitrary stress components.",
+        "normalization_basis": "not applicable",
+        "frequency_convention": "not applicable",
+        "unit_embedding": "MicroHamiltonian uses beta=1/T and F=-T log Z; derive physical kB/temperature scaling before SI comparison.",
+        "held_fixed": "Temperature and particle/model parameters during V derivative.",
+        "admissibility": "not applicable",
+        "reference_energy": "Same free-energy reference and volume family.",
+        "qpoint_weighting": "not applicable"
+      },
+      "remaining_obligations": [
+        "Prove units and stress/free-energy conjugacy; existing source declaration is not the OMAI contract_pressure theorem."
+      ],
+      "evidence": {
+        "kind": "source_correspondence"
+      }
+    },
+    {
+      "id": "continuum-stress-sign",
+      "targets": [
+        {
+          "kind": "node",
+          "id": "Stress",
+          "uid": "183e66d4e443326d2c346a0327cdb125026bd8f6a91a9bb97b61265fcade7e85"
+        },
+        {
+          "kind": "operator",
+          "id": "contract_pressure",
+          "uid": "acbf580bd577b7499bc6806f2882511b90aaab32cabdb290a0de452d251e7514",
+          "formula_sha256": "86f47f5fa90f900ae725b63de258ad5da3543e6ae3f07110e268241b7382edf3"
+        }
+      ],
+      "relation": "conceptual",
+      "statement": "Physlib inviscid Cauchy stress is -p*I (tensile-positive); OMAI contract_pressure is +trace(sigma)/3 with compressive-positive sigma. A negation plus static/isotropic specialization is required.",
+      "sources": [
+        {
+          "module": "Physlib.FluidDynamics.CauchyFlow.Inviscid",
+          "name": "FluidDynamics.CauchyFlow.IsInviscid",
+          "kind": "def",
+          "line": 54
+        }
+      ],
+      "conditions": [
+        "Dimension 3, isotropic static specialization, and sigma_OMAI=-stress_Physlib."
+      ],
+      "conventions": {
+        "model_scope": "Inviscid continuum stress, not an atomistic/DFT stress derivation.",
+        "component_scope": "Three-dimensional stress tensor; explicit sign conversion.",
+        "normalization_basis": "not applicable",
+        "frequency_convention": "not applicable",
+        "unit_embedding": "Pressure/stress in Pa after unit alignment.",
+        "held_fixed": "One space-time operating point.",
+        "admissibility": "Isotropic stress specialization only.",
+        "reference_energy": "not applicable",
+        "qpoint_weighting": "not applicable"
+      },
+      "remaining_obligations": [
+        "Prove the signed tensor interpretation and trace identity; do not relabel tensile and compressive conventions as exact."
+      ],
+      "evidence": {
+        "kind": "source_correspondence"
+      }
+    }
+  ],
+  "gap_reasons": {
+    "domains": {
+      "thermal_transport": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations.",
+      "dft_ground_state": "No current Physlib Kohn-Sham, DFT, atomistic derivative, or ground-state producer formula identification found in the audited source.",
+      "mechanics": "No current Physlib solid-elasticity/Voigt/EOS formula identification found; continuum stress and thermodynamic pressure are related concepts with sign/model prerequisites.",
+      "stability": "No current Physlib matching reference-state, convex-hull, surface, adsorption, reaction, or grain-boundary formula model identified.",
+      "thermochemistry": "No current Physlib CALPHAD/Gibbs-assessed database or per-mole-atoms formula correspondence identified; Helmholtz is not Gibbs.",
+      "quasiharmonic": "No current Physlib volume-dependent phonon/QHA potential or response-identity formula theorem identified.",
+      "molecular": "No current Physlib molecular Hessian, electronic gap, NEB, or bond-dissociation formula identification; harmonic oscillator analogies remain conceptual.",
+      "electronic_transport": "Physlib scalar thermoelectric coefficients do not prove OMAI ab-initio BTE/scattering/electronic-DOS producers.",
+      "materials": "No matching current Physlib Einstein-MSD, Arrhenius, Nernst-Einstein, or cluster-expansion formula theorem identified.",
+      "thermodynamic_identities": "No current Physlib matching molar-volume, Gruneisen, or Cp-Cv response derivation identified; thermoelectric mappings are separately classified.",
+      "composites": "No matching current Physlib Nan/Hasselman-Johnson/depolarization/interfacial NEMD formula model identified.",
+      "analog_device_metrology": "No matching current Physlib device conductance/drift/programming-error/thermionic/Schottky/ramp/retention model identified.",
+      "cure_kinetics": "No matching current Physlib Kamal cure or DiBenedetto glass-transition model identified."
+    },
+    "nodes": {},
+    "operators": {}
+  }
+}
