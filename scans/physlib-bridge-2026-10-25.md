@@ -119,7 +119,7 @@ node --test docs/lean/lib.test.js docs/lean/bridge/lib.test.js
 
 The [build record](https://github.com/openmaterials-ai/openmaterials-ai/blob/1a382762b5eb6f0a82bdfe3c18eda3f94a720b44/lean/bridge/build-evidence.json),
 [formula/source contract](https://github.com/openmaterials-ai/openmaterials-ai/blob/1a382762b5eb6f0a82bdfe3c18eda3f94a720b44/lean/bridge/semantic-formula-contract.json),
-and [mapping records](https://github.com/openmaterials-ai/openmaterials-ai/blob/feat/physlib-formula-bridge/omai/data/formula_bindings.json)
+and [mapping records](https://github.com/openmaterials-ai/openmaterials-ai/blob/837a09a7408a592d285742419fdc144f4d1ea88c/omai/data/formula_bindings.json)
 list dependency pins, assumptions, remaining proofs, and build results.
 OMAI defines formulas, MCG handles operations, and mapengine performs computation.
 
