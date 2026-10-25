@@ -94,7 +94,54 @@ def _gap_reason(kind: str, row: dict, inventory: dict, reasons: dict) -> str:
     )
 
 
+def compiled_targets(binding: dict, inventory: dict) -> list[dict]:
+    """Subjects of a compiled formula bridge, not every associated input.
+
+    Authors can state a narrower scope or a standalone quantity interpretation
+    in ``evidence.proved_targets``. Otherwise the scope consists of the bound
+    operators and their bound output quantities. An input reference does not
+    prove that input's producing formula.
+    """
+    if binding["evidence"]["kind"] != "compiled_bridge":
+        return []
+    if "proved_targets" in binding["evidence"]:
+        return copy.deepcopy(binding["evidence"]["proved_targets"])
+    operators = {target["id"] for target in binding["targets"] if target["kind"] == "operator"}
+    outputs = {output for row in inventory["operators"] if row["id"] in operators
+               for output in row["outputs"]}
+    return [{"kind": target["kind"], "id": target["id"]} for target in binding["targets"]
+            if target["kind"] == "operator" or target["id"] in outputs]
+
+
+def physlib_declaration_index(payload: dict | None = None) -> list[dict]:
+    """Unique upstream declarations with every referring OMAI binding ID.
+
+    This is an index of reviewed references, not an inventory of all Physlib
+    declarations and not a claim that a declaration has an inverse formula.
+    """
+    payload = _packaged_bindings() if payload is None else payload
+    declarations: dict[tuple[str, str], dict] = {}
+    for binding in payload["bindings"]:
+        for source in binding["sources"]:
+            key = (source["module"], source["name"])
+            row = declarations.setdefault(key, {**source, "binding_ids": []})
+            if {key: value for key, value in row.items() if key != "binding_ids"} != source:
+                raise ValueError(f"inconsistent metadata for upstream declaration: {key}")
+            if binding["id"] not in row["binding_ids"]:
+                row["binding_ids"].append(binding["id"])
+    for row in declarations.values():
+        row["binding_ids"].sort()
+    return copy.deepcopy([declarations[key] for key in sorted(declarations)])
+
+
 def _coverage(bindings: list[dict], inventory: dict) -> dict:
+    proved = {(target["kind"], target["id"]) for binding in bindings
+              for target in compiled_targets(binding, inventory)}
+    output_nodes = {output for operator in inventory["operators"]
+                    if ("operator", operator["id"]) in proved for output in operator["outputs"]
+                    if ("node", output) in proved}
+    interpretation_nodes = {name for kind, name in proved if kind == "node"} - output_nodes
+    declarations = physlib_declaration_index({"bindings": bindings})
     return {
         "nodes_total": len(inventory["nodes"]),
         "nodes_mapped": sum(bool(row["binding_ids"]) for row in inventory["nodes"]),
@@ -103,6 +150,12 @@ def _coverage(bindings: list[dict], inventory: dict) -> dict:
         "bindings_total": len(bindings),
         "source_correspondences": sum(b["evidence"]["kind"] == "source_correspondence" for b in bindings),
         "compiled_bridges": sum(b["evidence"]["kind"] == "compiled_bridge" for b in bindings),
+        "nodes_compiled": sum(kind == "node" for kind, _ in proved),
+        "nodes_compiled_outputs": len(output_nodes),
+        "nodes_compiled_interpretations": len(interpretation_nodes),
+        "operators_compiled": sum(kind == "operator" for kind, _ in proved),
+        "upstream_declarations_referenced": len(declarations),
+        "upstream_modules_referenced": len({row["module"] for row in declarations}),
         "relations": {relation: sum(b["relation"] == relation for b in bindings)
                       for relation in _RELATIONS},
     }
@@ -187,7 +240,7 @@ def _check_compiled_evidence(binding: dict, upstream: dict, root: Path) -> None:
         if ".lake" not in path.relative_to(bridge_root).parts
     } | {"lean/bridge/" + name for name in (
         "lean-toolchain", "lakefile.toml", "lake-manifest.json", "semantic-formula-contract.json",
-    )}
+    )} | {str(path.relative_to(root)) for path in bridge_root.glob("*-formula-contract.json")}
     if not required <= hashes.keys():
         raise ValueError("build record omits proof source/configuration/endpoint dependencies")
     for relative, digest in hashes.items():
@@ -256,6 +309,11 @@ def validate_formula_bindings(payload: dict, *, check_catalog: bool = False,
             raise ValueError("uncompiled correspondence must disclose remaining bridge obligations")
         if binding["relation"] == "conceptual" and binding["evidence"]["kind"] == "compiled_bridge":
             raise ValueError("conceptual reference cannot claim a compiled formula bridge")
+        if "proved_targets" in binding["evidence"]:
+            subjects = [(target["kind"], target["id"])
+                        for target in binding["evidence"]["proved_targets"]]
+            if len(set(subjects)) != len(subjects) or not set(subjects) <= set(targets):
+                raise ValueError("compiled proof subjects must be distinct binding targets")
         declarations = [(source["module"], source["name"]) for source in binding["sources"]]
         if len(set(declarations)) != len(declarations):
             raise ValueError(f"duplicate source declaration: {binding['id']}")
@@ -269,7 +327,10 @@ def validate_formula_bindings(payload: dict, *, check_catalog: bool = False,
             raise ValueError(f"inconsistent inventory binding IDs: {key}")
         if row["status"] != ("mapped" if expected[key] else "gap"):
             raise ValueError(f"inconsistent coverage status: {key}")
-    if payload["coverage"] != _coverage(bindings, inventory):
+    # Schema v1 predates the additive proof-subject/reverse-index counters.
+    # Accept retained v1 payloads; check every supplied counter, including new ones.
+    actual_coverage = _coverage(bindings, inventory)
+    if any(actual_coverage[key] != value for key, value in payload["coverage"].items()):
         raise ValueError("coverage counts do not match bindings and inventory")
     if check_catalog:
         actual = catalog_inventory()
@@ -392,6 +453,24 @@ def formula_bindings_for(element_id: str, *, kind: str | None = None) -> list[di
         binding for binding in _packaged_bindings()["bindings"]
         if any(target["id"] == element_id and (kind is None or target["kind"] == kind)
                for target in binding["targets"])
+    ])
+
+
+def formula_bindings_for_physlib(*, declaration: str | None = None,
+                                module: str | None = None) -> list[dict]:
+    """Return full OMAI binding records for an exact Physlib name and/or module.
+
+    At least one selector is required; providing both intersects them. Unknown
+    names return an empty list. Results include all conditions and evidence,
+    and each binding appears once even when several declarations match.
+    """
+    if not declaration and not module:
+        raise ValueError("provide an exact Physlib declaration or module")
+    return copy.deepcopy([
+        binding for binding in _packaged_bindings()["bindings"]
+        if any((declaration is None or source["name"] == declaration)
+               and (module is None or source["module"] == module)
+               for source in binding["sources"])
     ])
 
 

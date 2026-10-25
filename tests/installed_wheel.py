@@ -61,11 +61,17 @@ print("installed wheel ok: record_simulation")
 
 # Current formula correspondences are package resources: they must not
 # disappear when the source checkout's docs/data directory is absent.
-from omai.formula_bindings import formula_bindings_for
+from omai.formula_bindings import (
+    formula_bindings_for, formula_bindings_for_physlib, physlib_declaration_index,
+)
 
 formula_rows = formula_bindings_for("PowerFactor", kind="node")
 assert formula_rows, "installed wheel lost its reviewed formula bridge"
 assert all(row["evidence"]["kind"] in ("source_correspondence", "compiled_bridge")
            for row in formula_rows)
 assert formula_bindings_for("contract_power_factor", kind="operator")
-print("installed wheel ok: formula bridge resources")
+source = formula_rows[0]["sources"][0]
+reverse_rows = formula_bindings_for_physlib(declaration=source["name"], module=source["module"])
+assert formula_rows[0] in reverse_rows
+assert any(row["name"] == source["name"] for row in physlib_declaration_index())
+print("installed wheel ok: bidirectional formula bridge resources")

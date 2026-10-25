@@ -11,6 +11,17 @@ the parent directory is unchanged and builds separately.
 - `OMAIPhyslibSemantics.lean`: scalar and isotropic thermoelectric formulas and
   harmonic closed-form consistency, under the documented model, normalization,
   frequency, and operating-point assumptions.
+- `OMAIPhyslibHarmonicEnsemble.lean`: the full Nat-spectrum oscillator ensemble,
+  partition and energy sums, finiteness and integrability, and identification of
+  the OMAI F/U/S/C formulas. Fixed-spectrum derivatives and the sinh form of heat
+  capacity are proved on the positive-temperature domain.
+- `OMAIPhyslibHarmonicSums.lean`: four finite uniform-q molar contractions of the
+  proved single-mode quantities, with exactly `3*N_atoms` branches. These are
+  normalized sums, not a construction of a joint product ensemble.
+- `OMAIPhyslibContinuum.lean`: absolute-temperature round trips and beta unit
+  scaling; signed three-dimensional inviscid stress and pressure contraction.
+- `*-formula-contract.json`: separately reviewed OMAI endpoint identities and
+  source hashes. New proofs do not rewrite the historical six-formula contract.
 - `build-evidence.json`: source and configuration hashes, pinned dependencies,
   and the transitive axiom audit from a build with warnings treated as errors.
   This is a reproducible local build record, not external certification.
@@ -41,5 +52,6 @@ The operator layer is unit-free. Canonical numeric frequency representations use
 linear THz; the harmonic symbolic angular frequency requires
 `omega_SI = 2*pi*10^12*nu_linear_THz`. Dimension equality does not prove that
 factor. Harmonic molar results use moles of primitive cells, not CALPHAD's moles
-of atoms. This package contains formulas and proofs; operations remain in MCG
+of atoms. Every mode must have strictly positive frequency; an unmodified Gamma
+grid with zero acoustic modes does not meet the premises. This package contains formulas and proofs; operations remain in MCG
 and computation in mapengine.

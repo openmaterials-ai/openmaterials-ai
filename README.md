@@ -222,7 +222,17 @@ Each mapping records the scientific identity, formula fingerprint, pinned Physli
 declarations, model, units, normalization, hypotheses, and remaining proof
 obligations. `omai.formula_bindings` exposes this metadata from the installed
 package; the resolver adds it without replacing existing fields. The records
-distinguish source links from compiled bridge theorems.
+distinguish source links from compiled bridge theorems. The compiled results
+include the full single-mode harmonic ensemble's F/U/S/C formulas, their finite
+uniform-q molar contractions, temperature representations, and signed inviscid
+pressure. Each result retains its model and unit conditions.
+
+The [map's PhysLean / Physlib navigator](https://openmaterials.ai/map/) connects
+quantities and operators to upstream declarations and back. The Python APIs
+`formula_bindings_for_physlib(declaration=..., module=...)` and
+`physlib_declaration_index()` expose the same references. Coverage separates
+formula outputs, standalone quantity interpretations, and associated inputs;
+reverse lookup does not assert a mathematical inverse.
 
 `lean/bridge/` uses Physlib's seven-base ISQ dimension system with its own pinned
 build. The historical `lean/` package is unchanged. These proofs do not validate

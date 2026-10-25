@@ -8,4 +8,4 @@ rev = "8ddcc004043c5b537e4225fa763121c176b62a4a"
 
 [[lean_lib]]
 name = "OMAIPhyslibBridge"
-globs = ["OMAIPhyslibBridge", "OMAIPhyslibDimensions", "OMAIPhyslibSemantics"]
+globs = ["OMAIPhyslibBridge", "OMAIPhyslibDimensions", "OMAIPhyslibSemantics", "OMAIPhyslibContinuum", "OMAIPhyslibHarmonicEnsemble", "OMAIPhyslibHarmonicSums"]
