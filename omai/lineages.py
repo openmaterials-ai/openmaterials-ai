@@ -1193,7 +1193,8 @@ def record_to_fragment(record: dict) -> str:
             for key, value in record.items()
         }
     blob = json.dumps(record, separators=(",", ":")).encode("utf-8")
-    packed = gzip.compress(blob)
+    # Transport bytes must not depend on when this link was generated.
+    packed = gzip.compress(blob, mtime=0)
     b64 = base64.urlsafe_b64encode(packed).decode("ascii").rstrip("=")
     return "g" + b64
 

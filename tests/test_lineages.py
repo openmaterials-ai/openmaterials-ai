@@ -1296,6 +1296,24 @@ def test_fragment_round_trip_is_identity_stable():
     assert back["id"] == rec["id"] == lin.lineage_id(rec["lineage"])
 
 
+def test_fragment_is_reproducible_across_clock_changes(monkeypatch):
+    """A fragment has no wall-clock provenance; the lineage identity is unchanged."""
+    import base64
+    import gzip
+
+    rec = lin.record_light(lineage=_light_lineage(), name_to_uid=_NAME_TO_UID)
+    monkeypatch.setattr(gzip.time, "time", lambda: 1_700_000_000)
+    first = lin.record_to_fragment(rec)
+    monkeypatch.setattr(gzip.time, "time", lambda: 1_800_000_000)
+    second = lin.record_to_fragment(rec)
+    assert first == second
+    encoded = first[1:]
+    packed = base64.urlsafe_b64decode(encoded + "=" * (-len(encoded) % 4))
+    assert packed[4:8] == b"\x00" * 4
+    assert lin.record_from_fragment(first) == rec
+    assert lin.record_from_fragment(second)["id"] == lin.lineage_id(rec["lineage"])
+
+
 def test_fragment_is_base64url_no_plus_slash_or_padding():
     """The fragment is base64url with a mode prefix: no '+', '/', or '=' (so it
     is safe in a URL fragment), and it starts with 'g' (gzip)."""
