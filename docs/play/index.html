@@ -938,7 +938,7 @@ function resolveInstanceById(hash, instances){
    the way validate_light is: lineage present; when a node is named it is checked
    against THIS map version (node-unresolved is a normal, valid state, not an
    error); artifact pointers well-formed ({path, role} required, url/sha256
-   optional and shape-checked). Returns {ok, error?, node, nodeResolved} so the
+   optional and shape-checked); mirror locations shape-checked. Returns {ok, error?, node, nodeResolved} so the
    caller can banner an error or annotate what we have. It never recomputes the
    sha256 lineage id (a browser could, but the render path does not gate on it). */
 var SHA256_RE = /^[0-9a-f]{64}$/;
@@ -969,6 +969,24 @@ function validateLightJS(record){
         return { ok: false, error: 'The url of artifact ' + i + ', when present, must be a string.' };
       if (a.sha256 != null && (typeof a.sha256 !== 'string' || !SHA256_RE.test(a.sha256)))
         return { ok: false, error: 'The sha256 of artifact ' + i + ', when present, must be a 64-hex string.' };
+    }
+  }
+  // Resolver locations are outside lineage identity, but malformed access
+  // metadata must not be presented as a valid record. Match _validate_mirrors.
+  var mirrors = record.mirrors;
+  if (mirrors != null) {
+    if (typeof mirrors !== 'object' || Array.isArray(mirrors))
+      return { ok: false, error: 'The mirrors field, when present, must be an object (path to location).' };
+    var paths = Object.keys(mirrors);
+    for (var j = 0; j < paths.length; j++) {
+      var loc = mirrors[paths[j]];
+      if (loc == null || typeof loc === 'string') continue;
+      if (typeof loc !== 'object' || Array.isArray(loc))
+        return { ok: false, error: 'Mirror ' + paths[j] + ' must be a URL string or an object.' };
+      if (loc.url != null && typeof loc.url !== 'string')
+        return { ok: false, error: 'Mirror ' + paths[j] + ' url, when present, must be a string.' };
+      if (loc.provider != null && typeof loc.provider !== 'string')
+        return { ok: false, error: 'Mirror ' + paths[j] + ' provider, when present, must be a string.' };
     }
   }
   // node-unresolved is VALID (state what we have): a named-but-off-map node, or no
@@ -1542,16 +1560,22 @@ function fmtValue(v){
 // the light lineage with no artifacts says nothing.
 function heavyHost(record){
   var mirrors = record.mirrors;
-  if (mirrors && typeof mirrors === 'object') {
+  if (mirrors && typeof mirrors === 'object' && !Array.isArray(mirrors)) {
     var mk = Object.keys(mirrors);
     for (var i = 0; i < mk.length; i++) {
       var loc = mirrors[mk[i]];
-      if (loc && typeof loc === 'object' && loc.url) return { provider: loc.provider || 'the host', url: loc.url };
+      if (loc && typeof loc === 'object' && !Array.isArray(loc) &&
+          typeof loc.url === 'string' && loc.url &&
+          (loc.provider == null || typeof loc.provider === 'string'))
+        return { provider: loc.provider || 'the host', url: loc.url };
       if (typeof loc === 'string' && loc) return { provider: 'the host', url: loc };
     }
   }
-  var arts = record.artifacts || [];
-  for (var j = 0; j < arts.length; j++) { if (arts[j] && arts[j].url) return { provider: 'MaterialsCodeGraph', url: arts[j].url }; }
+  var arts = Array.isArray(record.artifacts) ? record.artifacts : [];
+  for (var j = 0; j < arts.length; j++) {
+    if (arts[j] && typeof arts[j].url === 'string' && arts[j].url)
+      return { provider: 'MaterialsCodeGraph', url: arts[j].url };
+  }
   return null;
 }
 
