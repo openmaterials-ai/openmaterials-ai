@@ -2,7 +2,7 @@
   "schema_version": 1,
   "upstream": {
     "repository": "https://github.com/leanprover-community/physlib",
-    "revision": "8ddcc004043c5b537e4225fa763121c176b62a4a",
+    "revision": "d70acc20677320d37b38e602e331e900466b704d",
     "lean_toolchain": "leanprover/lean4:v4.35.0"
   },
   "bindings": [
@@ -23,28 +23,28 @@
           "name": "Temperature",
           "kind": "structure",
           "line": 32,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/Thermodynamics/Temperature/Basic.lean#L32"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/Thermodynamics/Temperature/Basic.lean#L32"
         },
         {
           "module": "Physlib.Thermodynamics.Temperature.Basic",
           "name": "Temperature.β",
           "kind": "def",
           "line": 59,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/Thermodynamics/Temperature/Basic.lean#L59"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/Thermodynamics/Temperature/Basic.lean#L59"
         },
         {
           "module": "Physlib.Thermodynamics.Temperature.Basic",
           "name": "Temperature.ofRealNonneg",
           "kind": "def",
           "line": 172,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/Thermodynamics/Temperature/Basic.lean#L172"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/Thermodynamics/Temperature/Basic.lean#L172"
         },
         {
           "module": "Physlib.Thermodynamics.Temperature.Basic",
           "name": "Temperature.beta_pos",
           "kind": "lemma",
           "line": 92,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/Thermodynamics/Temperature/Basic.lean#L92"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/Thermodynamics/Temperature/Basic.lean#L92"
         }
       ],
       "conditions": [
@@ -104,7 +104,7 @@
           "name": "Physlib.CondensedMatter.Crystal",
           "kind": "structure",
           "line": 65,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/CondensedMatter/Crystal/Basic.lean#L65"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/CondensedMatter/Crystal/Basic.lean#L65"
         }
       ],
       "conditions": [
@@ -150,14 +150,14 @@
           "name": "ClassicalMechanics.HarmonicOscillator.ω",
           "kind": "def",
           "line": 156,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/ClassicalMechanics/HarmonicOscillator/Basic.lean#L156"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/ClassicalMechanics/HarmonicOscillator/Basic.lean#L156"
         },
         {
           "module": "Physlib.ClassicalMechanics.HarmonicOscillator.Basic",
           "name": "ClassicalMechanics.HarmonicOscillator.ω_sq",
           "kind": "lemma",
           "line": 163,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/ClassicalMechanics/HarmonicOscillator/Basic.lean#L163"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/ClassicalMechanics/HarmonicOscillator/Basic.lean#L163"
         }
       ],
       "conditions": [
@@ -203,21 +203,21 @@
           "name": "ClassicalMechanics.HarmonicOscillator.potentialEnergy",
           "kind": "def",
           "line": 200,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/ClassicalMechanics/HarmonicOscillator/Basic.lean#L200"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/ClassicalMechanics/HarmonicOscillator/Basic.lean#L200"
         },
         {
           "module": "Physlib.ClassicalMechanics.HarmonicOscillator.Basic",
           "name": "ClassicalMechanics.HarmonicOscillator.force",
           "kind": "def",
           "line": 451,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/ClassicalMechanics/HarmonicOscillator/Basic.lean#L451"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/ClassicalMechanics/HarmonicOscillator/Basic.lean#L451"
         },
         {
           "module": "Physlib.ClassicalMechanics.HarmonicOscillator.Basic",
           "name": "ClassicalMechanics.HarmonicOscillator.force_eq_linear",
           "kind": "lemma",
           "line": 464,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/ClassicalMechanics/HarmonicOscillator/Basic.lean#L464"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/ClassicalMechanics/HarmonicOscillator/Basic.lean#L464"
         }
       ],
       "conditions": [
@@ -269,7 +269,7 @@
           "name": "FluidDynamics.CauchyFlow.IsInviscid",
           "kind": "def",
           "line": 54,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/FluidDynamics/CauchyFlow/Inviscid.lean#L54"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/FluidDynamics/CauchyFlow/Inviscid.lean#L54"
         }
       ],
       "conditions": [
@@ -370,70 +370,70 @@
           "name": "CanonicalEnsemble.helmholtzFreeEnergy",
           "kind": "def",
           "line": 680,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L680"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L680"
         },
         {
           "module": "Physlib.QuantumMechanics.HarmonicOscillator.OneDimension.TISE",
           "name": "QuantumMechanics.OneDimension.HarmonicOscillator.eigenValue",
           "kind": "def",
           "line": 29,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29"
         },
         {
           "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
           "name": "CanonicalEnsemble.meanEnergy",
           "kind": "def",
           "line": 519,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L519"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L519"
         },
         {
           "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
           "name": "CanonicalEnsemble.thermodynamicEntropy",
           "kind": "def",
           "line": 800,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L800"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L800"
         },
         {
           "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
           "name": "CanonicalEnsemble.heatCapacity",
           "kind": "def",
           "line": 417,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L417"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L417"
         },
         {
           "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
           "name": "CanonicalEnsemble.mathematicalPartitionFunction_add",
           "kind": "lemma",
           "line": 369,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L369"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L369"
         },
         {
           "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
           "name": "CanonicalEnsemble.integrable_energy_add",
           "kind": "lemma",
           "line": 487,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L487"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L487"
         },
         {
           "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
           "name": "CanonicalEnsemble.meanEnergy_add",
           "kind": "lemma",
           "line": 529,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L529"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L529"
         },
         {
           "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
           "name": "CanonicalEnsemble.partitionFunction_add",
           "kind": "lemma",
           "line": 628,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L628"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L628"
         },
         {
           "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
           "name": "CanonicalEnsemble.helmholtzFreeEnergy_add",
           "kind": "lemma",
           "line": 705,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L705"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L705"
         }
       ],
       "conditions": [
@@ -533,14 +533,14 @@
           "name": "CanonicalEnsemble.heatCapacity",
           "kind": "def",
           "line": 417,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L417"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L417"
         },
         {
           "module": "Physlib.QuantumMechanics.HarmonicOscillator.OneDimension.TISE",
           "name": "QuantumMechanics.OneDimension.HarmonicOscillator.eigenValue",
           "kind": "def",
           "line": 29,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29"
         }
       ],
       "conditions": [
@@ -611,21 +611,21 @@
           "name": "CanonicalEnsemble.thermodynamicEntropy",
           "kind": "def",
           "line": 800,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L800"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L800"
         },
         {
           "module": "Physlib.QuantumMechanics.HarmonicOscillator.OneDimension.TISE",
           "name": "QuantumMechanics.OneDimension.HarmonicOscillator.eigenValue",
           "kind": "def",
           "line": 29,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29"
         },
         {
           "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
           "name": "CanonicalEnsemble.helmholtzFreeEnergy_eq_meanEnergy_sub_temp_mul_thermodynamicEntropy",
           "kind": "theorem",
           "line": 173,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L173"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L173"
         }
       ],
       "conditions": [
@@ -691,21 +691,21 @@
           "name": "CanonicalEnsemble.helmholtzFreeEnergy",
           "kind": "def",
           "line": 680,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L680"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L680"
         },
         {
           "module": "Physlib.QuantumMechanics.HarmonicOscillator.OneDimension.TISE",
           "name": "QuantumMechanics.OneDimension.HarmonicOscillator.eigenValue",
           "kind": "def",
           "line": 29,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29"
         },
         {
           "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
           "name": "CanonicalEnsemble.helmholtzFreeEnergy_eq_meanEnergy_sub_temp_mul_thermodynamicEntropy",
           "kind": "theorem",
           "line": 173,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L173"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L173"
         }
       ],
       "conditions": [
@@ -772,14 +772,14 @@
           "name": "CanonicalEnsemble.heatCapacity",
           "kind": "def",
           "line": 417,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L417"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L417"
         },
         {
           "module": "Physlib.QuantumMechanics.HarmonicOscillator.OneDimension.TISE",
           "name": "QuantumMechanics.OneDimension.HarmonicOscillator.eigenValue",
           "kind": "def",
           "line": 29,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29"
         }
       ],
       "conditions": [
@@ -848,21 +848,21 @@
           "name": "CanonicalEnsemble.meanEnergy",
           "kind": "def",
           "line": 519,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L519"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L519"
         },
         {
           "module": "Physlib.QuantumMechanics.HarmonicOscillator.OneDimension.TISE",
           "name": "QuantumMechanics.OneDimension.HarmonicOscillator.eigenValue",
           "kind": "def",
           "line": 29,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29"
         },
         {
           "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
           "name": "CanonicalEnsemble.helmholtzFreeEnergy_eq_meanEnergy_sub_temp_mul_thermodynamicEntropy",
           "kind": "theorem",
           "line": 173,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L173"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L173"
         }
       ],
       "conditions": [
@@ -928,14 +928,14 @@
           "name": "CanonicalEnsemble.thermodynamicEntropy",
           "kind": "def",
           "line": 800,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L800"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L800"
         },
         {
           "module": "Physlib.QuantumMechanics.HarmonicOscillator.OneDimension.TISE",
           "name": "QuantumMechanics.OneDimension.HarmonicOscillator.eigenValue",
           "kind": "def",
           "line": 29,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29"
         }
       ],
       "conditions": [
@@ -1003,14 +1003,14 @@
           "name": "CanonicalEnsemble.helmholtzFreeEnergy",
           "kind": "def",
           "line": 680,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L680"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L680"
         },
         {
           "module": "Physlib.QuantumMechanics.HarmonicOscillator.OneDimension.TISE",
           "name": "QuantumMechanics.OneDimension.HarmonicOscillator.eigenValue",
           "kind": "def",
           "line": 29,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29"
         }
       ],
       "conditions": [
@@ -1078,14 +1078,14 @@
           "name": "CanonicalEnsemble.heatCapacity",
           "kind": "def",
           "line": 417,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L417"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L417"
         },
         {
           "module": "Physlib.QuantumMechanics.HarmonicOscillator.OneDimension.TISE",
           "name": "QuantumMechanics.OneDimension.HarmonicOscillator.eigenValue",
           "kind": "def",
           "line": 29,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29"
         }
       ],
       "conditions": [
@@ -1153,14 +1153,14 @@
           "name": "CanonicalEnsemble.meanEnergy",
           "kind": "def",
           "line": 519,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L519"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L519"
         },
         {
           "module": "Physlib.QuantumMechanics.HarmonicOscillator.OneDimension.TISE",
           "name": "QuantumMechanics.OneDimension.HarmonicOscillator.eigenValue",
           "kind": "def",
           "line": 29,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29"
         }
       ],
       "conditions": [
@@ -1206,6 +1206,133 @@
       }
     },
     {
+      "id": "harmonic-static-cp-identity",
+      "relation": "conditional",
+      "statement": "For the static-plus-harmonic Physlib ensemble, the temperature derivative of actual molar enthalpy along a local stable constant-pressure branch equals the OMAI Cp identity. Cv, volume, expansion and isothermal bulk modulus must belong to the same molar free-energy surface.",
+      "targets": [
+        {
+          "kind": "node",
+          "id": "BulkModulus",
+          "uid": "c0a13e64c02811f49b951271c894373267937676e0c657fc9ef09fac72558ced"
+        },
+        {
+          "kind": "node",
+          "id": "HeatCapacityConstantP",
+          "uid": "08057e4554a3420c933329b3821de9295e2b5950191e23cafe310b0a15adc7b6"
+        },
+        {
+          "kind": "node",
+          "id": "MolarHeatCapacity",
+          "uid": "4fa2d8e16bde42f794f150f5d149e5d645d63f7ddaac59cef79bd41771b13c17"
+        },
+        {
+          "kind": "node",
+          "id": "MolarVolume",
+          "uid": "e4ae49aad73336225c26fd3cf5d8dc2f4477b02b7d8bad22c9c74fd40a2482b2"
+        },
+        {
+          "kind": "node",
+          "id": "Temperature",
+          "uid": "63f9bd32d94d77e12afbb96f5b1b7a870de6b1f5805213b7f3c3ff227da301f0"
+        },
+        {
+          "kind": "node",
+          "id": "ThermalExpansion",
+          "uid": "9b42f8aebb6099cdcd910a272a92208881b598688bac7830c3ae0a412152473e"
+        },
+        {
+          "kind": "operator",
+          "id": "contract_heat_capacity_p_identity",
+          "uid": "79a11e58595c8b262c104330dcfc622f13a787da6bae856cf4f40b57a6a93639",
+          "formula_sha256": "97ed2e0d3a11efad01a3ab0017d21be3da3009446b0b9364673fad4b8fdcb0f1"
+        }
+      ],
+      "sources": [
+        {
+          "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+          "name": "CanonicalEnsemble.helmholtzFreeEnergy",
+          "kind": "def",
+          "line": 680,
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L680"
+        },
+        {
+          "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+          "name": "CanonicalEnsemble.meanEnergy",
+          "kind": "def",
+          "line": 519,
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L519"
+        },
+        {
+          "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+          "name": "CanonicalEnsemble.thermodynamicEntropy",
+          "kind": "def",
+          "line": 800,
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L800"
+        },
+        {
+          "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
+          "name": "CanonicalEnsemble.heatCapacity",
+          "kind": "def",
+          "line": 417,
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L417"
+        },
+        {
+          "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
+          "name": "CanonicalEnsemble.meanEnergyT",
+          "kind": "def",
+          "line": 409,
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L409"
+        }
+      ],
+      "conditions": [
+        "Use a finite heterogeneous family of full Nat harmonic occupation ensembles, product counting measure, unweighted oscillator energies, dof=0 and phase-space unit=1. Attach static energy N_q*E_0(v) through an actual singleton ensemble before molar normalization.",
+        "Temperature T and primitive-cell volume v are positive. Every frequency is positive and C2 on an open positive-volume domain. Static energy E_0(v) is C2, arbitrary signed, and independent of temperature.",
+        "Keep masses, composition, atom and q counts, reduced-q labels, uniform q weights and Avogadro scale fixed. Frequencies depend on volume but have no independent temperature dependence.",
+        "Use molar volume V_m=N_A*v. Let F_static_joint be the actual free energy after attaching the N_q*E_0(v) singleton, and F_harmonic_joint the unshifted harmonic free energy. Then F_mol=(N_A/N_q)*F_static_joint=N_A*E_0(v)+(N_A/N_q)*F_harmonic_joint. Evaluate all quantities at the same temperature and equilibrium volume, per mole of the same primitive cells, not per mole of atoms.",
+        "The supplied volume path is differentiable at the evaluation temperature and satisfies domain membership and F_V+p_ext=0 throughout a neighborhood, with constant external pressure. Require F_VV>0 at the evaluation point; the proved C2 regularity permits restriction to a stable neighborhood. A pointwise stationarity equation alone is insufficient.",
+        "Interpret expansion as V_m_prime/V_m and bulk modulus as the isothermal derivative V_m*F_VV. Cp is the derivative of actual molar internal energy plus p_ext*V_m along that path; Cv is the fixed-volume capacity of the same actual ensemble.",
+        "Embed model values coherently in SI: T in K, E_0 in J per primitive cell, molar F/U in J/mol of those cells, v in m^3, V_m in m^3/mol, alpha in 1/K, pressure and isothermal bulk modulus in Pa, and capacities in J/(mol K). Convert cell Angstrom^3 by 10^-30 to m^3, canonical pressure eV/Angstrom^3 by 1.602176634e11 to Pa, and serving GPa by 10^9 to Pa. Static energies served in eV require 1.602176634e-19 J/eV. These exact-real interpretations do not certify floating-point adapters."
+      ],
+      "conventions": {
+        "model_scope": "Local hydrostatic static-plus-independent-harmonic canonical model with volume-dependent positive frequencies. This is an OMAI model-specific extension of actual Physlib ensembles, not an existing upstream Cp theorem or a numerical QHA solver proof.",
+        "component_scope": "Finite uniform-q grid with all 3*N_atoms branches, fixed reduced-q labels, scalar volumetric expansion and isothermal bulk response.",
+        "normalization_basis": "Moles of primitive cells. The Hamiltonian static offset is N_q*E_0(v); N_A/N_q is applied to evaluated thermodynamic quantities, giving N_A*E_0(v) in molar F and U. There is no branch-count divisor.",
+        "frequency_convention": "Angular SI frequency with exact upstream hbar and kB. Stored linear THz requires omega_SI=2*pi*10^12*nu_THz; finite-precision conversion code is not certified.",
+        "unit_embedding": "F and U in J/mol, capacities J/(mol K), primitive-cell v in m^3 and molar V_m in m^3/mol; pressure and isothermal bulk modulus in Pa. Use a common numeric-unit embedding, not raw mixed serving values.",
+        "held_fixed": "Composition, masses, q labels/weights, Avogadro scale and the static-energy/frequency functions are fixed. Cv differentiates at fixed volume; Cp differentiates along the locally constant-pressure path.",
+        "admissibility": "T>0, v>0, omega>0, N_A>0, N_q>0 and local positive isothermal curvature. Totalized values outside the model domain have no asserted physical interpretation.",
+        "reference_energy": "All oscillator zero-point energies remain. The signed temperature-independent static energy enters the actual Hamiltonian and is not silently removed.",
+        "qpoint_weighting": "Uniform full-grid q averaging; varying primitive volume does not change reduced-q labels or introduce fractional oscillator copies."
+      },
+      "remaining_obligations": [
+        "Static-energy, phonon, geometry, thermal-expansion and bulk-modulus producers are interpreted inputs, not verified implementations. The theorem does not validate EOS fits, minimizers, finite-difference/polyfit derivatives or the sibling compute_heat_capacity_p producer.",
+        "The equilibrium branch and common-potential input interpretation remain explicit local hypotheses of the general theorem. The compiled nonzero-expansion and zero-response witnesses establish realizable model examples; they do not certify any particular material or numerical volume scan.",
+        "Zero or imaginary modes, independent temperature-dependent spectra, nonuniform q quadrature, intermode coupling, phase coexistence and mechanically unstable branches remain outside scope.",
+        "No claim is made about FC3 mode gammas or the opaque thermal-Gruneisen producer. A fitted thermodynamic quotient is not independent evidence for mode-weighted gamma agreement."
+      ],
+      "evidence": {
+        "kind": "compiled_bridge",
+        "module": "OMAIPhyslibHarmonicResponse",
+        "declarations": [
+          "OMAI.PhyslibBridge.Response.harmonic_static_heatCapacityP_eq_omai",
+          "OMAI.PhyslibBridge.Response.harmonic_static_heatCapacityP_ge_heatCapacityV"
+        ],
+        "source_path": "lean/bridge/OMAIPhyslibHarmonicResponse.lean",
+        "build_record": "lean/bridge/build-evidence.json",
+        "proved_targets": [
+          {
+            "kind": "operator",
+            "id": "contract_heat_capacity_p_identity"
+          },
+          {
+            "kind": "node",
+            "id": "HeatCapacityConstantP"
+          }
+        ],
+        "source_sha256": "1914f2a738ae2ffaa4b35cfce04dc3a880f2d67cbf89a4ff47c7f15ec8a5f9b0"
+      }
+    },
+    {
       "id": "harmonic-volumetric-heat-capacity",
       "targets": [
         {
@@ -1228,14 +1355,14 @@
           "name": "CanonicalEnsemble.heatCapacity",
           "kind": "def",
           "line": 417,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L417"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L417"
         },
         {
           "module": "Physlib.QuantumMechanics.HarmonicOscillator.OneDimension.TISE",
           "name": "QuantumMechanics.OneDimension.HarmonicOscillator.eigenValue",
           "kind": "def",
           "line": 29,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29"
         }
       ],
       "conditions": [
@@ -1301,7 +1428,7 @@
           "name": "NVEHamiltonian.pressure",
           "kind": "def",
           "line": 219,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/StatisticalMechanics/MicroCanonicalEnsemble/ThermoQuantities.lean#L219"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/MicroCanonicalEnsemble/ThermoQuantities.lean#L219"
         }
       ],
       "conditions": [
@@ -1348,28 +1475,28 @@
           "name": "CondensedMatter.ThermoelectricMaterial.figureOfMerit",
           "kind": "def",
           "line": 158,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L158"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L158"
         },
         {
           "module": "Physlib.CondensedMatter.Thermoelectric.Basic",
           "name": "CondensedMatter.ThermoelectricMaterial.figureOfMerit_eq",
           "kind": "lemma",
           "line": 169,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L169"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L169"
         },
         {
           "module": "Physlib.CondensedMatter.Thermoelectric.Basic",
           "name": "CondensedMatter.ThermoelectricMaterial.figureOfMerit_pos",
           "kind": "lemma",
           "line": 182,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L182"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L182"
         },
         {
           "module": "Physlib.CondensedMatter.Thermoelectric.Basic",
           "name": "CondensedMatter.ThermoelectricMaterial.figureOfMerit_le_of_le",
           "kind": "lemma",
           "line": 200,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L200"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L200"
         }
       ],
       "conditions": [
@@ -1432,7 +1559,7 @@
           "name": "CondensedMatter.ThermoelectricMaterial",
           "kind": "structure",
           "line": 102,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L102"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L102"
         }
       ],
       "conditions": [
@@ -1480,14 +1607,14 @@
           "name": "CondensedMatter.ThermoelectricMaterial.powerFactor",
           "kind": "def",
           "line": 125,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L125"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L125"
         },
         {
           "module": "Physlib.CondensedMatter.Thermoelectric.Basic",
           "name": "CondensedMatter.ThermoelectricMaterial.powerFactor_pos",
           "kind": "lemma",
           "line": 128,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L128"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L128"
         }
       ],
       "conditions": [
@@ -1548,14 +1675,14 @@
           "name": "CondensedMatter.ThermoelectricMaterial.totalThermalConductivity",
           "kind": "def",
           "line": 143,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L143"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L143"
         },
         {
           "module": "Physlib.CondensedMatter.Thermoelectric.Basic",
           "name": "CondensedMatter.ThermoelectricMaterial.totalThermalConductivity_pos",
           "kind": "lemma",
           "line": 146,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L146"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L146"
         }
       ],
       "conditions": [
@@ -1658,9 +1785,11 @@
       {
         "id": "BulkModulus",
         "uid": "c0a13e64c02811f49b951271c894373267937676e0c657fc9ef09fac72558ced",
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No current Physlib solid-elasticity/Voigt/EOS formula identification found. The bridge proves the signed inviscid stress/pressure contraction under its sign and unit conditions; identification with thermodynamic free-energy pressure remains unproved. No current Physlib volume-dependent phonon/QHA potential or response-identity formula theorem identified. No current Physlib matching molar-volume, Gruneisen, or Cp-Cv response derivation identified; thermoelectric mappings are separately classified."
+        "binding_ids": [
+          "harmonic-static-cp-identity"
+        ],
+        "status": "mapped",
+        "reason": "See the conditions and evidence for each mapping."
       },
       {
         "id": "CalphadMolarEntropy",
@@ -1922,7 +2051,7 @@
         "uid": "a62ac1eae1e972a0b265a14f8a2af5610deb61eb0c883b7668ac4a64313b3b75",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No current Physlib volume-dependent phonon/QHA potential or response-identity formula theorem identified. No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "The local static-plus-harmonic Cp bridge does not verify numerical QHA volume scans, EOS fitting, minimization, or expansion, bulk-modulus and heat-capacity producers. Independent thermal-Gruneisen producer agreement remains unproved. No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "HOMOLUMOGap",
@@ -1943,9 +2072,11 @@
       {
         "id": "HeatCapacityConstantP",
         "uid": "08057e4554a3420c933329b3821de9295e2b5950191e23cafe310b0a15adc7b6",
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No current Physlib volume-dependent phonon/QHA potential or response-identity formula theorem identified. No current Physlib matching molar-volume, Gruneisen, or Cp-Cv response derivation identified; thermoelectric mappings are separately classified."
+        "binding_ids": [
+          "harmonic-static-cp-identity"
+        ],
+        "status": "mapped",
+        "reason": "See the conditions and evidence for each mapping."
       },
       {
         "id": "HeatCapacity[method=pimd]",
@@ -2113,7 +2244,8 @@
         "uid": "4fa2d8e16bde42f794f150f5d149e5d645d63f7ddaac59cef79bd41771b13c17",
         "binding_ids": [
           "harmonic-joint-molar-ensemble",
-          "harmonic-molar-heat-capacity"
+          "harmonic-molar-heat-capacity",
+          "harmonic-static-cp-identity"
         ],
         "status": "mapped",
         "reason": "See the conditions and evidence for each mapping."
@@ -2141,9 +2273,11 @@
       {
         "id": "MolarVolume",
         "uid": "e4ae49aad73336225c26fd3cf5d8dc2f4477b02b7d8bad22c9c74fd40a2482b2",
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No current Physlib matching molar-volume, Gruneisen, or Cp-Cv response derivation identified; thermoelectric mappings are separately classified."
+        "binding_ids": [
+          "harmonic-static-cp-identity"
+        ],
+        "status": "mapped",
+        "reason": "See the conditions and evidence for each mapping."
       },
       {
         "id": "MolecularFrequency",
@@ -2243,7 +2377,7 @@
         "uid": "bb10912780eb22d45beff551be14f7f4216f3aae26161e8bfd60cdc051f63f58",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No current Physlib volume-dependent phonon/QHA potential or response-identity formula theorem identified."
+        "reason": "The local static-plus-harmonic Cp bridge does not verify numerical QHA volume scans, EOS fitting, minimization, or expansion, bulk-modulus and heat-capacity producers. Independent thermal-Gruneisen producer agreement remains unproved."
       },
       {
         "id": "QuantumKineticEnergy",
@@ -2346,7 +2480,8 @@
         "id": "Temperature",
         "uid": "63f9bd32d94d77e12afbb96f5b1b7a870de6b1f5805213b7f3c3ff227da301f0",
         "binding_ids": [
-          "absolute-temperature"
+          "absolute-temperature",
+          "harmonic-static-cp-identity"
         ],
         "status": "mapped",
         "reason": "See the conditions and evidence for each mapping."
@@ -2470,23 +2605,25 @@
       {
         "id": "ThermalExpansion",
         "uid": "9b42f8aebb6099cdcd910a272a92208881b598688bac7830c3ae0a412152473e",
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No current Physlib volume-dependent phonon/QHA potential or response-identity formula theorem identified. No current Physlib matching molar-volume, Gruneisen, or Cp-Cv response derivation identified; thermoelectric mappings are separately classified."
+        "binding_ids": [
+          "harmonic-static-cp-identity"
+        ],
+        "status": "mapped",
+        "reason": "See the conditions and evidence for each mapping."
       },
       {
         "id": "ThermalGruneisen",
         "uid": "22b1bd519d50d93fd24a919e021bab85aff246464a66a08f8274558834983985",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No current Physlib volume-dependent phonon/QHA potential or response-identity formula theorem identified. No current Physlib matching molar-volume, Gruneisen, or Cp-Cv response derivation identified; thermoelectric mappings are separately classified."
+        "reason": "The local static-plus-harmonic Cp bridge does not verify numerical QHA volume scans, EOS fitting, minimization, or expansion, bulk-modulus and heat-capacity producers. Independent thermal-Gruneisen producer agreement remains unproved. No reviewed Physlib model bridge is established here for the molar-volume producer or an independently defined thermal Gruneisen relation; Cp and thermoelectric mappings are separately classified."
       },
       {
         "id": "TotalEnergy",
         "uid": "cf5a36298543de2027b173b757d38d80b38b66a85d2d3a56f55097e3da0e9a5e",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No current Physlib Kohn-Sham, DFT, atomistic derivative, or ground-state producer formula identification found in the audited source. No current Physlib solid-elasticity/Voigt/EOS formula identification found. The bridge proves the signed inviscid stress/pressure contraction under its sign and unit conditions; identification with thermodynamic free-energy pressure remains unproved. No current Physlib molecular Hessian, electronic gap, NEB, or bond-dissociation formula identification; harmonic oscillator analogies remain conceptual. No current Physlib volume-dependent phonon/QHA potential or response-identity formula theorem identified. No current Physlib matching reference-state, convex-hull, surface, adsorption, reaction, or grain-boundary formula model identified."
+        "reason": "No current Physlib Kohn-Sham, DFT, atomistic derivative, or ground-state producer formula identification found in the audited source. No current Physlib solid-elasticity/Voigt/EOS formula identification found. The bridge proves the signed inviscid stress/pressure contraction under its sign and unit conditions; identification with thermodynamic free-energy pressure remains unproved. No current Physlib molecular Hessian, electronic gap, NEB, or bond-dissociation formula identification; harmonic oscillator analogies remain conceptual. The local static-plus-harmonic Cp bridge does not verify numerical QHA volume scans, EOS fitting, minimization, or expansion, bulk-modulus and heat-capacity producers. Independent thermal-Gruneisen producer agreement remains unproved. No current Physlib matching reference-state, convex-hull, surface, adsorption, reaction, or grain-boundary formula model identified."
       },
       {
         "id": "Trajectory",
@@ -2719,7 +2856,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No current Physlib volume-dependent phonon/QHA potential or response-identity formula theorem identified."
+        "reason": "The local static-plus-harmonic Cp bridge does not verify numerical QHA volume scans, EOS fitting, minimization, or expansion, bulk-modulus and heat-capacity producers. Independent thermal-Gruneisen producer agreement remains unproved."
       },
       {
         "id": "compute_calphad_entropy",
@@ -3170,7 +3307,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No current Physlib volume-dependent phonon/QHA potential or response-identity formula theorem identified."
+        "reason": "The local static-plus-harmonic Cp bridge does not verify numerical QHA volume scans, EOS fitting, minimization, or expansion, bulk-modulus and heat-capacity producers. Independent thermal-Gruneisen producer agreement remains unproved."
       },
       {
         "id": "compute_heat_current",
@@ -3503,7 +3640,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No current Physlib volume-dependent phonon/QHA potential or response-identity formula theorem identified."
+        "reason": "The local static-plus-harmonic Cp bridge does not verify numerical QHA volume scans, EOS fitting, minimization, or expansion, bulk-modulus and heat-capacity producers. Independent thermal-Gruneisen producer agreement remains unproved."
       },
       {
         "id": "compute_reaction_barrier",
@@ -3623,7 +3760,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No current Physlib volume-dependent phonon/QHA potential or response-identity formula theorem identified."
+        "reason": "The local static-plus-harmonic Cp bridge does not verify numerical QHA volume scans, EOS fitting, minimization, or expansion, bulk-modulus and heat-capacity producers. Independent thermal-Gruneisen producer agreement remains unproved."
       },
       {
         "id": "compute_transition_temperature",
@@ -3809,9 +3946,11 @@
         "outputs": [
           "HeatCapacityConstantP"
         ],
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No current Physlib matching molar-volume, Gruneisen, or Cp-Cv response derivation identified; thermoelectric mappings are separately classified."
+        "binding_ids": [
+          "harmonic-static-cp-identity"
+        ],
+        "status": "mapped",
+        "reason": "See the conditions and evidence for each mapping."
       },
       {
         "id": "contract_interface_conductance[transport_model=nemd]",
@@ -4005,7 +4144,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No current Physlib matching molar-volume, Gruneisen, or Cp-Cv response derivation identified; thermoelectric mappings are separately classified."
+        "reason": "No reviewed Physlib model bridge is established here for the molar-volume producer or an independently defined thermal Gruneisen relation; Cp and thermoelectric mappings are separately classified."
       },
       {
         "id": "contract_poisson_ratio",
@@ -4108,7 +4247,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No current Physlib volume-dependent phonon/QHA potential or response-identity formula theorem identified."
+        "reason": "The local static-plus-harmonic Cp bridge does not verify numerical QHA volume scans, EOS fitting, minimization, or expansion, bulk-modulus and heat-capacity producers. Independent thermal-Gruneisen producer agreement remains unproved."
       },
       {
         "id": "contract_thermal_gruneisen_identity",
@@ -4126,7 +4265,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No current Physlib matching molar-volume, Gruneisen, or Cp-Cv response derivation identified; thermoelectric mappings are separately classified."
+        "reason": "No reviewed Physlib model bridge is established here for the molar-volume producer or an independently defined thermal Gruneisen relation; Cp and thermoelectric mappings are separately classified."
       },
       {
         "id": "contract_volumetric_heat_capacity",
@@ -4737,21 +4876,21 @@
   },
   "coverage": {
     "nodes_total": 129,
-    "nodes_mapped": 24,
+    "nodes_mapped": 28,
     "operators_total": 127,
-    "operators_mapped": 13,
-    "bindings_total": 21,
+    "operators_mapped": 14,
+    "bindings_total": 22,
     "source_correspondences": 5,
-    "compiled_bridges": 16,
-    "nodes_compiled": 14,
-    "nodes_compiled_outputs": 13,
+    "compiled_bridges": 17,
+    "nodes_compiled": 15,
+    "nodes_compiled_outputs": 14,
     "nodes_compiled_interpretations": 1,
-    "operators_compiled": 13,
-    "upstream_declarations_referenced": 32,
+    "operators_compiled": 14,
+    "upstream_declarations_referenced": 33,
     "upstream_modules_referenced": 9,
     "relations": {
       "exact_definition": 1,
-      "conditional": 16,
+      "conditional": 17,
       "conceptual": 4
     }
   }

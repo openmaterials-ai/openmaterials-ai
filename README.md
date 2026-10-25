@@ -227,7 +227,12 @@ include the full single-mode harmonic ensemble's F/U/S/C formulas, their finite
 uniform-q molar contractions, temperature representations, and signed inviscid
 pressure. A heterogeneous joint-ensemble proof now establishes the product
 interpretation of the four molar formulas. Volumetric heat capacity has both
-single-mode-sum and joint-ensemble proofs with positive primitive-cell volume. Each result retains its model and unit conditions.
+single-mode-sum and joint-ensemble proofs with positive primitive-cell volume.
+A static-plus-harmonic volume family also proves the local constant-pressure
+identity `Cp - Cv = T V_m alpha_V^2 K_T`, using actual ensemble enthalpy and a
+common primitive-cell molar basis. Nonzero-expansion and zero-response examples
+are compiled; numerical QHA producers remain unverified. Each result retains
+its model and unit conditions.
 
 The [map's PhysLean / Physlib navigator](https://openmaterials.ai/map/) connects
 quantities and operators to upstream declarations and back. The Python APIs

@@ -23,7 +23,7 @@ Cite the map version in https://openmaterials.ai/data/version.json with any valu
 - [Codes](https://openmaterials.ai/codes/): the bibliography of the codes the map cites
 - [Data contract](https://openmaterials.ai/guide/#data): the shapes of the main JSON files under data/
 - [Repository](https://github.com/openmaterials-ai/openmaterials-ai): source, GOVERNANCE.md, and the contribution process
-- [Formula bridge](https://openmaterials.ai/lean/bridge/): mapping coverage and gaps, separate from the historical Lean 4.31.0 proof package
+- [Formula bridge](https://openmaterials.ai/lean/bridge/): mapping coverage and gaps, including a conditional static-plus-harmonic Cp response identity; compiled model proofs do not validate numerical producers. Separate from the historical Lean 4.31.0 proof package.
 
 ## Values
 

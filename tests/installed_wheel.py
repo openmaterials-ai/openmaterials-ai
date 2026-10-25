@@ -75,3 +75,16 @@ reverse_rows = formula_bindings_for_physlib(declaration=source["name"], module=s
 assert formula_rows[0] in reverse_rows
 assert any(row["name"] == source["name"] for row in physlib_declaration_index())
 print("installed wheel ok: bidirectional formula bridge resources")
+
+cp_rows = formula_bindings_for("contract_heat_capacity_p_identity", kind="operator")
+assert len(cp_rows) == 1 and cp_rows[0]["id"] == "harmonic-static-cp-identity"
+assert cp_rows[0]["evidence"]["kind"] == "compiled_bridge"
+assert {(row["kind"], row["id"]) for row in cp_rows[0]["evidence"]["proved_targets"]} == {
+    ("operator", "contract_heat_capacity_p_identity"), ("node", "HeatCapacityConstantP"),
+}
+assert cp_rows[0] in formula_bindings_for_physlib(
+    declaration="CanonicalEnsemble.meanEnergyT",
+    module="Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
+)
+assert formula_bindings_for("compute_heat_capacity_p", kind="operator") == []
+print("installed wheel ok: conditional Cp identity, not its numerical sibling")

@@ -43,11 +43,11 @@
   <div class="page-body">
     <nav class="toc gtoc" aria-label="Contents">
       <a href="#coverage">Coverage</a><a href="#inventory">OMAI inventory</a><a href="#upstream-inventory">Physlib declarations</a>
-      <a href="#analytic">Harmonic ensemble proofs</a><a href="#scope">Evidence and scope</a><a href="#reproduce">Reproduce</a>
+      <a href="#analytic">Harmonic ensemble proofs</a><a href="#response">Cp response</a><a href="#scope">Evidence and scope</a><a href="#reproduce">Reproduce</a>
       <a href="../">Historical verified layer</a>
     </nav>
     <article class="prose gwrap">
-      <p><a href="https://physlib.io/">Physlib</a> combines the former PhysLean and Lean-QuantumInfo libraries. This bridge uses Physlib <a id="upstream" href="https://github.com/leanprover-community/physlib/tree/8ddcc004043c5b537e4225fa763121c176b62a4a"><code>8ddcc004043c5</code></a>, on Lean 4.35.0.
+      <p><a href="https://physlib.io/">Physlib</a> combines the former PhysLean and Lean-QuantumInfo libraries. This bridge uses Physlib <a id="upstream" href="https://github.com/leanprover-community/physlib/tree/d70acc20677320d37b38e602e331e900466b704d"><code>d70acc2067732</code></a>, on Lean 4.35.0.
         Its dependency pin is separate from the <a href="../">historical Lean 4.31.0 package</a>.
         The source inventory includes every OMAI quantity and operator, including operators without input links.</p>
       <p class="notice gnote">Mapped does not mean proved. Exact-definition, conditional, and conceptual correspondences describe the relation to upstream;
@@ -117,6 +117,28 @@
           <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/dcd570fd8898d58f559c6d85c59ede8ac34e2b02/lean/bridge/joint-density-formula-contract.json">joint volumetric</a>.
           Formula contracts pin the reviewed endpoints and Lean source; they do not automatically translate formulas into proofs.</p>
       </section>
+      <section class="gsec" id="response">
+        <h2>Constant-pressure heat capacity</h2>
+        <p>The local static-plus-harmonic bridge proves
+          <code>Cp - Cv = T*V_m*alpha_V^2*K_T</code> on a common primitive-cell molar basis.
+          Cp is defined independently as the temperature derivative of actual ensemble enthalpy along a constant-pressure path.
+          Expansion is <code>V_m'/V_m</code>, and the isothermal bulk modulus is <code>V_m*F_VV</code> for the same molar free energy.</p>
+        <p>The model attaches the signed static energy <code>N_q*E_0(v)</code> through an actual singleton ensemble,
+          then applies <code>N_A/N_q</code> to the evaluated thermodynamic quantities. Frequencies are positive C2 functions of volume;
+          static energy is C2 and temperature-independent. The reduced-q grid and molar basis stay fixed.
+          The branch must satisfy equilibrium throughout a neighborhood, with positive temperature, volume and curvature at the evaluation point.</p>
+        <p>A heterogeneous example uses the implicit function theorem to construct a stable branch with nonzero expansion and actual Cp greater than Cv at its reference state.
+          A separate constant-frequency example has zero expansion and Cp equal to Cv.
+          These are exact model examples, not material fits. The result adds one compiled operator/output pair;
+          it does not verify numerical QHA, EOS fits, minimizers, input producers or the sibling <code>compute_heat_capacity_p</code> route.</p>
+        <p>Inspect the
+          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/dcd570fd8898d58f559c6d85c59ede8ac34e2b02/lean/bridge/OMAIPhyslibHarmonicResponse.lean">catalog endpoint</a>,
+          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/dcd570fd8898d58f559c6d85c59ede8ac34e2b02/lean/bridge/OMAIPhyslibHarmonicVolume.lean">actual volume family</a>,
+          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/dcd570fd8898d58f559c6d85c59ede8ac34e2b02/lean/bridge/OMAIPhyslibResponseWitness.lean">two model examples</a>,
+          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/dcd570fd8898d58f559c6d85c59ede8ac34e2b02/lean/bridge/OMAIPhyslibStaticEnsemble.lean">static ensemble</a>,
+          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/dcd570fd8898d58f559c6d85c59ede8ac34e2b02/lean/bridge/response-formula-contract.json">reviewed endpoint contract</a>,
+          and <a href="#operator=contract_heat_capacity_p_identity">mapping conditions and sources</a>.</p>
+      </section>
       <section class="gsec" id="scope">
         <h2>Evidence and scope</h2>
         <ul>
@@ -140,7 +162,7 @@
 python -m omai.formula_bindings --check --physlib-path /path/to/pinned/physlib
 bash lean/bridge/check.sh
 python -m omai.formula_bindings --check --lean-package lean/bridge</pre>
-        <p>The read-only source check verifies pinned files and declaration lines. The compiled source-reference audit checks upstream names and their defining modules. The package audit also checks the endpoint definitions named in the reviewed formula contracts, including definitions retained in earlier modules. These reference and name checks establish provenance, not formula equivalence. Run <code>check.sh</code> to build with the pinned dependencies and perform the endpoint-name and transitive-axiom audits.</p>
+        <p>The read-only source check verifies pinned files and declaration lines. The compiled source-reference audit checks upstream names and their defining modules. The package audit also checks the endpoint definitions named in the reviewed formula contracts, including definitions retained in earlier modules. These reference and name checks establish provenance, not formula equivalence. The axiom audit requires every bridge source module to be imported with its private kernel data, and includes module-owned private and generated declarations as well as the bridge namespace. It rejects missing modules, incomplete output and unapproved assumptions. Run <code>check.sh</code> to build with the pinned dependencies and perform the endpoint-name and transitive-axiom audits.</p>
       </section>
     </article>
   </div>
