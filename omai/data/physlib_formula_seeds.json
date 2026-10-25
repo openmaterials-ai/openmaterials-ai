@@ -310,7 +310,7 @@
         "frequency_convention": "Symbolic omega is angular rad/s. Canonical linear THz requires omega=2*pi*10^12*nu_THz, not value identity.",
         "unit_embedding": "Use the exact upstream hbar and kB in one consistent unit system: J, K and angular rad/s in SI; entropy and heat capacity are J/K.",
         "held_fixed": "Mode spectrum, q weights, and cell volume fixed when differentiating in T.",
-        "admissibility": "T>0, omega>0, hbar>0, kB>0; zero/imaginary/unstable modes excluded and not assigned totalized Lean values.",
+        "admissibility": "T>0, omega>0, hbar>0, kB>0. Zero, imaginary and unstable modes are outside the physical model; totalized Lean expressions do not give them a physical interpretation.",
         "reference_energy": "The spectrum includes hbar*omega/2; this constant contributes to F and U but not to S or C.",
         "qpoint_weighting": "No q sum at the single-mode stage."
       },
@@ -388,7 +388,7 @@
         "frequency_convention": "Symbolic omega is angular rad/s. Canonical linear THz requires omega=2*pi*10^12*nu_THz, not value identity.",
         "unit_embedding": "Use the exact upstream hbar and kB in one consistent unit system: J, K and angular rad/s in SI; entropy and heat capacity are J/K.",
         "held_fixed": "Mode spectrum, q weights, and cell volume fixed when differentiating in T.",
-        "admissibility": "T>0, omega>0, hbar>0, kB>0; zero/imaginary/unstable modes excluded and not assigned totalized Lean values.",
+        "admissibility": "T>0, omega>0, hbar>0, kB>0. Zero, imaginary and unstable modes are outside the physical model; totalized Lean expressions do not give them a physical interpretation.",
         "reference_energy": "The spectrum includes hbar*omega/2; this constant contributes to F and U but not to S or C.",
         "qpoint_weighting": "No q sum at the single-mode stage."
       },
@@ -465,7 +465,7 @@
         "frequency_convention": "Symbolic omega is angular rad/s. Canonical linear THz requires omega=2*pi*10^12*nu_THz, not value identity.",
         "unit_embedding": "Use the exact upstream hbar and kB in one consistent unit system: J, K and angular rad/s in SI; entropy and heat capacity are J/K.",
         "held_fixed": "Mode spectrum, q weights, and cell volume fixed when differentiating in T.",
-        "admissibility": "T>0, omega>0, hbar>0, kB>0; zero/imaginary/unstable modes excluded and not assigned totalized Lean values.",
+        "admissibility": "T>0, omega>0, hbar>0, kB>0. Zero, imaginary and unstable modes are outside the physical model; totalized Lean expressions do not give them a physical interpretation.",
         "reference_energy": "The spectrum includes hbar*omega/2; this constant contributes to F and U but not to S or C.",
         "qpoint_weighting": "No q sum at the single-mode stage."
       },
@@ -537,7 +537,7 @@
         "frequency_convention": "Symbolic omega is angular rad/s. Canonical linear THz requires omega=2*pi*10^12*nu_THz, not value identity.",
         "unit_embedding": "Use the exact upstream hbar and kB in one consistent unit system: J, K and angular rad/s in SI; entropy and heat capacity are J/K.",
         "held_fixed": "Mode spectrum, q weights, and cell volume fixed when differentiating in T.",
-        "admissibility": "T>0, omega>0, hbar>0, kB>0; zero/imaginary/unstable modes excluded and not assigned totalized Lean values.",
+        "admissibility": "T>0, omega>0, hbar>0, kB>0. Zero, imaginary and unstable modes are outside the physical model; totalized Lean expressions do not give them a physical interpretation.",
         "reference_energy": "The spectrum includes hbar*omega/2; this constant contributes to F and U but not to S or C.",
         "qpoint_weighting": "No q sum at the single-mode stage."
       },
@@ -606,18 +606,18 @@
         "Hold the mode spectrum, weights and primitive-cell basis fixed; convert stored linear THz to angular frequency."
       ],
       "conventions": {
-        "model_scope": "Finite normalized sum of the proved single-mode ensemble quantities. No joint product ensemble is constructed.",
+        "model_scope": "Normalized sum of proved single-mode ensemble quantities; the separate harmonic-joint-molar-ensemble record establishes the joint-product interpretation.",
         "component_scope": "N_q q points and exactly 3*N_atoms branches per primitive-cell basis.",
         "normalization_basis": "N_A/N_q times the full mode sum, per mole of primitive cells, not per mole of atoms.",
         "frequency_convention": "Symbolic omega is angular rad/s. Canonical linear THz requires omega=2*pi*10^12*nu_THz, not value identity.",
         "unit_embedding": "Per-mode energy in J and entropy/heat capacity in J/K; molar outputs in J/mol or J/(mol K) of primitive cells. The explicit positive Avogadro parameter is interpreted as N_A in the chosen units.",
         "held_fixed": "Mode spectrum, q weights, and cell volume fixed when differentiating in T.",
-        "admissibility": "T>0, omega>0, hbar>0, kB>0; zero/imaginary/unstable modes excluded and not assigned totalized Lean values.",
+        "admissibility": "T>0, omega>0, hbar>0, kB>0. Zero, imaginary and unstable modes are outside the physical model; totalized Lean expressions do not give them a physical interpretation.",
         "reference_energy": "The spectrum includes hbar*omega/2; this constant contributes to F and U but not to S or C.",
         "qpoint_weighting": "Uniform q weight 1/N_q, N_q>0; sum all 3*N_atoms branches."
       },
       "remaining_obligations": [
-        "A joint product ensemble and its partition-function/additivity theorem are not constructed. Nonuniform q weights, zero-mode prescriptions, per-atom basis conversion, phonon producers and numerical implementation validation remain outside this contraction proof."
+        "This record retains the single-mode contraction proof. The separate harmonic-joint-molar-ensemble record supplies joint-product thermodynamics. Nonuniform q, zero or imaginary modes, phonon producers, thermodynamic limits and numerical implementations remain outside scope."
       ],
       "evidence": {
         "kind": "compiled_bridge",
@@ -679,18 +679,18 @@
         "Hold the mode spectrum, weights and primitive-cell basis fixed; convert stored linear THz to angular frequency."
       ],
       "conventions": {
-        "model_scope": "Finite normalized sum of the proved single-mode ensemble quantities. No joint product ensemble is constructed.",
+        "model_scope": "Normalized sum of proved single-mode ensemble quantities; the separate harmonic-joint-molar-ensemble record establishes the joint-product interpretation.",
         "component_scope": "N_q q points and exactly 3*N_atoms branches per primitive-cell basis.",
         "normalization_basis": "N_A/N_q times the full mode sum, per mole of primitive cells, not per mole of atoms.",
         "frequency_convention": "Symbolic omega is angular rad/s. Canonical linear THz requires omega=2*pi*10^12*nu_THz, not value identity.",
         "unit_embedding": "Per-mode energy in J and entropy/heat capacity in J/K; molar outputs in J/mol or J/(mol K) of primitive cells. The explicit positive Avogadro parameter is interpreted as N_A in the chosen units.",
         "held_fixed": "Mode spectrum, q weights, and cell volume fixed when differentiating in T.",
-        "admissibility": "T>0, omega>0, hbar>0, kB>0; zero/imaginary/unstable modes excluded and not assigned totalized Lean values.",
+        "admissibility": "T>0, omega>0, hbar>0, kB>0. Zero, imaginary and unstable modes are outside the physical model; totalized Lean expressions do not give them a physical interpretation.",
         "reference_energy": "The spectrum includes hbar*omega/2; this constant contributes to F and U but not to S or C.",
         "qpoint_weighting": "Uniform q weight 1/N_q, N_q>0; sum all 3*N_atoms branches."
       },
       "remaining_obligations": [
-        "A joint product ensemble and its partition-function/additivity theorem are not constructed. Nonuniform q weights, zero-mode prescriptions, per-atom basis conversion, phonon producers and numerical implementation validation remain outside this contraction proof."
+        "This record retains the single-mode contraction proof. The separate harmonic-joint-molar-ensemble record supplies joint-product thermodynamics. Nonuniform q, zero or imaginary modes, phonon producers, thermodynamic limits and numerical implementations remain outside scope."
       ],
       "evidence": {
         "kind": "compiled_bridge",
@@ -1089,18 +1089,18 @@
         "Hold the mode spectrum, weights and primitive-cell basis fixed; convert stored linear THz to angular frequency."
       ],
       "conventions": {
-        "model_scope": "Finite normalized sum of the proved single-mode ensemble quantities. No joint product ensemble is constructed.",
+        "model_scope": "Normalized sum of proved single-mode ensemble quantities; the separate harmonic-joint-molar-ensemble record establishes the joint-product interpretation.",
         "component_scope": "N_q q points and exactly 3*N_atoms branches per primitive-cell basis.",
         "normalization_basis": "N_A/N_q times the full mode sum, per mole of primitive cells, not per mole of atoms.",
         "frequency_convention": "Symbolic omega is angular rad/s. Canonical linear THz requires omega=2*pi*10^12*nu_THz, not value identity.",
         "unit_embedding": "Per-mode energy in J and entropy/heat capacity in J/K; molar outputs in J/mol or J/(mol K) of primitive cells. The explicit positive Avogadro parameter is interpreted as N_A in the chosen units.",
         "held_fixed": "Mode spectrum, q weights, and cell volume fixed when differentiating in T.",
-        "admissibility": "T>0, omega>0, hbar>0, kB>0; zero/imaginary/unstable modes excluded and not assigned totalized Lean values.",
+        "admissibility": "T>0, omega>0, hbar>0, kB>0. Zero, imaginary and unstable modes are outside the physical model; totalized Lean expressions do not give them a physical interpretation.",
         "reference_energy": "The spectrum includes hbar*omega/2; this constant contributes to F and U but not to S or C.",
         "qpoint_weighting": "Uniform q weight 1/N_q, N_q>0; sum all 3*N_atoms branches."
       },
       "remaining_obligations": [
-        "A joint product ensemble and its partition-function/additivity theorem are not constructed. Nonuniform q weights, zero-mode prescriptions, per-atom basis conversion, phonon producers and numerical implementation validation remain outside this contraction proof."
+        "This record retains the single-mode contraction proof. The separate harmonic-joint-molar-ensemble record supplies joint-product thermodynamics. Nonuniform q, zero or imaginary modes, phonon producers, thermodynamic limits and numerical implementations remain outside scope."
       ],
       "evidence": {
         "kind": "compiled_bridge",
@@ -1162,18 +1162,18 @@
         "Hold the mode spectrum, weights and primitive-cell basis fixed; convert stored linear THz to angular frequency."
       ],
       "conventions": {
-        "model_scope": "Finite normalized sum of the proved single-mode ensemble quantities. No joint product ensemble is constructed.",
+        "model_scope": "Normalized sum of proved single-mode ensemble quantities; the separate harmonic-joint-molar-ensemble record establishes the joint-product interpretation.",
         "component_scope": "N_q q points and exactly 3*N_atoms branches per primitive-cell basis.",
         "normalization_basis": "N_A/N_q times the full mode sum, per mole of primitive cells, not per mole of atoms.",
         "frequency_convention": "Symbolic omega is angular rad/s. Canonical linear THz requires omega=2*pi*10^12*nu_THz, not value identity.",
         "unit_embedding": "Per-mode energy in J and entropy/heat capacity in J/K; molar outputs in J/mol or J/(mol K) of primitive cells. The explicit positive Avogadro parameter is interpreted as N_A in the chosen units.",
         "held_fixed": "Mode spectrum, q weights, and cell volume fixed when differentiating in T.",
-        "admissibility": "T>0, omega>0, hbar>0, kB>0; zero/imaginary/unstable modes excluded and not assigned totalized Lean values.",
+        "admissibility": "T>0, omega>0, hbar>0, kB>0. Zero, imaginary and unstable modes are outside the physical model; totalized Lean expressions do not give them a physical interpretation.",
         "reference_energy": "The spectrum includes hbar*omega/2; this constant contributes to F and U but not to S or C.",
         "qpoint_weighting": "Uniform q weight 1/N_q, N_q>0; sum all 3*N_atoms branches."
       },
       "remaining_obligations": [
-        "A joint product ensemble and its partition-function/additivity theorem are not constructed. Nonuniform q weights, zero-mode prescriptions, per-atom basis conversion, phonon producers and numerical implementation validation remain outside this contraction proof."
+        "This record retains the single-mode contraction proof. The separate harmonic-joint-molar-ensemble record supplies joint-product thermodynamics. Nonuniform q, zero or imaginary modes, phonon producers, thermodynamic limits and numerical implementations remain outside scope."
       ],
       "evidence": {
         "kind": "compiled_bridge",
@@ -1192,6 +1192,345 @@
           {
             "kind": "node",
             "id": "MolarHeatCapacity"
+          }
+        ]
+      }
+    },
+    {
+      "id": "harmonic-joint-molar-ensemble",
+      "targets": [
+        {
+          "kind": "operator",
+          "id": "contract_molar_free_energy",
+          "uid": "9d4ded802829a8b2fe5544556eeb81534fe39e3ceae5efac0065e7ddcf3da152",
+          "formula_sha256": "dbff2ebb2aece334d4cbf8a8ad1928d48e3660a69d64cb8b73746b54dedeb5b0"
+        },
+        {
+          "kind": "node",
+          "id": "MolarHelmholtzFreeEnergy",
+          "uid": "419335bd5f3a1949576e608e4147d8f18bef980a69a9c6b99199f812c806b7be"
+        },
+        {
+          "kind": "operator",
+          "id": "contract_molar_internal_energy",
+          "uid": "77d1268cd072ac2acfbf95872ae6a8acc0a20ac9e196dfe7256048ad9f5f8f2d",
+          "formula_sha256": "2df3e3d6b3c9796f181b1cd476cf85250ee59ca8d440c2a20770ef2bfe0d8065"
+        },
+        {
+          "kind": "node",
+          "id": "MolarInternalEnergy",
+          "uid": "220926f4974baec5c511f5acae2c9c4e09a8276d41c1314391b91dec537ef2fb"
+        },
+        {
+          "kind": "operator",
+          "id": "contract_molar_entropy",
+          "uid": "c9322877acc6349a7e18b29646674344b12d39565adf4ee3e23f2b82e1b53ab3",
+          "formula_sha256": "dd26ff6b4ba598e3847d7cb5bea43db12244846b2adeb279f4a3a9d3d0df168f"
+        },
+        {
+          "kind": "node",
+          "id": "MolarEntropy",
+          "uid": "0f08fcb37791dc7cc3e0e0ee5c611abbefc5075867719b275fcaa77ada4f1ac2"
+        },
+        {
+          "kind": "operator",
+          "id": "contract_molar_heat_capacity",
+          "uid": "00bbc32d579215c8ada01de36f6d5db89d0cd23ccd1e392bc4bc085e9c96fc8e",
+          "formula_sha256": "d650d1a9d8bf0b675e7f416f15d6d29beda89179a7af59ab2afad6a1dd72e71c"
+        },
+        {
+          "kind": "node",
+          "id": "MolarHeatCapacity",
+          "uid": "4fa2d8e16bde42f794f150f5d149e5d645d63f7ddaac59cef79bd41771b13c17"
+        }
+      ],
+      "relation": "conditional",
+      "statement": "The full heterogeneous joint harmonic ensemble has the proved mode-product partition and additive F/U/S/C. Applying N_A/N_q to its actual thermodynamic quantities gives the four existing OMAI molar formulas.",
+      "sources": [
+        {
+          "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+          "name": "CanonicalEnsemble.helmholtzFreeEnergy",
+          "kind": "def",
+          "line": 680
+        },
+        {
+          "module": "Physlib.QuantumMechanics.HarmonicOscillator.OneDimension.TISE",
+          "name": "QuantumMechanics.OneDimension.HarmonicOscillator.eigenValue",
+          "kind": "def",
+          "line": 29
+        },
+        {
+          "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+          "name": "CanonicalEnsemble.meanEnergy",
+          "kind": "def",
+          "line": 519
+        },
+        {
+          "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+          "name": "CanonicalEnsemble.thermodynamicEntropy",
+          "kind": "def",
+          "line": 800
+        },
+        {
+          "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
+          "name": "CanonicalEnsemble.heatCapacity",
+          "kind": "def",
+          "line": 417
+        },
+        {
+          "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+          "name": "CanonicalEnsemble.mathematicalPartitionFunction_add",
+          "kind": "lemma",
+          "line": 369
+        },
+        {
+          "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+          "name": "CanonicalEnsemble.integrable_energy_add",
+          "kind": "lemma",
+          "line": 487
+        },
+        {
+          "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+          "name": "CanonicalEnsemble.meanEnergy_add",
+          "kind": "lemma",
+          "line": 529
+        },
+        {
+          "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+          "name": "CanonicalEnsemble.partitionFunction_add",
+          "kind": "lemma",
+          "line": 628
+        },
+        {
+          "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+          "name": "CanonicalEnsemble.helmholtzFreeEnergy_add",
+          "kind": "lemma",
+          "line": 705
+        }
+      ],
+      "conditions": [
+        "Use a finite grid Fin N_q x Fin (3*N_atoms), with positive natural N_q and N_atoms. Fin labels map to OMAI 1-based labels by i.val+1.",
+        "Each grid entry is an upstream positive-frequency harmonic oscillator with exact upstream hbar and kB; all entries share one positive absolute temperature.",
+        "Use uniform q weights 1/N_q and a positive Avogadro scale N_A in the chosen molar units. Do not divide by the branch count or atom count.",
+        "All modes must have strictly positive frequencies. An unmodified Gamma grid with zero acoustic modes does not satisfy the premises.",
+        "Hold the mode spectrum, weights and primitive-cell basis fixed; convert stored linear THz to angular frequency.",
+        "Construct the actual finite product of full Nat occupation spaces, with product counting measure, unweighted eigenvalue sum, dof=0 and phase-space unit=1. No occupation cutoff or equal-frequency assumption is used.",
+        "Apply N_A/N_q after evaluating the joint thermodynamic quantities, not inside the Hamiltonian."
+      ],
+      "conventions": {
+        "model_scope": "Finite heterogeneous independent-mode quantum harmonic product with all Nat occupations. The empty-index identity has one zero-energy microstate and partition one.",
+        "component_scope": "Explicit measure-preserving rectangular-to-flat occupation reindexing for N_q by 3*N_atoms modes.",
+        "normalization_basis": "N_A/N_q times the full mode sum, per mole of primitive cells, not per mole of atoms.",
+        "frequency_convention": "Symbolic omega is angular rad/s. Canonical linear THz requires omega=2*pi*10^12*nu_THz, not value identity.",
+        "unit_embedding": "Per-mode energy in J and entropy/heat capacity in J/K; molar outputs in J/mol or J/(mol K) of primitive cells. The explicit positive Avogadro parameter is interpreted as N_A in the chosen units.",
+        "held_fixed": "All frequencies, mode indices, q weights, primitive-cell basis and volume fixed in temperature derivatives.",
+        "admissibility": "T>0, omega>0, hbar>0, kB>0. Zero, imaginary and unstable modes are outside the physical model; totalized Lean expressions do not give them a physical interpretation.",
+        "reference_energy": "The spectrum includes hbar*omega/2; this constant contributes to F and U but not to S or C.",
+        "qpoint_weighting": "Uniform q weight 1/N_q, N_q>0; sum all 3*N_atoms branches."
+      },
+      "remaining_obligations": [
+        "Intermode coupling, nonuniform q weights, zero or imaginary frequencies, phonon-mode production, thermodynamic limits and numerical implementations remain outside this independent-mode model."
+      ],
+      "evidence": {
+        "kind": "compiled_bridge",
+        "module": "OMAIPhyslibHarmonicProduct",
+        "declarations": [
+          "OMAI.PhyslibBridge.harmonicProduct_partitionFunction",
+          "OMAI.PhyslibBridge.harmonicGridOccupation_measurePreserving",
+          "OMAI.PhyslibBridge.harmonicGridEnsemble_energy",
+          "OMAI.PhyslibBridge.harmonic_joint_molar_helmholtzFreeEnergy_eq_omai",
+          "OMAI.PhyslibBridge.harmonic_joint_molar_meanEnergy_eq_omai",
+          "OMAI.PhyslibBridge.harmonic_joint_molar_thermodynamicEntropy_eq_omai",
+          "OMAI.PhyslibBridge.harmonic_joint_molar_heatCapacity_eq_omai"
+        ],
+        "source_path": "lean/bridge/OMAIPhyslibHarmonicProduct.lean",
+        "source_sha256": "4c0af6605e43ceed3460a8c7fe9198f486bd48cf2ac6e538fa0c45ac1a644578",
+        "build_record": "lean/bridge/build-evidence.json",
+        "proved_targets": [
+          {
+            "kind": "operator",
+            "id": "contract_molar_free_energy"
+          },
+          {
+            "kind": "node",
+            "id": "MolarHelmholtzFreeEnergy"
+          },
+          {
+            "kind": "operator",
+            "id": "contract_molar_internal_energy"
+          },
+          {
+            "kind": "node",
+            "id": "MolarInternalEnergy"
+          },
+          {
+            "kind": "operator",
+            "id": "contract_molar_entropy"
+          },
+          {
+            "kind": "node",
+            "id": "MolarEntropy"
+          },
+          {
+            "kind": "operator",
+            "id": "contract_molar_heat_capacity"
+          },
+          {
+            "kind": "node",
+            "id": "MolarHeatCapacity"
+          }
+        ]
+      }
+    },
+    {
+      "id": "harmonic-volumetric-heat-capacity",
+      "targets": [
+        {
+          "kind": "operator",
+          "id": "contract_volumetric_heat_capacity",
+          "uid": "239c7dd3370e7b7e4456f1ade35c5d81edba69efda786d25e8e1e74f6fa297d9",
+          "formula_sha256": "e89d3db8b665f634538055816c2e1336259f88bcd007badcf318c802d2b3ff92"
+        },
+        {
+          "kind": "node",
+          "id": "VolumetricHeatCapacity",
+          "uid": "29e324b97f31cdb7d3cd8ef6aec5668fff111fd7ee96bd19dd0426b8728c1d47"
+        }
+      ],
+      "relation": "conditional",
+      "statement": "The sum of actual Physlib single-mode heat capacities divided by N_q*V_cell, with positive primitive-cell volume V_cell, equals the OMAI volumetric heat-capacity formula. The same grid satisfies C_vol=C_mol/(N_A*V_cell).",
+      "sources": [
+        {
+          "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
+          "name": "CanonicalEnsemble.heatCapacity",
+          "kind": "def",
+          "line": 417
+        },
+        {
+          "module": "Physlib.QuantumMechanics.HarmonicOscillator.OneDimension.TISE",
+          "name": "QuantumMechanics.OneDimension.HarmonicOscillator.eigenValue",
+          "kind": "def",
+          "line": 29
+        }
+      ],
+      "conditions": [
+        "Use a finite grid Fin N_q x Fin (3*N_atoms), with positive natural N_q and N_atoms. Fin labels map to OMAI 1-based labels by i.val+1.",
+        "Each grid entry is an upstream positive-frequency harmonic oscillator with exact upstream hbar and kB; all entries share one positive absolute temperature.",
+        "All modes must have strictly positive frequencies. An unmodified Gamma grid with zero acoustic modes does not satisfy the premises.",
+        "Hold the mode spectrum, weights and primitive-cell basis fixed; convert stored linear THz to angular frequency.",
+        "V_cell is the positive primitive-cell volume in m^3, not a supercell volume; convert stored Angstrom^3 by the exact factor 10^-30.",
+        "Use sum(c)/(N_q*V_cell), with no Avogadro factor or branch-count divisor. The molar comparison uses the same positive N_A and primitive-cell basis."
+      ],
+      "conventions": {
+        "model_scope": "Finite uniform-q contraction of actual derivative-defined Physlib single-mode heat capacities.",
+        "component_scope": "N_q q points and exactly 3*N_atoms branches per primitive-cell basis.",
+        "normalization_basis": "Sum all 3*N_atoms branches; divide by N_q times primitive-cell volume, not by atom or branch count.",
+        "frequency_convention": "Symbolic omega is angular rad/s. Canonical linear THz requires omega=2*pi*10^12*nu_THz, not value identity.",
+        "unit_embedding": "Per-mode heat capacity J/K and V_cell in m^3 give J/(m^3 K); Angstrom^3 converts exactly by 10^-30. Molar comparison uses J/(mol K) per mole of primitive cells.",
+        "held_fixed": "Mode spectrum, q weights, and cell volume fixed when differentiating in T.",
+        "admissibility": "T>0, omega>0, hbar>0, kB>0. Zero, imaginary and unstable modes are outside the physical model; totalized Lean expressions do not give them a physical interpretation.",
+        "reference_energy": "Each spectrum includes zero-point energy; its temperature derivative contributes no additive heat-capacity term.",
+        "qpoint_weighting": "Uniform q weight 1/N_q, N_q>0; sum all 3*N_atoms branches."
+      },
+      "remaining_obligations": [
+        "Primitive-cell geometry and phonon frequencies remain interpreted inputs, not verified producers. Nonuniform q, zero/imaginary modes, thermodynamic limits and finite-precision implementations remain outside scope."
+      ],
+      "evidence": {
+        "kind": "compiled_bridge",
+        "module": "OMAIPhyslibHarmonicDensity",
+        "declarations": [
+          "OMAI.PhyslibBridge.harmonic_volumetric_heatCapacity_eq_omai",
+          "OMAI.PhyslibBridge.harmonicVolumetricHeatCapacity_eq_molar_div",
+          "OMAI.PhyslibBridge.uniformVolumetricContraction_ofAngstromCubed",
+          "OMAI.PhyslibBridge.harmonicHeatCapacity_angularSI_eq_linearTHz"
+        ],
+        "source_path": "lean/bridge/OMAIPhyslibHarmonicDensity.lean",
+        "source_sha256": "cf4d59af5b660a1fc73b079d63451f269081e1bd9a3018047e1f6f41517013ea",
+        "build_record": "lean/bridge/build-evidence.json",
+        "proved_targets": [
+          {
+            "kind": "operator",
+            "id": "contract_volumetric_heat_capacity"
+          },
+          {
+            "kind": "node",
+            "id": "VolumetricHeatCapacity"
+          }
+        ]
+      }
+    },
+    {
+      "id": "harmonic-joint-volumetric-heat-capacity",
+      "targets": [
+        {
+          "kind": "operator",
+          "id": "contract_volumetric_heat_capacity",
+          "uid": "239c7dd3370e7b7e4456f1ade35c5d81edba69efda786d25e8e1e74f6fa297d9",
+          "formula_sha256": "e89d3db8b665f634538055816c2e1336259f88bcd007badcf318c802d2b3ff92"
+        },
+        {
+          "kind": "node",
+          "id": "VolumetricHeatCapacity",
+          "uid": "29e324b97f31cdb7d3cd8ef6aec5668fff111fd7ee96bd19dd0426b8728c1d47"
+        }
+      ],
+      "relation": "conditional",
+      "statement": "The actual heterogeneous joint ensemble heat capacity divided by N_q*V_cell equals the same OMAI volumetric formula. This strengthens its model interpretation without adding another operator.",
+      "sources": [
+        {
+          "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
+          "name": "CanonicalEnsemble.heatCapacity",
+          "kind": "def",
+          "line": 417
+        },
+        {
+          "module": "Physlib.QuantumMechanics.HarmonicOscillator.OneDimension.TISE",
+          "name": "QuantumMechanics.OneDimension.HarmonicOscillator.eigenValue",
+          "kind": "def",
+          "line": 29
+        }
+      ],
+      "conditions": [
+        "Use a finite grid Fin N_q x Fin (3*N_atoms), with positive natural N_q and N_atoms. Fin labels map to OMAI 1-based labels by i.val+1.",
+        "Each grid entry is an upstream positive-frequency harmonic oscillator with exact upstream hbar and kB; all entries share one positive absolute temperature.",
+        "All modes must have strictly positive frequencies. An unmodified Gamma grid with zero acoustic modes does not satisfy the premises.",
+        "Hold the mode spectrum, weights and primitive-cell basis fixed; convert stored linear THz to angular frequency.",
+        "V_cell is the positive primitive-cell volume in m^3, not a supercell volume; convert stored Angstrom^3 by the exact factor 10^-30.",
+        "Use sum(c)/(N_q*V_cell), with no Avogadro factor or branch-count divisor. The molar comparison uses the same positive N_A and primitive-cell basis.",
+        "Construct the actual finite product of full Nat occupation spaces, with product counting measure, unweighted eigenvalue sum, dof=0 and phase-space unit=1. No occupation cutoff or equal-frequency assumption is used.",
+        "Apply 1/(N_q*V_cell) to the evaluated joint heat capacity, not inside the Hamiltonian."
+      ],
+      "conventions": {
+        "model_scope": "Finite heterogeneous independent-mode quantum harmonic product with all Nat occupations. The empty-index identity has one zero-energy microstate and partition one.",
+        "component_scope": "N_q q points and exactly 3*N_atoms branches per primitive-cell basis.",
+        "normalization_basis": "Sum all 3*N_atoms branches; divide by N_q times primitive-cell volume, not by atom or branch count.",
+        "frequency_convention": "Symbolic omega is angular rad/s. Canonical linear THz requires omega=2*pi*10^12*nu_THz, not value identity.",
+        "unit_embedding": "Per-mode heat capacity J/K and V_cell in m^3 give J/(m^3 K); Angstrom^3 converts exactly by 10^-30. Molar comparison uses J/(mol K) per mole of primitive cells.",
+        "held_fixed": "Mode spectrum, q weights, and cell volume fixed when differentiating in T.",
+        "admissibility": "T>0, omega>0, hbar>0, kB>0. Zero, imaginary and unstable modes are outside the physical model; totalized Lean expressions do not give them a physical interpretation.",
+        "reference_energy": "Each spectrum includes zero-point energy; its temperature derivative contributes no additive heat-capacity term.",
+        "qpoint_weighting": "Uniform q weight 1/N_q, N_q>0; sum all 3*N_atoms branches."
+      },
+      "remaining_obligations": [
+        "Primitive-cell geometry and phonon frequencies remain interpreted inputs, not verified producers. Nonuniform q, zero/imaginary modes, thermodynamic limits and finite-precision implementations remain outside scope."
+      ],
+      "evidence": {
+        "kind": "compiled_bridge",
+        "module": "OMAIPhyslibJointDensity",
+        "declarations": [
+          "OMAI.PhyslibBridge.harmonic_joint_volumetric_heatCapacity_eq_omai"
+        ],
+        "source_path": "lean/bridge/OMAIPhyslibJointDensity.lean",
+        "source_sha256": "9f5f729c3db288f9d5b7e1b285b050c40df8caeabf72df09591d6203c6e7fde7",
+        "build_record": "lean/bridge/build-evidence.json",
+        "proved_targets": [
+          {
+            "kind": "operator",
+            "id": "contract_volumetric_heat_capacity"
+          },
+          {
+            "kind": "node",
+            "id": "VolumetricHeatCapacity"
           }
         ]
       }

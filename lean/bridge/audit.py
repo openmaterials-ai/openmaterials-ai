@@ -7,6 +7,7 @@ occur. The local build record is provenance, not a signed attestation.
 from __future__ import annotations
 
 import hashlib
+import importlib.util
 import json
 from pathlib import Path
 import re
@@ -27,14 +28,21 @@ def run() -> dict:
     required_contracts = {
         "semantic-formula-contract.json", "continuum-formula-contract.json",
         "harmonic-ensemble-formula-contract.json", "harmonic-sums-formula-contract.json",
+        "harmonic-product-formula-contract.json", "harmonic-density-formula-contract.json",
+        "joint-density-formula-contract.json",
     }
     missing = required_contracts - {path.name for path in contracts}
     if missing:
         raise ValueError("reviewed formula contracts are missing: " + ", ".join(sorted(missing)))
     tracked = [*lean_sources, ROOT / "lean-toolchain", ROOT / "lakefile.toml",
-               ROOT / "lake-manifest.json", *contracts]
+               ROOT / "lake-manifest.json", ROOT / "audit.py", ROOT / "verify_contracts.py", *contracts]
     hashes = {str(path.relative_to(REPO)): digest(path) for path in tracked}
     subprocess.run(["lake", "--no-build", "build", "--wfail"], cwd=ROOT, check=True)
+    verifier_spec = importlib.util.spec_from_file_location(
+        "omai_bridge_contract_names", ROOT / "verify_contracts.py")
+    verifier = importlib.util.module_from_spec(verifier_spec)
+    verifier_spec.loader.exec_module(verifier)
+    verified_names = verifier.verify_compiled_contract_names(contracts, ROOT)
     probe = ROOT / ".lake" / "AxiomAudit.lean"
     # Enumerate the compiled environment, not a source regex: attributes,
     # sections, generated helpers and future names cannot evade the audit.
@@ -77,6 +85,8 @@ run_cmd do
                 "upstream_revision": dependencies["physlib"],
                 "lean_toolchain": (ROOT / "lean-toolchain").read_text().strip(),
                 "dependencies": dependencies, "dependency_sources_clean": True, "sources": hashes,
+                "contract_name_audit": {"status": "passed", "pairs": verified_names,
+                                        "pair_count": len(verified_names)},
                 "axiom_audit": {"status": "passed", "theorem_count": theorem_count,
                                 "declaration_count": len(by_name),
                                 "allowed_axioms": sorted(ALLOWED_AXIOMS),

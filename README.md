@@ -225,7 +225,9 @@ package; the resolver adds it without replacing existing fields. The records
 distinguish source links from compiled bridge theorems. The compiled results
 include the full single-mode harmonic ensemble's F/U/S/C formulas, their finite
 uniform-q molar contractions, temperature representations, and signed inviscid
-pressure. Each result retains its model and unit conditions.
+pressure. A heterogeneous joint-ensemble proof now establishes the product
+interpretation of the four molar formulas. Volumetric heat capacity has both
+single-mode-sum and joint-ensemble proofs with positive primitive-cell volume. Each result retains its model and unit conditions.
 
 The [map's PhysLean / Physlib navigator](https://openmaterials.ai/map/) connects
 quantities and operators to upstream declarations and back. The Python APIs

@@ -95,8 +95,15 @@
           it does not assume interchange of an infinite sum and a derivative.</p>
         <p>Four further proofs identify OMAI's molar contractions with <code>N_A/N_q</code> times the sum of these
           single-mode Physlib quantities over a finite grid with <code>3*N_atoms</code> branches.
-          The basis is a mole of primitive cells. These are normalized-sum proofs, not a joint product-ensemble theorem.
+          The basis is a mole of primitive cells. A separate proof constructs the heterogeneous joint ensemble,
+          establishes its product partition and actual F/U/S/C, and connects those quantities to all four molar formulas.
+          Molar normalization is applied after evaluating thermodynamics, not inside the Hamiltonian.
           Every frequency must be strictly positive; zero acoustic modes require a separate treatment.</p>
+        <p>Volumetric heat capacity is proved as the mode-capacity sum divided by <code>N_q*V_cell</code>,
+          and separately as the joint ensemble capacity with the same normalization. Volume must be positive
+          and refer to the primitive cell. The SI result is J/(m³ K); an Å³ input requires the exact factor
+          <code>10^-30</code>. The molar relation is <code>C_vol = C_mol/(N_A*V_cell)</code>.
+          The two proofs cover one operator, not two.</p>
         <p><a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/7acfabac5867f2cb7200eb02e0897fdc1f580ce8/lean/bridge/OMAIPhyslibHarmonicEnsemble.lean">Single-mode proofs</a>,
           <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/7acfabac5867f2cb7200eb02e0897fdc1f580ce8/lean/bridge/OMAIPhyslibHarmonicSums.lean">molar contraction proofs</a>,
           <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/7acfabac5867f2cb7200eb02e0897fdc1f580ce8/lean/bridge/harmonic-ensemble-formula-contract.json">reviewed formula contract</a>, and
@@ -124,10 +131,9 @@
           are separate from the retained historical package.</p>
         <pre class="formula-source">python -m omai.formula_bindings --check
 python -m omai.formula_bindings --check --physlib-path /path/to/pinned/physlib
-python -m omai.formula_bindings --check --lean-package lean/bridge
-cd lean/bridge
-lake build --wfail</pre>
-        <p>The read-only source check verifies pinned files and declaration lines. The compiled audit checks fully qualified names and their defining modules. Neither establishes formula equivalence. To reproduce the bridge proofs, build with the pinned Lean dependencies and run the package's axiom audit.</p>
+bash lean/bridge/check.sh
+python -m omai.formula_bindings --check --lean-package lean/bridge</pre>
+        <p>The read-only source check verifies pinned files and declaration lines. The compiled source-reference audit checks upstream names and their defining modules. The package audit also checks the endpoint definitions named in the reviewed formula contracts, including definitions retained in earlier modules. These reference and name checks establish provenance, not formula equivalence. Run <code>check.sh</code> to build with the pinned dependencies and perform the endpoint-name and transitive-axiom audits.</p>
       </section>
     </article>
   </div>
