@@ -104,17 +104,17 @@
           and refer to the primitive cell. The SI result is J/(m³ K); an Å³ input requires the exact factor
           <code>10^-30</code>. The molar relation is <code>C_vol = C_mol/(N_A*V_cell)</code>.
           The two proofs cover one operator, not two.</p>
-        <p><a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/dcd570fd8898d58f559c6d85c59ede8ac34e2b02/lean/bridge/OMAIPhyslibHarmonicEnsemble.lean">Single-mode proofs</a>,
-          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/dcd570fd8898d58f559c6d85c59ede8ac34e2b02/lean/bridge/OMAIPhyslibHarmonicSums.lean">molar contraction proofs</a>,
-          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/dcd570fd8898d58f559c6d85c59ede8ac34e2b02/lean/bridge/OMAIPhyslibHarmonicProduct.lean">joint-ensemble proofs</a>,
-          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/dcd570fd8898d58f559c6d85c59ede8ac34e2b02/lean/bridge/OMAIPhyslibHarmonicDensity.lean">single-mode volumetric proof</a>,
-          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/dcd570fd8898d58f559c6d85c59ede8ac34e2b02/lean/bridge/OMAIPhyslibJointDensity.lean">joint volumetric proof</a>,
-          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/dcd570fd8898d58f559c6d85c59ede8ac34e2b02/lean/bridge/build-evidence.json">build record and axiom audit</a>.</p>
-        <p>Reviewed formula contracts: <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/dcd570fd8898d58f559c6d85c59ede8ac34e2b02/lean/bridge/harmonic-ensemble-formula-contract.json">single-mode</a>,
-          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/dcd570fd8898d58f559c6d85c59ede8ac34e2b02/lean/bridge/harmonic-sums-formula-contract.json">molar contractions</a>,
-          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/dcd570fd8898d58f559c6d85c59ede8ac34e2b02/lean/bridge/harmonic-product-formula-contract.json">joint ensemble</a>,
-          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/dcd570fd8898d58f559c6d85c59ede8ac34e2b02/lean/bridge/harmonic-density-formula-contract.json">single-mode volumetric</a>,
-          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/dcd570fd8898d58f559c6d85c59ede8ac34e2b02/lean/bridge/joint-density-formula-contract.json">joint volumetric</a>.
+        <p><a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/27f71197ccfac0bbfed535a4376e941113bb567b/lean/bridge/OMAIPhyslibHarmonicEnsemble.lean">Single-mode proofs</a>,
+          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/27f71197ccfac0bbfed535a4376e941113bb567b/lean/bridge/OMAIPhyslibHarmonicSums.lean">molar contraction proofs</a>,
+          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/27f71197ccfac0bbfed535a4376e941113bb567b/lean/bridge/OMAIPhyslibHarmonicProduct.lean">joint-ensemble proofs</a>,
+          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/27f71197ccfac0bbfed535a4376e941113bb567b/lean/bridge/OMAIPhyslibHarmonicDensity.lean">single-mode volumetric proof</a>,
+          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/27f71197ccfac0bbfed535a4376e941113bb567b/lean/bridge/OMAIPhyslibJointDensity.lean">joint volumetric proof</a>,
+          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/27f71197ccfac0bbfed535a4376e941113bb567b/lean/bridge/build-evidence.json">build record and axiom audit</a>.</p>
+        <p>Reviewed formula contracts: <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/27f71197ccfac0bbfed535a4376e941113bb567b/lean/bridge/harmonic-ensemble-formula-contract.json">single-mode</a>,
+          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/27f71197ccfac0bbfed535a4376e941113bb567b/lean/bridge/harmonic-sums-formula-contract.json">molar contractions</a>,
+          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/27f71197ccfac0bbfed535a4376e941113bb567b/lean/bridge/harmonic-product-formula-contract.json">joint ensemble</a>,
+          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/27f71197ccfac0bbfed535a4376e941113bb567b/lean/bridge/harmonic-density-formula-contract.json">single-mode volumetric</a>,
+          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/27f71197ccfac0bbfed535a4376e941113bb567b/lean/bridge/joint-density-formula-contract.json">joint volumetric</a>.
           Formula contracts pin the reviewed endpoints and Lean source; they do not automatically translate formulas into proofs.</p>
       </section>
       <section class="gsec" id="response">
@@ -132,11 +132,11 @@
           These are exact model examples, not material fits. The result adds one compiled operator/output pair;
           it does not verify numerical QHA, EOS fits, minimizers, input producers or the sibling <code>compute_heat_capacity_p</code> route.</p>
         <p>Inspect the
-          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/dcd570fd8898d58f559c6d85c59ede8ac34e2b02/lean/bridge/OMAIPhyslibHarmonicResponse.lean">catalog endpoint</a>,
-          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/dcd570fd8898d58f559c6d85c59ede8ac34e2b02/lean/bridge/OMAIPhyslibHarmonicVolume.lean">actual volume family</a>,
-          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/dcd570fd8898d58f559c6d85c59ede8ac34e2b02/lean/bridge/OMAIPhyslibResponseWitness.lean">two model examples</a>,
-          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/dcd570fd8898d58f559c6d85c59ede8ac34e2b02/lean/bridge/OMAIPhyslibStaticEnsemble.lean">static ensemble</a>,
-          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/dcd570fd8898d58f559c6d85c59ede8ac34e2b02/lean/bridge/response-formula-contract.json">reviewed endpoint contract</a>,
+          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/27f71197ccfac0bbfed535a4376e941113bb567b/lean/bridge/OMAIPhyslibHarmonicResponse.lean">catalog endpoint</a>,
+          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/27f71197ccfac0bbfed535a4376e941113bb567b/lean/bridge/OMAIPhyslibHarmonicVolume.lean">actual volume family</a>,
+          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/27f71197ccfac0bbfed535a4376e941113bb567b/lean/bridge/OMAIPhyslibResponseWitness.lean">two model examples</a>,
+          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/27f71197ccfac0bbfed535a4376e941113bb567b/lean/bridge/OMAIPhyslibStaticEnsemble.lean">static ensemble</a>,
+          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/27f71197ccfac0bbfed535a4376e941113bb567b/lean/bridge/response-formula-contract.json">reviewed endpoint contract</a>,
           and <a href="#operator=contract_heat_capacity_p_identity">mapping conditions and sources</a>.</p>
       </section>
       <section class="gsec" id="scope">
@@ -156,7 +156,7 @@
       <section class="gsec" id="reproduce">
         <h2>Reproduce and inspect</h2>
         <p>The <a href="../../data/formula_bindings.json">machine-readable inventory</a> is generated from the reviewed mapping records shipped with OMAI and its existing scientific identities.
-          <a href="https://github.com/openmaterials-ai/openmaterials-ai/tree/dcd570fd8898d58f559c6d85c59ede8ac34e2b02/lean/bridge">Reviewed Lean source and build instructions</a>
+          <a href="https://github.com/openmaterials-ai/openmaterials-ai/tree/27f71197ccfac0bbfed535a4376e941113bb567b/lean/bridge">Reviewed Lean source and build instructions</a>
           are separate from the retained historical package.</p>
         <pre class="formula-source">python -m omai.formula_bindings --check
 python -m omai.formula_bindings --check --physlib-path /path/to/pinned/physlib

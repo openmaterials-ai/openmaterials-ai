@@ -100,7 +100,7 @@ test('map quantity references distinguish proof subject from compiled input asso
 test('proof and upstream links reject local paths, traversal, credentials, and lookalike hosts', () => {
   ['file:///tmp/source','http://github.com/a/b','https://github.com.evil/a','https://u:p@github.com/a'].forEach(url=>assert.equal(F.sourceHref(url),''));
   ['../secret','lean/bridge/../../evil.lean','/tmp/Proof.lean','lean/bridge/Proof.lean" onload="x'].forEach(path=>assert.equal(F.proofHref(path),''));
-  assert.equal(F.proofHref('lean/bridge/Proof.lean'),'https://github.com/openmaterials-ai/openmaterials-ai/blob/dcd570fd8898d58f559c6d85c59ede8ac34e2b02/lean/bridge/Proof.lean');
+  assert.equal(F.proofHref('lean/bridge/Proof.lean'),'https://github.com/openmaterials-ai/openmaterials-ai/blob/27f71197ccfac0bbfed535a4376e941113bb567b/lean/bridge/Proof.lean');
 });
 test('rendered repeated bindings do not create duplicate DOM identifiers', () => {
   const html=F.index(makeData()).map(F.rowHtml).join('')+F.declarationIndex(makeData()).map(row=>F.declarationHtml(row)).join('');
