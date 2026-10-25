@@ -1,0 +1,71 @@
+name: physlib-bridge
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "omai/**"
+      - "lean/bridge/**"
+      - "tests/test_physlib_dimensions.py"
+      - "tests/test_formula_bindings.py"
+      - "tests/test_physlib_semantic_contract.py"
+      - "docs/data/formula_bindings.json"
+      - "docs/data/physlib_dimensions.json"
+      - ".github/workflows/physlib-bridge.yml"
+  pull_request:
+    paths:
+      - "omai/**"
+      - "lean/bridge/**"
+      - "tests/test_physlib_dimensions.py"
+      - "tests/test_formula_bindings.py"
+      - "tests/test_physlib_semantic_contract.py"
+      - "docs/data/formula_bindings.json"
+      - "docs/data/physlib_dimensions.json"
+      - ".github/workflows/physlib-bridge.yml"
+
+jobs:
+  current-physlib:
+    runs-on: ubuntu-latest
+    env:
+      MATHLIB_NO_CACHE_ON_UPDATE: "1"
+      LEAN_NUM_THREADS: "4"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install Python package
+        run: pip install -e . pytest
+      - name: Verify generated ISQ encodings
+        run: python -m pytest tests/test_physlib_dimensions.py -q
+      - name: Cache isolated toolchain and dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.elan
+            ~/.cache/mathlib
+            lean/bridge/.lake
+          key: physlib-bridge-${{ runner.os }}-${{ hashFiles('lean/bridge/lean-toolchain', 'lean/bridge/lake-manifest.json') }}-${{ github.sha }}
+          restore-keys: |
+            physlib-bridge-${{ runner.os }}-${{ hashFiles('lean/bridge/lean-toolchain', 'lean/bridge/lake-manifest.json') }}-
+      - name: Set up pinned Lean toolchain
+        uses: leanprover/lean-action@v1
+        with:
+          lake-package-directory: lean/bridge
+          use-mathlib-cache: false
+          use-github-cache: false
+          build: false
+          test: false
+          lint: false
+      - name: Build current bridge and audit transitive axioms
+        run: bash lean/bridge/check.sh
+      - name: Verify deterministic build evidence
+        run: git diff --exit-code -- lean/bridge/build-evidence.json
+      - name: Verify reviewed sources, identities and published artifacts
+        env:
+          PHYSLIB_BRIDGE_PACKAGE: lean/bridge
+          PHYSLIB_BRIDGE_PATH: lean/bridge/.lake/packages/physlib
+        run: |
+          python -m omai.formula_bindings --check --physlib-path lean/bridge/.lake/packages/physlib --lean-package lean/bridge
+          python -m pytest tests/test_formula_bindings.py tests/test_physlib_dimensions.py tests/test_physlib_semantic_contract.py -q

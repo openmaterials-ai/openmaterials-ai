@@ -1,0 +1,501 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openmaterials.ai/schemas/formula-bindings-v1.json",
+  "title": "Reviewed OMAI\u2013Physlib formula correspondences (not execution verification)",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "upstream": {
+      "type": "object",
+      "properties": {
+        "repository": {
+          "const": "https://github.com/leanprover-community/physlib"
+        },
+        "revision": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "lean_toolchain": {
+          "type": "string",
+          "pattern": "^leanprover/lean4:v[0-9]+\\.[0-9]+\\.[0-9]+$"
+        }
+      },
+      "required": [
+        "repository",
+        "revision",
+        "lean_toolchain"
+      ],
+      "additionalProperties": false
+    },
+    "bindings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "targets": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "kind": {
+                  "enum": [
+                    "node",
+                    "operator"
+                  ]
+                },
+                "id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "uid": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                },
+                "formula_sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                }
+              },
+              "required": [
+                "kind",
+                "id",
+                "uid"
+              ],
+              "additionalProperties": false,
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "kind": {
+                        "const": "operator"
+                      }
+                    }
+                  },
+                  "then": {
+                    "required": [
+                      "formula_sha256"
+                    ]
+                  },
+                  "else": {
+                    "not": {
+                      "required": [
+                        "formula_sha256"
+                      ]
+                    }
+                  }
+                }
+              ]
+            },
+            "minItems": 1
+          },
+          "relation": {
+            "enum": [
+              "exact_definition",
+              "conditional",
+              "conceptual"
+            ]
+          },
+          "statement": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sources": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "module": {
+                  "type": "string",
+                  "pattern": "^Physlib\\.[A-Za-z0-9_]+(?:\\.[A-Za-z0-9_]+)*$"
+                },
+                "name": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "kind": {
+                  "enum": [
+                    "def",
+                    "lemma",
+                    "theorem",
+                    "structure",
+                    "abbrev"
+                  ]
+                },
+                "line": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "source_url": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "module",
+                "name",
+                "kind",
+                "line",
+                "source_url"
+              ],
+              "additionalProperties": false
+            },
+            "minItems": 1
+          },
+          "conditions": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minItems": 0,
+            "uniqueItems": true
+          },
+          "conventions": {
+            "type": "object",
+            "properties": {
+              "model_scope": {
+                "type": "string",
+                "minLength": 1
+              },
+              "component_scope": {
+                "type": "string",
+                "minLength": 1
+              },
+              "normalization_basis": {
+                "type": "string",
+                "minLength": 1
+              },
+              "frequency_convention": {
+                "type": "string",
+                "minLength": 1
+              },
+              "unit_embedding": {
+                "type": "string",
+                "minLength": 1
+              },
+              "held_fixed": {
+                "type": "string",
+                "minLength": 1
+              },
+              "admissibility": {
+                "type": "string",
+                "minLength": 1
+              },
+              "reference_energy": {
+                "type": "string",
+                "minLength": 1
+              },
+              "qpoint_weighting": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "model_scope",
+              "component_scope",
+              "normalization_basis",
+              "frequency_convention",
+              "unit_embedding",
+              "held_fixed",
+              "admissibility",
+              "reference_energy",
+              "qpoint_weighting"
+            ],
+            "additionalProperties": false
+          },
+          "remaining_obligations": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minItems": 0,
+            "uniqueItems": true
+          },
+          "evidence": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "const": "source_correspondence"
+                  }
+                },
+                "required": [
+                  "kind"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "const": "compiled_bridge"
+                  },
+                  "module": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "declarations": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "minItems": 1,
+                    "uniqueItems": true
+                  },
+                  "source_path": {
+                    "type": "string",
+                    "pattern": "^lean/bridge/(?:[A-Za-z0-9_]+/)*[A-Za-z0-9_]+\\.lean$"
+                  },
+                  "source_sha256": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                  },
+                  "build_record": {
+                    "type": "string",
+                    "pattern": "^lean/bridge/(?:[A-Za-z0-9_-]+/)*[A-Za-z0-9_-]+\\.json$"
+                  }
+                },
+                "required": [
+                  "kind",
+                  "module",
+                  "declarations",
+                  "source_path",
+                  "source_sha256",
+                  "build_record"
+                ],
+                "additionalProperties": false
+              }
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "targets",
+          "relation",
+          "statement",
+          "sources",
+          "conditions",
+          "conventions",
+          "remaining_obligations",
+          "evidence"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 0
+    },
+    "inventory": {
+      "type": "object",
+      "properties": {
+        "nodes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "uid": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "binding_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "minItems": 0,
+                "uniqueItems": true
+              },
+              "status": {
+                "enum": [
+                  "mapped",
+                  "gap"
+                ]
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "id",
+              "uid",
+              "binding_ids",
+              "status",
+              "reason"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 0
+        },
+        "operators": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "uid": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "binding_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "minItems": 0,
+                "uniqueItems": true
+              },
+              "status": {
+                "enum": [
+                  "mapped",
+                  "gap"
+                ]
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1
+              },
+              "domain": {
+                "type": "string",
+                "minLength": 1
+              },
+              "formula_sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "formula_latex": {
+                "type": "string"
+              },
+              "inputs": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "minItems": 0
+              },
+              "outputs": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "minItems": 1
+              }
+            },
+            "required": [
+              "id",
+              "uid",
+              "binding_ids",
+              "status",
+              "reason",
+              "domain",
+              "formula_sha256",
+              "formula_latex",
+              "inputs",
+              "outputs"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 0
+        }
+      },
+      "required": [
+        "nodes",
+        "operators"
+      ],
+      "additionalProperties": false
+    },
+    "coverage": {
+      "type": "object",
+      "properties": {
+        "nodes_total": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "nodes_mapped": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "operators_total": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "operators_mapped": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "bindings_total": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "source_correspondences": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "compiled_bridges": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "relations": {
+          "type": "object",
+          "properties": {
+            "exact_definition": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "conditional": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "conceptual": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "required": [
+            "exact_definition",
+            "conditional",
+            "conceptual"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "nodes_total",
+        "nodes_mapped",
+        "operators_total",
+        "operators_mapped",
+        "bindings_total",
+        "source_correspondences",
+        "compiled_bridges",
+        "relations"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "schema_version",
+    "upstream",
+    "bindings",
+    "inventory",
+    "coverage"
+  ],
+  "additionalProperties": false
+}

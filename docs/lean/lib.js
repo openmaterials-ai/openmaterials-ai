@@ -101,15 +101,18 @@
   }
 
   // The physlib crosswalk is optional and may not exist yet. Accept either a
-  // flat { node_id: {...} } map or a { nodes: {...} } wrapper; return a plain
-  // map of node id to entry object, and {} for anything unusable.
+  // flat map or a { nodes: {...} } wrapper. Published entries are arrays;
+  // retain the earlier object form too. Empty arrays are coverage gaps.
   function normalizeCrosswalk(raw) {
     if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return {};
     var src = (raw.nodes && typeof raw.nodes === 'object' && !Array.isArray(raw.nodes)) ? raw.nodes : raw;
     var out = {};
     Object.keys(src).forEach(function (k) {
       var v = src[k];
-      if (v && typeof v === 'object' && !Array.isArray(v)) out[k] = v;
+      if (Array.isArray(v)) {
+        var entries = v.filter(function (e) { return e && typeof e === 'object' && !Array.isArray(e); });
+        if (entries.length) out[k] = entries;
+      } else if (v && typeof v === 'object') out[k] = v;
     });
     return out;
   }
