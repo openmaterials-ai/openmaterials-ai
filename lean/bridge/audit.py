@@ -23,8 +23,16 @@ def digest(path: Path) -> str:
 
 def run() -> dict:
     lean_sources = sorted(ROOT.glob("*.lean"))
+    contracts = sorted(ROOT.glob("*-formula-contract.json"))
+    required_contracts = {
+        "semantic-formula-contract.json", "continuum-formula-contract.json",
+        "harmonic-ensemble-formula-contract.json", "harmonic-sums-formula-contract.json",
+    }
+    missing = required_contracts - {path.name for path in contracts}
+    if missing:
+        raise ValueError("reviewed formula contracts are missing: " + ", ".join(sorted(missing)))
     tracked = [*lean_sources, ROOT / "lean-toolchain", ROOT / "lakefile.toml",
-               ROOT / "lake-manifest.json", ROOT / "semantic-formula-contract.json"]
+               ROOT / "lake-manifest.json", *contracts]
     hashes = {str(path.relative_to(REPO)): digest(path) for path in tracked}
     subprocess.run(["lake", "--no-build", "build", "--wfail"], cwd=ROOT, check=True)
     probe = ROOT / ".lake" / "AxiomAudit.lean"

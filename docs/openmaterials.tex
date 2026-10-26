@@ -2556,14 +2556,24 @@ identities, formulas and lineage rules remain unchanged.
 
 A scalar thermoelectric definition does not identify an arbitrary conductivity
 tensor: an isotropic interpretation and a common operating point are required.
-Likewise a canonical-ensemble theorem does not automatically describe OMAI's
-individual harmonic modes. Their positive frequency and temperature, zero-point
-energy, Bose occupation, ensemble measure, and cell or molar normalization must
-be supplied and justified. Symbolic angular frequency must not be confused with
-stored linear THz: $\omega_{\mathrm{SI}}=2\pi\,10^{12}\nu_{\mathrm{THz}}$.
+The current bridge constructs the full nonnegative-integer harmonic ensemble
+from the upstream oscillator spectrum, evaluates its partition and energy sums,
+and proves the finiteness and integrability needed to identify OMAI's per-mode
+$F$, $U$, $S$ and $C_V$. Fixed-spectrum derivatives are proved on the open
+positive-temperature domain. Four molar results identify the exact uniform-q
+contractions of those single-mode quantities, with $3N_{\mathrm{atoms}}$
+branches and $N_A/N_q$ normalization; they do not construct a joint product
+ensemble. Every mode must have strictly positive frequency, so zero acoustic
+modes require separate treatment. Symbolic angular frequency must not be confused
+with stored linear THz: $\omega_{\mathrm{SI}}=2\pi\,10^{12}\nu_{\mathrm{THz}}$.
 CALPHAD's mole-of-atoms basis is distinct from harmonic mole-of-primitive-cells
 and QHA mole-of-phonopy-cells. A theorem about real-valued formulas does not
 certify finite precision, numerical convergence, or a simulation implementation.
+
+The map and formula inventory support lookup from OMAI quantities and operators
+to Physlib declarations and back. Compiled formula outputs, standalone quantity
+interpretations and source-only associations have separate coverage counts.
+Reverse navigation is a reference lookup, not a theorem about inverse functions.
 
 The unifying claim of the design is that scientific computing has been organized around the
 wrong atomic unit. The instruction-in-an-input-file unit is too low; the natural-language

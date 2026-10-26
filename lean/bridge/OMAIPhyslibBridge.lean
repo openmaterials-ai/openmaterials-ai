@@ -1,3 +1,6 @@
 module
 public import OMAIPhyslibDimensions
 public import OMAIPhyslibSemantics
+public import OMAIPhyslibContinuum
+public import OMAIPhyslibHarmonicEnsemble
+public import OMAIPhyslibHarmonicSums
