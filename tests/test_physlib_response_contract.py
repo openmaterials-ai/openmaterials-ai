@@ -37,7 +37,7 @@ from omai.operator.identity import canonical_json
 
 ROOT = Path(__file__).resolve().parents[1]
 PACKAGE = ROOT / "lean/bridge"
-REVISION = "d70acc20677320d37b38e602e331e900466b704d"
+REVISION = "9b583cb6ef6e9cc537c4d4b786b508de1abbcf42"
 OLD_REVISION = "8ddcc004043c5b537e4225fa763121c176b62a4a"
 TOOLCHAIN = "leanprover/lean4:v4.35.0"
 BINDING_ID = "harmonic-static-cp-identity"

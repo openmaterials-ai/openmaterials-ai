@@ -1,7 +1,7 @@
 # Current Physlib bridge
 
 This independent Lean 4.35 package pins Physlib
-`d70acc20677320d37b38e602e331e900466b704d`. The historical Lean 4.31 package in
+`9b583cb6ef6e9cc537c4d4b786b508de1abbcf42`. The historical Lean 4.31 package in
 the parent directory is unchanged and builds separately.
 
 - `OMAIPhyslibDimensions.lean`: generated native seven-base ISQ encodings for

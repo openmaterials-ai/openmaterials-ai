@@ -2,7 +2,7 @@
   "schema_version": 1,
   "upstream": {
     "repository": "https://github.com/leanprover-community/physlib",
-    "revision": "d70acc20677320d37b38e602e331e900466b704d",
+    "revision": "9b583cb6ef6e9cc537c4d4b786b508de1abbcf42",
     "lean_toolchain": "leanprover/lean4:v4.35.0"
   },
   "bindings": [

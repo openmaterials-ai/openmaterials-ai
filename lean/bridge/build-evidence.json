@@ -4008,7 +4008,7 @@
     "importgraph": "a41f0e9a4dea23188ea9cc1c41ac9f8bbafe0b93",
     "leansearchclient": "d6b4c7be5be75ec4917c873ac50c756dc1436372",
     "mathlib": "56a005855ea17e0b0958f73ec801ae140b0a1679",
-    "physlib": "d70acc20677320d37b38e602e331e900466b704d",
+    "physlib": "9b583cb6ef6e9cc537c4d4b786b508de1abbcf42",
     "plausible": "dfa4f38190d07c37e315953e08b90fe2d95b3c24",
     "proofwidgets": "df72b022e558978a1c50264cfc4d7fec86fa8e04",
     "qq": "dce0ad79c486cb1fb504af04f953c3466b0c6db8"
@@ -4020,7 +4020,7 @@
   "sources": {
     "lean/bridge/OMAIPhyslibBridge.lean": "926091d896c74faa35fea24df5dd58bd57eabf27df38b7f37eba0c82cbcf4fdd",
     "lean/bridge/OMAIPhyslibContinuum.lean": "e8bff3cb5d44cd78885d8c5f200d8761e8c568cd0d101fc0c2110f521bdca7ff",
-    "lean/bridge/OMAIPhyslibDimensions.lean": "e1b46ef2e67cf7224d4bd5b078194401edbc213f368fdb41625c8bb6431ab717",
+    "lean/bridge/OMAIPhyslibDimensions.lean": "2b035d7bf6400adea49cb5f1595ee264c70f87539895b1d8279cbd694773a094",
     "lean/bridge/OMAIPhyslibHarmonicDensity.lean": "cf4d59af5b660a1fc73b079d63451f269081e1bd9a3018047e1f6f41517013ea",
     "lean/bridge/OMAIPhyslibHarmonicEnsemble.lean": "1a1f7e60f5cf4a3e468d173109b0127d7685123e6e0130b69374df687b94e172",
     "lean/bridge/OMAIPhyslibHarmonicProduct.lean": "4c0af6605e43ceed3460a8c7fe9198f486bd48cf2ac6e538fa0c45ac1a644578",
@@ -4040,13 +4040,13 @@
     "lean/bridge/harmonic-product-formula-contract.json": "adffdaa7139f3d919eb1ea058130fb502ad0d6e2e375bf2465ce47abf472d995",
     "lean/bridge/harmonic-sums-formula-contract.json": "c897e8de5d7c1b7211f95e0cd599479c87a738de946be683bd5ab3ae78be1699",
     "lean/bridge/joint-density-formula-contract.json": "f5a5bb01044f479cf9770573121442a84117af1a84a6976d5ede0765256dfd04",
-    "lean/bridge/lake-manifest.json": "8c6ab2b93cd2c3f43e5f26d40025bcf6cee05d2df5341ce464301ecd490fd1c0",
-    "lean/bridge/lakefile.toml": "f78e75cf84d26a48ed171c4df8c5d27560262ecb3583e9432e0a100659be611a",
+    "lean/bridge/lake-manifest.json": "d4f51a8aa0ee98c0c8a34a7f9cc00accf43ee3a67571f571c0e35318d0956e53",
+    "lean/bridge/lakefile.toml": "cd888a0815a49eaa5557058455c5dcccbd77afb439f651a79ee2decd05fc40ae",
     "lean/bridge/lean-toolchain": "ca5f1f601d34c49079e38d7e7041eb0f2a9c227fbc1df0f404820069a052330c",
     "lean/bridge/response-formula-contract.json": "f4f446f1967c45ccf508f42232e070d468121b0967459f93fc0c496210adf353",
     "lean/bridge/semantic-formula-contract.json": "21002241bb9dae2d674df0ede26cf7f0804823591675bcb4099142e7a5d1b123",
     "lean/bridge/verify_contracts.py": "57225331e3e602ec50c4cb707f6b0b8c4f9cc7b7476e978cfa8a94ccd7708ffc"
   },
   "status": "passed",
-  "upstream_revision": "d70acc20677320d37b38e602e331e900466b704d"
+  "upstream_revision": "9b583cb6ef6e9cc537c4d4b786b508de1abbcf42"
 }

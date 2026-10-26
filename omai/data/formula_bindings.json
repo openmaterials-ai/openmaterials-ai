@@ -2,7 +2,7 @@
   "schema_version": 1,
   "upstream": {
     "repository": "https://github.com/leanprover-community/physlib",
-    "revision": "d70acc20677320d37b38e602e331e900466b704d",
+    "revision": "9b583cb6ef6e9cc537c4d4b786b508de1abbcf42",
     "lean_toolchain": "leanprover/lean4:v4.35.0"
   },
   "bindings": [
@@ -23,28 +23,28 @@
           "name": "Temperature",
           "kind": "structure",
           "line": 32,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/Thermodynamics/Temperature/Basic.lean#L32"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/Thermodynamics/Temperature/Basic.lean#L32"
         },
         {
           "module": "Physlib.Thermodynamics.Temperature.Basic",
           "name": "Temperature.β",
           "kind": "def",
           "line": 59,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/Thermodynamics/Temperature/Basic.lean#L59"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/Thermodynamics/Temperature/Basic.lean#L59"
         },
         {
           "module": "Physlib.Thermodynamics.Temperature.Basic",
           "name": "Temperature.ofRealNonneg",
           "kind": "def",
           "line": 172,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/Thermodynamics/Temperature/Basic.lean#L172"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/Thermodynamics/Temperature/Basic.lean#L172"
         },
         {
           "module": "Physlib.Thermodynamics.Temperature.Basic",
           "name": "Temperature.beta_pos",
           "kind": "lemma",
           "line": 92,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/Thermodynamics/Temperature/Basic.lean#L92"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/Thermodynamics/Temperature/Basic.lean#L92"
         }
       ],
       "conditions": [
@@ -104,7 +104,7 @@
           "name": "Physlib.CondensedMatter.Crystal",
           "kind": "structure",
           "line": 65,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/CondensedMatter/Crystal/Basic.lean#L65"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Crystal/Basic.lean#L65"
         }
       ],
       "conditions": [
@@ -150,14 +150,14 @@
           "name": "ClassicalMechanics.HarmonicOscillator.ω",
           "kind": "def",
           "line": 156,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/ClassicalMechanics/HarmonicOscillator/Basic.lean#L156"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/ClassicalMechanics/HarmonicOscillator/Basic.lean#L156"
         },
         {
           "module": "Physlib.ClassicalMechanics.HarmonicOscillator.Basic",
           "name": "ClassicalMechanics.HarmonicOscillator.ω_sq",
           "kind": "lemma",
           "line": 163,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/ClassicalMechanics/HarmonicOscillator/Basic.lean#L163"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/ClassicalMechanics/HarmonicOscillator/Basic.lean#L163"
         }
       ],
       "conditions": [
@@ -203,21 +203,21 @@
           "name": "ClassicalMechanics.HarmonicOscillator.potentialEnergy",
           "kind": "def",
           "line": 200,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/ClassicalMechanics/HarmonicOscillator/Basic.lean#L200"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/ClassicalMechanics/HarmonicOscillator/Basic.lean#L200"
         },
         {
           "module": "Physlib.ClassicalMechanics.HarmonicOscillator.Basic",
           "name": "ClassicalMechanics.HarmonicOscillator.force",
           "kind": "def",
           "line": 451,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/ClassicalMechanics/HarmonicOscillator/Basic.lean#L451"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/ClassicalMechanics/HarmonicOscillator/Basic.lean#L451"
         },
         {
           "module": "Physlib.ClassicalMechanics.HarmonicOscillator.Basic",
           "name": "ClassicalMechanics.HarmonicOscillator.force_eq_linear",
           "kind": "lemma",
           "line": 464,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/ClassicalMechanics/HarmonicOscillator/Basic.lean#L464"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/ClassicalMechanics/HarmonicOscillator/Basic.lean#L464"
         }
       ],
       "conditions": [
@@ -269,7 +269,7 @@
           "name": "FluidDynamics.CauchyFlow.IsInviscid",
           "kind": "def",
           "line": 54,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/FluidDynamics/CauchyFlow/Inviscid.lean#L54"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/FluidDynamics/CauchyFlow/Inviscid.lean#L54"
         }
       ],
       "conditions": [
@@ -370,70 +370,70 @@
           "name": "CanonicalEnsemble.helmholtzFreeEnergy",
           "kind": "def",
           "line": 680,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L680"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L680"
         },
         {
           "module": "Physlib.QuantumMechanics.HarmonicOscillator.OneDimension.TISE",
           "name": "QuantumMechanics.OneDimension.HarmonicOscillator.eigenValue",
           "kind": "def",
           "line": 29,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29"
         },
         {
           "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
           "name": "CanonicalEnsemble.meanEnergy",
           "kind": "def",
           "line": 519,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L519"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L519"
         },
         {
           "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
           "name": "CanonicalEnsemble.thermodynamicEntropy",
           "kind": "def",
           "line": 800,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L800"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L800"
         },
         {
           "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
           "name": "CanonicalEnsemble.heatCapacity",
           "kind": "def",
           "line": 417,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L417"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L417"
         },
         {
           "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
           "name": "CanonicalEnsemble.mathematicalPartitionFunction_add",
           "kind": "lemma",
           "line": 369,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L369"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L369"
         },
         {
           "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
           "name": "CanonicalEnsemble.integrable_energy_add",
           "kind": "lemma",
           "line": 487,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L487"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L487"
         },
         {
           "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
           "name": "CanonicalEnsemble.meanEnergy_add",
           "kind": "lemma",
           "line": 529,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L529"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L529"
         },
         {
           "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
           "name": "CanonicalEnsemble.partitionFunction_add",
           "kind": "lemma",
           "line": 628,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L628"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L628"
         },
         {
           "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
           "name": "CanonicalEnsemble.helmholtzFreeEnergy_add",
           "kind": "lemma",
           "line": 705,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L705"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L705"
         }
       ],
       "conditions": [
@@ -533,14 +533,14 @@
           "name": "CanonicalEnsemble.heatCapacity",
           "kind": "def",
           "line": 417,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L417"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L417"
         },
         {
           "module": "Physlib.QuantumMechanics.HarmonicOscillator.OneDimension.TISE",
           "name": "QuantumMechanics.OneDimension.HarmonicOscillator.eigenValue",
           "kind": "def",
           "line": 29,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29"
         }
       ],
       "conditions": [
@@ -611,21 +611,21 @@
           "name": "CanonicalEnsemble.thermodynamicEntropy",
           "kind": "def",
           "line": 800,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L800"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L800"
         },
         {
           "module": "Physlib.QuantumMechanics.HarmonicOscillator.OneDimension.TISE",
           "name": "QuantumMechanics.OneDimension.HarmonicOscillator.eigenValue",
           "kind": "def",
           "line": 29,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29"
         },
         {
           "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
           "name": "CanonicalEnsemble.helmholtzFreeEnergy_eq_meanEnergy_sub_temp_mul_thermodynamicEntropy",
           "kind": "theorem",
           "line": 173,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L173"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L173"
         }
       ],
       "conditions": [
@@ -691,21 +691,21 @@
           "name": "CanonicalEnsemble.helmholtzFreeEnergy",
           "kind": "def",
           "line": 680,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L680"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L680"
         },
         {
           "module": "Physlib.QuantumMechanics.HarmonicOscillator.OneDimension.TISE",
           "name": "QuantumMechanics.OneDimension.HarmonicOscillator.eigenValue",
           "kind": "def",
           "line": 29,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29"
         },
         {
           "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
           "name": "CanonicalEnsemble.helmholtzFreeEnergy_eq_meanEnergy_sub_temp_mul_thermodynamicEntropy",
           "kind": "theorem",
           "line": 173,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L173"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L173"
         }
       ],
       "conditions": [
@@ -772,14 +772,14 @@
           "name": "CanonicalEnsemble.heatCapacity",
           "kind": "def",
           "line": 417,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L417"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L417"
         },
         {
           "module": "Physlib.QuantumMechanics.HarmonicOscillator.OneDimension.TISE",
           "name": "QuantumMechanics.OneDimension.HarmonicOscillator.eigenValue",
           "kind": "def",
           "line": 29,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29"
         }
       ],
       "conditions": [
@@ -848,21 +848,21 @@
           "name": "CanonicalEnsemble.meanEnergy",
           "kind": "def",
           "line": 519,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L519"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L519"
         },
         {
           "module": "Physlib.QuantumMechanics.HarmonicOscillator.OneDimension.TISE",
           "name": "QuantumMechanics.OneDimension.HarmonicOscillator.eigenValue",
           "kind": "def",
           "line": 29,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29"
         },
         {
           "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
           "name": "CanonicalEnsemble.helmholtzFreeEnergy_eq_meanEnergy_sub_temp_mul_thermodynamicEntropy",
           "kind": "theorem",
           "line": 173,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L173"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L173"
         }
       ],
       "conditions": [
@@ -928,14 +928,14 @@
           "name": "CanonicalEnsemble.thermodynamicEntropy",
           "kind": "def",
           "line": 800,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L800"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L800"
         },
         {
           "module": "Physlib.QuantumMechanics.HarmonicOscillator.OneDimension.TISE",
           "name": "QuantumMechanics.OneDimension.HarmonicOscillator.eigenValue",
           "kind": "def",
           "line": 29,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29"
         }
       ],
       "conditions": [
@@ -1003,14 +1003,14 @@
           "name": "CanonicalEnsemble.helmholtzFreeEnergy",
           "kind": "def",
           "line": 680,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L680"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L680"
         },
         {
           "module": "Physlib.QuantumMechanics.HarmonicOscillator.OneDimension.TISE",
           "name": "QuantumMechanics.OneDimension.HarmonicOscillator.eigenValue",
           "kind": "def",
           "line": 29,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29"
         }
       ],
       "conditions": [
@@ -1078,14 +1078,14 @@
           "name": "CanonicalEnsemble.heatCapacity",
           "kind": "def",
           "line": 417,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L417"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L417"
         },
         {
           "module": "Physlib.QuantumMechanics.HarmonicOscillator.OneDimension.TISE",
           "name": "QuantumMechanics.OneDimension.HarmonicOscillator.eigenValue",
           "kind": "def",
           "line": 29,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29"
         }
       ],
       "conditions": [
@@ -1153,14 +1153,14 @@
           "name": "CanonicalEnsemble.meanEnergy",
           "kind": "def",
           "line": 519,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L519"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L519"
         },
         {
           "module": "Physlib.QuantumMechanics.HarmonicOscillator.OneDimension.TISE",
           "name": "QuantumMechanics.OneDimension.HarmonicOscillator.eigenValue",
           "kind": "def",
           "line": 29,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29"
         }
       ],
       "conditions": [
@@ -1253,35 +1253,35 @@
           "name": "CanonicalEnsemble.helmholtzFreeEnergy",
           "kind": "def",
           "line": 680,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L680"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L680"
         },
         {
           "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
           "name": "CanonicalEnsemble.meanEnergy",
           "kind": "def",
           "line": 519,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L519"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L519"
         },
         {
           "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
           "name": "CanonicalEnsemble.thermodynamicEntropy",
           "kind": "def",
           "line": 800,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L800"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L800"
         },
         {
           "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
           "name": "CanonicalEnsemble.heatCapacity",
           "kind": "def",
           "line": 417,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L417"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L417"
         },
         {
           "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
           "name": "CanonicalEnsemble.meanEnergyT",
           "kind": "def",
           "line": 409,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L409"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L409"
         }
       ],
       "conditions": [
@@ -1355,14 +1355,14 @@
           "name": "CanonicalEnsemble.heatCapacity",
           "kind": "def",
           "line": 417,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L417"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L417"
         },
         {
           "module": "Physlib.QuantumMechanics.HarmonicOscillator.OneDimension.TISE",
           "name": "QuantumMechanics.OneDimension.HarmonicOscillator.eigenValue",
           "kind": "def",
           "line": 29,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29"
         }
       ],
       "conditions": [
@@ -1428,7 +1428,7 @@
           "name": "NVEHamiltonian.pressure",
           "kind": "def",
           "line": 219,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/MicroCanonicalEnsemble/ThermoQuantities.lean#L219"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/MicroCanonicalEnsemble/ThermoQuantities.lean#L219"
         }
       ],
       "conditions": [
@@ -1475,28 +1475,28 @@
           "name": "CondensedMatter.ThermoelectricMaterial.figureOfMerit",
           "kind": "def",
           "line": 158,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L158"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L158"
         },
         {
           "module": "Physlib.CondensedMatter.Thermoelectric.Basic",
           "name": "CondensedMatter.ThermoelectricMaterial.figureOfMerit_eq",
           "kind": "lemma",
           "line": 169,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L169"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L169"
         },
         {
           "module": "Physlib.CondensedMatter.Thermoelectric.Basic",
           "name": "CondensedMatter.ThermoelectricMaterial.figureOfMerit_pos",
           "kind": "lemma",
           "line": 182,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L182"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L182"
         },
         {
           "module": "Physlib.CondensedMatter.Thermoelectric.Basic",
           "name": "CondensedMatter.ThermoelectricMaterial.figureOfMerit_le_of_le",
           "kind": "lemma",
           "line": 200,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L200"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L200"
         }
       ],
       "conditions": [
@@ -1559,7 +1559,7 @@
           "name": "CondensedMatter.ThermoelectricMaterial",
           "kind": "structure",
           "line": 102,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L102"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L102"
         }
       ],
       "conditions": [
@@ -1607,14 +1607,14 @@
           "name": "CondensedMatter.ThermoelectricMaterial.powerFactor",
           "kind": "def",
           "line": 125,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L125"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L125"
         },
         {
           "module": "Physlib.CondensedMatter.Thermoelectric.Basic",
           "name": "CondensedMatter.ThermoelectricMaterial.powerFactor_pos",
           "kind": "lemma",
           "line": 128,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L128"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L128"
         }
       ],
       "conditions": [
@@ -1675,14 +1675,14 @@
           "name": "CondensedMatter.ThermoelectricMaterial.totalThermalConductivity",
           "kind": "def",
           "line": 143,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L143"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L143"
         },
         {
           "module": "Physlib.CondensedMatter.Thermoelectric.Basic",
           "name": "CondensedMatter.ThermoelectricMaterial.totalThermalConductivity_pos",
           "kind": "lemma",
           "line": 146,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L146"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L146"
         }
       ],
       "conditions": [

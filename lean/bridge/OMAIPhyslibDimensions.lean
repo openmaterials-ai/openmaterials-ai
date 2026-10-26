@@ -2,7 +2,7 @@
    Native Physlib seven-base ISQ encodings; dimensional evidence only.
    OMAI tuple order: M, L, T, Th, N, I, J (explicitly matched below).
    No unit-scale, frequency convention, formula or numeric-code proof is implied.
-   Physlib revision: d70acc20677320d37b38e602e331e900466b704d.
+   Physlib revision: 9b583cb6ef6e9cc537c4d4b786b508de1abbcf42.
 -/
 module
 public import Physlib.Units.ISQDimensionBase
