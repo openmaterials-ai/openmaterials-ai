@@ -18,6 +18,13 @@ the parent directory is unchanged and builds separately.
 - `OMAIPhyslibHarmonicSums.lean`: four finite uniform-q molar contractions of the
   proved single-mode quantities, with exactly `3*N_atoms` branches. These are
   normalized sums, not a construction of a joint product ensemble.
+- `OMAIPhyslibHarmonicProduct.lean`: the heterogeneous full-Nat joint ensemble,
+  partition factorization, actual F/U/S/C, and the four molar endpoints. Its
+  rectangular occupation reindexing preserves the measure and Hamiltonian.
+- `OMAIPhyslibHarmonicDensity.lean` and `OMAIPhyslibJointDensity.lean`: volumetric
+  heat capacity with positive primitive-cell volume, its molar relation, and
+  the same formula from the actual joint ensemble. Exact real unit lemmas do
+  not certify floating-point conversion code.
 - `OMAIPhyslibContinuum.lean`: absolute-temperature round trips and beta unit
   scaling; signed three-dimensional inviscid stress and pressure contraction.
 - `*-formula-contract.json`: separately reviewed OMAI endpoint identities and
@@ -26,7 +33,7 @@ the parent directory is unchanged and builds separately.
   and the transitive axiom audit from a build with warnings treated as errors.
   This is a reproducible local build record, not external certification.
 
-From the repository root:
+Use the project environment (Python 3.11 or newer). From the repository root:
 
 ```sh
 python3 -m omai.physlib_dimensions
@@ -36,7 +43,8 @@ python3 -m omai.formula_bindings --check --lean-package lean/bridge
 ```
 
 Use `bash lean/bridge/check.sh --no-cache` when the matching cache is already
-present. `check.sh` disables Mathlib's full-cache post-update hook and requests
+present. Set `PYTHON` to the environment interpreter if `python3` is older.
+`check.sh` disables Mathlib's full-cache post-update hook and requests
 only external imports reachable from the bridge. It builds only this library,
 then audits every public theorem and rejects any transitive axiom outside
 `propext`, `Classical.choice`, `Quot.sound` (in particular `sorryAx`).
@@ -55,3 +63,9 @@ factor. Harmonic molar results use moles of primitive cells, not CALPHAD's moles
 of atoms. Every mode must have strictly positive frequency; an unmodified Gamma
 grid with zero acoustic modes does not meet the premises. This package contains formulas and proofs; operations remain in MCG
 and computation in mapengine.
+
+The package audit checks each Lean endpoint definition named in the reviewed
+contracts against its fully qualified name and actual defining module. A product
+proof can refer to an unchanged endpoint in the earlier sum module. The audit
+records these name/module pairs and hashes its validation scripts; these checks
+establish provenance, not scientific interpretation.

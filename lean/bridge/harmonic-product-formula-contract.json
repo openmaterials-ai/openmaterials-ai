@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "scope": "Reviewed OMAI formula endpoints and exact Lean source bytes. These hashes detect drift; they are not an automatic symbolic translation or numerical implementation proof.",
+  "source_path": "lean/bridge/OMAIPhyslibHarmonicProduct.lean",
+  "source_sha256": "4c0af6605e43ceed3460a8c7fe9198f486bd48cf2ac6e538fa0c45ac1a644578",
+  "operators": [
+    {
+      "id": "contract_molar_free_energy",
+      "uid": "9d4ded802829a8b2fe5544556eeb81534fe39e3ceae5efac0065e7ddcf3da152",
+      "formula_sha256": "dbff2ebb2aece334d4cbf8a8ad1928d48e3660a69d64cb8b73746b54dedeb5b0",
+      "formula_latex": "F_{mol} = \\frac{N_{A} \\sum_{\\substack{1 \\leq \\mathbf{q} \\leq N_{q}\\\\1 \\leq \\nu \\leq 3 N}} {f}_{\\mathbf{q},\\nu}}{N_{q}}",
+      "lean_definition": "OMAI.PhyslibBridge.harmonicMolarFreeEnergy",
+      "definition_source_path": "lean/bridge/OMAIPhyslibHarmonicSums.lean"
+    },
+    {
+      "id": "contract_molar_internal_energy",
+      "uid": "77d1268cd072ac2acfbf95872ae6a8acc0a20ac9e196dfe7256048ad9f5f8f2d",
+      "formula_sha256": "2df3e3d6b3c9796f181b1cd476cf85250ee59ca8d440c2a20770ef2bfe0d8065",
+      "formula_latex": "E_{mol} = \\frac{N_{A} \\sum_{\\substack{1 \\leq \\mathbf{q} \\leq N_{q}\\\\1 \\leq \\nu \\leq 3 N}} {e}_{\\mathbf{q},\\nu}}{N_{q}}",
+      "lean_definition": "OMAI.PhyslibBridge.harmonicMolarInternalEnergy",
+      "definition_source_path": "lean/bridge/OMAIPhyslibHarmonicSums.lean"
+    },
+    {
+      "id": "contract_molar_entropy",
+      "uid": "c9322877acc6349a7e18b29646674344b12d39565adf4ee3e23f2b82e1b53ab3",
+      "formula_sha256": "dd26ff6b4ba598e3847d7cb5bea43db12244846b2adeb279f4a3a9d3d0df168f",
+      "formula_latex": "S_{mol} = \\frac{N_{A} \\sum_{\\substack{1 \\leq \\mathbf{q} \\leq N_{q}\\\\1 \\leq \\nu \\leq 3 N}} {s}_{\\mathbf{q},\\nu}}{N_{q}}",
+      "lean_definition": "OMAI.PhyslibBridge.harmonicMolarEntropy",
+      "definition_source_path": "lean/bridge/OMAIPhyslibHarmonicSums.lean"
+    },
+    {
+      "id": "contract_molar_heat_capacity",
+      "uid": "00bbc32d579215c8ada01de36f6d5db89d0cd23ccd1e392bc4bc085e9c96fc8e",
+      "formula_sha256": "d650d1a9d8bf0b675e7f416f15d6d29beda89179a7af59ab2afad6a1dd72e71c",
+      "formula_latex": "C_V^{mol} = \\frac{N_{A} \\sum_{\\substack{1 \\leq \\mathbf{q} \\leq N_{q}\\\\1 \\leq \\nu \\leq 3 N}} {c}_{\\mathbf{q},\\nu}}{N_{q}}",
+      "lean_definition": "OMAI.PhyslibBridge.harmonicMolarHeatCapacity",
+      "definition_source_path": "lean/bridge/OMAIPhyslibHarmonicSums.lean"
+    }
+  ],
+  "interpretations": [
+    "Heterogeneous finite spectrum with full Nat occupations, unweighted eigenvalue sum, product counting measure, dof=0 and phase-space unit=1. The empty-index case has one zero-energy state and unit partition, not a zero-frequency oscillator.",
+    "Partition factorization, finite Boltzmann measure and normalized energy integrability are proved. Joint F/U/S/C equal the corresponding mode sums at positive absolute temperature; only finite closed-form sums are differentiated.",
+    "Explicit measurable occupation reindexing preserves the rectangular N_q by 3*N_atoms product measure and Hamiltonian. The molar factor N_A/N_q multiplies thermodynamic quantities after ensemble evaluation, never its energies.",
+    "Exact upstream hbar/kB, positive-frequency oscillators and fixed uniform q grid. Primitive-cell molar basis, not per atom. Zero/imaginary modes, nonuniform q, thermodynamic limits and producer/numerical correctness remain outside scope."
+  ]
+}

@@ -4,3 +4,6 @@ public import OMAIPhyslibSemantics
 public import OMAIPhyslibContinuum
 public import OMAIPhyslibHarmonicEnsemble
 public import OMAIPhyslibHarmonicSums
+public import OMAIPhyslibHarmonicProduct
+public import OMAIPhyslibHarmonicDensity
+public import OMAIPhyslibJointDensity

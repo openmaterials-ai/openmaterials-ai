@@ -7,6 +7,8 @@ import hashlib
 import json
 from pathlib import Path
 
+import pytest
+
 from omai.formula_bindings import catalog_inventory
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -60,7 +62,11 @@ def test_additional_reviewed_formula_contracts_have_not_drifted():
             assert nodes[reviewed["id"]]["uid"] == reviewed["uid"]
 
 
-def test_axiom_audit_refuses_a_deleted_reviewed_contract(tmp_path, monkeypatch):
+@pytest.mark.parametrize("missing_contract", [
+    "harmonic-sums-formula-contract.json", "harmonic-product-formula-contract.json",
+    "harmonic-density-formula-contract.json", "joint-density-formula-contract.json",
+])
+def test_axiom_audit_refuses_a_deleted_reviewed_contract(tmp_path, monkeypatch, missing_contract):
     import importlib.util
     import pytest
 
@@ -69,7 +75,7 @@ def test_axiom_audit_refuses_a_deleted_reviewed_contract(tmp_path, monkeypatch):
     spec.loader.exec_module(audit)
     for path in CONTRACT.parent.glob("*-formula-contract.json"):
         (tmp_path / path.name).write_bytes(path.read_bytes())
-    (tmp_path / "harmonic-sums-formula-contract.json").unlink()
+    (tmp_path / missing_contract).unlink()
     monkeypatch.setattr(audit, "ROOT", tmp_path)
-    with pytest.raises(ValueError, match="harmonic-sums-formula-contract.json"):
+    with pytest.raises(ValueError, match=missing_contract):
         audit.run()

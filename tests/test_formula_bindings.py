@@ -174,6 +174,27 @@ def test_compiled_subjects_exclude_input_associations(payload):
     assert payload["coverage"]["operators_compiled"] == sum(kind == "operator" for kind, _ in subjects)
 
 
+def test_second_compiled_proof_does_not_inflate_unique_coverage():
+    """A stronger model proof can add evidence without adding catalog subjects."""
+    seeds = json.loads((_ROOT / "omai/data/physlib_formula_seeds.json").read_text())
+    before = build_formula_bindings(seeds)
+    additional = copy.deepcopy(next(row for row in seeds["bindings"]
+                                    if row["id"] == "harmonic-molar-heat-capacity"))
+    additional["id"] = "duplicate-compiled-scope-test"
+    seeds["bindings"].append(additional)
+    after = build_formula_bindings(seeds)
+    assert after["coverage"]["compiled_bridges"] == before["coverage"]["compiled_bridges"] + 1
+    assert after["coverage"]["bindings_total"] == before["coverage"]["bindings_total"] + 1
+    for key in ("nodes_compiled", "nodes_compiled_outputs", "nodes_compiled_interpretations",
+                "operators_compiled", "nodes_mapped", "operators_mapped",
+                "upstream_declarations_referenced", "upstream_modules_referenced"):
+        assert after["coverage"][key] == before["coverage"][key], key
+    row = next(op for op in after["inventory"]["operators"]
+               if op["id"] == "contract_molar_heat_capacity")
+    assert "duplicate-compiled-scope-test" in row["binding_ids"]
+    validate_formula_bindings(after, check_catalog=True)
+
+
 def test_resolver_enrichment_preserves_legacy_and_operator_uids(payload):
     graph = build_graph_dict(DOMAINS)
     semantics = build_semantics(graph)
@@ -260,6 +281,8 @@ def test_compiled_evidence_requires_exact_source_and_successful_build(one_bindin
         "packages": [{"name": "physlib", "rev": revision}],
     }))
     (source.parent / "semantic-formula-contract.json").write_text("{}\n")
+    for filename in ("audit.py", "verify_contracts.py"):
+        (source.parent / filename).write_text("# synthetic audit dependency fixture")
     hashes = {str(path.relative_to(tmp_path)): hashlib.sha256(path.read_bytes()).hexdigest()
               for path in source.parent.iterdir() if path.is_file()}
     successful = {
@@ -267,12 +290,24 @@ def test_compiled_evidence_requires_exact_source_and_successful_build(one_bindin
         "upstream_revision": revision,
         "lean_toolchain": one_binding["upstream"]["lean_toolchain"],
         "sources": hashes, "dependencies": {"physlib": revision},
+        "contract_name_audit": {"status": "passed", "pairs": [], "pair_count": 0},
         "axiom_audit": {"status": "passed", "theorem_count": 1, "declaration_count": 1,
                         "allowed_axioms": ["propext", "Classical.choice", "Quot.sound"],
                         "declarations": {"Test.example": []}},
     }
     record.write_text(json.dumps(successful))
     validate_formula_bindings(one_binding, proof_root=tmp_path)
+    missing_names = copy.deepcopy(successful)
+    del missing_names["contract_name_audit"]
+    record.write_text(json.dumps(missing_names))
+    with pytest.raises(ValueError, match="contract name/module audit"):
+        validate_formula_bindings(one_binding, proof_root=tmp_path)
+    wrong_names = copy.deepcopy(successful)
+    wrong_names["contract_name_audit"]["pairs"] = [{"name": "Forged.name", "module": "Test"}]
+    record.write_text(json.dumps(wrong_names))
+    with pytest.raises(ValueError, match="contract name/module audit"):
+        validate_formula_bindings(one_binding, proof_root=tmp_path)
+    record.write_text(json.dumps(successful))
     source.write_text(source.read_text() + "-- unverified edit\n")
     with pytest.raises(ValueError, match="source hash mismatch"):
         validate_formula_bindings(one_binding, proof_root=tmp_path)

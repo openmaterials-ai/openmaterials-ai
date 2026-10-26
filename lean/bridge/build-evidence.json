@@ -5,7 +5,7 @@
       "Quot.sound",
       "propext"
     ],
-    "declaration_count": 369,
+    "declaration_count": 460,
     "declarations": {
       "OMAI.PhyslibBridge.HarmonicModeGrid": [
         "Classical.choice",
@@ -1384,6 +1384,114 @@
         "Quot.sound",
         "propext"
       ],
+      "OMAI.PhyslibBridge.PrimitiveCellVolume": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.PrimitiveCellVolume._sizeOf_1": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.PrimitiveCellVolume._sizeOf_inst": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.PrimitiveCellVolume.casesOn": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.PrimitiveCellVolume.ctorIdx": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.PrimitiveCellVolume.mk": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.PrimitiveCellVolume.mk._flat_ctor": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.PrimitiveCellVolume.mk.inj": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.PrimitiveCellVolume.mk.injEq": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.PrimitiveCellVolume.mk.noConfusion": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.PrimitiveCellVolume.mk.sizeOf_spec": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.PrimitiveCellVolume.noConfusion": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.PrimitiveCellVolume.noConfusionType": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.PrimitiveCellVolume.ofAngstromCubed": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.PrimitiveCellVolume.ofAngstromCubed._proof_1": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.PrimitiveCellVolume.ofAngstromCubed._proof_2": [
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.PrimitiveCellVolume.ofAngstromCubed._proof_3": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.PrimitiveCellVolume.ofAngstromCubed_siValue": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.PrimitiveCellVolume.rec": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.PrimitiveCellVolume.recOn": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.PrimitiveCellVolume.siValue": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.PrimitiveCellVolume.siValue_pos": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
       "OMAI.PhyslibBridge.absoluteTemperature": [
         "Classical.choice",
         "Quot.sound",
@@ -1474,6 +1582,16 @@
         "Quot.sound",
         "propext"
       ],
+      "OMAI.PhyslibBridge.harmonicArgument.eq_1": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.harmonicArgument_angularSI_eq_linearTHz": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
       "OMAI.PhyslibBridge.harmonicArgument_hasDerivAt": [
         "Classical.choice",
         "Quot.sound",
@@ -1522,6 +1640,76 @@
         "Quot.sound",
         "propext"
       ],
+      "OMAI.PhyslibBridge.harmonicGridEnsemble": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.harmonicGridEnsemble.eq_1": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.harmonicGridEnsemble_energy": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.harmonicGridEnsemble_heatCapacity": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.harmonicGridEnsemble_helmholtzFreeEnergy": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.harmonicGridEnsemble_meanEnergy": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.harmonicGridEnsemble_partitionFunction": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.harmonicGridEnsemble_thermodynamicEntropy": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.harmonicGridOccupation": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.harmonicGridOccupation.eq_1": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.harmonicGridOccupation_measurePreserving": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.harmonicGridOscillator": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.harmonicGridOscillator.eq_1": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.harmonicGrid_sum": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
       "OMAI.PhyslibBridge.harmonicHeatCapacity": [
         "Classical.choice",
         "Quot.sound",
@@ -1531,6 +1719,16 @@
         "propext"
       ],
       "OMAI.PhyslibBridge.harmonicHeatCapacity._proof_2": [
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.harmonicHeatCapacity.eq_1": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.harmonicHeatCapacity_angularSI_eq_linearTHz": [
+        "Classical.choice",
+        "Quot.sound",
         "propext"
       ],
       "OMAI.PhyslibBridge.harmonicHeatCapacity_eq_exp": [
@@ -1593,6 +1791,177 @@
         "Quot.sound",
         "propext"
       ],
+      "OMAI.PhyslibBridge.harmonicProduct": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.harmonicProduct._proof_1": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.harmonicProduct._proof_2": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.harmonicProduct._proof_3": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.harmonicProduct.eq_1": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.harmonicProduct_boltzmann_finite": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.harmonicProduct_energy": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.harmonicProduct_energy_integrable": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.harmonicProduct_heatCapacity": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.harmonicProduct_helmholtzFreeEnergy": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.harmonicProduct_meanEnergy": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.harmonicProduct_meanEnergyT_eq_omai": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.harmonicProduct_measure": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.harmonicProduct_measure_neZero": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.harmonicProduct_partitionFunction": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.harmonicProduct_partitionFunction_eq_geometric": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.harmonicProduct_singleton_heatCapacity": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.harmonicProduct_singleton_partition": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.harmonicProduct_succ": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.harmonicProduct_thermodynamicEntropy": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.harmonicProduct_vacuum_energy": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.harmonicProduct_vacuum_measure": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.harmonicProduct_vacuum_partition": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.harmonicProduct_vacuum_unique": [
+        "Quot.sound"
+      ],
+      "OMAI.PhyslibBridge.harmonicUnequalPair": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.harmonicUnequalPair._proof_1": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.harmonicUnequalPair._proof_2": [
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.harmonicUnequalPair.eq_1": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.harmonicUnequalPair_energy": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.harmonicUnequalPair_frequencies": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.harmonicUnequalPair_heatCapacity": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.harmonicUnequalPair_partition": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.harmonicVolumetricHeatCapacity": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.harmonicVolumetricHeatCapacity.eq_1": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.harmonicVolumetricHeatCapacity_eq_molar_div": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
       "OMAI.PhyslibBridge.harmonic_boltzmann_factor": [
         "Classical.choice",
         "Quot.sound",
@@ -1644,6 +2013,31 @@
         "propext"
       ],
       "OMAI.PhyslibBridge.harmonic_helmholtzFreeEnergy_eq_omai": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.harmonic_joint_molar_heatCapacity_eq_omai": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.harmonic_joint_molar_helmholtzFreeEnergy_eq_omai": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.harmonic_joint_molar_meanEnergy_eq_omai": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.harmonic_joint_molar_thermodynamicEntropy_eq_omai": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.harmonic_joint_volumetric_heatCapacity_eq_omai": [
         "Classical.choice",
         "Quot.sound",
         "propext"
@@ -1708,6 +2102,11 @@
         "Quot.sound",
         "propext"
       ],
+      "OMAI.PhyslibBridge.harmonic_volumetric_heatCapacity_eq_omai": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
       "OMAI.PhyslibBridge.inverseTemperature": [
         "Classical.choice",
         "Quot.sound",
@@ -1739,6 +2138,24 @@
         "propext"
       ],
       "OMAI.PhyslibBridge.isotropic_total_conductivity": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.linearTHzEffectiveHbar": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.linearTHzToAngularSI": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.linearTHzToAngularSI._proof_1": [
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.linearTHzToAngularSI_pos": [
         "Classical.choice",
         "Quot.sound",
         "propext"
@@ -1835,12 +2252,100 @@
         "Classical.choice",
         "Quot.sound",
         "propext"
+      ],
+      "OMAI.PhyslibBridge.uniformVolumetricContraction": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.uniformVolumetricContraction.eq_1": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.uniformVolumetricContraction_eq_catalog": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.uniformVolumetricContraction_eq_molar_div": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.uniformVolumetricContraction_ofAngstromCubed": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.uniformVolumetricContraction_scale_pos": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
       ]
     },
     "status": "passed",
-    "theorem_count": 205
+    "theorem_count": 273
   },
   "command": "lake build --wfail",
+  "contract_name_audit": {
+    "pair_count": 13,
+    "pairs": [
+      {
+        "module": "OMAIPhyslibSemantics",
+        "name": "OMAI.PhyslibBridge.figureOfMerit"
+      },
+      {
+        "module": "OMAIPhyslibSemantics",
+        "name": "OMAI.PhyslibBridge.harmonicEntropy"
+      },
+      {
+        "module": "OMAIPhyslibSemantics",
+        "name": "OMAI.PhyslibBridge.harmonicFreeEnergy"
+      },
+      {
+        "module": "OMAIPhyslibHarmonicEnsemble",
+        "name": "OMAI.PhyslibBridge.harmonicHeatCapacity"
+      },
+      {
+        "module": "OMAIPhyslibSemantics",
+        "name": "OMAI.PhyslibBridge.harmonicInternalEnergy"
+      },
+      {
+        "module": "OMAIPhyslibHarmonicSums",
+        "name": "OMAI.PhyslibBridge.harmonicMolarEntropy"
+      },
+      {
+        "module": "OMAIPhyslibHarmonicSums",
+        "name": "OMAI.PhyslibBridge.harmonicMolarFreeEnergy"
+      },
+      {
+        "module": "OMAIPhyslibHarmonicSums",
+        "name": "OMAI.PhyslibBridge.harmonicMolarHeatCapacity"
+      },
+      {
+        "module": "OMAIPhyslibHarmonicSums",
+        "name": "OMAI.PhyslibBridge.harmonicMolarInternalEnergy"
+      },
+      {
+        "module": "OMAIPhyslibHarmonicDensity",
+        "name": "OMAI.PhyslibBridge.harmonicVolumetricHeatCapacity"
+      },
+      {
+        "module": "OMAIPhyslibSemantics",
+        "name": "OMAI.PhyslibBridge.powerFactor"
+      },
+      {
+        "module": "OMAIPhyslibContinuum",
+        "name": "OMAI.PhyslibBridge.pressureFromStress"
+      },
+      {
+        "module": "OMAIPhyslibSemantics",
+        "name": "OMAI.PhyslibBridge.totalThermalConductivity"
+      }
+    ],
+    "status": "passed"
+  },
   "dependencies": {
     "aesop": "4a174c490d8707121c4a9290800489f105d85e07",
     "batteries": "66e469188fe07963e5cf666c7d4433f45b8131c5",
@@ -1858,19 +2363,27 @@
   "schema_version": 1,
   "scope": "ISQ dimension encodings and explicitly stated bridge theorems; not numerical-code validation",
   "sources": {
-    "lean/bridge/OMAIPhyslibBridge.lean": "f1f7d7962630f952985d078fbce86af070f2698a53dc5963a1fc0a241eb3e918",
+    "lean/bridge/OMAIPhyslibBridge.lean": "ad5a2b11697a2371ceda181248c027ed46d4258fd8a8e7d5e03cd58c3f32f192",
     "lean/bridge/OMAIPhyslibContinuum.lean": "e8bff3cb5d44cd78885d8c5f200d8761e8c568cd0d101fc0c2110f521bdca7ff",
     "lean/bridge/OMAIPhyslibDimensions.lean": "074b3d76ed4d46c83ded9ab3a0760b8d7ddd990067e9663cd46583f4a388e95b",
+    "lean/bridge/OMAIPhyslibHarmonicDensity.lean": "cf4d59af5b660a1fc73b079d63451f269081e1bd9a3018047e1f6f41517013ea",
     "lean/bridge/OMAIPhyslibHarmonicEnsemble.lean": "1a1f7e60f5cf4a3e468d173109b0127d7685123e6e0130b69374df687b94e172",
+    "lean/bridge/OMAIPhyslibHarmonicProduct.lean": "4c0af6605e43ceed3460a8c7fe9198f486bd48cf2ac6e538fa0c45ac1a644578",
     "lean/bridge/OMAIPhyslibHarmonicSums.lean": "5b3c3afbfc6a0fe5e9951091d66fc61b0802ebd6b5ca786927c67ecba2193e52",
+    "lean/bridge/OMAIPhyslibJointDensity.lean": "9f5f729c3db288f9d5b7e1b285b050c40df8caeabf72df09591d6203c6e7fde7",
     "lean/bridge/OMAIPhyslibSemantics.lean": "9ce9bbe14c751333465a9f08bdb5319f369361e136f2f8233e8e72e6614797a5",
+    "lean/bridge/audit.py": "776794a007285759e6c9c7dccd27c53d251a477fb8860e1da911bcc1633fbcff",
     "lean/bridge/continuum-formula-contract.json": "b5fb4368abccaac9fcde8b6ccb6dfd55402f14f1a9537e898645484ba69b2e8f",
+    "lean/bridge/harmonic-density-formula-contract.json": "b3f5f43df5ae50417ec309a996dcdbbef311fcac9bd4bb72957f45da28533ba8",
     "lean/bridge/harmonic-ensemble-formula-contract.json": "787bff6c81de388b2631c77b044b394a03c8562c744493931f09db60e8f663ab",
+    "lean/bridge/harmonic-product-formula-contract.json": "adffdaa7139f3d919eb1ea058130fb502ad0d6e2e375bf2465ce47abf472d995",
     "lean/bridge/harmonic-sums-formula-contract.json": "c897e8de5d7c1b7211f95e0cd599479c87a738de946be683bd5ab3ae78be1699",
+    "lean/bridge/joint-density-formula-contract.json": "f5a5bb01044f479cf9770573121442a84117af1a84a6976d5ede0765256dfd04",
     "lean/bridge/lake-manifest.json": "944e89730b11251e6da9fc6c98a534683a84c535dcb0c64caee423accdc596f0",
-    "lean/bridge/lakefile.toml": "2fcf09b210d1c90a7f5a8dc84acf7931d0d06610147d9548e059734536328e22",
+    "lean/bridge/lakefile.toml": "275a0d0772eeff00a66e487c2c3c6ef363fc569f18bbc6786b036577894485c8",
     "lean/bridge/lean-toolchain": "ca5f1f601d34c49079e38d7e7041eb0f2a9c227fbc1df0f404820069a052330c",
-    "lean/bridge/semantic-formula-contract.json": "21002241bb9dae2d674df0ede26cf7f0804823591675bcb4099142e7a5d1b123"
+    "lean/bridge/semantic-formula-contract.json": "21002241bb9dae2d674df0ede26cf7f0804823591675bcb4099142e7a5d1b123",
+    "lean/bridge/verify_contracts.py": "57225331e3e602ec50c4cb707f6b0b8c4f9cc7b7476e978cfa8a94ccd7708ffc"
   },
   "status": "passed",
   "upstream_revision": "8ddcc004043c5b537e4225fa763121c176b62a4a"

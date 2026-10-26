@@ -240,6 +240,7 @@ def _check_compiled_evidence(binding: dict, upstream: dict, root: Path) -> None:
         if ".lake" not in path.relative_to(bridge_root).parts
     } | {"lean/bridge/" + name for name in (
         "lean-toolchain", "lakefile.toml", "lake-manifest.json", "semantic-formula-contract.json",
+        "audit.py", "verify_contracts.py",
     )} | {str(path.relative_to(root)) for path in bridge_root.glob("*-formula-contract.json")}
     if not required <= hashes.keys():
         raise ValueError("build record omits proof source/configuration/endpoint dependencies")
@@ -248,6 +249,21 @@ def _check_compiled_evidence(binding: dict, upstream: dict, root: Path) -> None:
         if (not path.resolve().is_relative_to(bridge_root.resolve())
                 or not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != digest):
             raise ValueError(f"compiled dependency hash mismatch: {relative}")
+    expected_names = set()
+    for contract_path in bridge_root.glob("*-formula-contract.json"):
+        contract = json.loads(contract_path.read_text())
+        for endpoint in [*contract.get("operators", []), *contract.get("nodes", [])]:
+            if "lean_definition" in endpoint:
+                definition_source = root / endpoint.get("definition_source_path", contract["source_path"])
+                if not definition_source.resolve().is_relative_to(bridge_root.resolve()):
+                    raise ValueError("contract definition path is outside the bridge package")
+                module = ".".join(definition_source.relative_to(bridge_root).with_suffix("").parts)
+                expected_names.add((endpoint["lean_definition"], module))
+    expected_pairs = [{"name": name, "module": module} for name, module in sorted(expected_names)]
+    name_audit = record.get("contract_name_audit", {})
+    if (name_audit.get("status") != "passed" or name_audit.get("pairs") != expected_pairs
+            or name_audit.get("pair_count") != len(expected_pairs)):
+        raise ValueError("compiled bridge lacks matching contract name/module audit")
     audit = record.get("axiom_audit", {})
     declarations = audit.get("declarations", {})
     if (audit.get("status") != "passed" or not declarations
