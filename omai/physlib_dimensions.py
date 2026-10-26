@@ -14,7 +14,7 @@ from pathlib import Path
 from omai.map_data import DOMAINS, build_graph_dict
 from omai.operator import dimensions
 
-PHYSLIB_REV = "8ddcc004043c5b537e4225fa763121c176b62a4a"
+PHYSLIB_REV = "d70acc20677320d37b38e602e331e900466b704d"
 LEAN_TOOLCHAIN = "leanprover/lean4:v4.35.0"
 ISQ_BASES = ("mass", "length", "time", "temperature", "amount", "current", "luminousIntensity")
 _ROOT = Path(__file__).resolve().parents[1]

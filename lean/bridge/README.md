@@ -1,7 +1,7 @@
 # Current Physlib bridge
 
 This independent Lean 4.35 package pins Physlib
-`8ddcc004043c5b537e4225fa763121c176b62a4a`. The historical Lean 4.31 package in
+`d70acc20677320d37b38e602e331e900466b704d`. The historical Lean 4.31 package in
 the parent directory is unchanged and builds separately.
 
 - `OMAIPhyslibDimensions.lean`: generated native seven-base ISQ encodings for
@@ -25,10 +25,22 @@ the parent directory is unchanged and builds separately.
   heat capacity with positive primitive-cell volume, its molar relation, and
   the same formula from the actual joint ensemble. Exact real unit lemmas do
   not certify floating-point conversion code.
+- `OMAIPhyslibStaticEnsemble.lean` and `OMAIPhyslibResponseUnits.lean`: an actual
+  signed static-energy singleton, F/U shifts and S/Cv invariance, with cell/molar
+  derivative scalings and non-unit normalization controls.
+- `OMAIPhyslibResponseCalculus.lean` and `OMAIPhyslibHarmonicVolume.lean`: local
+  C2 response calculus and its identification with a volume-dependent actual
+  static-plus-harmonic ensemble. Cp is an enthalpy derivative, not the desired
+  response formula by definition.
+- `OMAIPhyslibResponseWitness.lean` and `OMAIPhyslibHarmonicResponse.lean`: an
+  explicit heterogeneous nonzero-expansion example, a separate zero-response
+  control, and the catalog Cp identity and inequality. These cover one operator
+  and its output, not the numerical QHA producer or its input producers.
 - `OMAIPhyslibContinuum.lean`: absolute-temperature round trips and beta unit
   scaling; signed three-dimensional inviscid stress and pressure contraction.
 - `*-formula-contract.json`: separately reviewed OMAI endpoint identities and
-  source hashes. New proofs do not rewrite the historical six-formula contract.
+  source hashes. All eight contracts are required by the audit. New proofs do
+  not rewrite the historical six-formula contract.
 - `build-evidence.json`: source and configuration hashes, pinned dependencies,
   and the transitive axiom audit from a build with warnings treated as errors.
   This is a reproducible local build record, not external certification.
@@ -40,14 +52,19 @@ python3 -m omai.physlib_dimensions
 python3 -m pytest tests/test_physlib_dimensions.py -q
 bash lean/bridge/check.sh
 python3 -m omai.formula_bindings --check --lean-package lean/bridge
+PHYSLIB_BRIDGE_PACKAGE=lean/bridge python3 -m pytest tests/test_physlib_response_contract.py -q
 ```
 
 Use `bash lean/bridge/check.sh --no-cache` when the matching cache is already
 present. Set `PYTHON` to the environment interpreter if `python3` is older.
 `check.sh` disables Mathlib's full-cache post-update hook and requests
 only external imports reachable from the bridge. It builds only this library,
-then audits every public theorem and rejects any transitive axiom outside
-`propext`, `Classical.choice`, `Quot.sound` (in particular `sorryAx`).
+then audits imported kernel declarations owned by every bridge source module,
+plus the existing bridge namespace. This includes private and generated helpers.
+The audit requires every source module to be reachable with full private data;
+its probe deliberately uses non-module imports for that visibility. It rejects
+any transitive axiom outside `propext`, `Classical.choice`, `Quot.sound`
+(in particular `sorryAx`). Expanded audit counts are not counts of new formulas.
 
 The source-reference audit builds the mapped Physlib modules and checks each
 fully qualified declaration name and defining module in Lean's compiled

@@ -111,12 +111,14 @@ PHONOPY_THERMAL_GRUNEISEN = SpaceRepresentationSpec(
     observable_units={"gamma_thermal": "dimensionless"},
     code_api={"gamma_thermal": "PhonopyQHA.gruneisen_temperature (matcalc QHACalc 'gruneisen_parameters')"},
     notes=(
-        "PhonopyQHA.gruneisen_temperature (qha/core.py:355), matcalc "
-        "result['gruneisen_parameters'], dimensionless (_qha.py:302). The single "
-        "macroscopic gamma(T) = alpha B V / C_V per temperature, the "
-        "heat-capacity-weighted average of the mode gammas. DISTINCT from the mode "
-        "Gruneisen (gamma_G, (q,nu)-indexed, FC3-produced): this is a T-only "
-        "scalar, a contraction of it (contract_thermal_gruneisen)."
+        "PhonopyQHA.gruneisen_temperature (phonopy 3.5.1 qha/core.py:355), "
+        "matcalc result['gruneisen_parameters'], dimensionless (_qha.py:302). "
+        "This version evaluates alpha_V*B_T/C_V_vol from equilibrium-volume "
+        "results and fitted heat capacities, with a zero fallback below its "
+        "heat-capacity threshold. It does not consume an FC3 mode-gamma array. "
+        "Equality to an independently computed heat-capacity-weighted mode "
+        "average requires separate common-model and producer validation; this "
+        "representation association alone does not establish that agreement."
     ),
 )
 
@@ -213,7 +215,11 @@ PHONOPY_CONTRACT_THERMAL_GRUNEISEN = OperatorRepresentationSpec(
     operator=contract_thermal_gruneisen,
     representation_name="phonopy",
     notes=(
-        "PhonopyQHA.gruneisen_temperature: the heat-capacity-weighted contraction "
-        "of the mode gammas, matcalc 'gruneisen_parameters', dimensionless."
+        "PhonopyQHA.gruneisen_temperature (phonopy 3.5.1), matcalc "
+        "'gruneisen_parameters', dimensionless. This implementation evaluates "
+        "the thermal-expansion/bulk-modulus/heat-capacity quotient, including "
+        "its low-heat-capacity zero fallback; it is not an independent FC3 "
+        "mode-gamma contraction. This operator representation does not verify "
+        "equivalence to an independently computed mode-weighted result."
     ),
 )

@@ -100,9 +100,31 @@ test('map quantity references distinguish proof subject from compiled input asso
 test('proof and upstream links reject local paths, traversal, credentials, and lookalike hosts', () => {
   ['file:///tmp/source','http://github.com/a/b','https://github.com.evil/a','https://u:p@github.com/a'].forEach(url=>assert.equal(F.sourceHref(url),''));
   ['../secret','lean/bridge/../../evil.lean','/tmp/Proof.lean','lean/bridge/Proof.lean" onload="x'].forEach(path=>assert.equal(F.proofHref(path),''));
-  assert.equal(F.proofHref('lean/bridge/Proof.lean'),'https://github.com/openmaterials-ai/openmaterials-ai/blob/dcd570fd8898d58f559c6d85c59ede8ac34e2b02/lean/bridge/Proof.lean');
+  assert.equal(F.proofHref('lean/bridge/Proof.lean'),'https://github.com/openmaterials-ai/openmaterials-ai/blob/27f71197ccfac0bbfed535a4376e941113bb567b/lean/bridge/Proof.lean');
 });
 test('rendered repeated bindings do not create duplicate DOM identifiers', () => {
   const html=F.index(makeData()).map(F.rowHtml).join('')+F.declarationIndex(makeData()).map(row=>F.declarationHtml(row)).join('');
   assert.doesNotMatch(html,/\sid=/);
+});
+
+test('reviewed Cp data links only the identity route and its output as new proof subjects', () => {
+  const data = require('../../data/formula_bindings.json');
+  const binding = data.bindings.find(b => b.id === 'harmonic-static-cp-identity');
+  assert.ok(binding);
+  assert.deepEqual(new Set(F.provedTargets(binding, data).map(t => t.kind + ':' + t.id)),
+    new Set(['operator:contract_heat_capacity_p_identity', 'node:HeatCapacityConstantP']));
+  const rows = F.index(data);
+  assert.equal(rows.find(r => r.kind === 'operator' && r.id === 'contract_heat_capacity_p_identity').compiled, true);
+  assert.equal(rows.find(r => r.kind === 'node' && r.id === 'HeatCapacityConstantP').compiled, true);
+  for (const id of ['compute_heat_capacity_p', 'contract_thermal_gruneisen_identity', 'contract_molar_volume']) {
+    assert.equal(rows.find(r => r.kind === 'operator' && r.id === id).compiled, false);
+  }
+  const selected = F.mapSelection('#operator=contract_heat_capacity_p_identity', data);
+  assert.deepEqual(selected.nodes, ['HeatCapacityConstantP']);
+  assert.deepEqual(F.parseFragment('#operator=contract_heat_capacity_p_identity'),
+    {view:'omai', kind:'operator', id:'contract_heat_capacity_p_identity'});
+  const upstream = F.declarationIndex(data).find(r => r.name === 'CanonicalEnsemble.meanEnergyT');
+  assert.ok(upstream.bindings.some(b => b.id === binding.id));
+  assert.match(F.bindingHtml(binding), /OMAIPhyslibHarmonicResponse\.lean/);
+  assert.equal(F.targetReferencesHtml(data, 'operator', 'compute_heat_capacity_p', '/lean/bridge/'), '');
 });
