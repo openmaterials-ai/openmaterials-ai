@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "scope": "Reviewed OMAI formula endpoint and exact Lean proof source. Hash and compiled-name checks detect drift and provenance errors; they are not automatic symbolic translation or numerical validation.",
+  "source_path": "lean/bridge/OMAIPhyslibHarmonicDensity.lean",
+  "source_sha256": "cf4d59af5b660a1fc73b079d63451f269081e1bd9a3018047e1f6f41517013ea",
+  "operators": [
+    {
+      "id": "contract_volumetric_heat_capacity",
+      "uid": "239c7dd3370e7b7e4456f1ade35c5d81edba69efda786d25e8e1e74f6fa297d9",
+      "formula_sha256": "e89d3db8b665f634538055816c2e1336259f88bcd007badcf318c802d2b3ff92",
+      "formula_latex": "C_V^{vol} = \\frac{\\sum_{\\substack{1 \\leq \\mathbf{q} \\leq N_{q}\\\\1 \\leq \\nu \\leq 3 N}} {c}_{\\mathbf{q},\\nu}}{N_{q} V_{cell}}",
+      "lean_definition": "OMAI.PhyslibBridge.harmonicVolumetricHeatCapacity"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "VolumetricHeatCapacity",
+      "uid": "29e324b97f31cdb7d3cd8ef6aec5668fff111fd7ee96bd19dd0426b8728c1d47"
+    }
+  ],
+  "interpretations": [
+    "Positive primitive-cell volume in cubic metres; N_q and N_atoms positive; exactly 3*N_atoms branches, strictly positive frequencies and positive absolute temperature; exact upstream hbar/kB.",
+    "Volumetric normalization is sum(c)/(N_q*V_cell) in J/(m^3 K), no Avogadro factor or branch-count divisor. C_vol=C_mol/(N_A*V_cell) uses the same primitive-cell basis.",
+    "Actual derivative-defined single-mode Physlib capacities are used. The separate joint-density proof divides the actual joint capacity by N_q*V_cell; it adds no new operator beyond this endpoint.",
+    "Exact real Angstrom-cubed and linear-THz interpretation lemmas do not certify floating-point adapters. Cell geometry, dispersion producers, nonuniform q, zero/imaginary modes and thermodynamic limits remain outside scope."
+  ]
+}

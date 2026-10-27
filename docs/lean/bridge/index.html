@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PhysLean / Physlib formula bridge | OpenMaterials</title>
+<meta name="description" content="OMAI quantities and formulas mapped to pinned Physlib declarations, with assumptions, proof status, and coverage gaps.">
+<link rel="canonical" href="https://openmaterials.ai/lean/bridge/">
+<meta name="theme-color" content="#F4F1EA" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0F0E0C" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<script>try{const t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch{}</script>
+<link rel="preload" href="../../assets/fonts/newsreader-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../assets/fonts/jetbrains-mono-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../assets/site.css">
+<style>
+  .filters { display:flex; flex-wrap:wrap; gap:16px; margin:24px 0; }
+  .filters label { display:grid; gap:4px; font-size:14px; }
+  .filters input, .filters select { background:var(--surface); color:var(--ink); border:1px solid var(--line); padding:8px; border-radius:4px; font:inherit; }
+  .filters input { min-width:240px; }
+  .inventory-row { border-top:1px solid var(--line); padding:16px 0; overflow-wrap:anywhere; }
+  .inventory-row summary { cursor:pointer; }
+  .row-kind, .row-status, .muted { color:var(--ink-2); font-size:14px; }
+  .row-status { margin-left:8px; }
+  .uid { font-size:12px; overflow-wrap:anywhere; }
+  .binding { margin:16px 0; padding:16px; border:1px solid var(--line); border-radius:4px; }
+  .binding h3 { margin-top:0; }
+  .tags { font:13px/1.5 var(--font-mono); }
+  .conventions div { margin-bottom:12px; }
+  .conventions dt { font-weight:600; text-transform:capitalize; }
+  .conventions dd { margin-left:0; }
+  .formula-source { white-space:pre-wrap; overflow-wrap:anywhere; font:13px/1.5 var(--font-mono); }
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<div data-site-header></div>
+<main class="frame" id="main">
+  <header class="page-head">
+    <h1>PhysLean / Physlib formula bridge</h1>
+    <p class="lede">Formal results linked to the map's quantities and formulas, with the conditions needed to apply them.</p>
+  </header>
+  <div class="page-body">
+    <nav class="toc gtoc" aria-label="Contents">
+      <a href="#coverage">Coverage</a><a href="#inventory">OMAI inventory</a><a href="#upstream-inventory">Physlib declarations</a>
+      <a href="#analytic">Harmonic ensemble proofs</a><a href="#response">Cp response</a><a href="#scope">Evidence and scope</a><a href="#reproduce">Reproduce</a>
+      <a href="../">Historical verified layer</a>
+    </nav>
+    <article class="prose gwrap">
+      <p><a href="https://physlib.io/">Physlib</a> combines the former PhysLean and Lean-QuantumInfo libraries. This bridge uses Physlib <a id="upstream" href="https://github.com/leanprover-community/physlib/tree/d70acc20677320d37b38e602e331e900466b704d"><code>d70acc2067732</code></a>, on Lean 4.35.0.
+        Its dependency pin is separate from the <a href="../">historical Lean 4.31.0 package</a>.
+        The source inventory includes every OMAI quantity and operator, including operators without input links.</p>
+      <p class="notice gnote">Mapped does not mean proved. Exact-definition, conditional, and conceptual correspondences describe the relation to upstream;
+        source correspondence versus compiled bridge describes the evidence. A general Physlib theorem is not automatically a theorem about an OMAI model.</p>
+      <section class="gsec" id="coverage">
+        <h2>Coverage</h2>
+        <dl class="ledger" id="coverage-counts" aria-label="Formula correspondence coverage"><div><dt>Inventory</dt><dd>Loading…</dd></div></dl>
+        <p>Referenced quantities include inputs and related concepts. Compiled subjects are the formula outputs or explicit quantity interpretations covered by a compiled bridge, under its stated conditions. A compiled bridge using lattice thermal conductivity does not prove the formula that computes lattice thermal conductivity.</p>
+        <p>The upstream counts cover declarations cited here, not all of Physlib. No whole-library percentage is implied.</p>
+        <p>Dimension checks do not establish formula equivalence. This package uses upstream
+          <code>Dimension ISQDimensionBase</code> with all seven named bases. Opaque fields are listed but not encoded.</p>
+        <p id="dimension-coverage">The <a href="../../data/physlib_dimensions.json">field-by-field dimension inventory</a> lists encoded and opaque fields separately.</p>
+      </section>
+      <section class="gsec" id="inventory">
+        <h2>OMAI quantities and formulas</h2>
+        <div class="filters">
+          <label>Search<input id="search" type="search" placeholder="Quantity, formula, model, or condition"></label>
+          <label>Kind<select id="kind"><option value="">All</option><option value="node">Quantity</option><option value="operator">Operator</option></select></label>
+          <label>Correspondence<select id="status"><option value="">All</option><option value="mapped">Referenced</option><option value="gap">Gap</option></select></label>
+          <label>Proof scope<select id="evidence"><option value="">All</option><option value="compiled">Compiled subjects</option><option value="source">Referenced, not compiled subjects</option></select></label>
+        </div>
+        <p id="shown" role="status" aria-live="polite"></p>
+        <div id="records">Loading…</div>
+        <noscript><p>The full inventory, hypotheses and source links are available in <a href="../../data/formula_bindings.json">formula_bindings.json</a>.</p></noscript>
+      </section>
+      <section class="gsec" id="upstream-inventory">
+        <h2>Physlib declarations → OMAI</h2>
+        <p>Start from an upstream declaration or module to find the OMAI quantities and operators that cite it. Links work in both directions; they do not assert an inverse formula or a reversible computation.</p>
+        <div class="filters">
+          <label>Search upstream<input id="upstream-search" type="search" placeholder="Declaration, module, or OMAI target"></label>
+          <label>Module<select id="upstream-module"><option value="">All modules</option></select></label>
+          <label>Binding evidence<select id="upstream-evidence"><option value="">All</option><option value="compiled_bridge">Compiled bridges</option><option value="source_correspondence">Source-only references</option></select></label>
+        </div>
+        <p id="upstream-shown" role="status" aria-live="polite"></p>
+        <div id="upstream-records">Loading…</div>
+      </section>
+      <section class="gsec" id="analytic">
+        <h2>Harmonic ensemble proofs</h2>
+        <p>The bridge constructs the full nonnegative-integer quantum harmonic ensemble from Physlib's oscillator spectrum.
+          It evaluates the partition sum and energy moment, proves the required finiteness and integrability,
+          and identifies Physlib's free energy, mean energy, entropy and heat capacity with OMAI's single-mode formulas.</p>
+        <p>The proofs require positive temperature and angular frequency, use the exact upstream constants,
+          and retain zero-point energy. They also establish <code>dF/dT = -S</code> and <code>dU/dT = C</code> at fixed spectrum.
+          The heat-capacity result transfers the proved energy equality on the positive-temperature domain;
+          it does not assume interchange of an infinite sum and a derivative.</p>
+        <p>Four further proofs identify OMAI's molar contractions with <code>N_A/N_q</code> times the sum of these
+          single-mode Physlib quantities over a finite grid with <code>3*N_atoms</code> branches.
+          The basis is a mole of primitive cells. A separate proof constructs the heterogeneous joint ensemble,
+          establishes its product partition and actual F/U/S/C, and connects those quantities to all four molar formulas.
+          Molar normalization is applied after evaluating thermodynamics, not inside the Hamiltonian.
+          Every frequency must be strictly positive; zero acoustic modes require a separate treatment.</p>
+        <p>Volumetric heat capacity is proved as the mode-capacity sum divided by <code>N_q*V_cell</code>,
+          and separately as the joint ensemble capacity with the same normalization. Volume must be positive
+          and refer to the primitive cell. The SI result is J/(m³ K); an Å³ input requires the exact factor
+          <code>10^-30</code>. The molar relation is <code>C_vol = C_mol/(N_A*V_cell)</code>.
+          The two proofs cover one operator, not two.</p>
+        <p><a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/27f71197ccfac0bbfed535a4376e941113bb567b/lean/bridge/OMAIPhyslibHarmonicEnsemble.lean">Single-mode proofs</a>,
+          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/27f71197ccfac0bbfed535a4376e941113bb567b/lean/bridge/OMAIPhyslibHarmonicSums.lean">molar contraction proofs</a>,
+          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/27f71197ccfac0bbfed535a4376e941113bb567b/lean/bridge/OMAIPhyslibHarmonicProduct.lean">joint-ensemble proofs</a>,
+          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/27f71197ccfac0bbfed535a4376e941113bb567b/lean/bridge/OMAIPhyslibHarmonicDensity.lean">single-mode volumetric proof</a>,
+          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/27f71197ccfac0bbfed535a4376e941113bb567b/lean/bridge/OMAIPhyslibJointDensity.lean">joint volumetric proof</a>,
+          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/27f71197ccfac0bbfed535a4376e941113bb567b/lean/bridge/build-evidence.json">build record and axiom audit</a>.</p>
+        <p>Reviewed formula contracts: <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/27f71197ccfac0bbfed535a4376e941113bb567b/lean/bridge/harmonic-ensemble-formula-contract.json">single-mode</a>,
+          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/27f71197ccfac0bbfed535a4376e941113bb567b/lean/bridge/harmonic-sums-formula-contract.json">molar contractions</a>,
+          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/27f71197ccfac0bbfed535a4376e941113bb567b/lean/bridge/harmonic-product-formula-contract.json">joint ensemble</a>,
+          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/27f71197ccfac0bbfed535a4376e941113bb567b/lean/bridge/harmonic-density-formula-contract.json">single-mode volumetric</a>,
+          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/27f71197ccfac0bbfed535a4376e941113bb567b/lean/bridge/joint-density-formula-contract.json">joint volumetric</a>.
+          Formula contracts pin the reviewed endpoints and Lean source; they do not automatically translate formulas into proofs.</p>
+      </section>
+      <section class="gsec" id="response">
+        <h2>Constant-pressure heat capacity</h2>
+        <p>The local static-plus-harmonic bridge proves
+          <code>Cp - Cv = T*V_m*alpha_V^2*K_T</code> on a common primitive-cell molar basis.
+          Cp is defined independently as the temperature derivative of actual ensemble enthalpy along a constant-pressure path.
+          Expansion is <code>V_m'/V_m</code>, and the isothermal bulk modulus is <code>V_m*F_VV</code> for the same molar free energy.</p>
+        <p>The model attaches the signed static energy <code>N_q*E_0(v)</code> through an actual singleton ensemble,
+          then applies <code>N_A/N_q</code> to the evaluated thermodynamic quantities. Frequencies are positive C2 functions of volume;
+          static energy is C2 and temperature-independent. The reduced-q grid and molar basis stay fixed.
+          The branch must satisfy equilibrium throughout a neighborhood, with positive temperature, volume and curvature at the evaluation point.</p>
+        <p>A heterogeneous example uses the implicit function theorem to construct a stable branch with nonzero expansion and actual Cp greater than Cv at its reference state.
+          A separate constant-frequency example has zero expansion and Cp equal to Cv.
+          These are exact model examples, not material fits. The result adds one compiled operator/output pair;
+          it does not verify numerical QHA, EOS fits, minimizers, input producers or the sibling <code>compute_heat_capacity_p</code> route.</p>
+        <p>Inspect the
+          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/27f71197ccfac0bbfed535a4376e941113bb567b/lean/bridge/OMAIPhyslibHarmonicResponse.lean">catalog endpoint</a>,
+          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/27f71197ccfac0bbfed535a4376e941113bb567b/lean/bridge/OMAIPhyslibHarmonicVolume.lean">actual volume family</a>,
+          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/27f71197ccfac0bbfed535a4376e941113bb567b/lean/bridge/OMAIPhyslibResponseWitness.lean">two model examples</a>,
+          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/27f71197ccfac0bbfed535a4376e941113bb567b/lean/bridge/OMAIPhyslibStaticEnsemble.lean">static ensemble</a>,
+          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/27f71197ccfac0bbfed535a4376e941113bb567b/lean/bridge/response-formula-contract.json">reviewed endpoint contract</a>,
+          and <a href="#operator=contract_heat_capacity_p_identity">mapping conditions and sources</a>.</p>
+      </section>
+      <section class="gsec" id="scope">
+        <h2>Evidence and scope</h2>
+        <ul>
+          <li><strong>Exact definition:</strong> the displayed definitions correspond under the specified interpretation. This label alone is not a Lean proof.</li>
+          <li><strong>Conditional:</strong> a model, units, index or normalization bridge is required. Inspect the remaining obligations.</li>
+          <li><strong>Conceptual:</strong> a related model or concept, not a formula-equivalence claim.</li>
+          <li><strong>Gap:</strong> no correspondence was established in the reviewed source. Other or later developments may supply one.</li>
+        </ul>
+        <p>Scalar thermoelectric results require a common operating point and explicit isotropic interpretation where OMAI carries tensor quantities.
+          Harmonic results require stable positive frequencies, positive temperature, Bose occupation, and the stated per-mode or cell/molar normalization. Zero-point energy contributes to free energy and internal energy.
+          Stored linear THz is not angular frequency: <code>omega_SI = 2*pi*10^12*nu_THz</code>.</p>
+        <p>Temperature results concern an absolute-temperature representation. The pressure result identifies the signed trace under an inviscid constitutive law; it does not prove a DFT stress formula. Reverse navigation identifies references, not mathematical inverse functions.
+          None of these results certifies finite-precision arithmetic, convergence, physical-model adequacy, or a numerical adapter.</p>
+      </section>
+      <section class="gsec" id="reproduce">
+        <h2>Reproduce and inspect</h2>
+        <p>The <a href="../../data/formula_bindings.json">machine-readable inventory</a> is generated from the reviewed mapping records shipped with OMAI and its existing scientific identities.
+          <a href="https://github.com/openmaterials-ai/openmaterials-ai/tree/27f71197ccfac0bbfed535a4376e941113bb567b/lean/bridge">Reviewed Lean source and build instructions</a>
+          are separate from the retained historical package.</p>
+        <pre class="formula-source">python -m omai.formula_bindings --check
+python -m omai.formula_bindings --check --physlib-path /path/to/pinned/physlib
+bash lean/bridge/check.sh
+python -m omai.formula_bindings --check --lean-package lean/bridge</pre>
+        <p>The read-only source check verifies pinned files and declaration lines. The compiled source-reference audit checks upstream names and their defining modules. The package audit also checks the endpoint definitions named in the reviewed formula contracts, including definitions retained in earlier modules. These reference and name checks establish provenance, not formula equivalence. The axiom audit requires every bridge source module to be imported with its private kernel data, and includes module-owned private and generated declarations as well as the bridge namespace. It rejects missing modules, incomplete output and unapproved assumptions. Run <code>check.sh</code> to build with the pinned dependencies and perform the endpoint-name and transitive-axiom audits.</p>
+      </section>
+    </article>
+  </div>
+</main>
+<div data-site-footer></div>
+<script src="../../assets/site.js"></script>
+<script src="lib.js"></script>
+<script>
+(function () {
+  'use strict';
+  var F = window.FormulaBridge, rows = [], declarations = [], exactTarget = null, exactDeclaration = '', exactModule = '';
+  var search = document.getElementById('search'), kind = document.getElementById('kind'), status = document.getElementById('status'), evidence = document.getElementById('evidence');
+  var upstreamSearch = document.getElementById('upstream-search'), upstreamModule = document.getElementById('upstream-module'), upstreamEvidence = document.getElementById('upstream-evidence');
+  function render() {
+    var shown = F.select(rows, search.value, kind.value, status.value, evidence.value);
+    if (exactTarget) shown = shown.filter(function (row) { return row.kind === exactTarget.kind && row.id === exactTarget.id; });
+    document.getElementById('shown').textContent = shown.length + ' of ' + rows.length + ' inventory entries shown';
+    document.getElementById('records').innerHTML = shown.map(F.rowHtml).join('') || '<p>No matching entries.</p>';
+    if (shown.length === 1) document.querySelector('#records .inventory-row').open = true;
+  }
+  function renderUpstream() {
+    var shown = F.selectDeclarations(declarations, upstreamSearch.value, exactModule || upstreamModule.value, upstreamEvidence.value, exactDeclaration);
+    document.getElementById('upstream-shown').textContent = shown.length + ' of ' + declarations.length + ' referenced declarations shown';
+    document.getElementById('upstream-records').innerHTML = shown.map(function (row) { return F.declarationHtml(row); }).join('') || '<p>No matching declarations.</p>';
+    if (shown.length === 1) document.querySelector('#upstream-records .inventory-row').open = true;
+  }
+  function fromHash() {
+    var state = F.parseFragment(location.hash);
+    exactTarget = null; exactDeclaration = ''; exactModule = '';
+    if (state.view === 'omai') {
+      kind.value = state.kind; search.value = ''; status.value = ''; evidence.value = ''; exactTarget = state;
+    } else if (state.view === 'physlib') {
+      upstreamSearch.value = ''; upstreamModule.value = state.module; upstreamEvidence.value = ''; exactDeclaration = state.declaration; exactModule = state.module;
+    }
+    render(); renderUpstream();
+    if (state.view === 'omai' || state.view === 'physlib') document.getElementById(state.view === 'omai' ? 'inventory' : 'upstream-inventory').scrollIntoView({block:'start'});
+  }
+  [search, kind, status, evidence].forEach(function (el) { el.addEventListener('input', function () { exactTarget = null; render(); }); });
+  [upstreamSearch, upstreamModule, upstreamEvidence].forEach(function (el) { el.addEventListener('input', function () { exactDeclaration = ''; exactModule = ''; renderUpstream(); }); });
+  window.addEventListener('hashchange', fromHash);
+  fetch('../../data/formula_bindings.json').then(function (r) {
+    if (!r.ok) throw new Error('HTTP ' + r.status); return r.json();
+  }).then(function (data) {
+    rows = F.index(data); declarations = F.declarationIndex(data);
+    Array.from(new Set(declarations.map(function (row) { return row.module; }))).sort().forEach(function (module) {
+      var option = document.createElement('option'); option.value = module; option.textContent = module; upstreamModule.appendChild(option);
+    });
+    var c = data.coverage;
+    var stats = [ ['Quantities referenced', c.nodes_mapped + ' / ' + c.nodes_total],
+      ['Operators referenced', c.operators_mapped + ' / ' + c.operators_total],
+      ['Quantities covered by compiled results', c.nodes_compiled + ' / ' + c.nodes_total],
+      ['Compiled formula output quantities', c.nodes_compiled_outputs], ['Standalone quantity interpretations', c.nodes_compiled_interpretations], ['Operators covered by compiled results', c.operators_compiled + ' / ' + c.operators_total],
+      ['Source-only binding records', c.source_correspondences], ['Compiled bridge records', c.compiled_bridges],
+      ['Physlib declarations referenced', declarations.length], ['Physlib modules referenced', new Set(declarations.map(function (row) { return row.module; })).size],
+      ['Exact-definition relations', c.relations.exact_definition], ['Conditional relations', c.relations.conditional], ['Conceptual relations', c.relations.conceptual] ];
+    document.getElementById('coverage-counts').innerHTML = stats.map(function (s) { return '<div><dt>' + F.esc(s[0]) + '</dt><dd>' + F.esc(s[1]) + '</dd></div>'; }).join('');
+    var revisionLink = F.sourceHref(data.upstream.repository + '/tree/' + data.upstream.revision);
+    if (revisionLink) document.getElementById('upstream').href = revisionLink;
+    document.getElementById('upstream').textContent = data.upstream.revision.slice(0, 12);
+    fromHash();
+  }).catch(function (e) {
+    document.getElementById('records').textContent = 'Inventory unavailable: ' + e.message;
+    document.getElementById('upstream-records').textContent = 'Declaration index unavailable. The machine-readable inventory is linked below.';
+  });
+  fetch('../../data/physlib_dimensions.json').then(function (r) {
+    if (!r.ok) throw new Error('HTTP ' + r.status); return r.json();
+  }).then(function (data) {
+    var opaque = data.records.filter(function (r) { return r.status === 'opaque'; });
+    var nodes = new Set(data.records.filter(function (r) { return r.status === 'encoded'; }).map(function (r) { return r.node; }));
+    document.getElementById('dimension-coverage').innerHTML = F.esc(data.encoded_fields + ' / ' + data.fields + ' fields encoded across ' + nodes.size + ' / ' + data.catalog_nodes + ' nodes. ') +
+      F.esc('Opaque: ' + opaque.map(function (r) { return r.node + ' / ' + r.field; }).join('; ')) +
+      '. <a href="../../data/physlib_dimensions.json">Inspect every field and exponent</a>.';
+  }).catch(function () { /* Keep the raw inventory link when optional data is unavailable. */ });
+})();
+</script>
+</body>
+</html>

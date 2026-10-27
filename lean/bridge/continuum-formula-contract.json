@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "scope": "Reviewed OMAI formula endpoints and exact Lean source bytes. These hashes detect drift; they are not an automatic symbolic translation or numerical implementation proof.",
+  "source_path": "lean/bridge/OMAIPhyslibContinuum.lean",
+  "source_sha256": "e8bff3cb5d44cd78885d8c5f200d8761e8c568cd0d101fc0c2110f521bdca7ff",
+  "operators": [
+    {
+      "id": "contract_pressure",
+      "uid": "acbf580bd577b7499bc6806f2882511b90aaab32cabdb290a0de452d251e7514",
+      "formula_sha256": "86f47f5fa90f900ae725b63de258ad5da3543e6ae3f07110e268241b7382edf3",
+      "formula_latex": "P = \\frac{\\sum_{\\alpha=1}^{3} {\\sigma}_{\\alpha,\\alpha}}{3}",
+      "lean_definition": "OMAI.PhyslibBridge.pressureFromStress"
+    }
+  ],
+  "interpretations": [
+    "Absolute temperature is a nonnegative real value in the same absolute-temperature units; beta uses the exact upstream Boltzmann constant. Positive temperature is required for positivity and unit-scaling results.",
+    "OMAI compressive-positive stress is minus Physlib tensile-positive Cauchy stress, in the same pressure units. Fin 3 axes 0,1,2 correspond to OMAI axes 1,2,3.",
+    "The trace contraction equals the inviscid pressure at each spacetime point. No equilibrium, DFT stress producer or thermodynamic free-energy derivative is proved."
+  ],
+  "nodes": [
+    {
+      "id": "Temperature",
+      "uid": "63f9bd32d94d77e12afbb96f5b1b7a870de6b1f5805213b7f3c3ff227da301f0"
+    },
+    {
+      "id": "Pressure",
+      "uid": "4ca6efdb874d146a6cca564c7a8a0504ee8868ae5890d4c33abddc147423d6f1"
+    }
+  ]
+}

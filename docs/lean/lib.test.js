@@ -92,3 +92,11 @@ test('the published lean.json parses whole: every node, edge, identity', () => {
     assert.ok(t.conclusion.indexOf('=') !== -1, name + ' states an equation');
   });
 });
+
+test('the published crosswalk retains every declaration array and no empty gap', () => {
+  const raw = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'physlib_crosswalk.json'), 'utf8'));
+  const normalized = L.normalizeCrosswalk(raw);
+  const linked = Object.keys(raw.nodes).filter(id => raw.nodes[id].length);
+  assert.deepStrictEqual(Object.keys(normalized), linked);
+  for (const id of linked) assert.deepStrictEqual(normalized[id], raw.nodes[id]);
+});
