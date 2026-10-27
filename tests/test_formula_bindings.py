@@ -14,7 +14,10 @@ import pytest
 from omai.formula_bindings import (
     build_formula_bindings,
     catalog_inventory,
+    compiled_targets,
     formula_bindings_for,
+    formula_bindings_for_physlib,
+    physlib_declaration_index,
     validate_formula_bindings,
     verify_source_references,
     verify_compiled_source_names,
@@ -116,6 +119,82 @@ def test_packaged_lookup_is_independent_of_working_directory_and_caller_mutation
         formula_bindings_for(target["id"], kind="execution")
 
 
+def test_reverse_lookup_matches_exact_names_modules_and_returns_full_records(payload, tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    declarations = physlib_declaration_index()
+    assert len(declarations) == payload["coverage"]["upstream_declarations_referenced"]
+    for source in declarations:
+        expected = [binding for binding in payload["bindings"]
+                    if any(s["name"] == source["name"] and s["module"] == source["module"]
+                           for s in binding["sources"])]
+        actual = formula_bindings_for_physlib(declaration=source["name"], module=source["module"])
+        assert actual == expected
+        assert source["binding_ids"] == sorted(binding["id"] for binding in expected)
+        assert all(binding["conditions"] or binding["relation"] != "conditional" for binding in actual)
+        assert len({binding["id"] for binding in actual}) == len(actual)
+    module = declarations[0]["module"]
+    expected = [binding for binding in payload["bindings"]
+                if any(source["module"] == module for source in binding["sources"])]
+    assert formula_bindings_for_physlib(module=module) == expected
+    assert formula_bindings_for_physlib(module=module + ".Missing") == []
+    assert formula_bindings_for_physlib(declaration=declarations[0]["name"].split(".")[-1]) == []
+    assert formula_bindings_for_physlib(declaration=declarations[0]["name"], module="Physlib.Other") == []
+    changed = formula_bindings_for_physlib(module=module)
+    changed[0]["conditions"].append("caller mutation")
+    assert all("caller mutation" not in row["conditions"] for row in formula_bindings_for_physlib(module=module))
+    with pytest.raises(ValueError, match="declaration or module"):
+        formula_bindings_for_physlib()
+
+
+def test_reverse_index_deduplicates_references_and_rejects_conflicting_source_metadata(one_binding):
+    other = copy.deepcopy(one_binding["bindings"][0])
+    other["id"] = "another-reference"
+    one_binding["bindings"].append(other)
+    rows = physlib_declaration_index(one_binding)
+    assert len(rows) == 1
+    assert rows[0]["binding_ids"] == ["another-reference", "scalar-power-factor-test"]
+    other["sources"][0]["line"] += 1
+    with pytest.raises(ValueError, match="inconsistent metadata"):
+        physlib_declaration_index(one_binding)
+
+
+def test_compiled_subjects_exclude_input_associations(payload):
+    total = next(binding for binding in payload["bindings"]
+                 if binding["id"] == "thermoelectric-total-conductivity")
+    proved = compiled_targets(total, payload["inventory"])
+    lattice_input = {"kind": "node", "id": "ThermalConductivity[bte_solver=direct_inverse]"}
+    assert any(target["id"] == lattice_input["id"] for target in total["targets"])
+    assert lattice_input not in proved
+    assert all(target in [{"kind": t["kind"], "id": t["id"]} for t in total["targets"]]
+               for target in proved)
+    assert any(target["kind"] == "operator" for target in proved)
+    subjects = {(target["kind"], target["id"]) for binding in payload["bindings"]
+                for target in compiled_targets(binding, payload["inventory"])}
+    assert payload["coverage"]["nodes_compiled"] == sum(kind == "node" for kind, _ in subjects)
+    assert payload["coverage"]["operators_compiled"] == sum(kind == "operator" for kind, _ in subjects)
+
+
+def test_second_compiled_proof_does_not_inflate_unique_coverage():
+    """A stronger model proof can add evidence without adding catalog subjects."""
+    seeds = json.loads((_ROOT / "omai/data/physlib_formula_seeds.json").read_text())
+    before = build_formula_bindings(seeds)
+    additional = copy.deepcopy(next(row for row in seeds["bindings"]
+                                    if row["id"] == "harmonic-molar-heat-capacity"))
+    additional["id"] = "duplicate-compiled-scope-test"
+    seeds["bindings"].append(additional)
+    after = build_formula_bindings(seeds)
+    assert after["coverage"]["compiled_bridges"] == before["coverage"]["compiled_bridges"] + 1
+    assert after["coverage"]["bindings_total"] == before["coverage"]["bindings_total"] + 1
+    for key in ("nodes_compiled", "nodes_compiled_outputs", "nodes_compiled_interpretations",
+                "operators_compiled", "nodes_mapped", "operators_mapped",
+                "upstream_declarations_referenced", "upstream_modules_referenced"):
+        assert after["coverage"][key] == before["coverage"][key], key
+    row = next(op for op in after["inventory"]["operators"]
+               if op["id"] == "contract_molar_heat_capacity")
+    assert "duplicate-compiled-scope-test" in row["binding_ids"]
+    validate_formula_bindings(after, check_catalog=True)
+
+
 def test_resolver_enrichment_preserves_legacy_and_operator_uids(payload):
     graph = build_graph_dict(DOMAINS)
     semantics = build_semantics(graph)
@@ -191,6 +270,9 @@ def test_compiled_evidence_requires_exact_source_and_successful_build(one_bindin
     }
     one_binding["coverage"]["compiled_bridges"] = 1
     one_binding["coverage"]["source_correspondences"] = 0
+    one_binding["coverage"]["nodes_compiled"] = 1
+    one_binding["coverage"]["nodes_compiled_outputs"] = 1
+    one_binding["coverage"]["operators_compiled"] = 1
     record = source.parent / "build-evidence.json"
     revision = one_binding["upstream"]["revision"]
     (source.parent / "lean-toolchain").write_text(one_binding["upstream"]["lean_toolchain"])
@@ -199,6 +281,8 @@ def test_compiled_evidence_requires_exact_source_and_successful_build(one_bindin
         "packages": [{"name": "physlib", "rev": revision}],
     }))
     (source.parent / "semantic-formula-contract.json").write_text("{}\n")
+    for filename in ("audit.py", "verify_contracts.py"):
+        (source.parent / filename).write_text("# synthetic audit dependency fixture")
     hashes = {str(path.relative_to(tmp_path)): hashlib.sha256(path.read_bytes()).hexdigest()
               for path in source.parent.iterdir() if path.is_file()}
     successful = {
@@ -206,12 +290,24 @@ def test_compiled_evidence_requires_exact_source_and_successful_build(one_bindin
         "upstream_revision": revision,
         "lean_toolchain": one_binding["upstream"]["lean_toolchain"],
         "sources": hashes, "dependencies": {"physlib": revision},
+        "contract_name_audit": {"status": "passed", "pairs": [], "pair_count": 0},
         "axiom_audit": {"status": "passed", "theorem_count": 1, "declaration_count": 1,
                         "allowed_axioms": ["propext", "Classical.choice", "Quot.sound"],
                         "declarations": {"Test.example": []}},
     }
     record.write_text(json.dumps(successful))
     validate_formula_bindings(one_binding, proof_root=tmp_path)
+    missing_names = copy.deepcopy(successful)
+    del missing_names["contract_name_audit"]
+    record.write_text(json.dumps(missing_names))
+    with pytest.raises(ValueError, match="contract name/module audit"):
+        validate_formula_bindings(one_binding, proof_root=tmp_path)
+    wrong_names = copy.deepcopy(successful)
+    wrong_names["contract_name_audit"]["pairs"] = [{"name": "Forged.name", "module": "Test"}]
+    record.write_text(json.dumps(wrong_names))
+    with pytest.raises(ValueError, match="contract name/module audit"):
+        validate_formula_bindings(one_binding, proof_root=tmp_path)
+    record.write_text(json.dumps(successful))
     source.write_text(source.read_text() + "-- unverified edit\n")
     with pytest.raises(ValueError, match="source hash mismatch"):
         validate_formula_bindings(one_binding, proof_root=tmp_path)
@@ -298,3 +394,14 @@ def test_compiled_source_audit_rejects_wrong_defining_module(payload, monkeypatc
     monkeypatch.setattr("omai.formula_bindings.verify_source_references", lambda *_: None)
     with pytest.raises(ValueError, match="belongs to .* not"):
         verify_compiled_source_names(mutated, Path(package))
+
+
+def test_retained_schema_v1_coverage_remains_readable(one_binding):
+    original_fields = {"nodes_total", "nodes_mapped", "operators_total", "operators_mapped",
+                       "bindings_total", "source_correspondences", "compiled_bridges", "relations"}
+    one_binding["coverage"] = {key: value for key, value in one_binding["coverage"].items()
+                               if key in original_fields}
+    validate_formula_bindings(one_binding)
+    one_binding["coverage"]["operators_compiled"] = 1
+    with pytest.raises(ValueError, match="coverage counts"):
+        validate_formula_bindings(one_binding)

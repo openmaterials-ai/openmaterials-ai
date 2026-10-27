@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "scope": "Reviewed OMAI formula endpoints and exact Lean source bytes. These hashes detect drift; they are not an automatic symbolic translation or numerical implementation proof.",
+  "source_path": "lean/bridge/OMAIPhyslibHarmonicEnsemble.lean",
+  "source_sha256": "1a1f7e60f5cf4a3e468d173109b0127d7685123e6e0130b69374df687b94e172",
+  "operators": [
+    {
+      "id": "compute_free_energy",
+      "uid": "b15ffc57501399eb9f1a0081d34ec1e16b579134c884d6dcf0b05434924e02eb",
+      "formula_sha256": "919246645690d2a35e9330824756ff2cb9bae8fb4dfffa4b5f93b953a4ce178b",
+      "formula_latex": "{f}_{\\mathbf{q},\\nu} = T k_{B} \\log{\\left(1 - e^{- \\frac{\\bar{\\h} {\\omega}_{\\mathbf{q},\\nu}}{T k_{B}}} \\right)} + \\frac{\\bar{\\h} {\\omega}_{\\mathbf{q},\\nu}}{2}",
+      "lean_definition": "OMAI.PhyslibBridge.harmonicFreeEnergy",
+      "definition_source_path": "lean/bridge/OMAIPhyslibSemantics.lean"
+    },
+    {
+      "id": "compute_internal_energy",
+      "uid": "ce45fb09bf9c3f8076a2064b90853e163f80b20a3f5c7506af913c560accbc53",
+      "formula_sha256": "6f0d545bd77043c0fa3b62ff5f97422a626b5ddd71b88baffe4d562b94d8f280",
+      "formula_latex": "{e}_{\\mathbf{q},\\nu} = \\bar{\\h} \\left(n_{BE}{\\left(\\frac{\\bar{\\h} {\\omega}_{\\mathbf{q},\\nu}}{T k_{B}} \\right)} + \\frac{1}{2}\\right) {\\omega}_{\\mathbf{q},\\nu}",
+      "lean_definition": "OMAI.PhyslibBridge.harmonicInternalEnergy",
+      "definition_source_path": "lean/bridge/OMAIPhyslibSemantics.lean"
+    },
+    {
+      "id": "compute_entropy",
+      "uid": "40d04377570142198d0a7f3d505de3b8fa6fdcf0418622be679aceec11b13264",
+      "formula_sha256": "a1368172bfefa61b76a34da3b474fa48f11a728e01b851f0abf1961cd53e61c7",
+      "formula_latex": "{s}_{\\mathbf{q},\\nu} = - k_{B} \\log{\\left(1 - e^{- \\frac{\\bar{\\h} {\\omega}_{\\mathbf{q},\\nu}}{T k_{B}}} \\right)} + \\frac{\\bar{\\h} n_{BE}{\\left(\\frac{\\bar{\\h} {\\omega}_{\\mathbf{q},\\nu}}{T k_{B}} \\right)} {\\omega}_{\\mathbf{q},\\nu}}{T}",
+      "lean_definition": "OMAI.PhyslibBridge.harmonicEntropy",
+      "definition_source_path": "lean/bridge/OMAIPhyslibSemantics.lean"
+    },
+    {
+      "id": "compute_heat_capacity",
+      "uid": "3662d6183de400b2337d314499e31dd473b7b2ea3994290f21046e36bdcedfdb",
+      "formula_sha256": "b28a7bc9aae3f2172b22319465791fdb88fcfc5f7c0b8c3fcdfac99a9ded8bd9",
+      "formula_latex": "{c}_{\\mathbf{q},\\nu} = \\frac{\\bar{\\h}^{2} {\\omega}_{\\mathbf{q},\\nu}^{2}}{4 T^{2} k_{B} \\sinh^{2}{\\left(\\frac{\\bar{\\h} {\\omega}_{\\mathbf{q},\\nu}}{2 T k_{B}} \\right)}}",
+      "lean_definition": "OMAI.PhyslibBridge.harmonicHeatCapacity"
+    }
+  ],
+  "interpretations": [
+    "Full Nat counting-measure ensemble with the upstream quantum harmonic oscillator spectrum, dof=0 and phase-space unit=1; exact upstream hbar and kB, positive angular frequency and absolute temperature.",
+    "Partition sum, first energy moment, Boltzmann finiteness and normalized energy integrability are proved. The upstream F/U/S/C quantities equal the reviewed OMAI per-mode formulas, including zero-point energy in F and U.",
+    "Heat capacity is transferred from the mean-energy equality on the open positive-temperature domain. Fixed-spectrum derivatives dF/dT=-S and dU/dT=C are proved without assuming differentiation under an infinite sum.",
+    "Stored linear THz requires omega_SI=2*pi*10^12*nu_THz. No frequency/eigenmode producer or numerical implementation is proved."
+  ]
+}
