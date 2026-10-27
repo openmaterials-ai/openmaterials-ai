@@ -519,6 +519,9 @@ var configByUid = {};   // canonical.uid and aliases -> configuration bundle rec
 var VB = { x: 0, y: 0, w: 1000, h: 700 };
 
 function esc(s){ return String(s == null ? '' : s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+// A record's own URL becomes a link only as http(s): a shared fragment is untrusted
+// input, and a javascript: or data: href would run on this page when clicked.
+function webUrl(u){ return typeof u === 'string' && /^https?:\/\//i.test(u) ? u : ''; }
 function tex(s, block){ if (!s) return ''; if (!HAS_KATEX) return esc(s); try { return katex.renderToString(String(s), { throwOnError:false, displayMode: !!block }); } catch(e){ return esc(s); } }
 
 /* ---- data load ----------------------------------------------------------- */
@@ -1565,15 +1568,15 @@ function heavyHost(record){
     for (var i = 0; i < mk.length; i++) {
       var loc = mirrors[mk[i]];
       if (loc && typeof loc === 'object' && !Array.isArray(loc) &&
-          typeof loc.url === 'string' && loc.url &&
+          webUrl(loc.url) &&
           (loc.provider == null || typeof loc.provider === 'string'))
         return { provider: loc.provider || 'the host', url: loc.url };
-      if (typeof loc === 'string' && loc) return { provider: 'the host', url: loc };
+      if (webUrl(loc)) return { provider: 'the host', url: loc };
     }
   }
   var arts = Array.isArray(record.artifacts) ? record.artifacts : [];
   for (var j = 0; j < arts.length; j++) {
-    if (arts[j] && typeof arts[j].url === 'string' && arts[j].url)
+    if (arts[j] && webUrl(arts[j].url))
       return { provider: 'MaterialsCodeGraph', url: arts[j].url };
   }
   return null;
@@ -1705,7 +1708,7 @@ function artifactsHTML(record){
   if (Array.isArray(arts) && arts.length) {
     body += '<ul class="rec-arts">' + arts.map(function(a){
       if (!a || typeof a !== 'object') return '';
-      var link = a.url ? '<a href="' + esc(a.url) + '" target="_blank" rel="noopener">Open</a>' : '';
+      var link = webUrl(a.url) ? '<a href="' + esc(a.url) + '" target="_blank" rel="noopener">Open</a>' : '';
       return '<li class="rec-art">' +
         '<span class="rec-art-role">' + esc(a.role || 'artifact') + '</span>' +
         '<span class="rec-art-path">' + esc(a.path || '') + '</span>' +

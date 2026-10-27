@@ -31,7 +31,7 @@ def _on_page(record: dict) -> dict:
     html = _PLAY.read_text()
     source = "var nodeById = {}; var SHA256_RE = /^[0-9a-f]{64}$/;\n"
     source += "\n".join(_function(html, name) for name in (
-        "normalizeLineageRecord", "validateLightJS", "heavyHost"))
+        "webUrl", "normalizeLineageRecord", "validateLightJS", "heavyHost"))
     source += "\nvar rec = " + json.dumps(record) + ";\n"
     source += "console.log(JSON.stringify({check:validateLightJS(rec),host:heavyHost(rec)}));"
     result = subprocess.run([node, "-e", source], capture_output=True, text=True, check=True)
@@ -82,3 +82,20 @@ def test_host_rendering_uses_only_well_shaped_locations():
     assert _on_page(record)["host"]["url"] == "https://example.org/model"
     record["artifacts"][0]["url"] = {"bad": "not a location"}
     assert _on_page(record)["host"] is None
+
+
+@pytest.mark.parametrize("mirrors,artifacts,host", [
+    ({"model": "javascript:alert(1)"}, None, None),
+    ({"model": {"url": "JavaScript:alert(1)", "provider": "x"}}, None, None),
+    ({"model": "data:text/html,<script>alert(1)</script>"}, None, None),
+    (None, [{"path": "a", "role": "data", "url": "javascript:alert(1)"}], None),
+    ({"model": "javascript:alert(1)"}, [{"path": "a", "role": "data", "url": "https://example.org/a"}],
+     {"provider": "MaterialsCodeGraph", "url": "https://example.org/a"}),
+    ({"model": "HTTPS://example.org/m"}, None, {"provider": "the host", "url": "HTTPS://example.org/m"}),
+])
+def test_only_http_urls_become_links(mirrors, artifacts, host):
+    """A shared record is untrusted: a non-http(s) URL never becomes a link."""
+    record = {"lineage": {"template": "test"}, "mirrors": mirrors}
+    if artifacts is not None:
+        record["artifacts"] = artifacts
+    assert _on_page(record)["host"] == host
