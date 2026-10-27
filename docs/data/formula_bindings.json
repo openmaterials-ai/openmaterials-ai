@@ -2,7 +2,7 @@
   "schema_version": 1,
   "upstream": {
     "repository": "https://github.com/leanprover-community/physlib",
-    "revision": "8ddcc004043c5b537e4225fa763121c176b62a4a",
+    "revision": "d70acc20677320d37b38e602e331e900466b704d",
     "lean_toolchain": "leanprover/lean4:v4.35.0"
   },
   "bindings": [
@@ -16,25 +16,40 @@
         }
       ],
       "relation": "conditional",
-      "statement": "An OMAI nonnegative absolute-temperature scalar can be wrapped as Physlib Temperature; beta uses the same kB convention.",
+      "statement": "A nonnegative OMAI absolute-temperature value and Physlib Temperature round-trip exactly. The inverse-temperature formula and its numerical unit scaling are proved under explicit positivity and kB conventions.",
       "sources": [
         {
           "module": "Physlib.Thermodynamics.Temperature.Basic",
           "name": "Temperature",
           "kind": "structure",
           "line": 32,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/Thermodynamics/Temperature/Basic.lean#L32"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/Thermodynamics/Temperature/Basic.lean#L32"
         },
         {
           "module": "Physlib.Thermodynamics.Temperature.Basic",
           "name": "Temperature.β",
           "kind": "def",
           "line": 59,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/Thermodynamics/Temperature/Basic.lean#L59"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/Thermodynamics/Temperature/Basic.lean#L59"
+        },
+        {
+          "module": "Physlib.Thermodynamics.Temperature.Basic",
+          "name": "Temperature.ofRealNonneg",
+          "kind": "def",
+          "line": 172,
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/Thermodynamics/Temperature/Basic.lean#L172"
+        },
+        {
+          "module": "Physlib.Thermodynamics.Temperature.Basic",
+          "name": "Temperature.beta_pos",
+          "kind": "lemma",
+          "line": 92,
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/Thermodynamics/Temperature/Basic.lean#L92"
         }
       ],
       "conditions": [
-        "T >= 0 for the carrier type; T>0 for inverse-temperature formulas."
+        "T>=0 for the carrier and value round trips; T>0 for beta positivity and unit-scaling results.",
+        "For target numerical temperature a*T and energy b*E, use positive a,b and kB_target=(b/a)*kB_source; beta_target=beta_source/b. The upstream Boltzmann constant must satisfy that equality."
       ],
       "conventions": {
         "model_scope": "Absolute thermodynamic temperature.",
@@ -48,10 +63,28 @@
         "qpoint_weighting": "not applicable"
       },
       "remaining_obligations": [
-        "Formalize the OMAI real-value-to-nonnegative-Temperature adapter and unit convention; wrapping a value does not prove a physical model."
+        "The caller must select and justify the absolute-temperature and energy units. This representation result does not verify a temperature-producing computation or a material model."
       ],
       "evidence": {
-        "kind": "source_correspondence"
+        "kind": "compiled_bridge",
+        "module": "OMAIPhyslibContinuum",
+        "declarations": [
+          "OMAI.PhyslibBridge.absoluteTemperature_toReal",
+          "OMAI.PhyslibBridge.absoluteTemperature_roundtrip",
+          "OMAI.PhyslibBridge.absoluteTemperature_beta_eq",
+          "OMAI.PhyslibBridge.absoluteTemperature_beta_pos",
+          "OMAI.PhyslibBridge.inverseTemperature_unit_scaling",
+          "OMAI.PhyslibBridge.absoluteTemperature_beta_unit_scaling"
+        ],
+        "source_path": "lean/bridge/OMAIPhyslibContinuum.lean",
+        "source_sha256": "e8bff3cb5d44cd78885d8c5f200d8761e8c568cd0d101fc0c2110f521bdca7ff",
+        "build_record": "lean/bridge/build-evidence.json",
+        "proved_targets": [
+          {
+            "kind": "node",
+            "id": "Temperature"
+          }
+        ]
       }
     },
     {
@@ -71,7 +104,7 @@
           "name": "Physlib.CondensedMatter.Crystal",
           "kind": "structure",
           "line": 65,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/CondensedMatter/Crystal/Basic.lean#L65"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/CondensedMatter/Crystal/Basic.lean#L65"
         }
       ],
       "conditions": [
@@ -117,14 +150,14 @@
           "name": "ClassicalMechanics.HarmonicOscillator.ω",
           "kind": "def",
           "line": 156,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/ClassicalMechanics/HarmonicOscillator/Basic.lean#L156"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/ClassicalMechanics/HarmonicOscillator/Basic.lean#L156"
         },
         {
           "module": "Physlib.ClassicalMechanics.HarmonicOscillator.Basic",
           "name": "ClassicalMechanics.HarmonicOscillator.ω_sq",
           "kind": "lemma",
           "line": 163,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/ClassicalMechanics/HarmonicOscillator/Basic.lean#L163"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/ClassicalMechanics/HarmonicOscillator/Basic.lean#L163"
         }
       ],
       "conditions": [
@@ -170,21 +203,21 @@
           "name": "ClassicalMechanics.HarmonicOscillator.potentialEnergy",
           "kind": "def",
           "line": 200,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/ClassicalMechanics/HarmonicOscillator/Basic.lean#L200"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/ClassicalMechanics/HarmonicOscillator/Basic.lean#L200"
         },
         {
           "module": "Physlib.ClassicalMechanics.HarmonicOscillator.Basic",
           "name": "ClassicalMechanics.HarmonicOscillator.force",
           "kind": "def",
           "line": 451,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/ClassicalMechanics/HarmonicOscillator/Basic.lean#L451"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/ClassicalMechanics/HarmonicOscillator/Basic.lean#L451"
         },
         {
           "module": "Physlib.ClassicalMechanics.HarmonicOscillator.Basic",
           "name": "ClassicalMechanics.HarmonicOscillator.force_eq_linear",
           "kind": "lemma",
           "line": 464,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/ClassicalMechanics/HarmonicOscillator/Basic.lean#L464"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/ClassicalMechanics/HarmonicOscillator/Basic.lean#L464"
         }
       ],
       "conditions": [
@@ -213,6 +246,11 @@
       "targets": [
         {
           "kind": "node",
+          "id": "Pressure",
+          "uid": "4ca6efdb874d146a6cca564c7a8a0504ee8868ae5890d4c33abddc147423d6f1"
+        },
+        {
+          "kind": "node",
           "id": "Stress",
           "uid": "183e66d4e443326d2c346a0327cdb125026bd8f6a91a9bb97b61265fcade7e85"
         },
@@ -223,19 +261,20 @@
           "formula_sha256": "86f47f5fa90f900ae725b63de258ad5da3543e6ae3f07110e268241b7382edf3"
         }
       ],
-      "relation": "conceptual",
-      "statement": "Physlib inviscid Cauchy stress is -p*I (tensile-positive); OMAI contract_pressure is +trace(sigma)/3 with compressive-positive sigma. A negation plus static/isotropic specialization is required.",
+      "relation": "conditional",
+      "statement": "Under Physlib's three-dimensional inviscid stress law, OMAI's compressive-positive stress is minus the tensile-positive Cauchy stress, and trace(sigma_OMAI)/3 equals the given pressure at each spacetime point.",
       "sources": [
         {
           "module": "Physlib.FluidDynamics.CauchyFlow.Inviscid",
           "name": "FluidDynamics.CauchyFlow.IsInviscid",
           "kind": "def",
           "line": 54,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/FluidDynamics/CauchyFlow/Inviscid.lean#L54"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/FluidDynamics/CauchyFlow/Inviscid.lean#L54"
         }
       ],
       "conditions": [
-        "Dimension 3, isotropic static specialization, and sigma_OMAI=-stress_Physlib."
+        "Use dimension 3 and the upstream CauchyFlow.IsInviscid law stress_Physlib=-p*I.",
+        "Set sigma_OMAI=-stress_Physlib in the same pressure units. Fin 3 axes 0,1,2 correspond to OMAI axes 1,2,3. No static, equilibrium or positive-pressure assumption is required."
       ],
       "conventions": {
         "model_scope": "Inviscid continuum stress, not an atomistic/DFT stress derivation.",
@@ -244,15 +283,309 @@
         "frequency_convention": "not applicable",
         "unit_embedding": "Pressure/stress in Pa after unit alignment.",
         "held_fixed": "One space-time operating point.",
-        "admissibility": "Isotropic stress specialization only.",
+        "admissibility": "Inviscid constitutive law at each spacetime point; no arbitrary deviatoric stress interpretation.",
         "reference_energy": "not applicable",
         "qpoint_weighting": "not applicable"
       },
       "remaining_obligations": [
-        "Prove the signed tensor interpretation and trace identity; do not relabel tensile and compressive conventions as exact."
+        "The caller must justify the inviscid model and sign/unit interpretation. No DFT stress producer, mechanical equilibrium or thermodynamic free-energy derivative is proved."
       ],
       "evidence": {
-        "kind": "source_correspondence"
+        "kind": "compiled_bridge",
+        "module": "OMAIPhyslibContinuum",
+        "declarations": [
+          "OMAI.PhyslibBridge.compressiveStress_roundtrip",
+          "OMAI.PhyslibBridge.compressiveStress_eq_pressure_identity",
+          "OMAI.PhyslibBridge.compressiveStress_diagonal_of_isInviscid",
+          "OMAI.PhyslibBridge.pressureFromStress_eq_physlib_pressure"
+        ],
+        "source_path": "lean/bridge/OMAIPhyslibContinuum.lean",
+        "source_sha256": "e8bff3cb5d44cd78885d8c5f200d8761e8c568cd0d101fc0c2110f521bdca7ff",
+        "build_record": "lean/bridge/build-evidence.json",
+        "proved_targets": [
+          {
+            "kind": "operator",
+            "id": "contract_pressure"
+          },
+          {
+            "kind": "node",
+            "id": "Pressure"
+          }
+        ]
+      }
+    },
+    {
+      "id": "harmonic-joint-molar-ensemble",
+      "targets": [
+        {
+          "kind": "node",
+          "id": "MolarEntropy",
+          "uid": "0f08fcb37791dc7cc3e0e0ee5c611abbefc5075867719b275fcaa77ada4f1ac2"
+        },
+        {
+          "kind": "node",
+          "id": "MolarHeatCapacity",
+          "uid": "4fa2d8e16bde42f794f150f5d149e5d645d63f7ddaac59cef79bd41771b13c17"
+        },
+        {
+          "kind": "node",
+          "id": "MolarHelmholtzFreeEnergy",
+          "uid": "419335bd5f3a1949576e608e4147d8f18bef980a69a9c6b99199f812c806b7be"
+        },
+        {
+          "kind": "node",
+          "id": "MolarInternalEnergy",
+          "uid": "220926f4974baec5c511f5acae2c9c4e09a8276d41c1314391b91dec537ef2fb"
+        },
+        {
+          "kind": "operator",
+          "id": "contract_molar_entropy",
+          "uid": "c9322877acc6349a7e18b29646674344b12d39565adf4ee3e23f2b82e1b53ab3",
+          "formula_sha256": "dd26ff6b4ba598e3847d7cb5bea43db12244846b2adeb279f4a3a9d3d0df168f"
+        },
+        {
+          "kind": "operator",
+          "id": "contract_molar_free_energy",
+          "uid": "9d4ded802829a8b2fe5544556eeb81534fe39e3ceae5efac0065e7ddcf3da152",
+          "formula_sha256": "dbff2ebb2aece334d4cbf8a8ad1928d48e3660a69d64cb8b73746b54dedeb5b0"
+        },
+        {
+          "kind": "operator",
+          "id": "contract_molar_heat_capacity",
+          "uid": "00bbc32d579215c8ada01de36f6d5db89d0cd23ccd1e392bc4bc085e9c96fc8e",
+          "formula_sha256": "d650d1a9d8bf0b675e7f416f15d6d29beda89179a7af59ab2afad6a1dd72e71c"
+        },
+        {
+          "kind": "operator",
+          "id": "contract_molar_internal_energy",
+          "uid": "77d1268cd072ac2acfbf95872ae6a8acc0a20ac9e196dfe7256048ad9f5f8f2d",
+          "formula_sha256": "2df3e3d6b3c9796f181b1cd476cf85250ee59ca8d440c2a20770ef2bfe0d8065"
+        }
+      ],
+      "relation": "conditional",
+      "statement": "The full heterogeneous joint harmonic ensemble has the proved mode-product partition and additive F/U/S/C. Applying N_A/N_q to its actual thermodynamic quantities gives the four existing OMAI molar formulas.",
+      "sources": [
+        {
+          "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+          "name": "CanonicalEnsemble.helmholtzFreeEnergy",
+          "kind": "def",
+          "line": 680,
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L680"
+        },
+        {
+          "module": "Physlib.QuantumMechanics.HarmonicOscillator.OneDimension.TISE",
+          "name": "QuantumMechanics.OneDimension.HarmonicOscillator.eigenValue",
+          "kind": "def",
+          "line": 29,
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29"
+        },
+        {
+          "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+          "name": "CanonicalEnsemble.meanEnergy",
+          "kind": "def",
+          "line": 519,
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L519"
+        },
+        {
+          "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+          "name": "CanonicalEnsemble.thermodynamicEntropy",
+          "kind": "def",
+          "line": 800,
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L800"
+        },
+        {
+          "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
+          "name": "CanonicalEnsemble.heatCapacity",
+          "kind": "def",
+          "line": 417,
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L417"
+        },
+        {
+          "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+          "name": "CanonicalEnsemble.mathematicalPartitionFunction_add",
+          "kind": "lemma",
+          "line": 369,
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L369"
+        },
+        {
+          "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+          "name": "CanonicalEnsemble.integrable_energy_add",
+          "kind": "lemma",
+          "line": 487,
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L487"
+        },
+        {
+          "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+          "name": "CanonicalEnsemble.meanEnergy_add",
+          "kind": "lemma",
+          "line": 529,
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L529"
+        },
+        {
+          "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+          "name": "CanonicalEnsemble.partitionFunction_add",
+          "kind": "lemma",
+          "line": 628,
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L628"
+        },
+        {
+          "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+          "name": "CanonicalEnsemble.helmholtzFreeEnergy_add",
+          "kind": "lemma",
+          "line": 705,
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L705"
+        }
+      ],
+      "conditions": [
+        "Use a finite grid Fin N_q x Fin (3*N_atoms), with positive natural N_q and N_atoms. Fin labels map to OMAI 1-based labels by i.val+1.",
+        "Each grid entry is an upstream positive-frequency harmonic oscillator with exact upstream hbar and kB; all entries share one positive absolute temperature.",
+        "Use uniform q weights 1/N_q and a positive Avogadro scale N_A in the chosen molar units. Do not divide by the branch count or atom count.",
+        "All modes must have strictly positive frequencies. An unmodified Gamma grid with zero acoustic modes does not satisfy the premises.",
+        "Hold the mode spectrum, weights and primitive-cell basis fixed; convert stored linear THz to angular frequency.",
+        "Construct the actual finite product of full Nat occupation spaces, with product counting measure, unweighted eigenvalue sum, dof=0 and phase-space unit=1. No occupation cutoff or equal-frequency assumption is used.",
+        "Apply N_A/N_q after evaluating the joint thermodynamic quantities, not inside the Hamiltonian."
+      ],
+      "conventions": {
+        "model_scope": "Finite heterogeneous independent-mode quantum harmonic product with all Nat occupations. The empty-index identity has one zero-energy microstate and partition one.",
+        "component_scope": "Explicit measure-preserving rectangular-to-flat occupation reindexing for N_q by 3*N_atoms modes.",
+        "normalization_basis": "N_A/N_q times the full mode sum, per mole of primitive cells, not per mole of atoms.",
+        "frequency_convention": "Symbolic omega is angular rad/s. Canonical linear THz requires omega=2*pi*10^12*nu_THz, not value identity.",
+        "unit_embedding": "Per-mode energy in J and entropy/heat capacity in J/K; molar outputs in J/mol or J/(mol K) of primitive cells. The explicit positive Avogadro parameter is interpreted as N_A in the chosen units.",
+        "held_fixed": "All frequencies, mode indices, q weights, primitive-cell basis and volume fixed in temperature derivatives.",
+        "admissibility": "T>0, omega>0, hbar>0, kB>0. Zero, imaginary and unstable modes are outside the physical model; totalized Lean expressions do not give them a physical interpretation.",
+        "reference_energy": "The spectrum includes hbar*omega/2; this constant contributes to F and U but not to S or C.",
+        "qpoint_weighting": "Uniform q weight 1/N_q, N_q>0; sum all 3*N_atoms branches."
+      },
+      "remaining_obligations": [
+        "Intermode coupling, nonuniform q weights, zero or imaginary frequencies, phonon-mode production, thermodynamic limits and numerical implementations remain outside this independent-mode model."
+      ],
+      "evidence": {
+        "kind": "compiled_bridge",
+        "module": "OMAIPhyslibHarmonicProduct",
+        "declarations": [
+          "OMAI.PhyslibBridge.harmonicProduct_partitionFunction",
+          "OMAI.PhyslibBridge.harmonicGridOccupation_measurePreserving",
+          "OMAI.PhyslibBridge.harmonicGridEnsemble_energy",
+          "OMAI.PhyslibBridge.harmonic_joint_molar_helmholtzFreeEnergy_eq_omai",
+          "OMAI.PhyslibBridge.harmonic_joint_molar_meanEnergy_eq_omai",
+          "OMAI.PhyslibBridge.harmonic_joint_molar_thermodynamicEntropy_eq_omai",
+          "OMAI.PhyslibBridge.harmonic_joint_molar_heatCapacity_eq_omai"
+        ],
+        "source_path": "lean/bridge/OMAIPhyslibHarmonicProduct.lean",
+        "source_sha256": "4c0af6605e43ceed3460a8c7fe9198f486bd48cf2ac6e538fa0c45ac1a644578",
+        "build_record": "lean/bridge/build-evidence.json",
+        "proved_targets": [
+          {
+            "kind": "operator",
+            "id": "contract_molar_free_energy"
+          },
+          {
+            "kind": "node",
+            "id": "MolarHelmholtzFreeEnergy"
+          },
+          {
+            "kind": "operator",
+            "id": "contract_molar_internal_energy"
+          },
+          {
+            "kind": "node",
+            "id": "MolarInternalEnergy"
+          },
+          {
+            "kind": "operator",
+            "id": "contract_molar_entropy"
+          },
+          {
+            "kind": "node",
+            "id": "MolarEntropy"
+          },
+          {
+            "kind": "operator",
+            "id": "contract_molar_heat_capacity"
+          },
+          {
+            "kind": "node",
+            "id": "MolarHeatCapacity"
+          }
+        ]
+      }
+    },
+    {
+      "id": "harmonic-joint-volumetric-heat-capacity",
+      "targets": [
+        {
+          "kind": "node",
+          "id": "VolumetricHeatCapacity",
+          "uid": "29e324b97f31cdb7d3cd8ef6aec5668fff111fd7ee96bd19dd0426b8728c1d47"
+        },
+        {
+          "kind": "operator",
+          "id": "contract_volumetric_heat_capacity",
+          "uid": "239c7dd3370e7b7e4456f1ade35c5d81edba69efda786d25e8e1e74f6fa297d9",
+          "formula_sha256": "e89d3db8b665f634538055816c2e1336259f88bcd007badcf318c802d2b3ff92"
+        }
+      ],
+      "relation": "conditional",
+      "statement": "The actual heterogeneous joint ensemble heat capacity divided by N_q*V_cell equals the same OMAI volumetric formula. This strengthens its model interpretation without adding another operator.",
+      "sources": [
+        {
+          "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
+          "name": "CanonicalEnsemble.heatCapacity",
+          "kind": "def",
+          "line": 417,
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L417"
+        },
+        {
+          "module": "Physlib.QuantumMechanics.HarmonicOscillator.OneDimension.TISE",
+          "name": "QuantumMechanics.OneDimension.HarmonicOscillator.eigenValue",
+          "kind": "def",
+          "line": 29,
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29"
+        }
+      ],
+      "conditions": [
+        "Use a finite grid Fin N_q x Fin (3*N_atoms), with positive natural N_q and N_atoms. Fin labels map to OMAI 1-based labels by i.val+1.",
+        "Each grid entry is an upstream positive-frequency harmonic oscillator with exact upstream hbar and kB; all entries share one positive absolute temperature.",
+        "All modes must have strictly positive frequencies. An unmodified Gamma grid with zero acoustic modes does not satisfy the premises.",
+        "Hold the mode spectrum, weights and primitive-cell basis fixed; convert stored linear THz to angular frequency.",
+        "V_cell is the positive primitive-cell volume in m^3, not a supercell volume; convert stored Angstrom^3 by the exact factor 10^-30.",
+        "Use sum(c)/(N_q*V_cell), with no Avogadro factor or branch-count divisor. The molar comparison uses the same positive N_A and primitive-cell basis.",
+        "Construct the actual finite product of full Nat occupation spaces, with product counting measure, unweighted eigenvalue sum, dof=0 and phase-space unit=1. No occupation cutoff or equal-frequency assumption is used.",
+        "Apply 1/(N_q*V_cell) to the evaluated joint heat capacity, not inside the Hamiltonian."
+      ],
+      "conventions": {
+        "model_scope": "Finite heterogeneous independent-mode quantum harmonic product with all Nat occupations. The empty-index identity has one zero-energy microstate and partition one.",
+        "component_scope": "N_q q points and exactly 3*N_atoms branches per primitive-cell basis.",
+        "normalization_basis": "Sum all 3*N_atoms branches; divide by N_q times primitive-cell volume, not by atom or branch count.",
+        "frequency_convention": "Symbolic omega is angular rad/s. Canonical linear THz requires omega=2*pi*10^12*nu_THz, not value identity.",
+        "unit_embedding": "Per-mode heat capacity J/K and V_cell in m^3 give J/(m^3 K); Angstrom^3 converts exactly by 10^-30. Molar comparison uses J/(mol K) per mole of primitive cells.",
+        "held_fixed": "Mode spectrum, q weights, and cell volume fixed when differentiating in T.",
+        "admissibility": "T>0, omega>0, hbar>0, kB>0. Zero, imaginary and unstable modes are outside the physical model; totalized Lean expressions do not give them a physical interpretation.",
+        "reference_energy": "Each spectrum includes zero-point energy; its temperature derivative contributes no additive heat-capacity term.",
+        "qpoint_weighting": "Uniform q weight 1/N_q, N_q>0; sum all 3*N_atoms branches."
+      },
+      "remaining_obligations": [
+        "Primitive-cell geometry and phonon frequencies remain interpreted inputs, not verified producers. Nonuniform q, zero/imaginary modes, thermodynamic limits and finite-precision implementations remain outside scope."
+      ],
+      "evidence": {
+        "kind": "compiled_bridge",
+        "module": "OMAIPhyslibJointDensity",
+        "declarations": [
+          "OMAI.PhyslibBridge.harmonic_joint_volumetric_heatCapacity_eq_omai"
+        ],
+        "source_path": "lean/bridge/OMAIPhyslibJointDensity.lean",
+        "source_sha256": "9f5f729c3db288f9d5b7e1b285b050c40df8caeabf72df09591d6203c6e7fde7",
+        "build_record": "lean/bridge/build-evidence.json",
+        "proved_targets": [
+          {
+            "kind": "operator",
+            "id": "contract_volumetric_heat_capacity"
+          },
+          {
+            "kind": "node",
+            "id": "VolumetricHeatCapacity"
+          }
+        ]
       }
     },
     {
@@ -271,51 +604,68 @@
         }
       ],
       "relation": "conditional",
-      "statement": "OMAI single-mode Entropy is a candidate interpretation of CanonicalEnsemble.thermodynamicEntropy once the oscillator model and its closed-form formulas have been proved.",
+      "statement": "The complete Nat-spectrum harmonic ensemble's CanonicalEnsemble.thermodynamicEntropy equals OMAI's single-mode Entropy formula at positive temperature and angular frequency.",
       "sources": [
         {
           "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
           "name": "CanonicalEnsemble.thermodynamicEntropy",
           "kind": "def",
           "line": 800,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L800"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L800"
         },
         {
           "module": "Physlib.QuantumMechanics.HarmonicOscillator.OneDimension.TISE",
           "name": "QuantumMechanics.OneDimension.HarmonicOscillator.eigenValue",
           "kind": "def",
           "line": 29,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29"
         },
         {
           "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
           "name": "CanonicalEnsemble.helmholtzFreeEnergy_eq_meanEnergy_sub_temp_mul_thermodynamicEntropy",
           "kind": "theorem",
           "line": 173,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L173"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L173"
         }
       ],
       "conditions": [
-        "Construct a canonical ensemble on Nat with counting measure and the stated harmonic spectrum.",
-        "Prove finite nonzero Boltzmann measure and integrability of energy for T>0.",
-        "Bind n_BE(x)=1/(exp(x)-1), with x=hbar*omega/(kB*T), and positive log argument."
+        "Use an upstream quantum harmonic oscillator with positive mass and angular frequency, exact upstream hbar and kB, and positive absolute temperature.",
+        "Use the constructed Nat counting-measure ensemble with dof=0 and phase-space unit=1; the partition sum, Boltzmann finiteness and energy integrability are proved.",
+        "Interpret Bose occupation as n_BE(x)=1/(exp(x)-1) with x=hbar*omega/(kB*T), and convert any stored linear THz to angular frequency."
       ],
       "conventions": {
         "model_scope": "Independent stable quantum harmonic mode at fixed volume, with countably infinite levels E_n=hbar*omega*(n+1/2).",
         "component_scope": "One fixed (q,nu) mode; no mixing of mode-indexed values and extensive ensemble values.",
-        "normalization_basis": "One oscillator; counting measure with dof=0 or explicitly equivalent phase-space normalization.",
+        "normalization_basis": "One oscillator; counting measure, dof=0, phase-space unit=1.",
         "frequency_convention": "Symbolic omega is angular rad/s. Canonical linear THz requires omega=2*pi*10^12*nu_THz, not value identity.",
-        "unit_embedding": "Energy in J, entropy/heat capacity in J/K, temperature in K; hbar and kB in consistent SI values.",
+        "unit_embedding": "Use the exact upstream hbar and kB in one consistent unit system: J, K and angular rad/s in SI; entropy and heat capacity are J/K.",
         "held_fixed": "Mode spectrum, q weights, and cell volume fixed when differentiating in T.",
-        "admissibility": "T>0, omega>0, hbar>0, kB>0; zero/imaginary/unstable modes excluded and not assigned totalized Lean values.",
-        "reference_energy": "Includes oscillator zero-point energy hbar*omega/2.",
+        "admissibility": "T>0, omega>0, hbar>0, kB>0. Zero, imaginary and unstable modes are outside the physical model; totalized Lean expressions do not give them a physical interpretation.",
+        "reference_energy": "The spectrum includes hbar*omega/2; this constant contributes to F and U but not to S or C.",
         "qpoint_weighting": "No q sum at the single-mode stage."
       },
       "remaining_obligations": [
-        "Derive the oscillator partition sum and identify the actual OMAI closed form with the named ensemble quantity; the spectrum theorem alone does not identify thermodynamics."
+        "The caller must justify this oscillator model and its frequency/unit interpretation for the material. No dynamical-matrix or phonon-producer theorem, zero-mode prescription or numerical implementation proof is supplied."
       ],
       "evidence": {
-        "kind": "source_correspondence"
+        "kind": "compiled_bridge",
+        "module": "OMAIPhyslibHarmonicEnsemble",
+        "declarations": [
+          "OMAI.PhyslibBridge.harmonic_thermodynamicEntropy_eq_omai"
+        ],
+        "source_path": "lean/bridge/OMAIPhyslibHarmonicEnsemble.lean",
+        "source_sha256": "1a1f7e60f5cf4a3e468d173109b0127d7685123e6e0130b69374df687b94e172",
+        "build_record": "lean/bridge/build-evidence.json",
+        "proved_targets": [
+          {
+            "kind": "operator",
+            "id": "compute_entropy"
+          },
+          {
+            "kind": "node",
+            "id": "Entropy"
+          }
+        ]
       }
     },
     {
@@ -334,51 +684,69 @@
         }
       ],
       "relation": "conditional",
-      "statement": "OMAI single-mode HelmholtzFreeEnergy is a candidate interpretation of CanonicalEnsemble.helmholtzFreeEnergy once the oscillator model and its closed-form formulas have been proved.",
+      "statement": "The complete Nat-spectrum harmonic ensemble's CanonicalEnsemble.helmholtzFreeEnergy equals OMAI's single-mode HelmholtzFreeEnergy formula at positive temperature and angular frequency.",
       "sources": [
         {
           "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
           "name": "CanonicalEnsemble.helmholtzFreeEnergy",
           "kind": "def",
           "line": 680,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L680"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L680"
         },
         {
           "module": "Physlib.QuantumMechanics.HarmonicOscillator.OneDimension.TISE",
           "name": "QuantumMechanics.OneDimension.HarmonicOscillator.eigenValue",
           "kind": "def",
           "line": 29,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29"
         },
         {
           "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
           "name": "CanonicalEnsemble.helmholtzFreeEnergy_eq_meanEnergy_sub_temp_mul_thermodynamicEntropy",
           "kind": "theorem",
           "line": 173,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L173"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L173"
         }
       ],
       "conditions": [
-        "Construct a canonical ensemble on Nat with counting measure and the stated harmonic spectrum.",
-        "Prove finite nonzero Boltzmann measure and integrability of energy for T>0.",
-        "Bind n_BE(x)=1/(exp(x)-1), with x=hbar*omega/(kB*T), and positive log argument."
+        "Use an upstream quantum harmonic oscillator with positive mass and angular frequency, exact upstream hbar and kB, and positive absolute temperature.",
+        "Use the constructed Nat counting-measure ensemble with dof=0 and phase-space unit=1; the partition sum, Boltzmann finiteness and energy integrability are proved.",
+        "Interpret Bose occupation as n_BE(x)=1/(exp(x)-1) with x=hbar*omega/(kB*T), and convert any stored linear THz to angular frequency."
       ],
       "conventions": {
         "model_scope": "Independent stable quantum harmonic mode at fixed volume, with countably infinite levels E_n=hbar*omega*(n+1/2).",
         "component_scope": "One fixed (q,nu) mode; no mixing of mode-indexed values and extensive ensemble values.",
-        "normalization_basis": "One oscillator; counting measure with dof=0 or explicitly equivalent phase-space normalization.",
+        "normalization_basis": "One oscillator; counting measure, dof=0, phase-space unit=1.",
         "frequency_convention": "Symbolic omega is angular rad/s. Canonical linear THz requires omega=2*pi*10^12*nu_THz, not value identity.",
-        "unit_embedding": "Energy in J, entropy/heat capacity in J/K, temperature in K; hbar and kB in consistent SI values.",
+        "unit_embedding": "Use the exact upstream hbar and kB in one consistent unit system: J, K and angular rad/s in SI; entropy and heat capacity are J/K.",
         "held_fixed": "Mode spectrum, q weights, and cell volume fixed when differentiating in T.",
-        "admissibility": "T>0, omega>0, hbar>0, kB>0; zero/imaginary/unstable modes excluded and not assigned totalized Lean values.",
-        "reference_energy": "Includes oscillator zero-point energy hbar*omega/2.",
+        "admissibility": "T>0, omega>0, hbar>0, kB>0. Zero, imaginary and unstable modes are outside the physical model; totalized Lean expressions do not give them a physical interpretation.",
+        "reference_energy": "The spectrum includes hbar*omega/2; this constant contributes to F and U but not to S or C.",
         "qpoint_weighting": "No q sum at the single-mode stage."
       },
       "remaining_obligations": [
-        "Derive the oscillator partition sum and identify the actual OMAI closed form with the named ensemble quantity; the spectrum theorem alone does not identify thermodynamics."
+        "The caller must justify this oscillator model and its frequency/unit interpretation for the material. No dynamical-matrix or phonon-producer theorem, zero-mode prescription or numerical implementation proof is supplied."
       ],
       "evidence": {
-        "kind": "source_correspondence"
+        "kind": "compiled_bridge",
+        "module": "OMAIPhyslibHarmonicEnsemble",
+        "declarations": [
+          "OMAI.PhyslibBridge.harmonic_helmholtzFreeEnergy_eq_omai",
+          "OMAI.PhyslibBridge.harmonicFreeEnergy_hasDerivAt"
+        ],
+        "source_path": "lean/bridge/OMAIPhyslibHarmonicEnsemble.lean",
+        "source_sha256": "1a1f7e60f5cf4a3e468d173109b0127d7685123e6e0130b69374df687b94e172",
+        "build_record": "lean/bridge/build-evidence.json",
+        "proved_targets": [
+          {
+            "kind": "operator",
+            "id": "compute_free_energy"
+          },
+          {
+            "kind": "node",
+            "id": "HelmholtzFreeEnergy"
+          }
+        ]
       }
     },
     {
@@ -397,46 +765,64 @@
         }
       ],
       "relation": "conditional",
-      "statement": "OMAI single-mode HeatCapacity is a candidate interpretation of CanonicalEnsemble.heatCapacity once the oscillator model and its closed-form formulas have been proved.",
+      "statement": "The complete Nat-spectrum harmonic ensemble's CanonicalEnsemble.heatCapacity equals OMAI's single-mode HeatCapacity formula at positive temperature and angular frequency.",
       "sources": [
         {
           "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
           "name": "CanonicalEnsemble.heatCapacity",
           "kind": "def",
           "line": 417,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L417"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L417"
         },
         {
           "module": "Physlib.QuantumMechanics.HarmonicOscillator.OneDimension.TISE",
           "name": "QuantumMechanics.OneDimension.HarmonicOscillator.eigenValue",
           "kind": "def",
           "line": 29,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29"
         }
       ],
       "conditions": [
-        "Construct a canonical ensemble on Nat with counting measure and the stated harmonic spectrum.",
-        "Prove finite nonzero Boltzmann measure and integrability of energy for T>0.",
-        "Bind n_BE(x)=1/(exp(x)-1), with x=hbar*omega/(kB*T), and positive log argument.",
-        "Prove differentiability/derivative interchange for the infinite-state model; finite-ensemble FDT cannot be applied to Nat."
+        "Use an upstream quantum harmonic oscillator with positive mass and angular frequency, exact upstream hbar and kB, and positive absolute temperature.",
+        "Use the constructed Nat counting-measure ensemble with dof=0 and phase-space unit=1; the partition sum, Boltzmann finiteness and energy integrability are proved.",
+        "Interpret Bose occupation as n_BE(x)=1/(exp(x)-1) with x=hbar*omega/(kB*T), and convert any stored linear THz to angular frequency.",
+        "Hold the spectrum fixed. The mean-energy equality on positive temperatures transfers its derivative to the upstream heat-capacity definition; no finite-state FDT or sum/derivative interchange is assumed."
       ],
       "conventions": {
         "model_scope": "Independent stable quantum harmonic mode at fixed volume, with countably infinite levels E_n=hbar*omega*(n+1/2).",
         "component_scope": "One fixed (q,nu) mode; no mixing of mode-indexed values and extensive ensemble values.",
-        "normalization_basis": "One oscillator; counting measure with dof=0 or explicitly equivalent phase-space normalization.",
+        "normalization_basis": "One oscillator; counting measure, dof=0, phase-space unit=1.",
         "frequency_convention": "Symbolic omega is angular rad/s. Canonical linear THz requires omega=2*pi*10^12*nu_THz, not value identity.",
-        "unit_embedding": "Energy in J, entropy/heat capacity in J/K, temperature in K; hbar and kB in consistent SI values.",
+        "unit_embedding": "Use the exact upstream hbar and kB in one consistent unit system: J, K and angular rad/s in SI; entropy and heat capacity are J/K.",
         "held_fixed": "Mode spectrum, q weights, and cell volume fixed when differentiating in T.",
-        "admissibility": "T>0, omega>0, hbar>0, kB>0; zero/imaginary/unstable modes excluded and not assigned totalized Lean values.",
-        "reference_energy": "Includes oscillator zero-point energy hbar*omega/2.",
+        "admissibility": "T>0, omega>0, hbar>0, kB>0. Zero, imaginary and unstable modes are outside the physical model; totalized Lean expressions do not give them a physical interpretation.",
+        "reference_energy": "The spectrum includes hbar*omega/2; this constant contributes to F and U but not to S or C.",
         "qpoint_weighting": "No q sum at the single-mode stage."
       },
       "remaining_obligations": [
-        "Derive the oscillator partition sum and identify the actual OMAI closed form with the named ensemble quantity; the spectrum theorem alone does not identify thermodynamics.",
-        "Prove c=dU/dT and equivalence of the sinh and exponential heat-capacity forms; no statistical-model heat-capacity proof is claimed."
+        "The caller must justify this oscillator model and its frequency/unit interpretation for the material. No dynamical-matrix or phonon-producer theorem, zero-mode prescription or numerical implementation proof is supplied."
       ],
       "evidence": {
-        "kind": "source_correspondence"
+        "kind": "compiled_bridge",
+        "module": "OMAIPhyslibHarmonicEnsemble",
+        "declarations": [
+          "OMAI.PhyslibBridge.harmonic_heatCapacity_eq_omai",
+          "OMAI.PhyslibBridge.harmonicInternalEnergy_hasDerivAt",
+          "OMAI.PhyslibBridge.harmonicHeatCapacity_eq_exp"
+        ],
+        "source_path": "lean/bridge/OMAIPhyslibHarmonicEnsemble.lean",
+        "source_sha256": "1a1f7e60f5cf4a3e468d173109b0127d7685123e6e0130b69374df687b94e172",
+        "build_record": "lean/bridge/build-evidence.json",
+        "proved_targets": [
+          {
+            "kind": "operator",
+            "id": "compute_heat_capacity"
+          },
+          {
+            "kind": "node",
+            "id": "HeatCapacity"
+          }
+        ]
       }
     },
     {
@@ -455,51 +841,143 @@
         }
       ],
       "relation": "conditional",
-      "statement": "OMAI single-mode InternalEnergy is a candidate interpretation of CanonicalEnsemble.meanEnergy once the oscillator model and its closed-form formulas have been proved.",
+      "statement": "The complete Nat-spectrum harmonic ensemble's CanonicalEnsemble.meanEnergy equals OMAI's single-mode InternalEnergy formula at positive temperature and angular frequency.",
       "sources": [
         {
           "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
           "name": "CanonicalEnsemble.meanEnergy",
           "kind": "def",
           "line": 519,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L519"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L519"
         },
         {
           "module": "Physlib.QuantumMechanics.HarmonicOscillator.OneDimension.TISE",
           "name": "QuantumMechanics.OneDimension.HarmonicOscillator.eigenValue",
           "kind": "def",
           "line": 29,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29"
         },
         {
           "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
           "name": "CanonicalEnsemble.helmholtzFreeEnergy_eq_meanEnergy_sub_temp_mul_thermodynamicEntropy",
           "kind": "theorem",
           "line": 173,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L173"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L173"
         }
       ],
       "conditions": [
-        "Construct a canonical ensemble on Nat with counting measure and the stated harmonic spectrum.",
-        "Prove finite nonzero Boltzmann measure and integrability of energy for T>0.",
-        "Bind n_BE(x)=1/(exp(x)-1), with x=hbar*omega/(kB*T), and positive log argument."
+        "Use an upstream quantum harmonic oscillator with positive mass and angular frequency, exact upstream hbar and kB, and positive absolute temperature.",
+        "Use the constructed Nat counting-measure ensemble with dof=0 and phase-space unit=1; the partition sum, Boltzmann finiteness and energy integrability are proved.",
+        "Interpret Bose occupation as n_BE(x)=1/(exp(x)-1) with x=hbar*omega/(kB*T), and convert any stored linear THz to angular frequency."
       ],
       "conventions": {
         "model_scope": "Independent stable quantum harmonic mode at fixed volume, with countably infinite levels E_n=hbar*omega*(n+1/2).",
         "component_scope": "One fixed (q,nu) mode; no mixing of mode-indexed values and extensive ensemble values.",
-        "normalization_basis": "One oscillator; counting measure with dof=0 or explicitly equivalent phase-space normalization.",
+        "normalization_basis": "One oscillator; counting measure, dof=0, phase-space unit=1.",
         "frequency_convention": "Symbolic omega is angular rad/s. Canonical linear THz requires omega=2*pi*10^12*nu_THz, not value identity.",
-        "unit_embedding": "Energy in J, entropy/heat capacity in J/K, temperature in K; hbar and kB in consistent SI values.",
+        "unit_embedding": "Use the exact upstream hbar and kB in one consistent unit system: J, K and angular rad/s in SI; entropy and heat capacity are J/K.",
         "held_fixed": "Mode spectrum, q weights, and cell volume fixed when differentiating in T.",
-        "admissibility": "T>0, omega>0, hbar>0, kB>0; zero/imaginary/unstable modes excluded and not assigned totalized Lean values.",
-        "reference_energy": "Includes oscillator zero-point energy hbar*omega/2.",
+        "admissibility": "T>0, omega>0, hbar>0, kB>0. Zero, imaginary and unstable modes are outside the physical model; totalized Lean expressions do not give them a physical interpretation.",
+        "reference_energy": "The spectrum includes hbar*omega/2; this constant contributes to F and U but not to S or C.",
         "qpoint_weighting": "No q sum at the single-mode stage."
       },
       "remaining_obligations": [
-        "Derive the oscillator partition sum and identify the actual OMAI closed form with the named ensemble quantity; the spectrum theorem alone does not identify thermodynamics."
+        "The caller must justify this oscillator model and its frequency/unit interpretation for the material. No dynamical-matrix or phonon-producer theorem, zero-mode prescription or numerical implementation proof is supplied."
       ],
       "evidence": {
-        "kind": "source_correspondence"
+        "kind": "compiled_bridge",
+        "module": "OMAIPhyslibHarmonicEnsemble",
+        "declarations": [
+          "OMAI.PhyslibBridge.harmonic_meanEnergy_eq_omai"
+        ],
+        "source_path": "lean/bridge/OMAIPhyslibHarmonicEnsemble.lean",
+        "source_sha256": "1a1f7e60f5cf4a3e468d173109b0127d7685123e6e0130b69374df687b94e172",
+        "build_record": "lean/bridge/build-evidence.json",
+        "proved_targets": [
+          {
+            "kind": "operator",
+            "id": "compute_internal_energy"
+          },
+          {
+            "kind": "node",
+            "id": "InternalEnergy"
+          }
+        ]
+      }
+    },
+    {
+      "id": "harmonic-molar-entropy",
+      "targets": [
+        {
+          "kind": "node",
+          "id": "MolarEntropy",
+          "uid": "0f08fcb37791dc7cc3e0e0ee5c611abbefc5075867719b275fcaa77ada4f1ac2"
+        },
+        {
+          "kind": "operator",
+          "id": "contract_molar_entropy",
+          "uid": "c9322877acc6349a7e18b29646674344b12d39565adf4ee3e23f2b82e1b53ab3",
+          "formula_sha256": "dd26ff6b4ba598e3847d7cb5bea43db12244846b2adeb279f4a3a9d3d0df168f"
+        }
+      ],
+      "relation": "conditional",
+      "statement": "The uniform-q contraction N_A/N_q of the proved single-mode Physlib thermodynamicEntropy quantities equals OMAI's molar Entropy formula for a finite positive-frequency grid.",
+      "sources": [
+        {
+          "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+          "name": "CanonicalEnsemble.thermodynamicEntropy",
+          "kind": "def",
+          "line": 800,
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L800"
+        },
+        {
+          "module": "Physlib.QuantumMechanics.HarmonicOscillator.OneDimension.TISE",
+          "name": "QuantumMechanics.OneDimension.HarmonicOscillator.eigenValue",
+          "kind": "def",
+          "line": 29,
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29"
+        }
+      ],
+      "conditions": [
+        "Use a finite grid Fin N_q x Fin (3*N_atoms), with positive natural N_q and N_atoms. Fin labels map to OMAI 1-based labels by i.val+1.",
+        "Each grid entry is an upstream positive-frequency harmonic oscillator with exact upstream hbar and kB; all entries share one positive absolute temperature.",
+        "Use uniform q weights 1/N_q and a positive Avogadro scale N_A in the chosen molar units. Do not divide by the branch count or atom count.",
+        "All modes must have strictly positive frequencies. An unmodified Gamma grid with zero acoustic modes does not satisfy the premises.",
+        "Hold the mode spectrum, weights and primitive-cell basis fixed; convert stored linear THz to angular frequency."
+      ],
+      "conventions": {
+        "model_scope": "Normalized sum of proved single-mode ensemble quantities; the separate harmonic-joint-molar-ensemble record establishes the joint-product interpretation.",
+        "component_scope": "N_q q points and exactly 3*N_atoms branches per primitive-cell basis.",
+        "normalization_basis": "N_A/N_q times the full mode sum, per mole of primitive cells, not per mole of atoms.",
+        "frequency_convention": "Symbolic omega is angular rad/s. Canonical linear THz requires omega=2*pi*10^12*nu_THz, not value identity.",
+        "unit_embedding": "Per-mode energy in J and entropy/heat capacity in J/K; molar outputs in J/mol or J/(mol K) of primitive cells. The explicit positive Avogadro parameter is interpreted as N_A in the chosen units.",
+        "held_fixed": "Mode spectrum, q weights, and cell volume fixed when differentiating in T.",
+        "admissibility": "T>0, omega>0, hbar>0, kB>0. Zero, imaginary and unstable modes are outside the physical model; totalized Lean expressions do not give them a physical interpretation.",
+        "reference_energy": "The spectrum includes hbar*omega/2; this constant contributes to F and U but not to S or C.",
+        "qpoint_weighting": "Uniform q weight 1/N_q, N_q>0; sum all 3*N_atoms branches."
+      },
+      "remaining_obligations": [
+        "This record retains the single-mode contraction proof. The separate harmonic-joint-molar-ensemble record supplies joint-product thermodynamics. Nonuniform q, zero or imaginary modes, phonon producers, thermodynamic limits and numerical implementations remain outside scope."
+      ],
+      "evidence": {
+        "kind": "compiled_bridge",
+        "module": "OMAIPhyslibHarmonicSums",
+        "declarations": [
+          "OMAI.PhyslibBridge.harmonic_molar_thermodynamicEntropy_eq_omai"
+        ],
+        "source_path": "lean/bridge/OMAIPhyslibHarmonicSums.lean",
+        "source_sha256": "5b3c3afbfc6a0fe5e9951091d66fc61b0802ebd6b5ca786927c67ecba2193e52",
+        "build_record": "lean/bridge/build-evidence.json",
+        "proved_targets": [
+          {
+            "kind": "operator",
+            "id": "contract_molar_entropy"
+          },
+          {
+            "kind": "node",
+            "id": "MolarEntropy"
+          }
+        ]
       }
     },
     {
@@ -518,40 +996,138 @@
         }
       ],
       "relation": "conditional",
-      "statement": "Physlib independent-ensemble additivity supplies a starting theorem for the OMAI finite mode sum; the OMAI molar scale and q-point normalization still need proof.",
+      "statement": "The uniform-q contraction N_A/N_q of the proved single-mode Physlib helmholtzFreeEnergy quantities equals OMAI's molar HelmholtzFreeEnergy formula for a finite positive-frequency grid.",
       "sources": [
         {
           "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
-          "name": "CanonicalEnsemble.helmholtzFreeEnergy_add",
-          "kind": "lemma",
-          "line": 705,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L705"
+          "name": "CanonicalEnsemble.helmholtzFreeEnergy",
+          "kind": "def",
+          "line": 680,
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L680"
+        },
+        {
+          "module": "Physlib.QuantumMechanics.HarmonicOscillator.OneDimension.TISE",
+          "name": "QuantumMechanics.OneDimension.HarmonicOscillator.eigenValue",
+          "kind": "def",
+          "line": 29,
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29"
         }
       ],
       "conditions": [
-        "Construct a canonical ensemble on Nat with counting measure and the stated harmonic spectrum.",
-        "Prove finite nonzero Boltzmann measure and integrability of energy for T>0.",
-        "Bind n_BE(x)=1/(exp(x)-1), with x=hbar*omega/(kB*T), and positive log argument.",
-        "Prove mode-wise semantic identification first.",
-        "For free-energy addition use equal phaseSpaceunit; for energy addition prove both energy-integrability conditions.",
-        "Use a finite mode product and N_q>0; retain molar cell basis and explicit N_A scale."
+        "Use a finite grid Fin N_q x Fin (3*N_atoms), with positive natural N_q and N_atoms. Fin labels map to OMAI 1-based labels by i.val+1.",
+        "Each grid entry is an upstream positive-frequency harmonic oscillator with exact upstream hbar and kB; all entries share one positive absolute temperature.",
+        "Use uniform q weights 1/N_q and a positive Avogadro scale N_A in the chosen molar units. Do not divide by the branch count or atom count.",
+        "All modes must have strictly positive frequencies. An unmodified Gamma grid with zero acoustic modes does not satisfy the premises.",
+        "Hold the mode spectrum, weights and primitive-cell basis fixed; convert stored linear THz to angular frequency."
       ],
       "conventions": {
-        "model_scope": "Independent stable quantum harmonic mode at fixed volume, with countably infinite levels E_n=hbar*omega*(n+1/2).",
-        "component_scope": "Finite collection of independent stable (q,nu) modes.",
-        "normalization_basis": "N_A/N_q times the mode sum: per mole of primitive cells, never per mole of atoms.",
+        "model_scope": "Normalized sum of proved single-mode ensemble quantities; the separate harmonic-joint-molar-ensemble record establishes the joint-product interpretation.",
+        "component_scope": "N_q q points and exactly 3*N_atoms branches per primitive-cell basis.",
+        "normalization_basis": "N_A/N_q times the full mode sum, per mole of primitive cells, not per mole of atoms.",
         "frequency_convention": "Symbolic omega is angular rad/s. Canonical linear THz requires omega=2*pi*10^12*nu_THz, not value identity.",
-        "unit_embedding": "Single-mode energy in J; after N_A/N_q normalization, molar energy in J/mol of primitive cells (and molar entropy/heat capacity in J/(mol K)). Temperature in K; hbar and kB use consistent SI values.",
+        "unit_embedding": "Per-mode energy in J and entropy/heat capacity in J/K; molar outputs in J/mol or J/(mol K) of primitive cells. The explicit positive Avogadro parameter is interpreted as N_A in the chosen units.",
         "held_fixed": "Mode spectrum, q weights, and cell volume fixed when differentiating in T.",
-        "admissibility": "T>0, omega>0, hbar>0, kB>0; zero/imaginary/unstable modes excluded and not assigned totalized Lean values.",
-        "reference_energy": "Includes oscillator zero-point energy hbar*omega/2.",
-        "qpoint_weighting": "Uniform q weight 1/N_q, N_q>0, summed over all branches."
+        "admissibility": "T>0, omega>0, hbar>0, kB>0. Zero, imaginary and unstable modes are outside the physical model; totalized Lean expressions do not give them a physical interpretation.",
+        "reference_energy": "The spectrum includes hbar*omega/2; this constant contributes to F and U but not to S or C.",
+        "qpoint_weighting": "Uniform q weight 1/N_q, N_q>0; sum all 3*N_atoms branches."
       },
       "remaining_obligations": [
-        "Prove finite-mode induction and N_A/N_q normalization bridge; upstream additivity alone is not the OMAI molar formula theorem."
+        "This record retains the single-mode contraction proof. The separate harmonic-joint-molar-ensemble record supplies joint-product thermodynamics. Nonuniform q, zero or imaginary modes, phonon producers, thermodynamic limits and numerical implementations remain outside scope."
       ],
       "evidence": {
-        "kind": "source_correspondence"
+        "kind": "compiled_bridge",
+        "module": "OMAIPhyslibHarmonicSums",
+        "declarations": [
+          "OMAI.PhyslibBridge.harmonic_molar_helmholtzFreeEnergy_eq_omai"
+        ],
+        "source_path": "lean/bridge/OMAIPhyslibHarmonicSums.lean",
+        "source_sha256": "5b3c3afbfc6a0fe5e9951091d66fc61b0802ebd6b5ca786927c67ecba2193e52",
+        "build_record": "lean/bridge/build-evidence.json",
+        "proved_targets": [
+          {
+            "kind": "operator",
+            "id": "contract_molar_free_energy"
+          },
+          {
+            "kind": "node",
+            "id": "MolarHelmholtzFreeEnergy"
+          }
+        ]
+      }
+    },
+    {
+      "id": "harmonic-molar-heat-capacity",
+      "targets": [
+        {
+          "kind": "node",
+          "id": "MolarHeatCapacity",
+          "uid": "4fa2d8e16bde42f794f150f5d149e5d645d63f7ddaac59cef79bd41771b13c17"
+        },
+        {
+          "kind": "operator",
+          "id": "contract_molar_heat_capacity",
+          "uid": "00bbc32d579215c8ada01de36f6d5db89d0cd23ccd1e392bc4bc085e9c96fc8e",
+          "formula_sha256": "d650d1a9d8bf0b675e7f416f15d6d29beda89179a7af59ab2afad6a1dd72e71c"
+        }
+      ],
+      "relation": "conditional",
+      "statement": "The uniform-q contraction N_A/N_q of the proved single-mode Physlib heatCapacity quantities equals OMAI's molar HeatCapacity formula for a finite positive-frequency grid.",
+      "sources": [
+        {
+          "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
+          "name": "CanonicalEnsemble.heatCapacity",
+          "kind": "def",
+          "line": 417,
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L417"
+        },
+        {
+          "module": "Physlib.QuantumMechanics.HarmonicOscillator.OneDimension.TISE",
+          "name": "QuantumMechanics.OneDimension.HarmonicOscillator.eigenValue",
+          "kind": "def",
+          "line": 29,
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29"
+        }
+      ],
+      "conditions": [
+        "Use a finite grid Fin N_q x Fin (3*N_atoms), with positive natural N_q and N_atoms. Fin labels map to OMAI 1-based labels by i.val+1.",
+        "Each grid entry is an upstream positive-frequency harmonic oscillator with exact upstream hbar and kB; all entries share one positive absolute temperature.",
+        "Use uniform q weights 1/N_q and a positive Avogadro scale N_A in the chosen molar units. Do not divide by the branch count or atom count.",
+        "All modes must have strictly positive frequencies. An unmodified Gamma grid with zero acoustic modes does not satisfy the premises.",
+        "Hold the mode spectrum, weights and primitive-cell basis fixed; convert stored linear THz to angular frequency."
+      ],
+      "conventions": {
+        "model_scope": "Normalized sum of proved single-mode ensemble quantities; the separate harmonic-joint-molar-ensemble record establishes the joint-product interpretation.",
+        "component_scope": "N_q q points and exactly 3*N_atoms branches per primitive-cell basis.",
+        "normalization_basis": "N_A/N_q times the full mode sum, per mole of primitive cells, not per mole of atoms.",
+        "frequency_convention": "Symbolic omega is angular rad/s. Canonical linear THz requires omega=2*pi*10^12*nu_THz, not value identity.",
+        "unit_embedding": "Per-mode energy in J and entropy/heat capacity in J/K; molar outputs in J/mol or J/(mol K) of primitive cells. The explicit positive Avogadro parameter is interpreted as N_A in the chosen units.",
+        "held_fixed": "Mode spectrum, q weights, and cell volume fixed when differentiating in T.",
+        "admissibility": "T>0, omega>0, hbar>0, kB>0. Zero, imaginary and unstable modes are outside the physical model; totalized Lean expressions do not give them a physical interpretation.",
+        "reference_energy": "The spectrum includes hbar*omega/2; this constant contributes to F and U but not to S or C.",
+        "qpoint_weighting": "Uniform q weight 1/N_q, N_q>0; sum all 3*N_atoms branches."
+      },
+      "remaining_obligations": [
+        "This record retains the single-mode contraction proof. The separate harmonic-joint-molar-ensemble record supplies joint-product thermodynamics. Nonuniform q, zero or imaginary modes, phonon producers, thermodynamic limits and numerical implementations remain outside scope."
+      ],
+      "evidence": {
+        "kind": "compiled_bridge",
+        "module": "OMAIPhyslibHarmonicSums",
+        "declarations": [
+          "OMAI.PhyslibBridge.harmonic_molar_heatCapacity_eq_omai"
+        ],
+        "source_path": "lean/bridge/OMAIPhyslibHarmonicSums.lean",
+        "source_sha256": "5b3c3afbfc6a0fe5e9951091d66fc61b0802ebd6b5ca786927c67ecba2193e52",
+        "build_record": "lean/bridge/build-evidence.json",
+        "proved_targets": [
+          {
+            "kind": "operator",
+            "id": "contract_molar_heat_capacity"
+          },
+          {
+            "kind": "node",
+            "id": "MolarHeatCapacity"
+          }
+        ]
       }
     },
     {
@@ -570,40 +1146,269 @@
         }
       ],
       "relation": "conditional",
-      "statement": "Physlib independent-ensemble additivity supplies a starting theorem for the OMAI finite mode sum; the OMAI molar scale and q-point normalization still need proof.",
+      "statement": "The uniform-q contraction N_A/N_q of the proved single-mode Physlib meanEnergy quantities equals OMAI's molar InternalEnergy formula for a finite positive-frequency grid.",
       "sources": [
         {
           "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
-          "name": "CanonicalEnsemble.meanEnergy_add",
-          "kind": "lemma",
-          "line": 529,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L529"
+          "name": "CanonicalEnsemble.meanEnergy",
+          "kind": "def",
+          "line": 519,
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L519"
+        },
+        {
+          "module": "Physlib.QuantumMechanics.HarmonicOscillator.OneDimension.TISE",
+          "name": "QuantumMechanics.OneDimension.HarmonicOscillator.eigenValue",
+          "kind": "def",
+          "line": 29,
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29"
         }
       ],
       "conditions": [
-        "Construct a canonical ensemble on Nat with counting measure and the stated harmonic spectrum.",
-        "Prove finite nonzero Boltzmann measure and integrability of energy for T>0.",
-        "Bind n_BE(x)=1/(exp(x)-1), with x=hbar*omega/(kB*T), and positive log argument.",
-        "Prove mode-wise semantic identification first.",
-        "For free-energy addition use equal phaseSpaceunit; for energy addition prove both energy-integrability conditions.",
-        "Use a finite mode product and N_q>0; retain molar cell basis and explicit N_A scale."
+        "Use a finite grid Fin N_q x Fin (3*N_atoms), with positive natural N_q and N_atoms. Fin labels map to OMAI 1-based labels by i.val+1.",
+        "Each grid entry is an upstream positive-frequency harmonic oscillator with exact upstream hbar and kB; all entries share one positive absolute temperature.",
+        "Use uniform q weights 1/N_q and a positive Avogadro scale N_A in the chosen molar units. Do not divide by the branch count or atom count.",
+        "All modes must have strictly positive frequencies. An unmodified Gamma grid with zero acoustic modes does not satisfy the premises.",
+        "Hold the mode spectrum, weights and primitive-cell basis fixed; convert stored linear THz to angular frequency."
       ],
       "conventions": {
-        "model_scope": "Independent stable quantum harmonic mode at fixed volume, with countably infinite levels E_n=hbar*omega*(n+1/2).",
-        "component_scope": "Finite collection of independent stable (q,nu) modes.",
-        "normalization_basis": "N_A/N_q times the mode sum: per mole of primitive cells, never per mole of atoms.",
+        "model_scope": "Normalized sum of proved single-mode ensemble quantities; the separate harmonic-joint-molar-ensemble record establishes the joint-product interpretation.",
+        "component_scope": "N_q q points and exactly 3*N_atoms branches per primitive-cell basis.",
+        "normalization_basis": "N_A/N_q times the full mode sum, per mole of primitive cells, not per mole of atoms.",
         "frequency_convention": "Symbolic omega is angular rad/s. Canonical linear THz requires omega=2*pi*10^12*nu_THz, not value identity.",
-        "unit_embedding": "Single-mode energy in J; after N_A/N_q normalization, molar energy in J/mol of primitive cells (and molar entropy/heat capacity in J/(mol K)). Temperature in K; hbar and kB use consistent SI values.",
+        "unit_embedding": "Per-mode energy in J and entropy/heat capacity in J/K; molar outputs in J/mol or J/(mol K) of primitive cells. The explicit positive Avogadro parameter is interpreted as N_A in the chosen units.",
         "held_fixed": "Mode spectrum, q weights, and cell volume fixed when differentiating in T.",
-        "admissibility": "T>0, omega>0, hbar>0, kB>0; zero/imaginary/unstable modes excluded and not assigned totalized Lean values.",
-        "reference_energy": "Includes oscillator zero-point energy hbar*omega/2.",
-        "qpoint_weighting": "Uniform q weight 1/N_q, N_q>0, summed over all branches."
+        "admissibility": "T>0, omega>0, hbar>0, kB>0. Zero, imaginary and unstable modes are outside the physical model; totalized Lean expressions do not give them a physical interpretation.",
+        "reference_energy": "The spectrum includes hbar*omega/2; this constant contributes to F and U but not to S or C.",
+        "qpoint_weighting": "Uniform q weight 1/N_q, N_q>0; sum all 3*N_atoms branches."
       },
       "remaining_obligations": [
-        "Prove finite-mode induction and N_A/N_q normalization bridge; upstream additivity alone is not the OMAI molar formula theorem."
+        "This record retains the single-mode contraction proof. The separate harmonic-joint-molar-ensemble record supplies joint-product thermodynamics. Nonuniform q, zero or imaginary modes, phonon producers, thermodynamic limits and numerical implementations remain outside scope."
       ],
       "evidence": {
-        "kind": "source_correspondence"
+        "kind": "compiled_bridge",
+        "module": "OMAIPhyslibHarmonicSums",
+        "declarations": [
+          "OMAI.PhyslibBridge.harmonic_molar_meanEnergy_eq_omai"
+        ],
+        "source_path": "lean/bridge/OMAIPhyslibHarmonicSums.lean",
+        "source_sha256": "5b3c3afbfc6a0fe5e9951091d66fc61b0802ebd6b5ca786927c67ecba2193e52",
+        "build_record": "lean/bridge/build-evidence.json",
+        "proved_targets": [
+          {
+            "kind": "operator",
+            "id": "contract_molar_internal_energy"
+          },
+          {
+            "kind": "node",
+            "id": "MolarInternalEnergy"
+          }
+        ]
+      }
+    },
+    {
+      "id": "harmonic-static-cp-identity",
+      "relation": "conditional",
+      "statement": "For the static-plus-harmonic Physlib ensemble, the temperature derivative of actual molar enthalpy along a local stable constant-pressure branch equals the OMAI Cp identity. Cv, volume, expansion and isothermal bulk modulus must belong to the same molar free-energy surface.",
+      "targets": [
+        {
+          "kind": "node",
+          "id": "BulkModulus",
+          "uid": "c0a13e64c02811f49b951271c894373267937676e0c657fc9ef09fac72558ced"
+        },
+        {
+          "kind": "node",
+          "id": "HeatCapacityConstantP",
+          "uid": "08057e4554a3420c933329b3821de9295e2b5950191e23cafe310b0a15adc7b6"
+        },
+        {
+          "kind": "node",
+          "id": "MolarHeatCapacity",
+          "uid": "4fa2d8e16bde42f794f150f5d149e5d645d63f7ddaac59cef79bd41771b13c17"
+        },
+        {
+          "kind": "node",
+          "id": "MolarVolume",
+          "uid": "e4ae49aad73336225c26fd3cf5d8dc2f4477b02b7d8bad22c9c74fd40a2482b2"
+        },
+        {
+          "kind": "node",
+          "id": "Temperature",
+          "uid": "63f9bd32d94d77e12afbb96f5b1b7a870de6b1f5805213b7f3c3ff227da301f0"
+        },
+        {
+          "kind": "node",
+          "id": "ThermalExpansion",
+          "uid": "9b42f8aebb6099cdcd910a272a92208881b598688bac7830c3ae0a412152473e"
+        },
+        {
+          "kind": "operator",
+          "id": "contract_heat_capacity_p_identity",
+          "uid": "79a11e58595c8b262c104330dcfc622f13a787da6bae856cf4f40b57a6a93639",
+          "formula_sha256": "97ed2e0d3a11efad01a3ab0017d21be3da3009446b0b9364673fad4b8fdcb0f1"
+        }
+      ],
+      "sources": [
+        {
+          "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+          "name": "CanonicalEnsemble.helmholtzFreeEnergy",
+          "kind": "def",
+          "line": 680,
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L680"
+        },
+        {
+          "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+          "name": "CanonicalEnsemble.meanEnergy",
+          "kind": "def",
+          "line": 519,
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L519"
+        },
+        {
+          "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+          "name": "CanonicalEnsemble.thermodynamicEntropy",
+          "kind": "def",
+          "line": 800,
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L800"
+        },
+        {
+          "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
+          "name": "CanonicalEnsemble.heatCapacity",
+          "kind": "def",
+          "line": 417,
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L417"
+        },
+        {
+          "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
+          "name": "CanonicalEnsemble.meanEnergyT",
+          "kind": "def",
+          "line": 409,
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L409"
+        }
+      ],
+      "conditions": [
+        "Use a finite heterogeneous family of full Nat harmonic occupation ensembles, product counting measure, unweighted oscillator energies, dof=0 and phase-space unit=1. Attach static energy N_q*E_0(v) through an actual singleton ensemble before molar normalization.",
+        "Temperature T and primitive-cell volume v are positive. Every frequency is positive and C2 on an open positive-volume domain. Static energy E_0(v) is C2, arbitrary signed, and independent of temperature.",
+        "Keep masses, composition, atom and q counts, reduced-q labels, uniform q weights and Avogadro scale fixed. Frequencies depend on volume but have no independent temperature dependence.",
+        "Use molar volume V_m=N_A*v. Let F_static_joint be the actual free energy after attaching the N_q*E_0(v) singleton, and F_harmonic_joint the unshifted harmonic free energy. Then F_mol=(N_A/N_q)*F_static_joint=N_A*E_0(v)+(N_A/N_q)*F_harmonic_joint. Evaluate all quantities at the same temperature and equilibrium volume, per mole of the same primitive cells, not per mole of atoms.",
+        "The supplied volume path is differentiable at the evaluation temperature and satisfies domain membership and F_V+p_ext=0 throughout a neighborhood, with constant external pressure. Require F_VV>0 at the evaluation point; the proved C2 regularity permits restriction to a stable neighborhood. A pointwise stationarity equation alone is insufficient.",
+        "Interpret expansion as V_m_prime/V_m and bulk modulus as the isothermal derivative V_m*F_VV. Cp is the derivative of actual molar internal energy plus p_ext*V_m along that path; Cv is the fixed-volume capacity of the same actual ensemble.",
+        "Embed model values coherently in SI: T in K, E_0 in J per primitive cell, molar F/U in J/mol of those cells, v in m^3, V_m in m^3/mol, alpha in 1/K, pressure and isothermal bulk modulus in Pa, and capacities in J/(mol K). Convert cell Angstrom^3 by 10^-30 to m^3, canonical pressure eV/Angstrom^3 by 1.602176634e11 to Pa, and serving GPa by 10^9 to Pa. Static energies served in eV require 1.602176634e-19 J/eV. These exact-real interpretations do not certify floating-point adapters."
+      ],
+      "conventions": {
+        "model_scope": "Local hydrostatic static-plus-independent-harmonic canonical model with volume-dependent positive frequencies. This is an OMAI model-specific extension of actual Physlib ensembles, not an existing upstream Cp theorem or a numerical QHA solver proof.",
+        "component_scope": "Finite uniform-q grid with all 3*N_atoms branches, fixed reduced-q labels, scalar volumetric expansion and isothermal bulk response.",
+        "normalization_basis": "Moles of primitive cells. The Hamiltonian static offset is N_q*E_0(v); N_A/N_q is applied to evaluated thermodynamic quantities, giving N_A*E_0(v) in molar F and U. There is no branch-count divisor.",
+        "frequency_convention": "Angular SI frequency with exact upstream hbar and kB. Stored linear THz requires omega_SI=2*pi*10^12*nu_THz; finite-precision conversion code is not certified.",
+        "unit_embedding": "F and U in J/mol, capacities J/(mol K), primitive-cell v in m^3 and molar V_m in m^3/mol; pressure and isothermal bulk modulus in Pa. Use a common numeric-unit embedding, not raw mixed serving values.",
+        "held_fixed": "Composition, masses, q labels/weights, Avogadro scale and the static-energy/frequency functions are fixed. Cv differentiates at fixed volume; Cp differentiates along the locally constant-pressure path.",
+        "admissibility": "T>0, v>0, omega>0, N_A>0, N_q>0 and local positive isothermal curvature. Totalized values outside the model domain have no asserted physical interpretation.",
+        "reference_energy": "All oscillator zero-point energies remain. The signed temperature-independent static energy enters the actual Hamiltonian and is not silently removed.",
+        "qpoint_weighting": "Uniform full-grid q averaging; varying primitive volume does not change reduced-q labels or introduce fractional oscillator copies."
+      },
+      "remaining_obligations": [
+        "Static-energy, phonon, geometry, thermal-expansion and bulk-modulus producers are interpreted inputs, not verified implementations. The theorem does not validate EOS fits, minimizers, finite-difference/polyfit derivatives or the sibling compute_heat_capacity_p producer.",
+        "The equilibrium branch and common-potential input interpretation remain explicit local hypotheses of the general theorem. The compiled nonzero-expansion and zero-response witnesses establish realizable model examples; they do not certify any particular material or numerical volume scan.",
+        "Zero or imaginary modes, independent temperature-dependent spectra, nonuniform q quadrature, intermode coupling, phase coexistence and mechanically unstable branches remain outside scope.",
+        "No claim is made about FC3 mode gammas or the opaque thermal-Gruneisen producer. A fitted thermodynamic quotient is not independent evidence for mode-weighted gamma agreement."
+      ],
+      "evidence": {
+        "kind": "compiled_bridge",
+        "module": "OMAIPhyslibHarmonicResponse",
+        "declarations": [
+          "OMAI.PhyslibBridge.Response.harmonic_static_heatCapacityP_eq_omai",
+          "OMAI.PhyslibBridge.Response.harmonic_static_heatCapacityP_ge_heatCapacityV"
+        ],
+        "source_path": "lean/bridge/OMAIPhyslibHarmonicResponse.lean",
+        "build_record": "lean/bridge/build-evidence.json",
+        "proved_targets": [
+          {
+            "kind": "operator",
+            "id": "contract_heat_capacity_p_identity"
+          },
+          {
+            "kind": "node",
+            "id": "HeatCapacityConstantP"
+          }
+        ],
+        "source_sha256": "1914f2a738ae2ffaa4b35cfce04dc3a880f2d67cbf89a4ff47c7f15ec8a5f9b0"
+      }
+    },
+    {
+      "id": "harmonic-volumetric-heat-capacity",
+      "targets": [
+        {
+          "kind": "node",
+          "id": "VolumetricHeatCapacity",
+          "uid": "29e324b97f31cdb7d3cd8ef6aec5668fff111fd7ee96bd19dd0426b8728c1d47"
+        },
+        {
+          "kind": "operator",
+          "id": "contract_volumetric_heat_capacity",
+          "uid": "239c7dd3370e7b7e4456f1ade35c5d81edba69efda786d25e8e1e74f6fa297d9",
+          "formula_sha256": "e89d3db8b665f634538055816c2e1336259f88bcd007badcf318c802d2b3ff92"
+        }
+      ],
+      "relation": "conditional",
+      "statement": "The sum of actual Physlib single-mode heat capacities divided by N_q*V_cell, with positive primitive-cell volume V_cell, equals the OMAI volumetric heat-capacity formula. The same grid satisfies C_vol=C_mol/(N_A*V_cell).",
+      "sources": [
+        {
+          "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
+          "name": "CanonicalEnsemble.heatCapacity",
+          "kind": "def",
+          "line": 417,
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L417"
+        },
+        {
+          "module": "Physlib.QuantumMechanics.HarmonicOscillator.OneDimension.TISE",
+          "name": "QuantumMechanics.OneDimension.HarmonicOscillator.eigenValue",
+          "kind": "def",
+          "line": 29,
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29"
+        }
+      ],
+      "conditions": [
+        "Use a finite grid Fin N_q x Fin (3*N_atoms), with positive natural N_q and N_atoms. Fin labels map to OMAI 1-based labels by i.val+1.",
+        "Each grid entry is an upstream positive-frequency harmonic oscillator with exact upstream hbar and kB; all entries share one positive absolute temperature.",
+        "All modes must have strictly positive frequencies. An unmodified Gamma grid with zero acoustic modes does not satisfy the premises.",
+        "Hold the mode spectrum, weights and primitive-cell basis fixed; convert stored linear THz to angular frequency.",
+        "V_cell is the positive primitive-cell volume in m^3, not a supercell volume; convert stored Angstrom^3 by the exact factor 10^-30.",
+        "Use sum(c)/(N_q*V_cell), with no Avogadro factor or branch-count divisor. The molar comparison uses the same positive N_A and primitive-cell basis."
+      ],
+      "conventions": {
+        "model_scope": "Finite uniform-q contraction of actual derivative-defined Physlib single-mode heat capacities.",
+        "component_scope": "N_q q points and exactly 3*N_atoms branches per primitive-cell basis.",
+        "normalization_basis": "Sum all 3*N_atoms branches; divide by N_q times primitive-cell volume, not by atom or branch count.",
+        "frequency_convention": "Symbolic omega is angular rad/s. Canonical linear THz requires omega=2*pi*10^12*nu_THz, not value identity.",
+        "unit_embedding": "Per-mode heat capacity J/K and V_cell in m^3 give J/(m^3 K); Angstrom^3 converts exactly by 10^-30. Molar comparison uses J/(mol K) per mole of primitive cells.",
+        "held_fixed": "Mode spectrum, q weights, and cell volume fixed when differentiating in T.",
+        "admissibility": "T>0, omega>0, hbar>0, kB>0. Zero, imaginary and unstable modes are outside the physical model; totalized Lean expressions do not give them a physical interpretation.",
+        "reference_energy": "Each spectrum includes zero-point energy; its temperature derivative contributes no additive heat-capacity term.",
+        "qpoint_weighting": "Uniform q weight 1/N_q, N_q>0; sum all 3*N_atoms branches."
+      },
+      "remaining_obligations": [
+        "Primitive-cell geometry and phonon frequencies remain interpreted inputs, not verified producers. Nonuniform q, zero/imaginary modes, thermodynamic limits and finite-precision implementations remain outside scope."
+      ],
+      "evidence": {
+        "kind": "compiled_bridge",
+        "module": "OMAIPhyslibHarmonicDensity",
+        "declarations": [
+          "OMAI.PhyslibBridge.harmonic_volumetric_heatCapacity_eq_omai",
+          "OMAI.PhyslibBridge.harmonicVolumetricHeatCapacity_eq_molar_div",
+          "OMAI.PhyslibBridge.uniformVolumetricContraction_ofAngstromCubed",
+          "OMAI.PhyslibBridge.harmonicHeatCapacity_angularSI_eq_linearTHz"
+        ],
+        "source_path": "lean/bridge/OMAIPhyslibHarmonicDensity.lean",
+        "source_sha256": "cf4d59af5b660a1fc73b079d63451f269081e1bd9a3018047e1f6f41517013ea",
+        "build_record": "lean/bridge/build-evidence.json",
+        "proved_targets": [
+          {
+            "kind": "operator",
+            "id": "contract_volumetric_heat_capacity"
+          },
+          {
+            "kind": "node",
+            "id": "VolumetricHeatCapacity"
+          }
+        ]
       }
     },
     {
@@ -623,7 +1428,7 @@
           "name": "NVEHamiltonian.pressure",
           "kind": "def",
           "line": 219,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/StatisticalMechanics/MicroCanonicalEnsemble/ThermoQuantities.lean#L219"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/StatisticalMechanics/MicroCanonicalEnsemble/ThermoQuantities.lean#L219"
         }
       ],
       "conditions": [
@@ -670,28 +1475,28 @@
           "name": "CondensedMatter.ThermoelectricMaterial.figureOfMerit",
           "kind": "def",
           "line": 158,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L158"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L158"
         },
         {
           "module": "Physlib.CondensedMatter.Thermoelectric.Basic",
           "name": "CondensedMatter.ThermoelectricMaterial.figureOfMerit_eq",
           "kind": "lemma",
           "line": 169,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L169"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L169"
         },
         {
           "module": "Physlib.CondensedMatter.Thermoelectric.Basic",
           "name": "CondensedMatter.ThermoelectricMaterial.figureOfMerit_pos",
           "kind": "lemma",
           "line": 182,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L182"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L182"
         },
         {
           "module": "Physlib.CondensedMatter.Thermoelectric.Basic",
           "name": "CondensedMatter.ThermoelectricMaterial.figureOfMerit_le_of_le",
           "kind": "lemma",
           "line": 200,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L200"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L200"
         }
       ],
       "conditions": [
@@ -754,7 +1559,7 @@
           "name": "CondensedMatter.ThermoelectricMaterial",
           "kind": "structure",
           "line": 102,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L102"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L102"
         }
       ],
       "conditions": [
@@ -802,14 +1607,14 @@
           "name": "CondensedMatter.ThermoelectricMaterial.powerFactor",
           "kind": "def",
           "line": 125,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L125"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L125"
         },
         {
           "module": "Physlib.CondensedMatter.Thermoelectric.Basic",
           "name": "CondensedMatter.ThermoelectricMaterial.powerFactor_pos",
           "kind": "lemma",
           "line": 128,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L128"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L128"
         }
       ],
       "conditions": [
@@ -870,14 +1675,14 @@
           "name": "CondensedMatter.ThermoelectricMaterial.totalThermalConductivity",
           "kind": "def",
           "line": 143,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L143"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L143"
         },
         {
           "module": "Physlib.CondensedMatter.Thermoelectric.Basic",
           "name": "CondensedMatter.ThermoelectricMaterial.totalThermalConductivity_pos",
           "kind": "lemma",
           "line": 146,
-          "source_url": "https://github.com/leanprover-community/physlib/blob/8ddcc004043c5b537e4225fa763121c176b62a4a/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L146"
+          "source_url": "https://github.com/leanprover-community/physlib/blob/d70acc20677320d37b38e602e331e900466b704d/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L146"
         }
       ],
       "conditions": [
@@ -961,7 +1766,7 @@
         "uid": "e62e58716111fdc1dff24d18e75c70904cbb07ce6e0025e24fcdac8c4ed0a53d",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "BondDissociationEnergy",
@@ -975,14 +1780,16 @@
         "uid": "438f0314dee5f9e98d88e4a7ba4425ef0edd207605338b318340da27bf28b2a4",
         "binding_ids": [],
         "status": "gap",
-        "reason": "Physlib scalar thermoelectric coefficients do not prove OMAI ab-initio BTE/scattering/electronic-DOS producers. No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "Physlib scalar thermoelectric coefficients do not prove OMAI ab-initio BTE/scattering/electronic-DOS producers. No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "BulkModulus",
         "uid": "c0a13e64c02811f49b951271c894373267937676e0c657fc9ef09fac72558ced",
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No current Physlib solid-elasticity/Voigt/EOS formula identification found; continuum stress and thermodynamic pressure are related concepts with sign/model prerequisites. No current Physlib volume-dependent phonon/QHA potential or response-identity formula theorem identified. No current Physlib matching molar-volume, Gruneisen, or Cp-Cv response derivation identified; thermoelectric mappings are separately classified."
+        "binding_ids": [
+          "harmonic-static-cp-identity"
+        ],
+        "status": "mapped",
+        "reason": "See the conditions and evidence for each mapping."
       },
       {
         "id": "CalphadMolarEntropy",
@@ -1052,14 +1859,14 @@
         "uid": "b6a79d756cf45fc64a3a07feb9e46c7372f398b3ee54806bf1c9903d8a42039f",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "CumulativeKappa[wrt=omega]",
         "uid": "55eaa32f15db94d55448456fb26f1c3ecaafcc9a3da2947f1615258c492542ef",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "CureConversion",
@@ -1080,7 +1887,7 @@
         "uid": "a84077d8f12cf490f370b5cd0b98a47e3e31b7ec75fc8763699763f8b2313db4",
         "binding_ids": [],
         "status": "gap",
-        "reason": "Physlib scalar thermoelectric coefficients do not prove OMAI ab-initio BTE/scattering/electronic-DOS producers. No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "Physlib scalar thermoelectric coefficients do not prove OMAI ab-initio BTE/scattering/electronic-DOS producers. No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "Diffusivity",
@@ -1101,21 +1908,21 @@
         "uid": "a883ea19a62fcb80dc79d8c347fc583bef6a56d8764aef89455da764b4732031",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "Eigenvectors",
         "uid": "21ba7756f45c808d3d91ed059c34c532f04845781d549b4c16573d9462bb2902",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "ElasticConstants",
         "uid": "01043ab212fd87e4ba9493caf709ab9a7ccc86ec7a0047a0512af12eca1c391e",
         "binding_ids": [],
         "status": "gap",
-        "reason": "Physlib scalar thermoelectric coefficients do not prove OMAI ab-initio BTE/scattering/electronic-DOS producers. No current Physlib solid-elasticity/Voigt/EOS formula identification found; continuum stress and thermodynamic pressure are related concepts with sign/model prerequisites."
+        "reason": "Physlib scalar thermoelectric coefficients do not prove OMAI ab-initio BTE/scattering/electronic-DOS producers. No current Physlib solid-elasticity/Voigt/EOS formula identification found. The bridge proves the signed inviscid stress/pressure contraction under its sign and unit conditions; identification with thermodynamic free-energy pressure remains unproved."
       },
       {
         "id": "ElectricalConductivity[carrier=electronic]",
@@ -1184,14 +1991,14 @@
         "uid": "78d005a949ff56a526a1911f0b24e766daecad0a7f5ce9c1cc15222f2ed73551",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No current Physlib Kohn-Sham, DFT, atomistic derivative, or ground-state producer formula identification found in the audited source. No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No current Physlib Kohn-Sham, DFT, atomistic derivative, or ground-state producer formula identification found in the audited source. No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "ForceConstants[order=3]",
         "uid": "73372380af126dde147e403f69339b87ee2f938a896dd5b56e9100c055dc8f93",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "Forces",
@@ -1237,14 +2044,14 @@
         "uid": "d1934e166dbd0c91125936f9b2ccc0100af0ba44ed439003aae76b47b6d26fc6",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "Gruneisen",
         "uid": "a62ac1eae1e972a0b265a14f8a2af5610deb61eb0c883b7668ac4a64313b3b75",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No current Physlib volume-dependent phonon/QHA potential or response-identity formula theorem identified. No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "The local static-plus-harmonic Cp bridge does not verify numerical QHA volume scans, EOS fitting, minimization, or expansion, bulk-modulus and heat-capacity producers. Independent thermal-Gruneisen producer agreement remains unproved. No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "HOMOLUMOGap",
@@ -1265,30 +2072,32 @@
       {
         "id": "HeatCapacityConstantP",
         "uid": "08057e4554a3420c933329b3821de9295e2b5950191e23cafe310b0a15adc7b6",
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No current Physlib volume-dependent phonon/QHA potential or response-identity formula theorem identified. No current Physlib matching molar-volume, Gruneisen, or Cp-Cv response derivation identified; thermoelectric mappings are separately classified."
+        "binding_ids": [
+          "harmonic-static-cp-identity"
+        ],
+        "status": "mapped",
+        "reason": "See the conditions and evidence for each mapping."
       },
       {
         "id": "HeatCapacity[method=pimd]",
         "uid": "3064108b9fe3839c9ca154ba7887f73cd550c02944ddf61dc26fcbdf07cf6fe0",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "HeatCurrent",
         "uid": "aab7019fbc014398b74ece01428527aa95e89da6f6d51efc0323b0acf59248c6",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No matching current Physlib Nan/Hasselman-Johnson/depolarization/interfacial NEMD formula model identified. No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No matching current Physlib Nan/Hasselman-Johnson/depolarization/interfacial NEMD formula model identified. No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "HeatCurrentACF",
         "uid": "d8f44a4cce5e3dfea1ec9329189d49ac70e33d69cab222e2679f7791a30613ac",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "HelmholtzFreeEnergy",
@@ -1327,35 +2136,35 @@
         "uid": "f8e4253dc1f218daff8e76af5b433dc230bf952f910ba163f87c6fa331aa033d",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "Linewidth[channel=anharmonic_3ph]",
         "uid": "f52d161ad0be284c121c6fd10fe403c922aaa59646746c12719622004da5fa3a",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "Linewidth[channel=boundary]",
         "uid": "81288248a2b40f0abfe78b058ffa4025a0312324e8af26b801017b9a0971961e",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "Linewidth[channel=isotope]",
         "uid": "6cbd3322c5b6eb0105f9ca22d9ddc88334206ec9c115a31e6fb87409cc374c45",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "Linewidth[channel=total]",
         "uid": "50c33a1edd60bff6fb74124af1a8847a4c8a2c58d39554b4661e6a2cddb62f30",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "MagneticMoment",
@@ -1369,28 +2178,28 @@
         "uid": "24749d8ecb8f22bd0931e83ebdc540a6cb0753bd4f3a611f142b31050353d42d",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No current Physlib solid-elasticity/Voigt/EOS formula identification found; continuum stress and thermodynamic pressure are related concepts with sign/model prerequisites."
+        "reason": "No current Physlib solid-elasticity/Voigt/EOS formula identification found. The bridge proves the signed inviscid stress/pressure contraction under its sign and unit conditions; identification with thermodynamic free-energy pressure remains unproved."
       },
       {
         "id": "MeanFreeDisplacement[bte_solver=direct_inverse]",
         "uid": "b24a26725f5641ffb16720514a7fdb23bf03304ce0d51c9f39501d1c8c009b6c",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "MeanFreeDisplacement[bte_solver=rta]",
         "uid": "ad1373f31b9dbb8bd24ea16e1f90f1d92a39d309f2dc22583fad4fd82eca6f59",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "MeanSquaredDisplacement",
         "uid": "28ebe96bc049a92e4318fd5242778f30e5647531d0a2b39c5891546329c8bca0",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No matching current Physlib Einstein-MSD, Arrhenius, Nernst-Einstein, or cluster-expansion formula theorem identified. No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No matching current Physlib Einstein-MSD, Arrhenius, Nernst-Einstein, or cluster-expansion formula theorem identified. No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "MigrationBarrier",
@@ -1404,7 +2213,7 @@
         "uid": "6052fe7e6aa8d2116b369886bffe59b04859f21145640184d24dfd96fbb60513",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "MolarEnthalpy",
@@ -1416,9 +2225,12 @@
       {
         "id": "MolarEntropy",
         "uid": "0f08fcb37791dc7cc3e0e0ee5c611abbefc5075867719b275fcaa77ada4f1ac2",
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "binding_ids": [
+          "harmonic-joint-molar-ensemble",
+          "harmonic-molar-entropy"
+        ],
+        "status": "mapped",
+        "reason": "See the conditions and evidence for each mapping."
       },
       {
         "id": "MolarGibbsEnergy",
@@ -1430,14 +2242,19 @@
       {
         "id": "MolarHeatCapacity",
         "uid": "4fa2d8e16bde42f794f150f5d149e5d645d63f7ddaac59cef79bd41771b13c17",
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations. No current Physlib matching molar-volume, Gruneisen, or Cp-Cv response derivation identified; thermoelectric mappings are separately classified."
+        "binding_ids": [
+          "harmonic-joint-molar-ensemble",
+          "harmonic-molar-heat-capacity",
+          "harmonic-static-cp-identity"
+        ],
+        "status": "mapped",
+        "reason": "See the conditions and evidence for each mapping."
       },
       {
         "id": "MolarHelmholtzFreeEnergy",
         "uid": "419335bd5f3a1949576e608e4147d8f18bef980a69a9c6b99199f812c806b7be",
         "binding_ids": [
+          "harmonic-joint-molar-ensemble",
           "harmonic-molar-free-energy"
         ],
         "status": "mapped",
@@ -1447,6 +2264,7 @@
         "id": "MolarInternalEnergy",
         "uid": "220926f4974baec5c511f5acae2c9c4e09a8276d41c1314391b91dec537ef2fb",
         "binding_ids": [
+          "harmonic-joint-molar-ensemble",
           "harmonic-molar-internal-energy"
         ],
         "status": "mapped",
@@ -1455,9 +2273,11 @@
       {
         "id": "MolarVolume",
         "uid": "e4ae49aad73336225c26fd3cf5d8dc2f4477b02b7d8bad22c9c74fd40a2482b2",
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No current Physlib matching molar-volume, Gruneisen, or Cp-Cv response derivation identified; thermoelectric mappings are separately classified."
+        "binding_ids": [
+          "harmonic-static-cp-identity"
+        ],
+        "status": "mapped",
+        "reason": "See the conditions and evidence for each mapping."
       },
       {
         "id": "MolecularFrequency",
@@ -1473,7 +2293,7 @@
         "uid": "09138ae29cee41ae5f1a1758ac65a479625ef4d3c6026bf7ad5b60f884d668a0",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "PhaseFraction",
@@ -1487,28 +2307,28 @@
         "uid": "ec483cecbdbfec9e13ce3b2033b03e4581edf7bc0ff935d09ab9c24a7e481080",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "PhononDOS",
         "uid": "e14b6cdd007ca3af971aa52880811138606efdb47e30d5a26c2335903ce796f3",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "PhononTransmission",
         "uid": "1e8b145f7ea4fc232aac842c985a46fee4a6d2b2a04118a38d67dce470ed1b50",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "PoissonRatio",
         "uid": "e95ba3f5810f8554656c148dae26520cf3258cace0b951dd75e69ee8c552c132",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No current Physlib solid-elasticity/Voigt/EOS formula identification found; continuum stress and thermodynamic pressure are related concepts with sign/model prerequisites."
+        "reason": "No current Physlib solid-elasticity/Voigt/EOS formula identification found. The bridge proves the signed inviscid stress/pressure contraction under its sign and unit conditions; identification with thermodynamic free-energy pressure remains unproved."
       },
       {
         "id": "Potential",
@@ -1524,7 +2344,7 @@
         "uid": "7a4fd6ca35f412c375006146204be07210a037901b0e4fb33e1805f243c74b6a",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "PowerFactor",
@@ -1539,6 +2359,7 @@
         "id": "Pressure",
         "uid": "4ca6efdb874d146a6cca564c7a8a0504ee8868ae5890d4c33abddc147423d6f1",
         "binding_ids": [
+          "continuum-stress-sign",
           "thermodynamic-pressure"
         ],
         "status": "mapped",
@@ -1556,14 +2377,14 @@
         "uid": "bb10912780eb22d45beff551be14f7f4216f3aae26161e8bfd60cdc051f63f58",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No current Physlib volume-dependent phonon/QHA potential or response-identity formula theorem identified."
+        "reason": "The local static-plus-harmonic Cp bridge does not verify numerical QHA volume scans, EOS fitting, minimization, or expansion, bulk-modulus and heat-capacity producers. Independent thermal-Gruneisen producer agreement remains unproved."
       },
       {
         "id": "QuantumKineticEnergy",
         "uid": "a9a8eae4014c21afe87f7332c4aa842b0fd9002a7ed33e0bdb1ec339402fc9c9",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "ReactionBarrier[construction=neb_mep]",
@@ -1614,7 +2435,7 @@
         "uid": "1ab85488c90143e38b94e27f93ab96571f381e7b09d507fa7a38216ffd34c5ec",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No current Physlib solid-elasticity/Voigt/EOS formula identification found; continuum stress and thermodynamic pressure are related concepts with sign/model prerequisites."
+        "reason": "No current Physlib solid-elasticity/Voigt/EOS formula identification found. The bridge proves the signed inviscid stress/pressure contraction under its sign and unit conditions; identification with thermodynamic free-energy pressure remains unproved."
       },
       {
         "id": "StateCoefficientOfVariation",
@@ -1659,7 +2480,8 @@
         "id": "Temperature",
         "uid": "63f9bd32d94d77e12afbb96f5b1b7a870de6b1f5805213b7f3c3ff227da301f0",
         "binding_ids": [
-          "absolute-temperature"
+          "absolute-temperature",
+          "harmonic-static-cp-identity"
         ],
         "status": "mapped",
         "reason": "See the conditions and evidence for each mapping."
@@ -1669,14 +2491,14 @@
         "uid": "50084cef8405999bb14c2ff71b98f70f982d71254e3ec35bed543a10bbbbf542",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "ThermalConductivity",
         "uid": "a03324d4def54619f16ee80ccf176b95a59808141651debabbf1611b7e3a12d5",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No matching current Physlib Nan/Hasselman-Johnson/depolarization/interfacial NEMD formula model identified. No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No matching current Physlib Nan/Hasselman-Johnson/depolarization/interfacial NEMD formula model identified. No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "ThermalConductivity[bte_solver=direct_inverse]",
@@ -1692,7 +2514,7 @@
         "uid": "d79d88d53266c147ea8d806cdbd30df309199469351ee13bcc9040a98745ebc4",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "ThermalConductivity[contribution=total]",
@@ -1736,77 +2558,79 @@
         "uid": "25dc9f7af8aec52efb6be16b7b7c76f8334b03056f8838c3ff432fdad8482fb6",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "ThermalConductivity[transport_model=hnemd]",
         "uid": "e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "ThermalConductivity[transport_model=nemd]",
         "uid": "d3e529fd2e7fa0a009440c21bd64949d6326c04eaa109fbed4cafac798608118",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "ThermalConductivity[transport_model=qhgk]",
         "uid": "8932e3cbadef74a82802b43fd1d25328cb40e6136c90df3b6a4a998e77f9567b",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "ThermalConductivity[transport_model=wigner]",
         "uid": "35e6000d8a0f2e4572e667befbd4cd5a8c6005fa8f6ef08791b6879c77baba64",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "ThermalConductivity[transport_model=wigner_coherences]",
         "uid": "7f8d407ef3f36290c7f8e385cddb4a06a3c1bf34563f1df35ded2bb532e69fa4",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "ThermalConductivity[transport_model=wigner_populations]",
         "uid": "3f837e061bf37d1ad104455abad3b9bd3d8bb16048a656977c2488fd3c4bd521",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "ThermalExpansion",
         "uid": "9b42f8aebb6099cdcd910a272a92208881b598688bac7830c3ae0a412152473e",
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No current Physlib volume-dependent phonon/QHA potential or response-identity formula theorem identified. No current Physlib matching molar-volume, Gruneisen, or Cp-Cv response derivation identified; thermoelectric mappings are separately classified."
+        "binding_ids": [
+          "harmonic-static-cp-identity"
+        ],
+        "status": "mapped",
+        "reason": "See the conditions and evidence for each mapping."
       },
       {
         "id": "ThermalGruneisen",
         "uid": "22b1bd519d50d93fd24a919e021bab85aff246464a66a08f8274558834983985",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No current Physlib volume-dependent phonon/QHA potential or response-identity formula theorem identified. No current Physlib matching molar-volume, Gruneisen, or Cp-Cv response derivation identified; thermoelectric mappings are separately classified."
+        "reason": "The local static-plus-harmonic Cp bridge does not verify numerical QHA volume scans, EOS fitting, minimization, or expansion, bulk-modulus and heat-capacity producers. Independent thermal-Gruneisen producer agreement remains unproved. No reviewed Physlib model bridge is established here for the molar-volume producer or an independently defined thermal Gruneisen relation; Cp and thermoelectric mappings are separately classified."
       },
       {
         "id": "TotalEnergy",
         "uid": "cf5a36298543de2027b173b757d38d80b38b66a85d2d3a56f55097e3da0e9a5e",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No current Physlib Kohn-Sham, DFT, atomistic derivative, or ground-state producer formula identification found in the audited source. No current Physlib solid-elasticity/Voigt/EOS formula identification found; continuum stress and thermodynamic pressure are related concepts with sign/model prerequisites. No current Physlib molecular Hessian, electronic gap, NEB, or bond-dissociation formula identification; harmonic oscillator analogies remain conceptual. No current Physlib volume-dependent phonon/QHA potential or response-identity formula theorem identified. No current Physlib matching reference-state, convex-hull, surface, adsorption, reaction, or grain-boundary formula model identified."
+        "reason": "No current Physlib Kohn-Sham, DFT, atomistic derivative, or ground-state producer formula identification found in the audited source. No current Physlib solid-elasticity/Voigt/EOS formula identification found. The bridge proves the signed inviscid stress/pressure contraction under its sign and unit conditions; identification with thermodynamic free-energy pressure remains unproved. No current Physlib molecular Hessian, electronic gap, NEB, or bond-dissociation formula identification; harmonic oscillator analogies remain conceptual. The local static-plus-harmonic Cp bridge does not verify numerical QHA volume scans, EOS fitting, minimization, or expansion, bulk-modulus and heat-capacity producers. Independent thermal-Gruneisen producer agreement remains unproved. No current Physlib matching reference-state, convex-hull, surface, adsorption, reaction, or grain-boundary formula model identified."
       },
       {
         "id": "Trajectory",
         "uid": "12cde23e9a333fdd03313c4cdbd82d51033f9bb3bd505466a8db5360faf166b4",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "TransitionTemperature",
@@ -1820,7 +2644,7 @@
         "uid": "f8b092359048e5130d56697ca9504bb4740b875aca685a8f760316bfb5e9a661",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "Voltage",
@@ -1832,9 +2656,12 @@
       {
         "id": "VolumetricHeatCapacity",
         "uid": "29e324b97f31cdb7d3cd8ef6aec5668fff111fd7ee96bd19dd0426b8728c1d47",
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations. No current Physlib matching molar-volume, Gruneisen, or Cp-Cv response derivation identified; thermoelectric mappings are separately classified."
+        "binding_ids": [
+          "harmonic-joint-volumetric-heat-capacity",
+          "harmonic-volumetric-heat-capacity"
+        ],
+        "status": "mapped",
+        "reason": "See the conditions and evidence for each mapping."
       },
       {
         "id": "WorkFunction",
@@ -1848,7 +2675,7 @@
         "uid": "022d18213f7d63713ef4fddb484e1ae6d898873ce20377176013f620225637d8",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No current Physlib solid-elasticity/Voigt/EOS formula identification found; continuum stress and thermodynamic pressure are related concepts with sign/model prerequisites."
+        "reason": "No current Physlib solid-elasticity/Voigt/EOS formula identification found. The bridge proves the signed inviscid stress/pressure contraction under its sign and unit conditions; identification with thermodynamic free-energy pressure remains unproved."
       },
       {
         "id": "ZT",
@@ -1893,7 +2720,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "autocorrelate_heat_current",
@@ -1909,7 +2736,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "combine_kappa_wigner",
@@ -1926,7 +2753,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "compute_adsorption_energy",
@@ -1994,7 +2821,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "compute_bulk_modulus_eos",
@@ -2011,7 +2838,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No current Physlib solid-elasticity/Voigt/EOS formula identification found; continuum stress and thermodynamic pressure are related concepts with sign/model prerequisites."
+        "reason": "No current Physlib solid-elasticity/Voigt/EOS formula identification found. The bridge proves the signed inviscid stress/pressure contraction under its sign and unit conditions; identification with thermodynamic free-energy pressure remains unproved."
       },
       {
         "id": "compute_bulk_modulus_qha",
@@ -2029,7 +2856,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No current Physlib volume-dependent phonon/QHA potential or response-identity formula theorem identified."
+        "reason": "The local static-plus-harmonic Cp bridge does not verify numerical QHA volume scans, EOS fitting, minimization, or expansion, bulk-modulus and heat-capacity producers. Independent thermal-Gruneisen producer agreement remains unproved."
       },
       {
         "id": "compute_calphad_entropy",
@@ -2115,7 +2942,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "compute_configurational_energy",
@@ -2149,7 +2976,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "compute_dos",
@@ -2165,7 +2992,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "compute_dynamical_matrix",
@@ -2181,7 +3008,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "compute_elastic_constants",
@@ -2198,7 +3025,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No current Physlib solid-elasticity/Voigt/EOS formula identification found; continuum stress and thermodynamic pressure are related concepts with sign/model prerequisites."
+        "reason": "No current Physlib solid-elasticity/Voigt/EOS formula identification found. The bridge proves the signed inviscid stress/pressure contraction under its sign and unit conditions; identification with thermodynamic free-energy pressure remains unproved."
       },
       {
         "id": "compute_electronic_conductivity",
@@ -2322,7 +3149,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "compute_force_constants[order=3]",
@@ -2338,7 +3165,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "compute_forces_hf",
@@ -2426,7 +3253,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "compute_gruneisen",
@@ -2445,7 +3272,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "compute_heat_capacity",
@@ -2480,7 +3307,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No current Physlib volume-dependent phonon/QHA potential or response-identity formula theorem identified."
+        "reason": "The local static-plus-harmonic Cp bridge does not verify numerical QHA volume scans, EOS fitting, minimization, or expansion, bulk-modulus and heat-capacity producers. Independent thermal-Gruneisen producer agreement remains unproved."
       },
       {
         "id": "compute_heat_current",
@@ -2496,7 +3323,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "compute_homo_lumo_gap",
@@ -2585,7 +3412,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "compute_kappa[transport_model=qhgk]",
@@ -2605,7 +3432,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "compute_kappa[transport_model=wigner_coherences]",
@@ -2624,7 +3451,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "compute_kappa[transport_model=wigner_populations]",
@@ -2642,7 +3469,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "compute_linewidth[channel=anharmonic_3ph]",
@@ -2661,7 +3488,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "compute_magnetic_moments",
@@ -2696,7 +3523,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "compute_molar_enthalpy",
@@ -2746,7 +3573,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "compute_participation_ratio",
@@ -2762,7 +3589,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "compute_phase_fractions",
@@ -2795,7 +3622,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "compute_qha_gibbs",
@@ -2813,7 +3640,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No current Physlib volume-dependent phonon/QHA potential or response-identity formula theorem identified."
+        "reason": "The local static-plus-harmonic Cp bridge does not verify numerical QHA volume scans, EOS fitting, minimization, or expansion, bulk-modulus and heat-capacity producers. Independent thermal-Gruneisen producer agreement remains unproved."
       },
       {
         "id": "compute_reaction_barrier",
@@ -2933,7 +3760,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No current Physlib volume-dependent phonon/QHA potential or response-identity formula theorem identified."
+        "reason": "The local static-plus-harmonic Cp bridge does not verify numerical QHA volume scans, EOS fitting, minimization, or expansion, bulk-modulus and heat-capacity producers. Independent thermal-Gruneisen producer agreement remains unproved."
       },
       {
         "id": "compute_transition_temperature",
@@ -2966,7 +3793,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "contract_bulk_modulus",
@@ -2982,7 +3809,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No current Physlib solid-elasticity/Voigt/EOS formula identification found; continuum stress and thermodynamic pressure are related concepts with sign/model prerequisites."
+        "reason": "No current Physlib solid-elasticity/Voigt/EOS formula identification found. The bridge proves the signed inviscid stress/pressure contraction under its sign and unit conditions; identification with thermodynamic free-energy pressure remains unproved."
       },
       {
         "id": "contract_conductance_window",
@@ -3016,7 +3843,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "contract_cumulative_kappa[wrt=omega]",
@@ -3035,7 +3862,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "contract_density",
@@ -3051,7 +3878,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No current Physlib solid-elasticity/Voigt/EOS formula identification found; continuum stress and thermodynamic pressure are related concepts with sign/model prerequisites."
+        "reason": "No current Physlib solid-elasticity/Voigt/EOS formula identification found. The bridge proves the signed inviscid stress/pressure contraction under its sign and unit conditions; identification with thermodynamic free-energy pressure remains unproved."
       },
       {
         "id": "contract_device_conductance",
@@ -3119,9 +3946,11 @@
         "outputs": [
           "HeatCapacityConstantP"
         ],
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No current Physlib matching molar-volume, Gruneisen, or Cp-Cv response derivation identified; thermoelectric mappings are separately classified."
+        "binding_ids": [
+          "harmonic-static-cp-identity"
+        ],
+        "status": "mapped",
+        "reason": "See the conditions and evidence for each mapping."
       },
       {
         "id": "contract_interface_conductance[transport_model=nemd]",
@@ -3156,7 +3985,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "contract_kappa[bte_solver=rta]",
@@ -3174,7 +4003,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "contract_kappa[transport_model=green_kubo]",
@@ -3191,7 +4020,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "contract_kappa[transport_model=hnemd]",
@@ -3208,7 +4037,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "contract_kappa[transport_model=nemd]",
@@ -3225,7 +4054,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "contract_molar_entropy",
@@ -3239,9 +4068,12 @@
         "outputs": [
           "MolarEntropy"
         ],
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "binding_ids": [
+          "harmonic-joint-molar-ensemble",
+          "harmonic-molar-entropy"
+        ],
+        "status": "mapped",
+        "reason": "See the conditions and evidence for each mapping."
       },
       {
         "id": "contract_molar_free_energy",
@@ -3256,6 +4088,7 @@
           "MolarHelmholtzFreeEnergy"
         ],
         "binding_ids": [
+          "harmonic-joint-molar-ensemble",
           "harmonic-molar-free-energy"
         ],
         "status": "mapped",
@@ -3273,9 +4106,12 @@
         "outputs": [
           "MolarHeatCapacity"
         ],
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "binding_ids": [
+          "harmonic-joint-molar-ensemble",
+          "harmonic-molar-heat-capacity"
+        ],
+        "status": "mapped",
+        "reason": "See the conditions and evidence for each mapping."
       },
       {
         "id": "contract_molar_internal_energy",
@@ -3290,6 +4126,7 @@
           "MolarInternalEnergy"
         ],
         "binding_ids": [
+          "harmonic-joint-molar-ensemble",
           "harmonic-molar-internal-energy"
         ],
         "status": "mapped",
@@ -3307,7 +4144,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No current Physlib matching molar-volume, Gruneisen, or Cp-Cv response derivation identified; thermoelectric mappings are separately classified."
+        "reason": "No reviewed Physlib model bridge is established here for the molar-volume producer or an independently defined thermal Gruneisen relation; Cp and thermoelectric mappings are separately classified."
       },
       {
         "id": "contract_poisson_ratio",
@@ -3324,7 +4161,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No current Physlib solid-elasticity/Voigt/EOS formula identification found; continuum stress and thermodynamic pressure are related concepts with sign/model prerequisites."
+        "reason": "No current Physlib solid-elasticity/Voigt/EOS formula identification found. The bridge proves the signed inviscid stress/pressure contraction under its sign and unit conditions; identification with thermodynamic free-energy pressure remains unproved."
       },
       {
         "id": "contract_power_factor",
@@ -3377,7 +4214,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No current Physlib solid-elasticity/Voigt/EOS formula identification found; continuum stress and thermodynamic pressure are related concepts with sign/model prerequisites."
+        "reason": "No current Physlib solid-elasticity/Voigt/EOS formula identification found. The bridge proves the signed inviscid stress/pressure contraction under its sign and unit conditions; identification with thermodynamic free-energy pressure remains unproved."
       },
       {
         "id": "contract_state_coefficient_of_variation",
@@ -3410,7 +4247,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No current Physlib volume-dependent phonon/QHA potential or response-identity formula theorem identified."
+        "reason": "The local static-plus-harmonic Cp bridge does not verify numerical QHA volume scans, EOS fitting, minimization, or expansion, bulk-modulus and heat-capacity producers. Independent thermal-Gruneisen producer agreement remains unproved."
       },
       {
         "id": "contract_thermal_gruneisen_identity",
@@ -3428,7 +4265,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No current Physlib matching molar-volume, Gruneisen, or Cp-Cv response derivation identified; thermoelectric mappings are separately classified."
+        "reason": "No reviewed Physlib model bridge is established here for the molar-volume producer or an independently defined thermal Gruneisen relation; Cp and thermoelectric mappings are separately classified."
       },
       {
         "id": "contract_volumetric_heat_capacity",
@@ -3442,9 +4279,12 @@
         "outputs": [
           "VolumetricHeatCapacity"
         ],
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "binding_ids": [
+          "harmonic-joint-volumetric-heat-capacity",
+          "harmonic-volumetric-heat-capacity"
+        ],
+        "status": "mapped",
+        "reason": "See the conditions and evidence for each mapping."
       },
       {
         "id": "contract_youngs_modulus",
@@ -3461,7 +4301,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No current Physlib solid-elasticity/Voigt/EOS formula identification found; continuum stress and thermodynamic pressure are related concepts with sign/model prerequisites."
+        "reason": "No current Physlib solid-elasticity/Voigt/EOS formula identification found. The bridge proves the signed inviscid stress/pressure contraction under its sign and unit conditions; identification with thermodynamic free-energy pressure remains unproved."
       },
       {
         "id": "contract_zt",
@@ -3577,7 +4417,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "hasselman_johnson",
@@ -3612,7 +4452,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "kamal_cure_conversion",
@@ -3699,7 +4539,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "provide_dielectric_tensor",
@@ -3713,7 +4553,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "provide_isotope_abundances",
@@ -3727,7 +4567,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "provide_potential",
@@ -3741,7 +4581,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "provide_temperature",
@@ -3755,7 +4595,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "provide_transmission",
@@ -3769,7 +4609,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "ramp_set_voltage",
@@ -3818,7 +4658,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "run_md",
@@ -3835,7 +4675,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "sample_pmf",
@@ -3852,7 +4692,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "sample_quantum_heat_capacity",
@@ -3869,7 +4709,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "sample_quantum_kinetic_energy",
@@ -3886,7 +4726,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "schottky_mott_barrier",
@@ -3923,7 +4763,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "solve_bte[bte_solver=rta]",
@@ -3942,7 +4782,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "solve_equilibrium",
@@ -3994,7 +4834,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; linked harmonic candidates retain explicit model obligations."
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "sum_thermal_conductivity",
@@ -4036,16 +4876,22 @@
   },
   "coverage": {
     "nodes_total": 129,
-    "nodes_mapped": 21,
+    "nodes_mapped": 28,
     "operators_total": 127,
-    "operators_mapped": 10,
-    "bindings_total": 16,
-    "source_correspondences": 13,
-    "compiled_bridges": 3,
+    "operators_mapped": 14,
+    "bindings_total": 22,
+    "source_correspondences": 5,
+    "compiled_bridges": 17,
+    "nodes_compiled": 15,
+    "nodes_compiled_outputs": 14,
+    "nodes_compiled_interpretations": 1,
+    "operators_compiled": 14,
+    "upstream_declarations_referenced": 33,
+    "upstream_modules_referenced": 9,
     "relations": {
       "exact_definition": 1,
-      "conditional": 10,
-      "conceptual": 5
+      "conditional": 17,
+      "conceptual": 4
     }
   }
 }

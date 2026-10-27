@@ -1,3 +1,15 @@
 module
 public import OMAIPhyslibDimensions
 public import OMAIPhyslibSemantics
+public import OMAIPhyslibContinuum
+public import OMAIPhyslibHarmonicEnsemble
+public import OMAIPhyslibHarmonicSums
+public import OMAIPhyslibHarmonicProduct
+public import OMAIPhyslibHarmonicDensity
+public import OMAIPhyslibJointDensity
+public import OMAIPhyslibStaticEnsemble
+public import OMAIPhyslibResponseUnits
+public import OMAIPhyslibResponseCalculus
+public import OMAIPhyslibHarmonicVolume
+public import OMAIPhyslibResponseWitness
+public import OMAIPhyslibHarmonicResponse
