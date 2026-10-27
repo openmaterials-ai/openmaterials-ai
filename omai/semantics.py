@@ -24,6 +24,8 @@ import json
 import re
 from pathlib import Path
 
+from omai.formula_bindings import formula_bindings_for
+
 _DOCS = Path(__file__).resolve().parent.parent / "docs"
 
 # ---------------------------------------------------------------------------
@@ -106,6 +108,22 @@ ALIASES: dict[str, tuple[str, ...]] = {
         "kamal_cure_conversion", "dibenedetto_glass_transition",
     ),
     "glass-transition-temperature": ("GlassTransitionTemperature",),
+    # Held-out errors of a fitted potential.
+    "validation-rmse": ("PotentialEnergyFitError", "PotentialForceFitError",
+                        "PotentialVirialFitError"),
+    "test-set-rmse": ("PotentialEnergyFitError", "PotentialForceFitError",
+                      "PotentialVirialFitError"),
+    "holdout-error": ("PotentialEnergyFitError", "PotentialForceFitError",
+                      "PotentialVirialFitError"),
+    # Committee force spread of an MD run (active learning).
+    "model-deviation": (
+        "PotentialUncertaintyExceedance[method=committee_force_spread]",
+        "compute_potential_uncertainty_exceedance",
+    ),
+    "query-by-committee": (
+        "PotentialUncertaintyExceedance[method=committee_force_spread]",
+        "compute_potential_uncertainty_exceedance",
+    ),
     # NO-HOME markers live in the alignment files, not here: an alias
     # must point at something that exists (the gate below enforces it).
 }
@@ -182,7 +200,7 @@ def build_semantics(graph: dict) -> list[dict]:
             continue
         seen_ops.add(op)
         entries.append({
-            "id": op, "uid": l.get("op_uid"), "kind": "edge",
+            "id": op, "uid": l.get("op_uid") or l.get("uid"), "kind": "edge",
             "labels": sorted({op, normalize(op)}),
             "curated": sorted(curated.get(op, [])),
         })
@@ -197,6 +215,10 @@ def resolve(label: str, semantics: list[dict], limit: int = 8) -> list[dict]:
     empty result means NO-HOME (a coverage gap, not an error).
     A node hit gains a "physlib" field when the reviewed crosswalk maps
     it to Lean 4 declarations (docs/data/physlib_crosswalk.json).
+    Node and operator hits also gain "formal_bindings" when the packaged
+    formula bridge records a correspondence, including its conditions and
+    distinct source-reference/compiled-proof evidence. This does not alter
+    the historical "physlib" field or resolution ranking.
     """
     q = normalize(label)
     qt = _tokens(label)
@@ -217,6 +239,9 @@ def resolve(label: str, semantics: list[dict], limit: int = 8) -> list[dict]:
                 physlib = physlib_for(e["id"])
                 if physlib:
                     hit["physlib"] = physlib
+            bindings = formula_bindings_for(e["id"], kind=e["kind"])
+            if bindings:
+                hit["formal_bindings"] = bindings
             hits.append(hit)
     hits.sort(key=lambda h: (-h["score"], h["id"]))
     return hits[:limit]

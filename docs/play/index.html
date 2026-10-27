@@ -6,8 +6,8 @@
 <title>Playground | OpenMaterials</title>
 <meta name="description" content="Parse a paper into proposed values, open a lineage record, resolve a method name to map nodes, or compare two materials by composition distance.">
 <link rel="canonical" href="https://openmaterials.ai/play/">
-<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#F4F1EA" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0F0E0C" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
 <meta property="og:type" content="website">
@@ -20,17 +20,17 @@
 <meta property="og:image:alt" content="The openmaterials.ai mark and wordmark above the line &quot;A versioned map of physics.&quot; A smaller line gives the licenses: map data CC BY 4.0 and code Apache 2.0.">
 <meta name="twitter:card" content="summary_large_image">
 <script>try{const t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch{}</script>
-<link rel="preload" href="../assets/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="../assets/fonts/GeistMono-Variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../assets/fonts/newsreader-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../assets/fonts/jetbrains-mono-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="../assets/vendor/katex/dist/katex.min.css">
 <link rel="stylesheet" href="../assets/site.css">
 <style>
   /* The playground, an app page: header, the tab strip, the tools column and
      the sub-map canvas, or the full-width datasheet stage. Colors are the
-     site.css tokens; each var() carries the light value as its fallback. */
+     site.css tokens; each var() carries a fallback for when site.css fails to load. */
   *{box-sizing:border-box;}
   html,body{height:100%;}
-  body.app{height:100vh;height:100dvh;margin:0;display:flex;flex-direction:column;overflow:hidden;max-width:100vw;background:var(--page,#FFFFFF);color:var(--ink,#171717);font:400 14px/20px var(--font-sans,"Geist","Geist Fallback",ui-sans-serif,system-ui,sans-serif);-webkit-font-smoothing:antialiased;}
+  body.app{height:100vh;height:100dvh;margin:0;display:flex;flex-direction:column;overflow:hidden;max-width:100vw;background:var(--page,#FFFFFF);color:var(--ink,#171717);font:400 14px/20px var(--font-sans,ui-sans-serif,system-ui,sans-serif);-webkit-font-smoothing:antialiased;}
   :focus-visible{outline:2px solid var(--ink,#171717);outline-offset:2px;}
   /* the tab strip: five tabs and Share; a 3 x 2 grid with Share beside it below 601 px */
   .pg-main{flex:1 1 auto;display:flex;flex-direction:column;min-height:0;min-width:0;max-width:100vw;overflow:hidden;}
@@ -90,7 +90,7 @@
   .lin-n{min-width:0;font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);color:var(--ink-2,#4D4D4D);overflow-wrap:anywhere;}
   .lin-n.hot{color:var(--ink,#171717);font-weight:500;}
   .lin-op{font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);color:var(--ink-2,#4D4D4D);}
-  .names .lin-n,.names .lin-op{font-family:var(--font-sans,"Geist",ui-sans-serif,system-ui,sans-serif);}   /* names in words, not ids */
+  .names .lin-n,.names .lin-op{font-family:var(--font-sans,ui-sans-serif,system-ui,sans-serif);}   /* names in words, not ids */
   .lin-code{margin:0;padding:10px 12px;border:1px solid var(--line,#EBEBEB);border-radius:var(--radius,6px);background:var(--page,#FFFFFF);color:var(--ink,#171717);font:400 12px/18px var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);white-space:pre-wrap;overflow-wrap:anywhere;}
   /* drop-a-record ingress: a paste OR a dropped/chosen .json file, rendered in
      place as a plain data view (no server, no storage). The record's data view
@@ -165,10 +165,10 @@
   .rec-head-meta dd{margin:0;color:var(--ink,#171717);overflow-wrap:anywhere;}
   /* the one id under every title, its Copy link and the tracer link */
   .rec-doi{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:6px 0 0;font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);font-size:13px;color:var(--ink-2,#4D4D4D);overflow-wrap:anywhere;}
-  .rec-doi-lab{font-family:var(--font-sans,"Geist",ui-sans-serif,system-ui,sans-serif);font-size:12px;font-weight:500;color:var(--ink-2,#4D4D4D);}
-  .rec-doi-copy{height:24px;padding:0 8px;border:0;border-radius:var(--radius,6px);background:transparent;box-shadow:0 0 0 1px var(--line,#EBEBEB);color:var(--ink,#171717);font-family:var(--font-sans,"Geist",ui-sans-serif,system-ui,sans-serif);font-size:12px;font-weight:500;cursor:pointer;}
+  .rec-doi-lab{font-family:var(--font-sans,ui-sans-serif,system-ui,sans-serif);font-size:12px;font-weight:500;color:var(--ink-2,#4D4D4D);}
+  .rec-doi-copy{height:24px;padding:0 8px;border:0;border-radius:var(--radius,6px);background:transparent;box-shadow:0 0 0 1px var(--line,#EBEBEB);color:var(--ink,#171717);font-family:var(--font-sans,ui-sans-serif,system-ui,sans-serif);font-size:12px;font-weight:500;cursor:pointer;}
   .rec-doi-copy:hover{background:var(--surface-2,#F2F2F2);}
-  .rec-doi a{font-family:var(--font-sans,"Geist",ui-sans-serif,system-ui,sans-serif);font-size:13px;}
+  .rec-doi a{font-family:var(--font-sans,ui-sans-serif,system-ui,sans-serif);font-size:13px;}
   .rec-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(330px,100%),1fr));gap:8px 32px;align-items:start;}
   .rec-col{min-width:0;}
   .rec-col>.rec-sec+.rec-sec{margin-top:8px;}
@@ -182,7 +182,7 @@
   .rec-kv dt{font-size:13px;line-height:20px;color:var(--ink-2,#4D4D4D);}
   .rec-kv dd{margin:0;min-width:0;font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);font-size:13px;line-height:20px;color:var(--ink,#171717);overflow-wrap:anywhere;}
   .rec-kv dd.wrap{word-break:break-all;}
-  .rec-src dd{font-family:var(--font-sans,"Geist",ui-sans-serif,system-ui,sans-serif);}   /* quotes and citations are prose, not values */
+  .rec-src dd{font-family:var(--font-sans,ui-sans-serif,system-ui,sans-serif);}   /* quotes and citations are prose, not values */
   /* a labelled sub-group inside a section (Hyperparameters, Conditions, ...) */
   .rec-grp{margin:0 0 8px;}
   .rec-grp:last-child{margin-bottom:0;}
@@ -519,6 +519,9 @@ var configByUid = {};   // canonical.uid and aliases -> configuration bundle rec
 var VB = { x: 0, y: 0, w: 1000, h: 700 };
 
 function esc(s){ return String(s == null ? '' : s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+// A record's own URL becomes a link only as http(s): a shared fragment is untrusted
+// input, and a javascript: or data: href would run on this page when clicked.
+function webUrl(u){ return typeof u === 'string' && /^https?:\/\//i.test(u) ? u : ''; }
 function tex(s, block){ if (!s) return ''; if (!HAS_KATEX) return esc(s); try { return katex.renderToString(String(s), { throwOnError:false, displayMode: !!block }); } catch(e){ return esc(s); } }
 
 /* ---- data load ----------------------------------------------------------- */
@@ -938,7 +941,7 @@ function resolveInstanceById(hash, instances){
    the way validate_light is: lineage present; when a node is named it is checked
    against THIS map version (node-unresolved is a normal, valid state, not an
    error); artifact pointers well-formed ({path, role} required, url/sha256
-   optional and shape-checked). Returns {ok, error?, node, nodeResolved} so the
+   optional and shape-checked); mirror locations shape-checked. Returns {ok, error?, node, nodeResolved} so the
    caller can banner an error or annotate what we have. It never recomputes the
    sha256 lineage id (a browser could, but the render path does not gate on it). */
 var SHA256_RE = /^[0-9a-f]{64}$/;
@@ -969,6 +972,24 @@ function validateLightJS(record){
         return { ok: false, error: 'The url of artifact ' + i + ', when present, must be a string.' };
       if (a.sha256 != null && (typeof a.sha256 !== 'string' || !SHA256_RE.test(a.sha256)))
         return { ok: false, error: 'The sha256 of artifact ' + i + ', when present, must be a 64-hex string.' };
+    }
+  }
+  // Resolver locations are outside lineage identity, but malformed access
+  // metadata must not be presented as a valid record. Match _validate_mirrors.
+  var mirrors = record.mirrors;
+  if (mirrors != null) {
+    if (typeof mirrors !== 'object' || Array.isArray(mirrors))
+      return { ok: false, error: 'The mirrors field, when present, must be an object (path to location).' };
+    var paths = Object.keys(mirrors);
+    for (var j = 0; j < paths.length; j++) {
+      var loc = mirrors[paths[j]];
+      if (loc == null || typeof loc === 'string') continue;
+      if (typeof loc !== 'object' || Array.isArray(loc))
+        return { ok: false, error: 'Mirror ' + paths[j] + ' must be a URL string or an object.' };
+      if (loc.url != null && typeof loc.url !== 'string')
+        return { ok: false, error: 'Mirror ' + paths[j] + ' url, when present, must be a string.' };
+      if (loc.provider != null && typeof loc.provider !== 'string')
+        return { ok: false, error: 'Mirror ' + paths[j] + ' provider, when present, must be a string.' };
     }
   }
   // node-unresolved is VALID (state what we have): a named-but-off-map node, or no
@@ -1542,16 +1563,22 @@ function fmtValue(v){
 // the light lineage with no artifacts says nothing.
 function heavyHost(record){
   var mirrors = record.mirrors;
-  if (mirrors && typeof mirrors === 'object') {
+  if (mirrors && typeof mirrors === 'object' && !Array.isArray(mirrors)) {
     var mk = Object.keys(mirrors);
     for (var i = 0; i < mk.length; i++) {
       var loc = mirrors[mk[i]];
-      if (loc && typeof loc === 'object' && loc.url) return { provider: loc.provider || 'the host', url: loc.url };
-      if (typeof loc === 'string' && loc) return { provider: 'the host', url: loc };
+      if (loc && typeof loc === 'object' && !Array.isArray(loc) &&
+          webUrl(loc.url) &&
+          (loc.provider == null || typeof loc.provider === 'string'))
+        return { provider: loc.provider || 'the host', url: loc.url };
+      if (webUrl(loc)) return { provider: 'the host', url: loc };
     }
   }
-  var arts = record.artifacts || [];
-  for (var j = 0; j < arts.length; j++) { if (arts[j] && arts[j].url) return { provider: 'MaterialsCodeGraph', url: arts[j].url }; }
+  var arts = Array.isArray(record.artifacts) ? record.artifacts : [];
+  for (var j = 0; j < arts.length; j++) {
+    if (arts[j] && webUrl(arts[j].url))
+      return { provider: 'MaterialsCodeGraph', url: arts[j].url };
+  }
   return null;
 }
 
@@ -1681,7 +1708,7 @@ function artifactsHTML(record){
   if (Array.isArray(arts) && arts.length) {
     body += '<ul class="rec-arts">' + arts.map(function(a){
       if (!a || typeof a !== 'object') return '';
-      var link = a.url ? '<a href="' + esc(a.url) + '" target="_blank" rel="noopener">Open</a>' : '';
+      var link = webUrl(a.url) ? '<a href="' + esc(a.url) + '" target="_blank" rel="noopener">Open</a>' : '';
       return '<li class="rec-art">' +
         '<span class="rec-art-role">' + esc(a.role || 'artifact') + '</span>' +
         '<span class="rec-art-path">' + esc(a.path || '') + '</span>' +

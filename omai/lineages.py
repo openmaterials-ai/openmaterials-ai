@@ -130,6 +130,7 @@ from __future__ import annotations
 import base64
 import gzip
 import hashlib
+import io
 import json
 import re
 from datetime import date
@@ -1192,10 +1193,23 @@ def record_to_fragment(record: dict) -> str:
             ("lineage" if key == "recipe" else key): value
             for key, value in record.items()
         }
-    blob = json.dumps(record, separators=(",", ":")).encode("utf-8")
-    packed = gzip.compress(blob)
-    b64 = base64.urlsafe_b64encode(packed).decode("ascii").rstrip("=")
-    return "g" + b64
+    return _gzip_fragment(record)
+
+
+def _gzip_fragment(payload: dict) -> str:
+    """``g`` + base64url(gzip(compact JSON)), with ``=`` padding stripped.
+
+    The gzip header is pinned (MTIME 0, OS byte 255), so a payload encodes to
+    the same string at any time, on any platform and on every supported
+    interpreter. ``gzip.compress(mtime=0)`` is not enough: before Python 3.13 it
+    copies zlib's platform OS byte (3 on Linux), while 3.13+ writes 255.
+    ``GzipFile`` writes 255 on all of them.
+    """
+    blob = json.dumps(payload, separators=(",", ":")).encode("utf-8")
+    buf = io.BytesIO()
+    with gzip.GzipFile(fileobj=buf, mode="wb", mtime=0) as f:
+        f.write(blob)
+    return "g" + base64.urlsafe_b64encode(buf.getvalue()).decode("ascii").rstrip("=")
 
 
 def record_from_fragment(fragment: str) -> dict:
@@ -1376,10 +1390,7 @@ def envelope_to_fragment(env: dict) -> str:
     legacy single-record path.
     """
     env = _validate_envelope(env, where="envelope_to_fragment")
-    blob = json.dumps(env, separators=(",", ":")).encode("utf-8")
-    packed = gzip.compress(blob)
-    b64 = base64.urlsafe_b64encode(packed).decode("ascii").rstrip("=")
-    return "g" + b64
+    return _gzip_fragment(env)
 
 
 def envelope_from_fragment(fragment: str) -> dict:

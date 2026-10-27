@@ -260,7 +260,8 @@ representation layer, 33 ingested representations (kaldo, phono3py, phonopy,
 pymatgen, ShengBTE, MESKAL, Quantum ESPRESSO, D3Q, VASP, LAMMPS, GPUMD, i-PI, xtb, the
 machine-learned potentials matgl / MACE / fairchem, the database representation mp-api,
 and the CALPHAD, amset, ORCA, OpenMM, and AtomisticSkills mat-* / chem-*
-workflows, and the package's own cure-kinetics evaluators, openmaterials-ai), and a
+workflows, and the package's own cure-kinetics and composite evaluators,
+openmaterials-ai), and a
 validation engine that executes the graph, composes
 edges symbolically, and cross-checks redundant routes. Units reconcile
 automatically from the typed dimensions, and a dimensional gate checks every
@@ -2506,15 +2507,19 @@ Four longer-term directions follow naturally from the design:
         states the map's executable identities as real-valued theorems against
         Mathlib, 18 in all: composition theorems that substitute an upstream identity
         into a downstream one and prove the chained form equals the flat form, and
-        law theorems for standalone rational operators; a units file anchors the
-        map's SI convention. A CI gate recompiles the full proof on every pull
+        law theorems for standalone rational operators; a units file proves a
+        declared SI-to-SI scale identity, not that every stored canonical number
+        is expressed in SI. A CI gate recompiles the full proof on every pull
         request that touches the map or the generators, with warnings promoted to
         errors, so the verified badge is the live state of the claim. A public
         formalization roadmap rates all 129 operators by what a proof of the formula
         would take (17 rational identities closed by the generator, 52 needing real
         analysis, 19 trivially reflexive, 41 opaque code outputs with nothing
-        algebraic to prove), and a hand-reviewed crosswalk links map nodes to the
-        physlib declarations that formalize the same concepts. The
+        algebraic to prove), and a historical hand-reviewed crosswalk links map
+        nodes to Physlib source declarations. Its conceptual correspondences,
+        including legacy ``exact'' labels, are not proofs of model equivalence.
+        These counts and build evidence describe the retained dependency pin,
+        not current upstream Physlib. The
         approximation-error theorems remain future work.
   \item \textbf{Theory-experiment integration.} Extend the representation functor to ingest
         experimental observables. The operator layer's graph-alignment machinery applies uniformly,
@@ -2534,6 +2539,78 @@ Four longer-term directions follow naturally from the design:
         land together; the natural candidate is the three-phonon linewidth surrogate
         that amortizes \texttt{ForceConstants[order=3]} into weights.
 \end{itemize}
+
+\paragraph{Current formula bridge.}
+The \texttt{lean/bridge/} package targets Physlib revision
+\texttt{d70acc20677320d37b38e602e331e900466b704d} on Lean~4.35.0,
+independently of the historical package above. It uses the upstream
+seven-base \texttt{ISQDimensionBase}; current Physlib no longer needs an
+OMAI-specific extension to represent amount of substance or luminous intensity.
+The mapping names each basis to preserve OMAI's dimension order and treats
+electric current as a base, with charge derived as current times time.
+The \href{https://openmaterials.ai/lean/bridge/}{formula-bridge inventory}
+records existing quantity and operator identities, formula fingerprints,
+pinned source declarations, models, units, normalizations, hypotheses, and
+remaining proof obligations. It also records gaps where no correspondence was
+established. Source correspondence, dimensional encoding, algebraic consistency,
+and compiled model identification are reported separately. The original scientific
+identities, formulas and lineage rules remain unchanged.
+
+A scalar thermoelectric definition does not identify an arbitrary conductivity
+tensor: an isotropic interpretation and a common operating point are required.
+The current bridge constructs the full nonnegative-integer harmonic ensemble
+from the upstream oscillator spectrum, evaluates its partition and energy sums,
+and proves the finiteness and integrability needed to identify OMAI's per-mode
+$F$, $U$, $S$ and $C_V$. Fixed-spectrum derivatives are proved on the open
+positive-temperature domain. Four molar results identify the exact uniform-q
+contractions of those single-mode quantities, with $3N_{\mathrm{atoms}}$
+branches and $N_A/N_q$ normalization. A separate heterogeneous joint-ensemble
+proof establishes the product partition function and the ensemble's $F$, $U$,
+$S$ and $C_V$, then identifies the four molar formulas after normalization.
+Volumetric heat capacity is the
+single-mode sum, or equivalently the joint capacity, divided by $N_q V_{cell}$
+with positive primitive-cell volume; its molar relation is
+$C_V^{vol}=C_V^{mol}/(N_A V_{cell})$. These are two proofs of one additional
+operator, not two coverage targets. Every mode must have strictly positive
+frequency, so zero acoustic modes require separate treatment. Symbolic angular frequency must not be confused
+with stored linear THz: $\omega_{\mathrm{SI}}=2\pi\,10^{12}\nu_{\mathrm{THz}}$.
+CALPHAD's mole-of-atoms basis is distinct from harmonic mole-of-primitive-cells
+and QHA mole-of-phonopy-cells. A theorem about real-valued formulas does not
+certify finite precision, numerical convergence, or a simulation implementation.
+
+The local static-plus-harmonic volume family also establishes
+\[
+  C_P^{mol}-C_V^{mol}=T V_m\alpha_V^2 K_T,\qquad V_m=N_A V_{cell}.
+\]
+Here $C_P$ is defined independently by differentiating actual molar ensemble
+enthalpy along a constant-pressure volume path. The actual Hamiltonian includes
+$N_q E_0(v)$ before the external $N_A/N_q$ normalization; static energy is signed
+and temperature-independent. Positive frequencies and static energy are $C^2$
+functions on an open positive-volume domain, with fixed reduced-q labels.
+Equilibrium must hold in a neighborhood, not merely at one point, and the
+isothermal curvature must be positive at the evaluation state. All input
+quantities use the same potential, operating point and primitive-cell molar basis.
+
+An explicit heterogeneous oscillator family with a fixed quadratic static
+energy uses the implicit function theorem to construct a branch with nonzero
+expansion and actual $C_P>C_V$ at its reference state. A separate stable
+constant-frequency control has zero expansion and $C_P=C_V$. These are exact
+model examples, not real-material fits. Only the existing
+\texttt{contract\_heat\_capacity\_p\_identity} operator and its output gain compiled
+coverage; the numerical QHA route, fitting/minimization and input producers
+remain unverified. The \href{https://openmaterials.ai/lean/bridge/\#response}{response bridge}
+links the source, reviewed endpoint contract and explicit assumptions.
+
+The package audit checks all imported kernel declarations owned by its source
+modules, including private and generated helpers, together with the existing
+bridge namespace. It verifies full private import visibility and source-module
+reachability before inspecting transitive axioms. These broader declaration
+counts are not additional scientific formula targets.
+
+The map and formula inventory support lookup from OMAI quantities and operators
+to Physlib declarations and back. Compiled formula outputs, standalone quantity
+interpretations and source-only associations have separate coverage counts.
+Reverse navigation is a reference lookup, not a theorem about inverse functions.
 
 The unifying claim of the design is that scientific computing has been organized around the
 wrong atomic unit. The instruction-in-an-input-file unit is too low; the natural-language
@@ -3183,8 +3260,8 @@ numbers:
         kaldo 34, phono3py 31, phonopy 22, pymatgen 22, ShengBTE 20, MESKAL 18,
         Quantum ESPRESSO 14, mp-api 13, LAMMPS 12, VASP 10, GPUMD 9, pycalphad 7, matgl 5,
         mat-elasticity 5, amset 5, ORCA 5, pymatgen-analysis-diffusion 5, D3Q 5,
-        i-PI 4, fairchem 4, MACE 4, OpenMM 4, ASE 3,
-        mat-diffusion-analysis 2, openmaterials-ai 2, plumed 2, smol 2, xtb 2,
+        i-PI 4, fairchem 4, MACE 4, OpenMM 4, openmaterials-ai 4, ASE 3,
+        mat-diffusion-analysis 2, plumed 2, smol 2, xtb 2,
         mat-equation-of-state 1, mat-surface-adsorption 1, rxn-network 1,
         diffcsp 1, mattergen 1.
   \item \textbf{Instances.} 93 recorded values, 87 simulation and 6 measurement.
@@ -3272,9 +3349,9 @@ i-PI                         & 4  & GPL-2.0-or-later / MIT \\
 fairchem                     & 4  & MIT \\
 MACE                         & 4  & MIT \\
 OpenMM                       & 4  & MIT (LGPL parts) \\
+openmaterials-ai             & 4  & Apache-2.0 AND CC-BY-4.0 \\
 ASE                          & 3  & LGPL-2.1-or-later \\
 mat-diffusion-analysis       & 2  & MIT \\
-openmaterials-ai             & 2  & Apache-2.0 AND CC-BY-4.0 \\
 plumed                       & 2  & LGPL-3.0 \\
 xtb                          & 2  & LGPL-3.0 \\
 smol                         & 2  & BSD-3-Clause \\

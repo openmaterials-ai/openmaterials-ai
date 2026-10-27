@@ -1,0 +1,11 @@
+name = "omai_physlib_bridge"
+defaultTargets = ["OMAIPhyslibBridge"]
+
+[[require]]
+name = "physlib"
+git = "https://github.com/leanprover-community/physlib.git"
+rev = "d70acc20677320d37b38e602e331e900466b704d"
+
+[[lean_lib]]
+name = "OMAIPhyslibBridge"
+globs = ["OMAIPhyslibBridge", "OMAIPhyslibDimensions", "OMAIPhyslibSemantics", "OMAIPhyslibContinuum", "OMAIPhyslibHarmonicEnsemble", "OMAIPhyslibHarmonicSums", "OMAIPhyslibHarmonicProduct", "OMAIPhyslibHarmonicDensity", "OMAIPhyslibJointDensity", "OMAIPhyslibStaticEnsemble", "OMAIPhyslibResponseUnits", "OMAIPhyslibResponseCalculus", "OMAIPhyslibHarmonicVolume", "OMAIPhyslibResponseWitness", "OMAIPhyslibHarmonicResponse"]

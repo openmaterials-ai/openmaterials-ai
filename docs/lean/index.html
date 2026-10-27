@@ -6,8 +6,8 @@
 <title>Verified layer | OpenMaterials</title>
 <meta name="description" content="The map's node dimensions are declared in Lean 4, and its edge dimension statements and operator identities are proven against physlib and Mathlib, with coverage counted from the published export.">
 <link rel="canonical" href="https://openmaterials.ai/lean/">
-<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#F4F1EA" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0F0E0C" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
 <meta property="og:type" content="website">
@@ -20,8 +20,8 @@
 <meta property="og:image:alt" content="The openmaterials.ai mark and wordmark above the line &quot;A versioned map of physics.&quot; A smaller line gives the licenses: map data CC BY 4.0 and code Apache 2.0.">
 <meta name="twitter:card" content="summary_large_image">
 <script>try{const t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch{}</script>
-<link rel="preload" href="../assets/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="../assets/fonts/GeistMono-Variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../assets/fonts/newsreader-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../assets/fonts/jetbrains-mono-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="../assets/site.css">
 <style>
   .of, .empty { color: var(--ink-2); }
@@ -54,6 +54,7 @@
       <a href="#edges">Edge theorems</a>
       <a href="#identities">Identities</a>
       <a href="#nodes">Nodes</a>
+      <a href="bridge/">Current formula bridge</a>
       <a href="#reproduce">Reproduce this</a>
       <a href="roadmap/">Roadmap</a>
     </nav>
@@ -68,6 +69,10 @@
 
       <section class="gsec" id="proven">
         <h2>What is proven, and what is not</h2>
+        <p class="notice gnote">This page preserves the historical Lean 4.31.0 export against
+          Physlib <code>a74414af9cf7</code>. The <a href="bridge/">current formula bridge</a>
+          has a separate inventory, seven-base ISQ dimensions, assumptions, and proof evidence.
+          Historical build results do not validate the newer package.</p>
         <h3>Tier 1: the dimensional layer</h3>
         <p>Each exported map node has a declared dimension, a Lean definition of five
           rational exponents over length, time, mass, charge, and temperature. A Tier 1
@@ -80,15 +85,16 @@
         <h3>Tier 2: the operator identities</h3>
         <p>A composition theorem substitutes the upstream identity into the downstream one
           and states that the chained form equals the flat form for all reals that satisfy
-          the stated hypotheses. A law theorem states a single identity's formula as a
-          well-typed real equation.</p>
+          the stated hypotheses. A standalone law theorem proves an algebraic consequence
+          of an assumed formula (for example, clearing a nonzero denominator), not an
+          independent derivation of that physical law.</p>
         <h3>Scope</h3>
-        <p>physlib's <code>Dimension</code> has five bases and no
-          base for amount of substance, electric current, or luminous intensity, so
-          map nodes whose dimension needs a mole, ampere, or candela base are
-          omitted from the export. Extending the dimension system upstream is a
-          later tier. The coverage counts below state exactly how much of the map
-          this leaves in.</p>
+        <p>The historical Physlib representation has five bases, including charge rather
+          than current. This exporter omits nodes requiring mole, ampere, or candela bases;
+          its separate Mathlib-only seven-base companion preserves those dimensions.
+          Current Physlib provides <code>ISQDimensionBase</code> with all seven bases;
+          the <a href="bridge/">new package</a> uses that upstream foundation directly.
+          The counts below describe only the historical export.</p>
         <p class="notice gnote">Limits: a node's dimension here is declared, and a theorem checks the dimensions of one edge or an algebraic identity. A theorem does not show that a formula is the right physics, that a code implements it correctly, or that a value on the map is accurate. The <a href="../agreement/">agreement page</a> carries the evidence for those questions.</p>
       </section>
 
@@ -122,8 +128,10 @@
         <h2>Nodes</h2>
         <p>The table lists every exported map node and its declared dimension as five
           exponents in physlib field order (length, time, mass, charge, temperature). Where a
-          node has a counterpart formalized in physlib itself, the crosswalk entry
-          appears under it.</p>
+          node has a historical source correspondence, its crosswalk entry appears
+          under it. Legacy <code>exact</code> labels are conceptual alignments, not
+          compiled identifications of OMAI quantities with Physlib models. Use the
+          <a href="bridge/">current reviewed mappings</a> for model-specific conditions.</p>
         <div id="node-list"><p class="empty">Loading&hellip;</p></div>
       </section>
 
@@ -155,7 +163,7 @@ pip install -e . &amp;&amp; python -m pytest tests/test_physlean_export.py tests
           <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/OpenMaterials.lean">OpenMaterials.lean</a> (Tier 1 declared dimensions and edge theorems),
           <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/OpenMaterialsIdentities.lean">OpenMaterialsIdentities.lean</a> (Tier 2 identities),
           <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/OpenMaterialsDimensions.lean">OpenMaterialsDimensions.lean</a> (the seven-base dimensional closure),
-          and <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/OpenMaterialsUnits.lean">OpenMaterialsUnits.lean</a> (the map's SI convention).</p>
+          and <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/OpenMaterialsUnits.lean">OpenMaterialsUnits.lean</a> (the generic SI-to-SI scale identity, not a proof that stored numerical values use SI).</p>
       </section>
     </article>
   </div>
@@ -253,6 +261,7 @@ pip install -e . &amp;&amp; python -m pytest tests/test_physlean_export.py tests
   // One crosswalk block: every field of the entry as a plain labelled
   // key-value; URL-shaped strings become links, nothing else is interpreted.
   function xwalkHtml(entry) {
+    if (Array.isArray(entry)) return entry.map(xwalkHtml).join('');
     var rows = Object.keys(entry).map(function (k) {
       var v = entry[k];
       var vh;
@@ -265,7 +274,7 @@ pip install -e . &amp;&amp; python -m pytest tests/test_physlean_export.py tests
       }
       return '<div class="kv"><span class="k">' + esc(k) + ':</span> ' + vh + '</div>';
     }).join('');
-    return '<div class="xwalk"><div class="xh">Formalized in physlib</div>' + rows + '</div>';
+    return '<div class="xwalk"><div class="xh">Historical source correspondence (not an OMAI equivalence proof)</div>' + rows + '</div>';
   }
 
   function renderNodes(lean, xwalk) {

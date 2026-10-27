@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "scope": "Manually reviewed correspondence of these six authoritative OMAI formulas to the exact Lean source bytes. Hashes detect independent endpoint drift; they are not a general automatic SymPy-to-Lean semantics proof.",
+  "source_path": "lean/bridge/OMAIPhyslibSemantics.lean",
+  "source_sha256": "9ce9bbe14c751333465a9f08bdb5319f369361e136f2f8233e8e72e6614797a5",
+  "operators": [
+    {
+      "id": "compute_entropy",
+      "uid": "40d04377570142198d0a7f3d505de3b8fa6fdcf0418622be679aceec11b13264",
+      "formula_sha256": "a1368172bfefa61b76a34da3b474fa48f11a728e01b851f0abf1961cd53e61c7",
+      "formula_latex": "{s}_{\\mathbf{q},\\nu} = - k_{B} \\log{\\left(1 - e^{- \\frac{\\bar{\\h} {\\omega}_{\\mathbf{q},\\nu}}{T k_{B}}} \\right)} + \\frac{\\bar{\\h} n_{BE}{\\left(\\frac{\\bar{\\h} {\\omega}_{\\mathbf{q},\\nu}}{T k_{B}} \\right)} {\\omega}_{\\mathbf{q},\\nu}}{T}",
+      "lean_definition": "OMAI.PhyslibBridge.harmonicEntropy"
+    },
+    {
+      "id": "compute_free_energy",
+      "uid": "b15ffc57501399eb9f1a0081d34ec1e16b579134c884d6dcf0b05434924e02eb",
+      "formula_sha256": "919246645690d2a35e9330824756ff2cb9bae8fb4dfffa4b5f93b953a4ce178b",
+      "formula_latex": "{f}_{\\mathbf{q},\\nu} = T k_{B} \\log{\\left(1 - e^{- \\frac{\\bar{\\h} {\\omega}_{\\mathbf{q},\\nu}}{T k_{B}}} \\right)} + \\frac{\\bar{\\h} {\\omega}_{\\mathbf{q},\\nu}}{2}",
+      "lean_definition": "OMAI.PhyslibBridge.harmonicFreeEnergy"
+    },
+    {
+      "id": "compute_internal_energy",
+      "uid": "ce45fb09bf9c3f8076a2064b90853e163f80b20a3f5c7506af913c560accbc53",
+      "formula_sha256": "6f0d545bd77043c0fa3b62ff5f97422a626b5ddd71b88baffe4d562b94d8f280",
+      "formula_latex": "{e}_{\\mathbf{q},\\nu} = \\bar{\\h} \\left(n_{BE}{\\left(\\frac{\\bar{\\h} {\\omega}_{\\mathbf{q},\\nu}}{T k_{B}} \\right)} + \\frac{1}{2}\\right) {\\omega}_{\\mathbf{q},\\nu}",
+      "lean_definition": "OMAI.PhyslibBridge.harmonicInternalEnergy"
+    },
+    {
+      "id": "contract_power_factor",
+      "uid": "692d823ec06a56ba59453ff8650d602fc72d1aac991aae3e572b236e5a269306",
+      "formula_sha256": "0b12a94e400c0db0bfa5be59bc424b1869508be637badb889fb29d42fd6b39c7",
+      "formula_latex": "PF = S^{2} \\sigma_{el}",
+      "lean_definition": "OMAI.PhyslibBridge.powerFactor"
+    },
+    {
+      "id": "contract_zt",
+      "uid": "ff8a1d876f02c91d2c28a2ebecd11217c9496adc0b928b06ff13847bb6ac427b",
+      "formula_sha256": "261e8f1f0c68d1d4aca31e5984b597032ab4f2a3a3e0aa7b84beb577e095ae16",
+      "formula_latex": "ZT = \\frac{PF T}{\\kappa_{tot}}",
+      "lean_definition": "OMAI.PhyslibBridge.figureOfMerit"
+    },
+    {
+      "id": "sum_thermal_conductivity",
+      "uid": "e5d0388c6c18b3fb6cb08647ddaf431bfb39e60f33e0abd1ecdd2cb0c05575ee",
+      "formula_sha256": "05612b74df513ca263a0cbb8a80f9c5f703dceced4703b2bb1f8adf76ff8f28e",
+      "formula_latex": "\\kappa_{tot} = \\kappa + \\kappa_{e}",
+      "lean_definition": "OMAI.PhyslibBridge.totalThermalConductivity"
+    }
+  ],
+  "interpretations": [
+    "Scalar thermoelectric values at a single operating point; tensor specialization is explicitly isotropic.",
+    "For harmonic formulas n_BE(x)=1/(exp(x)-1), omega angular rad/s, hbar>0, kB>0, omega>0, T>0; zero-point energy included.",
+    "Harmonic F=U-TS is closed-form consistency only; no ensemble identification or derivative/heat-capacity claim."
+  ]
+}

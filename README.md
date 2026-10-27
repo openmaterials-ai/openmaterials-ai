@@ -2,7 +2,7 @@
 
 # openmaterials-ai
 
-[![OpenMaterials map version](https://openmaterials.ai/badge/95138cc2c127.svg)](https://openmaterials.ai/)
+[![OpenMaterials map version](https://openmaterials.ai/badge/45be98afae7c.svg)](https://openmaterials.ai/)
 
 
 OpenMaterials is a versioned, content-addressed map of physics. Physical
@@ -20,8 +20,8 @@ Lean dimensional proof where one exists, the codes that produce it with their
 citations, and the values attached to it with their provenance. OpenMaterials is
 stewarded by OpenMaterials-AI, a foundation in formation.
 
-At map version 95138cc2c127 the map has 132 typed quantities (118 observable, 11
-hidden, 3 parameter), 296 links (257 formula, 39 parameter), and 129 operators
+At map version 45be98afae7c the map has 136 typed quantities (122 observable, 11
+hidden, 3 parameter), 307 links (265 formula, 42 parameter), and 133 operators
 in 18 tiers. It holds representations for 33 codes and 93 committed values (87
 from simulations, 6 from measurements). The [codes
 bibliography](https://openmaterials.ai/codes/) lists each code with its
@@ -211,9 +211,39 @@ with coverage counts from the published export, and the
 operator on the map by what a proof of its formula would take, from
 generator-provable algebra to the open analysis frontier (Brillouin-zone
 sums, correlation integrals). A hand-reviewed
-[crosswalk](https://openmaterials.ai/data/physlib_crosswalk.json) links map
-nodes to the physlib declarations that formalize the same concept, so
-`resolve()` can hand an agent the formal lemma alongside the formula.
+[historical crosswalk](https://openmaterials.ai/data/physlib_crosswalk.json)
+preserves source correspondences at the old dependency pin. Its `exact` labels
+do not establish model-specific equivalence, particularly for per-mode phonon
+quantities versus generic ensemble definitions.
+
+The [current formula bridge](https://openmaterials.ai/lean/bridge/) lists every
+quantity and operator, including those with no established correspondence.
+Each mapping records the scientific identity, formula fingerprint, pinned Physlib
+declarations, model, units, normalization, hypotheses, and remaining proof
+obligations. `omai.formula_bindings` exposes this metadata from the installed
+package; the resolver adds it without replacing existing fields. The records
+distinguish source links from compiled bridge theorems. The compiled results
+include the full single-mode harmonic ensemble's F/U/S/C formulas, their finite
+uniform-q molar contractions, temperature representations, and signed inviscid
+pressure. A heterogeneous joint-ensemble proof now establishes the product
+interpretation of the four molar formulas. Volumetric heat capacity has both
+single-mode-sum and joint-ensemble proofs with positive primitive-cell volume.
+A static-plus-harmonic volume family also proves the local constant-pressure
+identity `Cp - Cv = T V_m alpha_V^2 K_T`, using actual ensemble enthalpy and a
+common primitive-cell molar basis. Nonzero-expansion and zero-response examples
+are compiled; numerical QHA producers remain unverified. Each result retains
+its model and unit conditions.
+
+The [map's PhysLean / Physlib navigator](https://openmaterials.ai/map/) connects
+quantities and operators to upstream declarations and back. The Python APIs
+`formula_bindings_for_physlib(declaration=..., module=...)` and
+`physlib_declaration_index()` expose the same references. Coverage separates
+formula outputs, standalone quantity interpretations, and associated inputs;
+reverse lookup does not assert a mathematical inverse.
+
+`lean/bridge/` uses Physlib's seven-base ISQ dimension system with its own pinned
+build. The historical `lean/` package is unchanged. These proofs do not validate
+numerical implementations or justify converting arbitrary tensors to scalars.
 
 ## A slice of the map, as Mermaid
 
@@ -338,6 +368,11 @@ credit.
 `validate_light` reports unresolved rows under `unresolved_registry_rows`; no
 writer refuses them. The registry ships the releases under `code`.
 
+External graph-frontier consumers can use the
+[stable external-solve snapshot API](docs/external-solve-snapshots.md) to carry
+one detached, validated request through capability binding and planning.
+Existing dictionary APIs and wire identities remain unchanged.
+
 **The vectors.** `omai/vectors/*.json` ship inside the wheel.
 
 - `lineage_ids.json`: 32 lineages, each with its canonical JSON, `lineage_id`,
@@ -408,7 +443,7 @@ version. Widening a schema field to
 accept a shape real producers already emit is a patch, since it can only turn a
 spurious rejection into an acceptance. Removing a public name is a minor
 version before 1.0. Consumers pin an exact version
-(`openmaterials-ai==0.3.1`).
+(`openmaterials-ai==0.4.0`).
 
 ## Install
 

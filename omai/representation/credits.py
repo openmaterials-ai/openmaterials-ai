@@ -332,7 +332,7 @@ CODE_CREDITS: dict[str, dict] = {
         "Comput. Mol. Sci.)",
         "url": "https://github.com/grimme-lab/xtb",
     },
-    # --- cure kinetics ------------------------------------------------------
+    # --- the package's own evaluators ---
     "openmaterials-ai": {
         "name": "openmaterials-ai",
         "citation": "G. Barbalinardo, openmaterials.ai: a versioned, "

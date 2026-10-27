@@ -6,8 +6,8 @@
 <title>OpenMaterials | A versioned, content-addressed map of physical quantities</title>
 <meta name="description" content="OpenMaterials is a versioned, content-addressed map of physical quantities and formulas. Simulated and measured values attach to it with their provenance. Data is CC BY 4.0 and code is Apache 2.0.">
 <link rel="canonical" href="https://openmaterials.ai/">
-<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#F4F1EA" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0F0E0C" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <meta property="og:type" content="website">
@@ -20,14 +20,14 @@
 <meta property="og:image:alt" content="The openmaterials.ai mark and wordmark above the line &quot;A versioned map of physics.&quot; A smaller line gives the licenses: map data CC BY 4.0 and code Apache 2.0.">
 <meta name="twitter:card" content="summary_large_image">
 <script>try{const t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch{}</script>
-<link rel="preload" href="assets/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="assets/fonts/GeistMono-Variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/newsreader-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/jetbrains-mono-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/site.css">
 <script type="application/ld+json" id="om-jsonld">
 {"@context": "https://schema.org", "@graph": [
  {"@type": "Dataset", "@id": "https://openmaterials.ai/#map", "name": "OpenMaterials",
   "description": "OpenMaterials is a versioned, content-addressed map of physical quantities and formulas. Simulated and measured values attach to it with their provenance. Data is CC BY 4.0 and code is Apache 2.0.",
-  "url": "https://openmaterials.ai/", "version": "95138cc2c127280efd92d0c4e4ff753bf8a513758c4d97cc415c6edb647e6af8",
+  "url": "https://openmaterials.ai/", "version": "45be98afae7c2813f40dabc9996ac11c7ab4257172bd72f31c69a52a62798e1a",
   "license": "https://creativecommons.org/licenses/by/4.0/", "isAccessibleForFree": true,
   "creator": {"@id": "https://openmaterials.ai/#steward"}, "maintainer": {"@id": "https://openmaterials.ai/#steward"},
   "distribution": [
@@ -39,7 +39,7 @@
    {"@type": "DataDownload", "name": "lean.json", "encodingFormat": "application/json", "contentUrl": "https://openmaterials.ai/data/lean.json"},
    {"@type": "DataDownload", "name": "version.json", "encodingFormat": "application/json", "contentUrl": "https://openmaterials.ai/data/version.json"}]},
  {"@type": "Project", "@id": "https://openmaterials.ai/#steward", "name": "OpenMaterials-AI", "description": "A foundation in formation.", "url": "https://github.com/openmaterials-ai"},
- {"@type": "SoftwareSourceCode", "@id": "https://openmaterials.ai/#package", "name": "openmaterials-ai", "version": "0.3.1",
+ {"@type": "SoftwareSourceCode", "@id": "https://openmaterials.ai/#package", "name": "openmaterials-ai", "version": "0.4.0",
   "codeRepository": "https://github.com/openmaterials-ai/openmaterials-ai", "programmingLanguage": "Python",
   "license": "https://www.apache.org/licenses/LICENSE-2.0", "url": "https://pypi.org/project/openmaterials-ai/",
   "maintainer": {"@id": "https://openmaterials.ai/#steward"}}]}
@@ -50,7 +50,7 @@
 <div data-site-header></div>
 
 <main class="frame" id="main">
-  <section class="hero featured">
+  <section class="hero">
     <div class="hero-text">
       <h1>A versioned map of physics.</h1>
       <p class="lede">OpenMaterials is a typed graph of physical quantities and the formulas that relate them. Representations of <span data-bind="codes">33</span> codes and workflows connect their outputs to its nodes, and values from simulations and measurements attach to those nodes with their provenance and a content hash.</p>
@@ -58,24 +58,28 @@
         <a class="btn btn--primary" href="map/">Open the map</a>
         <a class="btn btn--secondary" href="#contribute">Contribute a value</a>
       </div>
-    </div>
-    <article class="card datum" data-instance="f735a05c14db39676b46e7f1100c55152afb7bf49cea79c9e1f61b8de075c619">
-      <p class="eyebrow">Committed value</p>
-      <p class="figure">147 <span class="unit">W/(m K)</span></p>
-      <dl class="ledger">
-        <div><dt>Quantity</dt><dd>Thermal conductivity</dd></div>
-        <div><dt>Material</dt><dd>Si (diamond)</dd></div>
-        <div><dt>Conditions</dt><dd>300 K, quantum statistics, direct inversion of scattering matrix, 19x19x19 q-grid, DFPT LDA</dd></div>
-        <div><dt>Source</dt><dd><a href="https://doi.org/10.1063/5.0020443">Barbalinardo et al. 2020</a>, kALDo</dd></div>
-        <div><dt>Id</dt><dd class="mono">f735a05c14db39676b46e7f1100c55152afb7bf49cea79c9e1f61b8de075c619</dd></div>
-        <div><dt>Measured</dt><dd data-instance="55ee996282a678f8e01cff39eb1973ca18f17440f6aa80662cff5dd6c32ebe1b"><a href="play/#id=55ee996282a678f8e01cff39eb1973ca18f17440f6aa80662cff5dd6c32ebe1b">156 W/(m K)</a>, Glassbrenner and Slack 1964</dd></div>
+      <dl class="ledger stamp">
+        <div><dt>Map version</dt><dd class="mono"><span data-bind="version12">45be98afae7c</span></dd></div>
+        <div><dt>Quantities</dt><dd class="mono"><span data-bind="n-nodes">136</span></dd></div>
+        <div><dt>Codes</dt><dd class="mono"><span data-bind="codes">33</span></dd></div>
+        <div><dt>Values</dt><dd class="mono"><span data-bind="n-values">93</span>, <span data-bind="n-meas">6</span> of them measured</dd></div>
       </dl>
+    </div>
+    <figure class="fig datum" id="fig-1" aria-labelledby="fig-1-cap">
+      <p class="eyebrow fig-label"><b>Fig. 1</b>Silicon near 300 K, every value on the map</p>
+      <div class="fig-plot" id="fig-1-plot" aria-hidden="true"></div>
+      <dl class="fig-rows" id="fig-1-rows">
+        <div><dt>Measured</dt><dd><a href="play/#id=55ee996282a678f8e01cff39eb1973ca18f17440f6aa80662cff5dd6c32ebe1b">156</a></dd></div>
+        <div><dt>Published calculations</dt><dd>118, 123, 140, <a href="play/#id=f735a05c14db39676b46e7f1100c55152afb7bf49cea79c9e1f61b8de075c619">147</a>, 166 (277 K)</dd></div>
+        <div><dt>Recorded runs</dt><dd>16.7 to 380</dd></div>
+      </dl>
+      <figcaption id="fig-1-cap">Every thermal conductivity value for crystalline silicon between 270 and 310 K on the map, in W/(m K), on a log axis. One measurement, by Glassbrenner and Slack (1964). The published calculations differ in statistics (quantum or classical) and solver (direct inversion or RTA), and Esfarjani et al. (2011) also in force constants and temperature (277 K). The recorded runs use the Tersoff potential to test codes, not to predict silicon. Four of them, 17 to 27 W/(m K), sit an order of magnitude below the other four and below published Tersoff values, for a cause their records do not yet establish; within those four, kALDo runs 11 to 16% above phono3py with the same solver. Each value keeps its conditions, and an incomplete record says so.
+        <span class="src">Source: <a href="data/instances.json">instances.json</a>, map version <span data-bind="version12">45be98afae7c</span>.</span></figcaption>
       <div class="cta-row">
-        <a class="btn btn--secondary btn--sm" href="https://materialscodegraph.com/?ref=omai-home#hero-connect">Run it for your material</a>
-        <a class="btn btn--secondary btn--sm" href="play/#id=f735a05c14db39676b46e7f1100c55152afb7bf49cea79c9e1f61b8de075c619">Open the datasheet</a>
-        <a class="btn btn--secondary btn--sm" href="map-trace/#node=ThermalConductivity%5Bbte_solver%3Ddirect_inverse%5D">Trace it</a>
+        <a class="btn btn--secondary btn--sm" href="https://materialscodegraph.com/?ref=omai-home#hero-connect">Price a calculation on MaterialsCodeGraph</a>
+        <a class="btn btn--secondary btn--sm" href="agreement/">Compare codes on one quantity</a>
       </div>
-    </article>
+    </figure>
   </section>
 
   <section id="fits">
@@ -123,7 +127,7 @@
         <dl class="ledger">
           <div><dt><a href="agreement/">Cross-code agreement</a></dt><dd>Values of one quantity from different methods or codes, with the spread of each group.</dd></div>
           <div><dt><a href="lineage/">Lineage tour</a></dt><dd>One QHGK thermal conductivity result for amorphous silicon, from its derivation on the map to its lineage record.</dd></div>
-          <div><dt><a href="lean/">Verified layer</a></dt><dd>Dimensions of <span data-bind="lean-nodes">105</span> nodes declared in Lean 4, with <span data-bind="lean-edges">12</span> edge dimension statements proven against physlib and <span data-bind="lean-idents">18</span> operator identities against Mathlib.</dd></div>
+          <div><dt><a href="lean/">Verified layer</a></dt><dd>Dimensions of <span data-bind="lean-nodes">109</span> nodes declared in Lean 4, with <span data-bind="lean-edges">12</span> edge dimension statements proven against physlib and <span data-bind="lean-idents">18</span> operator identities against Mathlib.</dd></div>
           <div><dt><a href="lean/roadmap/">Formalization roadmap</a></dt><dd>Every operator on the map, rated by what a Lean proof of its formula would take: provable, trivial, needs analysis, or nothing to prove.</dd></div>
         </dl>
       </div>
@@ -139,16 +143,16 @@
     </div>
   </section>
 
-  <section class="featured" id="map">
+  <section id="map">
     <div class="section-head">
       <h2>The map</h2>
     </div>
     <div class="split">
       <div class="facts">
         <dl class="ledger">
-          <div><dt>Quantities</dt><dd><span id="s-nodes">132 (118 observable, 11 hidden, 3 parameter)</span></dd></div>
-          <div><dt>Links</dt><dd><span id="s-links">296 (257 formula, 39 parameter)</span></dd></div>
-          <div><dt>Operators</dt><dd><span id="s-ops">129</span></dd></div>
+          <div><dt>Quantities</dt><dd><span id="s-nodes">136 (122 observable, 11 hidden, 3 parameter)</span></dd></div>
+          <div><dt>Links</dt><dd><span id="s-links">307 (265 formula, 42 parameter)</span></dd></div>
+          <div><dt>Operators</dt><dd><span id="s-ops">133</span></dd></div>
           <div><dt>Tiers</dt><dd><span id="s-tiers">18</span></dd></div>
         </dl>
         <p>Each quantity is a typed node. An observable carries no gauge freedom, so codes given the same inputs should agree on it. A hidden quantity depends on a gauge choice (an eigenvector phase, or the basis inside a degenerate subspace). It is an intermediate, like the eigenvectors, or an approximation, like the RTA thermal conductivity, and codes can differ on it. An operator computes a quantity from its inputs: formula links carry its symbolic formula, and parameter links supply inputs such as the cell volume. The nodes are grouped into tiers, such as Sources, Harmonic, Transport, Ground state, and Thermochemistry.</p>
@@ -226,15 +230,15 @@
   </section>
 
   <section class="close" id="cite">
-    <h2>Cite the map version you use: <span class="hash" data-bind="version12">95138cc2c127</span>.</h2>
-    <p class="cite-text">Barbalinardo, G. openmaterials.ai: a versioned, content-addressed map of physics. Map version <span data-bind="version12">95138cc2c127</span>. https://openmaterials.ai, accessed <span data-bind="today">2026-10-04</span>.</p>
+    <h2>Cite the map version you use: <span class="hash" data-bind="version12">45be98afae7c</span>.</h2>
+    <p class="cite-text">Barbalinardo, G. openmaterials.ai: a versioned, content-addressed map of physics. Map version <span data-bind="version12">45be98afae7c</span>. https://openmaterials.ai, accessed <span data-bind="today">2026-10-04</span>.</p>
     <figure class="code">
       <figcaption>BibTeX</figcaption>
-<pre>@misc{openmaterials-<span data-bind="version12">95138cc2c127</span>,
+<pre>@misc{openmaterials-<span data-bind="version12">45be98afae7c</span>,
   author = {Barbalinardo, Giuseppe},
   title  = {{openmaterials.ai}: a versioned, content-addressed map of physics},
   url    = {https://openmaterials.ai},
-  note   = {Map version <span data-bind="version12">95138cc2c127</span>, accessed <span data-bind="today">2026-10-04</span>}
+  note   = {Map version <span data-bind="version12">45be98afae7c</span>, accessed <span data-bind="today">2026-10-04</span>}
 }</pre>
     </figure>
     <div class="cta-row">
@@ -248,7 +252,7 @@
 <script src="assets/site.js"></script>
 <script>
 /* Each count and the map version are refreshed at load from the published files. The static text is
-   the value at map version 95138cc2c127 and stays in place if a file cannot be read. */
+   the value at map version 45be98afae7c and stays in place if a file cannot be read. */
 (function () {
   function get(p) { return fetch(p).then(function (r) { if (!r.ok) throw new Error(p); return r.json(); }); }
   function put(sel, text) {
@@ -266,13 +270,17 @@
       count(g.nodes, is('type', 'hidden')) + ' hidden, ' + count(g.nodes, is('type', 'parameter')) + ' parameter)');
     put('#s-links', g.links.length + ' (' + (g.links.length - params) + ' formula, ' + params + ' parameter)');
     put('#s-tiers', g.tiers.length);
+    put('[data-bind="n-nodes"]', g.nodes.length);
   }).catch(skip);
   get('data/lean_roadmap.json').then(function (r) { put('#s-ops', r.rows.length); }).catch(skip);
   get('data/codes.json').then(function (c) { put('[data-bind="codes"]', Object.keys(c).length); }).catch(skip);
   get('data/instances.json').then(function (v) {
     put('#s-values', v.length);
+    put('[data-bind="n-values"]', v.length);
     put('#s-sim', count(v, kind('simulation')));
     put('#s-meas', count(v, kind('measurement')));
+    put('[data-bind="n-meas"]', count(v, kind('measurement')));
+    figure1(v);
   }).catch(skip);
   get('data/lean.json').then(function (l) {
     put('[data-bind="lean-nodes"]', Object.keys(l.nodes).length);
@@ -280,6 +288,63 @@
     put('[data-bind="lean-idents"]', Object.keys(l.identities).length);
   }).catch(skip);
   get('data/version.json').then(function (v) { put('[data-bind="version12"]', String(v.version).slice(0, 12)); }).catch(skip);
+  /* Fig. 1: crystalline silicon's thermal conductivity between 270 and 310 K, one dot per value,
+     on a log axis, grouped by where the value comes from. Each dot opens its datasheet. */
+  function figure1(all) {
+    var NS = 'http://www.w3.org/2000/svg', ROWS = ['Measured', 'Published calculations', 'Recorded runs'];
+    function T(c) { var t = c.T != null ? c.T : c.temperature_K; return parseFloat(t); }
+    var pts = all.filter(function (x) {
+      return /^ThermalConductivity/.test(x.variable) && /^Si( \(diamond\))?$/.test(x.material) && T(x.conditions) >= 270 && T(x.conditions) <= 310 && +x.value > 0;
+    }).map(function (x) {
+      var row = x.source.kind === 'measurement' ? 0 : /^paper:/.test(x.source.ref) ? 1 : 2;
+      return { id: x.id, v: +x.value, row: row, t: T(x.conditions), tip: +(+x.value).toPrecision(3) + ' ' + x.units + ', ' + x.source.ref + ', ' + T(x.conditions) + ' K' };
+    }).sort(function (a, b) { return a.v - b.v; });
+    if (!pts.length) return;
+    // one SVG unit is one CSS pixel at the plot's width, so labels keep their size on phones
+    var plot = document.getElementById('fig-1-plot');
+    var W = Math.max(280, Math.min(560, plot.clientWidth || 480)), narrow = W < 420;
+    var L = narrow ? 76 : 166, R = W - 10, rowH = 44, top = 14, LO = 10, HI = 500, H = top + ROWS.length * rowH + 30;
+    var LABELS = narrow ? ['Measured', 'Published', 'Runs'] : ROWS;
+    function X(v) { v = Math.min(HI, Math.max(LO, v)); return L + (Math.log10(v) - Math.log10(LO)) / (Math.log10(HI) - Math.log10(LO)) * (R - L); }
+    function el(tag, at, parent) { var e = document.createElementNS(NS, tag); for (var k in at) e.setAttribute(k, at[k]); if (parent) parent.appendChild(e); return e; }
+    var svg = el('svg', { viewBox: '0 0 ' + W + ' ' + H, class: 'fig1' });
+    var meas = pts.filter(function (p) { return p.row === 0; })[0];
+    ROWS.forEach(function (name, r) {
+      var y = top + r * rowH + rowH / 2;
+      el('line', { x1: L, x2: R, y1: y, y2: y, class: 'row-rule' }, svg);
+      el('text', { x: 0, y: y + 4, class: 'row-lab' }, svg).textContent = LABELS[r];
+    });
+    [10, 30, 100, 300].forEach(function (v) {
+      var x = X(v), y = top + ROWS.length * rowH;
+      el('line', { x1: x, x2: x, y1: top, y2: y + 4, class: 'gridline' }, svg);
+      el('text', { x: x, y: y + 18, 'text-anchor': 'middle', class: 'tick' }, svg).textContent = v;
+    });
+    if (meas) el('line', { x1: X(meas.v), x2: X(meas.v), y1: top - 6, y2: top + ROWS.length * rowH, class: 'meas-line' }, svg);
+    var last = {};
+    pts.forEach(function (p) {
+      var x = X(p.v), y = top + p.row * rowH + rowH / 2, k = p.row;
+      if (last[k] != null && x - last[k].x < 9) { last[k].n += 1; y += (last[k].n % 2 ? -1 : 1) * 8; } else last[k] = { x: x, n: 0 };
+      last[k].x = x;
+      var a = el('a', { href: 'play/#id=' + p.id, tabindex: '-1' }, svg);   // the rows below carry the same links for keyboards
+      el('title', {}, a).textContent = p.tip;
+      el('circle', { cx: x, cy: y, r: p.row === 0 ? 6 : 4.5, class: 'dot dot--' + p.row }, a);
+    });
+    plot.textContent = ''; plot.appendChild(svg);
+    var rows = document.getElementById('fig-1-rows');
+    rows.textContent = '';
+    ROWS.forEach(function (name, r) {
+      var mine = pts.filter(function (p) { return p.row === r; });
+      if (!mine.length) return;
+      var div = document.createElement('div'), dt = document.createElement('dt'), dd = document.createElement('dd');
+      dt.textContent = name;
+      mine.forEach(function (p, i) {
+        if (i) dd.appendChild(document.createTextNode(', '));
+        var a = document.createElement('a'); a.href = 'play/#id=' + p.id; a.textContent = +p.v.toPrecision(3) + (p.t !== 300 ? ' (' + p.t + ' K)' : '');
+        dd.appendChild(a);
+      });
+      div.appendChild(dt); div.appendChild(dd); rows.appendChild(div);
+    });
+  }
   var d = new Date();   // the Cite block's access date is the reader's today
   put('[data-bind="today"]', d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'));
 })();

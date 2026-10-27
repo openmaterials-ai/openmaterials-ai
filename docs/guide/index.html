@@ -6,8 +6,8 @@
 <title>Guide | OpenMaterials</title>
 <meta name="description" content="The guide shows how to install the omai kernel, resolve a label to map nodes, load the graph, and parse a paper.">
 <link rel="canonical" href="https://openmaterials.ai/guide/">
-<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#F4F1EA" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0F0E0C" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
 <meta property="og:type" content="website">
@@ -20,8 +20,8 @@
 <meta property="og:image:alt" content="The openmaterials.ai mark and wordmark above the line &quot;A versioned map of physics.&quot; A smaller line gives the licenses: map data CC BY 4.0 and code Apache 2.0.">
 <meta name="twitter:card" content="summary_large_image">
 <script>try{const t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch{}</script>
-<link rel="preload" href="../assets/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="../assets/fonts/GeistMono-Variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../assets/fonts/newsreader-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../assets/fonts/jetbrains-mono-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="../assets/site.css">
 </head>
 <body>
@@ -51,7 +51,7 @@
       <section class="gsec" id="install">
         <h2>Install</h2>
         <div class="snippet" data-snippet="shell">
-          <div class="snippet-head"><span class="snippet-title">Install openmaterials-ai 0.3.1 from PyPI</span><span class="snippet-lang">shell</span></div>
+          <div class="snippet-head"><span class="snippet-title">Install openmaterials-ai 0.4.0 from PyPI</span><span class="snippet-lang">shell</span></div>
           <pre>pip install openmaterials-ai</pre>
         </div>
         <p>The map data is public JSON under <code>/data/</code>, so reading it needs no install. To work on the map itself, clone the repository and install it in editable mode.</p>
@@ -126,7 +126,8 @@ from omai.operator.identity import node_id
 print(node_id(THERMAL_CONDUCTIVITY)[:12], THERMAL_CONDUCTIVITY.fields[0].dimension.name)
 # a03324d4def5 thermal_conductivity</pre>
         </div>
-        <p>The dimensional layer is exported to Lean. <code>python -m omai.physlean_export</code> writes <code>lean/OpenMaterials.lean</code>, which declares each exported node's <code>Dimension</code> and states a theorem for each edge whose output dimension is the product of its input dimensions; the file compiles against physlib. The map and the playground show the selected node's Lean dimension, and the playground's sub-map shows each edge theorem. <code>OpenMaterialsIdentities.lean</code>, also generated, proves that the chained thermodynamic identities (ZT through the power factor, C_P through the molar volume) equal their expanded forms, and <code>OpenMaterialsUnits.lean</code> anchors the map's SI convention to physlib's unit-conversion structure.</p>
+        <p>The historical dimensional layer is exported to Lean. <code>python -m omai.physlean_export</code> writes <code>lean/OpenMaterials.lean</code> against the retained Physlib pin on Lean 4.31.0. It declares dimensions and proves selected input-product dimension equalities. <code>OpenMaterialsIdentities.lean</code> proves real-valued algebraic consequences and compositions under stated assumptions. The SI-to-SI unit theorem does not assert that every stored value is in SI; representations also use units such as linear THz and angstroms.</p>
+        <p>The <a href="../lean/bridge/">current formula bridge</a> uses upstream seven-base ISQ dimensions in an independent package. Its inventory lists source mappings, compiled proofs, and gaps for existing scientific identities. A source link is not an equivalence proof: inspect the assumptions, normalization, tensor scope, and remaining obligations before applying a theorem. The map links to these records beside its formulas. The <a href="../lean/bridge/#response">local static-plus-harmonic Cp response proof</a> uses a common molar free-energy model and a stable constant-pressure branch; it does not verify numerical QHA producers.</p>
       </section>
 
       <section class="gsec" id="mermaid">

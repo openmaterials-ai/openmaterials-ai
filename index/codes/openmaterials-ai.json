@@ -1,7 +1,7 @@
 {
  "representation": "openmaterials-ai",
- "lineage_version": "95138cc2c127280efd92d0c4e4ff753bf8a513758c4d97cc415c6edb647e6af8",
- "map_version": "0c9e4a65d31f7952f0b2c9f6119a089f719fdc110d54f8e3cd1d8a5c33f098b9",
+ "lineage_version": "45be98afae7c2813f40dabc9996ac11c7ab4257172bd72f31c69a52a62798e1a",
+ "map_version": "2b27f48fbddbf744f9098d169ed290cf034274d63b732bdb6420ee8963bf3bce",
  "covers": [
   {
    "node": "CureConversion",
@@ -14,6 +14,29 @@
    "uid": "5789aa6f8439e8b71b48197dd92c6f608f2bf3ca9900bc631d2321f5eded13cb",
    "api": "omai.cure_kinetics.evaluate.glass_transition_temperature",
    "unit": "kelvin"
+  },
+  {
+   "node": "ThermalConductivity[effective_medium=nan,orientation=aligned]",
+   "uid": "fc292985123b709c76547dc02721e60797cf5693fbad40b874826291314d5dd3",
+   "api": "omai.composites.evaluate.nan_kappa_aligned",
+   "unit": "W_per_m_per_K"
+  },
+  {
+   "node": "ThermalConductivity[effective_medium=nan,orientation=random]",
+   "uid": "8cee68745e003909cd8e65688628af53a35c0803ace3f330394bbf0edf338d7b",
+   "api": "omai.composites.evaluate.nan_kappa_random",
+   "unit": "W_per_m_per_K"
+  }
+ ],
+ "aliases": [],
+ "releases": [
+  {
+   "commit": "9dc55652c16478bf4b64e8f15c6dcd3939580bba",
+   "license_source": "https://github.com/openmaterials-ai/openmaterials-ai/tree/v0.4.0 (LICENSE, Apache License 2.0; LICENSE-DATA, CC BY 4.0 for the map data, including the package's copy under omai/data/; pyproject.toml license Apache-2.0 AND CC-BY-4.0)",
+   "released": "2026-10-18",
+   "spdx": "Apache-2.0 AND CC-BY-4.0",
+   "tag": "v0.4.0",
+   "version": "0.4.0"
   }
  ]
 }

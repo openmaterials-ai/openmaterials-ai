@@ -6,8 +6,8 @@
 <title>Map in 3D | OpenMaterials</title>
 <meta name="description" content="The OpenMaterials graph is drawn in 3D, with height set by tier. Select a quantity to show what it is computed from and what it feeds.">
 <link rel="canonical" href="https://openmaterials.ai/map-3d/">
-<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#F4F1EA" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0F0E0C" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
 <meta property="og:type" content="website">
@@ -20,8 +20,8 @@
 <meta property="og:image:alt" content="The openmaterials.ai mark and wordmark above the line &quot;A versioned map of physics.&quot; A smaller line gives the licenses: map data CC BY 4.0 and code Apache 2.0.">
 <meta name="twitter:card" content="summary_large_image">
 <script>try{const t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch{}</script>
-<link rel="preload" href="../assets/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="../assets/fonts/GeistMono-Variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../assets/fonts/newsreader-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../assets/fonts/jetbrains-mono-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="../assets/vendor/katex/dist/katex.min.css">
 <link rel="stylesheet" href="../assets/site.css">
 <style>
@@ -29,11 +29,11 @@
      nodes are the typed quantities, edges are the producing dependencies, and
      HEIGHT encodes tier progression (Sources lowest, later tiers higher). An app
      page: header, toolbar, the scene with the tier list, legend and panel
-     floating over it. Colors are the site.css tokens (each var() carries the
-     light value as its fallback); the scene reads them through #tokenProbe. */
+     floating over it. Colors are the site.css tokens (each var() carries a
+     fallback for when site.css fails to load); the scene reads them through #tokenProbe. */
   *{box-sizing:border-box;}
   html,body{overscroll-behavior:none;}
-  body.app{height:100vh;height:100dvh;margin:0;display:flex;flex-direction:column;overflow:hidden;background:var(--page,#FFFFFF);color:var(--ink,#171717);font:400 14px/20px var(--font-sans,"Geist","Geist Fallback",ui-sans-serif,system-ui,sans-serif);-webkit-font-smoothing:antialiased;}
+  body.app{height:100vh;height:100dvh;margin:0;display:flex;flex-direction:column;overflow:hidden;background:var(--page,#FFFFFF);color:var(--ink,#171717);font:400 14px/20px var(--font-sans,ui-sans-serif,system-ui,sans-serif);-webkit-font-smoothing:antialiased;}
   :focus-visible{outline:2px solid var(--ink,#171717);outline-offset:2px;}
   /* toolbar */
   .toolbar{flex:none;display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:8px var(--inset,16px);border-bottom:1px solid var(--line,#EBEBEB);background:var(--page,#FFFFFF);}
@@ -76,7 +76,7 @@
   .om-panel .x:hover{background:var(--surface-2,#F2F2F2);}
   .om-panel-label{margin:16px 0 8px;font-size:12px;line-height:16px;font-weight:500;letter-spacing:0;text-transform:none;color:var(--ink-2,#4D4D4D);}
   .om-panel .sym{font-size:28px;color:var(--ink,#171717);}
-  .om-panel .badge,.om-panel .tiertag{display:inline-flex;align-items:center;height:24px;padding:0 10px;margin-left:8px;border-radius:9999px;background:var(--surface-2,#F2F2F2);color:var(--ink,#171717);font-family:var(--font-sans,"Geist",ui-sans-serif,system-ui,sans-serif);font-size:12px;font-weight:500;vertical-align:middle;}
+  .om-panel .badge,.om-panel .tiertag{display:inline-flex;align-items:center;height:24px;padding:0 10px;margin-left:8px;border-radius:9999px;background:var(--surface-2,#F2F2F2);color:var(--ink,#171717);font-family:var(--font-sans,ui-sans-serif,system-ui,sans-serif);font-size:12px;font-weight:500;vertical-align:middle;}
   .om-panel .tiertag{color:var(--ink-2,#4D4D4D);}
   .om-panel .name{font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);color:var(--ink-2,#4D4D4D);font-size:13px;margin:8px 0 0;overflow-wrap:anywhere;}
   .formula{background:var(--surface,#FAFAFA);border:1px solid var(--line,#EBEBEB);border-radius:var(--radius,6px);padding:12px;overflow-x:auto;}

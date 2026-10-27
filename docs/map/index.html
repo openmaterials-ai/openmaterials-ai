@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Map | OpenMaterials</title>
-<meta name="description" content="The OpenMaterials map lays out every quantity by tier. Select one to see its formula, the edges that produce it, and the codes that compute it.">
+<meta name="description" content="The OpenMaterials map lays out every quantity by tier. Select one to see its formula, codes, and PhysLean / Physlib references. Browse upstream declarations back to OMAI quantities and operators.">
 <link rel="canonical" href="https://openmaterials.ai/map/">
-<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#F4F1EA" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0F0E0C" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
 <meta property="og:type" content="website">
@@ -20,16 +20,16 @@
 <meta property="og:image:alt" content="The openmaterials.ai mark and wordmark above the line &quot;A versioned map of physics.&quot; A smaller line gives the licenses: map data CC BY 4.0 and code Apache 2.0.">
 <meta name="twitter:card" content="summary_large_image">
 <script>try{const t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch{}</script>
-<link rel="preload" href="../assets/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="../assets/fonts/GeistMono-Variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../assets/fonts/newsreader-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../assets/fonts/jetbrains-mono-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="../assets/vendor/katex/dist/katex.min.css">
 <link rel="stylesheet" href="../assets/site.css">
 <style>
   /* The 2D map, an app page: header, toolbar, a full-bleed canvas with the
      panel and legend floating over it. Colors are the site.css tokens; each
-     var() carries the light value as its fallback. */
+     var() carries a fallback for when site.css fails to load. */
   *{box-sizing:border-box;}
-  body.app{height:100vh;height:100dvh;margin:0;display:flex;flex-direction:column;overflow:hidden;background:var(--page,#FFFFFF);color:var(--ink,#171717);font:400 14px/20px var(--font-sans,"Geist","Geist Fallback",ui-sans-serif,system-ui,sans-serif);-webkit-font-smoothing:antialiased;}
+  body.app{height:100vh;height:100dvh;margin:0;display:flex;flex-direction:column;overflow:hidden;background:var(--page,#FFFFFF);color:var(--ink,#171717);font:400 14px/20px var(--font-sans,ui-sans-serif,system-ui,sans-serif);-webkit-font-smoothing:antialiased;}
   :focus-visible{outline:2px solid var(--ink,#171717);outline-offset:2px;}
   /* toolbar */
   .toolbar{flex:none;display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:8px var(--inset,16px);border-bottom:1px solid var(--line,#EBEBEB);background:var(--page,#FFFFFF);}
@@ -96,7 +96,7 @@
   .om-panel .x:hover{background:var(--surface-2,#F2F2F2);}
   .om-panel-label{margin:16px 0 8px;font-size:12px;line-height:16px;font-weight:500;letter-spacing:0;text-transform:none;color:var(--ink-2,#4D4D4D);}
   .om-panel .sym{font-size:28px;color:var(--ink,#171717);}
-  .om-panel .badge,.om-panel .tiertag{display:inline-flex;align-items:center;height:24px;padding:0 10px;margin-left:8px;border-radius:9999px;background:var(--surface-2,#F2F2F2);color:var(--ink,#171717);font-family:var(--font-sans,"Geist",ui-sans-serif,system-ui,sans-serif);font-size:12px;font-weight:500;vertical-align:middle;}
+  .om-panel .badge,.om-panel .tiertag{display:inline-flex;align-items:center;height:24px;padding:0 10px;margin-left:8px;border-radius:9999px;background:var(--surface-2,#F2F2F2);color:var(--ink,#171717);font-family:var(--font-sans,ui-sans-serif,system-ui,sans-serif);font-size:12px;font-weight:500;vertical-align:middle;}
   .om-panel .tiertag{color:var(--ink-2,#4D4D4D);}
   .om-panel .tier{margin:0 0 8px;font-size:20px;line-height:28px;font-weight:450;color:var(--ink,#171717);}
   .om-panel .name{font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);color:var(--ink-2,#4D4D4D);font-size:13px;margin:8px 0 0;overflow-wrap:anywhere;}
@@ -113,6 +113,15 @@
   .lean-line{margin:4px 0 2px;padding:8px 10px;border:1px solid var(--line,#EBEBEB);border-radius:var(--radius,6px);background:var(--page,#FFFFFF);color:var(--ink,#171717);font:400 12px/16px var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);white-space:pre-wrap;overflow-wrap:anywhere;}
   .lean-badge{color:var(--data-sim,#0C7C55);}
   .muted{color:var(--ink-2,#4D4D4D);}
+  .formal-filters{display:grid;gap:10px;margin:12px 0;}
+  .formal-filters label{display:grid;gap:4px;font-size:12px;}
+  .formal-filters input,.formal-filters select{width:100%;min-width:0;padding:8px;border:1px solid var(--line,#EBEBEB);border-radius:4px;background:var(--page,#FFFFFF);color:var(--ink,#171717);font:inherit;}
+  .formal-binding,.upstream-row{border-top:1px solid var(--line,#EBEBEB);padding:12px 0;overflow-wrap:anywhere;}
+  .upstream-row summary{cursor:pointer;}
+  .formal-badge,.upstream-row .tags{font-size:12px;color:var(--ink-2,#4D4D4D);}
+  .upstream-row .binding{margin-top:16px;}
+  .upstream-row h4{margin-bottom:4px;}
+  .formal-binding ul,.upstream-row ul{padding-left:18px;}
   /* edge formula tip */
   #tip{position:fixed;z-index:30;max-width:420px;padding:8px 10px;border-radius:var(--radius,6px);background:var(--ink,#171717);color:var(--page,#FFFFFF);font-size:13px;line-height:18px;box-shadow:var(--shadow-float,0 0 0 1px #EBEBEB,0 4px 8px -4px rgb(0 0 0 / .04),0 16px 24px -8px rgb(0 0 0 / .06));pointer-events:none;display:none;}
   #tip .op{font-size:12px;font-weight:500;margin-bottom:4px;}
@@ -141,6 +150,7 @@
   <nav class="view-switch" aria-label="Map view"><a href="../map/" aria-current="page">2D</a><a href="../map-3d/">3D</a><a href="../map-trace/">Trace</a></nav>
   <select class="select" id="tierJump" aria-label="Jump to a tier"><option value="">Tier</option></select>
   <select class="select" id="codeFilter" aria-label="Codes"><option value="">All codes</option></select>
+  <button class="btn btn--secondary btn--sm" id="physlibBtn" type="button" aria-controls="panel">PhysLean / Physlib</button>
   <span class="push"></span>
   <button class="btn btn--ghost btn--sm" id="zoomOut" type="button" aria-label="Zoom out">&minus;</button>
   <button class="btn btn--ghost btn--sm" id="zoomIn" type="button" aria-label="Zoom in">+</button>
@@ -162,7 +172,7 @@
   <span><i class="sw param"></i>Parameter</span>
 </div>
 <p class="caption" id="caption">Select a quantity to see its formula, what it is built from, what it feeds, and the codes that compute it.</p>
-<div class="om-panel" id="panel"></div>
+<div class="om-panel" id="panel" role="complementary" aria-label="Map selection and formal references" tabindex="-1"></div>
 </div>
 <div id="fallback"></div>
 <div id="measure"></div>
@@ -175,6 +185,7 @@
 <script src="../assets/vendor/katex/dist/katex.min.js"></script>
 <script src="../assets/map-words.js"></script>
 <script src="../assets/sources.js"></script>
+<script src="../lean/bridge/lib.js"></script>
 <script>
 "use strict";
 // ============================================================================
@@ -203,6 +214,9 @@ let VB={x:0,y:0,w:1000,h:1000}, GW=1000, GH=1000;
 const LABEL_UNITS=22, MIN_SCALE=12/LABEL_UNITS, DEFAULT_SCALE=0.75;   // 16.5 px labels at rest
 let BANDS_TOP=0, lastFocus=null, lastAnchor=null, lastHits=[];
 let leanData={nodes:{},edges:{}};
+let formulaBindings={nodes:{},operators:{}};
+let formalData={bindings:[],inventory:{nodes:[],operators:[]}}, formalDeclarations=[];
+const FB=window.FormulaBridge;
 let nodeById={}, parents={}, children={}, symHtml={}, pos={},
     codesData={}, activeCode=null, tierList=[], tierIndex={}, edgeList=[],
     depth='overview';   // 'overview' | 'expanded' | 'focused'
@@ -254,7 +268,8 @@ Promise.all([
   fetch('../data/graph.json').then(r=>r.json()),
   fetch('../data/codes.json').then(r=>r.json()).catch(()=>({})),
   fetch('../data/semantics.json').then(r=>r.json()).catch(()=>[]),
-  fetch('../data/lean.json').then(r=>r.json()).catch(()=>({nodes:{},edges:{}}))
+  fetch('../data/lean.json').then(r=>r.json()).catch(()=>({nodes:{},edges:{}})),
+  fetch('../data/formula_bindings.json').then(r=>r.ok?r.json():null).catch(()=>null)
 ]).then(build).catch(e=> err('The map data did not load: '+e));
 
 // The semantic index: a node/edge's surface labels (auto + curated), keyed by
@@ -262,8 +277,12 @@ Promise.all([
 // stays MVC-pure; resolveLabels (map-words.js) mirrors omai/semantics.resolve.
 let semById={};
 
-function build([graph, codes, semantics, lean]){
+function build([graph, codes, semantics, lean, bindings]){
   leanData = lean || {nodes:{},edges:{}};
+  if(bindings){ formalData=bindings; formalDeclarations=FB.declarationIndex(bindings); }
+  ['nodes','operators'].forEach(kind=>{
+    ((bindings&&bindings.inventory&&bindings.inventory[kind])||[]).forEach(row=>{ formulaBindings[kind][row.id]=row; });
+  });
   (semantics||[]).forEach(e=>{ semById[e.id]=e; });
   codesData = codes || {};
   graph.nodes.forEach(n=>{ nodeById[n.id]=n; symHtml[n.id]=tex(n.symbol); });
@@ -536,6 +555,16 @@ function selectNode(node){
   }
   const lv=leanData.nodes&&leanData.nodes[node.id];
   if(lv){ h+='<div class="om-panel-label"><span class="lean-badge">Lean dimension</span></div><pre class="lean-line">'+esc(lv.lean)+'</pre>'; }
+  const bindingRow=formulaBindings.nodes[id];
+  if(bindingRow){
+    h+='<div class="om-panel-label">PhysLean / Physlib references</div>';
+    h+=FB.targetReferencesHtml(formalData,'node',id,'../lean/bridge/') || '<p class="muted">No reviewed correspondence for this quantity.</p>';
+    h+='<p><a href="../lean/bridge/#node='+encodeURIComponent(id)+'">Quantity conditions and coverage</a> · <a href="#physlib=1">Browse upstream declarations</a></p>';
+    [...new Set(fl.map(f=>f.op).filter(Boolean))].forEach(op=>{
+      const row=formulaBindings.operators[op];
+      if(row) h+='<p><a href="#operator='+encodeURIComponent(op)+'">'+esc(opName(op))+'</a>: '+(row.binding_ids.length?row.binding_ids.length+' correspondence'+(row.binding_ids.length===1?'':'s'):'gap')+'</p>';
+    });
+  }
   if(ins.length){ h+='<div class="om-panel-label">Built from</div><div class="chips">'+ins.map(chip).join('')+'</div>'; }
   if(outs.length){ h+='<div class="om-panel-label">Feeds</div><div class="chips">'+outs.map(chip).join('')+'</div>'; }
   h+=mappedByHtml(id);
@@ -552,6 +581,7 @@ function showTier(i){
 // The formula of the operator on one edge: a node with several producing routes carries one per operator.
 function edgeFormula(n, op){ const f=(n.formulas||[]).find(x=>x.op===op); return f?f.latex:n.formula; }
 function selectEdge(key, op){
+  if(formulaBindings.operators[op]){ selectOperator(op); return; }
   const [s,t]=key.split('>>'); const tn=nodeById[t], sn=nodeById[s]; if(!tn||!sn) return;
   captionEl.hidden=true; depth='focused';
   clearDim();
@@ -564,23 +594,77 @@ function selectEdge(key, op){
   panelEl.innerHTML=h; panelEl.style.display='block';
 }
 
-// ---- deep links: #node=<id> selects and frames a quantity -------------------
-function nodeFromHash(){ const m=location.hash.match(/[#?&]node=([^&]*)/); return m?decodeURIComponent(m[1]):null; }
-function codeFromHash(){ const m=location.hash.match(/[#?&]code=([^&]*)/); return m?decodeURIComponent(m[1]):null; }
+// Formal references are navigation metadata; they never become graph edges.
+function selectOperator(id){
+  const row=formulaBindings.operators[id]; if(!row) return;
+  captionEl.hidden=true; depth='focused'; clearDim();
+  const related=new Set(row.inputs.concat(row.outputs));
+  vp.querySelectorAll('.node').forEach(el=>{ el.classList.toggle('dim',!related.has(el.dataset.id)); el.classList.toggle('sel',row.outputs.includes(el.dataset.id)); });
+  vp.querySelectorAll('.edge').forEach(el=>{ const on=el.dataset.op===id; el.classList.toggle('dim',!on); el.classList.toggle('hot',on); });
+  let h=closeBtn()+'<div class="om-panel-label">Operator</div><h2 class="name">'+esc(id)+'</h2>';
+  h+='<div class="om-panel-label">Formula</div><div class="formula">'+tex(row.formula_latex,true)+'</div>';
+  h+='<div class="om-panel-label">Inputs</div><div class="chips">'+(row.inputs.length?row.inputs.map(chip).join(''):'No input quantities')+'</div>';
+  h+='<div class="om-panel-label">Outputs</div><div class="chips">'+row.outputs.map(chip).join('')+'</div>';
+  h+='<div class="om-panel-label">PhysLean / Physlib references</div>';
+  h+=FB.targetReferencesHtml(formalData,'operator',id,'../lean/bridge/') || '<p class="muted">No reviewed correspondence for this formula.</p>';
+  h+='<p><a href="../lean/bridge/#operator='+encodeURIComponent(id)+'">Conditions and coverage</a> · <a href="#physlib=1">Browse upstream declarations</a></p>';
+  panelEl.innerHTML=h; panelEl.style.display='block';
+  history.replaceState(null,'',FB.fragment({operator:id}));
+  const visible=[...related].filter(name=>pos[name]); if(visible.length) fitTo(visible,row.outputs[0]);
+  mapStatus.textContent='Operator '+id+' selected; Physlib references do not change the scientific graph.';
+}
+function showFormalNavigator(state){
+  state=state||{}; captionEl.hidden=true;
+  let exactDeclaration=state.declaration||'', exactModule=state.module||'';
+  const modules=[...new Set(formalDeclarations.map(row=>row.module))].sort();
+  let h=closeBtn()+'<h2 class="tier">PhysLean / Physlib</h2><p class="muted">Physlib combines the former PhysLean and Lean-QuantumInfo libraries. Follow a declaration to its OMAI quantities or operators. These references are not computation edges or inverse proofs.</p>';
+  h+='<div class="formal-filters"><label>Declaration or OMAI target<input type="search" id="formal-search" placeholder="Search references"></label>';
+  h+='<label>Module<select id="formal-module"><option value="">All modules</option>'+modules.map(module=>'<option value="'+attr(module)+'">'+esc(module)+'</option>').join('')+'</select></label>';
+  h+='<label>Binding evidence<select id="formal-evidence"><option value="">All</option><option value="compiled_bridge">Compiled bridges</option><option value="source_correspondence">Source-only</option></select></label></div>';
+  h+='<p id="formal-count" role="status" aria-live="polite"></p><div id="formal-results"></div><p><a href="../lean/bridge/#upstream-inventory">Full inventory and coverage</a></p>';
+  panelEl.innerHTML=h; panelEl.style.display='block';
+  const input=document.getElementById('formal-search'), module=document.getElementById('formal-module'), evidence=document.getElementById('formal-evidence');
+  module.value=exactModule;
+  function render(){
+    const rows=FB.selectDeclarations(formalDeclarations,input.value,exactModule||module.value,evidence.value,exactDeclaration);
+    document.getElementById('formal-count').textContent=rows.length+' of '+formalDeclarations.length+' referenced declarations';
+    document.getElementById('formal-results').innerHTML=rows.map(row=>FB.declarationHtml(row,{mapBase:'',bridgeBase:'../lean/bridge/'})).join('')||'<p>No matching reviewed declarations.</p>';
+    if(rows.length===1) document.querySelector('#formal-results details').open=true;
+  }
+  [input,module,evidence].forEach(control=>control.addEventListener('input',()=>{
+    exactDeclaration=''; exactModule=''; render(); history.replaceState(null,'',FB.fragment({physlib:'1',module:module.value}));
+  }));
+  render();
+  history.replaceState(null,'',FB.fragment({physlib:'1',declaration:exactDeclaration,module:exactModule}));
+  panelEl.focus();
+}
+document.getElementById('physlibBtn').addEventListener('click',()=>showFormalNavigator());
+
+// ---- deep links: quantities, real operators, and formal-reference navigation
+function nodeFromHash(){ return new URLSearchParams(location.hash.slice(1)).get('node'); }
+function codeFromHash(){ return new URLSearchParams(location.hash.slice(1)).get('code'); }
 function syncHash(id){
   const h=id?('#node='+encodeURIComponent(id)):'';
   if(location.hash===h||(!h&&!location.hash)) return;
   history.replaceState(null,'',h||location.pathname+location.search);
 }
+function missingFormalTarget(state){
+  clearDim(); panelEl.innerHTML=closeBtn()+'<p>No such OMAI '+esc(state.kind)+': '+esc(state.id)+'</p><p><a href="#physlib=1">Browse reviewed Physlib references</a></p>'; panelEl.style.display='block';
+  mapStatus.textContent='No such OMAI '+state.kind+': '+state.id;
+}
 function applyHash(){
-  // #code=<name>: land with one code's coverage lit (the codes bibliography links here)
   const codeRef=codeFromHash();
   if(codeRef && codesData[codeRef]){ if(activeCode!==codeRef) toggleCode(codeRef); return; }
-  if(activeCode) toggleCode(activeCode); // the hash no longer names a code: clear the filter
+  if(activeCode) toggleCode(activeCode);
+  const state=FB.mapSelection(location.hash,formalData);
+  if(state.view==='physlib'){ showFormalNavigator(state); return; }
+  if(state.kind==='operator'){
+    if(state.view==='missing'){ missingFormalTarget(state); return; }
+    selectOperator(state.id); return;
+  }
   let id=nodeFromHash(); if(!id) return;
-  if(!nodeById[id]){ const b=id.split('[')[0]; if(!nodeById[b]) return; id=b; }
-  selectNode(nodeById[id]);
-  fitTo(neighborhood(id), id);
+  if(!Object.prototype.hasOwnProperty.call(nodeById,id)){ missingFormalTarget({kind:'quantity',id:id}); return; }
+  selectNode(nodeById[id]); fitTo(neighborhood(id),id);
 }
 window.addEventListener('hashchange', applyHash);
 document.getElementById('copylink').addEventListener('click', function(){

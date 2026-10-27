@@ -32,4 +32,8 @@ register_space_symbols({
     "MagneticMoment": {r"m^{spin}"},
     # Electronic band gap scalar the band-structure solve reports.
     "BandGap": {"E_{gap}"},
+    # Held-out RMSEs of a fitted potential (compute_potential_*_fit_error).
+    "PotentialEnergyFitError": {r"\epsilon_E"},
+    "PotentialForceFitError": {r"\epsilon_F"},
+    "PotentialVirialFitError": {r"\epsilon_W"},
 })

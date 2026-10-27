@@ -7,24 +7,50 @@ id.
 
 ## Unreleased
 
+- `docs/data/releases/openmaterials-ai.json` registers 0.4.0 (tag v0.4.0), so
+  `release_check` resolves an `execution.registry` row naming
+  `openmaterials-ai` 0.4.0 against the live registry. The 0.4.0 wheel's
+  bundled registry predates the tag and still reports it unregistered. No id
+  changes.
+- The map gains PotentialEnergyFitError, PotentialForceFitError and
+  PotentialVirialFitError (dft_ground_state) and
+  PotentialUncertaintyExceedance[method=committee_force_spread]
+  (thermal_transport), each with one producing edge: records 290-295 and
+  296-297, two contributions that supersede nothing, so no node or edge uid
+  moves. The graph version moves from `baf99346621b` to `9476086d423e` and
+  `lineage_version` from `61a981c02604` to `6f66f9c5e9c2`;
+  `format_rules_version` stays `227566bf55a0`. The packaged external-solve
+  request `omai/tools/kaldo-direct-bte-si.json` pins the new graph version,
+  so its `request_id` moves from `9c65fd692c45` to `dd544ee37fd8`. A request
+  minted against graph `baf99346621b` fails as a stale map version.
 - The analog-device-metrology domain adds `ConductanceRelaxationTime`,
   `InterfaceTrapRelaxationTime` and benchmark-qualified
   `ClassificationAccuracy`. `subthreshold_conductance_tangent_time` evaluates
-  the initial raw-conductance tangent under a single-mode subthreshold model;
+  the initial raw-conductance tangent under a single-mode subthreshold model.
   `evaluate_reservoir_classification` is an external response-family contract,
-  not an executable classifier. No literature values or code coverage are added.
-  Existing node, edge and evidence ids, record-format rules and private-evidence
-  handling are unchanged. The graph version moves from `baf99346621b` to
-  `0c9e4a65d31f`, and the unified lineage version from `61a981c02604` to
-  `95138cc2c127`. The packaged kaldo external-solve fixture is re-minted against
-  that graph, moving its `request_id` from `9c65fd692c45` to `0a67c380a225`;
-  its scientific lineage and `lineage_id` are unchanged. Requests pinned to the
+  not an executable classifier. Records 298-302 add the three nodes and two
+  edges, and record 303 clarifies the `ClassificationAccuracy` description.
+  No literature values or code coverage are added. Existing node, edge and
+  evidence ids, record-format rules and private-evidence handling are
+  unchanged. The graph version moves from `9476086d423e` to `2b27f48fbddb`,
+  and the unified lineage version from `6f66f9c5e9c2` to `45be98afae7c`. The
+  packaged kaldo external-solve fixture is re-minted against that graph,
+  moving its `request_id` from `dd544ee37fd8` to `77ba6b7ef660`. Its
+  scientific lineage and `lineage_id` are unchanged. Requests pinned to the
   former graph fail the existing stale-version gate. New public definitions
-  take the next minor package version; this entry does not publish a release.
+  take the next minor package version. This entry does not publish a release.
+
+## 0.4.0
+
+Every consumer pins `openmaterials-ai==0.4.0`. No id changes: the map, its
+operators and graph_version (baf99346) are unchanged.
+
 - `meskal`: the release's `license_source` and the code's credits say the
   source repository is not public, and the credits `url` is null; they cited
   a repository and a page that are not public. The licence read at v1.1.0
-  (BSD-3-Clause) is unchanged. No id changes.
+  (BSD-3-Clause) is unchanged. Release entries stay append-only: an entry's
+  `license_source` text may now be corrected, while `version`, `tag`,
+  `commit`, `released` and `spdx` never change.
 - The `mescal` representation is removed (`docs/data/codes.json` and
   `registry.json` lose the key; `index/codes/mescal.json` is deleted): MESCAL
   is MESKAL's former name and `meskal` maps the same two nodes. `mescal` is an
@@ -33,8 +59,8 @@ id.
   reported), and `private_reasons` gives
   `{field: "execution.registry", kind: "code"}` (public before). The three
   MESCAL values keep their ids. Removed API:
-  `omai.thermal_transport.representation.mescal` and the `MESCAL_*` names;
-  this takes the minor version.
+  `omai.thermal_transport.representation.mescal`, the `MESCAL_*` names and
+  `CODE_CREDITS["mescal"]`; this takes the minor version.
 - `omai.cure_kinetics.evaluate`: `cure_conversion` evaluates
   kamal_cure_conversion as its own integral (Gauss-Legendre in
   s = ln(alpha / (1 - alpha)) and a Newton root, no time step; other rate laws
@@ -47,8 +73,16 @@ id.
   names `openmaterials-ai` now resolves to a representation: `private_reasons`
   gives `[]` for it (a code reason before) and `release_check` reports
   "version not registered" (before: "not a representation") until a release
-  entry lists that version. The map, its operators and every id are
-  unchanged; a new public name and a representation take the minor version.
+  entry lists that version. A new public name and a representation take the
+  minor version.
+- `omai.composites.evaluate`: `nan_kappa_random` and `nan_kappa_aligned`
+  (the aligned node's declared value, al33) evaluate the Nan edges at a
+  composite record's conditions (`NAN_KEYS`), with the interface as a
+  per-direction series film (the 2004 form). The Kapitza radius is km / G,
+  derived; a `kapitza_radius_nm` that disagrees with it is refused.
+  `aligned_tensor_components` also returns al11, which is not a node value.
+  The representation `openmaterials-ai` now also covers the two Nan nodes
+  (still 33 representations).
 
 ## 0.3.1
 
