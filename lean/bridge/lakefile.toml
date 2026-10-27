@@ -4,8 +4,8 @@ defaultTargets = ["OMAIPhyslibBridge"]
 [[require]]
 name = "physlib"
 git = "https://github.com/leanprover-community/physlib.git"
-rev = "8ddcc004043c5b537e4225fa763121c176b62a4a"
+rev = "d70acc20677320d37b38e602e331e900466b704d"
 
 [[lean_lib]]
 name = "OMAIPhyslibBridge"
-globs = ["OMAIPhyslibBridge", "OMAIPhyslibDimensions", "OMAIPhyslibSemantics"]
+globs = ["OMAIPhyslibBridge", "OMAIPhyslibDimensions", "OMAIPhyslibSemantics", "OMAIPhyslibContinuum", "OMAIPhyslibHarmonicEnsemble", "OMAIPhyslibHarmonicSums", "OMAIPhyslibHarmonicProduct", "OMAIPhyslibHarmonicDensity", "OMAIPhyslibJointDensity", "OMAIPhyslibStaticEnsemble", "OMAIPhyslibResponseUnits", "OMAIPhyslibResponseCalculus", "OMAIPhyslibHarmonicVolume", "OMAIPhyslibResponseWitness", "OMAIPhyslibHarmonicResponse"]

@@ -61,11 +61,30 @@ print("installed wheel ok: record_simulation")
 
 # Current formula correspondences are package resources: they must not
 # disappear when the source checkout's docs/data directory is absent.
-from omai.formula_bindings import formula_bindings_for
+from omai.formula_bindings import (
+    formula_bindings_for, formula_bindings_for_physlib, physlib_declaration_index,
+)
 
 formula_rows = formula_bindings_for("PowerFactor", kind="node")
 assert formula_rows, "installed wheel lost its reviewed formula bridge"
 assert all(row["evidence"]["kind"] in ("source_correspondence", "compiled_bridge")
            for row in formula_rows)
 assert formula_bindings_for("contract_power_factor", kind="operator")
-print("installed wheel ok: formula bridge resources")
+source = formula_rows[0]["sources"][0]
+reverse_rows = formula_bindings_for_physlib(declaration=source["name"], module=source["module"])
+assert formula_rows[0] in reverse_rows
+assert any(row["name"] == source["name"] for row in physlib_declaration_index())
+print("installed wheel ok: bidirectional formula bridge resources")
+
+cp_rows = formula_bindings_for("contract_heat_capacity_p_identity", kind="operator")
+assert len(cp_rows) == 1 and cp_rows[0]["id"] == "harmonic-static-cp-identity"
+assert cp_rows[0]["evidence"]["kind"] == "compiled_bridge"
+assert {(row["kind"], row["id"]) for row in cp_rows[0]["evidence"]["proved_targets"]} == {
+    ("operator", "contract_heat_capacity_p_identity"), ("node", "HeatCapacityConstantP"),
+}
+assert cp_rows[0] in formula_bindings_for_physlib(
+    declaration="CanonicalEnsemble.meanEnergyT",
+    module="Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
+)
+assert formula_bindings_for("compute_heat_capacity_p", kind="operator") == []
+print("installed wheel ok: conditional Cp identity, not its numerical sibling")

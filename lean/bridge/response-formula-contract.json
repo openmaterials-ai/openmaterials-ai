@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "scope": "Reviewed OMAI formula endpoint and exact Lean proof source. Hash and compiled-name checks detect drift and provenance errors; they are not automatic symbolic translation or numerical validation.",
+  "source_path": "lean/bridge/OMAIPhyslibHarmonicResponse.lean",
+  "source_sha256": "1914f2a738ae2ffaa4b35cfce04dc3a880f2d67cbf89a4ff47c7f15ec8a5f9b0",
+  "operators": [
+    {
+      "id": "contract_heat_capacity_p_identity",
+      "uid": "79a11e58595c8b262c104330dcfc622f13a787da6bae856cf4f40b57a6a93639",
+      "formula_sha256": "97ed2e0d3a11efad01a3ab0017d21be3da3009446b0b9364673fad4b8fdcb0f1",
+      "formula_latex": "C_{P} = C_V^{mol} + K T V_{m} \\alpha_{V}^{2}",
+      "lean_definition": "OMAI.PhyslibBridge.Response.heatCapacityPIdentity"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "HeatCapacityConstantP",
+      "uid": "08057e4554a3420c933329b3821de9295e2b5950191e23cafe310b0a15adc7b6"
+    }
+  ],
+  "interpretations": [
+    "Use a finite heterogeneous family of full Nat harmonic occupation ensembles, product counting measure, unweighted oscillator energies, dof=0 and phase-space unit=1. Attach static energy N_q*E_0(v) through an actual singleton ensemble before molar normalization.",
+    "Temperature T and primitive-cell volume v are positive. Every frequency is positive and C2 on an open positive-volume domain. Static energy E_0(v) is C2, arbitrary signed, and independent of temperature.",
+    "Keep masses, composition, atom and q counts, reduced-q labels, uniform q weights and Avogadro scale fixed. Frequencies depend on volume but have no independent temperature dependence.",
+    "Use molar volume V_m=N_A*v. Let F_static_joint be the actual free energy after attaching the N_q*E_0(v) singleton, and F_harmonic_joint the unshifted harmonic free energy. Then F_mol=(N_A/N_q)*F_static_joint=N_A*E_0(v)+(N_A/N_q)*F_harmonic_joint. Evaluate all quantities at the same temperature and equilibrium volume, per mole of the same primitive cells, not per mole of atoms.",
+    "The supplied volume path is differentiable at the evaluation temperature and satisfies domain membership and F_V+p_ext=0 throughout a neighborhood, with constant external pressure. Require F_VV>0 at the evaluation point; the proved C2 regularity permits restriction to a stable neighborhood. A pointwise stationarity equation alone is insufficient.",
+    "Interpret expansion as V_m_prime/V_m and bulk modulus as the isothermal derivative V_m*F_VV. Cp is the derivative of actual molar internal energy plus p_ext*V_m along that path; Cv is the fixed-volume capacity of the same actual ensemble.",
+    "Embed model values coherently in SI: T in K, E_0 in J per primitive cell, molar F/U in J/mol of those cells, v in m^3, V_m in m^3/mol, alpha in 1/K, pressure and isothermal bulk modulus in Pa, and capacities in J/(mol K). Convert cell Angstrom^3 by 10^-30 to m^3, canonical pressure eV/Angstrom^3 by 1.602176634e11 to Pa, and serving GPa by 10^9 to Pa. Static energies served in eV require 1.602176634e-19 J/eV. These exact-real interpretations do not certify floating-point adapters.",
+    "Only contract_heat_capacity_p_identity and its HeatCapacityConstantP output are proof subjects. Generic calculus, static-energy, coordinate and witness support do not certify the sibling numerical QHA producer, input producers or other catalog formulas."
+  ]
+}
