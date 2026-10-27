@@ -12,6 +12,17 @@ id.
   `openmaterials-ai` 0.4.0 against the live registry. The 0.4.0 wheel's
   bundled registry predates the tag and still reports it unregistered. No id
   changes.
+- The map gains PotentialEnergyFitError, PotentialForceFitError and
+  PotentialVirialFitError (dft_ground_state) and
+  PotentialUncertaintyExceedance[method=committee_force_spread]
+  (thermal_transport), each with one producing edge: records 290-295 and
+  296-297, two contributions that supersede nothing, so no node or edge uid
+  moves. The graph version moves from `baf99346621b` to `9476086d423e` and
+  `lineage_version` from `61a981c02604` to `6f66f9c5e9c2`;
+  `format_rules_version` stays `227566bf55a0`. The packaged external-solve
+  request `omai/tools/kaldo-direct-bte-si.json` pins the new graph version,
+  so its `request_id` moves from `9c65fd692c45` to `dd544ee37fd8`. A request
+  minted against graph `baf99346621b` fails as a stale map version.
 
 ## 0.4.0
 

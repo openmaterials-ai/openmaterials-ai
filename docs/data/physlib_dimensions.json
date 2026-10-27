@@ -1,9 +1,9 @@
 {
   "physlib_rev": "d70acc20677320d37b38e602e331e900466b704d",
   "lean_toolchain": "leanprover/lean4:v4.35.0",
-  "catalog_nodes": 129,
-  "fields": 131,
-  "encoded_fields": 126,
+  "catalog_nodes": 133,
+  "fields": 135,
+  "encoded_fields": 130,
   "opaque_fields": 5,
   "records": [
     {
@@ -1616,6 +1616,42 @@
       "status": "opaque"
     },
     {
+      "node": "PotentialEnergyFitError",
+      "node_uid": "d3f969394ab79173ea4afe796f00bc4b941141aa5f781e90fb3217e945f70755",
+      "field": "rmse_E",
+      "dimension": "energy",
+      "indices": [],
+      "exponents": [
+        1,
+        2,
+        -2,
+        0,
+        0,
+        0,
+        0
+      ],
+      "declaration": "OMAI.PhyslibBridge.ISQ.dimension_PotentialEnergyFitError_field_rmse_E",
+      "status": "encoded"
+    },
+    {
+      "node": "PotentialForceFitError",
+      "node_uid": "833c3db3fbd145b45ed051cd6eaf782d7555518a0634f524b9ceee7fe49245e0",
+      "field": "rmse_F",
+      "dimension": "force",
+      "indices": [],
+      "exponents": [
+        1,
+        1,
+        -2,
+        0,
+        0,
+        0,
+        0
+      ],
+      "declaration": "OMAI.PhyslibBridge.ISQ.dimension_PotentialForceFitError_field_rmse_F",
+      "status": "encoded"
+    },
+    {
       "node": "PotentialOfMeanForce",
       "node_uid": "7a4fd6ca35f412c375006146204be07210a037901b0e4fb33e1805f243c74b6a",
       "field": "F",
@@ -1631,6 +1667,42 @@
         0
       ],
       "declaration": "OMAI.PhyslibBridge.ISQ.dimension_PotentialOfMeanForce_field_F",
+      "status": "encoded"
+    },
+    {
+      "node": "PotentialUncertaintyExceedance[method=committee_force_spread]",
+      "node_uid": "e382fb86bf6c620d5af35954c8f189650ee0ca02dc3c389ed13cb533be8b76d9",
+      "field": "f_sigma",
+      "dimension": "dimensionless",
+      "indices": [],
+      "exponents": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "declaration": "OMAI.PhyslibBridge.ISQ.dimension_PotentialUncertaintyExceedance_method_committee_force_spread_field_f_sigma",
+      "status": "encoded"
+    },
+    {
+      "node": "PotentialVirialFitError",
+      "node_uid": "8d85a09e82115bdd601be2ded9450446a9cdbdf0364bc88f421215019d00677a",
+      "field": "rmse_W",
+      "dimension": "energy",
+      "indices": [],
+      "exponents": [
+        1,
+        2,
+        -2,
+        0,
+        0,
+        0,
+        0
+      ],
+      "declaration": "OMAI.PhyslibBridge.ISQ.dimension_PotentialVirialFitError_field_rmse_W",
       "status": "encoded"
     },
     {

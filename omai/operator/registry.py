@@ -202,6 +202,10 @@ QUANTITY_TAGS: dict[str, str] = {
     "state_coefficient_of_variation": "Coefficient of variation c = sigma_G/mu_G of a programmed conductance level across cells or cycles, stated in instance conditions with the target level and protocol; DIMENSIONLESS.",
     "cure_conversion": "Degree of cure alpha of a thermosetting resin, the reacted fraction of its reactive groups (in DSC practice, the released fraction of the total reaction heat), 0 (uncured) to 1 (fully cured); DIMENSIONLESS.",
     "glass_transition_temperature": "Glass transition temperature T_g, where an amorphous material, or the amorphous fraction of a semicrystalline one, passes between the glassy and the rubbery or liquid state; TEMPERATURE. A kinetic, rate-dependent transition, distinct from the equilibrium transition_temperature.",
+    "potential_energy_fit_error": "Raw RMSE of the per-atom energy of a fitted interatomic potential against held-out reference energies, no per-atom offset removed; ENERGY (eV/atom). The error on the held-out labels' distribution, not a measure of accuracy outside it.",
+    "potential_force_fit_error": "Raw RMSE of the Cartesian force components of a fitted interatomic potential against held-out reference forces; FORCE (eV/A). The error on the held-out labels' distribution, not a measure of accuracy outside it.",
+    "potential_virial_fit_error": "Raw RMSE of the per-atom virial components of a fitted interatomic potential against held-out reference virials (from the reference stress); ENERGY (eV/atom). The error on the held-out labels' distribution, not a measure of accuracy outside it.",
+    "potential_uncertainty_exceedance": "Fraction of one molecular dynamics run's uncertainty checks at which the largest per-atom force spread of a committee of machine-learned potentials exceeds a threshold sigma; DIMENSIONLESS, in [0, 1]. Size dependent (a maximum over atoms). An active-learning stopping criterion for a fitted potential at the run's conditions: a low value means a small spread among the members' forces on the sampled configurations, not that the potential is accurate there. Not a property of the material.",
 }
 
 
@@ -328,12 +332,16 @@ LABEL_KEYS: dict[str, frozenset[str]] = {
     # method label, so the quantum estimator lands WITHOUT a re-mint (the
     # carrier-label pattern). Deliberately a SEPARATE label key from
     # transport_model / bte_solver (which pick lattice-conductivity SOLVER
-    # routes): 'method' picks how a thermodynamic quantity is ESTIMATED (the
-    # harmonic mode-sum vs the PIMD fluctuation), a different axis. Collision-
-    # free against every other label key (order, bte_solver, transport_model,
+    # routes): 'method' picks how a quantity is ESTIMATED (the harmonic
+    # mode-sum vs the PIMD fluctuation), a different axis. Collision-free
+    # against every other label key (order, bte_solver, transport_model,
     # channel, wrt, carrier, construction, contribution): no key or value
-    # overlaps ('pimd' appears in no other value set).
-    "method": frozenset({"pimd"}),
+    # overlaps ('pimd' appears in no other value set). Also
+    # committee_force_spread: PotentialUncertaintyExceedance[method=
+    # committee_force_spread], the fraction of an MD run's checks at which the
+    # force spread of a committee of potentials exceeds a threshold (no other
+    # value set holds it).
+    "method": frozenset({"pimd", "committee_force_spread"}),
     # The ROLE a thermal conductivity plays as an INPUT to a composite
     # effective-medium calculation: matrix (the continuous host phase km) vs
     # filler (the dispersed inclusion phase, anisotropic k11/k33). Both join the

@@ -103,6 +103,22 @@ ALIASES: dict[str, tuple[str, ...]] = {
         "kamal_cure_conversion", "dibenedetto_glass_transition",
     ),
     "glass-transition-temperature": ("GlassTransitionTemperature",),
+    # Held-out errors of a fitted potential.
+    "validation-rmse": ("PotentialEnergyFitError", "PotentialForceFitError",
+                        "PotentialVirialFitError"),
+    "test-set-rmse": ("PotentialEnergyFitError", "PotentialForceFitError",
+                      "PotentialVirialFitError"),
+    "holdout-error": ("PotentialEnergyFitError", "PotentialForceFitError",
+                      "PotentialVirialFitError"),
+    # Committee force spread of an MD run (active learning).
+    "model-deviation": (
+        "PotentialUncertaintyExceedance[method=committee_force_spread]",
+        "compute_potential_uncertainty_exceedance",
+    ),
+    "query-by-committee": (
+        "PotentialUncertaintyExceedance[method=committee_force_spread]",
+        "compute_potential_uncertainty_exceedance",
+    ),
     # NO-HOME markers live in the alignment files, not here: an alias
     # must point at something that exists (the gate below enforces it).
 }

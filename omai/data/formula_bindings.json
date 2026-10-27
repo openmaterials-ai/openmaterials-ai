@@ -2340,11 +2340,39 @@
         "reason": "See the conditions and evidence for each mapping."
       },
       {
+        "id": "PotentialEnergyFitError",
+        "uid": "d3f969394ab79173ea4afe796f00bc4b941141aa5f781e90fb3217e945f70755",
+        "binding_ids": [],
+        "status": "gap",
+        "reason": "No current Physlib Kohn-Sham, DFT, atomistic derivative, or ground-state producer formula identification found in the audited source."
+      },
+      {
+        "id": "PotentialForceFitError",
+        "uid": "833c3db3fbd145b45ed051cd6eaf782d7555518a0634f524b9ceee7fe49245e0",
+        "binding_ids": [],
+        "status": "gap",
+        "reason": "No current Physlib Kohn-Sham, DFT, atomistic derivative, or ground-state producer formula identification found in the audited source."
+      },
+      {
         "id": "PotentialOfMeanForce",
         "uid": "7a4fd6ca35f412c375006146204be07210a037901b0e4fb33e1805f243c74b6a",
         "binding_ids": [],
         "status": "gap",
         "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+      },
+      {
+        "id": "PotentialUncertaintyExceedance[method=committee_force_spread]",
+        "uid": "e382fb86bf6c620d5af35954c8f189650ee0ca02dc3c389ed13cb533be8b76d9",
+        "binding_ids": [],
+        "status": "gap",
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+      },
+      {
+        "id": "PotentialVirialFitError",
+        "uid": "8d85a09e82115bdd601be2ded9450446a9cdbdf0364bc88f421215019d00677a",
+        "binding_ids": [],
+        "status": "gap",
+        "reason": "No current Physlib Kohn-Sham, DFT, atomistic derivative, or ground-state producer formula identification found in the audited source."
       },
       {
         "id": "PowerFactor",
@@ -3625,6 +3653,74 @@
         "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
+        "id": "compute_potential_energy_fit_error",
+        "uid": "259d51fed7bf820b6edf9878f31f419e8921e05334f10c22e85a2bacc55ee514",
+        "domain": "dft_ground_state",
+        "formula_sha256": "b23a5b8a32a88e9c464b3eb0fd705740663f8a919c10349bf30c12b9d0ab45d9",
+        "formula_latex": "\\epsilon_{E} = \\epsilon^{rmse}{\\left(V,E_{tot},N \\right)}",
+        "inputs": [
+          "Potential",
+          "TotalEnergy"
+        ],
+        "outputs": [
+          "PotentialEnergyFitError"
+        ],
+        "binding_ids": [],
+        "status": "gap",
+        "reason": "No current Physlib Kohn-Sham, DFT, atomistic derivative, or ground-state producer formula identification found in the audited source."
+      },
+      {
+        "id": "compute_potential_force_fit_error",
+        "uid": "617fa87d7443a62e99db43b88cbad44bb7179b37481c2711969dacbf744cf712",
+        "domain": "dft_ground_state",
+        "formula_sha256": "a368daf061e8a57f21222dd4965ae63944646097e55624c5a307db839cd8aaf7",
+        "formula_latex": "\\epsilon_{F} = \\epsilon^{rmse}{\\left(V,{F^{at}}_{i,\\alpha} \\right)}",
+        "inputs": [
+          "Potential",
+          "Forces"
+        ],
+        "outputs": [
+          "PotentialForceFitError"
+        ],
+        "binding_ids": [],
+        "status": "gap",
+        "reason": "No current Physlib Kohn-Sham, DFT, atomistic derivative, or ground-state producer formula identification found in the audited source."
+      },
+      {
+        "id": "compute_potential_uncertainty_exceedance",
+        "uid": "cdd7b5cc99b5cc279c21df1c1e6b179a7eafb368b4b5f1d154fbd30d64fa8aef",
+        "domain": "thermal_transport",
+        "formula_sha256": "3fc1370058cde7dbf382dc689578197f25929f3ee52bd6a87f37f9cb5dc59a38",
+        "formula_latex": "f_{\\sigma} = f^{exc}{\\left(V{\\left(\\{u\\} \\right)},r \\right)}",
+        "inputs": [
+          "Potential",
+          "Trajectory"
+        ],
+        "outputs": [
+          "PotentialUncertaintyExceedance[method=committee_force_spread]"
+        ],
+        "binding_ids": [],
+        "status": "gap",
+        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+      },
+      {
+        "id": "compute_potential_virial_fit_error",
+        "uid": "37e91b493c5bf8ebdb8c33f69f86fd14175ec025d32a8f087e3cdaa052809ad4",
+        "domain": "dft_ground_state",
+        "formula_sha256": "47e37f77222109f71c414a0549041be7cc26b6d398964dc82de22b8492331118",
+        "formula_latex": "\\epsilon_{W} = \\epsilon^{rmse}{\\left(V,{\\sigma}_{\\alpha,\\beta},V_{cell},N \\right)}",
+        "inputs": [
+          "Potential",
+          "Stress"
+        ],
+        "outputs": [
+          "PotentialVirialFitError"
+        ],
+        "binding_ids": [],
+        "status": "gap",
+        "reason": "No current Physlib Kohn-Sham, DFT, atomistic derivative, or ground-state producer formula identification found in the audited source."
+      },
+      {
         "id": "compute_qha_gibbs",
         "uid": "2dfd344c598d659dbc5e4c8def4cefcb69b1a0bd215a9202f981618b18611b89",
         "domain": "quasiharmonic",
@@ -4875,9 +4971,9 @@
     ]
   },
   "coverage": {
-    "nodes_total": 129,
+    "nodes_total": 133,
     "nodes_mapped": 28,
-    "operators_total": 127,
+    "operators_total": 131,
     "operators_mapped": 14,
     "bindings_total": 22,
     "source_correspondences": 5,

@@ -1473,6 +1473,42 @@ theorem dimension_PoissonRatio_field_nu_exponents :
     dimension_PoissonRatio_field_nu.exponent .luminousIntensity = 0 := by decide
 
 -- Opaque dimension omitted: Potential / potential.
+-- PotentialEnergyFitError / rmse_E; uid d3f969394ab79173ea4afe796f00bc4b941141aa5f781e90fb3217e945f70755
+def dimension_PotentialEnergyFitError_field_rmse_E : Dimension ISQDimensionBase := ofFunction fun
+  | .mass => 1
+  | .length => 2
+  | .time => -2
+  | .temperature => 0
+  | .amount => 0
+  | .current => 0
+  | .luminousIntensity => 0
+theorem dimension_PotentialEnergyFitError_field_rmse_E_exponents :
+    dimension_PotentialEnergyFitError_field_rmse_E.exponent .mass = 1 ∧
+    dimension_PotentialEnergyFitError_field_rmse_E.exponent .length = 2 ∧
+    dimension_PotentialEnergyFitError_field_rmse_E.exponent .time = -2 ∧
+    dimension_PotentialEnergyFitError_field_rmse_E.exponent .temperature = 0 ∧
+    dimension_PotentialEnergyFitError_field_rmse_E.exponent .amount = 0 ∧
+    dimension_PotentialEnergyFitError_field_rmse_E.exponent .current = 0 ∧
+    dimension_PotentialEnergyFitError_field_rmse_E.exponent .luminousIntensity = 0 := by decide
+
+-- PotentialForceFitError / rmse_F; uid 833c3db3fbd145b45ed051cd6eaf782d7555518a0634f524b9ceee7fe49245e0
+def dimension_PotentialForceFitError_field_rmse_F : Dimension ISQDimensionBase := ofFunction fun
+  | .mass => 1
+  | .length => 1
+  | .time => -2
+  | .temperature => 0
+  | .amount => 0
+  | .current => 0
+  | .luminousIntensity => 0
+theorem dimension_PotentialForceFitError_field_rmse_F_exponents :
+    dimension_PotentialForceFitError_field_rmse_F.exponent .mass = 1 ∧
+    dimension_PotentialForceFitError_field_rmse_F.exponent .length = 1 ∧
+    dimension_PotentialForceFitError_field_rmse_F.exponent .time = -2 ∧
+    dimension_PotentialForceFitError_field_rmse_F.exponent .temperature = 0 ∧
+    dimension_PotentialForceFitError_field_rmse_F.exponent .amount = 0 ∧
+    dimension_PotentialForceFitError_field_rmse_F.exponent .current = 0 ∧
+    dimension_PotentialForceFitError_field_rmse_F.exponent .luminousIntensity = 0 := by decide
+
 -- PotentialOfMeanForce / F; uid 7a4fd6ca35f412c375006146204be07210a037901b0e4fb33e1805f243c74b6a
 def dimension_PotentialOfMeanForce_field_F : Dimension ISQDimensionBase := ofFunction fun
   | .mass => 1
@@ -1490,6 +1526,42 @@ theorem dimension_PotentialOfMeanForce_field_F_exponents :
     dimension_PotentialOfMeanForce_field_F.exponent .amount = 0 ∧
     dimension_PotentialOfMeanForce_field_F.exponent .current = 0 ∧
     dimension_PotentialOfMeanForce_field_F.exponent .luminousIntensity = 0 := by decide
+
+-- PotentialUncertaintyExceedance[method=committee_force_spread] / f_sigma; uid e382fb86bf6c620d5af35954c8f189650ee0ca02dc3c389ed13cb533be8b76d9
+def dimension_PotentialUncertaintyExceedance_method_committee_force_spread_field_f_sigma : Dimension ISQDimensionBase := ofFunction fun
+  | .mass => 0
+  | .length => 0
+  | .time => 0
+  | .temperature => 0
+  | .amount => 0
+  | .current => 0
+  | .luminousIntensity => 0
+theorem dimension_PotentialUncertaintyExceedance_method_committee_force_spread_field_f_sigma_exponents :
+    dimension_PotentialUncertaintyExceedance_method_committee_force_spread_field_f_sigma.exponent .mass = 0 ∧
+    dimension_PotentialUncertaintyExceedance_method_committee_force_spread_field_f_sigma.exponent .length = 0 ∧
+    dimension_PotentialUncertaintyExceedance_method_committee_force_spread_field_f_sigma.exponent .time = 0 ∧
+    dimension_PotentialUncertaintyExceedance_method_committee_force_spread_field_f_sigma.exponent .temperature = 0 ∧
+    dimension_PotentialUncertaintyExceedance_method_committee_force_spread_field_f_sigma.exponent .amount = 0 ∧
+    dimension_PotentialUncertaintyExceedance_method_committee_force_spread_field_f_sigma.exponent .current = 0 ∧
+    dimension_PotentialUncertaintyExceedance_method_committee_force_spread_field_f_sigma.exponent .luminousIntensity = 0 := by decide
+
+-- PotentialVirialFitError / rmse_W; uid 8d85a09e82115bdd601be2ded9450446a9cdbdf0364bc88f421215019d00677a
+def dimension_PotentialVirialFitError_field_rmse_W : Dimension ISQDimensionBase := ofFunction fun
+  | .mass => 1
+  | .length => 2
+  | .time => -2
+  | .temperature => 0
+  | .amount => 0
+  | .current => 0
+  | .luminousIntensity => 0
+theorem dimension_PotentialVirialFitError_field_rmse_W_exponents :
+    dimension_PotentialVirialFitError_field_rmse_W.exponent .mass = 1 ∧
+    dimension_PotentialVirialFitError_field_rmse_W.exponent .length = 2 ∧
+    dimension_PotentialVirialFitError_field_rmse_W.exponent .time = -2 ∧
+    dimension_PotentialVirialFitError_field_rmse_W.exponent .temperature = 0 ∧
+    dimension_PotentialVirialFitError_field_rmse_W.exponent .amount = 0 ∧
+    dimension_PotentialVirialFitError_field_rmse_W.exponent .current = 0 ∧
+    dimension_PotentialVirialFitError_field_rmse_W.exponent .luminousIntensity = 0 := by decide
 
 -- PowerFactor / PF; uid 6c2382614be093f934d4f830419db9d60d32610041a8c213b677efc42f6a98ee
 def dimension_PowerFactor_field_PF : Dimension ISQDimensionBase := ofFunction fun
