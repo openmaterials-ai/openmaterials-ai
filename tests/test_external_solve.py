@@ -28,10 +28,13 @@ import pytest
 
 from omai.external_solve import (
     ExternalSolveRequestError,
+    ExternalSolveRequestSnapshot,
     build_request,
     parse_request,
     request_id,
+    snapshot_request,
     validate_request,
+    validate_request_snapshot,
 )
 from omai.lineages import lineage_id
 from omai.store import Store
@@ -416,6 +419,108 @@ def test_request_minted_before_a_map_change_goes_stale(tmp_path: Path) -> None:
                "test", "2026-08-25", "test deprecation")
     with pytest.raises(ExternalSolveRequestError, match="stale map version"):
         validate_request(request, store_root=root)
+
+
+def test_snapshot_detaches_ingress_and_every_export() -> None:
+    original = _fixture()
+    original["execution"]["nested"] = {"ranks": [1, 2]}
+    snapshot = validate_request_snapshot(original)
+    expected = json.loads(json.dumps(original))
+    original["lineage"]["conditions"]["mesh"][0] = 99
+    original["input_node_uids"].reverse()
+    original["target"]["name"] = "changed"
+    original["execution"]["nested"]["ranks"].append(3)
+    exported = snapshot.to_dict()
+    exported["lineage"].clear()
+    exported["execution"]["nested"]["ranks"].clear()
+    assert snapshot.to_dict() == expected
+    assert snapshot.request_id == request_id(expected)
+    assert snapshot.lineage_id == lineage_id(expected["lineage"])
+    assert validate_request(snapshot) == validate_request(expected)
+    with pytest.raises(AttributeError):
+        snapshot._json = "{}"  # type: ignore[misc]
+
+
+def test_builder_detaches_caller_lineage_and_execution() -> None:
+    from omai.thermal_transport.operator import THERMAL_CONDUCTIVITY_DIRECT, solve_bte_direct
+
+    original = _fixture()
+    built = build_request(operator=solve_bte_direct, target=THERMAL_CONDUCTIVITY_DIRECT,
+                          scheme="kaldo", discretization=original["representation"]["discretization"],
+                          lineage=original["lineage"], execution=original["execution"])
+    original["lineage"]["conditions"]["mesh"][0] = 99
+    original["execution"]["code"] = "changed"
+    original["representation"]["discretization"].clear()
+    assert built == _fixture()
+
+
+def test_snapshot_preserves_number_types_and_noncanonical_precision() -> None:
+    original = _fixture()
+    original["lineage"]["conditions"]["temperature_K"] = 300.0000000001
+    original["execution"]["numbers"] = [1, 1.0]
+    snapshot = snapshot_request(original)
+    exported = snapshot.to_dict()
+    assert exported["lineage"]["conditions"]["temperature_K"] == 300.0000000001
+    assert [type(v) for v in exported["execution"]["numbers"]] == [int, float]
+    assert snapshot.request_id == _fixture()["request_id"]
+    integral = _fixture()
+    integral["lineage"]["conditions"]["temperature_K"] = 300
+    integral = _reminted(integral)
+    assert snapshot_request(integral).request_id == request_id(integral)
+    assert type(snapshot_request(integral).to_dict()["lineage"]["conditions"]["temperature_K"]) is int
+
+
+@pytest.mark.parametrize("unsupported", [float("nan"), float("inf"), {1: "key"}, (1, 2)])
+def test_snapshot_refuses_non_json_without_coercion(unsupported: Any) -> None:
+    original = _fixture()
+    original["execution"]["nested"] = unsupported
+    with pytest.raises(ExternalSolveRequestError, match="JSON"):
+        snapshot_request(original)
+
+
+def test_snapshot_constructor_cannot_bypass_hash_validation() -> None:
+    original = _fixture()
+    original["request_id"] = "0" * 64
+    with pytest.raises(ExternalSolveRequestError, match="tampered"):
+        ExternalSolveRequestSnapshot(original)
+
+
+def test_snapshot_does_not_skip_later_map_freshness(tmp_path: Path) -> None:
+    root = _tmp_store(tmp_path)
+    snapshot = validate_request_snapshot(_fixture(), store_root=root)
+    Store(root).push("deprecate", {"uid": _fixture()["operator"]["uid"], "note": "test"},
+                     "test", "2026-10-25", "test deprecation")
+    with pytest.raises(ExternalSolveRequestError, match="stale map version"):
+        validate_request_snapshot(snapshot, store_root=root)
+
+
+def test_map_read_is_bound_to_checked_head(monkeypatch: pytest.MonkeyPatch) -> None:
+    original = Store.read
+    versions = []
+
+    def read(store: Store, version: str | None = None) -> dict:
+        versions.append(version)
+        return original(store, version)
+
+    monkeypatch.setattr(Store, "read", read)
+    validate_request_snapshot(_fixture())
+    assert versions == [_fixture()["map_version"]]
+
+
+def test_map_change_during_validation_is_refused(tmp_path: Path,
+                                               monkeypatch: pytest.MonkeyPatch) -> None:
+    root = _tmp_store(tmp_path)
+    original = Store.read
+
+    def read(store: Store, version: str | None = None) -> dict:
+        result = original(store, version)
+        store.push("deprecate", {"uid": _fixture()["operator"]["uid"], "note": "test"},
+                   "test", "2026-10-25", "concurrent deprecation")
+        return result
+
+    monkeypatch.setattr(Store, "read", read)
+    with pytest.raises(ExternalSolveRequestError, match="map changed during validation"):
+        validate_request_snapshot(_fixture(), store_root=root)
 
 
 # --------------------------------------------------------------------------
