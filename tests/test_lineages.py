@@ -1296,22 +1296,29 @@ def test_fragment_round_trip_is_identity_stable():
     assert back["id"] == rec["id"] == lin.lineage_id(rec["lineage"])
 
 
-def test_fragment_is_reproducible_across_clock_changes(monkeypatch):
-    """A fragment has no wall-clock provenance; the lineage identity is unchanged."""
+@pytest.mark.parametrize("encode", [
+    lin.record_to_fragment,
+    lambda rec: lin.envelope_to_fragment(lin.envelope([rec])),
+], ids=["record", "envelope"])
+def test_fragment_is_reproducible_across_clock_changes(monkeypatch, encode):
+    """A fragment has no wall-clock or platform provenance; the lineage identity
+    is unchanged."""
     import base64
     import gzip
 
     rec = lin.record_light(lineage=_light_lineage(), name_to_uid=_NAME_TO_UID)
     monkeypatch.setattr(gzip.time, "time", lambda: 1_700_000_000)
-    first = lin.record_to_fragment(rec)
+    first = encode(rec)
     monkeypatch.setattr(gzip.time, "time", lambda: 1_800_000_000)
-    second = lin.record_to_fragment(rec)
+    second = encode(rec)
     assert first == second
     encoded = first[1:]
     packed = base64.urlsafe_b64decode(encoded + "=" * (-len(encoded) % 4))
-    assert packed[4:8] == b"\x00" * 4
-    assert lin.record_from_fragment(first) == rec
-    assert lin.record_from_fragment(second)["id"] == lin.lineage_id(rec["lineage"])
+    # magic, deflate, no flags, MTIME 0, XFL 2 (level 9), OS 255 (unknown): the
+    # whole header, so a platform-dependent OS byte fails here too.
+    assert packed[:10] == bytes.fromhex("1f8b08000000000002ff")
+    assert lin.envelope_from_fragment(first)["lineages"] == [rec]
+    assert lin.envelope_from_fragment(second)["lineages"][0]["id"] == lin.lineage_id(rec["lineage"])
 
 
 def test_fragment_is_base64url_no_plus_slash_or_padding():
