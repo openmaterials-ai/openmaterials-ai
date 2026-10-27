@@ -372,8 +372,10 @@ def test_map_has_one_hundred_nodes_and_fifteen_tiers():
     # +2 for the cure-kinetics domain's nodes in the new Cure kinetics tier, the
     # 18th tier. +3 for the potential fit errors (Ground state, no new tier).
     # +1 for PotentialUncertaintyExceedance[method=committee_force_spread]
-    # (Molecular dynamics, no new tier).
-    assert len(g["nodes"]) == 133
+    # (Molecular dynamics, no new tier). +3 for ConductanceRelaxationTime,
+    # InterfaceTrapRelaxationTime and ClassificationAccuracy (Analog device
+    # metrology, no new tier).
+    assert len(g["nodes"]) == 136
     assert len(g["tiers"]) == 18
 
 

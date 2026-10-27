@@ -265,6 +265,24 @@ theorem dimension_ChemicalPotential_field_mu_exponents :
     dimension_ChemicalPotential_field_mu.exponent .current = 0 ∧
     dimension_ChemicalPotential_field_mu.exponent .luminousIntensity = 0 := by decide
 
+-- ClassificationAccuracy / A_cls; uid 0e10474b38987a0d5d3c77580649f461281a6a587093401a60781aab4bdf219d
+def dimension_ClassificationAccuracy_field_A_cls : Dimension ISQDimensionBase := ofFunction fun
+  | .mass => 0
+  | .length => 0
+  | .time => 0
+  | .temperature => 0
+  | .amount => 0
+  | .current => 0
+  | .luminousIntensity => 0
+theorem dimension_ClassificationAccuracy_field_A_cls_exponents :
+    dimension_ClassificationAccuracy_field_A_cls.exponent .mass = 0 ∧
+    dimension_ClassificationAccuracy_field_A_cls.exponent .length = 0 ∧
+    dimension_ClassificationAccuracy_field_A_cls.exponent .time = 0 ∧
+    dimension_ClassificationAccuracy_field_A_cls.exponent .temperature = 0 ∧
+    dimension_ClassificationAccuracy_field_A_cls.exponent .amount = 0 ∧
+    dimension_ClassificationAccuracy_field_A_cls.exponent .current = 0 ∧
+    dimension_ClassificationAccuracy_field_A_cls.exponent .luminousIntensity = 0 := by decide
+
 -- ConductanceDriftExponent / nu_drift; uid d9c306ec2d77f10a80335d58a2f12a09124ef4a0061ddf1ae18c90c3ef597aef
 def dimension_ConductanceDriftExponent_field_nu_drift : Dimension ISQDimensionBase := ofFunction fun
   | .mass => 0
@@ -282,6 +300,24 @@ theorem dimension_ConductanceDriftExponent_field_nu_drift_exponents :
     dimension_ConductanceDriftExponent_field_nu_drift.exponent .amount = 0 ∧
     dimension_ConductanceDriftExponent_field_nu_drift.exponent .current = 0 ∧
     dimension_ConductanceDriftExponent_field_nu_drift.exponent .luminousIntensity = 0 := by decide
+
+-- ConductanceRelaxationTime / tau_G; uid 72bddad977642e53ed5cc05d9eec037d77a96a2c3232db16f5f4b4eaaff0b971
+def dimension_ConductanceRelaxationTime_field_tau_G : Dimension ISQDimensionBase := ofFunction fun
+  | .mass => 0
+  | .length => 0
+  | .time => 1
+  | .temperature => 0
+  | .amount => 0
+  | .current => 0
+  | .luminousIntensity => 0
+theorem dimension_ConductanceRelaxationTime_field_tau_G_exponents :
+    dimension_ConductanceRelaxationTime_field_tau_G.exponent .mass = 0 ∧
+    dimension_ConductanceRelaxationTime_field_tau_G.exponent .length = 0 ∧
+    dimension_ConductanceRelaxationTime_field_tau_G.exponent .time = 1 ∧
+    dimension_ConductanceRelaxationTime_field_tau_G.exponent .temperature = 0 ∧
+    dimension_ConductanceRelaxationTime_field_tau_G.exponent .amount = 0 ∧
+    dimension_ConductanceRelaxationTime_field_tau_G.exponent .current = 0 ∧
+    dimension_ConductanceRelaxationTime_field_tau_G.exponent .luminousIntensity = 0 := by decide
 
 -- ConductanceState / G_c; uid 325f09352a8872995fe6ab0a40b9df8780a778389fa0fe00ebcbd9ef7758f4a3
 def dimension_ConductanceState_field_G_c : Dimension ISQDimensionBase := ofFunction fun
@@ -985,6 +1021,24 @@ theorem dimension_InterfaceConductance_transport_model_nemd_field_G_int_exponent
     dimension_InterfaceConductance_transport_model_nemd_field_G_int.exponent .amount = 0 ∧
     dimension_InterfaceConductance_transport_model_nemd_field_G_int.exponent .current = 0 ∧
     dimension_InterfaceConductance_transport_model_nemd_field_G_int.exponent .luminousIntensity = 0 := by decide
+
+-- InterfaceTrapRelaxationTime / tau_it; uid d9e8d6ad94a3bd0629bc56fd2fbc5a6555e2866c3ff667aefd714ad75a27a491
+def dimension_InterfaceTrapRelaxationTime_field_tau_it : Dimension ISQDimensionBase := ofFunction fun
+  | .mass => 0
+  | .length => 0
+  | .time => 1
+  | .temperature => 0
+  | .amount => 0
+  | .current => 0
+  | .luminousIntensity => 0
+theorem dimension_InterfaceTrapRelaxationTime_field_tau_it_exponents :
+    dimension_InterfaceTrapRelaxationTime_field_tau_it.exponent .mass = 0 ∧
+    dimension_InterfaceTrapRelaxationTime_field_tau_it.exponent .length = 0 ∧
+    dimension_InterfaceTrapRelaxationTime_field_tau_it.exponent .time = 1 ∧
+    dimension_InterfaceTrapRelaxationTime_field_tau_it.exponent .temperature = 0 ∧
+    dimension_InterfaceTrapRelaxationTime_field_tau_it.exponent .amount = 0 ∧
+    dimension_InterfaceTrapRelaxationTime_field_tau_it.exponent .current = 0 ∧
+    dimension_InterfaceTrapRelaxationTime_field_tau_it.exponent .luminousIntensity = 0 := by decide
 
 -- InternalEnergy / e; uid 4e9c9eb989aa721167806f40b353dbb75aedba068a1a486eeef178f77432108d
 def dimension_InternalEnergy_field_e : Dimension ISQDimensionBase := ofFunction fun

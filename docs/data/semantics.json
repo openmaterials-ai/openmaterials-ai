@@ -1501,6 +1501,47 @@
 },
 {
 "curated": [
+"conductance-relaxation-time",
+"conductance-tangent-time"
+],
+"id": "ConductanceRelaxationTime",
+"kind": "node",
+"labels": [
+"ConductanceRelaxationTime",
+"\\tau_G",
+"conductance relaxation time"
+],
+"uid": "72bddad977642e53ed5cc05d9eec037d77a96a2c3232db16f5f4b4eaaff0b971"
+},
+{
+"curated": [
+"interface-trap-relaxation-time"
+],
+"id": "InterfaceTrapRelaxationTime",
+"kind": "node",
+"labels": [
+"InterfaceTrapRelaxationTime",
+"\\tau_{it}",
+"interface trap relaxation time"
+],
+"uid": "d9e8d6ad94a3bd0629bc56fd2fbc5a6555e2866c3ff667aefd714ad75a27a491"
+},
+{
+"curated": [
+"classification-accuracy",
+"reservoir-classification"
+],
+"id": "ClassificationAccuracy",
+"kind": "node",
+"labels": [
+"A_{cls}",
+"ClassificationAccuracy",
+"classification accuracy"
+],
+"uid": "0e10474b38987a0d5d3c77580649f461281a6a587093401a60781aab4bdf219d"
+},
+{
+"curated": [
 "cure-kinetics",
 "degree-of-cure",
 "extent-of-cure"
@@ -2818,6 +2859,32 @@
 "zero_bias_retention"
 ],
 "uid": "10e6c7d5ab4087efdea29cf2219771cd55f19a87c50c19ca46756620116344e8"
+},
+{
+"curated": [
+"conductance-relaxation-time",
+"interface-trap-relaxation-time"
+],
+"id": "subthreshold_conductance_tangent_time",
+"kind": "edge",
+"labels": [
+"subthreshold conductance tangent time",
+"subthreshold_conductance_tangent_time"
+],
+"uid": "f98ab6a713f029111d0c63c1017b87934ee2d50296f1e0a49289217cb20495eb"
+},
+{
+"curated": [
+"classification-accuracy",
+"reservoir-classification"
+],
+"id": "evaluate_reservoir_classification",
+"kind": "edge",
+"labels": [
+"evaluate reservoir classification",
+"evaluate_reservoir_classification"
+],
+"uid": "557f968b85bdc45e519be10b1f5648d2d50005c4b18092f0435a0c74768a797a"
 },
 {
 "curated": [

@@ -161,8 +161,10 @@ def test_no_node_uid_collisions_at_105_nodes():
     # 129 with the cure-kinetics domain's two nodes in the new Cure kinetics tier.
     # 132 with the three potential fit errors (Ground state tier).
     # 133 with PotentialUncertaintyExceedance[method=committee_force_spread] (Molecular dynamics tier).
+    # 136 with ConductanceRelaxationTime, InterfaceTrapRelaxationTime and
+    # ClassificationAccuracy (Analog device metrology tier).
     g = build_graph_dict(DOMAINS)
-    assert len(g["nodes"]) == 133
+    assert len(g["nodes"]) == 136
     uids = [n["uid"] for n in g["nodes"]]
     assert len(set(uids)) == len(uids), "node uid collision"
 

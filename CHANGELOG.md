@@ -23,6 +23,22 @@ id.
   request `omai/tools/kaldo-direct-bte-si.json` pins the new graph version,
   so its `request_id` moves from `9c65fd692c45` to `dd544ee37fd8`. A request
   minted against graph `baf99346621b` fails as a stale map version.
+- The analog-device-metrology domain adds `ConductanceRelaxationTime`,
+  `InterfaceTrapRelaxationTime` and benchmark-qualified
+  `ClassificationAccuracy`. `subthreshold_conductance_tangent_time` evaluates
+  the initial raw-conductance tangent under a single-mode subthreshold model.
+  `evaluate_reservoir_classification` is an external response-family contract,
+  not an executable classifier. Records 298-302 add the three nodes and two
+  edges, and record 303 clarifies the `ClassificationAccuracy` description.
+  No literature values or code coverage are added. Existing node, edge and
+  evidence ids, record-format rules and private-evidence handling are
+  unchanged. The graph version moves from `9476086d423e` to `2b27f48fbddb`,
+  and the unified lineage version from `6f66f9c5e9c2` to `45be98afae7c`. The
+  packaged kaldo external-solve fixture is re-minted against that graph,
+  moving its `request_id` from `dd544ee37fd8` to `77ba6b7ef660`. Its
+  scientific lineage and `lineage_id` are unchanged. Requests pinned to the
+  former graph fail the existing stale-version gate. New public definitions
+  take the next minor package version. This entry does not publish a release.
 
 ## 0.4.0
 

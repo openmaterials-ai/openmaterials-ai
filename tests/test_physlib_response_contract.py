@@ -59,7 +59,7 @@ OUTPUT = "HeatCapacityConstantP"
 OPERATOR_UID = "79a11e58595c8b262c104330dcfc622f13a787da6bae856cf4f40b57a6a93639"
 FORMULA_SHA = "97ed2e0d3a11efad01a3ab0017d21be3da3009446b0b9364673fad4b8fdcb0f1"
 OUTPUT_UID = "08057e4554a3420c933329b3821de9295e2b5950191e23cafe310b0a15adc7b6"
-CATALOG_ID_SHA = "aaa0bd9b22dc194e6c50479d68d61f0a99182077ec82da0019207cfb89dacc09"
+CATALOG_ID_SHA = "7f60064e1533914c046b01c7b8723281def520baae4247b452e867f578c2ce8b"
 CP_SUBJECTS = frozenset({("operator", OPERATOR), ("node", OUTPUT)})
 BASELINE_OPERATORS = frozenset({
     "compute_entropy", "compute_free_energy", "compute_heat_capacity",
@@ -135,8 +135,8 @@ BASELINE_PAIRS = [{'module': 'OMAIPhyslibSemantics', 'name': 'OMAI.PhyslibBridge
  {'module': 'OMAIPhyslibSemantics', 'name': 'OMAI.PhyslibBridge.totalThermalConductivity'}]
 # Scientific protocol, golden vectors, historical package and seven retained proofs.
 PRESERVED_HASHES = {
-    "map/log.jsonl": "8abe968436d55cc0160ac0788f9402d9ffbacafae393719c0a4312366117e65a",
-    "docs/data/version.json": "425ed8c7c1a4d6cdc8f2e2287c80bae017c0d665bee7e75423f1b3bb55edf456",
+    "map/log.jsonl": "ec56c9b7511eb46f7635c1f4628f640c57adc046ca1d36619d0ca271a33e5900",
+    "docs/data/version.json": "a697596ba27a5f537c2ec90ee7722b4834964935ccc446f0d8909d21c5692934",
     "omai/operator/identity.py": "e8be3c3b86521e19c9ed1a855f33d2b187bbc2fb9158f269ae219855295ef9f0",
     "omai/lineages.py": "3266c424e4920d11bd54a1e8f0fad0fc8aeeb8a2dcfb4c2dbb3da66a61a5c552",
     "omai/schema.py": "69ee90c2eebf6f891abcc9cc31351b885d23a6f3a6d37e46b810959474bd2f36",
@@ -150,10 +150,10 @@ PRESERVED_HASHES = {
     "omai/vectors/render.json": "e01c9344751de35c5862da063da0ae27c8549aaed035d5117c6fcdb748446e76",
     "lean/.gitignore": "b3ad09fc93f83fdbd0bee771258dd4a58d3798fd7e6048611dde5a804bb43f1e",
     "lean/LintProbe.lean": "117cc40c968798d35dc7bfb098cac3bd8b582ad30860a2ec31d67175b8f3232a",
-    "lean/OpenMaterials.lean": "071e3b880b7d09785ca4723662e7bdf7aa048805a271a43fd6c1ac557428e399",
-    "lean/OpenMaterialsDimensions.lean": "997a9140c8ff8ed468a4fa40d63494a9f647bb2562fa4889fa064b8d22886af6",
-    "lean/OpenMaterialsIdentities.lean": "4d6cece5df6910ebd9783cc69dd799d5e5924540098acc602bf930551640500a",
-    "lean/OpenMaterialsUnits.lean": "6b0bc97a40c04ad350a090d3f799a0fb2f38071e930fa7483a01aff616ed6837",
+    "lean/OpenMaterials.lean": "3238be4ebef10d77a7fa53a20235aed062d7e039715657ed40692892643e9f7a",
+    "lean/OpenMaterialsDimensions.lean": "a5d210f8bba4da8ae1f4a65b39906c142e43c6260612f508e6448242572b7c6e",
+    "lean/OpenMaterialsIdentities.lean": "f9744e2068b3ad28a9f8fcfd51dbc2d47a2f63b808d9e8fbb215aaefa7aecbbc",
+    "lean/OpenMaterialsUnits.lean": "6a51154bb4115565819d98bb8f53e8acbf5fe704aad12bb0e24b37bf7bce2ba4",
     "lean/README.md": "d9aff6065a2201ac9dbca7520521163eec9e0b296e00dc3121029d69509b3361",
     "lean/check.sh": "e342b394a4c7e9a281161acc21f8c80095d41a7bd28c62eed097c87b8d65673c",
     "lean/lake-manifest.json": "c1aaccc183f37c07de7ed3e241513fabfabae08e39ecaca855dffe0070f83a90",
@@ -209,7 +209,7 @@ def _assert_selected_scope(payload):
     assert _subjects(payload) == BASELINE_SUBJECTS | CP_SUBJECTS, "unique proof subjects changed"
     assert {row["id"] for row in payload["bindings"]} == BASELINE_BINDINGS | {BINDING_ID}
     expected = {
-        "nodes_total": 133, "operators_total": 131,
+        "nodes_total": 136, "operators_total": 133,
         "operators_compiled": 14, "nodes_compiled": 15,
         "nodes_compiled_outputs": 14, "nodes_compiled_interpretations": 1,
         "bindings_total": 22, "compiled_bridges": 17, "source_correspondences": 5,
@@ -339,7 +339,7 @@ def evidence_copy(tmp_path):
 
 def test_response_unit_catalog_identity_projection_and_cp_pins():
     inventory = catalog_inventory()
-    assert (len(inventory["nodes"]), len(inventory["operators"])) == (133, 131)
+    assert (len(inventory["nodes"]), len(inventory["operators"])) == (136, 133)
     projection = {
         "nodes": [{key: row[key] for key in ("id", "uid")} for row in inventory["nodes"]],
         "operators": [{key: row[key] for key in ("id", "uid", "formula_sha256")}

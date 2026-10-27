@@ -96,6 +96,11 @@ ALIASES: dict[str, tuple[str, ...]] = {
     "set-threshold": ("SetVoltage",),
     "retention-time": ("RetentionTime", "zero_bias_retention"),
     "state-retention": ("RetentionTime",),
+    "conductance-relaxation-time": ("ConductanceRelaxationTime", "subthreshold_conductance_tangent_time"),
+    "conductance-tangent-time": ("ConductanceRelaxationTime",),
+    "interface-trap-relaxation-time": ("InterfaceTrapRelaxationTime", "subthreshold_conductance_tangent_time"),
+    "classification-accuracy": ("ClassificationAccuracy", "evaluate_reservoir_classification"),
+    "reservoir-classification": ("ClassificationAccuracy", "evaluate_reservoir_classification"),
     "degree-of-cure": ("CureConversion",),
     "extent-of-cure": ("CureConversion",),
     "cure-kinetics": (

@@ -27,7 +27,7 @@
 {"@context": "https://schema.org", "@graph": [
  {"@type": "Dataset", "@id": "https://openmaterials.ai/#map", "name": "OpenMaterials",
   "description": "OpenMaterials is a versioned, content-addressed map of physical quantities and formulas. Simulated and measured values attach to it with their provenance. Data is CC BY 4.0 and code is Apache 2.0.",
-  "url": "https://openmaterials.ai/", "version": "6f66f9c5e9c2694b3c18bc8e03ba5d03b27e0c27263355895c1584e8f91df67d",
+  "url": "https://openmaterials.ai/", "version": "45be98afae7c2813f40dabc9996ac11c7ab4257172bd72f31c69a52a62798e1a",
   "license": "https://creativecommons.org/licenses/by/4.0/", "isAccessibleForFree": true,
   "creator": {"@id": "https://openmaterials.ai/#steward"}, "maintainer": {"@id": "https://openmaterials.ai/#steward"},
   "distribution": [
@@ -59,8 +59,8 @@
         <a class="btn btn--secondary" href="#contribute">Contribute a value</a>
       </div>
       <dl class="ledger stamp">
-        <div><dt>Map version</dt><dd class="mono"><span data-bind="version12">6f66f9c5e9c2</span></dd></div>
-        <div><dt>Quantities</dt><dd class="mono"><span data-bind="n-nodes">133</span></dd></div>
+        <div><dt>Map version</dt><dd class="mono"><span data-bind="version12">45be98afae7c</span></dd></div>
+        <div><dt>Quantities</dt><dd class="mono"><span data-bind="n-nodes">136</span></dd></div>
         <div><dt>Codes</dt><dd class="mono"><span data-bind="codes">33</span></dd></div>
         <div><dt>Values</dt><dd class="mono"><span data-bind="n-values">93</span>, <span data-bind="n-meas">6</span> of them measured</dd></div>
       </dl>
@@ -74,7 +74,7 @@
         <div><dt>Recorded runs</dt><dd>16.7 to 380</dd></div>
       </dl>
       <figcaption id="fig-1-cap">Every thermal conductivity value for crystalline silicon between 270 and 310 K on the map, in W/(m K), on a log axis. One measurement, by Glassbrenner and Slack (1964). The published calculations differ in statistics (quantum or classical) and solver (direct inversion or RTA), and Esfarjani et al. (2011) also in force constants and temperature (277 K). The recorded runs use the Tersoff potential to test codes, not to predict silicon. Four of them, 17 to 27 W/(m K), sit an order of magnitude below the other four and below published Tersoff values, for a cause their records do not yet establish; within those four, kALDo runs 11 to 16% above phono3py with the same solver. Each value keeps its conditions, and an incomplete record says so.
-        <span class="src">Source: <a href="data/instances.json">instances.json</a>, map version <span data-bind="version12">6f66f9c5e9c2</span>.</span></figcaption>
+        <span class="src">Source: <a href="data/instances.json">instances.json</a>, map version <span data-bind="version12">45be98afae7c</span>.</span></figcaption>
       <div class="cta-row">
         <a class="btn btn--secondary btn--sm" href="https://materialscodegraph.com/?ref=omai-home#hero-connect">Price a calculation on MaterialsCodeGraph</a>
         <a class="btn btn--secondary btn--sm" href="agreement/">Compare codes on one quantity</a>
@@ -127,7 +127,7 @@
         <dl class="ledger">
           <div><dt><a href="agreement/">Cross-code agreement</a></dt><dd>Values of one quantity from different methods or codes, with the spread of each group.</dd></div>
           <div><dt><a href="lineage/">Lineage tour</a></dt><dd>One QHGK thermal conductivity result for amorphous silicon, from its derivation on the map to its lineage record.</dd></div>
-          <div><dt><a href="lean/">Verified layer</a></dt><dd>Dimensions of <span data-bind="lean-nodes">106</span> nodes declared in Lean 4, with <span data-bind="lean-edges">12</span> edge dimension statements proven against physlib and <span data-bind="lean-idents">18</span> operator identities against Mathlib.</dd></div>
+          <div><dt><a href="lean/">Verified layer</a></dt><dd>Dimensions of <span data-bind="lean-nodes">109</span> nodes declared in Lean 4, with <span data-bind="lean-edges">12</span> edge dimension statements proven against physlib and <span data-bind="lean-idents">18</span> operator identities against Mathlib.</dd></div>
           <div><dt><a href="lean/roadmap/">Formalization roadmap</a></dt><dd>Every operator on the map, rated by what a Lean proof of its formula would take: provable, trivial, needs analysis, or nothing to prove.</dd></div>
         </dl>
       </div>
@@ -150,9 +150,9 @@
     <div class="split">
       <div class="facts">
         <dl class="ledger">
-          <div><dt>Quantities</dt><dd><span id="s-nodes">133 (119 observable, 11 hidden, 3 parameter)</span></dd></div>
-          <div><dt>Links</dt><dd><span id="s-links">304 (262 formula, 42 parameter)</span></dd></div>
-          <div><dt>Operators</dt><dd><span id="s-ops">131</span></dd></div>
+          <div><dt>Quantities</dt><dd><span id="s-nodes">136 (122 observable, 11 hidden, 3 parameter)</span></dd></div>
+          <div><dt>Links</dt><dd><span id="s-links">307 (265 formula, 42 parameter)</span></dd></div>
+          <div><dt>Operators</dt><dd><span id="s-ops">133</span></dd></div>
           <div><dt>Tiers</dt><dd><span id="s-tiers">18</span></dd></div>
         </dl>
         <p>Each quantity is a typed node. An observable carries no gauge freedom, so codes given the same inputs should agree on it. A hidden quantity depends on a gauge choice (an eigenvector phase, or the basis inside a degenerate subspace). It is an intermediate, like the eigenvectors, or an approximation, like the RTA thermal conductivity, and codes can differ on it. An operator computes a quantity from its inputs: formula links carry its symbolic formula, and parameter links supply inputs such as the cell volume. The nodes are grouped into tiers, such as Sources, Harmonic, Transport, Ground state, and Thermochemistry.</p>
@@ -230,15 +230,15 @@
   </section>
 
   <section class="close" id="cite">
-    <h2>Cite the map version you use: <span class="hash" data-bind="version12">6f66f9c5e9c2</span>.</h2>
-    <p class="cite-text">Barbalinardo, G. openmaterials.ai: a versioned, content-addressed map of physics. Map version <span data-bind="version12">6f66f9c5e9c2</span>. https://openmaterials.ai, accessed <span data-bind="today">2026-10-04</span>.</p>
+    <h2>Cite the map version you use: <span class="hash" data-bind="version12">45be98afae7c</span>.</h2>
+    <p class="cite-text">Barbalinardo, G. openmaterials.ai: a versioned, content-addressed map of physics. Map version <span data-bind="version12">45be98afae7c</span>. https://openmaterials.ai, accessed <span data-bind="today">2026-10-04</span>.</p>
     <figure class="code">
       <figcaption>BibTeX</figcaption>
-<pre>@misc{openmaterials-<span data-bind="version12">6f66f9c5e9c2</span>,
+<pre>@misc{openmaterials-<span data-bind="version12">45be98afae7c</span>,
   author = {Barbalinardo, Giuseppe},
   title  = {{openmaterials.ai}: a versioned, content-addressed map of physics},
   url    = {https://openmaterials.ai},
-  note   = {Map version <span data-bind="version12">6f66f9c5e9c2</span>, accessed <span data-bind="today">2026-10-04</span>}
+  note   = {Map version <span data-bind="version12">45be98afae7c</span>, accessed <span data-bind="today">2026-10-04</span>}
 }</pre>
     </figure>
     <div class="cta-row">
@@ -252,7 +252,7 @@
 <script src="assets/site.js"></script>
 <script>
 /* Each count and the map version are refreshed at load from the published files. The static text is
-   the value at map version 6f66f9c5e9c2 and stays in place if a file cannot be read. */
+   the value at map version 45be98afae7c and stays in place if a file cannot be read. */
 (function () {
   function get(p) { return fetch(p).then(function (r) { if (!r.ok) throw new Error(p); return r.json(); }); }
   function put(sel, text) {

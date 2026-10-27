@@ -1,9 +1,9 @@
 {
   "physlib_rev": "d70acc20677320d37b38e602e331e900466b704d",
   "lean_toolchain": "leanprover/lean4:v4.35.0",
-  "catalog_nodes": 133,
-  "fields": 135,
-  "encoded_fields": 130,
+  "catalog_nodes": 136,
+  "fields": 138,
+  "encoded_fields": 133,
   "opaque_fields": 5,
   "records": [
     {
@@ -279,6 +279,24 @@
       "status": "encoded"
     },
     {
+      "node": "ClassificationAccuracy",
+      "node_uid": "0e10474b38987a0d5d3c77580649f461281a6a587093401a60781aab4bdf219d",
+      "field": "A_cls",
+      "dimension": "dimensionless",
+      "indices": [],
+      "exponents": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "declaration": "OMAI.PhyslibBridge.ISQ.dimension_ClassificationAccuracy_field_A_cls",
+      "status": "encoded"
+    },
+    {
       "node": "ConductanceDriftExponent",
       "node_uid": "d9c306ec2d77f10a80335d58a2f12a09124ef4a0061ddf1ae18c90c3ef597aef",
       "field": "nu_drift",
@@ -294,6 +312,24 @@
         0
       ],
       "declaration": "OMAI.PhyslibBridge.ISQ.dimension_ConductanceDriftExponent_field_nu_drift",
+      "status": "encoded"
+    },
+    {
+      "node": "ConductanceRelaxationTime",
+      "node_uid": "72bddad977642e53ed5cc05d9eec037d77a96a2c3232db16f5f4b4eaaff0b971",
+      "field": "tau_G",
+      "dimension": "time",
+      "indices": [],
+      "exponents": [
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0
+      ],
+      "declaration": "OMAI.PhyslibBridge.ISQ.dimension_ConductanceRelaxationTime_field_tau_G",
       "status": "encoded"
     },
     {
@@ -1071,6 +1107,24 @@
         0
       ],
       "declaration": "OMAI.PhyslibBridge.ISQ.dimension_InterfaceConductance_transport_model_nemd_field_G_int",
+      "status": "encoded"
+    },
+    {
+      "node": "InterfaceTrapRelaxationTime",
+      "node_uid": "d9e8d6ad94a3bd0629bc56fd2fbc5a6555e2866c3ff667aefd714ad75a27a491",
+      "field": "tau_it",
+      "dimension": "time",
+      "indices": [],
+      "exponents": [
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0
+      ],
+      "declaration": "OMAI.PhyslibBridge.ISQ.dimension_InterfaceTrapRelaxationTime_field_tau_it",
       "status": "encoded"
     },
     {
