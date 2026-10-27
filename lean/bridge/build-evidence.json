@@ -5,7 +5,7 @@
       "Quot.sound",
       "propext"
     ],
-    "declaration_count": 821,
+    "declaration_count": 829,
     "declarations": {
       "CanonicalEnsemble.heatCapacity.eq_1": [
         "Classical.choice",
@@ -1264,12 +1264,52 @@
         "Quot.sound",
         "propext"
       ],
+      "OMAI.PhyslibBridge.ISQ.dimension_PotentialEnergyFitError_field_rmse_E": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.ISQ.dimension_PotentialEnergyFitError_field_rmse_E_exponents": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.ISQ.dimension_PotentialForceFitError_field_rmse_F": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.ISQ.dimension_PotentialForceFitError_field_rmse_F_exponents": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
       "OMAI.PhyslibBridge.ISQ.dimension_PotentialOfMeanForce_field_F": [
         "Classical.choice",
         "Quot.sound",
         "propext"
       ],
       "OMAI.PhyslibBridge.ISQ.dimension_PotentialOfMeanForce_field_F_exponents": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.ISQ.dimension_PotentialUncertaintyExceedance_method_committee_force_spread_field_f_sigma": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.ISQ.dimension_PotentialUncertaintyExceedance_method_committee_force_spread_field_f_sigma_exponents": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.ISQ.dimension_PotentialVirialFitError_field_rmse_W": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.ISQ.dimension_PotentialVirialFitError_field_rmse_W_exponents": [
         "Classical.choice",
         "Quot.sound",
         "propext"
@@ -3936,7 +3976,7 @@
       "OMAIPhyslibStaticEnsemble"
     ],
     "status": "passed",
-    "theorem_count": 563
+    "theorem_count": 567
   },
   "command": "lake build --wfail",
   "contract_name_audit": {
@@ -4020,7 +4060,7 @@
   "sources": {
     "lean/bridge/OMAIPhyslibBridge.lean": "926091d896c74faa35fea24df5dd58bd57eabf27df38b7f37eba0c82cbcf4fdd",
     "lean/bridge/OMAIPhyslibContinuum.lean": "e8bff3cb5d44cd78885d8c5f200d8761e8c568cd0d101fc0c2110f521bdca7ff",
-    "lean/bridge/OMAIPhyslibDimensions.lean": "e1b46ef2e67cf7224d4bd5b078194401edbc213f368fdb41625c8bb6431ab717",
+    "lean/bridge/OMAIPhyslibDimensions.lean": "fb8cea34ea452fa89c4f4a821d9bcb943c29b207f16cd8e252ddd9af6a2e7099",
     "lean/bridge/OMAIPhyslibHarmonicDensity.lean": "cf4d59af5b660a1fc73b079d63451f269081e1bd9a3018047e1f6f41517013ea",
     "lean/bridge/OMAIPhyslibHarmonicEnsemble.lean": "1a1f7e60f5cf4a3e468d173109b0127d7685123e6e0130b69374df687b94e172",
     "lean/bridge/OMAIPhyslibHarmonicProduct.lean": "4c0af6605e43ceed3460a8c7fe9198f486bd48cf2ac6e538fa0c45ac1a644578",

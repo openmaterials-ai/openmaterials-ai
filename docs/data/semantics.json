@@ -2074,7 +2074,7 @@
 "compute potential uncertainty exceedance",
 "compute_potential_uncertainty_exceedance"
 ],
-"uid": null
+"uid": "cdd7b5cc99b5cc279c21df1c1e6b179a7eafb368b4b5f1d154fbd30d64fa8aef"
 },
 {
 "curated": [
@@ -2147,7 +2147,7 @@
 "compute potential energy fit error",
 "compute_potential_energy_fit_error"
 ],
-"uid": null
+"uid": "259d51fed7bf820b6edf9878f31f419e8921e05334f10c22e85a2bacc55ee514"
 },
 {
 "curated": [],
@@ -2157,7 +2157,7 @@
 "compute potential force fit error",
 "compute_potential_force_fit_error"
 ],
-"uid": null
+"uid": "617fa87d7443a62e99db43b88cbad44bb7179b37481c2711969dacbf744cf712"
 },
 {
 "curated": [],
@@ -2167,7 +2167,7 @@
 "compute potential virial fit error",
 "compute_potential_virial_fit_error"
 ],
-"uid": null
+"uid": "37e91b493c5bf8ebdb8c33f69f86fd14175ec025d32a8f087e3cdaa052809ad4"
 },
 {
 "curated": [
