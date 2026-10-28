@@ -6,7 +6,7 @@
   {
    "node": "ConductanceState",
    "uid": "325f09352a8872995fe6ab0a40b9df8780a778389fa0fe00ebcbd9ef7758f4a3",
-   "api": ".op with a DC source vread at the read bias across the device; G = -i(vread) / V_read (print or wrdata)",
+   "api": ".op with a DC source vread at the read bias across the device; G = -i(vread) / V_read (wrdata, or let g = -i(vread) / V_read before print: print drops one digit of a negative number)",
    "unit": "siemens"
   },
   {

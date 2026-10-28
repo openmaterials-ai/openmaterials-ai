@@ -44,13 +44,17 @@ NGSPICE_CONDUCTANCE_STATE = SpaceRepresentationSpec(
     representation_name="ngspice",
     observable_units={"G_c": "siemens"},
     code_api={"G_c": ".op with a DC source vread at the read bias across the device; "
-                     "G = -i(vread) / V_read (print or wrdata)"},
+                     "G = -i(vread) / V_read (wrdata, or let g = -i(vread) / V_read before print: "
+                     "print drops one digit of a negative number)"},
     notes=(
         "The chord conductance I/V of one device at its operating point: an "
         "operating-point analysis (.op) with a DC voltage source at the read "
         "bias across the two terminals, or across drain and source with the gate "
         "biased, and the device current read from the source branch, -i(vread) "
-        "in ngspice's sign convention, divided by V_read. Not the small-signal "
+        "in ngspice's sign convention, divided by V_read. -i(vread) is the device "
+        "current when vread's + node is on the device side and its branch "
+        "carries only the device; for a memtransistor vread sits on the drain, "
+        "so gate leakage stays out of the drain current. Not the small-signal "
         "dI/dV, which a central difference of two .op runs or the device's own "
         "operating-point parameters give. Read bias, gate bias, temperature "
         "(.temp or option temp) and the device state (a model parameter or an "
@@ -87,6 +91,8 @@ NGSPICE_DOT_PRODUCT_ERROR = SpaceRepresentationSpec(
         "instance conditions with the error sources the netlist includes. For "
         "the architecture propagate_programming_error states, with linear cells, "
         "ideal wires and readout and programming error as the only source, the "
-        "sampled value converges to that edge's closed form."
+        "sampled value converges to that edge's closed form when that error is "
+        "relative, level-independent and independent per cell, as agauss(G_i, "
+        "c*G_i, 1) draws it; for large c a Gaussian draw can go negative."
     ),
 )
