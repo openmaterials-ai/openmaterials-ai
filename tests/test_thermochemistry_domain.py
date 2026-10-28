@@ -424,7 +424,7 @@ def test_pycalphad_is_a_representation_and_the_config_thermo_scan_added_three_re
     from omai.map_data import build_codes
 
     codes = build_codes(DOMAINS)
-    assert len(codes) == 33
+    assert len(codes) == 34  # ngspice (2026-10-28) is the 34th
     assert "materialscodegraph" not in codes
     assert "xtb" in codes
     assert "mescal" not in codes

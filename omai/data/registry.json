@@ -124,6 +124,19 @@
    "aliases": [],
    "releases": []
   },
+  "ngspice": {
+   "aliases": [],
+   "releases": [
+    {
+     "commit": "a80f6e3e95d51534905b1f23410a951802666656",
+     "license_source": "https://sourceforge.net/p/ngspice/ngspice/ci/ngspice-47/tree/ and https://sourceforge.net/projects/ngspice/files/ng-spice-rework/47/ngspice-47.tar.gz (sha256 894e649651f1838a14095e5a5439e7d3aa63e87ede14d283173fda4fcdef675f), COPYING: Modified BSD; src/frontend/numparam LGPLv2 or newer; src/maths/KLU LGPLv2 (colamd.c: LGPL 2.1 or later); src/osdi MPLv2.0; src/xspice/icm/table GPLv2 or newer; src/maths/sparse an unnamed permissive notice (LicenseRef-ngspice-sparse); the rest of src/xspice public domain. The expression covers a default build; src/tclspice.c (LGPLv2) is built only with --with-tcl",
+     "released": "2026-08-11",
+     "spdx": "BSD-3-Clause AND LGPL-2.0-or-later AND LGPL-2.1-or-later AND MPL-2.0 AND GPL-2.0-or-later AND LicenseRef-ngspice-sparse",
+     "tag": "ngspice-47",
+     "version": "47"
+    }
+   ]
+  },
   "openmaterials-ai": {
    "aliases": [],
    "releases": [

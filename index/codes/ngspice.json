@@ -1,0 +1,30 @@
+{
+ "representation": "ngspice",
+ "lineage_version": "45be98afae7c2813f40dabc9996ac11c7ab4257172bd72f31c69a52a62798e1a",
+ "map_version": "2b27f48fbddbf744f9098d169ed290cf034274d63b732bdb6420ee8963bf3bce",
+ "covers": [
+  {
+   "node": "ConductanceState",
+   "uid": "325f09352a8872995fe6ab0a40b9df8780a778389fa0fe00ebcbd9ef7758f4a3",
+   "api": ".op with a DC source vread at the read bias across the device; G = -i(vread) / V_read (print or wrdata)",
+   "unit": "siemens"
+  },
+  {
+   "node": "DotProductError",
+   "uid": "1e6467a5b03397510e0d7f33403fd1cb42de5ea579e1f36b074d8dbbc620da20",
+   "api": ".op of the array netlist per input pattern (alter or a .control loop), wrdata of the readout node voltages at numdgt=15",
+   "unit": "dimensionless"
+  }
+ ],
+ "aliases": [],
+ "releases": [
+  {
+   "commit": "a80f6e3e95d51534905b1f23410a951802666656",
+   "license_source": "https://sourceforge.net/p/ngspice/ngspice/ci/ngspice-47/tree/ and https://sourceforge.net/projects/ngspice/files/ng-spice-rework/47/ngspice-47.tar.gz (sha256 894e649651f1838a14095e5a5439e7d3aa63e87ede14d283173fda4fcdef675f), COPYING: Modified BSD; src/frontend/numparam LGPLv2 or newer; src/maths/KLU LGPLv2 (colamd.c: LGPL 2.1 or later); src/osdi MPLv2.0; src/xspice/icm/table GPLv2 or newer; src/maths/sparse an unnamed permissive notice (LicenseRef-ngspice-sparse); the rest of src/xspice public domain. The expression covers a default build; src/tclspice.c (LGPLv2) is built only with --with-tcl",
+   "released": "2026-08-11",
+   "spdx": "BSD-3-Clause AND LGPL-2.0-or-later AND LGPL-2.1-or-later AND MPL-2.0 AND GPL-2.0-or-later AND LicenseRef-ngspice-sparse",
+   "tag": "ngspice-47",
+   "version": "47"
+  }
+ ]
+}

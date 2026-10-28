@@ -11,7 +11,8 @@ gate proves, and one external classification operator whose dimensions are not
 proved by the gate. ConductanceState carries the
 CONDUCTANCE dimension (the siemens), kept apart from the per-length electrical
 conductivity by tag and dimension, and connects the domain to the map through
-contract_device_conductance from ElectricalConductivity[carrier=electronic]. No
-code representation attaches yet; two measured values do, the work functions of
-pristine and oxygen-plasma-treated MoS2 (Hou et al. 2025).
+contract_device_conductance from ElectricalConductivity[carrier=electronic]. One
+code representation attaches, ngspice on ConductanceState and DotProductError;
+two measured values do, the work functions of pristine and oxygen-plasma-treated
+MoS2 (Hou et al. 2025).
 """
