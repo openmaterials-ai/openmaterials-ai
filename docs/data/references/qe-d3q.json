@@ -28,31 +28,6 @@
  "methods": [],
  "applications": [
   {
-   "doi": "10.1103/PhysRevB.89.064302",
-   "title": "Anharmonic free energies and phonon dispersions from the stochastic self-consistent harmonic approximation: Application to platinum and palladium hydrides",
-   "authors": [
-    "I. Errea",
-    "M. Calandra",
-    "F. Mauri"
-   ],
-   "year": 2014,
-   "journal": "Physical Review B"
-  },
-  {
-   "doi": "10.1103/PhysRevB.89.155426",
-   "title": "Phonon thermal transport in strained and unstrained graphene from first principles",
-   "authors": [
-    "L. Lindsay",
-    "W. Li",
-    "J. Carrete",
-    "N. Mingo",
-    "D. A. Broido",
-    "T. L. Reinecke"
-   ],
-   "year": 2014,
-   "journal": "Physical Review B"
-  },
-  {
    "doi": "10.1021/nl502059f",
    "title": "Thermal Conductivity of Graphene and Graphite: Collective Excitations and Mean Free Paths",
    "authors": [

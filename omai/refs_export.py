@@ -24,6 +24,28 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 OUT_DIR = ROOT / "docs" / "data" / "references"
 GROUPS = ("code", "methods", "applications")
+# Never exported as an application: a paper that cites the code but is another tool's software or
+# method paper, a dataset, or a review, found in the 2026-10-28 physics review. Kept here rather
+# than in Zotero so a re-export stays consistent; the Zotero items carry the tag "not-an-application".
+EXCLUDE_APPLICATIONS = {
+    "10.1103/physrevb.73.155114": "CASTEP DFPT paper (Refson 2006), not a VASP study",
+    "10.1063/5.0155600": "DeePMD-kit software paper",
+    "10.1021/acs.jctc.9b00143": "xtb metadynamics (Grimme 2019), does not use PLUMED",
+    "10.1039/d1cp02805g": "Multiwfn method paper",
+    "10.1002/jcc.26812": "Multiwfn method paper (IGMH)",
+    "10.1063/5.0216272": "Multiwfn software paper",
+    "10.1063/5.0007045": "CP2K software paper",
+    "10.1063/5.0006002": "Psi4 software paper",
+    "10.1063/5.0004997": "NWChem software paper",
+    "10.1021/acs.chemrev.0c01111": "review of machine learning force fields",
+    "10.1103/physrevb.92.054301": "ALAMODE self-consistent phonons (Tadano 2015), not phono3py",
+    "10.1103/physrevb.90.174107": "AFLOW AGL/AEL paper (Toher 2014), not Materials Project or pymatgen",
+    "10.1038/s41524-019-0203-2": "PoLyInfo polymer study (Wu 2019), not mp-api",
+    "10.1038/s41597-022-01882-6": "SPICE dataset paper",
+    "10.1039/d4sc08572h": "AIMNet2 potential paper, not a MACE study",
+    "10.1103/physrevb.89.064302": "SSCHA (Errea 2014), not verified as a D3Q user",
+    "10.1103/physrevb.89.155426": "finite-difference third-order code (Lindsay 2014), not verified as a D3Q user",
+}
 
 
 def _open_copy(db_path: Path) -> sqlite3.Connection:
@@ -99,6 +121,8 @@ def export(db_path: Path, out_dir: Path = OUT_DIR) -> dict[str, dict[str, int]]:
             ).fetchall()
             for (item_id,) in items:
                 e = _entry(db, item_id)
+                if e and group == "applications" and e["doi"].lower() in EXCLUDE_APPLICATIONS:
+                    continue
                 if e and e["doi"].lower() not in {x["doi"].lower() for x in groups[group]}:
                     groups[group].append(e)
         for g in GROUPS:  # year ascending inside a group: the story of a code reads forward

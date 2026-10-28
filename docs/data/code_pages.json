@@ -22,18 +22,18 @@
  },
  "gpumd": {
   "tagline": "Molecular dynamics on GPUs with neuroevolution potentials.",
-  "summary": "GPUMD runs molecular dynamics on GPUs with many-body and machine-learned potentials. It trains and runs neuroevolution potentials (NEP), and computes thermal transport with the Green-Kubo, homogeneous nonequilibrium (HNEMD) and nonequilibrium (NEMD) methods. It also decomposes the heat current spectrally. On the map it serves the heat current, its autocorrelation, and the thermal conductivities derived from them.",
+  "summary": "GPUMD runs molecular dynamics on GPUs with many-body and machine-learned potentials. It trains and runs neuroevolution potentials (NEP), and computes thermal transport with the Green-Kubo, homogeneous nonequilibrium (HNEMD) and nonequilibrium (NEMD) methods. It also decomposes the heat current spectrally. On the map it serves the heat current, its autocorrelation, the thermal conductivities derived from them, the NEP fit errors, and the molecular dynamics observables listed below.",
   "website": "https://gpumd.org",
   "docs": "https://gpumd.org/gpumd/index.html"
  },
  "i-pi": {
-  "tagline": "A force engine that separates nuclear dynamics from the force evaluation.",
+  "tagline": "A path-integral MD driver that separates nuclear dynamics from the force evaluation.",
   "summary": "i-PI is a Python driver for molecular dynamics that separates the nuclear propagation from the force evaluation. It runs path-integral and ring-polymer molecular dynamics, thermostats and enhanced sampling, and talks to electronic structure and potential codes over a socket. On the map it serves the quantities obtained from its trajectories.",
   "website": "https://ipi-code.org"
  },
  "kaldo": {
   "tagline": "Anharmonic lattice dynamics for thermal transport, from crystals to glasses.",
-  "summary": "kALDo computes thermal conductivity from harmonic and anharmonic force constants. It solves the Boltzmann transport equation for crystals and applies the quasi-harmonic Green-Kubo method to disordered and amorphous systems. Both methods take the same inputs, so one code treats crystalline and glassy transport. It runs on GPUs through JAX and accepts force constants from DFT and from interatomic potentials. On the map it serves phonon frequencies, lifetimes, mean free paths and the resulting conductivities.",
+  "summary": "kALDo computes thermal conductivity from harmonic and anharmonic force constants. It solves the Boltzmann transport equation for crystals and applies the quasi-harmonic Green-Kubo method to disordered and amorphous systems. Both methods take the same inputs, so one code treats crystalline and glassy transport. It runs on GPUs through TensorFlow and accepts force constants from DFT and from interatomic potentials. On the map it serves phonon frequencies, lifetimes, mean free paths and the resulting conductivities.",
   "website": "https://nanotheorygroup.github.io/kaldo/"
  },
  "lammps": {
@@ -63,8 +63,8 @@
   "website": "https://docs.materialsproject.org"
  },
  "meskal": {
-  "tagline": "Coherent phonon transport through interfaces and finite structures.",
-  "summary": "MESKAL computes coherent phonon transport in the Landauer picture: transmission through an interface or a finite region between leads, and the conductance and conductivity that follow from it. On the map it serves the channel-resolved transport quantities and their derived conductances."
+  "tagline": "Differentiable anharmonic lattice dynamics in JAX.",
+  "summary": "MESKAL computes anharmonic lattice thermal transport in JAX, so every quantity is differentiable with respect to the force constants: Boltzmann transport in the relaxation-time and direct-inverse forms, quasi-harmonic Green-Kubo for disordered systems, phonon linewidths from three-phonon, isotope and boundary scattering, and modal diffusivities. A Landauer branch gives phonon transmission and thermal conductance through an interface. On the map it serves those quantities."
  },
  "openmaterials-ai": {
   "tagline": "The OpenMaterials kernel evaluates the map's closed-form relations.",
@@ -143,7 +143,7 @@
  },
  "xtb": {
   "tagline": "Semiempirical extended tight-binding for molecules and materials.",
-  "summary": "xtb implements the GFN extended tight-binding methods, GFN2-xTB among them. They give fast energies, geometries, frequencies and properties for molecules and periodic systems. On the map it serves the quantities it computes at that level of theory.",
+  "summary": "xtb implements the GFN extended tight-binding methods, GFN2-xTB among them. They give fast energies, geometries, frequencies and properties for molecules and, with GFN0, GFN1 and GFN-FF, periodic systems. On the map it serves the quantities it computes at that level of theory.",
   "website": "https://xtb-docs.readthedocs.io"
  }
 }

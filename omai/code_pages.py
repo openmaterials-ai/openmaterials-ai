@@ -33,7 +33,7 @@ DATA = ROOT / "docs" / "data"
 OUT = ROOT / "docs" / "codes"
 CARDS = ROOT / "docs" / "assets" / "og" / "codes"
 SITE = "https://openmaterials.ai"
-GROUP_TITLES = {"code": "The code", "methods": "Methods it builds on", "applications": "Remarkable applications"}
+GROUP_TITLES = {"code": "The code", "methods": "Methods and inputs it builds on", "applications": "Remarkable applications"}
 
 
 def esc(s: object) -> str:
@@ -140,7 +140,7 @@ def page(key: str, rep: dict, reg: dict, refs: dict | None, text: dict, has_card
         )
         rel_html = (
             '<section class="gsec" id="releases"><h2>Releases on record</h2>'
-            "<p>Versions the map's representation has been checked against, with the license read from the release itself.</p>"
+            "<p>Versions on record for this code, with the license read from the release itself.</p>"
             f'<table class="releases"><thead><tr><th>Version</th><th>Released</th><th>License</th></tr></thead><tbody>{rows}</tbody></table></section>'
         )
 
@@ -152,8 +152,8 @@ def page(key: str, rep: dict, reg: dict, refs: dict | None, text: dict, has_card
                 continue
             lead = {
                 "code": "The papers that describe the code; cite them when you use it.",
-                "methods": "The methods the code implements, as published.",
-                "applications": "Studies that cite the code, chosen by citation count among the papers on phonons, thermal transport and related topics, with a few picked by hand.",
+                "methods": "The methods the code implements and the inputs it relies on, as published.",
+                "applications": "Highly cited studies that cite the code, with a few picked by hand.",
             }[g]
             ref_sections += f'<h3 id="refs-{g}">{title}</h3><p>{lead}</p><ol class="refs">{"".join(ref_line(r) for r in items)}</ol>'
     else:
@@ -186,7 +186,7 @@ def page(key: str, rep: dict, reg: dict, refs: dict | None, text: dict, has_card
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{esc(name)} | OpenMaterials</title>
-<meta name="description" content="{esc(description)} {esc(name)} on the OpenMaterials map: the quantities it computes, the papers that describe it, and the studies that use it.">
+<meta name="description" content="{esc(description)} {esc(name)} on the OpenMaterials map: the quantities it computes, the papers that describe it, and studies that cite it.">
 <link rel="canonical" href="{canonical}">
 <meta name="theme-color" content="#F4F1EA" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0F0E0C" media="(prefers-color-scheme: dark)">

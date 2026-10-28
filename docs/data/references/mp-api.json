@@ -24,21 +24,6 @@
  "methods": [],
  "applications": [
   {
-   "doi": "10.1103/PhysRevB.90.174107",
-   "title": "High-throughput computational screening of thermal conductivity, Debye temperature, and Grüneisen parameter using a quasiharmonic Debye model",
-   "authors": [
-    "C. Toher",
-    "J. J. Plata",
-    "O. Levy",
-    "M. De Jong",
-    "M. Asta",
-    "M. B. Nardelli",
-    "S. Curtarolo"
-   ],
-   "year": 2014,
-   "journal": "Physical Review B"
-  },
-  {
    "doi": "10.1103/PhysRevLett.115.205901",
    "title": "Prediction of Low-Thermal-Conductivity Compounds with First-Principles Anharmonic Lattice-Dynamics Calculations and Bayesian Optimization",
    "authors": [
@@ -72,27 +57,6 @@
    ],
    "year": 2018,
    "journal": "Energy & Environmental Science"
-  },
-  {
-   "doi": "10.1038/s41524-019-0203-2",
-   "title": "Machine-learning-assisted discovery of polymers with high thermal conductivity using a molecular design algorithm",
-   "authors": [
-    "S. Wu",
-    "Y. Kondo",
-    "M. a. Kakimoto",
-    "B. Yang",
-    "H. Yamada",
-    "I. Kuwajima",
-    "G. Lambard",
-    "K. Hongo",
-    "Y. Xu",
-    "J. Shiomi",
-    "C. Schick",
-    "J. Morikawa",
-    "R. Yoshida"
-   ],
-   "year": 2019,
-   "journal": "npj Computational Materials"
   }
  ]
 }

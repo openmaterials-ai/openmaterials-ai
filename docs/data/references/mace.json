@@ -126,37 +126,6 @@
    "journal": "The Journal of Chemical Physics"
   },
   {
-   "doi": "10.1038/s41597-022-01882-6",
-   "title": "SPICE, A Dataset of Drug-like Molecules and Peptides for Training Machine Learning Potentials",
-   "authors": [
-    "P. Eastman",
-    "P. K. Behara",
-    "D. L. Dotson",
-    "R. Galvelis",
-    "J. E. Herr",
-    "J. T. Horton",
-    "Y. Mao",
-    "J. D. Chodera",
-    "B. P. Pritchard",
-    "Y. Wang",
-    "G. De Fabritiis",
-    "T. E. Markland"
-   ],
-   "year": 2023,
-   "journal": "Scientific Data"
-  },
-  {
-   "doi": "10.1039/D4SC08572H",
-   "title": "AIMNet2: a neural network potential to meet your neutral, charged, organic, and elemental-organic needs",
-   "authors": [
-    "D. M. Anstine",
-    "R. Zubatyuk",
-    "O. Isayev"
-   ],
-   "year": 2025,
-   "journal": "Chemical Science"
-  },
-  {
    "doi": "10.1002/aenm.202403876",
    "title": "Recent Advances in Machine Learning‐Assisted Multiscale Design of Energy Materials",
    "authors": [

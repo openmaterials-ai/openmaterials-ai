@@ -35,17 +35,6 @@
  "methods": [],
  "applications": [
   {
-   "doi": "10.1103/PhysRevB.73.155114",
-   "title": "Variational density-functional perturbation theory for dielectrics and lattice dynamics",
-   "authors": [
-    "K. Refson",
-    "P. R. Tulip",
-    "S. J. Clark"
-   ],
-   "year": 2006,
-   "journal": "Physical Review B"
-  },
-  {
    "doi": "10.1103/PhysRevB.77.075133",
    "title": "Electron-phonon coupling and electron heat capacity of metals under conditions of strong electron-phonon nonequilibrium",
    "authors": [
