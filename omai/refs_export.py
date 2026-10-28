@@ -40,7 +40,9 @@ CURATED = {
     "i-pi": {"applications": ["10.1063/1.4883861", "10.1063/1.4971438", "10.1073/pnas.1815117116"]},  # TRPMD; high-order PIMD; ab initio water thermodynamics
     "mp-api": {"applications": ["10.1126/sciadv.1600225", "10.1126/sciadv.aaq0148", "10.1038/s41524-020-00362-y"]},  # metastability scale; synthesis limit; stability predictions, all on Materials Project data
     "pymatgen-analysis-diffusion": {"applications": ["10.1021/acs.chemmater.5b04013", "10.1038/ncomms11009", "10.1021/acs.chemmater.5b03656"]},  # Na3PSe4 (Ceder group); Na10SnP2S12, pymatgen named for the MSD fit; Na3PS4 (Ong group)
-    "rxn-network": {"applications": ["10.1021/jacs.1c06229", "10.1021/acscentsci.3c01051"]},  # YMnO3 selectivity, enumerated with the reaction-network package; thermodynamic selectivity with experiments
+    "rxn-network": {"applications": ["10.1021/jacs.1c06229", "10.1021/acscentsci.3c01051"]},
+    "mattergen": {"applications": ["10.1021/acs.jpclett.6c01568", "10.1016/j.jpowsour.2026.240034", "10.1002/batt.202500309", "10.1039/d5mh00010f"]},  # Li-Ga-Sn phase diagrams; garnet conductors; battery chemical space; Szymanski-Bartel benchmark (full text: MatterGen run and retrained)
+    "diffcsp": {"applications": ["10.1038/s41524-026-02117-7", "10.1016/j.patter.2026.101537", "10.1038/s41563-025-02355-y"]},  # guided diffusion for superconductors (DiffCSP pretrained and fine-tuned); diffusion models in unexplored chemical space; SCIGEN on DiffCSP  # YMnO3 selectivity, enumerated with the reaction-network package; thermodynamic selectivity with experiments
 }
 EXCLUDE_APPLICATIONS_REVIEWS = {  # reviews, perspectives and overviews that cite a code without using it
     "10.1016/j.neuron.2018.08.011": "review (Molecular Dynamics Simulation for All), not an OpenMM study",
