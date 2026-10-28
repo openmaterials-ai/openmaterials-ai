@@ -200,16 +200,16 @@
           "formula_sha256": "0d49b118dcf2f3478766bb23218c8161e098df186770bcebe8779d0aa58aaf61"
         }
       ],
-      "statement": "The catalog's conductance drift law does not depend on the reference time, and its exponent is minus the slope of log G against log t_d. Its thermionic conductance is the zero-bias slope of the Richardson-Dushman current; with an ideality factor n that slope is G/n in the form I_s (exp(q_e V/(n k_B T)) - 1) and G in the form I_s exp(q_e V/(n k_B T)) (1 - exp(-q_e V/(k_B T))), and the barrier follows exactly from conductances at two temperatures. Its retention time is the mean exit time of a constant-rate escape, divided by M for M exit paths, and the barrier follows exactly from retention times at two temperatures. Under a linear voltage ramp the expected hop count from zero bias is the leading term minus g_r k_B T/(alpha_F tau_ret); the leading term is exp((V - V*)/b), b = k_B T/alpha_F, equal to one at the catalog's location V*, and the first-hop voltage with survival exp(-exp((V - V*)/b)) has mean V* - gamma b, the catalog's set voltage. Its programming error equals the per-cell model it was written from, decreases strictly as the conductance window widens, tends to c sqrt(S_2/2)/S_1, and exceeds c/sqrt(2 n_w) for every kernel and window. For a conductance that rises (or falls) monotonically during a pulse, the dissipated energy lies between the catalog's pulse energies at the initial and the final conductance. For a channel of segments in series, the catalog's conductance with the length-averaged conductivity is an upper bound on the true conductance.",
+      "statement": "Every continuous positive drift law G_0 phi(t_d/t_{d,0}) that does not depend on the choice of reference time is the catalog's power law for some exponent (the multiplicative Cauchy equation). Conductances that follow the two-dimensional T^(3/2) injection law, inverted with the catalog's three-dimensional T^2 law from two temperatures T_1 < T_2, return Phi_Bn - k_B T_eff/2, where T_eff = log(T_2/T_1)/(1/T_1 - 1/T_2), the reciprocal of the logarithmic mean of 1/T_1 and 1/T_2, lies strictly between T_1 and T_2; this is the catalog's shift of about k_B T/2. An ensemble of devices with two symmetric sites exchanging at the catalog's retention rate 1/tau has a programmed fraction that relaxes to one half as 1/2 + (p(0) - 1/2) exp(-2t/tau), the only solution, with time constant tau/2. Under a linear voltage ramp the expected hop count from zero bias is the leading term exp((V - V*)/b), b = k_B T/alpha_F, minus g_r k_B T/(alpha_F tau_0) with tau_0 = exp(E_m/(k_B T))/nu_0 the zero-bias lifetime of the unprogrammed state over the SET barrier; the first-hop law with survival exp(-exp((V - V*)/b)) has a density of total mass one, an integrable first moment, and mean V* - gamma b, the catalog's set voltage. The catalog's programming error exceeds c/sqrt(2 n_w) for every kernel of n_w nonzero weights and every window W > 1. For a conductance that rises or falls monotonically during a pulse, the dissipated energy lies between the catalog's pulse energies at the initial and the final conductance. For a channel of segments in series, the catalog's conductance with the length-averaged conductivity is an upper bound on the true conductance.",
       "sources": [],
       "conditions": [
-        "Energies Phi_Bn and E_m are in joules, T in kelvin, k_B and q_e exact SI; P_th in A/K^2, G in siemens, nu_0 in THz and g_r in ps/V as the catalog stores them. An energy in eV read as joules is wrong by a factor 1.6e-19.",
-        "Drift: G_0 is nonzero and all times are positive; the law is the fitted power law inside the time range where nu was fitted.",
-        "Thermionic: one contact, thermionic emission over the barrier without field emission, the three-dimensional T^2 Richardson law, small signal |V| much smaller than k_B T/q_e; the catalog's G is the slope for ideality factor 1, and for an ideality factor n the slope is G/n or G depending on the form of the current law; Phi_Bn is the effective zero-bias barrier. The two-temperature inversion assumes Phi_Bn and P_th independent of temperature for the same contact.",
-        "Retention: one back-hop path at the Arrhenius rate nu_0 exp(-E_m/(k_B T)), or M equivalent paths; the two-temperature inversion assumes E_m and nu_0 independent of temperature. At one temperature E_m and nu_0 cannot be separated.",
-        "Ramp: a linear ramp with dwell g_r per volt (1/ramp rate, or t_p/dV for a staircase), alpha_F > 0, a barrier falling linearly with V, one hop switching the device, the device at temperature T. The mean set voltage uses the leading hop count and neglects hops at zero and negative bias, whose expected number g_r k_B T/(alpha_F tau_ret) must be much smaller than one.",
-        "Programming error: the per-cell model of the catalog description with c > 0, W > 1, w_max > 0, n_w the count of nonzero weights, S_1 = sum |w_i| and S_2 = sum w_i^2. Read noise, drift, IR drop, sneak paths and correlated errors are not included.",
-        "Pulse energy: G is the chord conductance I(V_p)/V_p and changes monotonically during the pulse (rising for SET, falling for RESET); the bracket holds for any width t_p >= 0 in the catalog's time unit.",
+        "Energies Phi_Bn and E_m are in joules, T in kelvin, k_B and q_e exact SI; P_th in A/K^2 and G in siemens. An energy in eV entered as joules inside exp(-E/(k_B T)) gives an exponentially wrong result, not a constant factor.",
+        "Drift: a single device and a single programmed level with one fixed exponent nu, isothermal storage, positive times inside the time range where nu was fitted, and 0 < t_{d,0}. An array mean over devices with a spread of nu is not a power law (a Gaussian nu of mean mu and width sigma gives d ln<G>/d ln t = -mu + sigma^2 ln(t/t_0)).",
+        "Thermionic: one contact, thermionic emission over a laterally homogeneous barrier without field emission, small signal |V| much smaller than k_B T/q_e, and an ideality factor independent of temperature; the catalog's G is the zero-bias slope for ideality factor 1. Phi_Bn is the effective zero-bias barrier. The zero-bias Richardson plot of this conductance is ln(G/T) against 1/T, not ln(G/T^2). A Gaussian spread sigma of barrier heights (Werner and Guttler) makes a two-temperature inversion return Phi_mean - sigma^2 (1/T_1 + 1/T_2)/(2 k_B). The catalog stores this small-signal slope in ConductanceState, whose meaning elsewhere is the chord conductance.",
+        "Retention: one back-hop path at the Arrhenius rate nu_0 exp(-E_m/(k_B T)), or M equivalent paths. The relaxation to one half holds for symmetric sites, where the device re-sets as often as it decays. At one temperature E_m and nu_0 cannot be separated. A datasheet retention is a time to failure at a fail fraction, not this mean; a spread of barrier heights makes the survival non-exponential.",
+        "Ramp: a linear ramp with dwell g_r per volt (1/ramp rate, or t_p/dV for a staircase), alpha_F > 0, a barrier falling linearly with V, one hop switching the device, the device at temperature T. The mean set voltage uses the leading hop count and neglects hops at zero and negative bias, whose expected number g_r k_B T/(alpha_F tau_0) must be much smaller than one; tau_0 = exp(E_m,set/(k_B T))/nu_0 is the zero-bias lifetime of the unprogrammed state over the SET-direction barrier, not the catalog's RetentionTime of the programmed state, and the two agree only for symmetric sites.",
+        "Programming error: c > 0, W > 1, w_max > 0, n_w the count of nonzero weights, S_1 = sum |w_i| and S_2 = sum w_i^2. The Lean shows that the catalog's closed form equals the per-cell sum c sqrt(sum_i (w_max/(W - 1) + |w_i|)^2/2)/S_1 of the catalog description and bounds it; it does not derive that expression from the stochastic cell model. Read noise, drift, IR drop, sneak paths and correlated errors are not included.",
+        "Pulse energy: V_p is the voltage across the same two terminals between which G is defined, with no series resistor, selector or compliance in that path; G is the chord conductance I(V_p)/V_p and changes monotonically during the pulse (rising for SET, falling for RESET). A gate pulse is not covered.",
         "Device conductance: current flows along the channel through segments of positive length and conductivity with one cross-section A; the catalog's sigma is then the length-averaged conductivity and the catalog conductance an upper bound, equal for a uniform channel."
       ],
       "conventions": {
@@ -217,7 +217,7 @@
         "component_scope": "One device, one contact or one cell array as each operator describes; scalar quantities.",
         "normalization_basis": "Conductances per device; the programming error is relative to the ideal dot product; hop counts are expected numbers per device.",
         "frequency_convention": "nu_0 is an attempt frequency in hops per unit time (THz in the catalog), not an angular frequency.",
-        "unit_embedding": "Joules for energies, kelvin, siemens, volts, A/K^2 for P_th, coulombs for alpha_F, and the catalog's canonical ps for times and THz for frequencies; the theorems hold in any coherent embedding.",
+        "unit_embedding": "The catalog stores times in ps and frequencies in THz; with joules, siemens and volts this embedding is not coherent: V_p^2 G t_p in V^2 S ps is a picojoule. The theorems hold in any coherent embedding; convert to one before comparing values.",
         "held_fixed": "Temperature during a measurement; for the two-temperature inversions the barrier and prefactor are held fixed between the two temperatures; the drift exponent within its fitted range.",
         "admissibility": "Positive temperatures, times, attempt frequency, alpha_F, g_r and P_th; W > 1 and c > 0 for the programming error; monotone conductance during a pulse; positive segment lengths and conductivities.",
         "reference_energy": "Barriers are measured from the state that is left: the programmed state for retention, the unprogrammed state for the ramp.",
@@ -225,29 +225,23 @@
       },
       "remaining_obligations": [
         "Measured or fitted parameters (nu, P_th, Phi_Bn, E_m, nu_0, alpha_F, c) and the measurements behind them are not verified.",
-        "Field and thermionic-field emission, the image-force temperature dependence of the barrier and the T^(3/2) law of two-dimensional injection are not covered.",
+        "Drift: a spread and state dependence of nu across devices and levels, nu(T) with thermally accelerated time, non-isothermal storage and 1/f read noise are not covered.",
+        "Thermionic: field and thermionic-field emission, the image-force temperature dependence of the barrier, barrier inhomogeneity and a temperature-dependent ideality factor are not covered.",
+        "Retention: the minimum of M independent exponential exit times and failure-fraction (datasheet) retention are not proved; only the mean and the symmetric two-site relaxation are.",
         "The Gumbel standard deviation pi k_B T/(sqrt(6) alpha_F), the N-hop generalization (k_B T/alpha_F)(psi(N) + gamma), device-to-device barrier spread, staircase discretization and Joule heating are not proved.",
-        "The programming-error model's derivation from the stochastic cell model and inputs is stated in the catalog description and checked here only as an identity with its per-cell form; read noise, drift, IR drop, sneak paths, quantization and correlated errors are excluded.",
+        "The programming-error model's derivation from the stochastic cell model is not proved; read noise, drift, IR drop, sneak paths, quantization and correlated errors are excluded.",
         "Capacitive charging energy, drive-electronics energy, contact resistance and short-channel (Landauer) transport are not covered.",
-        "contract_conductance_window, contract_state_coefficient_of_variation and schottky_mott_barrier are definitions with nothing non-obvious to prove and are not bound."
+        "contract_conductance_window and contract_state_coefficient_of_variation are definitions with nothing non-obvious to prove and are not bound; schottky_mott_barrier is unbound because its validity cannot be established algebraically."
       ],
       "evidence": {
         "kind": "compiled_bridge",
         "module": "OMAIDeviceMetrology",
         "declarations": [
-          "OMAI.PhyslibBridge.DeviceMetrology.driftConductance_rereference",
-          "OMAI.PhyslibBridge.DeviceMetrology.driftConductance_logSlope",
-          "OMAI.PhyslibBridge.DeviceMetrology.thermionicConductance_eq_zeroBiasSlope",
-          "OMAI.PhyslibBridge.DeviceMetrology.thermionicConductance_ideality",
-          "OMAI.PhyslibBridge.DeviceMetrology.thermionic_barrier_two_temperatures",
-          "OMAI.PhyslibBridge.DeviceMetrology.retentionTime_mean_exit",
-          "OMAI.PhyslibBridge.DeviceMetrology.retention_barrier_two_temperatures",
+          "OMAI.PhyslibBridge.DeviceMetrology.drift_law_unique",
+          "OMAI.PhyslibBridge.DeviceMetrology.thermionic_wrongLaw_barrier",
+          "OMAI.PhyslibBridge.DeviceMetrology.retention_symmetric_relaxation",
           "OMAI.PhyslibBridge.DeviceMetrology.ramp_expectedHops",
-          "OMAI.PhyslibBridge.DeviceMetrology.leadingHops_eq_exp",
           "OMAI.PhyslibBridge.DeviceMetrology.ramp_meanSetVoltage",
-          "OMAI.PhyslibBridge.DeviceMetrology.programmingError_eq_cells",
-          "OMAI.PhyslibBridge.DeviceMetrology.programmingError_strictAntiOn",
-          "OMAI.PhyslibBridge.DeviceMetrology.tendsto_programmingError",
           "OMAI.PhyslibBridge.DeviceMetrology.programmingError_gt",
           "OMAI.PhyslibBridge.DeviceMetrology.pulseEnergy_bracket",
           "OMAI.PhyslibBridge.DeviceMetrology.deviceConductance_series_le"
@@ -304,7 +298,7 @@
             "id": "SetVoltage"
           }
         ],
-        "source_sha256": "8dfed303eb739c86d244aff50d74f1050b71a1ddf7d443902de2d50912507060"
+        "source_sha256": "e4512fd4eda1c0bf64a059a05ed51f0493cfd3ca131c891a2a223ba837d79edd"
       }
     },
     {
@@ -334,11 +328,12 @@
           "formula_sha256": "30b75223fc1faba9136c4731d024ff4a258a6bb2ff8dcb7a170ffc25f9b633d5"
         }
       ],
-      "statement": "The weighted least-squares slope of log D against 1/T returns the activation energy exactly, E_a = -k_B times the slope, on data that follow the catalog's Arrhenius law, for every choice of positive weights and at least two distinct temperatures. For such a diffusivity and a temperature-independent carrier density, the catalog's Nernst-Einstein ionic conductivity satisfies d log(sigma T)/d(1/T) = -E_a/k_B and d log(sigma)/d(1/T) = -(E_a - k_B T)/k_B: sigma T is Arrhenius with the diffusion barrier, and fitting sigma alone underestimates it by k_B T.",
+      "statement": "The catalog's weighted Arrhenius fit is the weighted least-squares line of log D against 1/T: its slope minimizes the weighted sum of squared residuals over all lines. On data that follow the catalog's Arrhenius law exactly, it returns E_a = -k_B times the slope, for every choice of positive weights and at least two distinct temperatures; this is an exact-data identity, not a statement about noisy data. Fitting the catalog's Nernst-Einstein conductivity sigma itself, rather than sigma T, in the same way returns the apparent activation energy E_a - k_B T_eff with T_eff inside the temperature range of the data, for every choice of positive weights, when the diffusivity is Arrhenius with barrier E_a and the carrier density does not depend on temperature: sigma T, not sigma, carries the diffusion barrier.",
       "sources": [],
       "conditions": [
-        "E_a is an energy per particle in joules, k_B exact SI, T in kelvin; D_0 > 0. The regression is of log D against 1/T with positive weights and at least two distinct temperatures, on data that follow the Arrhenius law exactly.",
-        "Nernst-Einstein with the tracer diffusivity (Haven ratio 1); the carrier density n_c, the charge number z (nonzero), the elementary charge e_c and the Arrhenius parameters do not depend on temperature."
+        "E_a is an energy per particle in joules, k_B exact SI, T in kelvin at every data point; D_0 > 0. The regression is of log D against 1/T with positive weights and at least two distinct temperatures.",
+        "Nernst-Einstein with the tracer diffusivity and Haven ratio H_R = 1; the carrier density n_c, the charge number z (nonzero), the elementary charge e_c and the Arrhenius parameters do not depend on temperature.",
+        "The Einstein relation behind the input diffusivity needs d to match the number of MSD components summed and the diffusive regime of the MSD."
       ],
       "conventions": {
         "model_scope": "Arrhenius thermally activated diffusion and the Nernst-Einstein relation. Physlib has no solid-state diffusion model, so these are local theorems about the OMAI formulas over Mathlib reals; no Physlib declaration is identified.",
@@ -352,16 +347,17 @@
         "qpoint_weighting": "Not applicable."
       },
       "remaining_obligations": [
-        "Molecular-dynamics or experimental producers of the diffusivity and the noise in fitted data are not verified; the theorem covers exact Arrhenius data only.",
-        "Non-Arrhenius curvature, correlated (Haven ratio different from 1) conduction and temperature-dependent carrier densities are not covered.",
+        "Molecular-dynamics or experimental producers of the diffusivity and noise in fitted data are not verified; the exactness theorem covers exact Arrhenius data only.",
+        "Non-Arrhenius curvature, correlated conduction (Haven ratio different from 1) and temperature-dependent carrier densities are not covered.",
         "contract_diffusivity (D = slope/(2d)) is a definition with nothing non-obvious to prove and is not bound; compute_carrier_density and compute_configurational_energy are external selectors with nothing algebraic to prove."
       ],
       "evidence": {
         "kind": "compiled_bridge",
         "module": "OMAIMaterialsTransport",
         "declarations": [
+          "OMAI.PhyslibBridge.MaterialsTransport.wlsSlope_minimizes",
           "OMAI.PhyslibBridge.MaterialsTransport.arrhenius_wls_recovers_activation",
-          "OMAI.PhyslibBridge.MaterialsTransport.ionicConductivity_arrhenius"
+          "OMAI.PhyslibBridge.MaterialsTransport.ionic_wls_apparent_activation"
         ],
         "source_path": "lean/bridge/OMAIMaterialsTransport.lean",
         "build_record": "lean/bridge/build-evidence.json",
@@ -383,7 +379,7 @@
             "id": "ElectricalConductivity[carrier=ionic]"
           }
         ],
-        "source_sha256": "64b14397c877b98361d6bd293b851e3e257901ca12721eea4fa01ff6c0482e14"
+        "source_sha256": "2aa396f9e92d7b2a52b7d8cceb05c7834dee771777c23c47094dd2b2ed82d379"
       }
     },
     {
@@ -6392,7 +6388,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "A closed-form definition with nothing non-obvious to prove; no Lean theorem restates it, and it is not bound."
+        "reason": "Phi_Bn = Phi_W - chi is a difference with nothing to prove algebraically; its validity (no Fermi-level pinning and no interface dipole, while measured pinning factors are about 0.1 for Si, GaAs and MoS2) cannot be established algebraically. Catalog defect: WorkFunction does not distinguish a metal from a semiconductor, so a semiconductor's own work function can compose into a SchottkyBarrierHeight."
       },
       {
         "id": "solve_bte[bte_solver=direct_inverse]",

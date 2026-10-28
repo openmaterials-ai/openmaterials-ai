@@ -2,7 +2,7 @@
   "schema_version": 1,
   "scope": "Reviewed OMAI formula endpoints and exact Lean proof source for local theorems with no Physlib physics counterpart. Hash and compiled-name checks detect drift and provenance errors; they are not automatic symbolic translation or numerical validation.",
   "source_path": "lean/bridge/OMAIMaterialsTransport.lean",
-  "source_sha256": "64b14397c877b98361d6bd293b851e3e257901ca12721eea4fa01ff6c0482e14",
+  "source_sha256": "2aa396f9e92d7b2a52b7d8cceb05c7834dee771777c23c47094dd2b2ed82d379",
   "operators": [
     {
       "id": "fit_arrhenius",
@@ -30,7 +30,7 @@
     }
   ],
   "interpretations": [
-    "fit_arrhenius is the Arrhenius law D(T) = D_0 exp(-E_a/(T k_B)) with E_a an energy per particle in joules; the catalog's fit is a weighted regression of log D against 1/T, which returns E_a exactly on Arrhenius data for any positive weights and at least two distinct temperatures.",
-    "compute_ionic_conductivity is the Nernst-Einstein relation with the tracer diffusivity (Haven ratio 1); with an Arrhenius diffusivity and a temperature-independent carrier density, sigma T is Arrhenius with E_a and sigma alone has the apparent activation energy E_a - k_B T."
+    "fit_arrhenius is the Arrhenius law D(T) = D_0 exp(-E_a/(T k_B)) with E_a an energy per particle in joules; the catalog's fit is the weighted least-squares line of log D against 1/T, which minimizes the weighted squared residuals and returns E_a exactly on exact Arrhenius data for any positive weights and at least two distinct temperatures.",
+    "compute_ionic_conductivity is the Nernst-Einstein relation with the tracer diffusivity (Haven ratio 1); fitting sigma instead of sigma T returns E_a - k_B T_eff with T_eff inside the data's temperature range."
   ]
 }

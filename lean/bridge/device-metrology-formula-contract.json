@@ -2,7 +2,7 @@
   "schema_version": 1,
   "scope": "Reviewed OMAI formula endpoints and exact Lean proof source for local theorems with no Physlib physics counterpart. Hash and compiled-name checks detect drift and provenance errors; they are not automatic symbolic translation or numerical validation.",
   "source_path": "lean/bridge/OMAIDeviceMetrology.lean",
-  "source_sha256": "8dfed303eb739c86d244aff50d74f1050b71a1ddf7d443902de2d50912507060",
+  "source_sha256": "e4512fd4eda1c0bf64a059a05ed51f0493cfd3ca131c891a2a223ba837d79edd",
   "operators": [
     {
       "id": "apply_conductance_drift",
@@ -77,13 +77,13 @@
     }
   ],
   "interpretations": [
-    "Energies (Phi_Bn, E_m) are in joules, T in kelvin, k_B and q_e exact SI; an energy in eV read as joules gives a wrong result by a factor 1.6e-19. The theorems hold in any coherent unit embedding.",
-    "apply_conductance_drift is G_0 (t_d/t_{d,0})^(-nu) for positive times inside the fitted range; the drift exponent is minus the slope of log G against log t_d at every time and does not depend on the reference time.",
-    "emit_thermionic_conductance is the zero-bias small-signal slope of the three-dimensional Richardson-Dushman current of one contact with ideality factor 1; with an ideality factor n the slope is G/n for I_s (exp(q_e V/(n k_B T)) - 1) and G for I_s exp(q_e V/(n k_B T)) (1 - exp(-q_e V/(k_B T))).",
-    "zero_bias_retention is the mean of the exponential exit time of one path at the Arrhenius rate nu_0 exp(-E_m/(k_B T)); M equivalent paths divide it by M.",
-    "ramp_set_voltage is the mean of the minimum-Gumbel law of the first hop under a linear ramp with dwell g_r per volt, the hop rate nu_0 exp(-(E_m - alpha_F V)/(k_B T)) and the hops at zero and negative bias neglected; the neglected expected count is g_r k_B T/(alpha_F tau_ret).",
-    "propagate_programming_error is the per-cell model of the catalog description (affine mapping, positive and negative column groups, binary inputs with E[x^2] = 1/2, independent unbiased cell errors of coefficient of variation c) written with the kernel moments n_w, w_max, S_1 = sum |w_i| and S_2 = sum w_i^2 of the nonzero weights.",
-    "dissipate_pulse_energy is V_p^2 G t_p for a conductance constant during the pulse; for a conductance that changes monotonically the dissipated energy lies between its values at the initial and the final conductance.",
+    "Energies (Phi_Bn, E_m) are in joules, T in kelvin, k_B and q_e exact SI; an energy in eV entered as joules inside an exponential gives an exponentially wrong result. The catalog's ps and THz with joules, siemens and volts are not a coherent embedding; the theorems hold in any coherent one.",
+    "apply_conductance_drift is G_0 (t_d/t_{d,0})^(-nu) for one device and level with a fixed exponent; it is the only continuous positive drift law independent of the reference time.",
+    "emit_thermionic_conductance is the zero-bias small-signal slope of the three-dimensional Richardson-Dushman current of one contact with ideality factor 1 over a homogeneous barrier; inverting two-dimensional T^(3/2) data with it shifts the barrier by k_B T_eff/2 with T_eff between the two temperatures.",
+    "zero_bias_retention is the mean exit time of one path at the Arrhenius rate nu_0 exp(-E_m/(k_B T)); for symmetric sites an ensemble relaxes to one half with time constant tau/2.",
+    "ramp_set_voltage is the mean of the minimum-Gumbel law of the first hop under a linear ramp with dwell g_r per volt and the hop rate nu_0 exp(-(E_m - alpha_F V)/(k_B T)), with the hops at zero and negative bias neglected; the neglected expected count is g_r k_B T/(alpha_F tau_0), tau_0 the zero-bias lifetime of the unprogrammed state over the SET barrier.",
+    "propagate_programming_error equals the per-cell sum c sqrt(sum_i (w_max/(W - 1) + |w_i|)^2/2)/S_1 of the catalog description over the nonzero weights; no derivation from the stochastic cell model is claimed. It exceeds c/sqrt(2 n_w).",
+    "dissipate_pulse_energy is V_p^2 G t_p for a conductance constant during the pulse and V_p across the same two terminals; for a conductance that changes monotonically the dissipated energy lies between its values at the initial and the final conductance.",
     "contract_device_conductance is the uniform-channel conductance; for segments in series it is an upper bound when sigma is the length-averaged conductivity."
   ]
 }

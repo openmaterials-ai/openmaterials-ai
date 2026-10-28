@@ -41,14 +41,21 @@ TRANCHES = {
         ],
         "outputs": {"ConductanceState", "DotProductError", "ProgrammingPulseEnergy", "RetentionTime", "SetVoltage"},
         "key_theorems": {
-            "thermionicConductance_eq_zeroBiasSlope": "HasDerivAt (thermionicCurrent PhiBn T Pth qe kB)\n      (thermionicConductance PhiBn T Pth qe kB) 0",
+            "drift_law_unique": "∃ nu : ℝ, ∀ G0 td td0 : ℝ, 0 < td → 0 < td0 →\n      G0 * phi (td / td0) = driftConductance nu G0 td td0",
+            "thermionic_wrongLaw_barrier": "PhiBn - kB * (log (T2 / T1) / (1 / T1 - 1 / T2)) / 2 ∧\n    T1 < log (T2 / T1) / (1 / T1 - 1 / T2) ∧ log (T2 / T1) / (1 / T1 - 1 / T2) < T2",
+            "retention_symmetric_relaxation": "p t = 1 / 2 + (p 0 - 1 / 2) * exp (-2 * t / retentionTime Em T nu0 kB)",
             "ramp_meanSetVoltage": "rampSetVoltage Em T alphaF nu0 gr kB",
-            "ramp_expectedHops": "gr * kB * T / (alphaF * retentionTime Em T nu0 kB)",
-            "retentionTime_mean_exit": "retentionTime Em T nu0 kB / M",
+            "ramp_expectedHops": "gr * kB * T / (alphaF * (exp (Em / (T * kB)) / nu0))",
             "programmingError_gt": "cG / sqrt (2 * n) < programmingError cG WG n wmax (∑ i, |w i|) (∑ i, w i ^ 2)",
             "deviceConductance_series_le": "A / ∑ i, l i / sigma i ≤",
         },
-        "not_cited": {"leadingHops_hasDerivAt"},
+        # Obvious or definitional results kept in the module as support (review of 15370b7).
+        "not_cited": {"leadingHops_hasDerivAt", "leadingHops_eq_exp", "driftConductance_rereference",
+                      "driftConductance_logSlope", "thermionicConductance_eq_zeroBiasSlope",
+                      "thermionicConductance_ideality", "thermionic_barrier_two_temperatures",
+                      "retentionTime_mean_exit", "retention_barrier_two_temperatures",
+                      "programmingError_eq_cells", "programmingError_strictAntiOn",
+                      "tendsto_programmingError"},
     },
     "arrhenius-ionic-transport": {
         "source": "lean/bridge/OMAIMaterialsTransport.lean",
@@ -63,13 +70,14 @@ TRANCHES = {
         "outputs": {"ActivationEnergy", "ElectricalConductivity[carrier=ionic]"},
         "key_theorems": {
             "arrhenius_wls_recovers_activation": "-kB * wlsSlope w (fun i => 1 / T i)\n      (fun i => log (arrheniusDiffusivity D0 Ea kB (T i))) = Ea",
-            "ionicConductivity_arrhenius": "(-(Ea - kB * (1 / beta)) / kB) beta",
+            "wlsSlope_minimizes": "∑ i, w i * (y i - a - b * x i) ^ 2",
+            "ionic_wls_apparent_activation": "∃ Teff, Tlo ≤ Teff ∧ Teff ≤ Thi ∧",
         },
-        "not_cited": {"wlsSlope_affine"},
+        "not_cited": {"wlsSlope_affine", "ionicConductivity_arrhenius", "wlsSlope_log_mem"},
     },
 }
 NOTHING_TO_PROVE = {"contract_conductance_window", "contract_state_coefficient_of_variation",
-                    "schottky_mott_barrier", "contract_diffusivity"}
+                    "contract_diffusivity"}
 
 
 def _binding(binding_id):
@@ -154,18 +162,28 @@ def test_plain_definitions_stay_unbound_with_a_reason():
     for op in NOTHING_TO_PROVE:
         assert rows[op]["status"] == "gap"
         assert "nothing non-obvious to prove" in rows[op]["reason"]
+    schottky = rows["schottky_mott_barrier"]
+    assert schottky["status"] == "gap"
+    assert "cannot be established algebraically" in schottky["reason"] and "Catalog defect" in schottky["reason"]
 
 
 def test_conventions_a_user_could_get_wrong_are_stated():
     device = " ".join(_binding("analog-device-metrology")["conditions"])
-    for phrase in ("in joules", "factor 1.6e-19", "ideality factor 1", "Phi_Bn is the effective zero-bias barrier",
-                   "cannot be separated", "dwell g_r per volt", "g_r k_B T/(alpha_F tau_ret)",
-                   "chord conductance", "length-averaged conductivity"):
+    for phrase in ("in joules", "exponentially wrong", "ideality factor 1", "laterally homogeneous barrier",
+                   "ln(G/T) against 1/T", "Werner and Guttler", "single programmed level", "Gaussian nu",
+                   "cannot be separated", "time to failure at a fail fraction", "dwell g_r per volt",
+                   "not the catalog's RetentionTime", "same two terminals", "gate pulse is not covered",
+                   "does not derive that expression from the stochastic cell model",
+                   "length-averaged conductivity"):
         assert phrase in device, phrase
+    assert "factor 1.6e-19" not in device
+    assert "picojoule" in _binding("analog-device-metrology")["conventions"]["unit_embedding"]
     materials = " ".join(_binding("arrhenius-ionic-transport")["conditions"])
-    for phrase in ("energy per particle", "at least two distinct temperatures", "Haven ratio 1"):
+    for phrase in ("energy per particle", "at least two distinct temperatures", "Haven ratio H_R = 1",
+                   "number of MSD components"):
         assert phrase in materials, phrase
-    assert "underestimates it by k_B T" in _binding("arrhenius-ionic-transport")["statement"]
+    statement = _binding("arrhenius-ionic-transport")["statement"]
+    assert "exact-data identity" in statement and "sigma T, not sigma" in statement
 
 
 def test_registry_pins_this_tranche():

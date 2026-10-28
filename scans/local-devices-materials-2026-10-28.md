@@ -1,54 +1,49 @@
 # Local analog-device, Arrhenius and Nernst-Einstein proofs
 
-This tranche adds two `local` bindings, `analog-device-metrology` and `arrhenius-ionic-transport`, over Mathlib with no Physlib source, in `lean/bridge/OMAIDeviceMetrology.lean` and `lean/bridge/OMAIMaterialsTransport.lean`. Nine operator formulas become local compiled subjects; four closed-form definitions stay unbound because a theorem restating them would prove nothing.
+This tranche adds two `local` bindings, `analog-device-metrology` and `arrhenius-ionic-transport`, over Mathlib with no Physlib source, in `lean/bridge/OMAIDeviceMetrology.lean` and `lean/bridge/OMAIMaterialsTransport.lean`. Nine operator formulas become local compiled subjects. Independent mathematician and device-physicist reviews of the first version (15370b7) found every statement true but four operators resting on obvious results; each now has a theorem with content tied to a claim of the catalog, and the obvious results stay in the modules uncited.
 
 ## Cited theorems
 
 | Operator | Theorem | Statement |
 | --- | --- | --- |
-| apply_conductance_drift | `driftConductance_rereference` | Drifting to `t_1` and re-referencing gives the same conductance at `t_2` as drifting directly. |
-| | `driftConductance_logSlope` | `d log G / d log t_d = -nu` at every time, for `G_0 != 0`. |
-| emit_thermionic_conductance | `thermionicConductance_eq_zeroBiasSlope` | The catalog `G` is the zero-bias slope of the Richardson-Dushman current. |
-| | `thermionicConductance_ideality` | With ideality `n` the slope is `G/n` for `I_s (exp(q V/(n k T)) - 1)` and `G` for `I_s exp(q V/(n k T))(1 - exp(-q V/(k T)))`. |
-| | `thermionic_barrier_two_temperatures` | `Phi_Bn = k_B log((G_1/T_1)/(G_2/T_2))/(1/T_2 - 1/T_1)`. |
-| zero_bias_retention | `retentionTime_mean_exit` | The mean of the exit time with density `M k exp(-M k t)` is `tau_ret / M`. |
-| | `retention_barrier_two_temperatures` | `E_m = k_B log(tau_1/tau_2)/(1/T_1 - 1/T_2)`, independent of `nu_0`. |
-| ramp_set_voltage | `ramp_expectedHops` | `int_0^V g_r rate = N_lead(V) - g_r k_B T/(alpha_F tau_ret)`. |
-| | `leadingHops_eq_exp` | `N_lead(V) = exp((V - V*)/b)`, `b = k_B T/alpha_F`, so `N_lead(V*) = 1`. |
-| | `ramp_meanSetVoltage` | The first-hop law with survival `exp(-N_lead)` has density `(1/b) e^{x} exp(-e^{x})` and mean `V* - gamma b`, the catalog value (through `gamma = -int_0^inf log t e^{-t} dt`). |
-| propagate_programming_error | `programmingError_eq_cells` | The catalog form equals `c sqrt(sum_i (w_max/(W-1) + |w_i|)^2/2)/sum_i |w_i|`. |
-| | `programmingError_strictAntiOn` | Strictly decreasing in `W` on `(1, inf)`. |
-| | `tendsto_programmingError` | Tends to `c sqrt(S_2/2)/S_1` as `W -> inf`. |
-| | `programmingError_gt` | Exceeds `c/sqrt(2 n_w)` for every kernel of `n_w` nonzero weights and every `W > 1`. |
-| dissipate_pulse_energy | `pulseEnergy_bracket` | For monotone `G` during the pulse, `int_0^t_p V_p^2 G dt` lies between the catalog energies at the initial and final conductance. |
-| contract_device_conductance | `deviceConductance_series_le` | `A/sum_i(l_i/sigma_i) <= ` the catalog conductance with the length-averaged conductivity. |
-| fit_arrhenius | `arrhenius_wls_recovers_activation` | Weighted least squares of `log D` on `1/T` gives `E_a = -k_B slope` exactly on Arrhenius data, any positive weights, two or more distinct temperatures. |
-| compute_ionic_conductivity | `ionicConductivity_arrhenius` | `d log(sigma T)/d(1/T) = -E_a/k_B` and `d log sigma/d(1/T) = -(E_a - k_B T)/k_B`. |
+| apply_conductance_drift | `drift_law_unique` | Every continuous positive drift law `G_0 phi(t/t_0)` independent of the reference time is `G_0 (t/t_0)^(-nu)` for some `nu` (multiplicative Cauchy equation). |
+| emit_thermionic_conductance | `thermionic_wrongLaw_barrier` | `T^(3/2)` data inverted with the catalog's `T^2` law from `T_1 < T_2` give `Phi - k_B T_eff/2`, `T_eff = log(T_2/T_1)/(1/T_1 - 1/T_2)`, with `T_1 < T_eff < T_2`. |
+| zero_bias_retention | `retention_symmetric_relaxation` | Every solution of `p' = (1 - p)/tau - p/tau` is `1/2 + (p(0) - 1/2) exp(-2t/tau)`: relaxation to one half with time constant `tau/2`. |
+| ramp_set_voltage | `ramp_expectedHops` | `int_0^V g_r rate = N_lead(V) - g_r k_B T/(alpha_F tau_0)`, `tau_0 = exp(E_m/(k_B T))/nu_0` of the unprogrammed state. |
+| | `ramp_meanSetVoltage` | The first-hop law with survival `exp(-N_lead)` has density of mass one, integrable first moment, and mean `V* - gamma b` (through `gamma = -Gamma'(1)`). |
+| propagate_programming_error | `programmingError_gt` | Exceeds `c/sqrt(2 n_w)` for every kernel of `n_w` nonzero weights and every `W > 1` (Cauchy-Schwarz). |
+| dissipate_pulse_energy | `pulseEnergy_bracket` | For monotone `G` during the pulse, `int V_p^2 G dt` lies between the catalog energies at the initial and final conductance. |
+| contract_device_conductance | `deviceConductance_series_le` | `A/sum(l_i/sigma_i) <=` the catalog conductance with the length-averaged conductivity. |
+| fit_arrhenius | `wlsSlope_minimizes` | The weighted least-squares slope and intercept minimize the weighted sum of squared residuals over all lines. |
+| | `arrhenius_wls_recovers_activation` | On exact Arrhenius data the slope gives `E_a = -k_B slope` for any positive weights and two or more distinct temperatures (an exact-data identity). |
+| compute_ionic_conductivity | `ionic_wls_apparent_activation` | Fitting `log sigma` against `1/T` returns `E_a - k_B T_eff` with `T_lo <= T_eff <= T_hi`, any positive weights. |
 
-Supporting lemmas `leadingHops_hasDerivAt` and `wlsSlope_affine` are not cited. While writing the module, the unused-variable linter showed that the log-slope theorem needs no positive time and the mean-exit theorem no positive temperature; those hypotheses were removed, and the log-slope theorem needs only `G_0 != 0`. The strict decrease of the programming error needs only `n_w >= 0`.
+Kept uncited as support: `driftConductance_rereference`, `driftConductance_logSlope` (needs `G_0 != 0` and `0 < t_{d,0}`), `thermionicConductance_eq_zeroBiasSlope`, `thermionicConductance_ideality`, `thermionic_barrier_two_temperatures`, `retentionTime_mean_exit`, `retention_barrier_two_temperatures`, `leadingHops_hasDerivAt`, `leadingHops_eq_exp`, `programmingError_eq_cells`, `programmingError_strictAntiOn`, `tendsto_programmingError`, `wlsSlope_affine`, `wlsSlope_log_mem`, `ionicConductivity_arrhenius`. The programming-error closed form equals the per-cell sum of the catalog description; no derivation from the stochastic cell model is claimed.
 
-## Definitions with nothing to prove
+## Unbound
 
-`contract_conductance_window` (`W = G_c/G_min`), `contract_state_coefficient_of_variation` (`c = sigma_G/G_c`), `schottky_mott_barrier` (`Phi_Bn = Phi_W - chi`) and `contract_diffusivity` (`D = slope/(2d)`) are recorded with the reason "A closed-form definition with nothing non-obvious to prove". `compute_carrier_density` and `compute_configurational_energy` are external selectors with nothing algebraic to prove.
+`contract_conductance_window`, `contract_state_coefficient_of_variation` and `contract_diffusivity` are definitions with nothing non-obvious to prove. `schottky_mott_barrier` is unbound because its validity (no Fermi-level pinning, no interface dipole; pinning factors near 0.1 for Si, GaAs and MoS2) cannot be established algebraically. `compute_carrier_density` and `compute_configurational_energy` are external selectors.
 
-## Catalog defects found
+## Catalog defects found (not edited)
 
-None in these two domains. The catalog descriptions claim a Gumbel standard deviation `pi k_B T/(sqrt(6) alpha_F)` and an N-hop mean shift `(k_B T/alpha_F)(psi(N) + gamma)`; these are not proved and are listed as remaining obligations, not defects.
+- WorkFunction does not distinguish a metal from a semiconductor, so the two MoS2 WorkFunction instances can compose into a SchottkyBarrierHeight through schottky_mott_barrier.
+- ConductanceState is the chord conductance, but emit_thermionic_conductance writes a small-signal zero-bias slope into it.
+- The units "cm^2/s" and "eV" used by the pymatgen-analysis-diffusion and mat-diffusion-analysis representations are not registered.
+- The catalog's canonical ps and THz with joules, siemens and volts are not a coherent embedding: V_p^2 G t_p in V^2 S ps is a picojoule.
 
 ## Coverage
 
-| Measure | Before (ef98abd) | After |
+| Measure | Before (5855543) | After |
 | --- | ---: | ---: |
 | Operator formulas proved | 36 / 127 | 45 / 127 |
 | Physlib-anchored | 24 | 24 |
 | Local | 12 | 21 |
 | Bindings | 36 | 38 |
-| Local relations | 4 | 6 |
 
 ## Prose for site and paper
 
-Lean page and README. Analog-device metrology and solid-state transport have no Physlib model, so their formulas are proved locally over Mathlib. The thermionic conductance is the zero-bias slope of the Richardson-Dushman current, and the barrier follows from two temperatures; the retention time is the mean exit time of a constant-rate escape; the ramp set voltage is the Gumbel mean of the first hop, which needs the Euler-Mascheroni constant as `-Gamma'(1)`; the programming error decreases with the conductance window and never falls below `c/sqrt(2 n_w)`. Weighted least squares on Arrhenius data recovers the activation energy exactly, and `sigma T`, not `sigma`, carries the diffusion barrier in a Nernst-Einstein conductivity.
+Lean page and README. Analog-device metrology and solid-state transport have no Physlib model, so their formulas are proved locally over Mathlib. The catalog's power-law drift is the only continuous drift law independent of its reference time; inverting two-dimensional thermionic data with the three-dimensional Richardson law shifts the barrier by k_B T_eff/2 with T_eff between the two temperatures; symmetric two-site retention relaxes to one half in tau/2; the ramp set voltage is the mean of a Gumbel first-hop law, which needs the Euler-Mascheroni constant as -Gamma'(1); the programming error never falls below c/sqrt(2 n_w). The weighted Arrhenius fit is the least-squares line and recovers the activation energy on exact data, and fitting sigma instead of sigma T underestimates it by k_B T_eff.
 
-Paper, Verification paragraph, after the composites sentence. Nine analog-device and solid-state transport formulas are proved locally: the drift law is independent of its reference time, the thermionic conductance is the zero-bias slope of the Richardson-Dushman current and the retention time the mean exit time of an Arrhenius escape, the ramp set voltage is the mean of a minimum-Gumbel first-hop law, the programming error exceeds `c/sqrt(2 n_w)` for any kernel, and a weighted Arrhenius regression recovers the activation energy exactly. Four closed-form definitions in these domains carry no theorem.
+Paper, Verification paragraph, after the composites sentence. Nine analog-device and solid-state transport formulas are proved locally: the drift power law is characterized by reference-time independence, a wrong-dimension Richardson inversion shifts the barrier by k_B T_eff/2, symmetric retention relaxes in tau/2, the ramp set voltage is the mean of a minimum-Gumbel first-hop law, the programming error exceeds c/sqrt(2 n_w) for any kernel, and an Arrhenius fit of sigma rather than sigma T returns E_a - k_B T_eff. Three closed-form definitions in these domains carry no theorem, and the Schottky-Mott limit is unbound because pinning cannot be excluded algebraically.
 
-llms.txt, formula bridge line. Add: local proofs for analog-device metrology (drift, thermionic emission, retention, ramp set voltage, programming error, pulse energy, series conductance) and for Arrhenius diffusion and Nernst-Einstein conduction.
+llms.txt, formula bridge line. Add: local proofs for analog-device metrology (drift-law uniqueness, thermionic barrier extraction bias, symmetric retention relaxation, ramp set voltage, programming-error floor, pulse energy, series conductance) and for Arrhenius fitting and Nernst-Einstein conduction.

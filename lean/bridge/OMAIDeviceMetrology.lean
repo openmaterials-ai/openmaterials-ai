@@ -114,6 +114,37 @@ theorem driftConductance_logSlope (nu : ℝ) {G0 td0 : ℝ} (hG : G0 ≠ 0) (h0 
   have := ((hasDerivAt_id' u).sub_const (log td0)).const_mul nu
   simpa using this.const_sub (log G0)
 
+/-- Every continuous positive drift law `G(t_d) = G_0 phi(t_d / t_{d,0})` that does not depend
+on the choice of reference time, `phi(x y) = phi(x) phi(y)` for positive `x, y` (re-referencing
+at any intermediate time gives the same conductance), is the catalog's power law for some
+exponent `nu`. -/
+theorem drift_law_unique {phi : ℝ → ℝ} (hcont : ContinuousOn phi (Ioi 0))
+    (hpos : ∀ x, 0 < x → 0 < phi x) (hmul : ∀ x y, 0 < x → 0 < y → phi (x * y) = phi x * phi y) :
+    ∃ nu : ℝ, ∀ G0 td td0 : ℝ, 0 < td → 0 < td0 →
+      G0 * phi (td / td0) = driftConductance nu G0 td td0 := by
+  set psi : ℝ → ℝ := fun u => log (phi (exp u))
+  have hpsi_cont : Continuous psi := by
+    have h1 : Continuous fun u => phi (exp u) :=
+      hcont.comp_continuous continuous_exp (fun u => exp_pos u)
+    exact h1.log fun u => (hpos _ (exp_pos u)).ne'
+  have hadd : ∀ u v, psi (u + v) = psi u + psi v := by
+    intro u v
+    simp only [psi, exp_add]
+    rw [hmul _ _ (exp_pos u) (exp_pos v), log_mul (hpos _ (exp_pos u)).ne' (hpos _ (exp_pos v)).ne']
+  let f : ℝ →+ ℝ := AddMonoidHom.mk' psi hadd
+  have hlin : ∀ u, psi u = u * psi 1 := by
+    intro u
+    have := map_real_smul f hpsi_cont u 1
+    simpa [f, smul_eq_mul] using this
+  refine ⟨-psi 1, fun G0 td td0 htd htd0 => ?_⟩
+  have hx : 0 < td / td0 := div_pos htd htd0
+  have hphi : phi (td / td0) = (td / td0) ^ (psi 1) := by
+    have h := hlin (log (td / td0))
+    simp only [psi, exp_log hx] at h
+    rw [← exp_log (hpos _ hx), h, rpow_def_of_pos hx, mul_comm]
+  unfold driftConductance
+  rw [hphi, rpow_neg hx.le, div_inv_eq_mul]
+
 /-! ## Thermionic emission -/
 
 /-- The Richardson-Dushman current of one Schottky contact,
@@ -162,6 +193,65 @@ theorem thermionicConductance_ideality (PhiBn Pth qe : ℝ) {T kB n : ℝ} (hT :
     convert this using 1
     · funext V; simp only [Pi.mul_apply]; congr 4 <;> ring_nf
     · rw [hG]; simp; field_simp
+
+/-- The two-temperature Richardson inversion of the catalog's thermionic law,
+`k_B log((G_1/T_1)/(G_2/T_2)) / (1/T_2 - 1/T_1)`, which plots `log(G/T)` against `1/T`. -/
+def twoTemperatureBarrier (kB G1 T1 G2 T2 : ℝ) : ℝ :=
+  kB * log ((G1 / T1) / (G2 / T2)) / (1 / T2 - 1 / T1)
+
+/-- Zero-bias conductance of two-dimensional thermionic injection, the slope at zero bias of
+`P_2D T^(3/2) exp(-Phi_Bn/(k_B T)) (exp(q_e V/(k_B T)) - 1)`. -/
+def thermionicConductance2D (PhiBn T P2 qe kB : ℝ) : ℝ :=
+  P2 * sqrt T * qe * exp (-PhiBn / (T * kB)) / kB
+
+/-- Conductances that follow the two-dimensional `T^(3/2)` law, inverted with the catalog's
+three-dimensional `T^2` law from two temperatures `T_1 < T_2`, return
+`Phi_Bn - k_B T_eff / 2`, where `T_eff = log(T_2/T_1) / (1/T_1 - 1/T_2)` is the reciprocal of the
+logarithmic mean of `1/T_1` and `1/T_2` and lies strictly between `T_1` and `T_2`: fitting one law
+to data from the other shifts the barrier by about `k_B T / 2`. -/
+theorem thermionic_wrongLaw_barrier (PhiBn : ℝ) {T1 T2 P2 qe kB : ℝ} (h1 : 0 < T1) (h12 : T1 < T2)
+    (hP : 0 < P2) (hq : 0 < qe) (hk : 0 < kB) :
+    twoTemperatureBarrier kB (thermionicConductance2D PhiBn T1 P2 qe kB) T1
+        (thermionicConductance2D PhiBn T2 P2 qe kB) T2 =
+      PhiBn - kB * (log (T2 / T1) / (1 / T1 - 1 / T2)) / 2 ∧
+    T1 < log (T2 / T1) / (1 / T1 - 1 / T2) ∧ log (T2 / T1) / (1 / T1 - 1 / T2) < T2 := by
+  have h2 : 0 < T2 := by linarith
+  have hD : 0 < 1 / T1 - 1 / T2 := by
+    rw [sub_pos]; exact one_div_lt_one_div_of_lt h1 h12
+  refine ⟨?_, ?_, ?_⟩
+  · have hratio : (thermionicConductance2D PhiBn T1 P2 qe kB / T1) /
+        (thermionicConductance2D PhiBn T2 P2 qe kB / T2) =
+          (sqrt T1 / T1) / (sqrt T2 / T2) * exp (-PhiBn / (T1 * kB) - -PhiBn / (T2 * kB)) := by
+      unfold thermionicConductance2D
+      rw [exp_sub]
+      have := exp_pos (-PhiBn / (T2 * kB))
+      have := sqrt_pos.mpr h2
+      field_simp
+    unfold twoTemperatureBarrier
+    rw [hratio, log_mul (by positivity) (exp_pos _).ne', log_exp, log_div (by positivity)
+      (by positivity), log_div (by positivity) h1.ne', log_div (by positivity) h2.ne',
+      log_sqrt h1.le, log_sqrt h2.le, log_div h2.ne' h1.ne']
+    have hne : 1 / T2 - 1 / T1 ≠ 0 := by linarith
+    have hne2 : T1 - T2 ≠ 0 := by linarith
+    have hne3 : T2 - T1 ≠ 0 := by linarith
+    field_simp
+    ring
+  · have hr : 1 < T2 / T1 := (one_lt_div h1).mpr h12
+    have hlog := one_sub_inv_le_log_of_pos (by positivity : 0 < T2 / T1)
+    have hstrict : 1 - (T2 / T1)⁻¹ < log (T2 / T1) := by
+      have := log_lt_sub_one_of_pos (by positivity : 0 < T1 / T2)
+        (ne_of_lt ((div_lt_one h2).mpr h12))
+      rw [log_div h1.ne' h2.ne'] at this
+      rw [log_div h2.ne' h1.ne', inv_div]
+      linarith
+    rw [lt_div_iff₀ hD]
+    have : T1 * (1 / T1 - 1 / T2) = 1 - (T2 / T1)⁻¹ := by field_simp
+    linarith
+  · have hlt := log_lt_sub_one_of_pos (by positivity : 0 < T2 / T1)
+      (ne_of_gt ((one_lt_div h1).mpr h12))
+    rw [div_lt_iff₀ hD]
+    have : T2 * (1 / T1 - 1 / T2) = T2 / T1 - 1 := by field_simp
+    linarith
 
 /-- The barrier height is recovered exactly from the catalog's thermionic conductance at
 two different temperatures: `Phi_Bn = k_B log((G_1 / T_1) / (G_2 / T_2)) / (1/T_2 - 1/T_1)`,
@@ -226,6 +316,38 @@ theorem retention_barrier_two_temperatures (Em : ℝ) {T1 T2 nu0 kB : ℝ} (h1 :
     intro h; apply hne; field_simp at h; linarith
   field_simp
 
+/-- An ensemble of devices with two symmetric sites, each hopping to the other at the
+catalog's retention rate `1/tau`, has a programmed fraction `p` with `p' = (1 - p)/tau - p/tau`.
+Every such `p` relaxes to one half with time constant `tau/2`:
+`p(t) = 1/2 + (p(0) - 1/2) exp(-2 t / tau)`. -/
+theorem retention_symmetric_relaxation (Em T nu0 kB : ℝ) (hnu : 0 < nu0) {p : ℝ → ℝ}
+    (hp : ∀ t, HasDerivAt p ((1 - p t) / retentionTime Em T nu0 kB - p t / retentionTime Em T nu0 kB) t)
+    (t : ℝ) :
+    p t = 1 / 2 + (p 0 - 1 / 2) * exp (-2 * t / retentionTime Em T nu0 kB) := by
+  set tau := retentionTime Em T nu0 kB
+  have htau : 0 < tau := div_pos (exp_pos _) hnu
+  set q : ℝ → ℝ := fun s => (p s - 1 / 2) * exp (2 * s / tau)
+  have hq : ∀ s, HasDerivAt q 0 s := by
+    intro s
+    have he : HasDerivAt (fun s => exp (2 * s / tau)) (exp (2 * s / tau) * (2 / tau)) s := by
+      have := ((hasDerivAt_id' s).const_mul (2 / tau)).exp
+      convert this using 1
+      · funext x; congr 1; ring
+      · ring_nf
+    have := ((hp s).sub_const (1 / 2)).mul he
+    convert this using 1
+    field_simp
+    ring
+  have hconst : q t = q 0 := is_const_of_deriv_eq_zero (fun s => (hq s).differentiableAt)
+    (fun s => (hq s).deriv) t 0
+  simp only [q, mul_zero, zero_div, exp_zero, mul_one] at hconst
+  have hpos := exp_pos (2 * t / tau)
+  have : p t - 1 / 2 = (p 0 - 1 / 2) * exp (-2 * t / tau) := by
+    rw [← hconst, mul_assoc, ← exp_add]
+    have : 2 * t / tau + -2 * t / tau = 0 := by ring
+    rw [this, exp_zero, mul_one]
+  linarith
+
 /-! ## Set voltage under a ramp -/
 
 /-- Hop rate at bias `V`, `nu_0 exp(-(E_m - alpha_F V) / (k_B T))`. -/
@@ -253,17 +375,18 @@ theorem leadingHops_hasDerivAt (Em gr nu0 : ℝ) {T alphaF kB : ℝ} (hT : 0 < T
     rw [hx]; field_simp
 
 /-- Under a ramp with dwell `g_r` per volt, the expected number of hops between zero bias
-and `V` is the leading term minus `g_r k_B T / (alpha_F tau_ret)`, where `tau_ret` is the
-catalog's retention time at the same barrier, temperature and attempt frequency. -/
+and `V` is the leading term minus `g_r k_B T / (alpha_F tau_0)`, where
+`tau_0 = exp(E_m/(T k_B))/nu_0` is the zero-bias lifetime of the unprogrammed state over the
+SET-direction barrier `E_m`. It equals the catalog's RetentionTime only for symmetric sites. -/
 theorem ramp_expectedHops (Em gr nu0 : ℝ) {T alphaF kB : ℝ} (hT : 0 < T) (ha : 0 < alphaF)
     (hk : 0 < kB) (hnu : 0 < nu0) (V : ℝ) :
     ∫ v in (0)..V, gr * hopRate Em T alphaF nu0 kB v =
       leadingHops Em T alphaF nu0 gr kB V -
-        gr * kB * T / (alphaF * retentionTime Em T nu0 kB) := by
+        gr * kB * T / (alphaF * (exp (Em / (T * kB)) / nu0)) := by
   rw [intervalIntegral.integral_eq_sub_of_hasDerivAt
     (fun v _ => leadingHops_hasDerivAt Em gr nu0 hT ha hk v)]
   · congr 1
-    unfold leadingHops retentionTime
+    unfold leadingHops
     have he : exp (Em / (T * kB)) = (exp ((alphaF * 0 - Em) / (kB * T)))⁻¹ := by
       rw [← exp_neg]; congr 1; ring
     rw [he]
@@ -351,14 +474,20 @@ private theorem gumbel_integrable :
 
 /-- If the first hop under the ramp has the survival `exp(-N(V))` of the leading hop count
 `N(V) = exp((V - V*) / b)`, `b = k_B T / alpha_F`, its density is
-`(1/b) exp((V - V*)/b) exp(-exp((V - V*)/b))` (a minimum-Gumbel law) and its mean is the
-catalog's set voltage `V* - gamma b`. -/
+`f(V) = (1/b) exp((V - V*)/b) exp(-exp((V - V*)/b))` (a minimum-Gumbel law): `f` has total mass
+one, `V f(V)` is integrable, and the mean is the catalog's set voltage `V* - gamma b`. -/
 theorem ramp_meanSetVoltage (Em gr : ℝ) {T alphaF nu0 kB : ℝ} (hT : 0 < T) (ha : 0 < alphaF)
     (hk : 0 < kB) (hnu : 0 < nu0) (hg : 0 < gr) :
     (∀ v, HasDerivAt (fun V => 1 - exp (-leadingHops Em T alphaF nu0 gr kB V))
       (1 / (kB * T / alphaF) *
         exp ((v - rampLocation Em T alphaF nu0 gr kB) / (kB * T / alphaF)) *
           exp (-exp ((v - rampLocation Em T alphaF nu0 gr kB) / (kB * T / alphaF)))) v) ∧
+      (∫ v, 1 / (kB * T / alphaF) *
+        exp ((v - rampLocation Em T alphaF nu0 gr kB) / (kB * T / alphaF)) *
+          exp (-exp ((v - rampLocation Em T alphaF nu0 gr kB) / (kB * T / alphaF)))) = 1 ∧
+      Integrable (fun v => v * (1 / (kB * T / alphaF) *
+        exp ((v - rampLocation Em T alphaF nu0 gr kB) / (kB * T / alphaF)) *
+          exp (-exp ((v - rampLocation Em T alphaF nu0 gr kB) / (kB * T / alphaF))))) ∧
       ∫ v, v * (1 / (kB * T / alphaF) *
         exp ((v - rampLocation Em T alphaF nu0 gr kB) / (kB * T / alphaF)) *
           exp (-exp ((v - rampLocation Em T alphaF nu0 gr kB) / (kB * T / alphaF)))) =
@@ -378,9 +507,30 @@ theorem ramp_meanSetVoltage (Em gr : ℝ) {T alphaF nu0 kB : ℝ} (hT : 0 < T) (
     have h3 := (h2.exp).const_sub 1
     convert h3 using 1
     ring
-  · obtain ⟨m0, m1⟩ := gumbel_moments
-    obtain ⟨i0, i1⟩ := gumbel_integrable
-    have hshift : (∫ v, v * (1 / b * exp ((v - c) / b) * exp (-exp ((v - c) / b)))) =
+  obtain ⟨m0, m1⟩ := gumbel_moments
+  obtain ⟨i0, i1⟩ := gumbel_integrable
+  refine ⟨?_, ?_, ?_⟩
+  · rw [← integral_add_right_eq_self (fun v => 1 / b * exp ((v - c) / b) *
+      exp (-exp ((v - c) / b))) c]
+    simp only [add_sub_cancel_right]
+    have := Measure.integral_comp_mul_left (fun y => 1 / b * exp y * exp (-exp y)) b⁻¹
+    simp only [inv_inv, abs_of_pos hb, smul_eq_mul] at this
+    have hl : (fun x => 1 / b * exp (x / b) * exp (-exp (x / b))) =
+        fun x => 1 / b * exp (b⁻¹ * x) * exp (-exp (b⁻¹ * x)) := by
+      funext x; rw [div_eq_inv_mul x b]
+    rw [hl, this]
+    have : (fun y => 1 / b * exp y * exp (-exp y)) = fun y => b⁻¹ * (exp y * exp (-exp y)) := by
+      funext y; ring
+    rw [this, integral_const_mul, m0]
+    field_simp
+  · have hg : Integrable (fun x : ℝ => b * (x * exp x * exp (-exp x)) + c * (exp x * exp (-exp x))) :=
+      (i1.const_mul b).add (i0.const_mul c)
+    have h := ((hg.comp_mul_right' (inv_ne_zero hb.ne')).comp_sub_right c).const_mul b⁻¹
+    refine h.congr (Eventually.of_forall fun v => ?_)
+    simp only
+    field_simp
+    ring
+  · have hshift : (∫ v, v * (1 / b * exp ((v - c) / b) * exp (-exp ((v - c) / b)))) =
         ∫ x, (x + c) * (1 / b * exp (x / b) * exp (-exp (x / b))) := by
       rw [← integral_add_right_eq_self (fun v => v * (1 / b * exp ((v - c) / b) *
         exp (-exp ((v - c) / b)))) c]
@@ -405,9 +555,10 @@ theorem ramp_meanSetVoltage (Em gr : ℝ) {T alphaF nu0 kB : ℝ} (hT : 0 < T) (
 
 /-! ## Programming error -/
 
-/-- The catalog's programming error is the per-cell model it was written from:
-`eps = c sqrt(sum_i (1/r + |w_i|)^2 / 2) / sum_i |w_i|` with `1/r = w_max / (W - 1)`,
-over the nonzero kernel weights `w_i`. -/
+/-- The catalog's closed form of the programming error equals the per-cell sum of the catalog
+description, `c sqrt(sum_i (w_max/(W - 1) + |w_i|)^2 / 2) / S_1`, over the nonzero kernel
+weights `w_i`. Both are closed forms of one expression; no derivation from the stochastic cell
+model is claimed. -/
 theorem programmingError_eq_cells {n : ℕ} (w : Fin n → ℝ) (cG WG wmax : ℝ) (hW : WG ≠ 1) :
     programmingError cG WG n wmax (∑ i, |w i|) (∑ i, w i ^ 2) =
       cG * sqrt ((∑ i, (wmax / (WG - 1) + |w i|) ^ 2) / 2) / ∑ i, |w i| := by
