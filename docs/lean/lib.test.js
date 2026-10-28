@@ -28,7 +28,8 @@ test('computeStats counts what the files hold, nothing more', () => {
   const s = L.computeStats(
     { version: 'abc', physlib_rev: 'r', lean_toolchain: 't', nodes: { A: {}, B: {} } },
     { nodes: [1, 2, 3] }, { coverage: { operators_compiled: 4, operators_total: 9 } });
-  assert.deepStrictEqual(s, { nodes: 2, graphNodes: 3, operatorsCompiled: 4, operatorsTotal: 9,
+  assert.deepStrictEqual(s, { nodes: 2, graphNodes: 3, operatorsCompiled: 4, operatorsAnchored: 4,
+    operatorsLocal: 0, operatorsTotal: 9,
     physlibRev: 'r', toolchain: 't', version: 'abc' });
 });
 

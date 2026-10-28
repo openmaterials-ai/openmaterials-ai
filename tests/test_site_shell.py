@@ -169,7 +169,7 @@ def test_the_home_static_text_equals_the_data():
         assert got and got.group(1) == want, f"#{el_id}: {got and got.group(1)!r} != {want!r}"
     bindings = _data("formula_bindings.json")
     binds = {"codes": len(codes), "lean-nodes": len(lean["nodes"]),
-             "lean-ops": bindings["coverage"]["operators_compiled"], "version12": ver["version"][:12],
+             "lean-ops": bindings["coverage"].get("operators_proved", bindings["coverage"]["operators_compiled"]), "version12": ver["version"][:12],
              "n-nodes": len(g["nodes"]), "n-values": len(inst), "n-meas": kinds.count("measurement")}
     for bind, want in binds.items():
         got = re.findall(r'data-bind="%s">([^<]*)<' % bind, HOME)

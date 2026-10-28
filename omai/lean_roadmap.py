@@ -15,8 +15,9 @@ it would take:
   algebraic to prove, only the dimension and the lineage.
 
 ``proven`` marks an operator that a compiled formula bridge in ``lean/bridge``
-proves a statement about (``omai.formula_bindings.compiled_targets``), at
-any difficulty. The website renders ``docs/data/lean_roadmap.json``.
+proves a statement about (``omai.formula_bindings.compiled_targets``), anchored to
+Physlib or local, at any difficulty. An external code's output that a compiled
+bridge interprets keeps the class ``na``; its reason says what is proved. The website renders ``docs/data/lean_roadmap.json``.
 """
 from __future__ import annotations
 

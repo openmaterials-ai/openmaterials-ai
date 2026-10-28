@@ -28,7 +28,8 @@ test("proven rows are exactly the compiled formula-bridge operators", () => {
   const bindings = JSON.parse(fs.readFileSync(
     path.join(__dirname, "..", "..", "data", "formula_bindings.json"), "utf8"));
   const proven = published.rows.filter(row => row.proven).length;
-  assert.strictEqual(proven, bindings.coverage.operators_compiled);
+  const cov = bindings.coverage;
+  assert.strictEqual(proven, cov.operators_proved === undefined ? cov.operators_compiled : cov.operators_proved);
   for (const row of published.rows) {
     if (row.proven && row.difficulty === "na") assert.match(row.reason, /compiled bridge/, row.op);
   }

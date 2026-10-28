@@ -66,7 +66,7 @@
         <div class="filters">
           <label>Search<input id="search" type="search" placeholder="Quantity, formula, model, or condition"></label>
           <label>Kind<select id="kind"><option value="">All</option><option value="node">Quantity</option><option value="operator">Operator</option></select></label>
-          <label>Correspondence<select id="status"><option value="">All</option><option value="mapped">Referenced</option><option value="gap">Gap</option></select></label>
+          <label>Correspondence<select id="status"><option value="">All</option><option value="mapped">Referenced</option><option value="local">Local proof only</option><option value="gap">Gap</option></select></label>
           <label>Proof scope<select id="evidence"><option value="">All</option><option value="compiled">Compiled subjects</option><option value="source">Referenced, not compiled subjects</option></select></label>
         </div>
         <p id="shown" role="status" aria-live="polite"></p>
@@ -171,6 +171,7 @@
           <li><strong>Exact definition:</strong> the displayed definitions correspond under the specified interpretation. This label alone is not a Lean proof.</li>
           <li><strong>Conditional:</strong> a model, units, index or normalization bridge is required. Inspect the remaining obligations.</li>
           <li><strong>Conceptual:</strong> a related model or concept, not a formula-equivalence claim.</li>
+          <li><strong>Local:</strong> a compiled theorem about the OMAI formula itself, over Mathlib, where Physlib has no model to anchor it. It cites no Physlib declaration. Rows it covers show the status Local proof, not Referenced, and the coverage ledger counts them apart from Physlib-anchored results.</li>
           <li><strong>Gap:</strong> no correspondence was established in the reviewed source. Other or later developments may supply one.</li>
         </ul>
         <p>Scalar thermoelectric results require a common operating point and explicit isotropic interpretation where OMAI carries tensor quantities.
@@ -240,10 +241,12 @@ python -m omai.formula_bindings --check --lean-package lean/bridge</pre>
     var stats = [ ['Quantities referenced', c.nodes_mapped + ' / ' + c.nodes_total],
       ['Operators referenced', c.operators_mapped + ' / ' + c.operators_total],
       ['Quantities covered by compiled results', c.nodes_compiled + ' / ' + c.nodes_total],
-      ['Compiled formula output quantities', c.nodes_compiled_outputs], ['Standalone quantity interpretations', c.nodes_compiled_interpretations], ['Operators covered by compiled results', c.operators_compiled + ' / ' + c.operators_total],
+      ['Compiled formula output quantities', c.nodes_compiled_outputs], ['Standalone quantity interpretations', c.nodes_compiled_interpretations], ['Operators covered by Physlib-anchored compiled results', c.operators_compiled + ' / ' + c.operators_total],
+      ['Operators covered by local proofs only', (c.operators_compiled_local || 0) + ' / ' + c.operators_total],
+      ['Operators with any compiled proof', (c.operators_proved === undefined ? c.operators_compiled : c.operators_proved) + ' / ' + c.operators_total],
       ['Source-only binding records', c.source_correspondences], ['Compiled bridge records', c.compiled_bridges],
       ['Physlib declarations referenced', declarations.length], ['Physlib modules referenced', new Set(declarations.map(function (row) { return row.module; })).size],
-      ['Exact-definition relations', c.relations.exact_definition], ['Conditional relations', c.relations.conditional], ['Conceptual relations', c.relations.conceptual] ];
+      ['Exact-definition relations', c.relations.exact_definition], ['Conditional relations', c.relations.conditional], ['Conceptual relations', c.relations.conceptual], ['Local relations', c.relations.local || 0] ];
     document.getElementById('coverage-counts').innerHTML = stats.map(function (s) { return '<div><dt>' + F.esc(s[0]) + '</dt><dd>' + F.esc(s[1]) + '</dd></div>'; }).join('');
     var revisionLink = F.sourceHref(data.upstream.repository + '/tree/' + data.upstream.revision);
     if (revisionLink) document.getElementById('upstream').href = revisionLink;

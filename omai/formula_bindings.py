@@ -1,8 +1,10 @@
-"""Reviewed Physlib correspondences, kept outside scientific map identities.
+"""Reviewed Physlib correspondences and local Lean proofs, kept outside map identities.
 
 A source correspondence is not an OMAI theorem or implementation validation.
 Bindings record their model assumptions separately from any compiled bridge
-proof. The package owns this metadata; the website receives an identical copy.
+proof. A ``local`` binding is a compiled theorem about an OMAI formula that has
+no Physlib physics counterpart; it cites no Physlib source and is counted
+separately from Physlib-anchored proofs. The package owns this metadata; the website receives an identical copy.
 
 Regenerate: ``python -m omai.formula_bindings``.  Audit source references with
 ``python -m omai.formula_bindings --check --physlib-path /path/to/pinned/clone``.
@@ -29,7 +31,7 @@ from omai.operator.identity import edge_id, formula_fingerprint, node_id
 
 _REPO = Path(__file__).resolve().parents[1]
 _DATA = resources.files("omai").joinpath("data")
-_RELATIONS = ("exact_definition", "conditional", "conceptual")
+_RELATIONS = ("exact_definition", "conditional", "conceptual", "local")
 _ALLOWED_AXIOMS = {"propext", "Classical.choice", "Quot.sound"}
 
 
@@ -134,19 +136,48 @@ def physlib_declaration_index(payload: dict | None = None) -> list[dict]:
     return copy.deepcopy([declarations[key] for key in sorted(declarations)])
 
 
+def _row_status(binding_ids: list[str], relations: dict[str, str]) -> str:
+    """``mapped`` when a Physlib-anchored binding references the row, ``local`` when
+    only local bindings do, ``gap`` otherwise."""
+    if not binding_ids:
+        return "gap"
+    return "local" if all(relations[i] == "local" for i in binding_ids) else "mapped"
+
+
+_LOCAL_REASON = " A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
+
+
 def _coverage(bindings: list[dict], inventory: dict) -> dict:
-    proved = {(target["kind"], target["id"]) for binding in bindings
+    """Physlib-anchored counts keep their original meaning; local proofs are counted apart.
+
+    ``*_mapped`` and ``*_compiled`` count only bindings that cite Physlib. ``*_local``
+    counts rows referenced only by local bindings, ``*_compiled_local`` the local proof
+    subjects not already proved with a Physlib anchor, and ``*_proved`` the union.
+    """
+    relations = {binding["id"]: binding["relation"] for binding in bindings}
+    anchored = [binding for binding in bindings if binding["relation"] != "local"]
+    proved = {(target["kind"], target["id"]) for binding in anchored
               for target in compiled_targets(binding, inventory)}
+    local_proved = {(target["kind"], target["id"]) for binding in bindings
+                    if binding["relation"] == "local"
+                    for target in compiled_targets(binding, inventory)} - proved
+    statuses = {(kind, row["id"]): _row_status(row["binding_ids"], relations)
+                for kind, key in (("node", "nodes"), ("operator", "operators"))
+                for row in inventory[key]}
     output_nodes = {output for operator in inventory["operators"]
                     if ("operator", operator["id"]) in proved for output in operator["outputs"]
                     if ("node", output) in proved}
     interpretation_nodes = {name for kind, name in proved if kind == "node"} - output_nodes
-    declarations = physlib_declaration_index({"bindings": bindings})
+    declarations = physlib_declaration_index({"bindings": anchored})
     return {
         "nodes_total": len(inventory["nodes"]),
-        "nodes_mapped": sum(bool(row["binding_ids"]) for row in inventory["nodes"]),
+        "nodes_mapped": sum(status == "mapped" for (kind, _), status in statuses.items() if kind == "node"),
         "operators_total": len(inventory["operators"]),
-        "operators_mapped": sum(bool(row["binding_ids"]) for row in inventory["operators"]),
+        "operators_mapped": sum(status == "mapped" for (kind, _), status in statuses.items()
+                                if kind == "operator"),
+        "nodes_local": sum(status == "local" for (kind, _), status in statuses.items() if kind == "node"),
+        "operators_local": sum(status == "local" for (kind, _), status in statuses.items()
+                               if kind == "operator"),
         "bindings_total": len(bindings),
         "source_correspondences": sum(b["evidence"]["kind"] == "source_correspondence" for b in bindings),
         "compiled_bridges": sum(b["evidence"]["kind"] == "compiled_bridge" for b in bindings),
@@ -154,6 +185,10 @@ def _coverage(bindings: list[dict], inventory: dict) -> dict:
         "nodes_compiled_outputs": len(output_nodes),
         "nodes_compiled_interpretations": len(interpretation_nodes),
         "operators_compiled": sum(kind == "operator" for kind, _ in proved),
+        "operators_compiled_local": sum(kind == "operator" for kind, _ in local_proved),
+        "nodes_compiled_local": sum(kind == "node" for kind, _ in local_proved),
+        "operators_proved": sum(kind == "operator" for kind, _ in proved | local_proved),
+        "nodes_proved": sum(kind == "node" for kind, _ in proved | local_proved),
         "upstream_declarations_referenced": len(declarations),
         "upstream_modules_referenced": len({row["module"] for row in declarations}),
         "relations": {relation: sum(b["relation"] == relation for b in bindings)
@@ -195,12 +230,16 @@ def build_formula_bindings(seeds: dict | None = None) -> dict:
         for source in binding["sources"]:
             source["source_url"] = _source_url(seeds["upstream"], source)
     bindings.sort(key=lambda binding: binding["id"])
+    relations = {binding["id"]: binding["relation"] for binding in bindings}
     for kind, key in (("node", "nodes"), ("operator", "operators")):
         for row in inventory[key]:
             row["binding_ids"] = sorted(by_target.get((kind, row["id"]), []))
-            row["status"] = "mapped" if row["binding_ids"] else "gap"
-            row["reason"] = ("See the conditions and evidence for each mapping."
-                             if row["binding_ids"] else _gap_reason(kind, row, inventory, reasons))
+            row["status"] = _row_status(row["binding_ids"], relations)
+            row["reason"] = {
+                "mapped": "See the conditions and evidence for each mapping.",
+                "local": _gap_reason(kind, row, inventory, reasons) + _LOCAL_REASON,
+                "gap": _gap_reason(kind, row, inventory, reasons),
+            }[row["status"]]
     payload = {
         "schema_version": 1,
         "upstream": seeds["upstream"],
@@ -340,8 +379,14 @@ def validate_formula_bindings(payload: dict, *, check_catalog: bool = False,
             if key[0] == "operator" and target["formula_sha256"] != lookup[key]["formula_sha256"]:
                 raise ValueError(f"stale operator formula: {key}")
             expected[key].append(binding["id"])
-        if binding["relation"] == "conditional" and not binding["conditions"]:
-            raise ValueError("conditional correspondence requires explicit conditions")
+        if binding["relation"] in ("conditional", "local") and not binding["conditions"]:
+            raise ValueError(f"{binding['relation']} binding requires explicit conditions")
+        if (binding["relation"] == "local") != (not binding["sources"]):
+            raise ValueError("a local binding cites no Physlib source; every other binding cites one")
+        if binding["relation"] == "local" and binding["evidence"]["kind"] != "compiled_bridge":
+            raise ValueError("a local binding must be a compiled proof")
+        if binding["relation"] == "local" and not binding["remaining_obligations"]:
+            raise ValueError("a local binding must disclose its remaining obligations")
         if (binding["evidence"]["kind"] == "source_correspondence"
                 and not binding["remaining_obligations"]):
             raise ValueError("uncompiled correspondence must disclose remaining bridge obligations")
@@ -360,15 +405,24 @@ def validate_formula_bindings(payload: dict, *, check_catalog: bool = False,
                 raise ValueError("source URL does not match pinned upstream")
         if proof_root is not None and binding["evidence"]["kind"] == "compiled_bridge":
             _check_compiled_evidence(binding, payload["upstream"], proof_root)
+    relations = {binding["id"]: binding["relation"] for binding in bindings}
     for key, row in lookup.items():
         if row["binding_ids"] != sorted(expected[key]):
             raise ValueError(f"inconsistent inventory binding IDs: {key}")
-        if row["status"] != ("mapped" if expected[key] else "gap"):
+        if row["status"] != _row_status(sorted(expected[key]), relations):
             raise ValueError(f"inconsistent coverage status: {key}")
     # Schema v1 predates the additive proof-subject/reverse-index counters.
     # Accept retained v1 payloads; check every supplied counter, including new ones.
     actual_coverage = _coverage(bindings, inventory)
-    if any(actual_coverage[key] != value for key, value in payload["coverage"].items()):
+    supplied = payload["coverage"]
+    if any(binding["relation"] == "local" for binding in bindings):
+        missing = {"operators_compiled_local", "nodes_compiled_local", "operators_proved",
+                   "nodes_proved", "operators_local", "nodes_local"} - supplied.keys()
+        if missing or "local" not in supplied["relations"]:
+            raise ValueError("a payload with local bindings must report its local counts")
+    relations = actual_coverage["relations"]
+    if (any(actual_coverage[key] != value for key, value in supplied.items() if key != "relations")
+            or any(relations[key] != supplied["relations"].get(key, 0) for key in relations)):
         raise ValueError("coverage counts do not match bindings and inventory")
     if check_catalog:
         actual = catalog_inventory()

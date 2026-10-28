@@ -168,10 +168,15 @@ def test_compiled_subjects_exclude_input_associations(payload):
     assert all(target in [{"kind": t["kind"], "id": t["id"]} for t in total["targets"]]
                for target in proved)
     assert any(target["kind"] == "operator" for target in proved)
+    anchored = {(target["kind"], target["id"]) for binding in payload["bindings"]
+                if binding["relation"] != "local"
+                for target in compiled_targets(binding, payload["inventory"])}
     subjects = {(target["kind"], target["id"]) for binding in payload["bindings"]
                 for target in compiled_targets(binding, payload["inventory"])}
-    assert payload["coverage"]["nodes_compiled"] == sum(kind == "node" for kind, _ in subjects)
-    assert payload["coverage"]["operators_compiled"] == sum(kind == "operator" for kind, _ in subjects)
+    assert payload["coverage"]["nodes_compiled"] == sum(kind == "node" for kind, _ in anchored)
+    assert payload["coverage"]["operators_compiled"] == sum(kind == "operator" for kind, _ in anchored)
+    assert payload["coverage"]["nodes_proved"] == sum(kind == "node" for kind, _ in subjects)
+    assert payload["coverage"]["operators_proved"] == sum(kind == "operator" for kind, _ in subjects)
 
 
 def test_second_compiled_proof_does_not_inflate_unique_coverage():
@@ -273,6 +278,8 @@ def test_compiled_evidence_requires_exact_source_and_successful_build(one_bindin
     one_binding["coverage"]["nodes_compiled"] = 1
     one_binding["coverage"]["nodes_compiled_outputs"] = 1
     one_binding["coverage"]["operators_compiled"] = 1
+    one_binding["coverage"]["operators_proved"] = 1
+    one_binding["coverage"]["nodes_proved"] = 1
     record = source.parent / "build-evidence.json"
     revision = one_binding["upstream"]["revision"]
     (source.parent / "lean-toolchain").write_text(one_binding["upstream"]["lean_toolchain"])
@@ -403,5 +410,7 @@ def test_retained_schema_v1_coverage_remains_readable(one_binding):
                                if key in original_fields}
     validate_formula_bindings(one_binding)
     one_binding["coverage"]["operators_compiled"] = 1
+    one_binding["coverage"]["operators_proved"] = 1
+    one_binding["coverage"]["nodes_proved"] = 1
     with pytest.raises(ValueError, match="coverage counts"):
         validate_formula_bindings(one_binding)

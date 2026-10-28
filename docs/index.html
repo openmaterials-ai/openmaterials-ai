@@ -127,7 +127,7 @@
         <dl class="ledger">
           <div><dt><a href="agreement/">Cross-code agreement</a></dt><dd>Values of one quantity from different methods or codes, with the spread of each group.</dd></div>
           <div><dt><a href="lineage/">Lineage tour</a></dt><dd>One QHGK thermal conductivity result for amorphous silicon, from its derivation on the map to its lineage record.</dd></div>
-          <div><dt><a href="lean/">Lean</a></dt><dd><span data-bind="lean-ops">20</span> operator formulas carry a compiled Lean proof against Physlib under stated conditions, and <span data-bind="lean-nodes">124</span> node dimensions are declared, in one package at one pinned Physlib revision.</dd></div>
+          <div><dt><a href="lean/">Lean</a></dt><dd><span data-bind="lean-ops">25</span> operator formulas carry a compiled Lean proof under stated conditions, anchored to Physlib where it has a model, and <span data-bind="lean-nodes">124</span> node dimensions are declared, in one package at one pinned Physlib revision.</dd></div>
           <div><dt><a href="lean/roadmap/">Formalization roadmap</a></dt><dd>Every operator on the map, rated by what a Lean theorem about its formula would take: a closed-form definition, a formula that needs analysis, or an external code output with nothing to prove.</dd></div>
         </dl>
       </div>
@@ -283,7 +283,7 @@
     figure1(v);
   }).catch(skip);
   get('data/lean.json').then(function (l) { put('[data-bind="lean-nodes"]', Object.keys(l.nodes).length); }).catch(skip);
-  get('data/formula_bindings.json').then(function (b) { put('[data-bind="lean-ops"]', b.coverage.operators_compiled); }).catch(skip);
+  get('data/formula_bindings.json').then(function (b) { put('[data-bind="lean-ops"]', b.coverage.operators_proved === undefined ? b.coverage.operators_compiled : b.coverage.operators_proved); }).catch(skip);
   get('data/version.json').then(function (v) { put('[data-bind="version12"]', String(v.version).slice(0, 12)); }).catch(skip);
   /* Fig. 1: crystalline silicon's thermal conductivity between 270 and 310 K, one dot per value,
      on a log axis, grouped by where the value comes from. Each dot opens its datasheet. */

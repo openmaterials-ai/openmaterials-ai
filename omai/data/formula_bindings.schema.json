@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openmaterials.ai/schemas/formula-bindings-v1.json",
-  "title": "Reviewed OMAI\u2013Physlib formula correspondences (not execution verification)",
+  "title": "Reviewed OMAI–Physlib formula correspondences (not execution verification)",
   "type": "object",
   "properties": {
     "schema_version": {
@@ -98,7 +98,8 @@
             "enum": [
               "exact_definition",
               "conditional",
-              "conceptual"
+              "conceptual",
+              "local"
             ]
           },
           "statement": {
@@ -145,7 +146,7 @@
               ],
               "additionalProperties": false
             },
-            "minItems": 1
+            "minItems": 0
           },
           "conditions": {
             "type": "array",
@@ -313,7 +314,45 @@
           "remaining_obligations",
           "evidence"
         ],
-        "additionalProperties": false
+        "additionalProperties": false,
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "relation": {
+                  "const": "local"
+                }
+              },
+              "required": [
+                "relation"
+              ]
+            },
+            "then": {
+              "properties": {
+                "sources": {
+                  "maxItems": 0
+                },
+                "evidence": {
+                  "properties": {
+                    "kind": {
+                      "const": "compiled_bridge"
+                    }
+                  },
+                  "required": [
+                    "kind"
+                  ]
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "sources": {
+                  "minItems": 1
+                }
+              }
+            }
+          }
+        ]
       },
       "minItems": 0
     },
@@ -345,6 +384,7 @@
               "status": {
                 "enum": [
                   "mapped",
+                  "local",
                   "gap"
                 ]
               },
@@ -389,6 +429,7 @@
               "status": {
                 "enum": [
                   "mapped",
+                  "local",
                   "gap"
                 ]
               },
@@ -492,6 +533,10 @@
             "conceptual": {
               "type": "integer",
               "minimum": 0
+            },
+            "local": {
+              "type": "integer",
+              "minimum": 0
             }
           },
           "required": [
@@ -522,6 +567,30 @@
           "minimum": 0
         },
         "nodes_compiled_interpretations": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "operators_compiled_local": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "nodes_compiled_local": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "operators_proved": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "nodes_proved": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "operators_local": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "nodes_local": {
           "type": "integer",
           "minimum": 0
         }

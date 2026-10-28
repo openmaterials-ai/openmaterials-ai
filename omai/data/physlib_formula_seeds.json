@@ -2190,6 +2190,148 @@
         ],
         "source_sha256": "2347e44452e37e3a05131ad636dd20f6ad7ea74dcc60c97fb8a2134f63f68f96"
       }
+    },
+    {
+      "id": "linear-elasticity-voigt-moduli",
+      "relation": "local",
+      "targets": [
+        {
+          "kind": "operator",
+          "id": "compute_bulk_modulus_eos",
+          "uid": "e78d5769e8a4718966dee70a82eb5ac9622b35e20edf471ee1d8dc88ab40868c",
+          "formula_sha256": "486f990eb13996a627d4274aada76d2ba5b3cdff7518587837b45ee121e12ace"
+        },
+        {
+          "kind": "operator",
+          "id": "contract_bulk_modulus",
+          "uid": "646fa795ffeed1fc8935994dd17159062c596fc0952ebb2a3159b3a1a74946fa",
+          "formula_sha256": "461564a49eea3bd54eae3039dc5c24685f31ed2fbd89c5306cafadf7c74d2122"
+        },
+        {
+          "kind": "operator",
+          "id": "contract_poisson_ratio",
+          "uid": "1374919bed5b2ab25f700faf12ff8dc32b6fa3296fe92dd12092e3b9edd39e54",
+          "formula_sha256": "b9c1551011306c38dd5511cafba2afc0051f45b276aa1f7b4e5d8d5a0228a49b"
+        },
+        {
+          "kind": "operator",
+          "id": "contract_shear_modulus",
+          "uid": "3466399c40c467b80ca4b9b3a83c9c5b0d73df41ed0295e3a4d6685683972909",
+          "formula_sha256": "a6d3c29f0a742deb9c3acf0be98694e08dd2ee4ce9e40e86b4bfb7d0d4931d69"
+        },
+        {
+          "kind": "operator",
+          "id": "contract_youngs_modulus",
+          "uid": "1b6ab3dbb0648151cd191a9a98d25d103e1a8461958a2f04c14dfa4627c248cf",
+          "formula_sha256": "375c6fffee472f619a478562c1a12bc1fd48b7dc55a1a13abcffbaed8dfcc9e6"
+        },
+        {
+          "kind": "node",
+          "id": "BulkModulus",
+          "uid": "c0a13e64c02811f49b951271c894373267937676e0c657fc9ef09fac72558ced"
+        },
+        {
+          "kind": "node",
+          "id": "PoissonRatio",
+          "uid": "e95ba3f5810f8554656c148dae26520cf3258cace0b951dd75e69ee8c552c132"
+        },
+        {
+          "kind": "node",
+          "id": "ShearModulus",
+          "uid": "1ab85488c90143e38b94e27f93ab96571f381e7b09d507fa7a38216ffd34c5ec"
+        },
+        {
+          "kind": "node",
+          "id": "YoungsModulus",
+          "uid": "022d18213f7d63713ef4fddb484e1ae6d898873ce20377176013f620225637d8"
+        }
+      ],
+      "statement": "For every stiffness tensor with the first minor symmetry that stores positive energy for every nonzero symmetric strain, the catalog's Voigt bulk and shear moduli are positive and its Poisson ratio lies strictly between -1 and 1/2. For an isotropic tensor the Voigt contractions return the Lame values K = lam + 2 mu/3 and G = mu, positivity of both is equivalent to stability, and the catalog's Poisson ratio and Young's modulus are the Lame expressions lam/(2(lam + mu)) and mu(3 lam + 2 mu)/(lam + mu). For a cubic tensor the contractions return (C11 + 2 C12)/3 and (C11 - C12 + 3 C44)/5, the trace of the stress depends on the strain only through its trace with modulus K, so K is the stress-controlled bulk modulus, and with C12 <= C11 and C44 >= 0 the curvature V0 E''(V0) of the cell energy minimized over cell shape at each volume is K. Under uniform scaling of the cell without shape relaxation the curvature is the Voigt K for every tensor.",
+      "sources": [],
+      "conditions": [
+        "ElasticConstants is the full fourth-rank stiffness tensor C_abcd on Cartesian indices in one orientation. Voigt 6x6 storage is expanded with the minor symmetries before the catalog sums apply; Mandel or Kelvin storage, with its factors sqrt(2) and 2 on the shear block, must be converted first.",
+        "The Lean stress sigma = C : e is tensile-positive, the negative of the catalog's compressive-positive Stress node, consistent with compute_elastic_constants defining C = -d sigma_OMAI / d eps.",
+        "The stability results require the first minor symmetry C_abcd = C_bacd and positive strain energy for every nonzero symmetric strain. The isotropic results use C_abcd = lam d_ab d_cd + mu (d_ac d_bd + d_ad d_bc); the cubic results use Voigt constants C11, C12, C44 with the cube axes along the Cartesian axes.",
+        "The catalog's Poisson ratio and Young's modulus take BulkModulus then ShearModulus. For an anisotropic crystal, E and nu computed from its Voigt K and G are Voigt-polycrystal estimates, neither Voigt-Reuss-Hill averages nor single-crystal directional values.",
+        "The equation-of-state results evaluate compute_bulk_modulus_eos at the reference volume V0 of a linear-elastic cell with energy E0 + V0 * W(e) / 2, W(e) = sum_abcd C_abcd e_ab e_cd, and volumetric strain 3 s(V) with s(V) = (V/V0)^(1/3) - 1. The cubic result minimizes W over every symmetric strain of that trace; the uniform-scaling result uses e = s(V) delta without shape relaxation."
+      ],
+      "conventions": {
+        "model_scope": "Linear elasticity of a homogeneous solid with a constant stiffness tensor. Physlib has no elastic-solid model, so these are local theorems about the OMAI formulas over Mathlib reals; no Physlib declaration is identified.",
+        "component_scope": "Full fourth-rank tensor on Cartesian indices 1..3; isotropic and cubic symmetry only. Strains are symmetric; the deviatoric and volumetric parts are taken with respect to the Kronecker delta.",
+        "normalization_basis": "Moduli are intensive, per unit volume of the solid. The equation-of-state energy is per cell of reference volume V0.",
+        "frequency_convention": "Not applicable; no frequencies enter these formulas.",
+        "unit_embedding": "Coherent SI: stiffness constants and moduli in Pa, energy in J, volume in m^3; nu is dimensionless. Mixed GPa and eV/A^3 inputs must be converted to one embedding first.",
+        "held_fixed": "Temperature, composition and internal coordinates are fixed; the stiffness is the clamped-ion or relaxed-ion tensor as supplied and is not recomputed under strain. In the relaxed equation-of-state result the cell shape relaxes at each volume; in the uniform-scaling result it does not.",
+        "admissibility": "Positive strain energy for every nonzero symmetric strain for the general bounds; C12 <= C11 and C44 >= 0 for the relaxed cubic result; V0 > 0 for both equation-of-state results.",
+        "reference_energy": "E0 is an arbitrary constant offset of the cell energy and drops out of the curvature.",
+        "qpoint_weighting": "Not applicable; no Brillouin-zone sums enter these formulas."
+      },
+      "remaining_obligations": [
+        "DFT or finite-difference producers of ElasticConstants (compute_elastic_constants) are not verified, including the strain step, the stress sign convention, ionic relaxation and the symmetrization of the computed tensor.",
+        "The Voigt averages are upper bounds for a general crystal and the Reuss averages lower bounds; neither bound is proved here, and the Hill value is an average of the two, not a bound. For a cubic crystal the Voigt bulk modulus is exact, but the Voigt shear modulus equals the Reuss value only at Zener ratio 2 C44 / (C11 - C12) = 1.",
+        "Fitted equations of state (Birch-Murnaghan, Vinet, polynomial) and numerical second derivatives used by compute_bulk_modulus_eos are not verified; the equality with the Voigt modulus is shown only for linear-elastic cell energies at V0. For a general crystal the shape-relaxed curvature is the Reuss modulus, which is not proved here.",
+        "Pressure-dependent moduli, finite-strain elasticity beyond the stated volumetric path, temperature dependence and anisotropic Poisson ratios are not covered."
+      ],
+      "evidence": {
+        "kind": "compiled_bridge",
+        "module": "OMAIElasticity",
+        "declarations": [
+          "OMAI.PhyslibBridge.Elasticity.voigt_pos_of_posDef",
+          "OMAI.PhyslibBridge.Elasticity.poissonRatio_bounds_of_posDef",
+          "OMAI.PhyslibBridge.Elasticity.voigtBulk_isotropic",
+          "OMAI.PhyslibBridge.Elasticity.voigtShear_isotropic",
+          "OMAI.PhyslibBridge.Elasticity.isotropic_stable_iff",
+          "OMAI.PhyslibBridge.Elasticity.poissonRatio_isotropic",
+          "OMAI.PhyslibBridge.Elasticity.youngsModulus_isotropic",
+          "OMAI.PhyslibBridge.Elasticity.voigtBulk_cubic",
+          "OMAI.PhyslibBridge.Elasticity.voigtShear_cubic",
+          "OMAI.PhyslibBridge.Elasticity.cubic_hydrostatic_stress",
+          "OMAI.PhyslibBridge.Elasticity.cubic_trace_stress",
+          "OMAI.PhyslibBridge.Elasticity.cubic_relaxed_eosBulk_eq_voigtBulk",
+          "OMAI.PhyslibBridge.Elasticity.uniformScaling_eosBulk_eq_voigtBulk"
+        ],
+        "source_path": "lean/bridge/OMAIElasticity.lean",
+        "build_record": "lean/bridge/build-evidence.json",
+        "proved_targets": [
+          {
+            "kind": "operator",
+            "id": "compute_bulk_modulus_eos"
+          },
+          {
+            "kind": "operator",
+            "id": "contract_bulk_modulus"
+          },
+          {
+            "kind": "operator",
+            "id": "contract_poisson_ratio"
+          },
+          {
+            "kind": "operator",
+            "id": "contract_shear_modulus"
+          },
+          {
+            "kind": "operator",
+            "id": "contract_youngs_modulus"
+          },
+          {
+            "kind": "node",
+            "id": "BulkModulus"
+          },
+          {
+            "kind": "node",
+            "id": "PoissonRatio"
+          },
+          {
+            "kind": "node",
+            "id": "ShearModulus"
+          },
+          {
+            "kind": "node",
+            "id": "YoungsModulus"
+          }
+        ],
+        "source_sha256": "dbc0efc3f35bcc223d28cd60d70fa591ab5f4cf9d285fe97360be6dca0602844"
+      }
     }
   ],
   "gap_reasons": {

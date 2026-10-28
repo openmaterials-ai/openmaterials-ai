@@ -19,3 +19,4 @@ public import OMAIPhyslibGruneisenWitness
 public import OMAIPhyslibGibbsBranch
 public import OMAIPhyslibQHA
 public import OMAIPhyslibQHAWitness
+public import OMAIElasticity

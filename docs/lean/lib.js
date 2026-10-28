@@ -44,7 +44,10 @@
     return {
       nodes: Object.keys((lean && lean.nodes) || {}).length,
       graphNodes: graph && Array.isArray(graph.nodes) ? graph.nodes.length : null,
-      operatorsCompiled: cov.operators_compiled === undefined ? null : cov.operators_compiled,
+      operatorsCompiled: cov.operators_proved !== undefined ? cov.operators_proved
+        : cov.operators_compiled === undefined ? null : cov.operators_compiled,
+      operatorsAnchored: cov.operators_compiled === undefined ? null : cov.operators_compiled,
+      operatorsLocal: cov.operators_compiled_local === undefined ? 0 : cov.operators_compiled_local,
       operatorsTotal: cov.operators_total === undefined ? null : cov.operators_total,
       physlibRev: (lean && lean.physlib_rev) || null,
       toolchain: (lean && lean.lean_toolchain) || null,
