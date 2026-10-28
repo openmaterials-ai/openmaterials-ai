@@ -178,8 +178,11 @@ test('reviewed QHA data compiles each producer and its output, not mode-Gruneise
     assert.equal(rows.find(r => r.kind === 'operator' && r.id === id).compiled, false);
   }
   assert.equal(rows.find(r => r.kind === 'node' && r.id === 'Gruneisen').compiled, false);
-  // BulkModulus is the Voigt average of the elastic tensor: an output association only.
-  assert.equal(rows.find(r => r.kind === 'node' && r.id === 'BulkModulus').compiled, false);
+  // BulkModulus is the Voigt average of the elastic tensor: an output association of the QHA
+  // binding. Only the elasticity tranche, which proves the Voigt contraction, makes it a subject.
+  const bulkProvers = data.bindings.filter(b => F.provedTargets(b, data)
+    .some(t => t.kind === 'node' && t.id === 'BulkModulus')).map(b => b.id);
+  assert.deepEqual(bulkProvers, ['linear-elasticity-voigt-moduli']);
   assert.equal(F.targetReferencesHtml(data, 'node', 'Gruneisen', '/lean/bridge/'), '');
   const upstream = F.declarationIndex(data).find(r => r.name === 'CanonicalEnsemble.thermodynamicEntropy');
   assert.ok(upstream.bindings.some(b => b.id === 'harmonic-qha-gibbs-energy'));

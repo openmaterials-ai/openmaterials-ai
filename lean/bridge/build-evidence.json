@@ -5,9 +5,337 @@
       "Quot.sound",
       "propext"
     ],
-    "declaration_count": 990,
+    "declaration_count": 1076,
     "declarations": {
       "CanonicalEnsemble.heatCapacity.eq_1": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Elasticity.PosDef": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Elasticity.Stiffness": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Elasticity.Symmetric": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Elasticity.Tensor2": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Elasticity.cubic": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Elasticity.cubic.eq_1": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Elasticity.cubic_hydrostatic_stress": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Elasticity.cubic_relaxed_eosBulk_eq_voigtBulk": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Elasticity.cubic_relaxed_sInf": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Elasticity.cubic_strainEnergy_ge": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Elasticity.cubic_trace_stress": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Elasticity.dev1": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Elasticity.dev1.eq_1": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Elasticity.dev2": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Elasticity.dev2.eq_1": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Elasticity.dev3": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Elasticity.dev3.eq_1": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Elasticity.dev4": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Elasticity.dev4.eq_1": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Elasticity.dev5": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Elasticity.dev5.eq_1": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Elasticity.eosBulk": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Elasticity.eosBulk_quadratic_strain": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Elasticity.fixedTraceEnergies": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Elasticity.hydrostaticStrain": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Elasticity.hydrostaticStrain.eq_1": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Elasticity.isotropic": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Elasticity.isotropic.eq_1": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Elasticity.isotropic_eq_cubic": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Elasticity.isotropic_stable_iff": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Elasticity.isotropic_strainEnergy": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Elasticity.isotropic_strainEnergy_split": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Elasticity.kron": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Elasticity.kron.eq_1": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Elasticity.poissonRatio": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Elasticity.poissonRatio._proof_1": [
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Elasticity.poissonRatio._proof_2": [
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Elasticity.poissonRatio_bounds": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Elasticity.poissonRatio_bounds_of_posDef": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Elasticity.poissonRatio_isotropic": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Elasticity.relaxedEnergy": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Elasticity.relaxedEnergy.eq_1": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Elasticity.strainEnergy": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Elasticity.strainEnergy.eq_1": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Elasticity.strainEnergy_hydrostatic": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Elasticity.stress": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Elasticity.stress.eq_1": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Elasticity.trace": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Elasticity.trace.eq_1": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Elasticity.uniformScalingEnergy": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Elasticity.uniformScalingEnergy.eq_1": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Elasticity.uniformScaling_eosBulk_eq_voigtBulk": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Elasticity.voigtBulk": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Elasticity.voigtBulk._proof_1": [
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Elasticity.voigtBulk.eq_1": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Elasticity.voigtBulk_cubic": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Elasticity.voigtBulk_isotropic": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Elasticity.voigtShear": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Elasticity.voigtShear._proof_1": [
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Elasticity.voigtShear._proof_2": [
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Elasticity.voigtShear.eq_1": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Elasticity.voigtShear_cubic": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Elasticity.voigtShear_eq_deviatoric_sum": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Elasticity.voigtShear_isotropic": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Elasticity.voigt_pos_of_posDef": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Elasticity.youngsModulus": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Elasticity.youngsModulus._proof_1": [
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Elasticity.youngsModulus_isotropic": [
         "Classical.choice",
         "Quot.sound",
         "propext"
@@ -3882,6 +4210,68 @@
         "Quot.sound",
         "propext"
       ],
+      "_private.OMAIElasticity.0.OMAI.PhyslibBridge.Elasticity.cubic_relaxed_sInf._simp_1_2": [
+        "propext"
+      ],
+      "_private.OMAIElasticity.0.OMAI.PhyslibBridge.Elasticity.eosBulk_quadratic_strain._simp_1_2": [
+        "propext"
+      ],
+      "_private.OMAIElasticity.0.OMAI.PhyslibBridge.Elasticity.eosBulk_quadratic_strain._simp_1_3": [
+        "propext"
+      ],
+      "_private.OMAIElasticity.0.OMAI.PhyslibBridge.Elasticity.eosBulk_quadratic_strain._simp_1_4": [
+        "propext"
+      ],
+      "_private.OMAIElasticity.0.OMAI.PhyslibBridge.Elasticity.eosBulk_quadratic_strain._simp_1_5": [
+        "propext"
+      ],
+      "_private.OMAIElasticity.0.OMAI.PhyslibBridge.Elasticity.eosBulk_quadratic_strain._simp_1_6": [
+        "propext"
+      ],
+      "_private.OMAIElasticity.0.OMAI.PhyslibBridge.Elasticity.eosBulk_quadratic_strain._simp_1_7": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "_private.OMAIElasticity.0.OMAI.PhyslibBridge.Elasticity.eosBulk_quadratic_strain._simp_1_8": [
+        "propext"
+      ],
+      "_private.OMAIElasticity.0.OMAI.PhyslibBridge.Elasticity.hydrostaticStrain_hasDerivAt": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "_private.OMAIElasticity.0.OMAI.PhyslibBridge.Elasticity.sym_of_fin": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "_private.OMAIElasticity.0.OMAI.PhyslibBridge.Elasticity.voigt_pos_of_posDef._simp_1_2": [
+        "propext"
+      ],
+      "_private.OMAIElasticity.0.OMAI.PhyslibBridge.Elasticity.youngsModulus_isotropic._simp_1_1": [
+        "propext"
+      ],
+      "_private.OMAIElasticity.0.OMAI.PhyslibBridge.Elasticity.youngsModulus_isotropic._simp_1_2": [
+        "propext"
+      ],
+      "_private.OMAIElasticity.0.OMAI.PhyslibBridge.Elasticity.youngsModulus_isotropic._simp_1_3": [
+        "propext"
+      ],
+      "_private.OMAIElasticity.0.OMAI.PhyslibBridge.Elasticity.youngsModulus_isotropic._simp_1_4": [
+        "propext"
+      ],
+      "_private.OMAIElasticity.0.OMAI.PhyslibBridge.Elasticity.youngsModulus_isotropic._simp_1_5": [
+        "propext"
+      ],
+      "_private.OMAIElasticity.0.OMAI.PhyslibBridge.Elasticity.youngsModulus_isotropic._simp_1_6": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "_private.OMAIElasticity.0.OMAI.PhyslibBridge.Elasticity.youngsModulus_isotropic._simp_1_7": [
+        "propext"
+      ],
       "_private.OMAIPhyslibGibbsBranch.0.OMAI.PhyslibBridge.Response.exists_gibbsBranchAt._simp_1_1": [
         "propext"
       ],
@@ -4590,6 +4980,7 @@
     "namespace_prefix": "OMAI.PhyslibBridge",
     "scope": "source_modules_union_namespace_v1",
     "source_modules": [
+      "OMAIElasticity",
       "OMAIPhyslibBridge",
       "OMAIPhyslibContinuum",
       "OMAIPhyslibDimensions",
@@ -4613,12 +5004,32 @@
       "OMAIPhyslibThermalGruneisen"
     ],
     "status": "passed",
-    "theorem_count": 691
+    "theorem_count": 753
   },
   "command": "lake build --wfail",
   "contract_name_audit": {
-    "pair_count": 20,
+    "pair_count": 25,
     "pairs": [
+      {
+        "module": "OMAIElasticity",
+        "name": "OMAI.PhyslibBridge.Elasticity.eosBulk"
+      },
+      {
+        "module": "OMAIElasticity",
+        "name": "OMAI.PhyslibBridge.Elasticity.poissonRatio"
+      },
+      {
+        "module": "OMAIElasticity",
+        "name": "OMAI.PhyslibBridge.Elasticity.voigtBulk"
+      },
+      {
+        "module": "OMAIElasticity",
+        "name": "OMAI.PhyslibBridge.Elasticity.voigtShear"
+      },
+      {
+        "module": "OMAIElasticity",
+        "name": "OMAI.PhyslibBridge.Elasticity.youngsModulus"
+      },
       {
         "module": "OMAIPhyslibHarmonicResponse",
         "name": "OMAI.PhyslibBridge.Response.heatCapacityPIdentity"
@@ -4719,7 +5130,8 @@
   "schema_version": 1,
   "scope": "ISQ dimension encodings and explicitly stated bridge theorems; not numerical-code validation",
   "sources": {
-    "lean/bridge/OMAIPhyslibBridge.lean": "519d44f4bc97cf02ce422f3de2d8525dfa88d1dcd67067cb52320b3ff43d2df1",
+    "lean/bridge/OMAIElasticity.lean": "dbc0efc3f35bcc223d28cd60d70fa591ab5f4cf9d285fe97360be6dca0602844",
+    "lean/bridge/OMAIPhyslibBridge.lean": "2b0f0c088b87c9bb73ecc195e3f3c63ef74df178ac199f615a92fd4a3dd879d8",
     "lean/bridge/OMAIPhyslibContinuum.lean": "e8bff3cb5d44cd78885d8c5f200d8761e8c568cd0d101fc0c2110f521bdca7ff",
     "lean/bridge/OMAIPhyslibDimensions.lean": "70ffbb67e2bc50c736e9529e55836756cdb9912f2c60024a4de0ffec1d8b35ad",
     "lean/bridge/OMAIPhyslibGibbsBranch.lean": "187fcc3093e54b76aa40fb12d866cffadc01adef119f31d3bd48eaadfc1367be",
@@ -4740,15 +5152,16 @@
     "lean/bridge/OMAIPhyslibSemantics.lean": "9ce9bbe14c751333465a9f08bdb5319f369361e136f2f8233e8e72e6614797a5",
     "lean/bridge/OMAIPhyslibStaticEnsemble.lean": "5d949848a8253d234f8058391b3641ec3ce1aa5671653293581d403851742f9e",
     "lean/bridge/OMAIPhyslibThermalGruneisen.lean": "6669b924a8682f135cee4daeda9d2d76b5418aa1ee30117dd7975dc86dddece9",
-    "lean/bridge/audit.py": "d39f3b791c9aa1f2ef0e65a1a09e4142b93f3f6414df99d0ee7287ca16f8dcad",
+    "lean/bridge/audit.py": "a6b70021b1df27d25f266dbf684d2fe8929c74fef3325cd6c9b1d731a612f9d2",
     "lean/bridge/continuum-formula-contract.json": "b5fb4368abccaac9fcde8b6ccb6dfd55402f14f1a9537e898645484ba69b2e8f",
+    "lean/bridge/elasticity-formula-contract.json": "4d9b230d6b4a62e45383dd03c48e34d1834d7d70e5bd1c38b191866128c000f8",
     "lean/bridge/harmonic-density-formula-contract.json": "b3f5f43df5ae50417ec309a996dcdbbef311fcac9bd4bb72957f45da28533ba8",
     "lean/bridge/harmonic-ensemble-formula-contract.json": "787bff6c81de388b2631c77b044b394a03c8562c744493931f09db60e8f663ab",
     "lean/bridge/harmonic-product-formula-contract.json": "adffdaa7139f3d919eb1ea058130fb502ad0d6e2e375bf2465ce47abf472d995",
     "lean/bridge/harmonic-sums-formula-contract.json": "c897e8de5d7c1b7211f95e0cd599479c87a738de946be683bd5ab3ae78be1699",
     "lean/bridge/joint-density-formula-contract.json": "f5a5bb01044f479cf9770573121442a84117af1a84a6976d5ede0765256dfd04",
     "lean/bridge/lake-manifest.json": "d4f51a8aa0ee98c0c8a34a7f9cc00accf43ee3a67571f571c0e35318d0956e53",
-    "lean/bridge/lakefile.toml": "bbafa0562218c863ee100dffcee4c09a7fdd03d94bba9dd53e910e6438fff305",
+    "lean/bridge/lakefile.toml": "9b05b31a7830cf66b46edb5310c719ca7ac883b1868e5f6143c6eb67514a59c3",
     "lean/bridge/lean-toolchain": "ca5f1f601d34c49079e38d7e7041eb0f2a9c227fbc1df0f404820069a052330c",
     "lean/bridge/qha-formula-contract.json": "60876d432d5819f8ed568770ec7df5ed7ad64fdc1e00c2c2fd03bd061b9f83c1",
     "lean/bridge/response-formula-contract.json": "f4f446f1967c45ccf508f42232e070d468121b0967459f93fc0c496210adf353",

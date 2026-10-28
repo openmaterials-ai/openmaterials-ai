@@ -31,6 +31,10 @@ from omai.formula_bindings import (
     validate_formula_bindings,
 )
 
+from physlib_tranches import (
+    GLOBAL_COVERAGE, bindings_after, contracts_after, modules_after, pairs_after, subjects_after,
+)
+
 ROOT = Path(__file__).resolve().parents[1]
 PACKAGE = ROOT / "lean/bridge"
 REVISION = "9b583cb6ef6e9cc537c4d4b786b508de1abbcf42"
@@ -55,7 +59,7 @@ EARLIER_CONTRACTS = frozenset({
     "joint-density-formula-contract.json", "response-formula-contract.json",
     "thermal-gruneisen-formula-contract.json",
 })
-REQUIRED_CONTRACTS = EARLIER_CONTRACTS | {CONTRACT_NAME}
+REQUIRED_CONTRACTS = EARLIER_CONTRACTS | {CONTRACT_NAME} | contracts_after("qha")
 EARLIER_PRESERVED = {
     "lean/bridge/OMAIPhyslibResponseCalculus.lean": "aaa0404cc1d8df8b0a437bb24c46fdb97269def69b6f6caece73947dd4ac7b12",
     "lean/bridge/OMAIPhyslibHarmonicVolume.lean": "23effa45ca48c083307f32391413ab30d819db78cbee14bf6c9e62fdacb9dca5",
@@ -186,22 +190,6 @@ def _full(name):
 
 
 FINAL_THEOREMS = frozenset(_full(name) for row in OPERATORS.values() for name in row["declarations"])
-EXPECTED_COVERAGE = {
-    "nodes_total": 129,
-    "operators_total": 127,
-    "operators_compiled": 20,
-    "operators_mapped": 20,
-    "nodes_compiled": 18,
-    "nodes_compiled_outputs": 17,
-    "nodes_compiled_interpretations": 1,
-    "nodes_mapped": 30,
-    "bindings_total": 28,
-    "compiled_bridges": 23,
-    "source_correspondences": 5,
-    "upstream_declarations_referenced": 33,
-    "upstream_modules_referenced": 9,
-    "relations": {"exact_definition": 1, "conditional": 23, "conceptual": 4},
-}
 # The producer definitions must not read the response quantities they are proved equal to.
 FORBIDDEN_EXACT = frozenset({
     *(NS + name for name in (
@@ -333,9 +321,9 @@ def test_qha_integration_binding_scope_and_evidence(payload, operator):
 
 
 def test_qha_integration_global_ledger(payload):
-    assert {row["id"] for row in payload["bindings"]} == EARLIER_BINDINGS | BINDING_IDS
-    assert _subjects(payload) == EARLIER_SUBJECTS | SUBJECTS
-    assert {key: payload["coverage"][key] for key in EXPECTED_COVERAGE} == EXPECTED_COVERAGE
+    assert {row["id"] for row in payload["bindings"]} == EARLIER_BINDINGS | BINDING_IDS | bindings_after("qha")
+    assert _subjects(payload) == EARLIER_SUBJECTS | SUBJECTS | subjects_after("qha")
+    assert {key: payload["coverage"][key] for key in GLOBAL_COVERAGE} == GLOBAL_COVERAGE
 
 
 def test_qha_integration_text_obligations(payload):
@@ -409,7 +397,8 @@ def test_qha_integration_record_covers_sources(payload, contract):
     assert {path: record["sources"][path] for path in tracked} == {path: _digest(ROOT / path) for path in tracked}
     assert {"lean/bridge/" + name for name in REQUIRED_CONTRACTS} <= record["sources"].keys()
     audit = record["contract_name_audit"]
-    assert audit["status"] == "passed" and audit["pair_count"] == EARLIER_PAIR_COUNT + len(PAIRS)
+    assert audit["status"] == "passed"
+    assert audit["pair_count"] == EARLIER_PAIR_COUNT + len(PAIRS) + len(pairs_after("qha"))
     assert all(pair in audit["pairs"] for pair in PAIRS)
     axioms = record["axiom_audit"]
     assert {SUPPORT_MODULE, MODULE, WITNESS_MODULE} <= set(axioms["source_modules"])
@@ -525,10 +514,12 @@ def test_qha_integration_import_structure():
     assert _lean_imports(ROOT / SOURCE) == [SUPPORT_MODULE, "OMAIPhyslibModeGruneisen"]
     assert _lean_imports(ROOT / WITNESS_SOURCE) == [MODULE, "OMAIPhyslibGruneisenWitness"]
     root_imports = _lean_imports(PACKAGE / "OMAIPhyslibBridge.lean")
-    assert root_imports[-3:] == [SUPPORT_MODULE, MODULE, WITNESS_MODULE]
+    later = modules_after("qha")
+    assert root_imports[len(root_imports) - 3 - len(later):] == [SUPPORT_MODULE, MODULE, WITNESS_MODULE, *later]
     assert "OMAIPhyslibThermalGruneisen" not in _lean_imports(ROOT / SOURCE)
     lakefile = tomllib.loads((PACKAGE / "lakefile.toml").read_text())
-    assert lakefile["lean_lib"][0]["globs"][-3:] == [SUPPORT_MODULE, MODULE, WITNESS_MODULE]
+    globs = lakefile["lean_lib"][0]["globs"]
+    assert globs[len(globs) - 3 - len(later):] == [SUPPORT_MODULE, MODULE, WITNESS_MODULE, *later]
 
 
 def _configured_compiled_package():
@@ -577,7 +568,8 @@ def _check_lean_source(package, tmp_path, text, stem):
 def test_qha_real_endpoint_names(compiled_package):
     assert _verify_strict([compiled_package / CONTRACT_NAME], compiled_package) == PAIRS
     pairs = _verify_strict([compiled_package / name for name in sorted(REQUIRED_CONTRACTS)], compiled_package)
-    assert len(pairs) == EARLIER_PAIR_COUNT + len(PAIRS) and all(pair in pairs for pair in PAIRS)
+    assert len(pairs) == EARLIER_PAIR_COUNT + len(PAIRS) + len(pairs_after("qha"))
+    assert all(pair in pairs for pair in PAIRS)
 
 
 @pytest.mark.parametrize("mutation,diagnostic", [

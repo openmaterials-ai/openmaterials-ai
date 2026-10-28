@@ -86,6 +86,16 @@ def test_local_module_uses_mathlib_only_and_no_escape_hatch():
         assert not re.search(r"\b" + word + r"\b", source), word
 
 
+def test_registry_pins_this_tranche():
+    from physlib_tranches import TRANCHES
+    entry = next(t for t in TRANCHES if t["name"] == "elasticity")
+    payload = _packaged_bindings()
+    assert entry["bindings"] == {BINDING_ID}
+    assert entry["subjects"] == {(t["kind"], t["id"]) for t in compiled_targets(_binding(payload), payload["inventory"])}
+    assert set(entry["contracts"]) == {CONTRACT.name}
+    assert {p["name"] for p in entry["pairs"]} == {NS + name for name, _ in DEFINITIONS.values()}
+
+
 def test_binding_is_local_compiled_and_scoped():
     binding = _binding()
     payload = _packaged_bindings()
@@ -104,8 +114,12 @@ def test_binding_is_local_compiled_and_scoped():
 def test_local_coverage_is_counted_apart_from_physlib():
     payload = _packaged_bindings()
     coverage = payload["coverage"]
-    assert coverage["relations"]["local"] == 1
-    assert coverage["operators_compiled_local"] == len(DEFINITIONS)
+    local = [b for b in payload["bindings"] if b["relation"] == "local"]
+    assert BINDING_ID in {b["id"] for b in local}
+    assert coverage["relations"]["local"] == len(local)
+    local_ops = {t["id"] for b in local for t in compiled_targets(b, payload["inventory"]) if t["kind"] == "operator"}
+    assert set(DEFINITIONS) <= local_ops
+    assert coverage["operators_compiled_local"] == len(local_ops)
     assert coverage["operators_proved"] == coverage["operators_compiled"] + coverage["operators_compiled_local"]
     status = {row["id"]: row for row in payload["inventory"]["operators"]}
     for op in DEFINITIONS:
@@ -150,9 +164,10 @@ def test_validator_enforces_the_local_relation(mutation, message):
 
 def test_retained_payload_without_local_counters_still_validates():
     payload = copy.deepcopy(_packaged_bindings())
+    local_ids = {b["id"] for b in payload["bindings"] if b["relation"] == "local"}
     payload["bindings"] = [b for b in payload["bindings"] if b["relation"] != "local"]
     for row in payload["inventory"]["operators"] + payload["inventory"]["nodes"]:
-        row["binding_ids"] = [i for i in row["binding_ids"] if i != BINDING_ID]
+        row["binding_ids"] = [i for i in row["binding_ids"] if i not in local_ids]
         if not row["binding_ids"]:
             row["status"] = "gap"
             row["reason"] = row["reason"].replace(" A local Lean proof over Mathlib covers it; see that binding's conditions and evidence.", "")
