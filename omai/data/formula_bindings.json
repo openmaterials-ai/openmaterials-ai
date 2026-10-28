@@ -129,6 +129,122 @@
       }
     },
     {
+      "id": "calphad-binary-equilibrium",
+      "relation": "local",
+      "targets": [
+        {
+          "kind": "node",
+          "id": "CalphadMolarEntropy",
+          "uid": "b11c4ec0ddbfa4483cc0a65d6a8fb2cefa9687b9a86ebd11bfb968d4253ec022"
+        },
+        {
+          "kind": "node",
+          "id": "ChemicalPotential",
+          "uid": "e707090e106994d3718f0afe5a20f2e60037f543334fa79b4a00360b7962d527"
+        },
+        {
+          "kind": "node",
+          "id": "MolarEnthalpy",
+          "uid": "600d0860290d3326202768db7249339c34ac675deb2ee8528a92207d3878b00c"
+        },
+        {
+          "kind": "node",
+          "id": "MolarGibbsEnergy",
+          "uid": "b048bc7569d568e2201557761eb758817674dd3a38b6f2379c5474f4cf91c66f"
+        },
+        {
+          "kind": "node",
+          "id": "PhaseFraction",
+          "uid": "7b55b11531084dcb2d5fd95100d62b2d68b787596e7c9712e06c011817ab5b8c"
+        },
+        {
+          "kind": "node",
+          "id": "TransitionTemperature",
+          "uid": "8b9dd2a79db11c01e15d37f64a7bd0d9c95f09ea080a67f7912d9b8aabd7b132"
+        },
+        {
+          "kind": "operator",
+          "id": "compute_calphad_entropy",
+          "uid": "c1a786957352c7a02efab90d3815c83156bbae53976932e51dec1a9f0df62f2b",
+          "formula_sha256": "841219f58ee33183c89a9fcd83b3c4a34c426c7be1473d45431ccd81b756c7cf"
+        },
+        {
+          "kind": "operator",
+          "id": "compute_chemical_potentials",
+          "uid": "6e99a335cfb6b775c858856c9f81be42bf54bb931975aa16e4b13eedfa874b61",
+          "formula_sha256": "a95d84ace50d2262f60cc554ca21e03163140ec272d406f065bd39d9d6610fcb"
+        },
+        {
+          "kind": "operator",
+          "id": "compute_molar_enthalpy",
+          "uid": "901873fa2497cc75e75079357e7125527526bf2590507835f5cbeae3e5fd2868",
+          "formula_sha256": "559358c8898996d1b25239cf7891b8cad1297e6964a661b04055f8cf53e78812"
+        },
+        {
+          "kind": "operator",
+          "id": "compute_phase_fractions",
+          "uid": "d5a6a4d1c789d427aecbc40998ec2b7d32240c2850ac5d9ed226e268b6ed09f8",
+          "formula_sha256": "cdec0b486b6a7f7bbcc6f823a398f698ab01889104b0374971dd06ab7bf1397a"
+        },
+        {
+          "kind": "operator",
+          "id": "compute_transition_temperature",
+          "uid": "6f9aee9e741ba70cb9ee59098485a719edfaa20a864e0a5122ae7a225a875363",
+          "formula_sha256": "dff18b12ad9924ead14269682911a8017a719684f240433725bdcdf9b4789c80"
+        },
+        {
+          "kind": "operator",
+          "id": "solve_equilibrium",
+          "uid": "8e00f3c45c66888481ee6a2004e915534c06dfbc94ef59c7c761b85a1a7365a8",
+          "formula_sha256": "e462f6823acba4718605093dd6a9c2f5b65d76e52a2f0f936f34b1d30f06d951"
+        }
+      ],
+      "statement": "For a binary system the interpreted equilibrium molar Gibbs energy, the least energy of any finite mixture of phases with the overall composition, is convex in composition on [0, 1] and is the greatest convex function below every phase's Gibbs curve, its convex envelope. The enthalpy and entropy channels H = G - T G' and S = -G' of a molar Gibbs energy twice differentiable in temperature give the same heat capacity, dH/dT = T dS/dT = -T G'', and satisfy the Gibbs-Helmholtz relation d(G/T)/dT = -H/T^2. The tangent-intercept chemical potentials obey the Gibbs-Duhem relation (1 - x) dmu_A/dx + x dmu_B/dx = 0, and at a two-phase minimum with interior compositions both phase tangents are the common chord, so both phases have the same chemical potentials. Mass balance fixes the two phase fractions to the lever rule, both in [0, 1] exactly when the overall composition lies between the phase compositions. A Gibbs-energy difference that changes sign on [T1, T2] with a positive entropy difference has exactly one transition temperature, which the catalog's boundary locus returns, with phase alpha stable below it and phase beta above it.",
+      "sources": [],
+      "conditions": [
+        "Every producer except contract_gibbs_hts is an opaque solver call in the catalog. The interpretations read molar Gibbs functions of the assessed phases per mole of atoms at fixed pressure with the SER reference, as pycalphad's GM, HM, SM, MU and NP; they are not the harmonic quantities per mole of primitive cells of the phonon bridge, and Gibbs is not Helmholtz.",
+        "The equilibrium and chemical-potential results are for a binary system, composition the mole fraction x of the second component in [0, 1], at the temperature and pressure built into the phase functions. The phase Gibbs curves are bounded below on [0, 1]; ideal-mixing terms x ln x are bounded there.",
+        "The enthalpy, entropy and Gibbs-Helmholtz results need G twice differentiable in temperature at fixed composition, which fails at a first-order transition, where H and S jump; the heat-capacity identity holds within one phase field.",
+        "The common-tangent theorem assumes a local minimum of the two-phase mixture energy in each phase composition with x1 < x < x2 and both phase curves differentiable there; it does not establish that the global minimum is two-phase.",
+        "compute_transition_temperature is interpreted for one composition and two competing phases bracketed in [T1, T2] by a sign change of G_beta - G_alpha, with S_beta > S_alpha inside, as for melting or a polymorphic transition on heating. Invariant points and solvus lines of multicomponent systems are not covered.",
+        "contract_gibbs_hts, G = H - T S, is a definition with nothing to prove beyond these interpretations and is not a proof subject."
+      ],
+      "conventions": {
+        "model_scope": "Equilibrium thermodynamics of assessed CALPHAD phase models. Physlib has no model of Gibbs minimization over assessed phases, so these are local theorems over Mathlib reals that identify no Physlib declaration.",
+        "component_scope": "Binary systems for the equilibrium, chemical-potential and phase-fraction results; one composition and two phases for the transition temperature; any number of assessed phases in the convex envelope.",
+        "normalization_basis": "Per mole of atoms (pycalphad v.N = 1), not per mole of formula units or primitive cells.",
+        "frequency_convention": "Not applicable; no frequencies enter these formulas.",
+        "unit_embedding": "Molar energies in J/mol, entropies in J/(mol K), temperatures in kelvin, compositions as mole fractions in [0, 1], not percentages.",
+        "held_fixed": "Pressure throughout; composition for the temperature derivatives; temperature for the composition derivatives and the equilibrium minimization.",
+        "admissibility": "Phase Gibbs curves bounded below on [0, 1]; T != 0 for Gibbs-Helmholtz; x1 < x2 for the lever rule and x1 < x < x2 for the common tangent; T1 < T2 with a sign change and positive entropy difference for the transition.",
+        "reference_energy": "The SER reference of the assessed database; a reference shift linear in composition shifts G, mu_A and mu_B consistently and does not change phase fractions or transition temperatures.",
+        "qpoint_weighting": "Not applicable; no Brillouin-zone sums enter these formulas."
+      },
+      "remaining_obligations": [
+        "The fidelity of the assessed database to experiment and the solver's global minimization (pycalphad's grid sampling and refinement) are not verified; the theorems hold for the interpreted definitions.",
+        "Multicomponent systems, sublattice site-fraction minimization inside a phase, magnetic and ordering contributions as separate terms, and pressure dependence are not covered.",
+        "That the global minimum is attained by at most two phases in a binary system (Caratheodory) and that a two-phase minimum exists between the common-tangent compositions are not proved.",
+        "Invariant points, solvus and liquidus lines in composition-temperature space, and the boundary-locus extraction from a swept phase-fraction grid, are not verified beyond the one-composition two-phase transition."
+      ],
+      "evidence": {
+        "kind": "compiled_bridge",
+        "module": "OMAICalphad",
+        "declarations": [
+          "OMAI.PhyslibBridge.Calphad.equilibriumGibbs_convexOn",
+          "OMAI.PhyslibBridge.Calphad.le_equilibriumGibbs_of_convex",
+          "OMAI.PhyslibBridge.Calphad.molarEnthalpy_calphadEntropy_heatCapacity",
+          "OMAI.PhyslibBridge.Calphad.gibbs_helmholtz",
+          "OMAI.PhyslibBridge.Calphad.gibbs_duhem",
+          "OMAI.PhyslibBridge.Calphad.commonTangent_of_isLocalMin",
+          "OMAI.PhyslibBridge.Calphad.leverFractions_unique_and_bounds",
+          "OMAI.PhyslibBridge.Calphad.transitionTemperature_unique"
+        ],
+        "source_path": "lean/bridge/OMAICalphad.lean",
+        "build_record": "lean/bridge/build-evidence.json",
+        "source_sha256": "aac625ec604cf4802a1e50da16125ffdd4d92d00e736b7a1cc34f0201b70db6c"
+      }
+    },
+    {
       "id": "canonical-rta-thermal-conductivity",
       "relation": "conditional",
       "statement": "With the relaxation-time mean free displacement F = v/(2 Gamma) and, as c, the actual Physlib canonical heat capacity of each harmonic mode at T > 0, the OMAI contraction kappa_ab = sum_m F_b c v_a/(N_q V_cell) is symmetric and positive semidefinite for positive linewidths and N_q V_cell > 0, and positive definite exactly when the group velocities of the modes span space.",
@@ -752,6 +868,124 @@
           }
         ],
         "source_sha256": "70bd052d1d32afe828a3a8f7e26e406d5ec1e121b86ad0d9b08717f8c0f87f1a"
+      }
+    },
+    {
+      "id": "dft-stability-energy-differences",
+      "relation": "local",
+      "targets": [
+        {
+          "kind": "node",
+          "id": "AdsorptionEnergy",
+          "uid": "949582fba59372799c672b38510bd07f2e733f8bd6e63887b9728a672b1c5b25"
+        },
+        {
+          "kind": "node",
+          "id": "EnergyAboveHull",
+          "uid": "910d47d67a7308728e2f7d211a08c1590239c7b802cd75128f00cd103a719b84"
+        },
+        {
+          "kind": "node",
+          "id": "GrainBoundaryEnergy",
+          "uid": "f81c9c7907dc4297e44624098da25bfd87c1654a4198853bb185891282c24528"
+        },
+        {
+          "kind": "node",
+          "id": "ReactionEnergy",
+          "uid": "a5736aa4760c27562f9e189829763a891b6fed83fe4a030a7e306b8d909d825c"
+        },
+        {
+          "kind": "node",
+          "id": "SurfaceEnergy",
+          "uid": "306384aed4a1204fb7ca2347729de8d1816fa5fc32f4855a5d5f56a4d0fc1ddf"
+        },
+        {
+          "kind": "node",
+          "id": "Voltage",
+          "uid": "26831a0aabc3508a944405ec2fd763a0637abeeac1ed3d87df64c27392d638f4"
+        },
+        {
+          "kind": "operator",
+          "id": "compute_adsorption_energy",
+          "uid": "35f53c511ef6202b79b33e89856071aa1f3f8610ad7705bd3f608784d6216a1f",
+          "formula_sha256": "55f4d4ba2cc61605a32dbe38ea3b7883519a192efc4d173bca1a654bd09810f0"
+        },
+        {
+          "kind": "operator",
+          "id": "compute_energy_above_hull",
+          "uid": "4e7f15bf40f88fab20271ac052a22b491e7955ab3ebab9bb229713adf057a040",
+          "formula_sha256": "8c6556dbca3a51a285840593e5ab35fa13c898956188a1beec9febac45ae722b"
+        },
+        {
+          "kind": "operator",
+          "id": "compute_grain_boundary_energy",
+          "uid": "74ba9279dc65f3acd9e2be4ca13861b510212aa24a19aca4b29c65976003bf1b",
+          "formula_sha256": "f9a65c5a348516a72f064663e00f68d094e9511ed620539de392d4377397aca6"
+        },
+        {
+          "kind": "operator",
+          "id": "compute_intercalation_voltage",
+          "uid": "a4bc99a6b2efc1df1400041ada33cfb59e97819f189e3501a99c06f9c5e5d49f",
+          "formula_sha256": "7a3dd261cb0bf1bb623ff3a0c3a2a353a03573911235a56c05e01e021b6f4949"
+        },
+        {
+          "kind": "operator",
+          "id": "compute_reaction_energy",
+          "uid": "2f0b118bbe3ef2e43e0d70c9b5d5316cc28dc4d0019ad8e7d0fc463cc6938a9c",
+          "formula_sha256": "2679bf8f5cc6b11e691142dbe4eb1ed23003bf4718ef5e528a12ef488d27fc27"
+        },
+        {
+          "kind": "operator",
+          "id": "compute_surface_energy",
+          "uid": "c8b2e006408e3e2c08f6c71eb7cd4e1a07f72ab20034fe883c691c1cad278492",
+          "formula_sha256": "c99d3c4dab85511ea00104a21376fad96e0f80ce1982fddad3ac9f531454e8eb"
+        }
+      ],
+      "statement": "The interpreted hull distance does not change when every competing entry's formation energy is shifted by the same affine function of composition, in particular when the elemental reference energies change; it can only grow when competitors are added, so a value computed against an incomplete competing set is a lower bound; and a supporting affine function of composition that touches an entry certifies a zero distance. The catalog's reaction energy summed over per-atom formation energies with weights nu_i N_i equals the reaction energy of the cell energies for every set of elemental references exactly when the reaction is balanced, and the adsorption energy and the average intercalation voltage are unchanged by every per-element energy offset exactly when the cells conserve atoms. The average intercalation voltage is the mean of the open-circuit voltage profile -(E'(x) - mu)/q over the ion content. For slab energies affine in the number of bulk units, the catalog's surface and grain-boundary energies are independent of slab thickness exactly when the bulk reference equals the slab slope, equal intercept/(2A) then, and grow without bound with thickness otherwise.",
+      "sources": [],
+      "conditions": [
+        "compute_energy_above_hull is opaque in the catalog and is interpreted as the per-atom distance of the entry's formation energy above the lower convex hull of the competing entries, the hull being the least weighted formation energy of nonnegative weights on the competing set that sum to one and reproduce the composition in atomic fractions. The entry belongs to the competing set. Formation energies are per atom and compositions are atomic fractions.",
+        "The affine invariance covers any shift c + sum_a delta_a x_a applied to every competing entry alike, including a change of the elemental reference chemical potentials of compute_formation_energy and a uniform per-atom correction. Corrections applied to some entries and not others, such as mixing GGA and GGA+U energies or anion corrections of the MP2020 scheme that depend on the entry, are not such a shift.",
+        "With per-atom formation energies the catalog's reaction-energy weights c_rxn[i] must be nu_i N_i: the balancing coefficient of species i in formula units times its atoms per formula unit. With formula-unit coefficients the sum depends on the elemental references, which the iff theorem shows.",
+        "The adsorption energy, intercalation voltage, surface energy and grain-boundary energy use cell energies from one energy model and one calculator setting, so that a per-element energy offset is common to every cell. The working-ion reservoir energy mu is per atom of the same element in the same model.",
+        "The intercalation voltage sign follows the catalog: V = -(E_full - E_empty - n mu)/(n q), positive when inserting n ions from the metal lowers the energy. In eV per elementary charge V is in volts. The mean-voltage theorem needs the cell energy E(x) differentiable in the ion content on [0, n] with an integrable derivative; for a phase-separating electrode E(x) is the convex hull energy and the profile has plateaus.",
+        "The surface and grain-boundary theorems assume slab energies affine in the number N of bulk units, E_slab(N) = N e + c, which holds once the surfaces of a symmetric slab no longer interact. The factor 2 counts the two equivalent surfaces or boundaries of the periodic slab."
+      ],
+      "conventions": {
+        "model_scope": "Ground-state energy differences built from cell energies of one electronic-structure or interatomic model. Physlib has no model of convex hulls, slabs or electrodes, so these are local theorems over Mathlib reals that identify no Physlib declaration.",
+        "component_scope": "Finite competing sets and finite element sets; cells are described by their atom counts per element. Slab thickness is the number of bulk units; the in-plane area is fixed.",
+        "normalization_basis": "Formation energies and hull distances per atom; reaction-energy weights per atom of each species (nu_i N_i); adsorption energies per adsorbate configuration; voltages per transferred elementary charge; surface and grain-boundary energies per unit area of one surface or boundary.",
+        "frequency_convention": "Not applicable; no frequencies enter these formulas.",
+        "unit_embedding": "Energies in eV or J in one embedding throughout, areas in A^2 or m^2 (1 eV/A^2 = 16.021766 J/m^2), charge in elementary charges so that eV/e is one volt.",
+        "held_fixed": "The energy model, its settings and the elemental reference energies are common to every cell entering one difference; the competing set is fixed for one hull; the slab area is fixed across thicknesses.",
+        "admissibility": "The entry belongs to its competing set; per-atom formation energies need a positive atom count; the intercalation iff needs n != 0 and q != 0; the thickness criterion needs a positive area.",
+        "reference_energy": "Elemental reference chemical potentials enter formation energies and drop out of hull distances and of balanced reaction energies. The working-ion reservoir mu is the energy per atom of the metal in the same model.",
+        "qpoint_weighting": "Not applicable; no Brillouin-zone sums enter these formulas."
+      },
+      "remaining_obligations": [
+        "The DFT or interatomic total energies, relaxations and structure selection of compute_formation_energy's reference set, the hull_source competing set, slab and grain-boundary construction and the adsorption site are not verified, nor the MP2020 or GGA/GGA+U mixing corrections, which are not common affine shifts of every entry.",
+        "Only the sufficiency of a supporting affine function for a zero hull distance is proved; its necessity, which needs convex duality, is not.",
+        "Finite-size slab effects beyond the affine regime (surface-surface interaction in thin slabs, dipole corrections for asymmetric or polar slabs) are not covered; asymmetric terminations change what compute_surface_energy computes.",
+        "Finite-temperature, vibrational, configurational and electrolyte contributions to stability, voltage and adsorption are not covered; the energies are ground-state values.",
+        "compute_formation_energy has no theorem of its own: it is a per-atom definition, and its reference choice drops out of the hull distance and balanced reaction energies proved here."
+      ],
+      "evidence": {
+        "kind": "compiled_bridge",
+        "module": "OMAIStabilityEnergies",
+        "declarations": [
+          "OMAI.PhyslibBridge.Stability.energyAboveHull_affine_invariant",
+          "OMAI.PhyslibBridge.Stability.energyAboveHull_mono_competitors",
+          "OMAI.PhyslibBridge.Stability.energyAboveHull_eq_zero_of_supporting",
+          "OMAI.PhyslibBridge.Stability.reactionEnergy_reference_independent_iff",
+          "OMAI.PhyslibBridge.Stability.adsorptionEnergy_offset_invariant_iff",
+          "OMAI.PhyslibBridge.Stability.intercalationVoltage_offset_invariant_iff",
+          "OMAI.PhyslibBridge.Stability.intercalationVoltage_eq_mean_ocv",
+          "OMAI.PhyslibBridge.Stability.surfaceEnergy_thickness_independent_iff",
+          "OMAI.PhyslibBridge.Stability.grainBoundaryEnergy_thickness_independent_iff"
+        ],
+        "source_path": "lean/bridge/OMAIStabilityEnergies.lean",
+        "build_record": "lean/bridge/build-evidence.json",
+        "source_sha256": "e05bc66e40a4c72d4f6fe36425c8bc2f5dbd581485f90049485603efa9e9911d"
       }
     },
     {
@@ -3008,9 +3242,11 @@
       {
         "id": "AdsorptionEnergy",
         "uid": "949582fba59372799c672b38510bd07f2e733f8bd6e63887b9728a672b1c5b25",
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No current Physlib matching reference-state, convex-hull, surface, adsorption, reaction, or grain-boundary formula model identified."
+        "binding_ids": [
+          "dft-stability-energy-differences"
+        ],
+        "status": "local",
+        "reason": "No current Physlib matching reference-state, convex-hull, surface, adsorption, reaction, or grain-boundary formula model identified. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
       },
       {
         "id": "AssessedDatabase",
@@ -3078,9 +3314,11 @@
       {
         "id": "CalphadMolarEntropy",
         "uid": "b11c4ec0ddbfa4483cc0a65d6a8fb2cefa9687b9a86ebd11bfb968d4253ec022",
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No current Physlib CALPHAD/Gibbs-assessed database or per-mole-atoms formula correspondence identified; Helmholtz is not Gibbs."
+        "binding_ids": [
+          "calphad-binary-equilibrium"
+        ],
+        "status": "local",
+        "reason": "No current Physlib CALPHAD/Gibbs-assessed database or per-mole-atoms formula correspondence identified; Helmholtz is not Gibbs. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
       },
       {
         "id": "CarrierDensity",
@@ -3106,9 +3344,11 @@
       {
         "id": "ChemicalPotential",
         "uid": "e707090e106994d3718f0afe5a20f2e60037f543334fa79b4a00360b7962d527",
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No current Physlib CALPHAD/Gibbs-assessed database or per-mole-atoms formula correspondence identified; Helmholtz is not Gibbs."
+        "binding_ids": [
+          "calphad-binary-equilibrium"
+        ],
+        "status": "local",
+        "reason": "No current Physlib CALPHAD/Gibbs-assessed database or per-mole-atoms formula correspondence identified; Helmholtz is not Gibbs. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
       },
       {
         "id": "ConductanceDriftExponent",
@@ -3254,9 +3494,11 @@
       {
         "id": "EnergyAboveHull",
         "uid": "910d47d67a7308728e2f7d211a08c1590239c7b802cd75128f00cd103a719b84",
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No current Physlib matching reference-state, convex-hull, surface, adsorption, reaction, or grain-boundary formula model identified."
+        "binding_ids": [
+          "dft-stability-energy-differences"
+        ],
+        "status": "local",
+        "reason": "No current Physlib matching reference-state, convex-hull, surface, adsorption, reaction, or grain-boundary formula model identified. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
       },
       {
         "id": "Entropy",
@@ -3325,9 +3567,11 @@
       {
         "id": "GrainBoundaryEnergy",
         "uid": "f81c9c7907dc4297e44624098da25bfd87c1654a4198853bb185891282c24528",
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No current Physlib matching reference-state, convex-hull, surface, adsorption, reaction, or grain-boundary formula model identified."
+        "binding_ids": [
+          "dft-stability-energy-differences"
+        ],
+        "status": "local",
+        "reason": "No current Physlib matching reference-state, convex-hull, surface, adsorption, reaction, or grain-boundary formula model identified. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
       },
       {
         "id": "GroupVelocity",
@@ -3511,9 +3755,11 @@
       {
         "id": "MolarEnthalpy",
         "uid": "600d0860290d3326202768db7249339c34ac675deb2ee8528a92207d3878b00c",
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No current Physlib CALPHAD/Gibbs-assessed database or per-mole-atoms formula correspondence identified; Helmholtz is not Gibbs."
+        "binding_ids": [
+          "calphad-binary-equilibrium"
+        ],
+        "status": "local",
+        "reason": "No current Physlib CALPHAD/Gibbs-assessed database or per-mole-atoms formula correspondence identified; Helmholtz is not Gibbs. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
       },
       {
         "id": "MolarEntropy",
@@ -3528,9 +3774,11 @@
       {
         "id": "MolarGibbsEnergy",
         "uid": "b048bc7569d568e2201557761eb758817674dd3a38b6f2379c5474f4cf91c66f",
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No current Physlib CALPHAD/Gibbs-assessed database or per-mole-atoms formula correspondence identified; Helmholtz is not Gibbs."
+        "binding_ids": [
+          "calphad-binary-equilibrium"
+        ],
+        "status": "local",
+        "reason": "No current Physlib CALPHAD/Gibbs-assessed database or per-mole-atoms formula correspondence identified; Helmholtz is not Gibbs. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
       },
       {
         "id": "MolarHeatCapacity",
@@ -3593,9 +3841,11 @@
       {
         "id": "PhaseFraction",
         "uid": "7b55b11531084dcb2d5fd95100d62b2d68b787596e7c9712e06c011817ab5b8c",
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No current Physlib CALPHAD/Gibbs-assessed database or per-mole-atoms formula correspondence identified; Helmholtz is not Gibbs."
+        "binding_ids": [
+          "calphad-binary-equilibrium"
+        ],
+        "status": "local",
+        "reason": "No current Physlib CALPHAD/Gibbs-assessed database or per-mole-atoms formula correspondence identified; Helmholtz is not Gibbs. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
       },
       {
         "id": "PhaseSpace3Phonon",
@@ -3697,9 +3947,11 @@
       {
         "id": "ReactionEnergy",
         "uid": "a5736aa4760c27562f9e189829763a891b6fed83fe4a030a7e306b8d909d825c",
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No current Physlib matching reference-state, convex-hull, surface, adsorption, reaction, or grain-boundary formula model identified."
+        "binding_ids": [
+          "dft-stability-energy-differences"
+        ],
+        "status": "local",
+        "reason": "No current Physlib matching reference-state, convex-hull, surface, adsorption, reaction, or grain-boundary formula model identified. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
       },
       {
         "id": "RetentionTime",
@@ -3775,9 +4027,11 @@
       {
         "id": "SurfaceEnergy",
         "uid": "306384aed4a1204fb7ca2347729de8d1816fa5fc32f4855a5d5f56a4d0fc1ddf",
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No current Physlib matching reference-state, convex-hull, surface, adsorption, reaction, or grain-boundary formula model identified."
+        "binding_ids": [
+          "dft-stability-energy-differences"
+        ],
+        "status": "local",
+        "reason": "No current Physlib matching reference-state, convex-hull, surface, adsorption, reaction, or grain-boundary formula model identified. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
       },
       {
         "id": "Temperature",
@@ -3949,9 +4203,11 @@
       {
         "id": "TransitionTemperature",
         "uid": "8b9dd2a79db11c01e15d37f64a7bd0d9c95f09ea080a67f7912d9b8aabd7b132",
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No current Physlib CALPHAD/Gibbs-assessed database or per-mole-atoms formula correspondence identified; Helmholtz is not Gibbs."
+        "binding_ids": [
+          "calphad-binary-equilibrium"
+        ],
+        "status": "local",
+        "reason": "No current Physlib CALPHAD/Gibbs-assessed database or per-mole-atoms formula correspondence identified; Helmholtz is not Gibbs. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
       },
       {
         "id": "VelocityAutocorrelation",
@@ -3963,9 +4219,11 @@
       {
         "id": "Voltage",
         "uid": "26831a0aabc3508a944405ec2fd763a0637abeeac1ed3d87df64c27392d638f4",
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No current Physlib matching reference-state, convex-hull, surface, adsorption, reaction, or grain-boundary formula model identified."
+        "binding_ids": [
+          "dft-stability-energy-differences"
+        ],
+        "status": "local",
+        "reason": "No current Physlib matching reference-state, convex-hull, surface, adsorption, reaction, or grain-boundary formula model identified. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
       },
       {
         "id": "VolumetricHeatCapacity",
@@ -4085,9 +4343,11 @@
         "outputs": [
           "AdsorptionEnergy"
         ],
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No current Physlib matching reference-state, convex-hull, surface, adsorption, reaction, or grain-boundary formula model identified."
+        "binding_ids": [
+          "dft-stability-energy-differences"
+        ],
+        "status": "local",
+        "reason": "No current Physlib matching reference-state, convex-hull, surface, adsorption, reaction, or grain-boundary formula model identified. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
       },
       {
         "id": "compute_band_gap",
@@ -4192,9 +4452,11 @@
         "outputs": [
           "CalphadMolarEntropy"
         ],
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No current Physlib CALPHAD/Gibbs-assessed database or per-mole-atoms formula correspondence identified; Helmholtz is not Gibbs."
+        "binding_ids": [
+          "calphad-binary-equilibrium"
+        ],
+        "status": "local",
+        "reason": "No current Physlib CALPHAD/Gibbs-assessed database or per-mole-atoms formula correspondence identified; Helmholtz is not Gibbs. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
       },
       {
         "id": "compute_carrier_density",
@@ -4243,9 +4505,11 @@
         "outputs": [
           "ChemicalPotential"
         ],
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No current Physlib CALPHAD/Gibbs-assessed database or per-mole-atoms formula correspondence identified; Helmholtz is not Gibbs."
+        "binding_ids": [
+          "calphad-binary-equilibrium"
+        ],
+        "status": "local",
+        "reason": "No current Physlib CALPHAD/Gibbs-assessed database or per-mole-atoms formula correspondence identified; Helmholtz is not Gibbs. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
       },
       {
         "id": "compute_conductance[transport_model=landauer]",
@@ -4420,9 +4684,11 @@
         "outputs": [
           "EnergyAboveHull"
         ],
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No current Physlib matching reference-state, convex-hull, surface, adsorption, reaction, or grain-boundary formula model identified."
+        "binding_ids": [
+          "dft-stability-energy-differences"
+        ],
+        "status": "local",
+        "reason": "No current Physlib matching reference-state, convex-hull, surface, adsorption, reaction, or grain-boundary formula model identified. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
       },
       {
         "id": "compute_entropy",
@@ -4558,9 +4824,11 @@
         "outputs": [
           "GrainBoundaryEnergy"
         ],
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No current Physlib matching reference-state, convex-hull, surface, adsorption, reaction, or grain-boundary formula model identified."
+        "binding_ids": [
+          "dft-stability-energy-differences"
+        ],
+        "status": "local",
+        "reason": "No current Physlib matching reference-state, convex-hull, surface, adsorption, reaction, or grain-boundary formula model identified. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
       },
       {
         "id": "compute_group_velocity",
@@ -4684,9 +4952,11 @@
         "outputs": [
           "Voltage"
         ],
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No current Physlib matching reference-state, convex-hull, surface, adsorption, reaction, or grain-boundary formula model identified."
+        "binding_ids": [
+          "dft-stability-energy-differences"
+        ],
+        "status": "local",
+        "reason": "No current Physlib matching reference-state, convex-hull, surface, adsorption, reaction, or grain-boundary formula model identified. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
       },
       {
         "id": "compute_internal_energy",
@@ -4867,9 +5137,11 @@
         "outputs": [
           "MolarEnthalpy"
         ],
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No current Physlib CALPHAD/Gibbs-assessed database or per-mole-atoms formula correspondence identified; Helmholtz is not Gibbs."
+        "binding_ids": [
+          "calphad-binary-equilibrium"
+        ],
+        "status": "local",
+        "reason": "No current Physlib CALPHAD/Gibbs-assessed database or per-mole-atoms formula correspondence identified; Helmholtz is not Gibbs. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
       },
       {
         "id": "compute_molecular_frequencies",
@@ -4935,9 +5207,11 @@
         "outputs": [
           "PhaseFraction"
         ],
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No current Physlib CALPHAD/Gibbs-assessed database or per-mole-atoms formula correspondence identified; Helmholtz is not Gibbs."
+        "binding_ids": [
+          "calphad-binary-equilibrium"
+        ],
+        "status": "local",
+        "reason": "No current Physlib CALPHAD/Gibbs-assessed database or per-mole-atoms formula correspondence identified; Helmholtz is not Gibbs. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
       },
       {
         "id": "compute_phase_space_3phonon",
@@ -5004,9 +5278,11 @@
         "outputs": [
           "ReactionEnergy"
         ],
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No current Physlib matching reference-state, convex-hull, surface, adsorption, reaction, or grain-boundary formula model identified."
+        "binding_ids": [
+          "dft-stability-energy-differences"
+        ],
+        "status": "local",
+        "reason": "No current Physlib matching reference-state, convex-hull, surface, adsorption, reaction, or grain-boundary formula model identified. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
       },
       {
         "id": "compute_seebeck",
@@ -5075,9 +5351,11 @@
         "outputs": [
           "SurfaceEnergy"
         ],
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No current Physlib matching reference-state, convex-hull, surface, adsorption, reaction, or grain-boundary formula model identified."
+        "binding_ids": [
+          "dft-stability-energy-differences"
+        ],
+        "status": "local",
+        "reason": "No current Physlib matching reference-state, convex-hull, surface, adsorption, reaction, or grain-boundary formula model identified. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
       },
       {
         "id": "compute_thermal_expansion",
@@ -5110,9 +5388,11 @@
         "outputs": [
           "TransitionTemperature"
         ],
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No current Physlib CALPHAD/Gibbs-assessed database or per-mole-atoms formula correspondence identified; Helmholtz is not Gibbs."
+        "binding_ids": [
+          "calphad-binary-equilibrium"
+        ],
+        "status": "local",
+        "reason": "No current Physlib CALPHAD/Gibbs-assessed database or per-mole-atoms formula correspondence identified; Helmholtz is not Gibbs. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
       },
       {
         "id": "compute_velocity_autocorrelation",
@@ -6158,9 +6438,11 @@
         "outputs": [
           "MolarGibbsEnergy"
         ],
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No current Physlib CALPHAD/Gibbs-assessed database or per-mole-atoms formula correspondence identified; Helmholtz is not Gibbs."
+        "binding_ids": [
+          "calphad-binary-equilibrium"
+        ],
+        "status": "local",
+        "reason": "No current Physlib CALPHAD/Gibbs-assessed database or per-mole-atoms formula correspondence identified; Helmholtz is not Gibbs. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
       },
       {
         "id": "solve_ground_state",
@@ -6240,26 +6522,26 @@
     "nodes_mapped": 33,
     "operators_total": 127,
     "operators_mapped": 24,
-    "nodes_local": 9,
-    "operators_local": 12,
-    "bindings_total": 36,
+    "nodes_local": 21,
+    "operators_local": 24,
+    "bindings_total": 38,
     "source_correspondences": 5,
-    "compiled_bridges": 31,
+    "compiled_bridges": 33,
     "nodes_compiled": 21,
     "nodes_compiled_outputs": 20,
     "nodes_compiled_interpretations": 1,
     "operators_compiled": 24,
-    "operators_compiled_local": 12,
-    "nodes_compiled_local": 10,
-    "operators_proved": 36,
-    "nodes_proved": 31,
+    "operators_compiled_local": 24,
+    "nodes_compiled_local": 22,
+    "operators_proved": 48,
+    "nodes_proved": 43,
     "upstream_declarations_referenced": 36,
     "upstream_modules_referenced": 10,
     "relations": {
       "exact_definition": 1,
       "conditional": 27,
       "conceptual": 4,
-      "local": 4
+      "local": 6
     }
   }
 }

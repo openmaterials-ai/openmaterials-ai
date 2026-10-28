@@ -29,3 +29,5 @@ public import OMAIPhyslibLatticeWitness
 public import OMAIPhyslibKappaContraction
 public import OMAIPhyslibRTAConductivity
 public import OMAIPhyslibParticipationRatio
+public import OMAIStabilityEnergies
+public import OMAICalphad
