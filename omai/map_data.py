@@ -1181,19 +1181,12 @@ if __name__ == "__main__":
     print("wrote", write_lineage())
     # The semantic layer regenerates with the map: labels are metadata over
     # live uids, so a stale semantics.json is a lie about identity.
-    from omai.physlean_export import write_export as _write_physlean
+    from omai.physlean_export import write_export as _write_lean_index
     try:
-        _p, _st = _write_physlean()
-        print("wrote", _p, "(" + str(_st["lemmas"]) + " lemmas, " + str(_st["nodes_exported"]) + " nodes)")
+        _p, _st = _write_lean_index()
+        print("wrote", _p, "(" + str(_st["nodes"]) + " nodes, " + str(_st["fields"]) + " fields)")
     except Exception as _e:
-        print("physlean export skipped:", _e)
-    from omai.lean_identities import write_identities as _write_ids
-    from omai.lean_units import write_units as _write_units
-    try:
-        _pi, _si = _write_ids(); print("wrote", _pi, "(" + str(_si["compositions"]) + " compositions)")
-        _pu, _su = _write_units(); print("wrote", _pu, "(" + str(_su["theorems"]) + " unit theorems)")
-    except Exception as _e:
-        print("lean tier2/units export skipped:", _e)
+        print("lean index skipped:", _e)
     _pc, _sc = write_conformance_index()
     print("wrote", _pc, "(" + str(_sc) + " conformance targets)")
     try:

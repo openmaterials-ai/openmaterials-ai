@@ -213,7 +213,7 @@ let VB={x:0,y:0,w:1000,h:1000}, GW=1000, GH=1000;
 // Node labels are LABEL_UNITS tall; no view scales them under 12 px.
 const LABEL_UNITS=22, MIN_SCALE=12/LABEL_UNITS, DEFAULT_SCALE=0.75;   // 16.5 px labels at rest
 let BANDS_TOP=0, lastFocus=null, lastAnchor=null, lastHits=[];
-let leanData={nodes:{},edges:{}};
+let leanData={nodes:{}};
 let formulaBindings={nodes:{},operators:{}};
 let formalData={bindings:[],inventory:{nodes:[],operators:[]}}, formalDeclarations=[];
 const FB=window.FormulaBridge;
@@ -268,7 +268,7 @@ Promise.all([
   fetch('../data/graph.json').then(r=>r.json()),
   fetch('../data/codes.json').then(r=>r.json()).catch(()=>({})),
   fetch('../data/semantics.json').then(r=>r.json()).catch(()=>[]),
-  fetch('../data/lean.json').then(r=>r.json()).catch(()=>({nodes:{},edges:{}})),
+  fetch('../data/lean.json').then(r=>r.json()).catch(()=>({nodes:{}})),
   fetch('../data/formula_bindings.json').then(r=>r.ok?r.json():null).catch(()=>null)
 ]).then(build).catch(e=> err('The map data did not load: '+e));
 
@@ -278,7 +278,7 @@ Promise.all([
 let semById={};
 
 function build([graph, codes, semantics, lean, bindings]){
-  leanData = lean || {nodes:{},edges:{}};
+  leanData = lean || {nodes:{}};
   if(bindings){ formalData=bindings; formalDeclarations=FB.declarationIndex(bindings); }
   ['nodes','operators'].forEach(kind=>{
     ((bindings&&bindings.inventory&&bindings.inventory[kind])||[]).forEach(row=>{ formulaBindings[kind][row.id]=row; });

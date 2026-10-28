@@ -1,12 +1,10 @@
 # Current Physlib bridge
 
-This independent Lean 4.35 package pins Physlib
-`9b583cb6ef6e9cc537c4d4b786b508de1abbcf42`. The historical Lean 4.31 package in
-the parent directory is unchanged and builds separately.
+This Lean 4.35 package pins Physlib `9b583cb6ef6e9cc537c4d4b786b508de1abbcf42`. It is the map's only Lean package.
 
 - `OMAIPhyslibDimensions.lean`: generated native seven-base ISQ encodings for
   every dimension-bearing catalog field, including promoted parameters. Opaque
-  dimensions are omitted. These **dimension witnesses** do not establish unit
+  dimensions are omitted. These are declarations, not theorems; they do not establish unit
   conversions, model adequacy, formula equality, or numerical-code correctness.
 - `OMAIPhyslibSemantics.lean`: scalar and isotropic thermoelectric formulas and
   harmonic closed-form consistency, under the documented model, normalization,

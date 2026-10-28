@@ -1,104 +1,57 @@
-"""The physlib export (Tier 1): the map's dimensional layer as Lean.
+"""The browser Lean index (docs/data/lean.json) mirrors the single Lean package.
 
-The generated file compiles against physlib (verified on a machine with a
-Lean toolchain via `cd lean && lake build`). CI has no toolchain, so here we
-re-verify the two things that make the generated file correct: (1) every
-node's physlib Dimension has the right shared-base exponents, and (2) every
-emitted lemma states a dimensional identity that ACTUALLY HOLDS, which is
-exactly what Lean's `decide` checks. A false lemma would fail `decide` in
-Lean; here it fails this test first. The real `lake build` against physlib is
-the remaining step, run outside CI (lean/check.sh)."""
-import re
+Every entry is a declaration that exists verbatim in
+lean/bridge/OMAIPhyslibDimensions.lean, at the bridge's one Physlib pin, and
+the published file is what the generator writes today."""
+import json
+from pathlib import Path
 
-from omai.map_data import DOMAINS
-from omai.physlean_export import (
-    _PHYSLIB_FIELD, _dimension_expr, _node_dimensions, build_dimensions_export,
-    build_export,
-)
+from omai.physlean_export import build_lean_index
+from omai.physlib_dimensions import LEAN_TOOLCHAIN, PHYSLIB_REV, dimension_records
+
+_ROOT = Path(__file__).resolve().parents[1]
 
 
-def _node_exps():
-    return {name: exps for name, (exps, _) in _node_dimensions().items()}
+def test_index_is_the_bridge_pin_and_only_node_dimensions():
+    index = build_lean_index()
+    assert set(index) == {"version", "physlib_rev", "lean_toolchain", "source", "nodes"}
+    assert index["physlib_rev"] == PHYSLIB_REV
+    assert index["lean_toolchain"] == LEAN_TOOLCHAIN
+    assert (_ROOT / "lean/bridge/lean-toolchain").read_text().strip() == LEAN_TOOLCHAIN
+    bindings = json.loads((_ROOT / "omai/data/formula_bindings.json").read_text())
+    assert bindings["upstream"]["revision"] == PHYSLIB_REV
 
 
-def test_shared_base_dimensions_translate_correctly():
-    # energy = M L^2 T^-2 -> physlib <length=2, time=-2, mass=1, charge=0, temp=0>
-    exps = _node_exps()["TotalEnergy"] if "TotalEnergy" in _node_exps() else _node_exps()["ActivationEnergy"]
-    expr = _dimension_expr(exps)
-    assert expr == "⟨2, (-2 : ℚ), 1, 0, 0⟩"
+def test_every_encoded_field_and_no_opaque_node():
+    index = build_lean_index()
+    records = dimension_records()
+    encoded = [r for r in records if r["status"] == "encoded"]
+    assert sum(len(n["fields"]) for n in index["nodes"].values()) == len(encoded)
+    for r in records:
+        if r["status"] == "opaque" and all(
+                o["status"] == "opaque" for o in records if o["node"] == r["node"]):
+            assert r["node"] not in index["nodes"]
+    trajectory = index["nodes"]["Trajectory"]
+    assert [f["field"] for f in trajectory["fields"]] == ["r", "v"]
 
 
-def test_mole_and_luminous_nodes_are_omitted_not_mangled():
-    # a molar node uses the N base physlib lacks: it must produce None, not a
-    # wrong 5-field literal.
-    exps = _node_exps().get("MolarHeatCapacity")
-    assert exps is not None
-    assert _dimension_expr(exps) is None
+def test_declarations_are_verbatim_bridge_source():
+    index = build_lean_index()
+    source = (_ROOT / index["source"]).read_text()
+    for node, entry in index["nodes"].items():
+        for block in entry["lean"].split("\ndef ")[1:] + [entry["lean"].split("\ndef ")[0]]:
+            text = block if block.startswith("def ") else "def " + block
+            assert text in source, node
+        for field in entry["fields"]:
+            name = field["declaration"].rsplit(".", 1)[1]
+            assert f"def {name} : Dimension ISQDimensionBase" in source
 
 
-def test_every_emitted_lemma_is_a_true_dimensional_identity():
-    src, stats = build_export()
-    node_exps = _node_exps()
-    # rebuild the id->name map the same way the exporter does
-    from omai.physlean_export import _lean_ident
-    ident_to_exps = {}
-    for name, exps in node_exps.items():
-        ident_to_exps[_lean_ident(name)] = exps
-
-    lemma_re = re.compile(r"theorem \S+ : (\w+) = (.+?) := by\s*$")
-    checked = 0
-    for line in src.splitlines():
-        m = lemma_re.match(line.strip())
-        if not m:
-            continue
-        target, prod = m.group(1), m.group(2)
-        factors = [f.strip() for f in prod.split("*")]
-        acc = [0] * len(node_exps[next(iter(node_exps))] and list(ident_to_exps.values())[0])
-        for f in factors:
-            fe = ident_to_exps[f]
-            acc = [a + b for a, b in zip(acc, fe)]
-        assert tuple(acc) == tuple(ident_to_exps[target]), \
-            f"lemma would FAIL decide: {target} != product of {factors}"
-        checked += 1
-    assert checked == stats["lemmas"] and checked >= 1
+def test_bridge_dimensions_restate_nothing():
+    source = (_ROOT / "lean/bridge/OMAIPhyslibDimensions.lean").read_text()
+    assert "theorem" not in source and "decide" not in source
 
 
-def test_export_pins_the_map_version():
-    src, stats = build_export()
-    assert stats["map_version"] and stats["map_version"] in src
-    assert stats["nodes_exported"] > 50
-    assert stats["nodes_omitted"] >= 1  # the boundary is real
-
-
-def test_seven_base_module_covers_exactly_the_omitted_nodes():
-    # every node the physlib bridge omits gets a Dimension7 constant, with the
-    # full seven-exponent vector, in the Mathlib-only companion module.
-    from omai.physlean_export import _dim7_expr, _lean_ident
-    src, stats = build_dimensions_export()
-    omitted = {name: exps for name, (exps, expr) in _node_dimensions().items()
-               if expr is None}
-    assert stats["nodes"] == len(omitted) >= 1
-    for name, exps in omitted.items():
-        line = f"def {_lean_ident(name)} : Dimension7 := {_dim7_expr(exps)}"
-        assert line in src, f"omitted node {name} missing from Dimension7 module"
-
-
-def test_every_seven_base_lemma_is_a_true_dimensional_identity():
-    from omai.physlean_export import _lean_ident
-    src, stats = build_dimensions_export()
-    ident_to_exps = {_lean_ident(n): e for n, e in _node_exps().items()}
-    lemma_re = re.compile(r"theorem \S+ : (\w+) = (.+?) := by\s*$")
-    checked = 0
-    for line in src.splitlines():
-        m = lemma_re.match(line.strip())
-        if not m:
-            continue
-        target, prod = m.group(1), m.group(2)
-        factors = [f.strip() for f in prod.split("*")]
-        acc = [0] * 7
-        for f in factors:
-            acc = [a + b for a, b in zip(acc, ident_to_exps[f])]
-        assert tuple(acc) == tuple(ident_to_exps[target]), \
-            f"Dimension7 lemma would FAIL: {target} != product of {factors}"
-        checked += 1
-    assert checked == stats["lemmas"] and checked >= 1
+def test_published_index_is_current():
+    published = json.loads((_ROOT / "docs/data/lean.json").read_text())
+    assert published == json.loads(json.dumps(build_lean_index()))

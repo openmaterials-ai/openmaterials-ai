@@ -44,11 +44,11 @@
     <nav class="toc gtoc" aria-label="Contents">
       <a href="#coverage">Coverage</a><a href="#inventory">OMAI inventory</a><a href="#upstream-inventory">Physlib declarations</a>
       <a href="#analytic">Harmonic ensemble proofs</a><a href="#response">Cp response</a><a href="#gruneisen">Thermal Gr&uuml;neisen</a><a href="#scope">Evidence and scope</a><a href="#reproduce">Reproduce</a>
-      <a href="../">Historical verified layer</a>
+      <a href="../">Lean overview</a>
     </nav>
     <article class="prose gwrap">
       <p><a href="https://physlib.io/">Physlib</a> combines the former PhysLean and Lean-QuantumInfo libraries. This bridge uses Physlib <a id="upstream" href="https://github.com/leanprover-community/physlib/tree/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42"><code>9b583cb6ef6e9</code></a>, on Lean 4.35.0.
-        Its dependency pin is separate from the <a href="../">historical Lean 4.31.0 package</a>.
+        It is the map's only Lean package; the <a href="../">Lean overview</a> lists its node dimensions.
         The source inventory includes every OMAI quantity and operator, including operators without input links.</p>
       <p class="notice gnote">Mapped does not mean proved. Exact-definition, conditional, and conceptual correspondences describe the relation to upstream;
         source correspondence versus compiled bridge describes the evidence. A general Physlib theorem is not automatically a theorem about an OMAI model.</p>
@@ -183,7 +183,7 @@
         <h2>Reproduce and inspect</h2>
         <p>The <a href="../../data/formula_bindings.json">machine-readable inventory</a> is generated from the reviewed mapping records shipped with OMAI and its existing scientific identities.
           <a href="https://github.com/openmaterials-ai/openmaterials-ai/tree/27f71197ccfac0bbfed535a4376e941113bb567b/lean/bridge">Reviewed Lean source and build instructions</a>
-          are separate from the retained historical package.</p>
+          are in <code>lean/bridge</code>.</p>
         <pre class="formula-source">python -m omai.formula_bindings --check
 python -m omai.formula_bindings --check --physlib-path /path/to/pinned/physlib
 bash lean/bridge/check.sh

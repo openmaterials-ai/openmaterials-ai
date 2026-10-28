@@ -84,7 +84,7 @@ def test_no_page_is_headerless():
 def test_footer_links_codes_and_lean():
     footer = re.search(r"var FOOTER = \[(.*?)\];", SITE_JS, re.S).group(1)
     assert "['Codes', 'codes/']" in footer
-    assert "['Verified layer', 'lean/']" in footer
+    assert "['Lean', 'lean/']" in footer
 
 
 def test_map_supports_the_code_hash_filter():

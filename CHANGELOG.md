@@ -7,6 +7,24 @@ id.
 
 ## Unreleased
 
+- One Lean package. The Lean 4.31 package in `lean/` (pinned to Physlib
+  a74414af) is removed, with its generators `omai.lean_identities` and
+  `omai.lean_units` and the `lean.yml` workflow. It held five-base node
+  dimensions, 13 edge-dimension equalities and 18 theorems that restated
+  closed-form formulas (from `Y = N/D` conclude `Y*D = N`), none of which
+  certified anything about the physics. `lean/bridge` is the only package.
+  Its generated `OMAIPhyslibDimensions.lean` keeps every dimension
+  definition and drops the 126 `_exponents` theorems that restated them.
+- `docs/data/lean.json` now lists each node's Physlib seven-base ISQ
+  declarations from `lean/bridge` (`nodes[id].lean` and `nodes[id].fields`)
+  with `physlib_rev` and `lean_toolchain`; the `edges` and `identities` keys
+  are gone. 124 nodes have an entry, up from 102.
+- `docs/data/lean_roadmap.json` rates formulas as `definition`, `hard` or
+  `na`; `easy` and `trivial` merge into `definition`. `proven` now means a
+  compiled formula bridge proves a statement about the operator. The Bose-
+  Einstein occupation, Dirac delta and Heaviside step count as special
+  functions, not code outputs. No id changes.
+
 - `docs/data/releases/openmaterials-ai.json` registers 0.4.0 (tag v0.4.0), so
   `release_check` resolves an `execution.registry` row naming
   `openmaterials-ai` 0.4.0 against the live registry. The 0.4.0 wheel's

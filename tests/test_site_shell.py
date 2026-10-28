@@ -167,8 +167,9 @@ def test_the_home_static_text_equals_the_data():
     for el_id, want in expect.items():
         got = re.search(r'id="%s">([^<]*)<' % el_id, HOME)
         assert got and got.group(1) == want, f"#{el_id}: {got and got.group(1)!r} != {want!r}"
-    binds = {"codes": len(codes), "lean-nodes": len(lean["nodes"]), "lean-edges": len(lean["edges"]),
-             "lean-idents": len(lean["identities"]), "version12": ver["version"][:12],
+    bindings = _data("formula_bindings.json")
+    binds = {"codes": len(codes), "lean-nodes": len(lean["nodes"]),
+             "lean-ops": bindings["coverage"]["operators_compiled"], "version12": ver["version"][:12],
              "n-nodes": len(g["nodes"]), "n-values": len(inst), "n-meas": kinds.count("measurement")}
     for bind, want in binds.items():
         got = re.findall(r'data-bind="%s">([^<]*)<' % bind, HOME)

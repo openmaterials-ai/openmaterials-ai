@@ -16,7 +16,7 @@ numerical arrays and cross-check two inputs at a gauge-invariant observable
 in docs/data/semantics.json) maps a method name as a paper or a language model
 writes it, such as "quasi-harmonic approximation", to typed, content-addressed
 node ids. An agent that resolves a phrase this way gets the node's formula, its
-Lean dimensional proof where one exists, the codes that produce it with their
+Lean dimension and any compiled formula proof, the codes that produce it with their
 citations, and the values attached to it with their provenance. OpenMaterials is
 stewarded by OpenMaterials-AI, a foundation in formation.
 
@@ -193,30 +193,13 @@ view (what the container holds: every lineage field, a value-and-units table, wh
 the output node means on the map, where the data lives, and a plain link to run
 it as a simulation on MaterialsCodeGraph). Every page has a copy-link control.
 
-## The verified layer (Lean 4)
+## The Lean layer (Lean 4)
 
-[![Lean proof check](https://github.com/openmaterials-ai/openmaterials-ai/actions/workflows/lean.yml/badge.svg)](https://github.com/openmaterials-ai/openmaterials-ai/actions/workflows/lean.yml)
+[![Physlib bridge check](https://github.com/openmaterials-ai/openmaterials-ai/actions/workflows/physlib-bridge.yml/badge.svg)](https://github.com/openmaterials-ai/openmaterials-ai/actions/workflows/physlib-bridge.yml)
 
-The map's dimensional structure and its rational identities are proven in
-Lean 4: every exported node is a physics dimension checked against
-[physlib](https://github.com/leanprover-community/physlib) (the community
-Lean 4 physics library, pinned by rev on toolchain 4.31.0), and every
-mechanically provable operator identity is a real-valued theorem checked
-against Mathlib. `lean/` is a standalone lake package; `cd lean && lake exe
-cache get && lake build` reproduces the proof, and CI recompiles it on every
-change with warnings promoted to errors. The
-[verified layer](https://openmaterials.ai/lean/) page renders what is proven
-with coverage counts from the published export, and the
-[formalization roadmap](https://openmaterials.ai/lean/roadmap/) rates every
-operator on the map by what a proof of its formula would take, from
-generator-provable algebra to the open analysis frontier (Brillouin-zone
-sums, correlation integrals). A hand-reviewed
-[historical crosswalk](https://openmaterials.ai/data/physlib_crosswalk.json)
-preserves source correspondences at the old dependency pin. Its `exact` labels
-do not establish model-specific equivalence, particularly for per-mode phonon
-quantities versus generic ensemble definitions.
+The map's Lean layer is one lake package, `lean/bridge/`, pinned to one [Physlib](https://github.com/leanprover-community/physlib) revision on Lean 4.35.0. Every node with dimensional content is a Physlib seven-base ISQ `Dimension`, and the compiled formula bridges prove conditional theorems about the map's formulas. `cd lean/bridge && lake exe cache get && lake build --wfail` reproduces the build, and CI rebuilds it on every change to the package or its generators. Closed-form formulas are not restated as theorems: concluding `Y*D = N` from `Y = N/D` certifies nothing, so the package holds no such statements. The [Lean page](https://openmaterials.ai/lean/) renders the coverage, and the [formalization roadmap](https://openmaterials.ai/lean/roadmap/) rates every operator on the map by what a theorem about its formula would take, from closed-form definitions to the open analysis frontier (Brillouin-zone sums, correlation integrals). A hand-reviewed [historical crosswalk](https://openmaterials.ai/data/physlib_crosswalk.json) preserves source correspondences at an earlier Physlib revision. Its `exact` labels do not establish model-specific equivalence, particularly for per-mode phonon quantities versus generic ensemble definitions.
 
-The [current formula bridge](https://openmaterials.ai/lean/bridge/) lists every
+The [formula bridge](https://openmaterials.ai/lean/bridge/) lists every
 quantity and operator, including those with no established correspondence.
 Each mapping records the scientific identity, formula fingerprint, pinned Physlib
 declarations, model, units, normalization, hypotheses, and remaining proof
@@ -249,9 +232,7 @@ quantities and operators to upstream declarations and back. The Python APIs
 formula outputs, standalone quantity interpretations, and associated inputs;
 reverse lookup does not assert a mathematical inverse.
 
-`lean/bridge/` uses Physlib's seven-base ISQ dimension system with its own pinned
-build. The historical `lean/` package is unchanged. These proofs do not validate
-numerical implementations or justify converting arbitrary tensors to scalars.
+These proofs do not validate numerical implementations or justify converting arbitrary tensors to scalars.
 
 ## A slice of the map, as Mermaid
 

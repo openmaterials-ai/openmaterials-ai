@@ -507,7 +507,7 @@ var SVGNS = 'http://www.w3.org/2000/svg';
 // scrolls jump instead of glide under reduced motion
 var SCROLL = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
 
-var GRAPH = null, SEM = [], LEAN = {nodes:{},edges:{}}, semById = {}, nodeById = {}, children = {}, parents = {}, symHtml = {};
+var GRAPH = null, SEM = [], LEAN = {nodes:{}}, semById = {}, nodeById = {}, children = {}, parents = {}, symHtml = {};
 var catalogById = {};   // node id -> {id, symbol, description}: the plain-language names for the lineage view
 var INSTANCE_IDS = null; // Set of committed lineage ids: the badge's committed test
 var codesByNode = {};   // node id -> [{code, api, url}]: which codes compute the quantity
@@ -526,7 +526,7 @@ var mapReady = Promise.all([
   fetch('../data/graph.json').then(function(r){ return r.json(); }),
   fetch('../data/semantics.json').then(function(r){ return r.json(); }).catch(function(){ return []; }),
   fetch('../data/version.json').then(function(r){ return r.json(); }).catch(function(){ return null; }),
-  fetch('../data/lean.json').then(function(r){ return r.json(); }).catch(function(){ return {nodes:{},edges:{}}; }),
+  fetch('../data/lean.json').then(function(r){ return r.json(); }).catch(function(){ return {nodes:{}}; }),
   fetch('../data/catalog.json').then(function(r){ return r.json(); }).catch(function(){ return []; }),
   fetch('../data/configurations.json').then(function(r){ return r.json(); }).catch(function(){ return null; }),
   fetch('../data/codes.json').then(function(r){ return r.json(); }).catch(function(){ return {}; }),
@@ -539,7 +539,7 @@ var mapReady = Promise.all([
 ]).then(function(res){
   GRAPH = res[0]; SEM = res[1] || [];
   if (res[2] && res[2].version) window.__MAP_VERSION__ = res[2].version;
-  LEAN = res[3] || {nodes:{},edges:{}};
+  LEAN = res[3] || {nodes:{}};
   (res[4] || []).forEach(function(n){ if (n && n.id) catalogById[n.id] = n; });
   configByUid = indexConfigurations(res[5]);
   // codes.json: code -> {node id -> {api, url, ...}}; invert to node -> codes
@@ -2328,22 +2328,6 @@ function renderMapView(view){
   box.innerHTML = note + '<div class="lin-lab">' + valid.length + (valid.length === 1 ? ' edge' : ' edges') + ' rendered</div><div class="lin-diagram">' +
     valid.map(function(tr){
       return '<div class="lin-row"><span class="lin-n hot">' + esc(tr[0]) + '</span><span class="lin-op">' + esc(opName(tr[1])) + ' &rarr;</span><span class="lin-n hot">' + esc(tr[2]) + '</span></div>'; }).join('') + '</div>';
-  // any Lean theorems that cover the rendered edges: the dimension proofs, and
-  // the algebraic composition proofs (Tier 2) where an identity chains.
-  var thms = {};
-  valid.forEach(function(tr){ var lv = LEAN.edges && LEAN.edges[tr[1]]; if (lv) thms[tr[1]] = lv.lean; });
-  var thmKeys = Object.keys(thms);
-  if (thmKeys.length) {
-    box.innerHTML += '<div class="lin-lab"><span class="lean-badge">Proven in Lean</span></div><pre class="lin-code">' +
-      thmKeys.map(function(k){ return esc(thms[k]); }).join('\n') + '</pre>';
-  }
-  var ids = {};
-  valid.forEach(function(tr){ var iv = LEAN.identities && LEAN.identities[tr[1]]; if (iv) ids[tr[1]] = iv.lean; });
-  var idKeys = Object.keys(ids);
-  if (idKeys.length) {
-    box.innerHTML += '<div class="lin-lab"><span class="lean-badge">Algebraic identity, proven in Lean</span></div><pre class="lin-code">' +
-      idKeys.map(function(k){ return esc(ids[k]); }).join('\n\n') + '</pre>';
-  }
   renderSubmap(mv.nodes, mv.eops);
 }
 function currentMapViewJSON(){

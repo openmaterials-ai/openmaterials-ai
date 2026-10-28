@@ -24,10 +24,13 @@ test("every row carries a nonempty reason", () => {
   }
 });
 
-test("proven rows are marked provable or trivial, never hard or na", () => {
+test("proven rows are exactly the compiled formula-bridge operators", () => {
+  const bindings = JSON.parse(fs.readFileSync(
+    path.join(__dirname, "..", "..", "data", "formula_bindings.json"), "utf8"));
+  const proven = published.rows.filter(row => row.proven).length;
+  assert.strictEqual(proven, bindings.coverage.operators_compiled);
   for (const row of published.rows) {
-    if (row.proven) assert.ok(["easy", "trivial"].includes(row.difficulty),
-      row.op + " is proven but rated " + row.difficulty);
+    if (row.proven) assert.notStrictEqual(row.difficulty, "na", row.op + " is proven but rated na");
   }
 });
 

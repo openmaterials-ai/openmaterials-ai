@@ -277,8 +277,8 @@ contact that sets it), and a cure-kinetics domain (the degree of cure and glass
 transition of a thermoset); the unified map of
 129 quantities and 127 operators is content-addressed in the log-first store
 (Part~\ref{part:kernel}), grown past its frozen genesis version through the
-contribution gates. Its dimensional layer is proven in Lean~4 against physlib
-and recompiled in CI on every change to the map or its generators, its evidence carries pinned conformance
+contribution gates. Its node dimensions and its compiled formula proofs live in one Lean~4 package
+pinned to one Physlib revision and rebuilt in CI on every change to the package or its generators, its evidence carries pinned conformance
 targets a re-run must reproduce, and the whole is held together by a suite of
 over 2,300 passing tests.
 
@@ -866,7 +866,7 @@ index.
   \item The version badge, a repository's statement of the map version it
   used: openmaterials.ai/badge/\textless{}version\textgreater{}.svg (the
   current version lives at /badge.svg).
-  \item The verified layer and its roadmap, live: \texttt{docs/lean/}
+  \item The Lean layer and its roadmap, live: \texttt{docs/lean/}
   (openmaterials.ai/lean and /lean/roadmap/).
   \item This document, browsable with a PDF download:
   \texttt{docs/document/} (openmaterials.ai/document).
@@ -2455,7 +2455,7 @@ We have committed to Python for Sprint 1. The trade-offs were:
         framework iteration to be cheap.
   \item \emph{Lean.} Not the right tool for running scientific computations;
         reserved as a verification target, a reservation since cashed in: the
-        verified layer of Part~\ref{part:status} compiles today.
+        Lean layer of Part~\ref{part:status} compiles today.
 \end{itemize}
 
 \section{Outlook}
@@ -2489,35 +2489,22 @@ Four longer-term directions follow naturally from the design:
         approximation theorems to be formally proved rather than asserted. The
         provenance mechanism makes this projection well-defined: each operation in $\pi$
         corresponds to a Lean lemma whose statement is the operation's error formula.
-        The first tiers are built, verified, and CI-gated (2026-07-17): \texttt{lean/}
-        is a standalone lake package on Lean~4.31.0 depending on physlib, the
-        community Lean~4 physics library, pinned by revision. Tier~1 declares every
-        exported node as a physics \texttt{Dimension} and proves one theorem per
-        verified executable edge: 102 nodes and 12 edge theorems compile against
-        physlib's five bases, and a generated seven-base extension adds the
-        amount-of-substance, current, and luminous-intensity quantities, so 121 of
-        the map's 129 nodes carry a machine-checked dimension. Of the eight left
-        out, five (\texttt{Structure}, \texttt{Potential}, and the opaque
-        autocorrelation kinds) have no dimensional content to prove; three
-        (\texttt{CellVolume}, \texttt{AtomicMass}, \texttt{AtomCount}) have
-        dimensions the exporter does not yet walk, generator work, not proof
-        work. Tier~2
-        states the map's executable identities as real-valued theorems against
-        Mathlib, 18 in all: composition theorems that substitute an upstream identity
-        into a downstream one and prove the chained form equals the flat form, and
-        law theorems for standalone rational operators; a units file proves a
-        declared SI-to-SI scale identity, not that every stored canonical number
-        is expressed in SI. A CI gate recompiles the full proof on every pull
-        request that touches the map or the generators, with warnings promoted to
-        errors, so the verified badge is the live state of the claim. A public
-        formalization roadmap rates all 127 operators by what a proof of the formula
-        would take (17 rational identities closed by the generator, 51 needing real
-        analysis, 19 trivially reflexive, 40 opaque code outputs with nothing
-        algebraic to prove), and a historical hand-reviewed crosswalk links map
-        nodes to Physlib source declarations. Its conceptual correspondences,
-        including legacy ``exact'' labels, are not proofs of model equivalence.
-        These counts and build evidence describe the retained dependency pin,
-        not current upstream Physlib. The
+        The map's Lean layer is one lake package, \texttt{lean/bridge/}, pinned to
+        one Physlib revision and one toolchain. It declares the dimension of each of
+        the 124 map nodes with dimensional content as a Physlib seven-base
+        \texttt{Dimension}; the five opaque nodes (\texttt{Structure},
+        \texttt{Potential}, \texttt{AssessedDatabase} and the two autocorrelation
+        kinds) have none. Its formula theorems are described below. Closed-form
+        formulas are not restated as theorems: concluding $YD = N$ from the
+        hypothesis $Y = N/D$ certifies nothing about the physics. An earlier package
+        on a separate Physlib pin, which held 18 such restatements and 13 dimension
+        coincidences, was retired on 2026-10-28. A public formalization roadmap rates
+        all 127 operators by what a theorem about the formula would take (36
+        closed-form definitions, 52 needing analysis, 39 external code outputs with
+        nothing algebraic to prove) and marks those with a compiled proof. A
+        historical hand-reviewed crosswalk links map nodes to Physlib source
+        declarations at an earlier revision. Its conceptual correspondences,
+        including legacy ``exact'' labels, are not proofs of model equivalence. The
         approximation-error theorems remain future work.
   \item \textbf{Theory-experiment integration.} Extend the representation functor to ingest
         experimental observables. The operator layer's graph-alignment machinery applies uniformly,
@@ -2540,10 +2527,9 @@ Four longer-term directions follow naturally from the design:
 
 \paragraph{Current formula bridge.}
 The \texttt{lean/bridge/} package targets Physlib revision
-\texttt{9b583cb6ef6e9cc537c4d4b786b508de1abbcf42} on Lean~4.35.0,
-independently of the historical package above. It uses the upstream
-seven-base \texttt{ISQDimensionBase}; current Physlib no longer needs an
-OMAI-specific extension to represent amount of substance or luminous intensity.
+\texttt{9b583cb6ef6e9cc537c4d4b786b508de1abbcf42} on Lean~4.35.0.
+It uses the upstream seven-base \texttt{ISQDimensionBase}, so no OMAI-specific
+extension is needed to represent amount of substance or luminous intensity.
 The mapping names each basis to preserve OMAI's dimension order and treats
 electric current as a base, with charge derived as current times time.
 The \href{https://openmaterials.ai/lean/bridge/}{formula-bridge inventory}
@@ -3298,14 +3284,12 @@ numbers:
         each a density in frequency), the ten analog-device-metrology
         closed forms, the NEMD interface conductance and the two cure-kinetics
         edges.
-  \item \textbf{Verified layer.} 102 nodes and 12 edge theorems compile against
-        physlib (Lean~4.31.0, pinned by revision), the generated seven-base
-        extension lifts dimensional coverage to 121 of 129 nodes (five of the
-        eight remaining are opaque by design; three await exporter coverage),
-        and 18 identity theorems check against
-        Mathlib; a CI gate recompiles the proof on every relevant pull request
+  \item \textbf{Lean layer.} One package at one Physlib pin (Lean~4.35.0)
+        declares the dimension of 124 of the 129 nodes (the other five are
+        opaque by design) and proves conditional theorems about 15 of the 127
+        operator formulas; a CI gate rebuilds it on every relevant pull request
         with warnings promoted to errors. The formalization roadmap page rates
-        every operator by what proving its formula would take.
+        every operator by what a theorem about its formula would take.
   \item \textbf{Tests.} The suite has over 2,300 passing tests.
 \end{itemize}
 

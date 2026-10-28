@@ -127,8 +127,8 @@
         <dl class="ledger">
           <div><dt><a href="agreement/">Cross-code agreement</a></dt><dd>Values of one quantity from different methods or codes, with the spread of each group.</dd></div>
           <div><dt><a href="lineage/">Lineage tour</a></dt><dd>One QHGK thermal conductivity result for amorphous silicon, from its derivation on the map to its lineage record.</dd></div>
-          <div><dt><a href="lean/">Verified layer</a></dt><dd>Dimensions of <span data-bind="lean-nodes">102</span> nodes declared in Lean 4, with <span data-bind="lean-edges">12</span> edge dimension statements proven against physlib and <span data-bind="lean-idents">18</span> operator identities against Mathlib.</dd></div>
-          <div><dt><a href="lean/roadmap/">Formalization roadmap</a></dt><dd>Every operator on the map, rated by what a Lean proof of its formula would take: provable, trivial, needs analysis, or nothing to prove.</dd></div>
+          <div><dt><a href="lean/">Lean</a></dt><dd><span data-bind="lean-ops">15</span> operator formulas carry a compiled Lean proof against Physlib under stated conditions, and <span data-bind="lean-nodes">124</span> node dimensions are declared, in one package at one pinned Physlib revision.</dd></div>
+          <div><dt><a href="lean/roadmap/">Formalization roadmap</a></dt><dd>Every operator on the map, rated by what a Lean theorem about its formula would take: a closed-form definition, a formula that needs analysis, or an external code output with nothing to prove.</dd></div>
         </dl>
       </div>
       <div>
@@ -282,11 +282,8 @@
     put('[data-bind="n-meas"]', count(v, kind('measurement')));
     figure1(v);
   }).catch(skip);
-  get('data/lean.json').then(function (l) {
-    put('[data-bind="lean-nodes"]', Object.keys(l.nodes).length);
-    put('[data-bind="lean-edges"]', Object.keys(l.edges).length);
-    put('[data-bind="lean-idents"]', Object.keys(l.identities).length);
-  }).catch(skip);
+  get('data/lean.json').then(function (l) { put('[data-bind="lean-nodes"]', Object.keys(l.nodes).length); }).catch(skip);
+  get('data/formula_bindings.json').then(function (b) { put('[data-bind="lean-ops"]', b.coverage.operators_compiled); }).catch(skip);
   get('data/version.json').then(function (v) { put('[data-bind="version12"]', String(v.version).slice(0, 12)); }).catch(skip);
   /* Fig. 1: crystalline silicon's thermal conductivity between 270 and 310 K, one dot per value,
      on a log axis, grouped by where the value comes from. Each dot opens its datasheet. */
