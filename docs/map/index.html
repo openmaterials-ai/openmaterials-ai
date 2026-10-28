@@ -217,7 +217,10 @@ const HAS_DAGRE = (typeof dagre!=='undefined');
 
 let VB={x:0,y:0,w:1000,h:1000}, GW=1000, GH=1000;
 // Node labels are LABEL_UNITS tall; no view scales them under 12 px.
-const LABEL_UNITS=22, MIN_SCALE=12/LABEL_UNITS, DEFAULT_SCALE=0.75;   // 16.5 px labels at rest
+// ?embed=1 draws the canvas alone (the code pages frame it); the hash still picks the code or node
+const EMBED=new URLSearchParams(location.search).get('embed')==='1';
+// Node labels are LABEL_UNITS tall; no view scales them under 12 px, or 7 px in an embed, where the whole lit subgraph has to fit a 480 px frame
+const LABEL_UNITS=22, MIN_SCALE=(EMBED?7:12)/LABEL_UNITS, DEFAULT_SCALE=0.75;   // 16.5 px labels at rest
 let BANDS_TOP=0, lastFocus=null, lastAnchor=null, lastHits=[];
 let leanData={nodes:{},edges:{}};
 let formulaBindings={nodes:{},operators:{}};
@@ -681,8 +684,7 @@ document.getElementById('copylink').addEventListener('click', function(){
   else{ window.prompt('Copy this link:',url); }
 });
 
-// ---- embed mode: ?embed=1 draws the canvas alone (the code pages frame it); the hash still picks the code or node
-const EMBED=new URLSearchParams(location.search).get('embed')==='1';
+// ---- embed mode (EMBED is read in the shared section, before the label floor is set)
 if(EMBED){ document.body.classList.add('embed'); document.getElementById('embedOut').href=location.pathname+location.hash; }
 function embedSnippet(){
   const u=new URL(location.href); u.searchParams.set('embed','1');

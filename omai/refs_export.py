@@ -36,9 +36,30 @@ CURATED = {
     "xtb": {"methods": ["10.1021/acs.jctc.9b00143"]},  # xtb's own metadynamics on GFN2-xTB (Grimme 2019); CREST is a separate program and stays out
     "plumed": {"applications": ["10.1103/PhysRevLett.104.190601", "10.1073/pnas.1303186110", "10.1103/PhysRevLett.111.230602", "10.1073/pnas.1811056115"]},  # well-tempered ensemble; funnel metadynamics; infrequent metadynamics; polymorph prediction
     "i-pi": {"applications": ["10.1063/1.4883861", "10.1063/1.4971438", "10.1073/pnas.1815117116"]},  # TRPMD; high-order PIMD; ab initio water thermodynamics
+    "mp-api": {"applications": ["10.1126/sciadv.1600225", "10.1126/sciadv.aaq0148", "10.1038/s41524-020-00362-y"]},  # metastability scale; synthesis limit; stability predictions, all on Materials Project data
+    "pymatgen-analysis-diffusion": {"applications": ["10.1021/acs.chemmater.5b04013", "10.1038/ncomms15893"]},  # Na3PS4 conductivity; origin of fast ion diffusion (Mo group, pymatgen diffusion analysis)
+    "rxn-network": {"applications": ["10.1002/adma.202100312", "10.1038/s44160-023-00424-1"]},  # pairwise reactions in ceramic synthesis; robotic synthesis guided by phase diagrams
 }
-EXCLUDE_APPLICATIONS_REVIEWS = {
+EXCLUDE_APPLICATIONS_REVIEWS = {  # reviews, perspectives and overviews that cite a code without using it
     "10.1016/j.neuron.2018.08.011": "review (Molecular Dynamics Simulation for All), not an OpenMM study",
+    "10.1002/aenm.201800035": "review of solid electrolyte design strategies (Park 2018)",
+    "10.1038/s41578-019-0157-5": "review of interface stability in solid-state batteries (Xiao 2019)",
+    "10.1016/j.esci.2022.02.008": "review of solid-state lithium batteries (Guo 2022)",
+    "10.1007/s10853-022-06915-4": "review of computational synthesis prediction (Bartel 2022)",
+    "10.1021/acs.chemrev.1c00637": "review of solid-state reaction synthesis (Kumar 2022)",
+    "10.1021/acs.chemrev.4c00055": "review of self-driving laboratories (Tom 2024)",
+    "10.1038/s41563-025-02272-0": "Materials Project overview, cites many codes (Horton 2025)",
+    "10.1021/acsnano.5c04200": "review of AI for materials discovery (Madika 2025)",
+    "10.1016/j.matt.2025.102138": "review of AI for catalyst design (Zhang 2025)",
+    "10.1038/s41563-025-02403-7": "review of AI-driven materials design (Cheng 2026)",
+    "10.1038/s41586-025-09269-4": "hydrogel design paper, a passing citation (Liao 2025)",
+    "10.1038/s41524-024-01443-y": "a competing generative model (Luo 2024)",
+    "10.1016/j.matt.2024.05.017": "perspective on generative models (Park 2024)",
+    "10.1016/j.cocom.2025.e01139": "review of machine learning materials discovery (Nematov 2025)",
+    "10.1002/aenm.202403876": "review of machine learning multiscale design (Mortazavi 2025)",
+    "10.1080/09506608.2019.1709354": "review of additive manufacturing (Reichardt 2021)",
+    "10.1016/j.mser.2021.100645": "review of high-entropy alloy studies (Huang 2022)",
+    "10.1038/s41563-025-02272-0": "Materials Project overview, cites many codes (Horton 2025)",
 }
 # Never exported as an application: a paper that cites the code but is another tool's software or
 # method paper, a dataset, or a review, found in the 2026-10-28 physics review. Kept here rather
