@@ -12,6 +12,11 @@ id.
   `openmaterials-ai` 0.4.0 against the live registry. The 0.4.0 wheel's
   bundled registry predates the tag and still reports it unregistered. No id
   changes.
+- The `ngspice` representation (the ngspice circuit simulator) maps
+  `ConductanceState` and `DotProductError`, and
+  `docs/data/releases/ngspice.json` registers ngspice-47 (version `47`), so
+  a registry row naming `ngspice` 47 resolves. The representation count moves
+  from 33 to 34. No node, edge or id changes.
 - The map gains PotentialEnergyFitError, PotentialForceFitError and
   PotentialVirialFitError (dft_ground_state) and
   PotentialUncertaintyExceedance[method=committee_force_spread]

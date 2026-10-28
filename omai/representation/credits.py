@@ -423,6 +423,37 @@ CODE_CREDITS: dict[str, dict] = {
         "citation from AtomisticSkills/README.md",
         "url": "https://github.com/learningmatter-mit/AtomisticSkills",
     },
+    # --- circuit simulation --------------------------------------------------
+    "ngspice": {
+        "name": "ngspice",
+        # The project states no citation request (web site, README, manual);
+        # the user's manual of the registered release is the reference, as
+        # its title page reads. No DOI exists (DataCite and Crossref searched
+        # 2026-10-28).
+        "citation": "H. Vogt, G. Atkinson, D. Warning, P. Nenzi, Ngspice "
+        "User's Manual, Version 47 (ngspice release version), 11 August 2026, "
+        "https://ngspice.sourceforge.io/docs.html",
+        "doi": None,
+        # The executable of a default build (configure defaults: XSPICE, OSDI
+        # and KLU on; CIDER, tclspice and NDEV off), as COPYING assigns its parts.
+        "license": "BSD-3-Clause AND LGPL-2.0-or-later AND LGPL-2.1-or-later "
+        "AND MPL-2.0 AND GPL-2.0-or-later AND LicenseRef-ngspice-sparse",
+        "license_source": "ngspice-47.tar.gz (sha256 894e6496...675f) and git tag "
+        "ngspice-47 (a80f6e3e), COPYING read 2026-10-28: 'Modified BSD' for all "
+        "source except: src/frontend/numparam LGPLv2 or newer (file headers: "
+        "LGPL version 2 or later); src/maths/KLU LGPLv2 (COPYING appends the "
+        "LGPL 2.1 text; colamd*.c state LGPL 2.1 or later, the klu*, btf* and "
+        "amd* files carry no notice of their own, so LGPL-2.1-or-later for KLU "
+        "is inferred from COPYING and the appended text); src/osdi MPLv2.0; "
+        "src/xspice public domain except src/xspice/icm/table GPLv2 or newer "
+        "(table.cm, loaded by the default spinit); src/maths/sparse an "
+        "unnamed permissive notice (Kundert and the University of California: "
+        "use, copy, modify and distribute with copyright notices retained and "
+        "credit given), here LicenseRef-ngspice-sparse. Not in a default build: "
+        "src/tclspice.c (LGPLv2), src/spicelib/devices/ndev (public domain). "
+        "The manual is CC-BY-SA-4.0",
+        "url": "https://ngspice.sourceforge.io",
+    },
     # --- foundation library --------------------------------------------------
     "ase": {
         "name": "ASE",

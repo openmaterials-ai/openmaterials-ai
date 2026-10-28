@@ -10,7 +10,8 @@ domain's MigrationBarrier; biased conductance and interface-trap relaxation;
 and benchmark-qualified classification accuracy from a conductance response
 family. The domain
 is definitional: it holds the quantities and the closed forms that relate them.
-No code representation attaches yet; two measured work functions do.
+The ngspice representation attaches to ConductanceState and DotProductError;
+two measured work functions attach as values.
 
 Node ids are plain names, except where a label changes the quantity: the
 electron Schottky barrier is SchottkyBarrierHeight[band_carrier=electron] (the hole
