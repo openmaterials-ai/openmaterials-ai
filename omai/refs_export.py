@@ -1,8 +1,9 @@
 """Export the per-code reference lists from a Zotero library into docs/data/references/<key>.json.
 
 The curated lists live in Zotero as ``MCG codes / <key>`` with subcollections ``<key> code``,
-``<key> methods`` and ``<key> applications`` (case-insensitive). Each entry keeps what a reader
-needs to find and cite the paper: DOI, title, authors, year, journal. The JSON is committed, so
+``<key> methods`` and ``<key> applications`` (case-insensitive). Zotero supplies the membership;
+every entry's title, authors, year and journal come from the doi.org registry record (CSL JSON),
+with the Zotero copy as the fallback when the registry is unreachable. The JSON is committed, so
 the site builds without Zotero; rerun this when the collections change.
 
 Run as::
@@ -18,6 +19,7 @@ import argparse
 import json
 import shutil
 import sqlite3
+import sys
 import tempfile
 from pathlib import Path
 
@@ -116,6 +118,13 @@ def _authors(db: sqlite3.Connection, item_id: int) -> list[str]:
     return out
 
 
+def _clean_title(title: str) -> str:
+    """Registry titles carry MathML and HTML; em and en dashes become colon and hyphen, the site's house style."""
+    import re
+    t = re.sub(r"<[^>]+>", " ", title)
+    return " ".join(t.replace(chr(0x2014), ": ").replace(chr(0x2013), "-").replace(" :", ":").split())
+
+
 def _entry_from_doi(db: sqlite3.Connection, doi: str, prefer_registry: bool = False) -> dict | None:
     """The Zotero item with this DOI, or the doi.org CSL record when the library lacks it (or when asked)."""
     row = None if prefer_registry else db.execute(
@@ -133,8 +142,9 @@ def _entry_from_doi(db: sqlite3.Connection, doi: str, prefer_registry: bool = Fa
         csl = _json.load(r)
     year = (csl.get("issued") or {}).get("date-parts", [[None]])[0][0]
     authors = [f"{' '.join(p[0] + '.' for p in a.get('given', '').replace('-', ' ').split())} {a.get('family', '')}".strip()
-               for a in csl.get("author", []) if a.get("family")]
-    return {"doi": doi, "title": " ".join(str(csl.get("title", "")).split()), "authors": authors, "year": year,
+               if a.get("family") else a.get("name", "").strip()  # a consortium is a literal name
+               for a in csl.get("author", []) if a.get("family") or a.get("name")]
+    return {"doi": doi, "title": _clean_title(str(csl.get("title", ""))), "authors": authors, "year": year,
             "journal": csl.get("container-title") or csl.get("publisher") or ""}
 
 
@@ -147,7 +157,7 @@ def _entry(db: sqlite3.Connection, item_id: int) -> dict | None:
     year = int(date[:4]) if date[:4].isdigit() else None
     return {
         "doi": doi,
-        "title": " ".join(title.replace(chr(0x2014), ": ").replace(chr(0x2013), "-").split()),  # em and en dashes in titles become colon and hyphen, the site's house style
+        "title": _clean_title(title),
         "authors": _authors(db, item_id),
         "year": year,
         "journal": next((v for v in (_field(db, item_id, f).strip() for f in ("publicationTitle", "proceedingsTitle", "conferenceName", "journalAbbreviation", "repository")) if v), ""),
@@ -186,6 +196,11 @@ def _export(db: sqlite3.Connection, out_dir: Path) -> dict[str, dict[str, int]]:
                 e = _entry(db, item_id)
                 if e and group == "applications" and e["doi"].lower() in {*EXCLUDE_APPLICATIONS, *EXCLUDE_APPLICATIONS_REVIEWS}:
                     continue
+                if e:  # the registry record is the reference of record; Zotero's copy can carry a PDF's embedded metadata
+                    try:
+                        e = _entry_from_doi(db, e["doi"], prefer_registry=True) or e
+                    except Exception as err:  # offline: keep the Zotero record and say so
+                        print(f"registry lookup failed for {e['doi']}: {err}", file=sys.stderr)
                 if e and e["doi"].lower() not in {x["doi"].lower() for x in groups[group]}:
                     groups[group].append(e)
         for group, dois in CURATED.get(key, {}).items():

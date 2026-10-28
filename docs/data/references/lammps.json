@@ -3,9 +3,9 @@
  "code": [
   {
    "doi": "10.1006/jcph.1995.1039",
-   "title": "Fast Parallel Algorithms for Short-Range Molecular-Dynamics",
+   "title": "Fast Parallel Algorithms for Short-Range Molecular Dynamics",
    "authors": [
-    "S. PLIMPTON"
+    "S. Plimpton"
    ],
    "year": 1995,
    "journal": "Journal of Computational Physics"
@@ -20,7 +20,7 @@
     "D. S. Bolintineanu",
     "W. M. Brown",
     "P. S. Crozier",
-    "P. J. In 'T Veld",
+    "P. J. in 't Veld",
     "A. Kohlmeyer",
     "S. G. Moore",
     "T. D. Nguyen",

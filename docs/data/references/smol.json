@@ -3,7 +3,7 @@
  "code": [
   {
    "doi": "10.21105/joss.04504",
-   "title": "smol: A Python package for cluster expansions andbeyond",
+   "title": "smol: A Python package for cluster expansions and beyond",
    "authors": [
     "L. Barroso-Luque",
     "J. H. Yang",

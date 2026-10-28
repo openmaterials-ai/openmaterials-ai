@@ -10,7 +10,7 @@
     "I. H. Chu",
     "S. P. Ong"
    ],
-   "year": 2017,
+   "year": 2016,
    "journal": "Chemistry of Materials"
   }
  ],
@@ -18,7 +18,7 @@
  "applications": [
   {
    "doi": "10.1021/acs.chemmater.5b04013",
-   "title": "Computational and Experimental Investigations of Na-Ion Conduction in Cubic Na<sub>3</sub>PSe<sub>4</sub>",
+   "title": "Computational and Experimental Investigations of Na-Ion Conduction in Cubic Na 3 PSe 4",
    "authors": [
     "S. H. Bo",
     "Y. Wang",
@@ -31,7 +31,7 @@
   },
   {
    "doi": "10.1021/acs.chemmater.5b03656",
-   "title": "Role of Na<sup>+</sup> Interstitials and Dopants in Enhancing the Na<sup>+</sup> Conductivity of the Cubic Na<sub>3</sub>PS<sub>4</sub> Superionic Conductor",
+   "title": "Role of Na + Interstitials and Dopants in Enhancing the Na + Conductivity of the Cubic Na 3 PS 4 Superionic Conductor",
    "authors": [
     "Z. Zhu",
     "I. H. Chu",
@@ -77,7 +77,7 @@
     "Y. Shao-Horn"
    ],
    "year": 2018,
-   "journal": "Energy & Environmental Science"
+   "journal": "Energy &amp; Environmental Science"
   }
  ]
 }
