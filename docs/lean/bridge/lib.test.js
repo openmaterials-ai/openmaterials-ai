@@ -160,7 +160,7 @@ test('reviewed QHA data compiles each producer and its output, not mode-Gruneise
     'harmonic-qha-gibbs-energy': ['compute_qha_gibbs', 'QHAGibbsEnergy'],
     'harmonic-qha-heat-capacity-p': ['compute_heat_capacity_p', 'HeatCapacityConstantP'],
     'harmonic-qha-thermal-expansion': ['compute_thermal_expansion', 'ThermalExpansion'],
-    'harmonic-qha-bulk-modulus': ['compute_bulk_modulus_qha', 'BulkModulus'],
+    'harmonic-qha-bulk-modulus': ['compute_bulk_modulus_qha', null],
     'harmonic-qha-thermal-gruneisen-contraction': ['contract_thermal_gruneisen', 'ThermalGruneisen'],
   };
   const rows = F.index(data);
@@ -168,9 +168,9 @@ test('reviewed QHA data compiles each producer and its output, not mode-Gruneise
     const binding = data.bindings.find(b => b.id === id);
     assert.ok(binding, id);
     assert.deepEqual(new Set(F.provedTargets(binding, data).map(t => t.kind + ':' + t.id)),
-      new Set(['operator:' + operator, 'node:' + output]));
+      new Set(['operator:' + operator, ...(output ? ['node:' + output] : [])]));
     assert.equal(rows.find(r => r.kind === 'operator' && r.id === operator).compiled, true);
-    assert.equal(rows.find(r => r.kind === 'node' && r.id === output).compiled, true);
+    if (output) assert.equal(rows.find(r => r.kind === 'node' && r.id === output).compiled, true);
     assert.match(F.bindingHtml(binding), /OMAIPhyslibQHA\.lean/);
     assert.doesNotMatch(F.bindingHtml(binding), /OMAIPhyslibQHAWitness/);
   }
@@ -178,6 +178,8 @@ test('reviewed QHA data compiles each producer and its output, not mode-Gruneise
     assert.equal(rows.find(r => r.kind === 'operator' && r.id === id).compiled, false);
   }
   assert.equal(rows.find(r => r.kind === 'node' && r.id === 'Gruneisen').compiled, false);
+  // BulkModulus is the Voigt average of the elastic tensor: an output association only.
+  assert.equal(rows.find(r => r.kind === 'node' && r.id === 'BulkModulus').compiled, false);
   assert.equal(F.targetReferencesHtml(data, 'node', 'Gruneisen', '/lean/bridge/'), '');
   const upstream = F.declarationIndex(data).find(r => r.name === 'CanonicalEnsemble.thermodynamicEntropy');
   assert.ok(upstream.bindings.some(b => b.id === 'harmonic-qha-gibbs-energy'));

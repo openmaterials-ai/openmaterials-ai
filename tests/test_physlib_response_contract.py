@@ -221,7 +221,7 @@ QHA_BINDING_IDS = frozenset({"harmonic-qha-gibbs-energy", "harmonic-qha-heat-cap
 QHA_SUBJECTS = {("operator", "compute_qha_gibbs"), ("node", "QHAGibbsEnergy"),
                 ("operator", "compute_heat_capacity_p"), ("node", "HeatCapacityConstantP"),
                 ("operator", "compute_thermal_expansion"), ("node", "ThermalExpansion"),
-                ("operator", "compute_bulk_modulus_qha"), ("node", "BulkModulus"),
+                ("operator", "compute_bulk_modulus_qha"),
                 ("operator", "contract_thermal_gruneisen"), ("node", "ThermalGruneisen")}
 QHA_PAIRS = [{"name": "OMAI.PhyslibBridge.Response." + name, "module": "OMAIPhyslibQHA"} for name in (
     "qhaGibbsEnergy", "qhaHeatCapacityP", "qhaThermalExpansion", "qhaBulkModulus", "qhaThermalGruneisen")]
@@ -249,8 +249,8 @@ def _assert_current_scope(payload):
         BASELINE_BINDINGS | {BINDING_ID, GAMMA_BINDING_ID} | QHA_BINDING_IDS)
     expected = {
         "nodes_total": 129, "operators_total": 127,
-        "operators_compiled": 20, "nodes_compiled": 19,
-        "nodes_compiled_outputs": 18, "nodes_compiled_interpretations": 1,
+        "operators_compiled": 20, "nodes_compiled": 18,
+        "nodes_compiled_outputs": 17, "nodes_compiled_interpretations": 1,
         "bindings_total": 28, "compiled_bridges": 23, "source_correspondences": 5,
     }
     for key, value in expected.items():

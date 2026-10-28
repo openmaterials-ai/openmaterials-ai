@@ -91,6 +91,7 @@ EARLIER_SUBJECTS = ({("operator", name) for name in EARLIER_OPERATORS}
 EARLIER_PAIR_COUNT = 15
 
 # Frozen QHA tranche.
+LINK = "OMAI.PhyslibBridge.HarmonicVolumeModel.freeEnergy_eq_actual"
 OPERATORS = {
     "compute_qha_gibbs": {
         "uid": "2dfd344c598d659dbc5e4c8def4cefcb69b1a0bd215a9202f981618b18611b89",
@@ -98,9 +99,9 @@ OPERATORS = {
         "latex": r"G_{qha} = G^{qha}{\left(E_{tot},\mathcal{S},\omega \right)}",
         "inputs": ["TotalEnergy", "Structure", "Frequency"], "output": "QHAGibbsEnergy",
         "definition": NS + "qhaGibbsEnergy", "binding": "harmonic-qha-gibbs-energy",
-        "declarations": ["harmonic_static_qhaGibbs_window", "harmonic_static_qhaGibbs_entropy",
+        "declarations": ["harmonic_static_qhaGibbs_convex_window", "harmonic_static_qhaGibbs_entropy",
                          "harmonic_static_qhaGibbs_volume"],
-        "associations": [],
+        "associations": [], "subject_output": True,
         "sources": ["CanonicalEnsemble.helmholtzFreeEnergy", "CanonicalEnsemble.thermodynamicEntropy"],
     },
     "compute_heat_capacity_p": {
@@ -109,8 +110,10 @@ OPERATORS = {
         "latex": r"C_{P} = C_P^{qha}{\left(G_{qha} \right)}",
         "inputs": ["QHAGibbsEnergy"], "output": "HeatCapacityConstantP",
         "definition": NS + "qhaHeatCapacityP", "binding": "harmonic-qha-heat-capacity-p",
-        "declarations": ["harmonic_static_qhaHeatCapacityP_eq_omai", "harmonic_static_qhaHeatCapacityP_gt_iff"],
-        "associations": ["QHAGibbsEnergy"],
+        "declarations": ["harmonic_static_qhaHeatCapacityP_eq_omai",
+                         "harmonic_static_qhaHeatCapacityP_eq_entropy_slope",
+                         "harmonic_static_qhaHeatCapacityP_gt_iff"],
+        "associations": ["QHAGibbsEnergy"], "subject_output": True,
         "sources": ["CanonicalEnsemble.helmholtzFreeEnergy", "CanonicalEnsemble.meanEnergyT",
                     "CanonicalEnsemble.heatCapacity"],
     },
@@ -121,8 +124,8 @@ OPERATORS = {
         "inputs": ["QHAGibbsEnergy"], "output": "ThermalExpansion",
         "definition": NS + "qhaThermalExpansion", "binding": "harmonic-qha-thermal-expansion",
         "declarations": ["harmonic_static_qhaThermalExpansion_eq_omai",
-                         "harmonic_static_qhaThermalExpansion_pos_iff"],
-        "associations": ["QHAGibbsEnergy"],
+                         "harmonic_static_qhaThermalExpansion_pos_iff", LINK],
+        "associations": ["QHAGibbsEnergy"], "subject_output": True,
         "sources": ["CanonicalEnsemble.helmholtzFreeEnergy", "CanonicalEnsemble.heatCapacity"],
     },
     "compute_bulk_modulus_qha": {
@@ -131,8 +134,9 @@ OPERATORS = {
         "latex": r"K = K^{qha}{\left(E_{tot},\mathcal{S},\omega \right)}",
         "inputs": ["TotalEnergy", "Structure", "Frequency"], "output": "BulkModulus",
         "definition": NS + "qhaBulkModulus", "binding": "harmonic-qha-bulk-modulus",
-        "declarations": ["harmonic_static_qhaBulkModulus_eq_omai"],
-        "associations": [],
+        "declarations": ["harmonic_static_qhaBulkModulus_eq_omai", LINK],
+        # BulkModulus is the Voigt average of the elastic tensor: an output association only.
+        "associations": [], "subject_output": False,
         "sources": ["CanonicalEnsemble.helmholtzFreeEnergy"],
     },
     "contract_thermal_gruneisen": {
@@ -141,8 +145,8 @@ OPERATORS = {
         "latex": r"\gamma_{th} = \gamma^{qha}{\left(\gamma_{G},\omega \right)}",
         "inputs": ["Gruneisen", "Frequency"], "output": "ThermalGruneisen",
         "definition": NS + "qhaThermalGruneisen", "binding": "harmonic-qha-thermal-gruneisen-contraction",
-        "declarations": ["harmonic_static_qhaThermalGruneisen_eq_omai", "qhaThermalGruneisen_mem_Icc"],
-        "associations": [],
+        "declarations": ["harmonic_static_qhaThermalGruneisen_eq_omai"],
+        "associations": [], "subject_output": True,
         "sources": ["CanonicalEnsemble.heatCapacity",
                     "QuantumMechanics.OneDimension.HarmonicOscillator.eigenValue",
                     "CanonicalEnsemble.helmholtzFreeEnergy"],
@@ -152,12 +156,12 @@ NODE_UIDS = {
     "QHAGibbsEnergy": "bb10912780eb22d45beff551be14f7f4216f3aae26161e8bfd60cdc051f63f58",
     "HeatCapacityConstantP": "08057e4554a3420c933329b3821de9295e2b5950191e23cafe310b0a15adc7b6",
     "ThermalExpansion": "9b42f8aebb6099cdcd910a272a92208881b598688bac7830c3ae0a412152473e",
-    "BulkModulus": "c0a13e64c02811f49b951271c894373267937676e0c657fc9ef09fac72558ced",
     "ThermalGruneisen": "22b1bd519d50d93fd24a919e021bab85aff246464a66a08f8274558834983985",
 }
+BULK_MODULUS_UID = "c0a13e64c02811f49b951271c894373267937676e0c657fc9ef09fac72558ced"
 BINDING_IDS = frozenset(row["binding"] for row in OPERATORS.values())
 SUBJECTS = ({("operator", name) for name in OPERATORS}
-            | {("node", row["output"]) for row in OPERATORS.values()})
+            | {("node", row["output"]) for row in OPERATORS.values() if row["subject_output"]})
 PAIRS = sorted([{"name": row["definition"], "module": MODULE} for row in OPERATORS.values()],
                key=lambda row: (row["name"], row["module"]))
 WITNESS_THEOREMS = frozenset("OMAI.PhyslibBridge.QHAWitness." + name for name in (
@@ -165,17 +169,30 @@ WITNESS_THEOREMS = frozenset("OMAI.PhyslibBridge.QHAWitness." + name for name in
     "zero_qha_control", "positive_qha_witness_nonunit",
 ))
 SUPPORT_THEOREMS = frozenset(NS + name for name in (
-    "exists_gibbsBranchAt", "GibbsBranchAt.window_strictMin", "GibbsBranchAt.gibbs_temperature_hasDerivAt",
-    "GibbsBranchAt.gibbs_pressure_hasDerivAt", "GibbsBranchAt.isotherm_hasDerivAt",
+    "exists_gibbsBranchAt", "strictMin_of_convex_interval", "GibbsBranchAt.window_strictMin",
+    "GibbsBranchAt.gibbs_temperature_hasDerivAt", "GibbsBranchAt.gibbs_pressure_hasDerivAt",
+    "GibbsBranchAt.isotherm_hasDerivAt",
 ))
-FINAL_THEOREMS = frozenset(NS + name for row in OPERATORS.values() for name in row["declarations"])
+# Proved but deliberately not cited: a small-window corollary, a positive-weight mean between its
+# bounds, and definitional unfoldings.
+NOT_CITED = frozenset(NS + name for name in (
+    "harmonic_static_qhaGibbs_window", "qhaThermalGruneisen_mem_Icc",
+    "GibbsBranchAt.qhaBulkModulus_eq_bulk", "qhaThermalGruneisen_eq_weightedGruneisen",
+))
+
+
+def _full(name):
+    return name if name.startswith("OMAI.") else NS + name
+
+
+FINAL_THEOREMS = frozenset(_full(name) for row in OPERATORS.values() for name in row["declarations"])
 EXPECTED_COVERAGE = {
     "nodes_total": 129,
     "operators_total": 127,
     "operators_compiled": 20,
     "operators_mapped": 20,
-    "nodes_compiled": 19,
-    "nodes_compiled_outputs": 18,
+    "nodes_compiled": 18,
+    "nodes_compiled_outputs": 17,
     "nodes_compiled_interpretations": 1,
     "nodes_mapped": 30,
     "bindings_total": 28,
@@ -264,6 +281,7 @@ def test_qha_unit_catalog_pins():
         assert live["inputs"] == row["inputs"] and live["outputs"] == [row["output"]], name
         assert live["domain"] == "quasiharmonic", name
     assert {name: nodes[name]["uid"] for name in NODE_UIDS} == NODE_UIDS
+    assert nodes["BulkModulus"]["uid"] == BULK_MODULUS_UID
 
 
 @pytest.mark.parametrize("relative,digest", sorted(EARLIER_PRESERVED.items()))
@@ -295,16 +313,16 @@ def test_qha_integration_binding_scope_and_evidence(payload, operator):
     expected_targets = sorted(
         [("operator", operator), ("node", row["output"]), *(("node", name) for name in row["associations"])],
         key=lambda target: (target[0], target[1]))
+    subjects = [("operator", operator)] + ([("node", row["output"])] if row["subject_output"] else [])
     assert [(target["kind"], target["id"]) for target in binding["targets"]] == expected_targets
     evidence = binding["evidence"]
     assert evidence["kind"] == "compiled_bridge"
     assert evidence["module"] == MODULE and evidence["source_path"] == SOURCE
     assert evidence["source_sha256"] == _digest(ROOT / SOURCE)
     assert evidence["build_record"] == "lean/bridge/build-evidence.json"
-    assert evidence["declarations"] == [NS + name for name in row["declarations"]]
-    assert [(target["kind"], target["id"]) for target in evidence["proved_targets"]] == [
-        ("operator", operator), ("node", row["output"])]
-    assert not (WITNESS_THEOREMS | SUPPORT_THEOREMS) & set(evidence["declarations"])
+    assert evidence["declarations"] == [_full(name) for name in row["declarations"]]
+    assert [(target["kind"], target["id"]) for target in evidence["proved_targets"]] == subjects
+    assert not (WITNESS_THEOREMS | SUPPORT_THEOREMS | NOT_CITED) & set(evidence["declarations"])
     assert [source["name"] for source in binding["sources"]] == row["sources"]
     texts = [binding["statement"], *binding["conditions"], *binding["conventions"].values(),
              *binding["remaining_obligations"]]
@@ -325,10 +343,29 @@ def test_qha_integration_text_obligations(payload):
     obligations = "\n".join(contraction["remaining_obligations"])
     for phrase in ("Maradudin-Fein", "compute_gruneisen", "gruneisen_temperature"):
         assert phrase in obligations, phrase
+    assert "corollary" in contraction["statement"]
     modulus = _binding(payload, OPERATORS["compute_bulk_modulus_qha"]["binding"])
     assert any("adiabatic modulus" in text for text in modulus["conditions"])
+    assert any("Voigt average" in text and "not a proof subject" in text for text in modulus["conditions"])
+    assert "stability premise" in modulus["statement"] and "is positive" not in modulus["statement"]
     capacity = _binding(payload, OPERATORS["compute_heat_capacity_p"]["binding"])
-    assert any("contract_heat_capacity_p_identity" in text for text in capacity["remaining_obligations"])
+    obligations = "\n".join(capacity["remaining_obligations"])
+    for phrase in ("contract_heat_capacity_p_identity", "polyfit_enthalpy_derivative", "heat_capacity_P_polyfit",
+                   "heat_capacity_P_numerical"):
+        assert phrase in obligations, phrase
+    assert "(dS/dV)_T=-F_TV=alpha_V*K_T" in capacity["statement"]
+    gibbs = _binding(payload, OPERATORS["compute_qha_gibbs"]["binding"])
+    assert "-(N_A/N_q) times the Physlib thermodynamic entropy" in gibbs["statement"]
+    for binding_id in BINDING_IDS:
+        binding = _binding(payload, binding_id)
+        conditions = "\n".join(binding["conditions"])
+        assert "certifies itself" in conditions and "strictly inside the scanned range" in conditions
+        assert "6.02214076e23" in binding["conventions"]["normalization_basis"]
+        assert "1.054571817e-34" in binding["conventions"]["frequency_convention"]
+        obligations = "\n".join(binding["remaining_obligations"])
+        for phrase in ("imaginary mode at every scanned volume", "shifted mesh", "Born charges",
+                       "same cell", "physically unreliable"):
+            assert phrase in obligations, (binding_id, phrase)
 
 
 @pytest.mark.parametrize("operator", ["compute_gruneisen", "contract_molar_volume"])
@@ -345,6 +382,10 @@ def test_qha_integration_exact_lookups(payload):
         "harmonic-qha-thermal-gruneisen-contraction", "harmonic-static-thermal-gruneisen-identity"]
     assert sorted(binding["id"] for binding in formula_bindings_for("QHAGibbsEnergy", kind="node")) == [
         "harmonic-qha-gibbs-energy", "harmonic-qha-heat-capacity-p", "harmonic-qha-thermal-expansion"]
+    bulk = [binding for binding in formula_bindings_for("BulkModulus", kind="node")
+            if binding["id"] == "harmonic-qha-bulk-modulus"]
+    assert len(bulk) == 1 and ("node", "BulkModulus") not in _subjects({"bindings": bulk,
+                                                                          "inventory": payload["inventory"]})
     for binding_id in BINDING_IDS:
         binding = _binding(payload, binding_id)
         for source in binding["sources"]:
@@ -373,7 +414,7 @@ def test_qha_integration_record_covers_sources(payload, contract):
     axioms = record["axiom_audit"]
     assert {SUPPORT_MODULE, MODULE, WITNESS_MODULE} <= set(axioms["source_modules"])
     declarations = axioms["declarations"]
-    for name in sorted(FINAL_THEOREMS | WITNESS_THEOREMS | SUPPORT_THEOREMS):
+    for name in sorted(FINAL_THEOREMS | WITNESS_THEOREMS | SUPPORT_THEOREMS | NOT_CITED):
         assert name in declarations, name
         assert set(declarations[name]) <= {"propext", "Classical.choice", "Quot.sound"}, name
 
@@ -401,7 +442,7 @@ def evidence_copy(tmp_path, payload):
 RECORD_MUTATIONS = [
     *(f"source_bytes:{path}" for path in sorted(NEW_SOURCES | {"lean/bridge/" + CONTRACT_NAME})),
     *(f"record_revision:{revision}" for revision in PREVIOUS_REVISIONS),
-    "missing_source_hash", "binding_source_hash", "unapproved_axiom",
+    "missing_source_hash", "binding_source_hash", "unapproved_axiom", "declaration_outside_import_closure",
 ]
 
 
@@ -421,6 +462,10 @@ def test_qha_record_consumer_refuses_drift(evidence_copy, mutation):
         data.binding["evidence"]["source_sha256"] = "0" * 64
     elif kind == "unapproved_axiom":
         record["axiom_audit"]["declarations"][NS + "harmonic_static_qhaHeatCapacityP_eq_omai"].append("sorryAx")
+    elif kind == "declaration_outside_import_closure":
+        # Compiled and audited, but owned by a bridge module the QHA source does not import.
+        assert "OMAI.PhyslibBridge.compressiveStress_roundtrip" in record["axiom_audit"]["declarations"]
+        data.binding["evidence"]["declarations"].append("OMAI.PhyslibBridge.compressiveStress_roundtrip")
     else:
         raise AssertionError(mutation)
     data.record_path.write_text(json.dumps(record))
@@ -463,6 +508,12 @@ def test_qha_unit_audit_requires_qha_contract(tmp_path, monkeypatch):
     with pytest.raises(ValueError, match=r"reviewed formula contracts are missing:.*" + re.escape(CONTRACT_NAME)):
         module.run()
     assert not (package / "build-evidence.json").exists()
+
+
+def test_qha_unit_cited_link_is_in_import_closure(evidence_copy):
+    data = evidence_copy
+    data.binding["evidence"]["declarations"].append(LINK)
+    _check_compiled_evidence(data.binding, data.upstream, data.root)
 
 
 def test_qha_integration_import_structure():
@@ -639,6 +690,7 @@ def test_qha_real_anti_circularity_closure(compiled_package, tmp_path):
     assert set(closures) == set(ROOTS)
     for root in ROOTS:
         reached = closures[root]
+        assert not [name for name in reached if name.startswith("_private.")], (root, "private helper")
         forbidden = sorted(name for name in reached if name in FORBIDDEN_EXACT)
         assert not forbidden, (root, forbidden)
         bridge = {name for name, kind in reached.items() if name.startswith("OMAI.PhyslibBridge.") and kind != "thm"}
@@ -692,8 +744,6 @@ example (A : ℝ) (hA : 0 < A) (n : ℕ) (hn : 0 < n) :
       qhaThermalExpansion
           (qhaGibbsEnergy (rateModel negativeRates A hA n hn).freeEnergy (Ioo (A - ε) (A + ε)))
           ((witnessTemperature : ℝ), 0) < 0 ∧
-      0 < qhaBulkModulus (rateModel negativeRates A hA n hn).freeEnergy (Ioo (A - ε) (A + ε))
-          ((witnessTemperature : ℝ), 0) ∧
       (rateModel negativeRates A hA n hn).cv ((witnessTemperature : ℝ), A) <
         qhaHeatCapacityP
           (qhaGibbsEnergy (rateModel negativeRates A hA n hn).freeEnergy (Ioo (A - ε) (A + ε)))
@@ -703,6 +753,30 @@ example (A : ℝ) (hA : 0 < A) (n : ℕ) (hn : 0 < n) :
           (fun i => ((rateModel negativeRates A hA n hn).gridAt 1
             (one_mem_J negativeRates A hA n hn)).oscillator i.1 i.2) witnessTemperature < 0 :=
   negative_qha_witness A hA n hn
+
+example (M : HarmonicVolumeModel) (T : Temperature) (p : ℝ)
+    (B : GibbsBranchAt M.freeEnergy M.domain ((T : ℝ), p)) {I : Set ℝ}
+    (hI : qhaGibbsEnergy M.freeEnergy I =ᶠ[𝓝 ((T : ℝ), p)] B.gibbs) :
+    qhaBulkModulus M.freeEnergy I ((T : ℝ), p) =
+      -gibbsVolume (qhaGibbsEnergy M.freeEnergy I) ((T : ℝ), p) /
+        deriv (fun q => gibbsVolume (qhaGibbsEnergy M.freeEnergy I) ((T : ℝ), q)) p :=
+  harmonic_static_qhaBulkModulus_eq_omai M T p B hI
+
+example (M : HarmonicVolumeModel) (T : Temperature) (p : ℝ)
+    (B : GibbsBranchAt M.freeEnergy M.domain ((T : ℝ), p)) {a b : ℝ}
+    (hJ : B.volume ((T : ℝ), p) ∈ Ioo a b)
+    (hconv : ∀ᶠ t in 𝓝 (T : ℝ), ∀ w ∈ Ioo a b,
+      (t, w) ∈ M.domain ∧ 0 < FVV M.freeEnergy (t, w)) :
+    qhaGibbsEnergy M.freeEnergy (Ioo a b) =ᶠ[𝓝 ((T : ℝ), p)] B.gibbs :=
+  (harmonic_static_qhaGibbs_convex_window M T p B hJ hconv).2
+
+example (M : HarmonicVolumeModel) (T : Temperature) (p : ℝ)
+    (B : GibbsBranchAt M.freeEnergy M.domain ((T : ℝ), p)) {I : Set ℝ}
+    (hI : qhaGibbsEnergy M.freeEnergy I =ᶠ[𝓝 ((T : ℝ), p)] B.gibbs) :
+    deriv (fun w => M.entropy ((T : ℝ), w)) (B.volume ((T : ℝ), p)) =
+      qhaThermalExpansion (qhaGibbsEnergy M.freeEnergy I) ((T : ℝ), p) *
+        qhaBulkModulus M.freeEnergy I ((T : ℝ), p) :=
+  (harmonic_static_qhaHeatCapacityP_eq_entropy_slope M T p B hI).2.2
 """
 
 
@@ -725,7 +799,7 @@ def test_qha_real_typed_negatives(compiled_package, tmp_path, case):
         + ("    qhaHeatCapacityP (qhaGibbsEnergy M.freeEnergy I) ((T : ℝ), p) = " + lhs + " :=\n"
            "  (harmonic_static_qhaHeatCapacityP_eq_omai M T p B hI).1\n" if case == "cv_for_cp" else
            "    qhaBulkModulus M.freeEnergy I ((T : ℝ), p) = " + lhs + " :=\n"
-           "  (harmonic_static_qhaBulkModulus_eq_omai M T p B hI).1\n"))
+           "  harmonic_static_qhaBulkModulus_eq_omai M T p B hI\n"))
     result = _check_lean_source(compiled_package, tmp_path, source, "QHATypedNegative")
     output = result.stdout + result.stderr
     assert result.returncode != 0

@@ -280,11 +280,33 @@ def _check_compiled_evidence(binding: dict, upstream: dict, root: Path) -> None:
         raise ValueError("compiled dependency revisions do not match the pinned manifest")
     if (bridge_root / "lean-toolchain").read_text().strip() != upstream["lean_toolchain"]:
         raise ValueError("compiled toolchain does not match bridge source metadata")
-    text = source.read_text()
+    # A cited declaration lives in the evidence source or in a bridge module that the
+    # evidence source imports; every such module is hashed in the build record above.
+    texts = [path.read_text() for path in _bridge_import_closure(source, bridge_root)]
     for declaration in evidence["declarations"]:
         leaf = declaration.rsplit(".", 1)[-1]
-        if not re.search(r"\b(?:theorem|lemma)\s+" + re.escape(leaf) + r"(?=\s|[({:]|$)", text):
+        pattern = re.compile(r"\b(?:theorem|lemma)\s+" + re.escape(leaf) + r"(?=\s|[({:]|$)")
+        if not any(pattern.search(text) for text in texts):
             raise ValueError(f"bridge declaration absent from compiled source: {declaration}")
+
+
+_LEAN_IMPORT = re.compile(r"^\s*(?:public\s+)?(?:meta\s+)?import\s+(?:all\s+)?(\S+)", re.MULTILINE)
+
+
+def _bridge_import_closure(source: Path, bridge_root: Path) -> list[Path]:
+    """The evidence source and every bridge-local Lean module it imports, transitively."""
+    seen: list[Path] = []
+    stack = [source]
+    while stack:
+        path = stack.pop()
+        if path in seen:
+            continue
+        seen.append(path)
+        for module in _LEAN_IMPORT.findall(path.read_text()):
+            candidate = bridge_root / (module.replace(".", "/") + ".lean")
+            if candidate.is_file():
+                stack.append(candidate)
+    return seen
 
 
 def validate_formula_bindings(payload: dict, *, check_catalog: bool = False,

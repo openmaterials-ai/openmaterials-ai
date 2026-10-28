@@ -30,7 +30,7 @@ test("proven rows are exactly the compiled formula-bridge operators", () => {
   const proven = published.rows.filter(row => row.proven).length;
   assert.strictEqual(proven, bindings.coverage.operators_compiled);
   for (const row of published.rows) {
-    if (row.proven) assert.notStrictEqual(row.difficulty, "na", row.op + " is proven but rated na");
+    if (row.proven && row.difficulty === "na") assert.match(row.reason, /compiled bridge/, row.op);
   }
 });
 

@@ -114,7 +114,7 @@ qha_expected = {
     "compute_qha_gibbs": ("harmonic-qha-gibbs-energy", "QHAGibbsEnergy"),
     "compute_heat_capacity_p": ("harmonic-qha-heat-capacity-p", "HeatCapacityConstantP"),
     "compute_thermal_expansion": ("harmonic-qha-thermal-expansion", "ThermalExpansion"),
-    "compute_bulk_modulus_qha": ("harmonic-qha-bulk-modulus", "BulkModulus"),
+    "compute_bulk_modulus_qha": ("harmonic-qha-bulk-modulus", None),
     "contract_thermal_gruneisen": ("harmonic-qha-thermal-gruneisen-contraction", "ThermalGruneisen"),
 }
 for operator, (binding_id, output) in qha_expected.items():
@@ -122,9 +122,8 @@ for operator, (binding_id, output) in qha_expected.items():
     assert [row["id"] for row in qha_rows] == [binding_id], operator
     assert qha_rows[0]["evidence"]["kind"] == "compiled_bridge"
     assert qha_rows[0]["evidence"]["module"] == "OMAIPhyslibQHA"
-    assert {(row["kind"], row["id"]) for row in qha_rows[0]["evidence"]["proved_targets"]} == {
-        ("operator", operator), ("node", output),
-    }
+    expected_subjects = {("operator", operator)} | ({("node", output)} if output else set())
+    assert {(row["kind"], row["id"]) for row in qha_rows[0]["evidence"]["proved_targets"]} == expected_subjects
     assert qha_rows[0] in formula_bindings_for_physlib(
         declaration="CanonicalEnsemble.helmholtzFreeEnergy",
         module="Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",

@@ -99,6 +99,9 @@ def build_roadmap():
         dom = getattr(d, "name", "?")
         for op in getattr(d, "operators", getattr(d, "edges", [])):
             cls, diff, reason = _classify(op)
+            if diff == "na" and op.name in proven:
+                reason = ("names an external code's output; a compiled bridge proves statements "
+                          "about an interpreted definition of it under stated conditions")
             counts[diff] += 1
             rows.append({
                 "domain": dom,

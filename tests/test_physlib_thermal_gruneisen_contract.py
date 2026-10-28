@@ -172,7 +172,7 @@ QHA_BINDINGS = frozenset({"harmonic-qha-gibbs-energy", "harmonic-qha-heat-capaci
 QHA_SUBJECTS = {("operator", "compute_qha_gibbs"), ("node", "QHAGibbsEnergy"),
                 ("operator", "compute_heat_capacity_p"), ("node", "HeatCapacityConstantP"),
                 ("operator", "compute_thermal_expansion"), ("node", "ThermalExpansion"),
-                ("operator", "compute_bulk_modulus_qha"), ("node", "BulkModulus"),
+                ("operator", "compute_bulk_modulus_qha"),
                 ("operator", "contract_thermal_gruneisen"), ("node", "ThermalGruneisen")}
 QHA_PAIRS = [{"name": "OMAI.PhyslibBridge.Response." + name, "module": "OMAIPhyslibQHA"} for name in (
     "qhaGibbsEnergy", "qhaHeatCapacityP", "qhaThermalExpansion", "qhaBulkModulus", "qhaThermalGruneisen")]
@@ -202,8 +202,8 @@ EXPECTED_COVERAGE = {
 }
 # Real payload after the later quasiharmonic tranche; gamma-only synthetic checks keep EXPECTED_COVERAGE.
 CURRENT_COVERAGE = {
-    **EXPECTED_COVERAGE, "operators_compiled": 20, "operators_mapped": 20, "nodes_compiled": 19,
-    "nodes_compiled_outputs": 18, "nodes_mapped": 30, "bindings_total": 28, "compiled_bridges": 23,
+    **EXPECTED_COVERAGE, "operators_compiled": 20, "operators_mapped": 20, "nodes_compiled": 18,
+    "nodes_compiled_outputs": 17, "nodes_mapped": 30, "bindings_total": 28, "compiled_bridges": 23,
     "relations": {"exact_definition": 1, "conditional": 23, "conceptual": 4},
 }
 CP_PRESERVED = {

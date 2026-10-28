@@ -62,6 +62,41 @@ namespace GibbsBranchAt
 
 variable {F : Surface} {D : Set (ℝ × ℝ)} {t₀ p₀ : ℝ}
 
+/-- A unique minimizer on a window fixes the windowed Gibbs energy at the family value. -/
+theorem qhaGibbsEnergy_eq_of_strictMin (B : GibbsBranchAt F D (t₀, p₀)) {J : Set ℝ} {x : ℝ × ℝ}
+    (hxV : B.volume x ∈ J) (hmin : ∀ w ∈ J, w ≠ B.volume x → B.gibbs x < F (x.1, w) + x.2 * w) :
+    qhaGibbsEnergy F J x = B.gibbs x := by
+  apply IsLeast.csInf_eq
+  refine ⟨⟨B.volume x, hxV, rfl⟩, ?_⟩
+  rintro y ⟨w, hw, rfl⟩
+  by_cases hwx : w = B.volume x
+  · subst hwx
+    exact le_rfl
+  · exact (hmin w hw hwx).le
+
+/-- Checkable window. On any open volume interval (a, b) that contains the selected volume,
+lies in the domain and has F_VV(T, ·) > 0 for every temperature near T₀, the family volume is
+the unique minimizer of F(T, ·) + pV for every (T, p) near the point, and the windowed Gibbs
+energy over (a, b) equals the family value there. A scan certifies its own window by this
+convexity. -/
+theorem qhaGibbsEnergy_convex_window (B : GibbsBranchAt F D (t₀, p₀)) (hD : IsOpen D)
+    (hF : ContDiffOn ℝ 2 F D) {a b : ℝ} (hJ : B.volume (t₀, p₀) ∈ Ioo a b)
+    (hconv : ∀ᶠ t in 𝓝 t₀, ∀ w ∈ Ioo a b, (t, w) ∈ D ∧ 0 < FVV F (t, w)) :
+    (∀ᶠ x in 𝓝 (t₀, p₀), B.volume x ∈ Ioo a b ∧
+        ∀ w ∈ Ioo a b, w ≠ B.volume x → B.gibbs x < F (x.1, w) + x.2 * w) ∧
+      qhaGibbsEnergy F (Ioo a b) =ᶠ[𝓝 (t₀, p₀)] B.gibbs := by
+  have hcV : ContinuousAt B.volume (t₀, p₀) := B.differentiable.self_of_nhds.continuousAt
+  have hV : ∀ᶠ x in 𝓝 (t₀, p₀), B.volume x ∈ Ioo a b := hcV.eventually (isOpen_Ioo.mem_nhds hJ)
+  have hT : ∀ᶠ x in 𝓝 (t₀, p₀), ∀ w ∈ Ioo a b, (x.1, w) ∈ D ∧ 0 < FVV F (x.1, w) :=
+    (continuous_fst.tendsto (t₀, p₀)).eventually hconv
+  have hmin : ∀ᶠ x in 𝓝 (t₀, p₀), B.volume x ∈ Ioo a b ∧
+      ∀ w ∈ Ioo a b, w ≠ B.volume x → B.gibbs x < F (x.1, w) + x.2 * w := by
+    filter_upwards [hV, hT, B.equilibrium] with x hxV hxT hxeq
+    exact ⟨hxV, strictMin_of_convex_interval hD hF hxT hxV hxeq⟩
+  refine ⟨hmin, ?_⟩
+  filter_upwards [hmin] with x hx
+  exact B.qhaGibbsEnergy_eq_of_strictMin hx.1 hx.2
+
 /-- Every sufficiently narrow window around the base volume selects the family: the family
 volume is the unique minimizer in the window and the windowed Gibbs energy equals its value. -/
 theorem qhaGibbsEnergy_selects (B : GibbsBranchAt F D (t₀, p₀)) (hD : IsOpen D)
@@ -76,14 +111,7 @@ theorem qhaGibbsEnergy_selects (B : GibbsBranchAt F D (t₀, p₀)) (hD : IsOpen
   obtain ⟨ε₀, hε₀, h⟩ := B.window_strictMin hD hF
   refine ⟨ε₀, hε₀, fun ε hε hεle => ⟨h ε hε hεle, ?_⟩⟩
   filter_upwards [h ε hε hεle] with x hx
-  obtain ⟨hxV, hmin⟩ := hx
-  apply IsLeast.csInf_eq
-  refine ⟨⟨B.volume x, hxV, rfl⟩, ?_⟩
-  rintro y ⟨w, hw, rfl⟩
-  by_cases hwx : w = B.volume x
-  · subst hwx
-    exact le_rfl
-  · exact (hmin w hw hwx).le
+  exact B.qhaGibbsEnergy_eq_of_strictMin hx.1 hx.2
 
 theorem eventually_gibbsVolume (B : GibbsBranchAt F D (t₀, p₀)) (hD : IsOpen D)
     (hF : ContDiffOn ℝ 2 F D) {G : ℝ × ℝ → ℝ} (hG : G =ᶠ[𝓝 (t₀, p₀)] B.gibbs) :
@@ -129,6 +157,15 @@ theorem qhaThermalExpansion_eq_expansion (B : GibbsBranchAt F D (t₀, p₀)) (h
   change deriv (fun s => gibbsVolume G (s, p₀)) t₀ / gibbsVolume G (t₀, p₀) =
     deriv (fun s => B.volume (s, p₀)) t₀ / B.volume (t₀, p₀)
   rw [hev.deriv_eq, h0]
+
+/-- (∂V/∂T)_p read off the Gibbs surface is the slope of the constant-pressure path. -/
+theorem deriv_gibbsVolume_isobar (B : GibbsBranchAt F D (t₀, p₀)) (hD : IsOpen D)
+    (hF : ContDiffOn ℝ 2 F D) {G : ℝ × ℝ → ℝ} (hG : G =ᶠ[𝓝 (t₀, p₀)] B.gibbs) :
+    deriv (fun s => gibbsVolume G (s, p₀)) t₀ = B.isobar.slope := by
+  have hev : (fun s => gibbsVolume G (s, p₀)) =ᶠ[𝓝 t₀] fun s => B.volume (s, p₀) :=
+    tendsto_isobar.eventually (B.eventually_gibbsVolume hD hF hG)
+  rw [hev.deriv_eq]
+  exact B.isobar_hasDerivAt.deriv
 
 /-- The curvature modulus at the selected volume is the family's isothermal modulus. -/
 theorem qhaBulkModulus_eq_bulk (B : GibbsBranchAt F D (t₀, p₀)) (hD : IsOpen D)
@@ -215,8 +252,23 @@ theorem harmonic_static_qhaGibbs_window
         =ᶠ[𝓝 ((T : ℝ), p)] B.gibbs :=
   B.qhaGibbsEnergy_selects M.domain_isOpen M.freeEnergy_contDiffOn
 
-/-- compute_qha_gibbs, temperature envelope: (∂G/∂T)_p is minus the actual Physlib
-thermodynamic entropy per mole of primitive cells at the selected volume. -/
+/-- compute_qha_gibbs, checkable window: on any open volume interval (a, b) containing the
+selected volume, inside the model domain and with F_VV(T, ·) > 0 for every temperature near T,
+the family volume is the unique minimizer of F(T, V) + pV for every (T, p) near the point and the
+windowed Gibbs energy over (a, b) equals F(T, V(T, p)) + pV(T, p) there. -/
+theorem harmonic_static_qhaGibbs_convex_window
+    (B : GibbsBranchAt M.freeEnergy M.domain ((T : ℝ), p)) {a b : ℝ}
+    (hJ : B.volume ((T : ℝ), p) ∈ Ioo a b)
+    (hconv : ∀ᶠ t in 𝓝 (T : ℝ), ∀ w ∈ Ioo a b,
+      (t, w) ∈ M.domain ∧ 0 < FVV M.freeEnergy (t, w)) :
+    (∀ᶠ x in 𝓝 ((T : ℝ), p), B.volume x ∈ Ioo a b ∧
+        ∀ w ∈ Ioo a b, w ≠ B.volume x →
+          M.freeEnergy (x.1, B.volume x) + x.2 * B.volume x < M.freeEnergy (x.1, w) + x.2 * w) ∧
+      qhaGibbsEnergy M.freeEnergy (Ioo a b) =ᶠ[𝓝 ((T : ℝ), p)] B.gibbs :=
+  B.qhaGibbsEnergy_convex_window M.domain_isOpen M.freeEnergy_contDiffOn hJ hconv
+
+/-- compute_qha_gibbs, temperature envelope: (∂G/∂T)_p is -(N_A/N_q) times the Physlib
+thermodynamic entropy of the static-plus-harmonic ensemble at the selected volume. -/
 theorem harmonic_static_qhaGibbs_entropy
     (B : GibbsBranchAt M.freeEnergy M.domain ((T : ℝ), p)) {I : Set ℝ}
     (hI : qhaGibbsEnergy M.freeEnergy I =ᶠ[𝓝 ((T : ℝ), p)] B.gibbs) :
@@ -276,23 +328,16 @@ theorem harmonic_static_qhaThermalExpansion_pos_iff
   rw [(harmonic_static_qhaThermalExpansion_eq_omai M T p B hI).1]
   exact M.expansion_pos_iff_weightedGruneisen_pos p T B.isobar
 
-/-- compute_bulk_modulus_qha: the curvature modulus at the selected volume equals the
-isothermal modulus V F_VV of the actual ensembles, equals -V / (∂V/∂p)_T read off the Gibbs
-surface, and is positive. -/
+/-- compute_bulk_modulus_qha: the curvature modulus V (∂²F/∂V²)_T at the volume (∂G/∂p)_T
+equals -V / (∂V/∂p)_T read off the Gibbs surface alone. -/
 theorem harmonic_static_qhaBulkModulus_eq_omai
     (B : GibbsBranchAt M.freeEnergy M.domain ((T : ℝ), p)) {I : Set ℝ}
     (hI : qhaGibbsEnergy M.freeEnergy I =ᶠ[𝓝 ((T : ℝ), p)] B.gibbs) :
     qhaBulkModulus M.freeEnergy I ((T : ℝ), p) =
-        bulk M.freeEnergy ((T : ℝ), B.volume ((T : ℝ), p)) ∧
-      qhaBulkModulus M.freeEnergy I ((T : ℝ), p) =
-        -gibbsVolume (qhaGibbsEnergy M.freeEnergy I) ((T : ℝ), p) /
-          deriv (fun q => gibbsVolume (qhaGibbsEnergy M.freeEnergy I) ((T : ℝ), q)) p ∧
-      0 < qhaBulkModulus M.freeEnergy I ((T : ℝ), p) := by
-  have hK := B.qhaBulkModulus_eq_bulk M.domain_isOpen M.freeEnergy_contDiffOn hI
-  refine ⟨hK, ?_, ?_⟩
-  · rw [hK, B.bulk_eq_gibbs_compressibility M.domain_isOpen M.freeEnergy_contDiffOn hI]
-  · rw [hK]
-    exact mul_pos (M.domain_positive B.in_domain.self_of_nhds).2 B.stable
+      -gibbsVolume (qhaGibbsEnergy M.freeEnergy I) ((T : ℝ), p) /
+        deriv (fun q => gibbsVolume (qhaGibbsEnergy M.freeEnergy I) ((T : ℝ), q)) p := by
+  rw [B.qhaBulkModulus_eq_bulk M.domain_isOpen M.freeEnergy_contDiffOn hI,
+    B.bulk_eq_gibbs_compressibility M.domain_isOpen M.freeEnergy_contDiffOn hI]
 
 /-- compute_heat_capacity_p: C_P = -T (∂²G/∂T²)_p equals the actual Physlib enthalpy
 derivative along the constant-pressure path and, with expansion and modulus read off the same
@@ -311,11 +356,59 @@ theorem harmonic_static_qhaHeatCapacityP_eq_omai
   refine ⟨hC.trans hA, ?_⟩
   have hgap := M.actualCp_sub_cv p (T : ℝ) B.isobar
   rw [(harmonic_static_qhaThermalExpansion_eq_omai M T p B hI).1,
-    (harmonic_static_qhaBulkModulus_eq_omai M T p B hI).1, hC.trans hA]
+    B.qhaBulkModulus_eq_bulk M.domain_isOpen M.freeEnergy_contDiffOn hI, hC.trans hA]
   change M.actualCp p B.isobar.volume (T : ℝ) - M.cv ((T : ℝ), B.volume ((T : ℝ), p)) =
     (T : ℝ) * B.volume ((T : ℝ), p) * expansion B.isobar.volume (T : ℝ) ^ 2 *
       bulk M.freeEnergy ((T : ℝ), B.volume ((T : ℝ), p)) at hgap
   linarith
+
+/-- compute_heat_capacity_p, the polyfit route: C_P = -T (∂²G/∂T²)_p equals
+C_V + T (∂V/∂T)_p (∂S/∂V)_T at the selected volume, with (∂V/∂T)_p read off the Gibbs surface and
+S the molar entropy of the same ensembles; the Maxwell relation gives
+(∂S/∂V)_T = -F_TV = alpha_V K_T. -/
+theorem harmonic_static_qhaHeatCapacityP_eq_entropy_slope
+    (B : GibbsBranchAt M.freeEnergy M.domain ((T : ℝ), p)) {I : Set ℝ}
+    (hI : qhaGibbsEnergy M.freeEnergy I =ᶠ[𝓝 ((T : ℝ), p)] B.gibbs) :
+    qhaHeatCapacityP (qhaGibbsEnergy M.freeEnergy I) ((T : ℝ), p) =
+        M.cv ((T : ℝ), B.volume ((T : ℝ), p)) + (T : ℝ) *
+          deriv (fun s => gibbsVolume (qhaGibbsEnergy M.freeEnergy I) (s, p)) (T : ℝ) *
+          deriv (fun w => M.entropy ((T : ℝ), w)) (B.volume ((T : ℝ), p)) ∧
+      deriv (fun w => M.entropy ((T : ℝ), w)) (B.volume ((T : ℝ), p)) =
+        -mixedTV M.freeEnergy ((T : ℝ), B.volume ((T : ℝ), p)) ∧
+      deriv (fun w => M.entropy ((T : ℝ), w)) (B.volume ((T : ℝ), p)) =
+        qhaThermalExpansion (qhaGibbsEnergy M.freeEnergy I) ((T : ℝ), p) *
+          qhaBulkModulus M.freeEnergy I ((T : ℝ), p) := by
+  have hx := B.in_domain.self_of_nhds
+  have hFx := M.freeEnergy_contDiffAt hx
+  -- Maxwell relation: S = -F_T near the selected volume, so (∂S/∂V)_T = -F_TV.
+  have hS : HasDerivAt (fun w => M.entropy ((T : ℝ), w))
+      (-mixedTV M.freeEnergy ((T : ℝ), B.volume ((T : ℝ), p))) (B.volume ((T : ℝ), p)) := by
+    have hFT := (partial_volume_hasDerivAt hFx (1, 0)).neg
+    rw [mixed_symmetric hFx] at hFT
+    refine hFT.congr_of_eventuallyEq ?_
+    have hopen : IsOpen {w : ℝ | ((T : ℝ), w) ∈ M.domain} :=
+      M.domain_isOpen.preimage (continuous_const.prodMk continuous_id)
+    filter_upwards [hopen.mem_nhds hx] with w hw
+    have h := M.FT_eq_neg_entropy hw
+    simp only [FT] at h
+    simp only [Pi.neg_apply]
+    linarith
+  have hSd := hS.deriv
+  have hV := (M.domain_positive hx).2
+  have hK := B.stable.ne'
+  have hαK : qhaThermalExpansion (qhaGibbsEnergy M.freeEnergy I) ((T : ℝ), p) *
+      qhaBulkModulus M.freeEnergy I ((T : ℝ), p) =
+        -mixedTV M.freeEnergy ((T : ℝ), B.volume ((T : ℝ), p)) := by
+    rw [(harmonic_static_qhaThermalExpansion_eq_omai M T p B hI).2,
+      B.qhaBulkModulus_eq_bulk M.domain_isOpen M.freeEnergy_contDiffOn hI]
+    unfold bulk
+    field_simp
+  refine ⟨?_, hSd, hSd.trans hαK.symm⟩
+  rw [B.qhaHeatCapacityP_eq_cp M.domain_isOpen M.freeEnergy_contDiffOn hI, B.isobar.cp_eq hFx,
+    B.deriv_gibbsVolume_isobar M.domain_isOpen M.freeEnergy_contDiffOn hI, hSd,
+    M.cv_eq_responseCv hx]
+  simp only [GibbsBranchAt.isobar_volume]
+  ring
 
 /-- compute_heat_capacity_p, strictness: C_P exceeds C_V exactly when the Gibbs-surface
 expansion is nonzero; they coincide when it vanishes. -/
@@ -328,7 +421,9 @@ theorem harmonic_static_qhaHeatCapacityP_gt_iff
   rw [(harmonic_static_qhaHeatCapacityP_eq_omai M T p B hI).2]
   have hT : 0 < (T : ℝ) := B.in_domain.self_of_nhds.1
   have hV := (M.domain_positive B.in_domain.self_of_nhds).2
-  have hK := (harmonic_static_qhaBulkModulus_eq_omai M T p B hI).2.2
+  have hK : 0 < qhaBulkModulus M.freeEnergy I ((T : ℝ), p) := by
+    rw [B.qhaBulkModulus_eq_bulk M.domain_isOpen M.freeEnergy_contDiffOn hI]
+    exact mul_pos hV B.stable
   constructor
   · intro h hα
     rw [hα] at h
@@ -362,7 +457,7 @@ theorem harmonic_static_qhaThermalGruneisen_eq_omai
             B.in_domain.self_of_nhds.2) T := by
   rw [qhaThermalGruneisen_eq_weightedGruneisen,
     (harmonic_static_qhaThermalExpansion_eq_omai M T p B hI).1,
-    (harmonic_static_qhaBulkModulus_eq_omai M T p B hI).1]
+    B.qhaBulkModulus_eq_bulk M.domain_isOpen M.freeEnergy_contDiffOn hI]
   have hC := M.volumetricCv_pos T _ B.in_domain.self_of_nhds.2 (temperature_pos_of_branch B)
   have hαK := M.expansion_mul_bulk_eq_weightedGruneisen_mul_volumetricCv p T B.isobar
   change expansion B.isobar.volume (T : ℝ) * bulk M.freeEnergy ((T : ℝ), B.volume ((T : ℝ), p)) =

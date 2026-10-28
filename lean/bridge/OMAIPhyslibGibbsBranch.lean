@@ -24,6 +24,59 @@ open scoped Topology ContDiff
 
 namespace OMAI.PhyslibBridge.Response
 
+/-- On an open volume interval where F(T, ·) stays in the domain and is strictly convex, a
+stationary point of V ↦ F(T, V) + pV is its unique minimizer on the interval. Strict
+monotonicity of F_V and the mean value theorem give the strict inequality. -/
+theorem strictMin_of_convex_interval {F : Surface} {D : Set (ℝ × ℝ)} (hD : IsOpen D)
+    (hF : ContDiffOn ℝ 2 F D) {t p a b V : ℝ}
+    (hbox : ∀ u ∈ Ioo a b, (t, u) ∈ D ∧ 0 < FVV F (t, u)) (hVI : V ∈ Ioo a b)
+    (heq : FV F (t, V) + p = 0) :
+    ∀ w ∈ Ioo a b, w ≠ V → F (t, V) + p * V < F (t, w) + p * w := by
+  intro w hwI hne
+  set I := Ioo a b with hI
+  let g : ℝ → ℝ := fun u => F (t, u) + p * u
+  let g' : ℝ → ℝ := fun u => FV F (t, u) + p
+  have hg : ∀ u ∈ I, HasDerivAt g (g' u) u := by
+    intro u hu
+    have h := (volume_hasDerivAt (hF.contDiffAt (hD.mem_nhds (hbox u hu).1))).fun_add
+      ((hasDerivAt_id u).const_mul p)
+    simp only [mul_one, id_eq] at h
+    exact h
+  have hg' : ∀ u ∈ I, HasDerivAt g' (FVV F (t, u)) u := by
+    intro u hu
+    exact (partial_volume_hasDerivAt (hF.contDiffAt (hD.mem_nhds (hbox u hu).1)) (0, 1)).add_const p
+  have hmono : StrictMonoOn g' I := by
+    refine strictMonoOn_of_deriv_pos (convex_Ioo _ _)
+      (fun u hu => (hg' u hu).continuousAt.continuousWithinAt) ?_
+    intro u hu
+    rw [interior_Ioo] at hu
+    rw [(hg' u hu).deriv]
+    exact (hbox u hu).2
+  have hg'V : g' V = 0 := heq
+  have hcont_g : ∀ c d, c ∈ I → d ∈ I → ContinuousOn g (Icc c d) := by
+    intro c d hc hd u hu
+    exact (hg u ((ordConnected_Ioo).out hc hd hu)).continuousAt.continuousWithinAt
+  change g V < g w
+  rcases lt_or_gt_of_ne hne with hlt | hgt
+  · obtain ⟨c, hc, hcs⟩ := exists_hasDerivAt_eq_slope g g' hlt (hcont_g w V hwI hVI)
+      (fun u hu => hg u ((ordConnected_Ioo).out hwI hVI (Ioo_subset_Icc_self hu)))
+    have hcI : c ∈ I := (ordConnected_Ioo).out hwI hVI (Ioo_subset_Icc_self hc)
+    have hneg : g' c < 0 := hg'V ▸ hmono hcI hVI hc.2
+    rw [hcs] at hneg
+    have hpos : 0 < V - w := sub_pos.mpr hlt
+    rcases div_neg_iff.mp hneg with ⟨_, h⟩ | ⟨h, _⟩
+    · linarith
+    · linarith
+  · obtain ⟨c, hc, hcs⟩ := exists_hasDerivAt_eq_slope g g' hgt (hcont_g V w hVI hwI)
+      (fun u hu => hg u ((ordConnected_Ioo).out hVI hwI (Ioo_subset_Icc_self hu)))
+    have hcI : c ∈ I := (ordConnected_Ioo).out hVI hwI (Ioo_subset_Icc_self hc)
+    have hpos : 0 < g' c := hg'V ▸ hmono hVI hcI hc.1
+    rw [hcs] at hpos
+    have hden : 0 < w - V := sub_pos.mpr hgt
+    rcases div_pos_iff.mp hpos with ⟨h, _⟩ | ⟨_, h⟩
+    · linarith
+    · linarith
+
 /-- A local two-parameter equilibrium family V(T, p) of a Helmholtz surface. -/
 structure GibbsBranchAt (F : Surface) (D : Set (ℝ × ℝ)) (x₀ : ℝ × ℝ) where
   volume : ℝ × ℝ → ℝ
@@ -101,53 +154,7 @@ theorem window_strictMin (B : GibbsBranchAt F D (t₀, p₀)) (hD : IsOpen D)
     apply hball
     rw [← ball_prod_same]
     exact ⟨hxT, by rw [Real.ball_eq_Ioo]; exact hu⟩
-  set V := B.volume x with hVdef
-  let g : ℝ → ℝ := fun u => F (x.1, u) + x.2 * u
-  let g' : ℝ → ℝ := fun u => FV F (x.1, u) + x.2
-  have hg : ∀ u ∈ I, HasDerivAt g (g' u) u := by
-    intro u hu
-    have h := (volume_hasDerivAt (hF.contDiffAt (hD.mem_nhds (hbox u hu).1))).fun_add
-      ((hasDerivAt_id u).const_mul x.2)
-    simp only [mul_one, id_eq] at h
-    exact h
-  have hg' : ∀ u ∈ I, HasDerivAt g' (FVV F (x.1, u)) u := by
-    intro u hu
-    exact (partial_volume_hasDerivAt (hF.contDiffAt (hD.mem_nhds (hbox u hu).1)) (0, 1)).add_const x.2
-  have hmono : StrictMonoOn g' I := by
-    refine strictMonoOn_of_deriv_pos (convex_Ioo _ _)
-      (fun u hu => (hg' u hu).continuousAt.continuousWithinAt) ?_
-    intro u hu
-    rw [interior_Ioo] at hu
-    rw [(hg' u hu).deriv]
-    exact (hbox u hu).2
-  have hVI : V ∈ I := hsub hxV
-  have hwI : w ∈ I := hsub hw
-  have hg'V : g' V = 0 := hxeq
-  have hcont_g : ∀ a b, a ∈ I → b ∈ I → ContinuousOn g (Icc a b) := by
-    intro a b ha hb u hu
-    exact (hg u ((ordConnected_Ioo).out ha hb hu)).continuousAt.continuousWithinAt
-  change g V < g w
-  rcases lt_or_gt_of_ne hne with hlt | hgt
-  · obtain ⟨c, hc, hcs⟩ := exists_hasDerivAt_eq_slope g g' hlt (hcont_g w V hwI hVI)
-      (fun u hu => hg u ((ordConnected_Ioo).out hwI hVI (Ioo_subset_Icc_self hu)))
-    have hcI : c ∈ I := (ordConnected_Ioo).out hwI hVI (Ioo_subset_Icc_self hc)
-    have hneg : g' c < 0 := hg'V ▸ hmono hcI hVI hc.2
-    rw [hcs] at hneg
-    have hpos : 0 < V - w := sub_pos.mpr hlt
-    have := (div_neg_iff.mp hneg)
-    rcases this with ⟨_, h⟩ | ⟨h, _⟩
-    · linarith
-    · linarith
-  · obtain ⟨c, hc, hcs⟩ := exists_hasDerivAt_eq_slope g g' hgt (hcont_g V w hVI hwI)
-      (fun u hu => hg u ((ordConnected_Ioo).out hVI hwI (Ioo_subset_Icc_self hu)))
-    have hcI : c ∈ I := (ordConnected_Ioo).out hVI hwI (Ioo_subset_Icc_self hc)
-    have hpos : 0 < g' c := hg'V ▸ hmono hVI hcI hc.1
-    rw [hcs] at hpos
-    have hden : 0 < w - V := sub_pos.mpr hgt
-    have := (div_pos_iff.mp hpos)
-    rcases this with ⟨h, _⟩ | ⟨_, h⟩
-    · linarith
-    · linarith
+  exact strictMin_of_convex_interval hD hF hbox (hsub hxV) hxeq w (hsub hw) hne
 
 /-- Envelope relation in temperature: (∂G/∂T)_p = F_T at the family volume. -/
 theorem gibbs_temperature_hasDerivAt (B : GibbsBranchAt F D (t₀, p₀)) (hD : IsOpen D)
