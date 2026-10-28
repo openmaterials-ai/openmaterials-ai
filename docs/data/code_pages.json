@@ -167,8 +167,8 @@
   "website": "https://github.com/learningmatter-mit/AtomisticSkills"
  },
  "ngspice": {
-  "tagline": "The open-source SPICE circuit simulator.",
-  "summary": "ngspice is the open-source circuit simulator descended from Berkeley SPICE 3f5, with XSPICE mixed-signal extensions. It solves DC, AC and transient analyses of circuits built from device models and behavioral sources, so a device characterized on the map can be placed in a circuit and simulated at the circuit level. On the map it serves the quantities read back from its transient analyses.",
+  "tagline": "An open-source SPICE circuit simulator.",
+  "summary": "ngspice is the open-source circuit simulator descended from Berkeley SPICE 3f5, with XSPICE mixed-signal extensions. It solves DC, AC and transient analyses of circuits built from device models and behavioral sources, so a device characterized on the map can be placed in a circuit and simulated at the circuit level. On the map it serves the quantities read back from its operating-point (.op) analyses.",
   "website": "https://ngspice.sourceforge.io"
  }
 }

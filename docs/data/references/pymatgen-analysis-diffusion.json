@@ -17,19 +17,46 @@
  "methods": [],
  "applications": [
   {
-   "doi": "10.1002/aenm.201800035",
-   "title": "Design Strategies, Practical Considerations, and New Solution Processes of Sulfide Solid Electrolytes for All‐Solid‐State Batteries",
+   "doi": "10.1021/acs.chemmater.5b04013",
+   "title": "Computational and Experimental Investigations of Na-Ion Conduction in Cubic Na<sub>3</sub>PSe<sub>4</sub>",
    "authors": [
-    "K. H. Park",
-    "Q. Bai",
-    "D. H. Kim",
-    "D. Y. Oh",
-    "Y. Zhu",
-    "Y. Mo",
-    "Y. S. Jung"
+    "S. H. Bo",
+    "Y. Wang",
+    "J. C. Kim",
+    "W. D. Richards",
+    "G. Ceder"
    ],
-   "year": 2018,
-   "journal": "Advanced Energy Materials"
+   "year": 2015,
+   "journal": "Chemistry of Materials"
+  },
+  {
+   "doi": "10.1021/acs.chemmater.5b03656",
+   "title": "Role of Na<sup>+</sup> Interstitials and Dopants in Enhancing the Na<sup>+</sup> Conductivity of the Cubic Na<sub>3</sub>PS<sub>4</sub> Superionic Conductor",
+   "authors": [
+    "Z. Zhu",
+    "I. H. Chu",
+    "Z. Deng",
+    "S. P. Ong"
+   ],
+   "year": 2015,
+   "journal": "Chemistry of Materials"
+  },
+  {
+   "doi": "10.1038/ncomms11009",
+   "title": "Design and synthesis of the superionic conductor Na10SnP2S12",
+   "authors": [
+    "W. D. Richards",
+    "T. Tsujimura",
+    "L. J. Miara",
+    "Y. Wang",
+    "J. C. Kim",
+    "S. P. Ong",
+    "I. Uechi",
+    "N. Suzuki",
+    "G. Ceder"
+   ],
+   "year": 2016,
+   "journal": "Nature Communications"
   },
   {
    "doi": "10.1039/C7EE03364H",
@@ -51,35 +78,6 @@
    ],
    "year": 2018,
    "journal": "Energy & Environmental Science"
-  },
-  {
-   "doi": "10.1038/s41578-019-0157-5",
-   "title": "Understanding interface stability in solid-state batteries",
-   "authors": [
-    "Y. Xiao",
-    "Y. Wang",
-    "S. H. Bo",
-    "J. C. Kim",
-    "L. J. Miara",
-    "G. Ceder"
-   ],
-   "year": 2019,
-   "journal": "Nature Reviews Materials"
-  },
-  {
-   "doi": "10.1016/j.esci.2022.02.008",
-   "title": "Solid-state lithium batteries: Safety and prospects",
-   "authors": [
-    "Y. Guo",
-    "S. Wu",
-    "Y. B. He",
-    "F. Kang",
-    "L. Chen",
-    "H. Li",
-    "Q. H. Yang"
-   ],
-   "year": 2022,
-   "journal": "eScience"
   }
  ]
 }

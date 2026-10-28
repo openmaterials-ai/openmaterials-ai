@@ -11,8 +11,9 @@ Every page is generated, never hand edited. Inputs, all under docs/data:
 
 The page opens with the map itself, embedded with the code's coverage lit (``map/?embed=1#code=<key>``),
 then the summary, the quantities served, the releases, the references and the citation line. A social
-card (1200 x 630) is drawn as SVG and rasterized with ImageMagick when ``convert`` is on the PATH; the
-PNGs are a release artifact whose bytes depend on the build machine's fonts, the HTML does not.
+card (1200 x 630) is drawn as SVG and rasterized with ImageMagick when ``convert`` is on the PATH;
+``omai.code_cards`` then replaces each PNG with a screenshot of the code's lit submap when Chrome is
+available. The PNGs are a release artifact whose bytes depend on the build machine, the HTML does not.
 
 Run as::
 
