@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "scope": "Reviewed OMAI formula endpoints and exact Lean proof source for local theorems about derivatives of an atomistic or cell energy, with no Physlib physics counterpart. Hash and compiled-name checks detect drift and provenance errors; they are not automatic symbolic translation or numerical validation.",
+  "source_path": "lean/bridge/OMAIMolecularModes.lean",
+  "source_sha256": "f2eec170c8cb2ad6496298982f7cef5414fb126dce3f61677651d0cbeb4e33bc",
+  "operators": [
+    {
+      "id": "compute_molecular_frequencies",
+      "uid": "e8e86bed52c1e09311b9baada0501b7668b72cf8de3797735bc4c7bb60090f3f",
+      "formula_sha256": "1b2f3949e74ab2b2db0136deee0dd84f2f576b76d18134a7624ebba18964fce0",
+      "formula_latex": "{\\nu_{mol}}_{m} = \\nu^{H}{\\left(\\mathcal{S},V \\right)}",
+      "lean_definition": "OMAI.PhyslibBridge.MolecularModes.molecularFrequencies"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "MolecularFrequency",
+      "uid": "e1270ea9a293c9107226bf831f60985f5525a0c386dca70841743bdc5d082c26"
+    }
+  ],
+  "interpretations": [
+    "The opaque nu^H(S, V) is interpreted as the eigenvalues lambda of the mass-weighted Hessian H_kl = Phi2_kl / sqrt(m_k m_l) of the potential at the structure: sqrt(lambda) for lambda >= 0 and -sqrt(-lambda) for an imaginary mode, in coherent angular units. The catalog stores wavenumbers in cm^-1, nu~ = omega / (2 pi c).",
+    "A local minimum of a potential twice continuously differentiable there, with positive masses, gives no negative eigenvalue (n_imaginary = 0). The converse does not hold, and the transition-state diagnostic n_imaginary = 1 is not covered.",
+    "For a translation-invariant potential the three mass-weighted rigid translations are zero modes. Rotational zero modes, the 3N-6 or 3N-5 count, and the projection of translations and rotations that quantum-chemistry codes apply are not covered."
+  ]
+}
