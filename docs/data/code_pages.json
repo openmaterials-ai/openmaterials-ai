@@ -148,12 +148,12 @@
  },
  "mat-elasticity": {
   "tagline": "An AtomisticSkills skill: elastic constants and moduli from a strained cell.",
-  "summary": "mat-elasticity is one of the AtomisticSkills, packaged calculations an agent can call. It wraps matcalc's ElasticityCalc: the cell is strained, the stresses are computed with the chosen ASE calculator (a machine-learned potential or any other), and the elastic tensor follows. From it the skill reports the bulk, shear and Young's moduli in the Voigt-Reuss-Hill average and the Poisson ratio. On the map it serves those five quantities.",
+  "summary": "mat-elasticity is one of the AtomisticSkills, packaged calculations an agent can call. It wraps matcalc's ElasticityCalc: the cell is strained, the stresses are computed with the chosen potential (the skill loads MACE, MatGL or FAIRChem), and the elastic tensor follows. From it the skill reports the bulk, shear and Young's moduli in the Voigt-Reuss-Hill average and the Poisson ratio. On the map it serves those five quantities.",
   "website": "https://github.com/learningmatter-mit/AtomisticSkills"
  },
  "mat-equation-of-state": {
   "tagline": "An AtomisticSkills skill: the bulk modulus from an equation of state.",
-  "summary": "mat-equation-of-state is one of the AtomisticSkills, packaged calculations an agent can call. It wraps matcalc's EOSCalc: the cell is scaled over a range of volumes, the energy is computed at each with the chosen ASE calculator, and a Birch-Murnaghan equation of state is fitted through pymatgen. The fitted B0 is the bulk modulus the skill reports, in GPa. On the map it serves that quantity.",
+  "summary": "mat-equation-of-state is one of the AtomisticSkills, packaged calculations an agent can call. It wraps matcalc's EOSCalc: the cell is scaled over a range of volumes, the ions are relaxed at each volume with the chosen potential and the energy taken, and a Birch-Murnaghan equation of state is fitted through pymatgen. The fitted B0 is the bulk modulus the skill reports, in GPa. On the map it serves that quantity.",
   "website": "https://github.com/learningmatter-mit/AtomisticSkills"
  },
  "mat-surface-adsorption": {

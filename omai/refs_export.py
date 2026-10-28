@@ -28,12 +28,12 @@ GROUPS = ("code", "methods", "applications")
 # there, otherwise from doi.org (CSL JSON). The Zotero collections should carry them too; this map
 # is the record of what was curated and why until they do.
 CURATED = {
-    "gpumd": {"methods": ["10.1103/PhysRevB.104.104309", "10.1038/s43588-026-01009-6"]},  # NEP framework; NEP89
+    "gpumd": {"methods": ["10.1103/PhysRevB.104.104309"], "code": ["10.1038/s43588-026-01009-6"]},  # NEP framework; NEP89, a model the code serves
     "kaldo": {"methods": ["10.1038/s41467-019-11572-4", "10.1103/PhysRevB.48.12581"]},  # QHGK (Isaeva 2019); Allen-Feldman
     "shengbte": {"methods": ["10.1016/0921-4526(95)00016-3"]},  # iterative BTE (Omini and Sparavigna 1995)
     "phono3py": {"methods": ["10.1103/PhysRevLett.110.265506"]},  # direct solution of the BTE (Chaput 2013)
     "fairchem": {"code": ["10.48550/arXiv.2410.12771"]},  # OMat24 dataset and models
-    "xtb": {"applications": ["10.1021/acs.jctc.9b00143", "10.1039/C9CP06869D"]},  # CREST conformer search on GFN2-xTB
+    "xtb": {"methods": ["10.1021/acs.jctc.9b00143"]},  # xtb's own metadynamics on GFN2-xTB (Grimme 2019); CREST is a separate program and stays out
     "plumed": {"applications": ["10.1103/PhysRevLett.104.190601", "10.1073/pnas.1303186110", "10.1103/PhysRevLett.111.230602", "10.1073/pnas.1811056115"]},  # well-tempered ensemble; funnel metadynamics; infrequent metadynamics; polymorph prediction
     "i-pi": {"applications": ["10.1063/1.4883861", "10.1063/1.4971438", "10.1073/pnas.1815117116"]},  # TRPMD; high-order PIMD; ab initio water thermodynamics
 }
@@ -46,7 +46,7 @@ EXCLUDE_APPLICATIONS_REVIEWS = {
 EXCLUDE_APPLICATIONS = {
     "10.1103/physrevb.73.155114": "CASTEP DFPT paper (Refson 2006), not a VASP study",
     "10.1063/5.0155600": "DeePMD-kit software paper",
-    "10.1021/acs.jctc.9b00143": "xtb metadynamics (Grimme 2019), does not use PLUMED",
+    "10.1021/acs.jctc.9b00143": "xtb metadynamics (Grimme 2019), does not use PLUMED (it is an xtb methods paper, see CURATED)",
     "10.1039/d1cp02805g": "Multiwfn method paper",
     "10.1002/jcc.26812": "Multiwfn method paper (IGMH)",
     "10.1063/5.0216272": "Multiwfn software paper",
@@ -95,9 +95,9 @@ def _authors(db: sqlite3.Connection, item_id: int) -> list[str]:
     return out
 
 
-def _entry_from_doi(db: sqlite3.Connection, doi: str) -> dict | None:
-    """The Zotero item with this DOI, or the doi.org CSL record when the library lacks it."""
-    row = db.execute(
+def _entry_from_doi(db: sqlite3.Connection, doi: str, prefer_registry: bool = False) -> dict | None:
+    """The Zotero item with this DOI, or the doi.org CSL record when the library lacks it (or when asked)."""
+    row = None if prefer_registry else db.execute(
         "select d.itemID from itemData d join itemDataValues v on v.valueID=d.valueID join fields f on f.fieldID=d.fieldID "
         "where f.fieldName='DOI' and lower(v.value)=lower(?)",
         (doi,),
@@ -170,7 +170,7 @@ def _export(db: sqlite3.Connection, out_dir: Path) -> dict[str, dict[str, int]]:
         for group, dois in CURATED.get(key, {}).items():
             for doi in dois:
                 if doi.lower() not in {x["doi"].lower() for x in groups[group]}:
-                    e = _entry_from_doi(db, doi)
+                    e = _entry_from_doi(db, doi, prefer_registry=True)  # curated DOIs take the registry record
                     if e:
                         groups[group].append(e)
         for g in GROUPS:  # year ascending inside a group: the story of a code reads forward

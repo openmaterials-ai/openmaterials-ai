@@ -17,16 +17,13 @@
  "methods": [
   {
    "doi": "10.1016/0921-4526(95)00016-3",
-   "title": "Ab initio variational approach for evaluating lattice thermal conductivity",
+   "title": "An iterative approach to the phonon Boltzmann equation in the theory of thermal conductivity",
    "authors": [
-    "G. Fugallo",
-    "M. Lazzeri",
-    "L. Paulatto",
-    "F. M. P. R. B",
-    "2013"
+    "M. Omini",
+    "A. Sparavigna"
    ],
-   "year": 2020,
-   "journal": "APS"
+   "year": 1995,
+   "journal": "Physica B: Condensed Matter"
   }
  ],
  "applications": [
