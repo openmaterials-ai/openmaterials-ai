@@ -96,7 +96,8 @@ LEGACY_CONTRACT_HASHES = {
 }
 CP_ERA_CONTRACTS = frozenset(LEGACY_CONTRACT_HASHES) | {CONTRACT_NAME}
 GAMMA_CONTRACT_NAME = "thermal-gruneisen-formula-contract.json"
-REQUIRED_CONTRACTS = CP_ERA_CONTRACTS | {GAMMA_CONTRACT_NAME}
+QHA_CONTRACT_NAME = "qha-formula-contract.json"
+REQUIRED_CONTRACTS = CP_ERA_CONTRACTS | {GAMMA_CONTRACT_NAME, QHA_CONTRACT_NAME}
 BASELINE_BINDINGS = frozenset(
     ['absolute-temperature',
      'abstract-crystal-structure',
@@ -214,10 +215,20 @@ GAMMA_BINDING_ID = "harmonic-static-thermal-gruneisen-identity"
 GAMMA_SUBJECTS = {("operator", "contract_thermal_gruneisen_identity"), ("node", "ThermalGruneisen")}
 GAMMA_PAIR = {"name": "OMAI.PhyslibBridge.Response.thermalGruneisenIdentity",
               "module": "OMAIPhyslibThermalGruneisen"}
+QHA_BINDING_IDS = frozenset({"harmonic-qha-gibbs-energy", "harmonic-qha-heat-capacity-p",
+                             "harmonic-qha-thermal-expansion", "harmonic-qha-bulk-modulus",
+                             "harmonic-qha-thermal-gruneisen-contraction"})
+QHA_SUBJECTS = {("operator", "compute_qha_gibbs"), ("node", "QHAGibbsEnergy"),
+                ("operator", "compute_heat_capacity_p"), ("node", "HeatCapacityConstantP"),
+                ("operator", "compute_thermal_expansion"), ("node", "ThermalExpansion"),
+                ("operator", "compute_bulk_modulus_qha"), ("node", "BulkModulus"),
+                ("operator", "contract_thermal_gruneisen"), ("node", "ThermalGruneisen")}
+QHA_PAIRS = [{"name": "OMAI.PhyslibBridge.Response." + name, "module": "OMAIPhyslibQHA"} for name in (
+    "qhaGibbsEnergy", "qhaHeatCapacityP", "qhaThermalExpansion", "qhaBulkModulus", "qhaThermalGruneisen")]
 
 
 def _assert_current_scope(payload):
-    """Exact real-payload ledger after the thermal Gruneisen tranche.
+    """Exact real-payload ledger after the thermal Gruneisen and quasiharmonic tranches.
 
     The Cp scope itself stays exactly CP_SUBJECTS; synthetic Cp-only tests keep
     using _assert_selected_scope unchanged.
@@ -232,13 +243,15 @@ def _assert_current_scope(payload):
     assert len(gamma) == 1, "integration pending: expected exactly one reviewed thermal Gruneisen binding"
     gamma_explicit = [(row["kind"], row["id"]) for row in gamma[0]["evidence"].get("proved_targets", [])]
     assert len(gamma_explicit) == 2 and set(gamma_explicit) == GAMMA_SUBJECTS, "gamma proof scope broadened"
-    assert _subjects(payload) == BASELINE_SUBJECTS | CP_SUBJECTS | GAMMA_SUBJECTS, "unique proof subjects changed"
-    assert {row["id"] for row in payload["bindings"]} == BASELINE_BINDINGS | {BINDING_ID, GAMMA_BINDING_ID}
+    assert _subjects(payload) == BASELINE_SUBJECTS | CP_SUBJECTS | GAMMA_SUBJECTS | QHA_SUBJECTS, \
+        "unique proof subjects changed"
+    assert {row["id"] for row in payload["bindings"]} == (
+        BASELINE_BINDINGS | {BINDING_ID, GAMMA_BINDING_ID} | QHA_BINDING_IDS)
     expected = {
         "nodes_total": 129, "operators_total": 127,
-        "operators_compiled": 15, "nodes_compiled": 16,
-        "nodes_compiled_outputs": 15, "nodes_compiled_interpretations": 1,
-        "bindings_total": 23, "compiled_bridges": 18, "source_correspondences": 5,
+        "operators_compiled": 20, "nodes_compiled": 19,
+        "nodes_compiled_outputs": 18, "nodes_compiled_interpretations": 1,
+        "bindings_total": 28, "compiled_bridges": 23, "source_correspondences": 5,
     }
     for key, value in expected.items():
         assert payload["coverage"][key] == value, key
@@ -663,10 +676,10 @@ def test_response_integration_current_record_covers_all_sources(response_payload
     assert (PACKAGE / "lean-toolchain").read_text().strip() == TOOLCHAIN
     assert NEW_SOURCES <= record["sources"].keys()
     assert {"lean/bridge/" + name for name in REQUIRED_CONTRACTS} <= record["sources"].keys()
-    expected_pairs = sorted([*BASELINE_PAIRS, {"name": DEFINITION, "module": MODULE}, GAMMA_PAIR],
+    expected_pairs = sorted([*BASELINE_PAIRS, {"name": DEFINITION, "module": MODULE}, GAMMA_PAIR, *QHA_PAIRS],
                             key=lambda row: (row["name"], row["module"]))
     assert record["contract_name_audit"] == {
-        "status": "passed", "pair_count": 15, "pairs": expected_pairs,
+        "status": "passed", "pair_count": 20, "pairs": expected_pairs,
     }
     source_modules = sorted(
         ".".join(path.relative_to(PACKAGE).with_suffix("").parts)

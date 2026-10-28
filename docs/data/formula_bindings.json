@@ -1206,6 +1206,431 @@
       }
     },
     {
+      "id": "harmonic-qha-bulk-modulus",
+      "relation": "conditional",
+      "statement": "For the same family, the isothermal curvature modulus V*(d2F/dV2)_T at the volume selected by the windowed Gibbs energy equals -V/(dV/dp)_T read off the Gibbs energy and is positive.",
+      "targets": [
+        {
+          "kind": "node",
+          "id": "BulkModulus",
+          "uid": "c0a13e64c02811f49b951271c894373267937676e0c657fc9ef09fac72558ced"
+        },
+        {
+          "kind": "operator",
+          "id": "compute_bulk_modulus_qha",
+          "uid": "de67212047d6c2bb08a94d9394adffe1b1cc183b7a1811d838de2dcfb9323235",
+          "formula_sha256": "bedbb8f82d002302668176dcdb9aa7abcbbe648e5963121237de436c725b2e7b"
+        }
+      ],
+      "sources": [
+        {
+          "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+          "name": "CanonicalEnsemble.helmholtzFreeEnergy",
+          "kind": "def",
+          "line": 680,
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L680"
+        }
+      ],
+      "conditions": [
+        "Use the same finite family of full Nat harmonic occupation ensembles as the Cp binding: product counting measure, unweighted oscillator energies, dof=0 and phase-space unit=1, with static energy N_q*E_0(v) attached through an actual singleton ensemble before molar normalization.",
+        "Temperature T and primitive-cell volume v are positive. Every frequency is positive and C2 on an open positive-volume domain. Static energy E_0(v) is C2, arbitrary signed, and independent of temperature. No mode may have zero or imaginary frequency; an unmodified Gamma-centred grid with zero acoustic modes does not satisfy the premises.",
+        "Keep masses, composition, atom and q counts, reduced-q labels, uniform q weights and the Avogadro scale fixed, with one q mesh at every volume. Frequencies depend on volume only.",
+        "The volume family V(T,p) is differentiable at every point of a neighborhood of the evaluation point (T,p), stays in the model domain and satisfies F_V(T,V)+p=0 throughout that neighborhood, with F_VV>0 at the evaluation point. The implicit-function theorem supplies such a family through every stable stationary point; a pointwise stationarity equation alone is insufficient.",
+        "The Gibbs energy is the infimum of F(T,V)+pV over an open volume window centred on the selected molar volume. For every half-width up to a model-dependent bound, the family volume is the unique minimizer in the window at every (T,p) near the evaluation point. A wider window that reaches another local minimum can select another branch, which is not covered.",
+        "Interpret K^qha(E_tot,S,omega) as the isothermal modulus of the actual molar Helmholtz surface at the selected volume and temperature. The adiabatic modulus K_S=K_T*C_P/C_V and static-only curvature are different quantities and are not this output.",
+        "Embed model values coherently in SI: T in K, p in Pa, E_0 in J per primitive cell, molar F and G in J/mol of primitive cells, v in m^3, V_m in m^3/mol, alpha_V in 1/K, K_T in Pa and capacities in J/(mol K) or J/(m^3 K). Convert Angstrom^3 by 10^-30, serving GPa by 10^9 and eV by 1.602176634e-19 J/eV. These exact-real interpretations do not certify floating-point adapters."
+      ],
+      "conventions": {
+        "model_scope": "Local hydrostatic static-plus-independent-harmonic canonical model with volume-dependent positive frequencies and no independent temperature dependence of the spectrum. The Gibbs energy is a windowed minimum over molar volume of the actual molar Helmholtz surface plus pV. This is an OMAI model-specific extension of actual Physlib ensembles, not an upstream QHA theorem or a numerical QHA solver proof.",
+        "component_scope": "Finite uniform-q grid with all 3*N_atoms branches and fixed reduced-q labels; one scalar volume coordinate along a hydrostatic path, one temperature and one pressure coordinate. Electronic, magnetic, configurational, anharmonic and anisotropic strain contributions are excluded.",
+        "normalization_basis": "Moles of primitive cells. F, G and C_P are molar in that basis; C_V_vol divides by the primitive cell volume. alpha_V, K_T and Gamma are intensive.",
+        "frequency_convention": "Angular SI frequency with exact upstream hbar and kB in the ensemble energies and heat-capacity weights. Stored linear THz requires omega_SI=2*pi*10^12*nu_THz.",
+        "unit_embedding": "G and F in J/mol, pressure and K_T in Pa, V_m in m^3/mol, alpha_V in 1/K, C_P in J/(mol K) and C_V_vol in J/(m^3 K). Use a common numeric-unit embedding, not raw mixed serving values.",
+        "held_fixed": "Composition, masses, q labels and weights, the q mesh, the Avogadro scale and the static-energy and frequency functions are fixed. C_P and alpha_V differentiate at constant pressure, K_T at constant temperature, C_V at constant volume.",
+        "admissibility": "T>0, v>0, omega>0, N_A>0, N_q>0, local positive isothermal curvature and a window inside the locally convex region. alpha_V and Gamma are sign-free. Totalized values outside the model domain or at T=0 have no asserted physical interpretation.",
+        "reference_energy": "All oscillator zero-point energies remain and shift the selected volume and modulus. The signed temperature-independent static energy enters the actual Hamiltonian and is not silently removed.",
+        "qpoint_weighting": "Uniform full-grid q averaging with the same mesh at every volume; varying primitive volume does not change reduced-q labels or introduce fractional oscillator copies."
+      },
+      "remaining_obligations": [
+        "Static-energy, phonon and geometry producers are interpreted inputs, not verified implementations. Numerical volume scans, EOS fits, polynomial or finite-difference derivatives, minimizers and the Phonopy QHA code are not verified; the theorems state what such a producer computes on an exact model, not that a given code does.",
+        "Global minimization over all volumes, first-order transitions between branches, phase coexistence, mechanically unstable branches and the T=0 limit are outside scope.",
+        "Zero or imaginary modes, Gamma-point acoustic modes, nonuniform or symmetry-reduced q quadrature, q meshes that change with volume, independent temperature-dependent spectra, anharmonic, electronic or magnetic free energies and anisotropic strain remain outside scope.",
+        "Compiled witnesses establish realizable model examples with positive, negative and zero expansion; they do not certify any material or numerical volume scan."
+      ],
+      "evidence": {
+        "kind": "compiled_bridge",
+        "module": "OMAIPhyslibQHA",
+        "declarations": [
+          "OMAI.PhyslibBridge.Response.harmonic_static_qhaBulkModulus_eq_omai"
+        ],
+        "source_path": "lean/bridge/OMAIPhyslibQHA.lean",
+        "build_record": "lean/bridge/build-evidence.json",
+        "proved_targets": [
+          {
+            "kind": "operator",
+            "id": "compute_bulk_modulus_qha"
+          },
+          {
+            "kind": "node",
+            "id": "BulkModulus"
+          }
+        ],
+        "source_sha256": "d84d36807d405bc6ad1fe10d2bcfac473e1f034cef1705a6e6618c5a9d8073a9"
+      }
+    },
+    {
+      "id": "harmonic-qha-gibbs-energy",
+      "relation": "conditional",
+      "statement": "For the static-plus-harmonic Physlib ensemble, the infimum of F(T,V)+pV over every sufficiently narrow volume window around a local stable equilibrium family is attained uniquely at the family volume, and its temperature and pressure derivatives are minus the actual canonical entropy and the selected molar volume.",
+      "targets": [
+        {
+          "kind": "node",
+          "id": "QHAGibbsEnergy",
+          "uid": "bb10912780eb22d45beff551be14f7f4216f3aae26161e8bfd60cdc051f63f58"
+        },
+        {
+          "kind": "operator",
+          "id": "compute_qha_gibbs",
+          "uid": "2dfd344c598d659dbc5e4c8def4cefcb69b1a0bd215a9202f981618b18611b89",
+          "formula_sha256": "8264d933a1f5cf6dab090041c2a1e6367cd92e5de6022aaa8e7dbbbe20ed840e"
+        }
+      ],
+      "sources": [
+        {
+          "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+          "name": "CanonicalEnsemble.helmholtzFreeEnergy",
+          "kind": "def",
+          "line": 680,
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L680"
+        },
+        {
+          "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+          "name": "CanonicalEnsemble.thermodynamicEntropy",
+          "kind": "def",
+          "line": 800,
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L800"
+        }
+      ],
+      "conditions": [
+        "Use the same finite family of full Nat harmonic occupation ensembles as the Cp binding: product counting measure, unweighted oscillator energies, dof=0 and phase-space unit=1, with static energy N_q*E_0(v) attached through an actual singleton ensemble before molar normalization.",
+        "Temperature T and primitive-cell volume v are positive. Every frequency is positive and C2 on an open positive-volume domain. Static energy E_0(v) is C2, arbitrary signed, and independent of temperature. No mode may have zero or imaginary frequency; an unmodified Gamma-centred grid with zero acoustic modes does not satisfy the premises.",
+        "Keep masses, composition, atom and q counts, reduced-q labels, uniform q weights and the Avogadro scale fixed, with one q mesh at every volume. Frequencies depend on volume only.",
+        "The volume family V(T,p) is differentiable at every point of a neighborhood of the evaluation point (T,p), stays in the model domain and satisfies F_V(T,V)+p=0 throughout that neighborhood, with F_VV>0 at the evaluation point. The implicit-function theorem supplies such a family through every stable stationary point; a pointwise stationarity equation alone is insufficient.",
+        "The Gibbs energy is the infimum of F(T,V)+pV over an open volume window centred on the selected molar volume. For every half-width up to a model-dependent bound, the family volume is the unique minimizer in the window at every (T,p) near the evaluation point. A wider window that reaches another local minimum can select another branch, which is not covered.",
+        "Interpret G^qha(E_tot,S,omega) as that windowed infimum with F the actual molar Helmholtz surface built from the static energy, structure and frequencies of one primitive cell. The entropy is the actual Physlib thermodynamic entropy per mole of primitive cells at the selected volume.",
+        "Embed model values coherently in SI: T in K, p in Pa, E_0 in J per primitive cell, molar F and G in J/mol of primitive cells, v in m^3, V_m in m^3/mol, alpha_V in 1/K, K_T in Pa and capacities in J/(mol K) or J/(m^3 K). Convert Angstrom^3 by 10^-30, serving GPa by 10^9 and eV by 1.602176634e-19 J/eV. These exact-real interpretations do not certify floating-point adapters."
+      ],
+      "conventions": {
+        "model_scope": "Local hydrostatic static-plus-independent-harmonic canonical model with volume-dependent positive frequencies and no independent temperature dependence of the spectrum. The Gibbs energy is a windowed minimum over molar volume of the actual molar Helmholtz surface plus pV. This is an OMAI model-specific extension of actual Physlib ensembles, not an upstream QHA theorem or a numerical QHA solver proof.",
+        "component_scope": "Finite uniform-q grid with all 3*N_atoms branches and fixed reduced-q labels; one scalar volume coordinate along a hydrostatic path, one temperature and one pressure coordinate. Electronic, magnetic, configurational, anharmonic and anisotropic strain contributions are excluded.",
+        "normalization_basis": "Moles of primitive cells. F, G and C_P are molar in that basis; C_V_vol divides by the primitive cell volume. alpha_V, K_T and Gamma are intensive.",
+        "frequency_convention": "Angular SI frequency with exact upstream hbar and kB in the ensemble energies and heat-capacity weights. Stored linear THz requires omega_SI=2*pi*10^12*nu_THz.",
+        "unit_embedding": "G and F in J/mol, pressure and K_T in Pa, V_m in m^3/mol, alpha_V in 1/K, C_P in J/(mol K) and C_V_vol in J/(m^3 K). Use a common numeric-unit embedding, not raw mixed serving values.",
+        "held_fixed": "Composition, masses, q labels and weights, the q mesh, the Avogadro scale and the static-energy and frequency functions are fixed. C_P and alpha_V differentiate at constant pressure, K_T at constant temperature, C_V at constant volume.",
+        "admissibility": "T>0, v>0, omega>0, N_A>0, N_q>0, local positive isothermal curvature and a window inside the locally convex region. alpha_V and Gamma are sign-free. Totalized values outside the model domain or at T=0 have no asserted physical interpretation.",
+        "reference_energy": "All oscillator zero-point energies remain and shift the selected volume and modulus. The signed temperature-independent static energy enters the actual Hamiltonian and is not silently removed.",
+        "qpoint_weighting": "Uniform full-grid q averaging with the same mesh at every volume; varying primitive volume does not change reduced-q labels or introduce fractional oscillator copies."
+      },
+      "remaining_obligations": [
+        "Static-energy, phonon and geometry producers are interpreted inputs, not verified implementations. Numerical volume scans, EOS fits, polynomial or finite-difference derivatives, minimizers and the Phonopy QHA code are not verified; the theorems state what such a producer computes on an exact model, not that a given code does.",
+        "Global minimization over all volumes, first-order transitions between branches, phase coexistence, mechanically unstable branches and the T=0 limit are outside scope.",
+        "Zero or imaginary modes, Gamma-point acoustic modes, nonuniform or symmetry-reduced q quadrature, q meshes that change with volume, independent temperature-dependent spectra, anharmonic, electronic or magnetic free energies and anisotropic strain remain outside scope.",
+        "Compiled witnesses establish realizable model examples with positive, negative and zero expansion; they do not certify any material or numerical volume scan."
+      ],
+      "evidence": {
+        "kind": "compiled_bridge",
+        "module": "OMAIPhyslibQHA",
+        "declarations": [
+          "OMAI.PhyslibBridge.Response.harmonic_static_qhaGibbs_window",
+          "OMAI.PhyslibBridge.Response.harmonic_static_qhaGibbs_entropy",
+          "OMAI.PhyslibBridge.Response.harmonic_static_qhaGibbs_volume"
+        ],
+        "source_path": "lean/bridge/OMAIPhyslibQHA.lean",
+        "build_record": "lean/bridge/build-evidence.json",
+        "proved_targets": [
+          {
+            "kind": "operator",
+            "id": "compute_qha_gibbs"
+          },
+          {
+            "kind": "node",
+            "id": "QHAGibbsEnergy"
+          }
+        ],
+        "source_sha256": "d84d36807d405bc6ad1fe10d2bcfac473e1f034cef1705a6e6618c5a9d8073a9"
+      }
+    },
+    {
+      "id": "harmonic-qha-heat-capacity-p",
+      "relation": "conditional",
+      "statement": "For the same windowed Gibbs energy, -T times its second temperature derivative at constant pressure equals the temperature derivative of actual molar enthalpy along the constant-pressure path, and equals C_V+T*V*alpha_V^2*K_T with alpha_V and K_T read off the same Gibbs energy. It exceeds C_V exactly when alpha_V is nonzero.",
+      "targets": [
+        {
+          "kind": "node",
+          "id": "HeatCapacityConstantP",
+          "uid": "08057e4554a3420c933329b3821de9295e2b5950191e23cafe310b0a15adc7b6"
+        },
+        {
+          "kind": "node",
+          "id": "QHAGibbsEnergy",
+          "uid": "bb10912780eb22d45beff551be14f7f4216f3aae26161e8bfd60cdc051f63f58"
+        },
+        {
+          "kind": "operator",
+          "id": "compute_heat_capacity_p",
+          "uid": "36100a86ef25aada0acd615151092323ba680b4a9791bb58d1175adcea96deb2",
+          "formula_sha256": "94c543b5191d7fa6737a2f2fcca9cc68bc4cc38530abd5c2d31b25b091bc4ccf"
+        }
+      ],
+      "sources": [
+        {
+          "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+          "name": "CanonicalEnsemble.helmholtzFreeEnergy",
+          "kind": "def",
+          "line": 680,
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L680"
+        },
+        {
+          "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
+          "name": "CanonicalEnsemble.meanEnergyT",
+          "kind": "def",
+          "line": 409,
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L409"
+        },
+        {
+          "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
+          "name": "CanonicalEnsemble.heatCapacity",
+          "kind": "def",
+          "line": 417,
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L417"
+        }
+      ],
+      "conditions": [
+        "Use the same finite family of full Nat harmonic occupation ensembles as the Cp binding: product counting measure, unweighted oscillator energies, dof=0 and phase-space unit=1, with static energy N_q*E_0(v) attached through an actual singleton ensemble before molar normalization.",
+        "Temperature T and primitive-cell volume v are positive. Every frequency is positive and C2 on an open positive-volume domain. Static energy E_0(v) is C2, arbitrary signed, and independent of temperature. No mode may have zero or imaginary frequency; an unmodified Gamma-centred grid with zero acoustic modes does not satisfy the premises.",
+        "Keep masses, composition, atom and q counts, reduced-q labels, uniform q weights and the Avogadro scale fixed, with one q mesh at every volume. Frequencies depend on volume only.",
+        "The volume family V(T,p) is differentiable at every point of a neighborhood of the evaluation point (T,p), stays in the model domain and satisfies F_V(T,V)+p=0 throughout that neighborhood, with F_VV>0 at the evaluation point. The implicit-function theorem supplies such a family through every stable stationary point; a pointwise stationarity equation alone is insufficient.",
+        "The Gibbs energy is the infimum of F(T,V)+pV over an open volume window centred on the selected molar volume. For every half-width up to a model-dependent bound, the family volume is the unique minimizer in the window at every (T,p) near the evaluation point. A wider window that reaches another local minimum can select another branch, which is not covered.",
+        "Interpret C_P^qha(G_qha) as -T*(d2G/dT2)_p of that windowed Gibbs energy at the evaluation point. C_V is the fixed-volume capacity of the same actual ensemble at the selected volume; alpha_V=(dV/dT)_p/V and K_T are the producers of the sibling bindings on the same Gibbs energy.",
+        "Embed model values coherently in SI: T in K, p in Pa, E_0 in J per primitive cell, molar F and G in J/mol of primitive cells, v in m^3, V_m in m^3/mol, alpha_V in 1/K, K_T in Pa and capacities in J/(mol K) or J/(m^3 K). Convert Angstrom^3 by 10^-30, serving GPa by 10^9 and eV by 1.602176634e-19 J/eV. These exact-real interpretations do not certify floating-point adapters."
+      ],
+      "conventions": {
+        "model_scope": "Local hydrostatic static-plus-independent-harmonic canonical model with volume-dependent positive frequencies and no independent temperature dependence of the spectrum. The Gibbs energy is a windowed minimum over molar volume of the actual molar Helmholtz surface plus pV. This is an OMAI model-specific extension of actual Physlib ensembles, not an upstream QHA theorem or a numerical QHA solver proof.",
+        "component_scope": "Finite uniform-q grid with all 3*N_atoms branches and fixed reduced-q labels; one scalar volume coordinate along a hydrostatic path, one temperature and one pressure coordinate. Electronic, magnetic, configurational, anharmonic and anisotropic strain contributions are excluded.",
+        "normalization_basis": "Moles of primitive cells. F, G and C_P are molar in that basis; C_V_vol divides by the primitive cell volume. alpha_V, K_T and Gamma are intensive.",
+        "frequency_convention": "Angular SI frequency with exact upstream hbar and kB in the ensemble energies and heat-capacity weights. Stored linear THz requires omega_SI=2*pi*10^12*nu_THz.",
+        "unit_embedding": "G and F in J/mol, pressure and K_T in Pa, V_m in m^3/mol, alpha_V in 1/K, C_P in J/(mol K) and C_V_vol in J/(m^3 K). Use a common numeric-unit embedding, not raw mixed serving values.",
+        "held_fixed": "Composition, masses, q labels and weights, the q mesh, the Avogadro scale and the static-energy and frequency functions are fixed. C_P and alpha_V differentiate at constant pressure, K_T at constant temperature, C_V at constant volume.",
+        "admissibility": "T>0, v>0, omega>0, N_A>0, N_q>0, local positive isothermal curvature and a window inside the locally convex region. alpha_V and Gamma are sign-free. Totalized values outside the model domain or at T=0 have no asserted physical interpretation.",
+        "reference_energy": "All oscillator zero-point energies remain and shift the selected volume and modulus. The signed temperature-independent static energy enters the actual Hamiltonian and is not silently removed.",
+        "qpoint_weighting": "Uniform full-grid q averaging with the same mesh at every volume; varying primitive volume does not change reduced-q labels or introduce fractional oscillator copies."
+      },
+      "remaining_obligations": [
+        "Static-energy, phonon and geometry producers are interpreted inputs, not verified implementations. Numerical volume scans, EOS fits, polynomial or finite-difference derivatives, minimizers and the Phonopy QHA code are not verified; the theorems state what such a producer computes on an exact model, not that a given code does.",
+        "Global minimization over all volumes, first-order transitions between branches, phase coexistence, mechanically unstable branches and the T=0 limit are outside scope.",
+        "Zero or imaginary modes, Gamma-point acoustic modes, nonuniform or symmetry-reduced q quadrature, q meshes that change with volume, independent temperature-dependent spectra, anharmonic, electronic or magnetic free energies and anisotropic strain remain outside scope.",
+        "Compiled witnesses establish realizable model examples with positive, negative and zero expansion; they do not certify any material or numerical volume scan.",
+        "contract_heat_capacity_p_identity has its own binding. The two routes agree on this model; neither verifies a numerical C_P producer or a polynomial fit of G(T)."
+      ],
+      "evidence": {
+        "kind": "compiled_bridge",
+        "module": "OMAIPhyslibQHA",
+        "declarations": [
+          "OMAI.PhyslibBridge.Response.harmonic_static_qhaHeatCapacityP_eq_omai",
+          "OMAI.PhyslibBridge.Response.harmonic_static_qhaHeatCapacityP_gt_iff"
+        ],
+        "source_path": "lean/bridge/OMAIPhyslibQHA.lean",
+        "build_record": "lean/bridge/build-evidence.json",
+        "proved_targets": [
+          {
+            "kind": "operator",
+            "id": "compute_heat_capacity_p"
+          },
+          {
+            "kind": "node",
+            "id": "HeatCapacityConstantP"
+          }
+        ],
+        "source_sha256": "d84d36807d405bc6ad1fe10d2bcfac473e1f034cef1705a6e6618c5a9d8073a9"
+      }
+    },
+    {
+      "id": "harmonic-qha-thermal-expansion",
+      "relation": "conditional",
+      "statement": "For the same windowed Gibbs energy, the expansion (dV/dT)_p/V with V=(dG/dp)_T equals the volumetric expansion of the constant-pressure path, -F_TV/(V*F_VV), and is positive exactly when the heat-capacity-weighted mode Gruneisen mean of the same family is positive.",
+      "targets": [
+        {
+          "kind": "node",
+          "id": "QHAGibbsEnergy",
+          "uid": "bb10912780eb22d45beff551be14f7f4216f3aae26161e8bfd60cdc051f63f58"
+        },
+        {
+          "kind": "node",
+          "id": "ThermalExpansion",
+          "uid": "9b42f8aebb6099cdcd910a272a92208881b598688bac7830c3ae0a412152473e"
+        },
+        {
+          "kind": "operator",
+          "id": "compute_thermal_expansion",
+          "uid": "4e11a6ef1474661ab6ea320a5c99e8774edbe32b5a4dcdb13d97fda4b108995e",
+          "formula_sha256": "7a5492ca3cc69da193307f5f74b36985627e5b4ab5c97bc2851120f491553f93"
+        }
+      ],
+      "sources": [
+        {
+          "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+          "name": "CanonicalEnsemble.helmholtzFreeEnergy",
+          "kind": "def",
+          "line": 680,
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L680"
+        },
+        {
+          "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
+          "name": "CanonicalEnsemble.heatCapacity",
+          "kind": "def",
+          "line": 417,
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L417"
+        }
+      ],
+      "conditions": [
+        "Use the same finite family of full Nat harmonic occupation ensembles as the Cp binding: product counting measure, unweighted oscillator energies, dof=0 and phase-space unit=1, with static energy N_q*E_0(v) attached through an actual singleton ensemble before molar normalization.",
+        "Temperature T and primitive-cell volume v are positive. Every frequency is positive and C2 on an open positive-volume domain. Static energy E_0(v) is C2, arbitrary signed, and independent of temperature. No mode may have zero or imaginary frequency; an unmodified Gamma-centred grid with zero acoustic modes does not satisfy the premises.",
+        "Keep masses, composition, atom and q counts, reduced-q labels, uniform q weights and the Avogadro scale fixed, with one q mesh at every volume. Frequencies depend on volume only.",
+        "The volume family V(T,p) is differentiable at every point of a neighborhood of the evaluation point (T,p), stays in the model domain and satisfies F_V(T,V)+p=0 throughout that neighborhood, with F_VV>0 at the evaluation point. The implicit-function theorem supplies such a family through every stable stationary point; a pointwise stationarity equation alone is insufficient.",
+        "The Gibbs energy is the infimum of F(T,V)+pV over an open volume window centred on the selected molar volume. For every half-width up to a model-dependent bound, the family volume is the unique minimizer in the window at every (T,p) near the evaluation point. A wider window that reaches another local minimum can select another branch, which is not covered.",
+        "Interpret alpha^qha(G_qha) as the volumetric coefficient (dV/dT)_p/V with V=(dG/dp)_T read off the windowed Gibbs energy. Linear expansion coefficients are one third of this only for cubic isotropic strain and are not this output.",
+        "Embed model values coherently in SI: T in K, p in Pa, E_0 in J per primitive cell, molar F and G in J/mol of primitive cells, v in m^3, V_m in m^3/mol, alpha_V in 1/K, K_T in Pa and capacities in J/(mol K) or J/(m^3 K). Convert Angstrom^3 by 10^-30, serving GPa by 10^9 and eV by 1.602176634e-19 J/eV. These exact-real interpretations do not certify floating-point adapters."
+      ],
+      "conventions": {
+        "model_scope": "Local hydrostatic static-plus-independent-harmonic canonical model with volume-dependent positive frequencies and no independent temperature dependence of the spectrum. The Gibbs energy is a windowed minimum over molar volume of the actual molar Helmholtz surface plus pV. This is an OMAI model-specific extension of actual Physlib ensembles, not an upstream QHA theorem or a numerical QHA solver proof.",
+        "component_scope": "Finite uniform-q grid with all 3*N_atoms branches and fixed reduced-q labels; one scalar volume coordinate along a hydrostatic path, one temperature and one pressure coordinate. Electronic, magnetic, configurational, anharmonic and anisotropic strain contributions are excluded.",
+        "normalization_basis": "Moles of primitive cells. F, G and C_P are molar in that basis; C_V_vol divides by the primitive cell volume. alpha_V, K_T and Gamma are intensive.",
+        "frequency_convention": "Angular SI frequency with exact upstream hbar and kB in the ensemble energies and heat-capacity weights. Stored linear THz requires omega_SI=2*pi*10^12*nu_THz.",
+        "unit_embedding": "G and F in J/mol, pressure and K_T in Pa, V_m in m^3/mol, alpha_V in 1/K, C_P in J/(mol K) and C_V_vol in J/(m^3 K). Use a common numeric-unit embedding, not raw mixed serving values.",
+        "held_fixed": "Composition, masses, q labels and weights, the q mesh, the Avogadro scale and the static-energy and frequency functions are fixed. C_P and alpha_V differentiate at constant pressure, K_T at constant temperature, C_V at constant volume.",
+        "admissibility": "T>0, v>0, omega>0, N_A>0, N_q>0, local positive isothermal curvature and a window inside the locally convex region. alpha_V and Gamma are sign-free. Totalized values outside the model domain or at T=0 have no asserted physical interpretation.",
+        "reference_energy": "All oscillator zero-point energies remain and shift the selected volume and modulus. The signed temperature-independent static energy enters the actual Hamiltonian and is not silently removed.",
+        "qpoint_weighting": "Uniform full-grid q averaging with the same mesh at every volume; varying primitive volume does not change reduced-q labels or introduce fractional oscillator copies."
+      },
+      "remaining_obligations": [
+        "Static-energy, phonon and geometry producers are interpreted inputs, not verified implementations. Numerical volume scans, EOS fits, polynomial or finite-difference derivatives, minimizers and the Phonopy QHA code are not verified; the theorems state what such a producer computes on an exact model, not that a given code does.",
+        "Global minimization over all volumes, first-order transitions between branches, phase coexistence, mechanically unstable branches and the T=0 limit are outside scope.",
+        "Zero or imaginary modes, Gamma-point acoustic modes, nonuniform or symmetry-reduced q quadrature, q meshes that change with volume, independent temperature-dependent spectra, anharmonic, electronic or magnetic free energies and anisotropic strain remain outside scope.",
+        "Compiled witnesses establish realizable model examples with positive, negative and zero expansion; they do not certify any material or numerical volume scan."
+      ],
+      "evidence": {
+        "kind": "compiled_bridge",
+        "module": "OMAIPhyslibQHA",
+        "declarations": [
+          "OMAI.PhyslibBridge.Response.harmonic_static_qhaThermalExpansion_eq_omai",
+          "OMAI.PhyslibBridge.Response.harmonic_static_qhaThermalExpansion_pos_iff"
+        ],
+        "source_path": "lean/bridge/OMAIPhyslibQHA.lean",
+        "build_record": "lean/bridge/build-evidence.json",
+        "proved_targets": [
+          {
+            "kind": "operator",
+            "id": "compute_thermal_expansion"
+          },
+          {
+            "kind": "node",
+            "id": "ThermalExpansion"
+          }
+        ],
+        "source_sha256": "d84d36807d405bc6ad1fe10d2bcfac473e1f034cef1705a6e6618c5a9d8073a9"
+      }
+    },
+    {
+      "id": "harmonic-qha-thermal-gruneisen-contraction",
+      "relation": "conditional",
+      "statement": "The heat-capacity-weighted mean of supplied mode Gruneisen parameters, with actual Physlib canonical oscillator heat capacities as weights, lies between any bounds of the parameters. Applied to the derivative-defined mode parameters and oscillators of the volume family at the selected cell volume, it equals alpha_V*K_T/C_V_vol with alpha_V and K_T read off the windowed Gibbs energy.",
+      "targets": [
+        {
+          "kind": "node",
+          "id": "ThermalGruneisen",
+          "uid": "22b1bd519d50d93fd24a919e021bab85aff246464a66a08f8274558834983985"
+        },
+        {
+          "kind": "operator",
+          "id": "contract_thermal_gruneisen",
+          "uid": "aa554ec7f8a638108f1039bffd5f1c727687f5fd0d018d61d2916e745a5f6f29",
+          "formula_sha256": "01d5dfc469084551b1508829d6a3c4d7f55bccf19207530724fb1f9a56137f26"
+        }
+      ],
+      "sources": [
+        {
+          "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
+          "name": "CanonicalEnsemble.heatCapacity",
+          "kind": "def",
+          "line": 417,
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L417"
+        },
+        {
+          "module": "Physlib.QuantumMechanics.HarmonicOscillator.OneDimension.TISE",
+          "name": "QuantumMechanics.OneDimension.HarmonicOscillator.eigenValue",
+          "kind": "def",
+          "line": 29,
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29"
+        },
+        {
+          "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+          "name": "CanonicalEnsemble.helmholtzFreeEnergy",
+          "kind": "def",
+          "line": 680,
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L680"
+        }
+      ],
+      "conditions": [
+        "Use the same finite family of full Nat harmonic occupation ensembles as the Cp binding: product counting measure, unweighted oscillator energies, dof=0 and phase-space unit=1, with static energy N_q*E_0(v) attached through an actual singleton ensemble before molar normalization.",
+        "Temperature T and primitive-cell volume v are positive. Every frequency is positive and C2 on an open positive-volume domain. Static energy E_0(v) is C2, arbitrary signed, and independent of temperature. No mode may have zero or imaginary frequency; an unmodified Gamma-centred grid with zero acoustic modes does not satisfy the premises.",
+        "Keep masses, composition, atom and q counts, reduced-q labels, uniform q weights and the Avogadro scale fixed, with one q mesh at every volume. Frequencies depend on volume only.",
+        "The volume family V(T,p) is differentiable at every point of a neighborhood of the evaluation point (T,p), stays in the model domain and satisfies F_V(T,V)+p=0 throughout that neighborhood, with F_VV>0 at the evaluation point. The implicit-function theorem supplies such a family through every stable stationary point; a pointwise stationarity equation alone is insufficient.",
+        "The Gibbs energy is the infimum of F(T,V)+pV over an open volume window centred on the selected molar volume. For every half-width up to a model-dependent bound, the family volume is the unique minimizer in the window at every (T,p) near the evaluation point. A wider window that reaches another local minimum can select another branch, which is not covered.",
+        "Interpret gamma^qha(gamma_G,omega) as sum_i gamma_i*c_i/sum_i c_i over all modes of the grid, where c_i is the actual canonical heat capacity of an oscillator with frequency omega_i at the evaluation temperature. For the identity with alpha_V*K_T/C_V_vol, gamma_i must be the derivative -v*omega_i_prime(v)/omega_i(v) of the same volume family at the selected cell volume v=V_m/N_A, and C_V_vol=sum(c)/(N_q*v).",
+        "Each labelled branch must be followed continuously through band crossings; sorted band order is not sufficient for the derivative-defined mode parameters.",
+        "Embed model values coherently in SI: T in K, p in Pa, E_0 in J per primitive cell, molar F and G in J/mol of primitive cells, v in m^3, V_m in m^3/mol, alpha_V in 1/K, K_T in Pa and capacities in J/(mol K) or J/(m^3 K). Convert Angstrom^3 by 10^-30, serving GPa by 10^9 and eV by 1.602176634e-19 J/eV. These exact-real interpretations do not certify floating-point adapters."
+      ],
+      "conventions": {
+        "model_scope": "Local hydrostatic static-plus-independent-harmonic canonical model with volume-dependent positive frequencies and no independent temperature dependence of the spectrum. The Gibbs energy is a windowed minimum over molar volume of the actual molar Helmholtz surface plus pV. This is an OMAI model-specific extension of actual Physlib ensembles, not an upstream QHA theorem or a numerical QHA solver proof.",
+        "component_scope": "Finite uniform-q grid with all 3*N_atoms branches and fixed reduced-q labels; one scalar volume coordinate along a hydrostatic path, one temperature and one pressure coordinate. Electronic, magnetic, configurational, anharmonic and anisotropic strain contributions are excluded.",
+        "normalization_basis": "Moles of primitive cells. F, G and C_P are molar in that basis; C_V_vol divides by the primitive cell volume. alpha_V, K_T and Gamma are intensive.",
+        "frequency_convention": "Angular SI frequency with exact upstream hbar and kB in the ensemble energies and heat-capacity weights. Stored linear THz requires omega_SI=2*pi*10^12*nu_THz.",
+        "unit_embedding": "G and F in J/mol, pressure and K_T in Pa, V_m in m^3/mol, alpha_V in 1/K, C_P in J/(mol K) and C_V_vol in J/(m^3 K). Use a common numeric-unit embedding, not raw mixed serving values.",
+        "held_fixed": "Composition, masses, q labels and weights, the q mesh, the Avogadro scale and the static-energy and frequency functions are fixed. C_P and alpha_V differentiate at constant pressure, K_T at constant temperature, C_V at constant volume.",
+        "admissibility": "T>0, v>0, omega>0, N_A>0, N_q>0, local positive isothermal curvature and a window inside the locally convex region. alpha_V and Gamma are sign-free. Totalized values outside the model domain or at T=0 have no asserted physical interpretation.",
+        "reference_energy": "All oscillator zero-point energies remain and shift the selected volume and modulus. The signed temperature-independent static energy enters the actual Hamiltonian and is not silently removed.",
+        "qpoint_weighting": "Uniform full-grid q averaging with the same mesh at every volume; varying primitive volume does not change reduced-q labels or introduce fractional oscillator copies."
+      },
+      "remaining_obligations": [
+        "Static-energy, phonon and geometry producers are interpreted inputs, not verified implementations. Numerical volume scans, EOS fits, polynomial or finite-difference derivatives, minimizers and the Phonopy QHA code are not verified; the theorems state what such a producer computes on an exact model, not that a given code does.",
+        "Global minimization over all volumes, first-order transitions between branches, phase coexistence, mechanically unstable branches and the T=0 limit are outside scope.",
+        "Zero or imaginary modes, Gamma-point acoustic modes, nonuniform or symmetry-reduced q quadrature, q meshes that change with volume, independent temperature-dependent spectra, anharmonic, electronic or magnetic free energies and anisotropic strain remain outside scope.",
+        "Compiled witnesses establish realizable model examples with positive, negative and zero expansion; they do not certify any material or numerical volume scan.",
+        "FC3 (Maradudin-Fein) and finite-difference mode Gruneisen producers, including compute_gruneisen, are not shown to equal the derivative-defined gamma_i. Phonopy gruneisen_temperature is a fitted quotient and does not consume mode parameters."
+      ],
+      "evidence": {
+        "kind": "compiled_bridge",
+        "module": "OMAIPhyslibQHA",
+        "declarations": [
+          "OMAI.PhyslibBridge.Response.harmonic_static_qhaThermalGruneisen_eq_omai",
+          "OMAI.PhyslibBridge.Response.qhaThermalGruneisen_mem_Icc"
+        ],
+        "source_path": "lean/bridge/OMAIPhyslibQHA.lean",
+        "build_record": "lean/bridge/build-evidence.json",
+        "proved_targets": [
+          {
+            "kind": "operator",
+            "id": "contract_thermal_gruneisen"
+          },
+          {
+            "kind": "node",
+            "id": "ThermalGruneisen"
+          }
+        ],
+        "source_sha256": "d84d36807d405bc6ad1fe10d2bcfac473e1f034cef1705a6e6618c5a9d8073a9"
+      }
+    },
+    {
       "id": "harmonic-static-cp-identity",
       "relation": "conditional",
       "statement": "For the static-plus-harmonic Physlib ensemble, the temperature derivative of actual molar enthalpy along a local stable constant-pressure branch equals the OMAI Cp identity. Cv, volume, expansion and isothermal bulk modulus must belong to the same molar free-energy surface.",
@@ -1901,6 +2326,7 @@
         "id": "BulkModulus",
         "uid": "c0a13e64c02811f49b951271c894373267937676e0c657fc9ef09fac72558ced",
         "binding_ids": [
+          "harmonic-qha-bulk-modulus",
           "harmonic-static-cp-identity",
           "harmonic-static-thermal-gruneisen-identity"
         ],
@@ -2167,7 +2593,7 @@
         "uid": "a62ac1eae1e972a0b265a14f8a2af5610deb61eb0c883b7668ac4a64313b3b75",
         "binding_ids": [],
         "status": "gap",
-        "reason": "The local static-plus-harmonic Cp and thermal-Gruneisen bridges do not verify numerical QHA volume scans, EOS fitting, minimization, or expansion, bulk-modulus, heat-capacity and Gruneisen producers. The opaque mode-weighted thermal-Gruneisen contraction and agreement between independent Gruneisen producers remain unproved. No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "The local quasiharmonic bridges cover the windowed Gibbs minimum, its C_P, expansion and isothermal modulus, and the mode-weighted Gamma contraction on a stable equilibrium family of the static-plus-harmonic model. Mode-Gruneisen producers, static-energy and phonon producers, numerical volume scans, EOS fits and global minimization remain unverified. No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "HOMOLUMOGap",
@@ -2189,6 +2615,7 @@
         "id": "HeatCapacityConstantP",
         "uid": "08057e4554a3420c933329b3821de9295e2b5950191e23cafe310b0a15adc7b6",
         "binding_ids": [
+          "harmonic-qha-heat-capacity-p",
           "harmonic-static-cp-identity"
         ],
         "status": "mapped",
@@ -2491,9 +2918,13 @@
       {
         "id": "QHAGibbsEnergy",
         "uid": "bb10912780eb22d45beff551be14f7f4216f3aae26161e8bfd60cdc051f63f58",
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "The local static-plus-harmonic Cp and thermal-Gruneisen bridges do not verify numerical QHA volume scans, EOS fitting, minimization, or expansion, bulk-modulus, heat-capacity and Gruneisen producers. The opaque mode-weighted thermal-Gruneisen contraction and agreement between independent Gruneisen producers remain unproved."
+        "binding_ids": [
+          "harmonic-qha-gibbs-energy",
+          "harmonic-qha-heat-capacity-p",
+          "harmonic-qha-thermal-expansion"
+        ],
+        "status": "mapped",
+        "reason": "See the conditions and evidence for each mapping."
       },
       {
         "id": "QuantumKineticEnergy",
@@ -2722,6 +3153,7 @@
         "id": "ThermalExpansion",
         "uid": "9b42f8aebb6099cdcd910a272a92208881b598688bac7830c3ae0a412152473e",
         "binding_ids": [
+          "harmonic-qha-thermal-expansion",
           "harmonic-static-cp-identity",
           "harmonic-static-thermal-gruneisen-identity"
         ],
@@ -2732,6 +3164,7 @@
         "id": "ThermalGruneisen",
         "uid": "22b1bd519d50d93fd24a919e021bab85aff246464a66a08f8274558834983985",
         "binding_ids": [
+          "harmonic-qha-thermal-gruneisen-contraction",
           "harmonic-static-thermal-gruneisen-identity"
         ],
         "status": "mapped",
@@ -2742,7 +3175,7 @@
         "uid": "cf5a36298543de2027b173b757d38d80b38b66a85d2d3a56f55097e3da0e9a5e",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No current Physlib Kohn-Sham, DFT, atomistic derivative, or ground-state producer formula identification found in the audited source. No current Physlib solid-elasticity/Voigt/EOS formula identification found. The bridge proves the signed inviscid stress/pressure contraction under its sign and unit conditions; identification with thermodynamic free-energy pressure remains unproved. No current Physlib molecular Hessian, electronic gap, NEB, or bond-dissociation formula identification; harmonic oscillator analogies remain conceptual. The local static-plus-harmonic Cp and thermal-Gruneisen bridges do not verify numerical QHA volume scans, EOS fitting, minimization, or expansion, bulk-modulus, heat-capacity and Gruneisen producers. The opaque mode-weighted thermal-Gruneisen contraction and agreement between independent Gruneisen producers remain unproved. No current Physlib matching reference-state, convex-hull, surface, adsorption, reaction, or grain-boundary formula model identified."
+        "reason": "No current Physlib Kohn-Sham, DFT, atomistic derivative, or ground-state producer formula identification found in the audited source. No current Physlib solid-elasticity/Voigt/EOS formula identification found. The bridge proves the signed inviscid stress/pressure contraction under its sign and unit conditions; identification with thermodynamic free-energy pressure remains unproved. No current Physlib molecular Hessian, electronic gap, NEB, or bond-dissociation formula identification; harmonic oscillator analogies remain conceptual. The local quasiharmonic bridges cover the windowed Gibbs minimum, its C_P, expansion and isothermal modulus, and the mode-weighted Gamma contraction on a stable equilibrium family of the static-plus-harmonic model. Mode-Gruneisen producers, static-energy and phonon producers, numerical volume scans, EOS fits and global minimization remain unverified. No current Physlib matching reference-state, convex-hull, surface, adsorption, reaction, or grain-boundary formula model identified."
       },
       {
         "id": "Trajectory",
@@ -2974,9 +3407,11 @@
         "outputs": [
           "BulkModulus"
         ],
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "The local static-plus-harmonic Cp and thermal-Gruneisen bridges do not verify numerical QHA volume scans, EOS fitting, minimization, or expansion, bulk-modulus, heat-capacity and Gruneisen producers. The opaque mode-weighted thermal-Gruneisen contraction and agreement between independent Gruneisen producers remain unproved."
+        "binding_ids": [
+          "harmonic-qha-bulk-modulus"
+        ],
+        "status": "mapped",
+        "reason": "See the conditions and evidence for each mapping."
       },
       {
         "id": "compute_calphad_entropy",
@@ -3425,9 +3860,11 @@
         "outputs": [
           "HeatCapacityConstantP"
         ],
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "The local static-plus-harmonic Cp and thermal-Gruneisen bridges do not verify numerical QHA volume scans, EOS fitting, minimization, or expansion, bulk-modulus, heat-capacity and Gruneisen producers. The opaque mode-weighted thermal-Gruneisen contraction and agreement between independent Gruneisen producers remain unproved."
+        "binding_ids": [
+          "harmonic-qha-heat-capacity-p"
+        ],
+        "status": "mapped",
+        "reason": "See the conditions and evidence for each mapping."
       },
       {
         "id": "compute_heat_current",
@@ -3758,9 +4195,11 @@
         "outputs": [
           "QHAGibbsEnergy"
         ],
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "The local static-plus-harmonic Cp and thermal-Gruneisen bridges do not verify numerical QHA volume scans, EOS fitting, minimization, or expansion, bulk-modulus, heat-capacity and Gruneisen producers. The opaque mode-weighted thermal-Gruneisen contraction and agreement between independent Gruneisen producers remain unproved."
+        "binding_ids": [
+          "harmonic-qha-gibbs-energy"
+        ],
+        "status": "mapped",
+        "reason": "See the conditions and evidence for each mapping."
       },
       {
         "id": "compute_reaction_barrier",
@@ -3878,9 +4317,11 @@
         "outputs": [
           "ThermalExpansion"
         ],
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "The local static-plus-harmonic Cp and thermal-Gruneisen bridges do not verify numerical QHA volume scans, EOS fitting, minimization, or expansion, bulk-modulus, heat-capacity and Gruneisen producers. The opaque mode-weighted thermal-Gruneisen contraction and agreement between independent Gruneisen producers remain unproved."
+        "binding_ids": [
+          "harmonic-qha-thermal-expansion"
+        ],
+        "status": "mapped",
+        "reason": "See the conditions and evidence for each mapping."
       },
       {
         "id": "compute_transition_temperature",
@@ -4365,9 +4806,11 @@
         "outputs": [
           "ThermalGruneisen"
         ],
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "The local static-plus-harmonic Cp and thermal-Gruneisen bridges do not verify numerical QHA volume scans, EOS fitting, minimization, or expansion, bulk-modulus, heat-capacity and Gruneisen producers. The opaque mode-weighted thermal-Gruneisen contraction and agreement between independent Gruneisen producers remain unproved."
+        "binding_ids": [
+          "harmonic-qha-thermal-gruneisen-contraction"
+        ],
+        "status": "mapped",
+        "reason": "See the conditions and evidence for each mapping."
       },
       {
         "id": "contract_thermal_gruneisen_identity",
@@ -4998,21 +5441,21 @@
   },
   "coverage": {
     "nodes_total": 129,
-    "nodes_mapped": 29,
+    "nodes_mapped": 30,
     "operators_total": 127,
-    "operators_mapped": 15,
-    "bindings_total": 23,
+    "operators_mapped": 20,
+    "bindings_total": 28,
     "source_correspondences": 5,
-    "compiled_bridges": 18,
-    "nodes_compiled": 16,
-    "nodes_compiled_outputs": 15,
+    "compiled_bridges": 23,
+    "nodes_compiled": 19,
+    "nodes_compiled_outputs": 18,
     "nodes_compiled_interpretations": 1,
-    "operators_compiled": 15,
+    "operators_compiled": 20,
     "upstream_declarations_referenced": 33,
     "upstream_modules_referenced": 9,
     "relations": {
       "exact_definition": 1,
-      "conditional": 18,
+      "conditional": 23,
       "conceptual": 4
     }
   }

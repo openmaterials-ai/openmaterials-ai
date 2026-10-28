@@ -116,9 +116,9 @@ test('reviewed Cp data links only the identity route and its output as new proof
   const rows = F.index(data);
   assert.equal(rows.find(r => r.kind === 'operator' && r.id === 'contract_heat_capacity_p_identity').compiled, true);
   assert.equal(rows.find(r => r.kind === 'node' && r.id === 'HeatCapacityConstantP').compiled, true);
-  // contract_thermal_gruneisen_identity is compiled by the separate thermal
-  // Gruneisen binding; the exact Cp provedTargets set above excludes it.
-  for (const id of ['compute_heat_capacity_p', 'contract_molar_volume', 'contract_thermal_gruneisen', 'compute_gruneisen']) {
+  // contract_thermal_gruneisen_identity, compute_heat_capacity_p and contract_thermal_gruneisen are
+  // compiled by separate later bindings; the exact Cp provedTargets set above excludes them.
+  for (const id of ['contract_molar_volume', 'compute_gruneisen']) {
     assert.equal(rows.find(r => r.kind === 'operator' && r.id === id).compiled, false);
   }
   const selected = F.mapSelection('#operator=contract_heat_capacity_p_identity', data);
@@ -128,7 +128,8 @@ test('reviewed Cp data links only the identity route and its output as new proof
   const upstream = F.declarationIndex(data).find(r => r.name === 'CanonicalEnsemble.meanEnergyT');
   assert.ok(upstream.bindings.some(b => b.id === binding.id));
   assert.match(F.bindingHtml(binding), /OMAIPhyslibHarmonicResponse\.lean/);
-  assert.equal(F.targetReferencesHtml(data, 'operator', 'compute_heat_capacity_p', '/lean/bridge/'), '');
+  assert.doesNotMatch(F.targetReferencesHtml(data, 'operator', 'compute_heat_capacity_p', '/lean/bridge/'),
+    /harmonic-static-cp-identity/);
 });
 
 test('reviewed thermal Gruneisen data links only the identity route and ThermalGruneisen as new proof subjects', () => {
@@ -140,9 +141,7 @@ test('reviewed thermal Gruneisen data links only the identity route and ThermalG
   const rows = F.index(data);
   assert.equal(rows.find(r => r.kind === 'operator' && r.id === 'contract_thermal_gruneisen_identity').compiled, true);
   assert.equal(rows.find(r => r.kind === 'node' && r.id === 'ThermalGruneisen').compiled, true);
-  for (const id of ['contract_thermal_gruneisen', 'compute_gruneisen']) {
-    assert.equal(rows.find(r => r.kind === 'operator' && r.id === id).compiled, false);
-  }
+  assert.equal(rows.find(r => r.kind === 'operator' && r.id === 'compute_gruneisen').compiled, false);
   assert.equal(rows.find(r => r.kind === 'node' && r.id === 'Gruneisen').compiled, false);
   const selected = F.mapSelection('#operator=contract_thermal_gruneisen_identity', data);
   assert.deepEqual(selected.nodes, ['ThermalGruneisen']);
@@ -151,5 +150,35 @@ test('reviewed thermal Gruneisen data links only the identity route and ThermalG
   assert.match(F.bindingHtml(binding), /OMAIPhyslibThermalGruneisen\.lean/);
   assert.doesNotMatch(F.bindingHtml(binding), /OMAIPhyslibGruneisenWitness/);
   assert.equal(F.targetReferencesHtml(data, 'node', 'Gruneisen', '/lean/bridge/'), '');
-  assert.equal(F.targetReferencesHtml(data, 'operator', 'contract_thermal_gruneisen', '/lean/bridge/'), '');
+  assert.doesNotMatch(F.targetReferencesHtml(data, 'operator', 'contract_thermal_gruneisen', '/lean/bridge/'),
+    /harmonic-static-thermal-gruneisen-identity/);
+});
+
+test('reviewed QHA data compiles each producer and its output, not mode-Gruneisen or molar-volume producers', () => {
+  const data = require('../../data/formula_bindings.json');
+  const expected = {
+    'harmonic-qha-gibbs-energy': ['compute_qha_gibbs', 'QHAGibbsEnergy'],
+    'harmonic-qha-heat-capacity-p': ['compute_heat_capacity_p', 'HeatCapacityConstantP'],
+    'harmonic-qha-thermal-expansion': ['compute_thermal_expansion', 'ThermalExpansion'],
+    'harmonic-qha-bulk-modulus': ['compute_bulk_modulus_qha', 'BulkModulus'],
+    'harmonic-qha-thermal-gruneisen-contraction': ['contract_thermal_gruneisen', 'ThermalGruneisen'],
+  };
+  const rows = F.index(data);
+  for (const [id, [operator, output]] of Object.entries(expected)) {
+    const binding = data.bindings.find(b => b.id === id);
+    assert.ok(binding, id);
+    assert.deepEqual(new Set(F.provedTargets(binding, data).map(t => t.kind + ':' + t.id)),
+      new Set(['operator:' + operator, 'node:' + output]));
+    assert.equal(rows.find(r => r.kind === 'operator' && r.id === operator).compiled, true);
+    assert.equal(rows.find(r => r.kind === 'node' && r.id === output).compiled, true);
+    assert.match(F.bindingHtml(binding), /OMAIPhyslibQHA\.lean/);
+    assert.doesNotMatch(F.bindingHtml(binding), /OMAIPhyslibQHAWitness/);
+  }
+  for (const id of ['compute_gruneisen', 'contract_molar_volume']) {
+    assert.equal(rows.find(r => r.kind === 'operator' && r.id === id).compiled, false);
+  }
+  assert.equal(rows.find(r => r.kind === 'node' && r.id === 'Gruneisen').compiled, false);
+  assert.equal(F.targetReferencesHtml(data, 'node', 'Gruneisen', '/lean/bridge/'), '');
+  const upstream = F.declarationIndex(data).find(r => r.name === 'CanonicalEnsemble.thermodynamicEntropy');
+  assert.ok(upstream.bindings.some(b => b.id === 'harmonic-qha-gibbs-energy'));
 });

@@ -53,10 +53,13 @@ This Lean 4.35 package pins Physlib `9b583cb6ef6e9cc537c4d4b786b508de1abbcf42`. 
   branch; a negative-rate branch with negative Gamma and expansion; and a zero
   control. The branches hold for every positive molar scale and q count, the
   zero control for every positive molar scale with one q point.
+- `OMAIPhyslibGibbsBranch.lean`: a two-parameter equilibrium family V(T,p) of a C2 Helmholtz surface, built by the C1 implicit-function theorem from any stable stationary point. On every sufficiently narrow volume window the family volume is the unique minimizer of F(T,V)+pV, proved by strict monotonicity of F_V and the mean value theorem. The envelope relations (dG/dT)_p = F_T and (dG/dp)_T = V and the compressibility (dV/dp)_T = -1/F_VV follow.
+- `OMAIPhyslibQHA.lean`: the five quasiharmonic producers written as functions of the Gibbs surface, namely the windowed minimum G(T,p) = inf_V [F(T,V)+pV], C_P = -T (d2G/dT2)_p, alpha_V = (dV/dT)_p/V with V = (dG/dp)_T, the curvature modulus V (d2F/dV2)_T at that volume, and the heat-capacity-weighted mean of supplied mode Gruneisen parameters. On the static-plus-harmonic family they equal minus the actual Physlib entropy, the actual enthalpy derivative and C_V + T V alpha_V^2 K_T, the path expansion -F_TV/(V F_VV), -V/(dV/dp)_T, and alpha_V K_T/C_V_vol. The producer definitions read no expansion, bulk, cp, branch or Gamma.
+- `OMAIPhyslibQHAWitness.lean`: exact windows on the signed-rate families with positive and negative expansion, positive modulus, C_P strictly above C_V and contracted Gamma in (1, 2) or below 0, and a constant-frequency control with zero expansion, C_P = C_V and zero Gamma.
 - `OMAIPhyslibContinuum.lean`: absolute-temperature round trips and beta unit
   scaling; signed three-dimensional inviscid stress and pressure contraction.
 - `*-formula-contract.json`: separately reviewed OMAI endpoint identities and
-  source hashes. All nine contracts are required by the audit. New proofs do
+  source hashes. All ten contracts are required by the audit. New proofs do
   not rewrite the historical six-formula contract.
 - `build-evidence.json`: source and configuration hashes, pinned dependencies,
   and the transitive axiom audit from a build with warnings treated as errors.

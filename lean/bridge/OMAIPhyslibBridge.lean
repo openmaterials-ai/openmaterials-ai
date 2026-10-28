@@ -16,3 +16,6 @@ public import OMAIPhyslibHarmonicResponse
 public import OMAIPhyslibModeGruneisen
 public import OMAIPhyslibThermalGruneisen
 public import OMAIPhyslibGruneisenWitness
+public import OMAIPhyslibGibbsBranch
+public import OMAIPhyslibQHA
+public import OMAIPhyslibQHAWitness

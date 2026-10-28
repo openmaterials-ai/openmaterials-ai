@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "scope": "Reviewed OMAI formula endpoints and exact Lean proof source. Hash and compiled-name checks detect drift and provenance errors; they are not automatic symbolic translation or numerical validation.",
+  "source_path": "lean/bridge/OMAIPhyslibQHA.lean",
+  "source_sha256": "d84d36807d405bc6ad1fe10d2bcfac473e1f034cef1705a6e6618c5a9d8073a9",
+  "operators": [
+    {
+      "id": "compute_qha_gibbs",
+      "uid": "2dfd344c598d659dbc5e4c8def4cefcb69b1a0bd215a9202f981618b18611b89",
+      "formula_sha256": "8264d933a1f5cf6dab090041c2a1e6367cd92e5de6022aaa8e7dbbbe20ed840e",
+      "formula_latex": "G_{qha} = G^{qha}{\\left(E_{tot},\\mathcal{S},\\omega \\right)}",
+      "lean_definition": "OMAI.PhyslibBridge.Response.qhaGibbsEnergy"
+    },
+    {
+      "id": "compute_heat_capacity_p",
+      "uid": "36100a86ef25aada0acd615151092323ba680b4a9791bb58d1175adcea96deb2",
+      "formula_sha256": "94c543b5191d7fa6737a2f2fcca9cc68bc4cc38530abd5c2d31b25b091bc4ccf",
+      "formula_latex": "C_{P} = C_P^{qha}{\\left(G_{qha} \\right)}",
+      "lean_definition": "OMAI.PhyslibBridge.Response.qhaHeatCapacityP"
+    },
+    {
+      "id": "compute_thermal_expansion",
+      "uid": "4e11a6ef1474661ab6ea320a5c99e8774edbe32b5a4dcdb13d97fda4b108995e",
+      "formula_sha256": "7a5492ca3cc69da193307f5f74b36985627e5b4ab5c97bc2851120f491553f93",
+      "formula_latex": "\\alpha_{V} = \\alpha^{qha}{\\left(G_{qha} \\right)}",
+      "lean_definition": "OMAI.PhyslibBridge.Response.qhaThermalExpansion"
+    },
+    {
+      "id": "compute_bulk_modulus_qha",
+      "uid": "de67212047d6c2bb08a94d9394adffe1b1cc183b7a1811d838de2dcfb9323235",
+      "formula_sha256": "bedbb8f82d002302668176dcdb9aa7abcbbe648e5963121237de436c725b2e7b",
+      "formula_latex": "K = K^{qha}{\\left(E_{tot},\\mathcal{S},\\omega \\right)}",
+      "lean_definition": "OMAI.PhyslibBridge.Response.qhaBulkModulus"
+    },
+    {
+      "id": "contract_thermal_gruneisen",
+      "uid": "aa554ec7f8a638108f1039bffd5f1c727687f5fd0d018d61d2916e745a5f6f29",
+      "formula_sha256": "01d5dfc469084551b1508829d6a3c4d7f55bccf19207530724fb1f9a56137f26",
+      "formula_latex": "\\gamma_{th} = \\gamma^{qha}{\\left(\\gamma_{G},\\omega \\right)}",
+      "lean_definition": "OMAI.PhyslibBridge.Response.qhaThermalGruneisen"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "QHAGibbsEnergy",
+      "uid": "bb10912780eb22d45beff551be14f7f4216f3aae26161e8bfd60cdc051f63f58"
+    },
+    {
+      "id": "HeatCapacityConstantP",
+      "uid": "08057e4554a3420c933329b3821de9295e2b5950191e23cafe310b0a15adc7b6"
+    },
+    {
+      "id": "ThermalExpansion",
+      "uid": "9b42f8aebb6099cdcd910a272a92208881b598688bac7830c3ae0a412152473e"
+    },
+    {
+      "id": "BulkModulus",
+      "uid": "c0a13e64c02811f49b951271c894373267937676e0c657fc9ef09fac72558ced"
+    },
+    {
+      "id": "ThermalGruneisen",
+      "uid": "22b1bd519d50d93fd24a919e021bab85aff246464a66a08f8274558834983985"
+    }
+  ],
+  "interpretations": [
+    "compute_qha_gibbs is the infimum over an open volume window of F(T,V)+pV, with F the actual molar Helmholtz surface of the static-plus-harmonic ensembles and x=(T,p).",
+    "compute_heat_capacity_p is -T*(d2G/dT2)_p of that Gibbs energy; compute_thermal_expansion is (dV/dT)_p/V with V=(dG/dp)_T; compute_bulk_modulus_qha is V*(d2F/dV2)_T at the volume (dG/dp)_T.",
+    "contract_thermal_gruneisen is the mean of supplied mode parameters weighted by actual Physlib canonical heat capacities of supplied oscillators.",
+    "These producer definitions read nothing from the response quantities they are proved equal to: no expansion, bulk, cp, branch structure or mode-weighted Gamma appears in their closures.",
+    "The identifications hold on a local stable equilibrium family for every sufficiently narrow window. Numerical volume scans, EOS fits, minimizers, FC3 and finite-difference Gruneisen producers and Phonopy are not verified."
+  ]
+}

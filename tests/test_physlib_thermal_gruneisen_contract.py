@@ -117,7 +117,10 @@ CATALOG_ID_SHA = "21869395fbf9688ad8a3c8f042f46c8e185579789779601ad1b9fbfa8323c9
 # Frozen thermal Gruneisen tranche.
 GAMMA_BINDING_ID = "harmonic-static-thermal-gruneisen-identity"
 GAMMA_CONTRACT_NAME = "thermal-gruneisen-formula-contract.json"
-REQUIRED_CONTRACTS = CP_ERA_CONTRACTS | {GAMMA_CONTRACT_NAME}
+GAMMA_ERA_CONTRACTS = CP_ERA_CONTRACTS | {GAMMA_CONTRACT_NAME}
+# The later quasiharmonic tranche adds its own required contract; gamma scope is unchanged.
+QHA_CONTRACT_NAME = "qha-formula-contract.json"
+REQUIRED_CONTRACTS = GAMMA_ERA_CONTRACTS | {QHA_CONTRACT_NAME}
 SUPPORT_MODULE = "OMAIPhyslibModeGruneisen"
 GAMMA_MODULE = "OMAIPhyslibThermalGruneisen"
 WITNESS_MODULE = "OMAIPhyslibGruneisenWitness"
@@ -163,6 +166,18 @@ GAMMA_SUBJECTS = {("operator", GAMMA_OPERATOR), ("node", GAMMA_OUTPUT)}
 GAMMA_PAIR = {"name": GAMMA_DEFINITION, "module": GAMMA_MODULE}
 CP_PAIR = {"name": CP_DEFINITION, "module": CP_MODULE}
 EXPECTED_PAIRS = sorted([*BASELINE_PAIRS, CP_PAIR, GAMMA_PAIR], key=lambda row: (row["name"], row["module"]))
+QHA_BINDINGS = frozenset({"harmonic-qha-gibbs-energy", "harmonic-qha-heat-capacity-p",
+                          "harmonic-qha-thermal-expansion", "harmonic-qha-bulk-modulus",
+                          "harmonic-qha-thermal-gruneisen-contraction"})
+QHA_SUBJECTS = {("operator", "compute_qha_gibbs"), ("node", "QHAGibbsEnergy"),
+                ("operator", "compute_heat_capacity_p"), ("node", "HeatCapacityConstantP"),
+                ("operator", "compute_thermal_expansion"), ("node", "ThermalExpansion"),
+                ("operator", "compute_bulk_modulus_qha"), ("node", "BulkModulus"),
+                ("operator", "contract_thermal_gruneisen"), ("node", "ThermalGruneisen")}
+QHA_PAIRS = [{"name": "OMAI.PhyslibBridge.Response." + name, "module": "OMAIPhyslibQHA"} for name in (
+    "qhaGibbsEnergy", "qhaHeatCapacityP", "qhaThermalExpansion", "qhaBulkModulus", "qhaThermalGruneisen")]
+CURRENT_PAIRS = sorted([*EXPECTED_PAIRS, *QHA_PAIRS], key=lambda row: (row["name"], row["module"]))
+QHA_MODULES = ["OMAIPhyslibGibbsBranch", "OMAIPhyslibQHA", "OMAIPhyslibQHAWitness"]
 GAMMA_SOURCES = sorted([
     ("Physlib.StatisticalMechanics.CanonicalEnsemble.Basic", "CanonicalEnsemble.helmholtzFreeEnergy", "def", 680),
     ("Physlib.StatisticalMechanics.CanonicalEnsemble.Basic", "CanonicalEnsemble.meanEnergy", "def", 519),
@@ -184,6 +199,12 @@ EXPECTED_COVERAGE = {
     "upstream_declarations_referenced": 33,
     "upstream_modules_referenced": 9,
     "relations": {"exact_definition": 1, "conditional": 18, "conceptual": 4},
+}
+# Real payload after the later quasiharmonic tranche; gamma-only synthetic checks keep EXPECTED_COVERAGE.
+CURRENT_COVERAGE = {
+    **EXPECTED_COVERAGE, "operators_compiled": 20, "operators_mapped": 20, "nodes_compiled": 19,
+    "nodes_compiled_outputs": 18, "nodes_mapped": 30, "bindings_total": 28, "compiled_bridges": 23,
+    "relations": {"exact_definition": 1, "conditional": 23, "conceptual": 4},
 }
 CP_PRESERVED = {
     "lean/bridge/OMAIPhyslibHarmonicResponse.lean": "1914f2a738ae2ffaa4b35cfce04dc3a880f2d67cbf89a4ff47c7f15ec8a5f9b0",
@@ -457,6 +478,22 @@ def _assert_gamma_scope(payload):
     assert {row["id"] for row in payload["bindings"]} == BASELINE_BINDINGS | {CP_BINDING_ID, GAMMA_BINDING_ID}
     coverage = payload["coverage"]
     assert {key: coverage[key] for key in EXPECTED_COVERAGE} == EXPECTED_COVERAGE
+
+
+def _assert_gamma_current_scope(payload):
+    """Real-payload ledger after the later quasiharmonic tranche; the gamma scope is unchanged."""
+    binding = _gamma_binding(payload)
+    assert binding["relation"] == "conditional"
+    assert binding["evidence"]["kind"] == "compiled_bridge"
+    explicit = _explicit(binding)
+    assert len(explicit) == 2 and set(explicit) == GAMMA_SUBJECTS, "gamma proof scope broadened"
+    cp = _explicit(_binding(payload, CP_BINDING_ID))
+    assert len(cp) == 2 and set(cp) == CP_SUBJECTS, "Cp proof scope broadened"
+    assert _subjects(payload) == BASELINE_SUBJECTS | CP_SUBJECTS | GAMMA_SUBJECTS | QHA_SUBJECTS
+    assert {row["id"] for row in payload["bindings"]} == (
+        BASELINE_BINDINGS | {CP_BINDING_ID, GAMMA_BINDING_ID} | QHA_BINDINGS)
+    coverage = payload["coverage"]
+    assert {key: coverage[key] for key in CURRENT_COVERAGE} == CURRENT_COVERAGE
 
 
 def _assert_gamma_contract(contract, root=ROOT):
@@ -805,7 +842,7 @@ def test_gamma_integration_contract_is_exact(gamma_contract):
 
 
 def test_gamma_integration_scope_and_evidence(gamma_payload):
-    _assert_gamma_scope(gamma_payload)
+    _assert_gamma_current_scope(gamma_payload)
     binding = _gamma_binding(gamma_payload)
     # The generator orders targets by (kind, id); compare against that exact canonical order.
     assert [(row["kind"], row["id"], row["uid"], row.get("formula_sha256")) for row in binding["targets"]] == sorted([
@@ -836,16 +873,22 @@ def test_gamma_integration_binding_text_exact(gamma_payload):
     assert not any(FORBIDDEN_TEXT.search(text) for text in texts)
 
 
-@pytest.mark.parametrize("operator", [
-    "contract_thermal_gruneisen", "compute_gruneisen", "compute_heat_capacity_p", "contract_molar_volume",
-])
+@pytest.mark.parametrize("operator", ["compute_gruneisen", "contract_molar_volume"])
 def test_gamma_integration_sibling_gaps(gamma_payload, operator):
     assert formula_bindings_for(operator, kind="operator") == []
 
 
+@pytest.mark.parametrize("operator", ["contract_thermal_gruneisen", "compute_heat_capacity_p"])
+def test_gamma_integration_siblings_only_in_qha_tranche(gamma_payload, operator):
+    rows = formula_bindings_for(operator, kind="operator")
+    assert len(rows) == 1 and rows[0]["id"] in QHA_BINDINGS
+    assert rows[0]["id"] != GAMMA_BINDING_ID
+
+
 def test_gamma_integration_exact_lookups(gamma_payload):
     assert formula_bindings_for("Gruneisen", kind="node") == []
-    assert [row["id"] for row in formula_bindings_for(GAMMA_OUTPUT, kind="node")] == [GAMMA_BINDING_ID]
+    assert sorted(row["id"] for row in formula_bindings_for(GAMMA_OUTPUT, kind="node")) == [
+        "harmonic-qha-thermal-gruneisen-contraction", GAMMA_BINDING_ID]
     assert [row["id"] for row in formula_bindings_for(GAMMA_OPERATOR, kind="operator")] == [GAMMA_BINDING_ID]
 
 
@@ -857,7 +900,7 @@ def test_gamma_integration_record_covers_sources(gamma_payload, gamma_contract):
     assert tracked <= record["sources"].keys()
     assert {path: record["sources"][path] for path in tracked} == {path: _digest(ROOT / path) for path in tracked}
     assert {"lean/bridge/" + name for name in REQUIRED_CONTRACTS} <= record["sources"].keys()
-    assert record["contract_name_audit"] == {"status": "passed", "pair_count": 15, "pairs": EXPECTED_PAIRS}
+    assert record["contract_name_audit"] == {"status": "passed", "pair_count": 20, "pairs": CURRENT_PAIRS}
     audit = record["axiom_audit"]
     assert {SUPPORT_MODULE, GAMMA_MODULE, WITNESS_MODULE} <= set(audit["source_modules"])
     declarations = audit["declarations"]
@@ -933,10 +976,11 @@ def test_gamma_integration_import_structure():
     importers = {path.stem for path in PACKAGE.glob("*.lean") if GAMMA_MODULE in _lean_imports(path)}
     assert "OMAIPhyslibBridge" in importers and importers <= {"OMAIPhyslibBridge", WITNESS_MODULE}
     assert _lean_imports(PACKAGE / "OMAIPhyslibBridge.lean") == [
-        *PREVIOUS_ROOT_IMPORTS, SUPPORT_MODULE, GAMMA_MODULE, WITNESS_MODULE]
+        *PREVIOUS_ROOT_IMPORTS, SUPPORT_MODULE, GAMMA_MODULE, WITNESS_MODULE, *QHA_MODULES]
     lakefile = tomllib.loads((PACKAGE / "lakefile.toml").read_text())
     assert [row["name"] for row in lakefile["lean_lib"]] == ["OMAIPhyslibBridge"]
-    assert lakefile["lean_lib"][0]["globs"] == [*PREVIOUS_GLOBS, SUPPORT_MODULE, GAMMA_MODULE, WITNESS_MODULE]
+    assert lakefile["lean_lib"][0]["globs"] == [
+        *PREVIOUS_GLOBS, SUPPORT_MODULE, GAMMA_MODULE, WITNESS_MODULE, *QHA_MODULES]
 
 
 def _configured_compiled_package():
@@ -1002,7 +1046,7 @@ def _check_lean_source(package, tmp_path, text, stem):
 def test_gamma_real_final_endpoint(gamma_compiled_package):
     package = gamma_compiled_package
     assert _verify_strict([package / GAMMA_CONTRACT_NAME], package) == [GAMMA_PAIR]
-    assert _verify_strict([package / name for name in sorted(REQUIRED_CONTRACTS)], package) == EXPECTED_PAIRS
+    assert _verify_strict([package / name for name in sorted(GAMMA_ERA_CONTRACTS)], package) == EXPECTED_PAIRS
 
 
 @pytest.mark.parametrize("mutation,diagnostic", [

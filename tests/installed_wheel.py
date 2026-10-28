@@ -86,7 +86,8 @@ assert cp_rows[0] in formula_bindings_for_physlib(
     declaration="CanonicalEnsemble.meanEnergyT",
     module="Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
 )
-assert formula_bindings_for("compute_heat_capacity_p", kind="operator") == []
+assert all(row["id"] != "harmonic-static-cp-identity"
+           for row in formula_bindings_for("compute_heat_capacity_p", kind="operator"))
 print("installed wheel ok: conditional Cp identity, not its numerical sibling")
 
 gamma_rows = formula_bindings_for("contract_thermal_gruneisen_identity", kind="operator")
@@ -102,7 +103,30 @@ for declaration, module in (
     ("CanonicalEnsemble.heatCapacity", "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas"),
 ):
     assert gamma_rows[0] in formula_bindings_for_physlib(declaration=declaration, module=module)
-for sibling in ("contract_thermal_gruneisen", "compute_gruneisen", "contract_molar_volume"):
+for sibling in ("compute_gruneisen", "contract_molar_volume"):
     assert formula_bindings_for(sibling, kind="operator") == []
+assert all(row["id"] != "harmonic-static-thermal-gruneisen-identity"
+           for row in formula_bindings_for("contract_thermal_gruneisen", kind="operator"))
 assert formula_bindings_for("Gruneisen", kind="node") == []
 print("installed wheel ok: thermal Gruneisen identity, not its siblings")
+
+qha_expected = {
+    "compute_qha_gibbs": ("harmonic-qha-gibbs-energy", "QHAGibbsEnergy"),
+    "compute_heat_capacity_p": ("harmonic-qha-heat-capacity-p", "HeatCapacityConstantP"),
+    "compute_thermal_expansion": ("harmonic-qha-thermal-expansion", "ThermalExpansion"),
+    "compute_bulk_modulus_qha": ("harmonic-qha-bulk-modulus", "BulkModulus"),
+    "contract_thermal_gruneisen": ("harmonic-qha-thermal-gruneisen-contraction", "ThermalGruneisen"),
+}
+for operator, (binding_id, output) in qha_expected.items():
+    qha_rows = formula_bindings_for(operator, kind="operator")
+    assert [row["id"] for row in qha_rows] == [binding_id], operator
+    assert qha_rows[0]["evidence"]["kind"] == "compiled_bridge"
+    assert qha_rows[0]["evidence"]["module"] == "OMAIPhyslibQHA"
+    assert {(row["kind"], row["id"]) for row in qha_rows[0]["evidence"]["proved_targets"]} == {
+        ("operator", operator), ("node", output),
+    }
+    assert qha_rows[0] in formula_bindings_for_physlib(
+        declaration="CanonicalEnsemble.helmholtzFreeEnergy",
+        module="Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+    )
+print("installed wheel ok: local quasiharmonic producers, not mode-Gruneisen producers")
