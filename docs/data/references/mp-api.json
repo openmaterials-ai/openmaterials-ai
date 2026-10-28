@@ -24,20 +24,6 @@
  "methods": [],
  "applications": [
   {
-   "doi": "10.1103/PhysRevLett.115.205901",
-   "title": "Prediction of Low-Thermal-Conductivity Compounds with First-Principles Anharmonic Lattice-Dynamics Calculations and Bayesian Optimization",
-   "authors": [
-    "A. Seko",
-    "A. Togo",
-    "H. Hayashi",
-    "K. Tsuda",
-    "L. Chaput",
-    "I. Tanaka"
-   ],
-   "year": 2015,
-   "journal": "Physical Review Letters"
-  },
-  {
    "doi": "10.1126/sciadv.1600225",
    "title": "The thermodynamic scale of inorganic crystalline metastability",
    "authors": [
@@ -65,27 +51,6 @@
    ],
    "year": 2018,
    "journal": "Science Advances"
-  },
-  {
-   "doi": "10.1039/C7EE03364H",
-   "title": "Tuning mobility and stability of lithium ion conductors based on lattice dynamics",
-   "authors": [
-    "S. Muy",
-    "J. C. Bachman",
-    "L. Giordano",
-    "H. H. Chang",
-    "D. L. Abernathy",
-    "D. Bansal",
-    "O. Delaire",
-    "S. Hori",
-    "R. Kanno",
-    "F. Maglia",
-    "S. Lupart",
-    "P. Lamp",
-    "Y. Shao-Horn"
-   ],
-   "year": 2018,
-   "journal": "Energy &amp; Environmental Science"
   },
   {
    "doi": "10.1038/s41524-020-00362-y",

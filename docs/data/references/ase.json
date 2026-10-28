@@ -47,6 +47,29 @@
  "methods": [],
  "applications": [
   {
+   "doi": "10.1088/2053-1583/aacfc1",
+   "title": "The Computational 2D Materials Database: high-throughput modeling and discovery of atomically thin crystals",
+   "authors": [
+    "S. Haastrup",
+    "M. Strange",
+    "M. Pandey",
+    "T. Deilmann",
+    "P. S. Schmidt",
+    "N. F. Hinsche",
+    "M. N. Gjerding",
+    "D. Torelli",
+    "P. M. Larsen",
+    "A. C. Riis-Jensen",
+    "J. Gath",
+    "K. W. Jacobsen",
+    "J. Jørgen Mortensen",
+    "T. Olsen",
+    "K. S. Thygesen"
+   ],
+   "year": 2018,
+   "journal": "2D Materials"
+  },
+  {
    "doi": "10.1103/PhysRevMaterials.3.033601",
    "title": "First-principles study of phonon anharmonicity and negative thermal expansion in ScF 3",
    "authors": [
@@ -57,18 +80,6 @@
    ],
    "year": 2019,
    "journal": "Physical Review Materials"
-  },
-  {
-   "doi": "10.1063/1.5064602",
-   "title": "Phonon properties and thermal conductivity from first principles, lattice dynamics, and the Boltzmann transport equation",
-   "authors": [
-    "A. J. H. McGaughey",
-    "A. Jain",
-    "H. Y. Kim",
-    "B. Fu"
-   ],
-   "year": 2019,
-   "journal": "Journal of Applied Physics"
   },
   {
    "doi": "10.1088/1361-648X/ac066b",
@@ -83,6 +94,23 @@
    ],
    "year": 2021,
    "journal": "Journal of Physics: Condensed Matter"
+  },
+  {
+   "doi": "10.1038/s41467-022-29939-5",
+   "title": "E(3)-equivariant graph neural networks for data-efficient and accurate interatomic potentials",
+   "authors": [
+    "S. Batzner",
+    "A. Musaelian",
+    "L. Sun",
+    "M. Geiger",
+    "J. P. Mailoa",
+    "M. Kornbluth",
+    "N. Molinari",
+    "T. E. Smidt",
+    "B. Kozinsky"
+   ],
+   "year": 2022,
+   "journal": "Nature Communications"
   }
  ]
 }

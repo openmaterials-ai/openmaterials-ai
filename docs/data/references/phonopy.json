@@ -24,6 +24,46 @@
  "methods": [],
  "applications": [
   {
+   "doi": "10.1103/PhysRevB.92.144308",
+   "title": "Lattice dynamics and vibrational spectra of the orthorhombic, tetragonal, and cubic phases of methylammonium lead iodide",
+   "authors": [
+    "F. Brivio",
+    "J. M. Frost",
+    "J. M. Skelton",
+    "A. J. Jackson",
+    "O. J. Weber",
+    "M. T. Weller",
+    "A. R. Goñi",
+    "A. M. A. Leguy",
+    "P. R. F. Barnes",
+    "A. Walsh"
+   ],
+   "year": 2015,
+   "journal": "Physical Review B"
+  },
+  {
+   "doi": "10.1039/c6cp03474h",
+   "title": "Dynamic disorder, phonon lifetimes, and the assignment of modes to the vibrational spectra of methylammonium lead halide perovskites",
+   "authors": [
+    "A. M. A. Leguy",
+    "A. R. Goñi",
+    "J. M. Frost",
+    "J. Skelton",
+    "F. Brivio",
+    "X. Rodríguez-Martínez",
+    "O. J. Weber",
+    "A. Pallipurath",
+    "M. I. Alonso",
+    "M. Campoy-Quiles",
+    "M. T. Weller",
+    "J. Nelson",
+    "A. Walsh",
+    "P. R. F. Barnes"
+   ],
+   "year": 2016,
+   "journal": "Physical Chemistry Chemical Physics"
+  },
+  {
    "doi": "10.1126/science.aag0410",
    "title": "Anomalously low electronic thermal conductivity in metallic vanadium dioxide",
    "authors": [

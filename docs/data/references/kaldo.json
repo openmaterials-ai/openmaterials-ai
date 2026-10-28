@@ -40,19 +40,15 @@
  ],
  "applications": [
   {
-   "doi": "10.1063/5.0055593",
-   "title": "Thermal transport in defective and disordered materials",
+   "doi": "10.1103/PhysRevB.103.024204",
+   "title": "Mode localization and suppressed heat transport in amorphous alloys",
    "authors": [
-    "R. Hanus",
-    "R. Gurunathan",
-    "L. Lindsay",
-    "M. T. Agne",
-    "J. Shi",
-    "S. Graham",
-    "G. Jeffrey Snyder"
+    "N. W. Lundgren",
+    "G. Barbalinardo",
+    "D. Donadio"
    ],
    "year": 2021,
-   "journal": "Applied Physics Reviews"
+   "journal": "Physical Review B"
   },
   {
    "doi": "10.1103/PhysRevLett.127.025902",
@@ -82,16 +78,15 @@
    "journal": "npj Computational Materials"
   },
   {
-   "doi": "10.1007/s40766-023-00041-w",
-   "title": "Non-Fourier heat transport in nanosystems",
+   "doi": "10.1038/s41524-023-01116-2",
+   "title": "Hydrodynamic finite-size scaling of the thermal conductivity in glasses",
    "authors": [
-    "G. Benenti",
-    "D. Donadio",
-    "S. Lepri",
-    "R. Livi"
+    "A. Fiorentino",
+    "P. Pegolo",
+    "S. Baroni"
    ],
    "year": 2023,
-   "journal": "La Rivista del Nuovo Cimento"
+   "journal": "npj Computational Materials"
   },
   {
    "doi": "10.1038/s41586-025-09108-6",

@@ -38,58 +38,24 @@
  ],
  "applications": [
   {
-   "doi": "10.1103/PhysRevB.92.144308",
-   "title": "Lattice dynamics and vibrational spectra of the orthorhombic, tetragonal, and cubic phases of methylammonium lead iodide",
+   "doi": "10.1039/c8cp00350e",
+   "title": "Phonon transport in Janus monolayer MoSSe: a first-principles study",
    "authors": [
-    "F. Brivio",
-    "J. M. Frost",
-    "J. M. Skelton",
-    "A. J. Jackson",
-    "O. J. Weber",
-    "M. T. Weller",
-    "A. R. Goñi",
-    "A. M. A. Leguy",
-    "P. R. F. Barnes",
-    "A. Walsh"
+    "S. D. Guo"
    ],
-   "year": 2015,
-   "journal": "Physical Review B"
-  },
-  {
-   "doi": "10.1103/PhysRevLett.115.205901",
-   "title": "Prediction of Low-Thermal-Conductivity Compounds with First-Principles Anharmonic Lattice-Dynamics Calculations and Bayesian Optimization",
-   "authors": [
-    "A. Seko",
-    "A. Togo",
-    "H. Hayashi",
-    "K. Tsuda",
-    "L. Chaput",
-    "I. Tanaka"
-   ],
-   "year": 2015,
-   "journal": "Physical Review Letters"
-  },
-  {
-   "doi": "10.1039/C6CP03474H",
-   "title": "Dynamic disorder, phonon lifetimes, and the assignment of modes to the vibrational spectra of methylammonium lead halide perovskites",
-   "authors": [
-    "A. M. A. Leguy",
-    "A. R. Goñi",
-    "J. M. Frost",
-    "J. Skelton",
-    "F. Brivio",
-    "X. Rodríguez-Martínez",
-    "O. J. Weber",
-    "A. Pallipurath",
-    "M. I. Alonso",
-    "M. Campoy-Quiles",
-    "M. T. Weller",
-    "J. Nelson",
-    "A. Walsh",
-    "P. R. F. Barnes"
-   ],
-   "year": 2016,
+   "year": 2018,
    "journal": "Physical Chemistry Chemical Physics"
+  },
+  {
+   "doi": "10.1103/PhysRevX.12.041011",
+   "title": "Wigner Formulation of Thermal Transport in Solids",
+   "authors": [
+    "M. Simoncelli",
+    "N. Marzari",
+    "F. Mauri"
+   ],
+   "year": 2022,
+   "journal": "Physical Review X"
   }
  ]
 }

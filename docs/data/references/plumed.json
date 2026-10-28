@@ -58,21 +58,6 @@
    "journal": "Proceedings of the National Academy of Sciences"
   },
   {
-   "doi": "10.1016/j.softx.2015.06.001",
-   "title": "GROMACS: High performance molecular simulations through multi-level parallelism from laptops to supercomputers",
-   "authors": [
-    "M. J. Abraham",
-    "T. Murtola",
-    "R. Schulz",
-    "S. Páll",
-    "J. C. Smith",
-    "B. Hess",
-    "E. Lindahl"
-   ],
-   "year": 2015,
-   "journal": "SoftwareX"
-  },
-  {
    "doi": "10.1073/pnas.1811056115",
    "title": "Predicting polymorphism in molecular crystals using orientational entropy",
    "authors": [
@@ -81,83 +66,6 @@
    ],
    "year": 2018,
    "journal": "Proceedings of the National Academy of Sciences"
-  },
-  {
-   "doi": "10.1088/1361-648X/ab4007",
-   "title": "QuantumATK: an integrated platform of electronic and atomic-scale modelling tools",
-   "authors": [
-    "S. Smidstrup",
-    "T. Markussen",
-    "P. Vancraeyveld",
-    "J. Wellendorff",
-    "J. Schneider",
-    "T. Gunst",
-    "B. Verstichel",
-    "D. Stradi",
-    "P. A. Khomyakov",
-    "U. G. Vej-Hansen",
-    "M. E. Lee",
-    "S. T. Chill",
-    "F. Rasmussen",
-    "G. Penazzi",
-    "F. Corsetti",
-    "A. Ojanperä",
-    "K. Jensen",
-    "M. L. N. Palsgaard",
-    "U. Martinez",
-    "A. Blom",
-    "M. Brandbyge",
-    "K. Stokbro"
-   ],
-   "year": 2019,
-   "journal": "Journal of Physics: Condensed Matter"
-  },
-  {
-   "doi": "10.1063/1.5143190",
-   "title": "DFTB+, a software package for efficient approximate density functional theory based atomistic simulations",
-   "authors": [
-    "B. Hourahine",
-    "B. Aradi",
-    "V. Blum",
-    "F. Bonafé",
-    "A. Buccheri",
-    "C. Camacho",
-    "C. Cevallos",
-    "M. Y. Deshaye",
-    "T. Dumitrică",
-    "A. Dominguez",
-    "S. Ehlert",
-    "M. Elstner",
-    "T. van der Heide",
-    "J. Hermann",
-    "S. Irle",
-    "J. J. Kranz",
-    "C. Köhler",
-    "T. Kowalczyk",
-    "T. Kubař",
-    "I. S. Lee",
-    "V. Lutsker",
-    "R. J. Maurer",
-    "S. K. Min",
-    "I. Mitchell",
-    "C. Negre",
-    "T. A. Niehaus",
-    "A. M. N. Niklasson",
-    "A. J. Page",
-    "A. Pecchia",
-    "G. Penazzi",
-    "M. P. Persson",
-    "J. Řezáč",
-    "C. G. Sánchez",
-    "M. Sternberg",
-    "M. Stöhr",
-    "F. Stuckenberg",
-    "A. Tkatchenko",
-    "V. W. z. Yu",
-    "T. Frauenheim"
-   ],
-   "year": 2020,
-   "journal": "The Journal of Chemical Physics"
   }
  ]
 }
