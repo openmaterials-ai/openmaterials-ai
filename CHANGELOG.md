@@ -24,6 +24,26 @@ id.
   compiled formula bridge proves a statement about the operator. The Bose-
   Einstein occupation, Dirac delta and Heaviside step count as special
   functions, not code outputs. No id changes.
+- `formula_bindings.json` gains the relation `local`: a compiled theorem
+  about an OMAI formula that Physlib has no model for. A local binding
+  cites no Physlib source, must be compiled and must state conditions and
+  remaining obligations. Inventory rows covered only by local bindings have
+  status `local` and keep their Physlib gap reason. `operators_compiled` and
+  `nodes_compiled` keep their meaning (Physlib-anchored subjects only); new
+  counters `operators_compiled_local`, `nodes_compiled_local`,
+  `operators_proved`, `nodes_proved`, `operators_local` and `nodes_local`
+  report the rest. Payloads without local bindings validate as before; a
+  payload with local bindings must carry the new counters. A cited
+  declaration may live in any bridge module the evidence source imports.
+- New compiled bindings: the quasiharmonic producers (Gibbs energy,
+  C_P, expansion, isothermal modulus, Gruneisen contraction), crystal
+  lattice dynamics (dynamical matrix, dispersion, group velocity) and the
+  relaxation-time conductivity, anchored to Physlib; local bindings for the
+  elastic moduli, composite conductivity and depolarization factor, cure
+  kinetics and the participation ratio. The non-analytic correction, the
+  linearized-BTE collision matrix and the cumulative conductivity of a
+  linearized-BTE solution are recorded as catalog defects in their gap
+  reasons. No id changes.
 
 - `docs/data/releases/openmaterials-ai.json` registers 0.4.0 (tag v0.4.0), so
   `release_check` resolves an `execution.registry` row naming

@@ -23,7 +23,7 @@ Cite the map version in https://openmaterials.ai/data/version.json with any valu
 - [Codes](https://openmaterials.ai/codes/): the bibliography of the codes the map cites
 - [Data contract](https://openmaterials.ai/guide/#data): the shapes of the main JSON files under data/
 - [Repository](https://github.com/openmaterials-ai/openmaterials-ai): source, GOVERNANCE.md, and the contribution process
-- [Formula bridge](https://openmaterials.ai/lean/bridge/): mapping coverage and gaps, including conditional static-plus-harmonic Cp response and thermal Gruneisen identities; compiled model proofs do not validate numerical or mode-Gruneisen producers. It is the map's only Lean package.
+- [Formula bridge](https://openmaterials.ai/lean/bridge/): mapping coverage and gaps. Physlib-anchored proofs cover the harmonic ensembles, the static-plus-harmonic Cp and thermal Gruneisen identities, the quasiharmonic Gibbs, C_P, expansion, modulus and Gruneisen-contraction producers, crystal lattice dynamics (dynamical matrix, commensurate dispersion, group velocity away from Gamma) and the relaxation-time conductivity; local proofs over Mathlib cover elastic moduli, composite conductivity and cure kinetics. Compiled model proofs do not verify numerical producers. The non-analytic correction, the linearized-BTE collision matrix and the linearized-BTE cumulative conductivity are recorded as catalog defects. It is the map's only Lean package.
 
 ## Values
 
