@@ -165,5 +165,10 @@
   "tagline": "An AtomisticSkills skill: diffusivity and activation energy from trajectories.",
   "summary": "mat-diffusion-analysis is one of the AtomisticSkills, packaged calculations an agent can call. It takes molecular dynamics trajectories at several temperatures, extracts the diffusivity at each from the mean squared displacement, and fits a weighted Arrhenius law through them. The slope gives the activation energy in eV. On the map it serves the diffusivity and the activation energy.",
   "website": "https://github.com/learningmatter-mit/AtomisticSkills"
+ },
+ "ngspice": {
+  "tagline": "The open-source SPICE circuit simulator.",
+  "summary": "ngspice is the open-source circuit simulator descended from Berkeley SPICE 3f5, with XSPICE mixed-signal extensions. It solves DC, AC and transient analyses of circuits built from device models and behavioral sources, so a device characterized on the map can be placed in a circuit and simulated at the circuit level. On the map it serves the quantities read back from its transient analyses.",
+  "website": "https://ngspice.sourceforge.io"
  }
 }
