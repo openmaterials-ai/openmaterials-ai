@@ -30,14 +30,32 @@
    "journal": "Chemistry of Materials"
   },
   {
-   "doi": "10.1038/ncomms15893",
-   "title": "Origin of fast ion diffusion in super-ionic conductors",
+   "doi": "10.1021/acs.chemmater.5b03656",
+   "title": "Role of Na<sup>+</sup> Interstitials and Dopants in Enhancing the Na<sup>+</sup> Conductivity of the Cubic Na<sub>3</sub>PS<sub>4</sub> Superionic Conductor",
    "authors": [
-    "X. He",
-    "Y. Zhu",
-    "Y. Mo"
+    "Z. Zhu",
+    "I. H. Chu",
+    "Z. Deng",
+    "S. P. Ong"
    ],
-   "year": 2017,
+   "year": 2015,
+   "journal": "Chemistry of Materials"
+  },
+  {
+   "doi": "10.1038/ncomms11009",
+   "title": "Design and synthesis of the superionic conductor Na10SnP2S12",
+   "authors": [
+    "W. D. Richards",
+    "T. Tsujimura",
+    "L. J. Miara",
+    "Y. Wang",
+    "J. C. Kim",
+    "S. P. Ong",
+    "I. Uechi",
+    "N. Suzuki",
+    "G. Ceder"
+   ],
+   "year": 2016,
    "journal": "Nature Communications"
   },
   {
