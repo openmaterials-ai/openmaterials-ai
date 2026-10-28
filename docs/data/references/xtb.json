@@ -29,6 +29,16 @@
    "journal": "WIREs Computational Molecular Science"
   }
  ],
- "methods": [],
+ "methods": [
+  {
+   "doi": "10.1021/acs.jctc.9b00143",
+   "title": "Exploration of Chemical Compound, Conformer, and Reaction Space with Meta-Dynamics Simulations Based on Tight-Binding Quantum Chemical Calculations",
+   "authors": [
+    "S. Grimme"
+   ],
+   "year": 2019,
+   "journal": "Journal of Chemical Theory and Computation"
+  }
+ ],
  "applications": []
 }

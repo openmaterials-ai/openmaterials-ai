@@ -27,6 +27,37 @@
  "methods": [],
  "applications": [
   {
+   "doi": "10.1103/PhysRevLett.104.190601",
+   "title": "Enhanced Sampling in the Well-Tempered Ensemble",
+   "authors": [
+    "M. Bonomi",
+    "M. Parrinello"
+   ],
+   "year": 2010,
+   "journal": "Physical Review Letters"
+  },
+  {
+   "doi": "10.1103/PhysRevLett.111.230602",
+   "title": "From Metadynamics to Dynamics",
+   "authors": [
+    "P. Tiwary",
+    "M. Parrinello"
+   ],
+   "year": 2013,
+   "journal": "Physical Review Letters"
+  },
+  {
+   "doi": "10.1073/pnas.1303186110",
+   "title": "Funnel metadynamics as accurate binding free-energy method",
+   "authors": [
+    "V. Limongelli",
+    "M. Bonomi",
+    "M. Parrinello"
+   ],
+   "year": 2013,
+   "journal": "Proceedings of the National Academy of Sciences"
+  },
+  {
    "doi": "10.1016/j.softx.2015.06.001",
    "title": "GROMACS: High performance molecular simulations through multi-level parallelism from laptops to supercomputers",
    "authors": [
@@ -40,6 +71,16 @@
    ],
    "year": 2015,
    "journal": "SoftwareX"
+  },
+  {
+   "doi": "10.1073/pnas.1811056115",
+   "title": "Predicting polymorphism in molecular crystals using orientational entropy",
+   "authors": [
+    "P. M. Piaggi",
+    "M. Parrinello"
+   ],
+   "year": 2018,
+   "journal": "Proceedings of the National Academy of Sciences"
   },
   {
    "doi": "10.1063/1.5143190",

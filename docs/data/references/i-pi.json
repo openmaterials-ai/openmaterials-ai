@@ -62,5 +62,41 @@
   }
  ],
  "methods": [],
- "applications": []
+ "applications": [
+  {
+   "doi": "10.1063/1.4883861",
+   "title": "How to remove the spurious resonances from ring polymer molecular dynamics",
+   "authors": [
+    "M. Rossi",
+    "M. Ceriotti",
+    "D. E. Manolopoulos"
+   ],
+   "year": 2014,
+   "journal": "The Journal of Chemical Physics"
+  },
+  {
+   "doi": "10.1063/1.4971438",
+   "title": "High order path integrals made easy",
+   "authors": [
+    "V. Kapil",
+    "J. Behler",
+    "M. Ceriotti"
+   ],
+   "year": 2016,
+   "journal": "The Journal of Chemical Physics"
+  },
+  {
+   "doi": "10.1073/pnas.1815117116",
+   "title": "Ab initio thermodynamics of liquid and solid water",
+   "authors": [
+    "B. Cheng",
+    "E. A. Engel",
+    "J. Behler",
+    "C. Dellago",
+    "M. Ceriotti"
+   ],
+   "year": 2019,
+   "journal": "Proceedings of the National Academy of Sciences"
+  }
+ ]
 }

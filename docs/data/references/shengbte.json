@@ -14,7 +14,18 @@
    "journal": "Computer Physics Communications"
   }
  ],
- "methods": [],
+ "methods": [
+  {
+   "doi": "10.1016/0921-4526(95)00016-3",
+   "title": "An iterative approach to the phonon Boltzmann equation in the theory of thermal conductivity",
+   "authors": [
+    "M. Omini",
+    "A. Sparavigna"
+   ],
+   "year": 1995,
+   "journal": "Physica B: Condensed Matter"
+  }
+ ],
  "applications": [
   {
    "doi": "10.1038/nphys3492",

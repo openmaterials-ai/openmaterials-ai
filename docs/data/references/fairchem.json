@@ -50,6 +50,23 @@
    ],
    "year": 2023,
    "journal": "ACS Catalysis"
+  },
+  {
+   "doi": "10.48550/arXiv.2410.12771",
+   "title": "Open Materials 2024 (OMat24) Inorganic Materials Dataset and Models",
+   "authors": [
+    "L. Barroso-Luque",
+    "M. Shuaibi",
+    "X. Fu",
+    "B. M. Wood",
+    "M. Dzamba",
+    "M. Gao",
+    "A. Rizvi",
+    "C. L. Zitnick",
+    "Z. W. Ulissi"
+   ],
+   "year": 2024,
+   "journal": "arXiv"
   }
  ],
  "methods": [],

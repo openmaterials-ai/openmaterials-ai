@@ -103,6 +103,33 @@
    ],
    "year": 2025,
    "journal": "Materials Genome Engineering Advances"
+  },
+  {
+   "doi": "10.1038/s43588-026-01009-6",
+   "title": "NEP89: universal neuroevolution potential for inorganic and organic materials across 89 elements",
+   "authors": [
+    "T. Liang",
+    "K. Xu",
+    "E. Lindgren",
+    "Z. Chen",
+    "R. Zhao",
+    "J. Liu",
+    "E. Berger",
+    "B. Tang",
+    "B. Zhang",
+    "Y. Wang",
+    "K. Song",
+    "P. Ying",
+    "N. Xu",
+    "H. Dong",
+    "S. Chen",
+    "P. Erhart",
+    "Z. Fan",
+    "T. Ala-Nissila",
+    "J. Xu"
+   ],
+   "year": 2026,
+   "journal": "Nature Computational Science"
   }
  ],
  "methods": [
@@ -130,6 +157,22 @@
     "T. Ala-Nissila"
    ],
    "year": 2019,
+   "journal": "Physical Review B"
+  },
+  {
+   "doi": "10.1103/PhysRevB.104.104309",
+   "title": "Neuroevolution machine learning potentials: Combining high accuracy and low cost in atomistic simulations and application to heat transport",
+   "authors": [
+    "Z. Fan",
+    "Z. Zeng",
+    "C. Zhang",
+    "Y. Wang",
+    "K. Song",
+    "H. Dong",
+    "Y. Chen",
+    "T. Ala-Nissila"
+   ],
+   "year": 2021,
    "journal": "Physical Review B"
   }
  ],

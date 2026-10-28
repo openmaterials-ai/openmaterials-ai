@@ -145,5 +145,30 @@
   "tagline": "Semiempirical extended tight-binding for molecules and materials.",
   "summary": "xtb implements the GFN extended tight-binding methods, GFN2-xTB among them. They give fast energies, geometries, frequencies and properties for molecules and, with GFN0, GFN1 and GFN-FF, periodic systems. On the map it serves the quantities it computes at that level of theory.",
   "website": "https://xtb-docs.readthedocs.io"
+ },
+ "mat-elasticity": {
+  "tagline": "An AtomisticSkills skill: elastic constants and moduli from a strained cell.",
+  "summary": "mat-elasticity is one of the AtomisticSkills, packaged calculations an agent can call. It wraps matcalc's ElasticityCalc: the cell is strained, the stresses are computed with the chosen potential (the skill loads MACE, MatGL or FAIRChem), and the elastic tensor follows. From it the skill reports the bulk, shear and Young's moduli in the Voigt-Reuss-Hill average and the Poisson ratio. On the map it serves those five quantities.",
+  "website": "https://github.com/learningmatter-mit/AtomisticSkills"
+ },
+ "mat-equation-of-state": {
+  "tagline": "An AtomisticSkills skill: the bulk modulus from an equation of state.",
+  "summary": "mat-equation-of-state is one of the AtomisticSkills, packaged calculations an agent can call. It wraps matcalc's EOSCalc: the cell is scaled over a range of volumes, the ions are relaxed at each volume with the chosen potential and the energy taken, and a Birch-Murnaghan equation of state is fitted through pymatgen. The fitted B0 is the bulk modulus the skill reports, in GPa. On the map it serves that quantity.",
+  "website": "https://github.com/learningmatter-mit/AtomisticSkills"
+ },
+ "mat-surface-adsorption": {
+  "tagline": "An AtomisticSkills skill: adsorption energies on slab sites.",
+  "summary": "mat-surface-adsorption is one of the AtomisticSkills, packaged calculations an agent can call. It wraps matcalc's AdsorptionCalc: slabs are cut from the bulk, the adsorbate is placed on each candidate site, slab and adsorbate-on-slab are relaxed with the chosen ASE calculator, and the adsorption energy is E(adslab) minus E(slab) minus E(adsorbate), per site. On the map it serves the adsorption energy.",
+  "website": "https://github.com/learningmatter-mit/AtomisticSkills"
+ },
+ "mat-diffusion-analysis": {
+  "tagline": "An AtomisticSkills skill: diffusivity and activation energy from trajectories.",
+  "summary": "mat-diffusion-analysis is one of the AtomisticSkills, packaged calculations an agent can call. It takes molecular dynamics trajectories at several temperatures, extracts the diffusivity at each from the mean squared displacement, and fits a weighted Arrhenius law through them. The slope gives the activation energy in eV. On the map it serves the diffusivity and the activation energy.",
+  "website": "https://github.com/learningmatter-mit/AtomisticSkills"
+ },
+ "ngspice": {
+  "tagline": "The open-source SPICE circuit simulator.",
+  "summary": "ngspice is the open-source circuit simulator descended from Berkeley SPICE 3f5, with XSPICE mixed-signal extensions. It solves DC, AC and transient analyses of circuits built from device models and behavioral sources, so a device characterized on the map can be placed in a circuit and simulated at the circuit level. On the map it serves the quantities read back from its transient analyses.",
+  "website": "https://ngspice.sourceforge.io"
  }
 }
