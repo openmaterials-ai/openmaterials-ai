@@ -88,3 +88,21 @@ assert cp_rows[0] in formula_bindings_for_physlib(
 )
 assert formula_bindings_for("compute_heat_capacity_p", kind="operator") == []
 print("installed wheel ok: conditional Cp identity, not its numerical sibling")
+
+gamma_rows = formula_bindings_for("contract_thermal_gruneisen_identity", kind="operator")
+assert len(gamma_rows) == 1 and gamma_rows[0]["id"] == "harmonic-static-thermal-gruneisen-identity"
+assert gamma_rows[0]["evidence"]["kind"] == "compiled_bridge"
+assert {(row["kind"], row["id"]) for row in gamma_rows[0]["evidence"]["proved_targets"]} == {
+    ("operator", "contract_thermal_gruneisen_identity"), ("node", "ThermalGruneisen"),
+}
+for declaration, module in (
+    ("CanonicalEnsemble.helmholtzFreeEnergy", "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic"),
+    ("CanonicalEnsemble.meanEnergy", "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic"),
+    ("CanonicalEnsemble.meanEnergyT", "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas"),
+    ("CanonicalEnsemble.heatCapacity", "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas"),
+):
+    assert gamma_rows[0] in formula_bindings_for_physlib(declaration=declaration, module=module)
+for sibling in ("contract_thermal_gruneisen", "compute_gruneisen", "contract_molar_volume"):
+    assert formula_bindings_for(sibling, kind="operator") == []
+assert formula_bindings_for("Gruneisen", kind="node") == []
+print("installed wheel ok: thermal Gruneisen identity, not its siblings")

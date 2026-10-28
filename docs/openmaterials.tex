@@ -2599,6 +2599,37 @@ coverage; the numerical QHA route, fitting/minimization and input producers
 remain unverified. The \href{https://openmaterials.ai/lean/bridge/\#response}{response bridge}
 links the source, reviewed endpoint contract and explicit assumptions.
 
+The same volume family proves the thermal Gr\"uneisen identity
+\[
+  \Gamma=\frac{\sum_i \gamma_i c_i}{\sum_i c_i}=\frac{\alpha_V K_T}{C_V^{vol}},\qquad
+  \gamma_i=-\frac{v\,\omega_i'(v)}{\omega_i(v)},
+\]
+on a local stable constant-pressure branch. Here $\Gamma$ is defined directly
+from the volume derivatives of the mode frequencies and the actual canonical mode
+heat capacities $c_i$ at the branch volume; it uses no expansion, bulk modulus,
+branch or free energy. The volumetric expansion $\alpha_V=V_m'(T)/V_m(T)$ along the branch, the isothermal
+bulk modulus $K_T=V_m F_{VV}$ and $C_V^{vol}=\sum_i c_i/(N_q v)$ belong to the same
+free energy, temperature and primitive cell. A supporting fixed-volume result,
+$(\partial P/\partial T)_V=\Gamma C_V^{vol}$, needs no branch. The weights require
+angular SI frequency, while the mode parameters, as logarithmic derivatives, do
+not depend on a constant frequency scale. Every mode must have positive
+frequency; $\Gamma$, $\gamma_i$ and $\alpha_V$ may be negative, and no statement is
+made at $T=0$. Pairing an adiabatic modulus with $C_V^{vol}$ would give
+$\Gamma(1+\alpha_V\Gamma T)$ instead of $\Gamma$.
+
+Exact model examples set $\hbar\omega_b/(k_B T)=b+1$ and $\gamma_b=b+1$ for
+$b=0,1,2$. The weighted mean then lies strictly between $1$ and the arithmetic mean $2$:
+every weight is positive, and the higher-frequency modes, which carry the larger
+$\gamma_b$, have smaller heat-capacity weights. A negative-rate
+branch has $\Gamma<0$ and $\alpha_V<0$, and a constant-frequency control with a single $q$ point has
+$\Gamma=\alpha_V=0$. These are exact model examples, not real-material fits. Only
+the \texttt{contract\_thermal\_gruneisen\_identity} operator and its output gain
+compiled coverage. FC3 and finite-difference mode-Gr\"uneisen producers,
+phonopy's fitted thermal-Gr\"uneisen quotient, numerical QHA, input producers and
+the opaque \texttt{contract\_thermal\_gruneisen} contraction remain unverified.
+The \href{https://openmaterials.ai/lean/bridge/\#gruneisen}{thermal Gr\"uneisen bridge}
+links the source, reviewed endpoint contract and explicit assumptions.
+
 The package audit checks all imported kernel declarations owned by its source
 modules, including private and generated helpers, together with the existing
 bridge namespace. It verifies full private import visibility and source-module

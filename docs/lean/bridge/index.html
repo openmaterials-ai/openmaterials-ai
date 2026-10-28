@@ -43,7 +43,7 @@
   <div class="page-body">
     <nav class="toc gtoc" aria-label="Contents">
       <a href="#coverage">Coverage</a><a href="#inventory">OMAI inventory</a><a href="#upstream-inventory">Physlib declarations</a>
-      <a href="#analytic">Harmonic ensemble proofs</a><a href="#response">Cp response</a><a href="#scope">Evidence and scope</a><a href="#reproduce">Reproduce</a>
+      <a href="#analytic">Harmonic ensemble proofs</a><a href="#response">Cp response</a><a href="#gruneisen">Thermal Gr&uuml;neisen</a><a href="#scope">Evidence and scope</a><a href="#reproduce">Reproduce</a>
       <a href="../">Historical verified layer</a>
     </nav>
     <article class="prose gwrap">
@@ -138,6 +138,32 @@
           <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/27f71197ccfac0bbfed535a4376e941113bb567b/lean/bridge/OMAIPhyslibStaticEnsemble.lean">static ensemble</a>,
           <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/27f71197ccfac0bbfed535a4376e941113bb567b/lean/bridge/response-formula-contract.json">reviewed endpoint contract</a>,
           and <a href="#operator=contract_heat_capacity_p_identity">mapping conditions and sources</a>.</p>
+      </section>
+      <section class="gsec" id="gruneisen">
+        <h2>Thermal Gr&uuml;neisen parameter</h2>
+        <p>The same static-plus-harmonic volume family proves
+          <code>Gamma = alpha_V*K_T/C_V_vol</code> on a local stable constant-pressure branch.
+          Gamma is defined independently as the heat-capacity-weighted mean of mode Gr&uuml;neisen parameters
+          <code>gamma_i = -v*omega_i'/omega_i</code>, weighted by actual canonical mode heat capacities at the branch volume.
+          Expansion is <code>V_m'(T)/V_m(T)</code> along the branch, the isothermal bulk modulus is <code>V_m*F_VV</code>, and the volumetric heat capacity is
+          <code>sum(c)/(N_q*v)</code>, all for the same free energy, temperature and primitive cell.</p>
+        <p>A supporting result holds at fixed volume without a branch: <code>(dP/dT)_V = Gamma*C_V_vol</code>.
+          The heat-capacity weights use angular SI frequency; mode parameters are logarithmic derivatives and do not depend on a constant frequency scale.
+          Every mode must have positive frequency, so zero acoustic modes need separate treatment. Gamma, the mode parameters and the expansion may be negative,
+          and no statement is made at zero temperature. An adiabatic modulus paired with <code>C_V_vol</code> gives <code>Gamma*(1+alpha_V*Gamma*T)</code>, not Gamma.</p>
+        <p>Exact model examples set the heat-capacity arguments <code>hbar*omega/(kB*T)</code> to 1, 2 and 3 with mode parameters 1, 2 and 3.
+          Gamma then lies strictly between 1 and the arithmetic mean 2: every weight is positive, and the higher-frequency modes, which carry the larger mode parameters, have smaller heat-capacity weights.
+          A negative-rate branch has negative Gamma and negative expansion, and a constant-frequency control with one q point has both equal to zero.
+          These are exact model examples, not material fits. The result adds compiled coverage only for the identity operator and its output;
+          it does not verify FC3 or finite-difference mode-Gr&uuml;neisen producers, phonopy's fitted thermal-Gr&uuml;neisen quotient, numerical QHA,
+          input producers or the opaque <code>contract_thermal_gruneisen</code> contraction.</p>
+        <p>Inspect the
+          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/27f71197ccfac0bbfed535a4376e941113bb567b/lean/bridge/OMAIPhyslibThermalGruneisen.lean">catalog endpoint</a>,
+          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/27f71197ccfac0bbfed535a4376e941113bb567b/lean/bridge/OMAIPhyslibModeGruneisen.lean">mode parameters and weights</a>,
+          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/27f71197ccfac0bbfed535a4376e941113bb567b/lean/bridge/OMAIPhyslibGruneisenWitness.lean">model examples</a>,
+          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/27f71197ccfac0bbfed535a4376e941113bb567b/lean/bridge/OMAIPhyslibHarmonicVolume.lean">actual volume family</a>,
+          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/27f71197ccfac0bbfed535a4376e941113bb567b/lean/bridge/thermal-gruneisen-formula-contract.json">reviewed endpoint contract</a>,
+          and <a href="#operator=contract_thermal_gruneisen_identity">mapping conditions and sources</a>.</p>
       </section>
       <section class="gsec" id="scope">
         <h2>Evidence and scope</h2>

@@ -36,10 +36,29 @@ the parent directory is unchanged and builds separately.
   explicit heterogeneous nonzero-expansion example, a separate zero-response
   control, and the catalog Cp identity and inequality. These cover one operator
   and its output, not the numerical QHA producer or its input producers.
+- `OMAIPhyslibModeGruneisen.lean`: derivative-defined mode Gruneisen
+  parameters, actual per-mode canonical heat capacities and their weighted mean
+  Gamma on the static-plus-harmonic volume family. The fixed-volume relation
+  `(dP/dT)_V = Gamma*C_V_vol` is a supporting result, and the per-mode heat
+  capacity is proved to decrease strictly with frequency at fixed positive
+  temperature. Gamma uses no expansion, bulk modulus, branch or free energy.
+- `OMAIPhyslibThermalGruneisen.lean`: the catalog endpoint `alpha*K/C_vol` and
+  the theorem that, on a local stable constant-pressure branch, Gamma at the
+  branch volume equals it with the volumetric expansion, isothermal
+  bulk modulus `V_m*F_VV` and volumetric heat capacity `sum(c)/(N_q*v)` of the
+  same model. This covers the identity operator and its
+  output, not the opaque weighted-contraction operator, mode-Gruneisen producers
+  or phonopy's thermal-Gruneisen quotient.
+- `OMAIPhyslibGruneisenWitness.lean`: exact examples with heat-capacity
+  arguments `hbar*omega/(kB*T) = 1, 2, 3` and mode parameters 1, 2, 3, where
+  Gamma lies strictly between 1 and the arithmetic mean 2; a positive-expansion
+  branch; a negative-rate branch with negative Gamma and expansion; and a zero
+  control. The branches hold for every positive molar scale and q count, the
+  zero control for every positive molar scale with one q point.
 - `OMAIPhyslibContinuum.lean`: absolute-temperature round trips and beta unit
   scaling; signed three-dimensional inviscid stress and pressure contraction.
 - `*-formula-contract.json`: separately reviewed OMAI endpoint identities and
-  source hashes. All eight contracts are required by the audit. New proofs do
+  source hashes. All nine contracts are required by the audit. New proofs do
   not rewrite the historical six-formula contract.
 - `build-evidence.json`: source and configuration hashes, pinned dependencies,
   and the transitive axiom audit from a build with warnings treated as errors.

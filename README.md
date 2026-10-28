@@ -231,8 +231,16 @@ single-mode-sum and joint-ensemble proofs with positive primitive-cell volume.
 A static-plus-harmonic volume family also proves the local constant-pressure
 identity `Cp - Cv = T V_m alpha_V^2 K_T`, using actual ensemble enthalpy and a
 common primitive-cell molar basis. Nonzero-expansion and zero-response examples
-are compiled; numerical QHA producers remain unverified. Each result retains
-its model and unit conditions.
+(the zero-response control has a single q point) are compiled; numerical QHA producers remain unverified. The same volume family
+proves the local thermal Gruneisen identity `Gamma = alpha_V K_T / C_V_vol`.
+Gamma is defined independently as the heat-capacity-weighted mean of mode
+Gruneisen parameters `gamma_i = -v omega_i'(v) / omega_i(v)`, weighted by actual
+canonical mode heat capacities at the branch volume. Volumetric expansion,
+isothermal bulk modulus and volumetric heat capacity come from the same free
+energy, temperature and primitive cell. Examples with distinct mode parameters,
+negative expansion and a zero control are compiled; FC3 and finite-difference
+mode-Gruneisen producers and phonopy's fitted thermal-Gruneisen quotient remain
+unverified. Each result retains its model and unit conditions.
 
 The [map's PhysLean / Physlib navigator](https://openmaterials.ai/map/) connects
 quantities and operators to upstream declarations and back. The Python APIs

@@ -13,3 +13,6 @@ public import OMAIPhyslibResponseCalculus
 public import OMAIPhyslibHarmonicVolume
 public import OMAIPhyslibResponseWitness
 public import OMAIPhyslibHarmonicResponse
+public import OMAIPhyslibModeGruneisen
+public import OMAIPhyslibThermalGruneisen
+public import OMAIPhyslibGruneisenWitness

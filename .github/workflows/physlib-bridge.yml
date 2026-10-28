@@ -11,6 +11,7 @@ on:
       - "tests/test_physlib_semantic_contract.py"
       - "tests/test_physlib_contract_names.py"
       - "tests/test_physlib_response_contract.py"
+      - "tests/test_physlib_thermal_gruneisen_contract.py"
       - "docs/data/formula_bindings.json"
       - "docs/data/physlib_dimensions.json"
       - ".github/workflows/physlib-bridge.yml"
@@ -23,6 +24,7 @@ on:
       - "tests/test_physlib_semantic_contract.py"
       - "tests/test_physlib_contract_names.py"
       - "tests/test_physlib_response_contract.py"
+      - "tests/test_physlib_thermal_gruneisen_contract.py"
       - "docs/data/formula_bindings.json"
       - "docs/data/physlib_dimensions.json"
       - ".github/workflows/physlib-bridge.yml"
@@ -72,4 +74,4 @@ jobs:
           PHYSLIB_BRIDGE_PATH: lean/bridge/.lake/packages/physlib
         run: |
           python -m omai.formula_bindings --check --physlib-path lean/bridge/.lake/packages/physlib --lean-package lean/bridge
-          python -m pytest tests/test_formula_bindings.py tests/test_physlib_dimensions.py tests/test_physlib_semantic_contract.py tests/test_physlib_contract_names.py tests/test_physlib_response_contract.py -q
+          python -m pytest tests/test_formula_bindings.py tests/test_physlib_dimensions.py tests/test_physlib_semantic_contract.py tests/test_physlib_contract_names.py tests/test_physlib_response_contract.py tests/test_physlib_thermal_gruneisen_contract.py -q

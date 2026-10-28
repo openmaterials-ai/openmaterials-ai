@@ -5,9 +5,382 @@
       "Quot.sound",
       "propext"
     ],
-    "declaration_count": 821,
+    "declaration_count": 1012,
     "declarations": {
       "CanonicalEnsemble.heatCapacity.eq_1": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.branch_one_succ": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.branch_two_succ": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.branch_zero_succ": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.einsteinWeight_pos": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.einsteinWeight_three_lt_two": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.einsteinWeight_two_lt_one": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.negativeRates": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.negativeRates.eq_1": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.negative_gamma_witness": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.negative_weightedGruneisen_neg": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.one_mem_J": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.positiveRates": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.positiveRates.eq_1": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.positive_bounds_of_weights": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.positive_gamma_witness": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.positive_gamma_witness_nonunit": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.positive_modeGruneisen_injective": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.positive_weightedGruneisen_bounds": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.quantumScale": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.quantumScale_pos": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.rateBase": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.rateBase._proof_1": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.rateBase._proof_2": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.rateBaseF": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.rateBaseF.eq_1": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.rateBaseF_contDiffAt": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.rateBaseF_eq_sum": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.rateBase_domain": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.rateCell": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.rateCell_contDiffAt": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.rateCell_hasDerivAt": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.rateCell_second": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.rateCurvature": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.rateFamily": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.rateFamily._proof_1": [
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.rateFamily._proof_2": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.rateFamily._proof_3": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.rateFamily._proof_4": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.rateFamily_freeEnergy": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.rateModel": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.rateModel.congr_simp": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.rateOmega": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.rateOmega.eq_1": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.rateOmega_contDiff": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.rateOmega_hasDerivAt": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.rateOmega_pos": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.rateReference": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.rateReference._proof_1": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.rateReference._proof_2": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.rateReference._proof_3": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.rateReference._proof_4": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.rateSlope": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.rateSlope.eq_1": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.rateStatic": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.rateStatic_contDiff": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.rateStatic_hasDerivAt": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.rate_FVV_reference": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.rate_FV_reference": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.rate_FV_scaled": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.rate_branch": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.rate_curvature_pos": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.rate_domain": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.rate_domain_reference": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.rate_modeGruneisen": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.rate_reference_argument": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.rate_weight_eq": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.rate_weightedGruneisen_eq": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.rate_weights_strictAnti": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.weighted_cancel": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.witnessTemperature": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.witnessTemperature.eq_1": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.witnessTemperature_toReal": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.witnessTemperature_val_pos": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.zeroModel_weightedGruneisen": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.GruneisenWitness.zero_gamma_control": [
         "Classical.choice",
         "Quot.sound",
         "propext"
@@ -142,6 +515,11 @@
         "Quot.sound",
         "propext"
       ],
+      "OMAI.PhyslibBridge.HarmonicVolumeModel.FV_eq_modeSum": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
       "OMAI.PhyslibBridge.HarmonicVolumeModel.J": [
         "Classical.choice",
         "Quot.sound",
@@ -192,6 +570,11 @@
         "Quot.sound",
         "propext"
       ],
+      "OMAI.PhyslibBridge.HarmonicVolumeModel.bulk_pos_of_branch": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
       "OMAI.PhyslibBridge.HarmonicVolumeModel.casesOn": [
         "Classical.choice",
         "Quot.sound",
@@ -203,6 +586,11 @@
         "propext"
       ],
       "OMAI.PhyslibBridge.HarmonicVolumeModel.cellFreeEnergy_contDiffAt": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.HarmonicVolumeModel.cellFreeEnergy_volume_hasDerivAt": [
         "Classical.choice",
         "Quot.sound",
         "propext"
@@ -238,6 +626,11 @@
         "propext"
       ],
       "OMAI.PhyslibBridge.HarmonicVolumeModel.cv_pos": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.HarmonicVolumeModel.deriv_omega_eq_modeGruneisen": [
         "Classical.choice",
         "Quot.sound",
         "propext"
@@ -278,6 +671,26 @@
         "propext"
       ],
       "OMAI.PhyslibBridge.HarmonicVolumeModel.entropy_eq_actual": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.HarmonicVolumeModel.expansion_eq_zero_iff_weightedGruneisen_eq_zero": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.HarmonicVolumeModel.expansion_mul_bulk_eq_weightedGruneisen_mul_volumetricCv": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.HarmonicVolumeModel.expansion_neg_iff_weightedGruneisen_neg": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.HarmonicVolumeModel.expansion_pos_iff_weightedGruneisen_pos": [
         "Classical.choice",
         "Quot.sound",
         "propext"
@@ -327,6 +740,11 @@
         "Quot.sound",
         "propext"
       ],
+      "OMAI.PhyslibBridge.HarmonicVolumeModel.gridAt.congr_simp": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
       "OMAI.PhyslibBridge.HarmonicVolumeModel.internalEnergy": [
         "Classical.choice",
         "Quot.sound",
@@ -348,6 +766,11 @@
         "propext"
       ],
       "OMAI.PhyslibBridge.HarmonicVolumeModel.internalEnergy_temperature_hasDerivAt": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.HarmonicVolumeModel.mixedTV_eq_neg_modeSum": [
         "Classical.choice",
         "Quot.sound",
         "propext"
@@ -382,7 +805,42 @@
         "Quot.sound",
         "propext"
       ],
+      "OMAI.PhyslibBridge.HarmonicVolumeModel.modeGruneisen": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.HarmonicVolumeModel.modeHeatCapacity": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.HarmonicVolumeModel.modeHeatCapacity.congr_simp": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.HarmonicVolumeModel.modeHeatCapacity_eq_closed": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.HarmonicVolumeModel.modeHeatCapacity_pos": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.HarmonicVolumeModel.modeHeatCapacity_sum_pos": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
       "OMAI.PhyslibBridge.HarmonicVolumeModel.mode_freeEnergy_contDiffAt": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.HarmonicVolumeModel.neg_mixedTV_eq_weightedGruneisen_mul_volumetricCv": [
         "Classical.choice",
         "Quot.sound",
         "propext"
@@ -407,6 +865,11 @@
         "Quot.sound",
         "propext"
       ],
+      "OMAI.PhyslibBridge.HarmonicVolumeModel.omega_hasDerivAt": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
       "OMAI.PhyslibBridge.HarmonicVolumeModel.omega_pos": [
         "Classical.choice",
         "Quot.sound",
@@ -418,6 +881,16 @@
         "propext"
       ],
       "OMAI.PhyslibBridge.HarmonicVolumeModel.positive_J": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.HarmonicVolumeModel.primitiveCellVolumeAt": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.HarmonicVolumeModel.primitiveCellVolumeAt.congr_simp": [
         "Classical.choice",
         "Quot.sound",
         "propext"
@@ -443,6 +916,56 @@
         "propext"
       ],
       "OMAI.PhyslibBridge.HarmonicVolumeModel.staticEnergy_C2": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.HarmonicVolumeModel.volumetricCv_eq_actual_ensemble": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.HarmonicVolumeModel.volumetricCv_eq_actual_modes": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.HarmonicVolumeModel.volumetricCv_eq_cv_div_volume": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.HarmonicVolumeModel.volumetricCv_eq_modeSum": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.HarmonicVolumeModel.volumetricCv_pos": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.HarmonicVolumeModel.weightedGruneisen": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.HarmonicVolumeModel.weightedGruneisen.congr_simp": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.HarmonicVolumeModel.weightedGruneisen.eq_1": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.HarmonicVolumeModel.weightedGruneisen_congr": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.HarmonicVolumeModel.weightedGruneisen_eq_closed": [
         "Classical.choice",
         "Quot.sound",
         "propext"
@@ -2240,6 +2763,11 @@
         "Quot.sound",
         "propext"
       ],
+      "OMAI.PhyslibBridge.Response.harmonic_static_thermalGruneisen_eq_omai": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
       "OMAI.PhyslibBridge.Response.heatCapacityPIdentity": [
         "Classical.choice",
         "Quot.sound",
@@ -2381,6 +2909,11 @@
         "propext"
       ],
       "OMAI.PhyslibBridge.Response.surface_along_hasDerivAt": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Response.thermalGruneisenIdentity": [
         "Classical.choice",
         "Quot.sound",
         "propext"
@@ -2546,6 +3079,26 @@
         "propext"
       ],
       "OMAI.PhyslibBridge.compressiveStress_roundtrip": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.einsteinCapacity": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.einsteinCapacity_hasDerivAt": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.einsteinCapacity_strictAntiOn": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.einstein_gap_pos": [
         "Classical.choice",
         "Quot.sound",
         "propext"
@@ -2739,7 +3292,17 @@
         "Quot.sound",
         "propext"
       ],
+      "OMAI.PhyslibBridge.harmonicHeatCapacity_eq_kB_mul_einsteinCapacity": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
       "OMAI.PhyslibBridge.harmonicHeatCapacity_pos": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.harmonicHeatCapacity_strictAntiOn_frequency": [
         "Classical.choice",
         "Quot.sound",
         "propext"
@@ -3569,6 +4132,119 @@
         "Quot.sound",
         "propext"
       ],
+      "_private.OMAIPhyslibGruneisenWitness.0.OMAI.PhyslibBridge.GruneisenWitness.positive_modeGruneisen_injective._simp_1_2": [
+        "propext"
+      ],
+      "_private.OMAIPhyslibGruneisenWitness.0.OMAI.PhyslibBridge.GruneisenWitness.positive_modeGruneisen_injective._simp_1_3": [
+        "propext"
+      ],
+      "_private.OMAIPhyslibGruneisenWitness.0.OMAI.PhyslibBridge.GruneisenWitness.rateFamily_freeEnergy._simp_1_1": [
+        "propext"
+      ],
+      "_private.OMAIPhyslibGruneisenWitness.0.OMAI.PhyslibBridge.GruneisenWitness.rateFamily_freeEnergy._simp_1_2": [
+        "propext"
+      ],
+      "_private.OMAIPhyslibGruneisenWitness.0.OMAI.PhyslibBridge.GruneisenWitness.rateFamily_freeEnergy._simp_1_3": [
+        "propext"
+      ],
+      "_private.OMAIPhyslibGruneisenWitness.0.OMAI.PhyslibBridge.GruneisenWitness.rateFamily_freeEnergy._simp_1_4": [
+        "propext"
+      ],
+      "_private.OMAIPhyslibGruneisenWitness.0.OMAI.PhyslibBridge.GruneisenWitness.rateFamily_freeEnergy._simp_1_5": [
+        "propext"
+      ],
+      "_private.OMAIPhyslibGruneisenWitness.0.OMAI.PhyslibBridge.GruneisenWitness.rateFamily_freeEnergy._simp_1_6": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "_private.OMAIPhyslibGruneisenWitness.0.OMAI.PhyslibBridge.GruneisenWitness.rateFamily_freeEnergy._simp_1_7": [
+        "propext"
+      ],
+      "_private.OMAIPhyslibGruneisenWitness.0.OMAI.PhyslibBridge.GruneisenWitness.rate_modeGruneisen._simp_1_1": [
+        "propext"
+      ],
+      "_private.OMAIPhyslibGruneisenWitness.0.OMAI.PhyslibBridge.GruneisenWitness.rate_modeGruneisen._simp_1_2": [
+        "propext"
+      ],
+      "_private.OMAIPhyslibGruneisenWitness.0.OMAI.PhyslibBridge.GruneisenWitness.rate_modeGruneisen._simp_1_3": [
+        "propext"
+      ],
+      "_private.OMAIPhyslibGruneisenWitness.0.OMAI.PhyslibBridge.GruneisenWitness.rate_modeGruneisen._simp_1_4": [
+        "propext"
+      ],
+      "_private.OMAIPhyslibGruneisenWitness.0.OMAI.PhyslibBridge.GruneisenWitness.rate_modeGruneisen._simp_1_5": [
+        "propext"
+      ],
+      "_private.OMAIPhyslibGruneisenWitness.0.OMAI.PhyslibBridge.GruneisenWitness.rate_modeGruneisen._simp_1_6": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "_private.OMAIPhyslibGruneisenWitness.0.OMAI.PhyslibBridge.GruneisenWitness.rate_modeGruneisen._simp_1_7": [
+        "propext"
+      ],
+      "_private.OMAIPhyslibGruneisenWitness.0.OMAI.PhyslibBridge.GruneisenWitness.rate_reference_argument._simp_1_1": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "_private.OMAIPhyslibGruneisenWitness.0.OMAI.PhyslibBridge.GruneisenWitness.rate_reference_argument._simp_1_2": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "_private.OMAIPhyslibGruneisenWitness.0.OMAI.PhyslibBridge.GruneisenWitness.rate_reference_argument._simp_1_3": [
+        "propext"
+      ],
+      "_private.OMAIPhyslibGruneisenWitness.0.OMAI.PhyslibBridge.GruneisenWitness.rate_reference_argument._simp_1_4": [
+        "propext"
+      ],
+      "_private.OMAIPhyslibGruneisenWitness.0.OMAI.PhyslibBridge.GruneisenWitness.rate_reference_argument._simp_1_5": [
+        "propext"
+      ],
+      "_private.OMAIPhyslibGruneisenWitness.0.OMAI.PhyslibBridge.GruneisenWitness.rate_reference_argument._simp_1_6": [
+        "propext"
+      ],
+      "_private.OMAIPhyslibGruneisenWitness.0.OMAI.PhyslibBridge.GruneisenWitness.rate_reference_argument._simp_1_7": [
+        "propext"
+      ],
+      "_private.OMAIPhyslibGruneisenWitness.0.OMAI.PhyslibBridge.GruneisenWitness.rate_reference_argument._simp_1_8": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "_private.OMAIPhyslibGruneisenWitness.0.OMAI.PhyslibBridge.GruneisenWitness.rate_reference_argument._simp_1_9": [
+        "propext"
+      ],
+      "_private.OMAIPhyslibGruneisenWitness.0.OMAI.PhyslibBridge.GruneisenWitness.rate_weight_eq._simp_1_1": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "_private.OMAIPhyslibGruneisenWitness.0.OMAI.PhyslibBridge.GruneisenWitness.rate_weight_eq._simp_1_2": [
+        "propext"
+      ],
+      "_private.OMAIPhyslibGruneisenWitness.0.OMAI.PhyslibBridge.GruneisenWitness.rate_weight_eq._simp_1_3": [
+        "propext"
+      ],
+      "_private.OMAIPhyslibGruneisenWitness.0.OMAI.PhyslibBridge.GruneisenWitness.rate_weight_eq._simp_1_4": [
+        "propext"
+      ],
+      "_private.OMAIPhyslibGruneisenWitness.0.OMAI.PhyslibBridge.GruneisenWitness.rate_weight_eq._simp_1_5": [
+        "propext"
+      ],
+      "_private.OMAIPhyslibGruneisenWitness.0.OMAI.PhyslibBridge.GruneisenWitness.rate_weight_eq._simp_1_6": [
+        "propext"
+      ],
+      "_private.OMAIPhyslibGruneisenWitness.0.OMAI.PhyslibBridge.GruneisenWitness.rate_weight_eq._simp_1_7": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "_private.OMAIPhyslibGruneisenWitness.0.OMAI.PhyslibBridge.GruneisenWitness.rate_weight_eq._simp_1_8": [
+        "propext"
+      ],
       "_private.OMAIPhyslibHarmonicDensity.0.OMAI.PhyslibBridge.uniformVolumetricContraction_eq_molar_div._simp_1_1": [
         "propext"
       ],
@@ -3696,6 +4372,159 @@
       ],
       "_private.OMAIPhyslibHarmonicVolume.0.OMAI.PhyslibBridge.HarmonicVolumeModel.freeEnergy_eq_internalEnergy_sub_temperature_entropy._simp_1_1": [
         "Quot.sound",
+        "propext"
+      ],
+      "_private.OMAIPhyslibModeGruneisen.0.OMAI.PhyslibBridge.HarmonicVolumeModel.FV_eq_modeSum._simp_1_1": [
+        "propext"
+      ],
+      "_private.OMAIPhyslibModeGruneisen.0.OMAI.PhyslibBridge.HarmonicVolumeModel.FV_eq_modeSum._simp_1_2": [
+        "propext"
+      ],
+      "_private.OMAIPhyslibModeGruneisen.0.OMAI.PhyslibBridge.HarmonicVolumeModel.FV_eq_modeSum._simp_1_3": [
+        "propext"
+      ],
+      "_private.OMAIPhyslibModeGruneisen.0.OMAI.PhyslibBridge.HarmonicVolumeModel.FV_eq_modeSum._simp_1_4": [
+        "propext"
+      ],
+      "_private.OMAIPhyslibModeGruneisen.0.OMAI.PhyslibBridge.HarmonicVolumeModel.FV_eq_modeSum._simp_1_5": [
+        "propext"
+      ],
+      "_private.OMAIPhyslibModeGruneisen.0.OMAI.PhyslibBridge.HarmonicVolumeModel.FV_eq_modeSum._simp_1_6": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "_private.OMAIPhyslibModeGruneisen.0.OMAI.PhyslibBridge.HarmonicVolumeModel.FV_eq_modeSum._simp_1_7": [
+        "propext"
+      ],
+      "_private.OMAIPhyslibModeGruneisen.0.OMAI.PhyslibBridge.HarmonicVolumeModel.cellFreeEnergy_volume_hasDerivAt._simp_1_1": [
+        "propext"
+      ],
+      "_private.OMAIPhyslibModeGruneisen.0.OMAI.PhyslibBridge.HarmonicVolumeModel.cellFreeEnergy_volume_hasDerivAt._simp_1_2": [
+        "propext"
+      ],
+      "_private.OMAIPhyslibModeGruneisen.0.OMAI.PhyslibBridge.HarmonicVolumeModel.cellFreeEnergy_volume_hasDerivAt._simp_1_3": [
+        "propext"
+      ],
+      "_private.OMAIPhyslibModeGruneisen.0.OMAI.PhyslibBridge.HarmonicVolumeModel.cellFreeEnergy_volume_hasDerivAt._simp_1_4": [
+        "propext"
+      ],
+      "_private.OMAIPhyslibModeGruneisen.0.OMAI.PhyslibBridge.HarmonicVolumeModel.cellFreeEnergy_volume_hasDerivAt._simp_1_5": [
+        "propext"
+      ],
+      "_private.OMAIPhyslibModeGruneisen.0.OMAI.PhyslibBridge.HarmonicVolumeModel.cellFreeEnergy_volume_hasDerivAt._simp_1_6": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "_private.OMAIPhyslibModeGruneisen.0.OMAI.PhyslibBridge.HarmonicVolumeModel.cellFreeEnergy_volume_hasDerivAt._simp_1_7": [
+        "propext"
+      ],
+      "_private.OMAIPhyslibModeGruneisen.0.OMAI.PhyslibBridge.HarmonicVolumeModel.cellFreeEnergy_volume_hasDerivAt._simp_1_8": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "_private.OMAIPhyslibModeGruneisen.0.OMAI.PhyslibBridge.HarmonicVolumeModel.deriv_omega_eq_modeGruneisen._simp_1_1": [
+        "propext"
+      ],
+      "_private.OMAIPhyslibModeGruneisen.0.OMAI.PhyslibBridge.HarmonicVolumeModel.deriv_omega_eq_modeGruneisen._simp_1_2": [
+        "propext"
+      ],
+      "_private.OMAIPhyslibModeGruneisen.0.OMAI.PhyslibBridge.HarmonicVolumeModel.deriv_omega_eq_modeGruneisen._simp_1_3": [
+        "propext"
+      ],
+      "_private.OMAIPhyslibModeGruneisen.0.OMAI.PhyslibBridge.HarmonicVolumeModel.deriv_omega_eq_modeGruneisen._simp_1_4": [
+        "propext"
+      ],
+      "_private.OMAIPhyslibModeGruneisen.0.OMAI.PhyslibBridge.HarmonicVolumeModel.deriv_omega_eq_modeGruneisen._simp_1_5": [
+        "propext"
+      ],
+      "_private.OMAIPhyslibModeGruneisen.0.OMAI.PhyslibBridge.HarmonicVolumeModel.deriv_omega_eq_modeGruneisen._simp_1_6": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "_private.OMAIPhyslibModeGruneisen.0.OMAI.PhyslibBridge.HarmonicVolumeModel.deriv_omega_eq_modeGruneisen._simp_1_7": [
+        "propext"
+      ],
+      "_private.OMAIPhyslibModeGruneisen.0.OMAI.PhyslibBridge.HarmonicVolumeModel.expansion_mul_bulk_eq_weightedGruneisen_mul_volumetricCv._simp_1_1": [
+        "propext"
+      ],
+      "_private.OMAIPhyslibModeGruneisen.0.OMAI.PhyslibBridge.HarmonicVolumeModel.expansion_mul_bulk_eq_weightedGruneisen_mul_volumetricCv._simp_1_2": [
+        "propext"
+      ],
+      "_private.OMAIPhyslibModeGruneisen.0.OMAI.PhyslibBridge.HarmonicVolumeModel.expansion_mul_bulk_eq_weightedGruneisen_mul_volumetricCv._simp_1_3": [
+        "propext"
+      ],
+      "_private.OMAIPhyslibModeGruneisen.0.OMAI.PhyslibBridge.HarmonicVolumeModel.expansion_mul_bulk_eq_weightedGruneisen_mul_volumetricCv._simp_1_4": [
+        "propext"
+      ],
+      "_private.OMAIPhyslibModeGruneisen.0.OMAI.PhyslibBridge.HarmonicVolumeModel.expansion_mul_bulk_eq_weightedGruneisen_mul_volumetricCv._simp_1_5": [
+        "propext"
+      ],
+      "_private.OMAIPhyslibModeGruneisen.0.OMAI.PhyslibBridge.HarmonicVolumeModel.expansion_mul_bulk_eq_weightedGruneisen_mul_volumetricCv._simp_1_6": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "_private.OMAIPhyslibModeGruneisen.0.OMAI.PhyslibBridge.HarmonicVolumeModel.expansion_mul_bulk_eq_weightedGruneisen_mul_volumetricCv._simp_1_7": [
+        "propext"
+      ],
+      "_private.OMAIPhyslibModeGruneisen.0.OMAI.PhyslibBridge.HarmonicVolumeModel.modeHeatCapacity_sum_pos._proof_1_1": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "_private.OMAIPhyslibModeGruneisen.0.OMAI.PhyslibBridge.HarmonicVolumeModel.volumetricCv_eq_cv_div_volume._simp_1_1": [
+        "propext"
+      ],
+      "_private.OMAIPhyslibModeGruneisen.0.OMAI.PhyslibBridge.HarmonicVolumeModel.volumetricCv_eq_cv_div_volume._simp_1_2": [
+        "propext"
+      ],
+      "_private.OMAIPhyslibModeGruneisen.0.OMAI.PhyslibBridge.HarmonicVolumeModel.volumetricCv_eq_cv_div_volume._simp_1_3": [
+        "propext"
+      ],
+      "_private.OMAIPhyslibModeGruneisen.0.OMAI.PhyslibBridge.HarmonicVolumeModel.volumetricCv_eq_cv_div_volume._simp_1_4": [
+        "propext"
+      ],
+      "_private.OMAIPhyslibModeGruneisen.0.OMAI.PhyslibBridge.HarmonicVolumeModel.volumetricCv_eq_cv_div_volume._simp_1_5": [
+        "propext"
+      ],
+      "_private.OMAIPhyslibModeGruneisen.0.OMAI.PhyslibBridge.HarmonicVolumeModel.volumetricCv_eq_cv_div_volume._simp_1_6": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "_private.OMAIPhyslibModeGruneisen.0.OMAI.PhyslibBridge.HarmonicVolumeModel.volumetricCv_eq_cv_div_volume._simp_1_7": [
+        "propext"
+      ],
+      "_private.OMAIPhyslibModeGruneisen.0.OMAI.PhyslibBridge.harmonicHeatCapacity_eq_kB_mul_einsteinCapacity._simp_1_1": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "_private.OMAIPhyslibModeGruneisen.0.OMAI.PhyslibBridge.harmonicHeatCapacity_eq_kB_mul_einsteinCapacity._simp_1_2": [
+        "propext"
+      ],
+      "_private.OMAIPhyslibModeGruneisen.0.OMAI.PhyslibBridge.harmonicHeatCapacity_eq_kB_mul_einsteinCapacity._simp_1_3": [
+        "propext"
+      ],
+      "_private.OMAIPhyslibModeGruneisen.0.OMAI.PhyslibBridge.harmonicHeatCapacity_eq_kB_mul_einsteinCapacity._simp_1_4": [
+        "propext"
+      ],
+      "_private.OMAIPhyslibModeGruneisen.0.OMAI.PhyslibBridge.harmonicHeatCapacity_eq_kB_mul_einsteinCapacity._simp_1_5": [
+        "propext"
+      ],
+      "_private.OMAIPhyslibModeGruneisen.0.OMAI.PhyslibBridge.harmonicHeatCapacity_eq_kB_mul_einsteinCapacity._simp_1_6": [
+        "propext"
+      ],
+      "_private.OMAIPhyslibModeGruneisen.0.OMAI.PhyslibBridge.harmonicHeatCapacity_eq_kB_mul_einsteinCapacity._simp_1_7": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "_private.OMAIPhyslibModeGruneisen.0.OMAI.PhyslibBridge.harmonicHeatCapacity_eq_kB_mul_einsteinCapacity._simp_1_8": [
         "propext"
       ],
       "_private.OMAIPhyslibResponseCalculus.0.OMAI.PhyslibBridge.Response.exists_scalar_implicit_branch._simp_1_1": [
@@ -3922,6 +4751,7 @@
       "OMAIPhyslibBridge",
       "OMAIPhyslibContinuum",
       "OMAIPhyslibDimensions",
+      "OMAIPhyslibGruneisenWitness",
       "OMAIPhyslibHarmonicDensity",
       "OMAIPhyslibHarmonicEnsemble",
       "OMAIPhyslibHarmonicProduct",
@@ -3929,22 +4759,28 @@
       "OMAIPhyslibHarmonicSums",
       "OMAIPhyslibHarmonicVolume",
       "OMAIPhyslibJointDensity",
+      "OMAIPhyslibModeGruneisen",
       "OMAIPhyslibResponseCalculus",
       "OMAIPhyslibResponseUnits",
       "OMAIPhyslibResponseWitness",
       "OMAIPhyslibSemantics",
-      "OMAIPhyslibStaticEnsemble"
+      "OMAIPhyslibStaticEnsemble",
+      "OMAIPhyslibThermalGruneisen"
     ],
     "status": "passed",
-    "theorem_count": 563
+    "theorem_count": 734
   },
   "command": "lake build --wfail",
   "contract_name_audit": {
-    "pair_count": 14,
+    "pair_count": 15,
     "pairs": [
       {
         "module": "OMAIPhyslibHarmonicResponse",
         "name": "OMAI.PhyslibBridge.Response.heatCapacityPIdentity"
+      },
+      {
+        "module": "OMAIPhyslibThermalGruneisen",
+        "name": "OMAI.PhyslibBridge.Response.thermalGruneisenIdentity"
       },
       {
         "module": "OMAIPhyslibSemantics",
@@ -4018,9 +4854,10 @@
   "schema_version": 1,
   "scope": "ISQ dimension encodings and explicitly stated bridge theorems; not numerical-code validation",
   "sources": {
-    "lean/bridge/OMAIPhyslibBridge.lean": "926091d896c74faa35fea24df5dd58bd57eabf27df38b7f37eba0c82cbcf4fdd",
+    "lean/bridge/OMAIPhyslibBridge.lean": "01f3b2bd332ef4d578b1b318a652cd6b1f79db098967b3286b3eed8c917ecb1e",
     "lean/bridge/OMAIPhyslibContinuum.lean": "e8bff3cb5d44cd78885d8c5f200d8761e8c568cd0d101fc0c2110f521bdca7ff",
     "lean/bridge/OMAIPhyslibDimensions.lean": "2b035d7bf6400adea49cb5f1595ee264c70f87539895b1d8279cbd694773a094",
+    "lean/bridge/OMAIPhyslibGruneisenWitness.lean": "99c4b6ffb4d42f0513d1139b303d953264bae41926b1d5ce3363ceb56b2cbaf9",
     "lean/bridge/OMAIPhyslibHarmonicDensity.lean": "cf4d59af5b660a1fc73b079d63451f269081e1bd9a3018047e1f6f41517013ea",
     "lean/bridge/OMAIPhyslibHarmonicEnsemble.lean": "1a1f7e60f5cf4a3e468d173109b0127d7685123e6e0130b69374df687b94e172",
     "lean/bridge/OMAIPhyslibHarmonicProduct.lean": "4c0af6605e43ceed3460a8c7fe9198f486bd48cf2ac6e538fa0c45ac1a644578",
@@ -4028,12 +4865,14 @@
     "lean/bridge/OMAIPhyslibHarmonicSums.lean": "5b3c3afbfc6a0fe5e9951091d66fc61b0802ebd6b5ca786927c67ecba2193e52",
     "lean/bridge/OMAIPhyslibHarmonicVolume.lean": "23effa45ca48c083307f32391413ab30d819db78cbee14bf6c9e62fdacb9dca5",
     "lean/bridge/OMAIPhyslibJointDensity.lean": "9f5f729c3db288f9d5b7e1b285b050c40df8caeabf72df09591d6203c6e7fde7",
+    "lean/bridge/OMAIPhyslibModeGruneisen.lean": "0ea8fbbed0fe6920dd0c712a0f2d55768c4cca218f5193a1dce1ffd29f7046b5",
     "lean/bridge/OMAIPhyslibResponseCalculus.lean": "aaa0404cc1d8df8b0a437bb24c46fdb97269def69b6f6caece73947dd4ac7b12",
     "lean/bridge/OMAIPhyslibResponseUnits.lean": "c6dbff78f7335254cd12667e9bb991f1389834c3fae0036a7c50b04088a516b1",
     "lean/bridge/OMAIPhyslibResponseWitness.lean": "6dba4f1ca76e9f3dd694e0445908d0928e84a1ce58ae076019aa76cd6a30d9e7",
     "lean/bridge/OMAIPhyslibSemantics.lean": "9ce9bbe14c751333465a9f08bdb5319f369361e136f2f8233e8e72e6614797a5",
     "lean/bridge/OMAIPhyslibStaticEnsemble.lean": "5d949848a8253d234f8058391b3641ec3ce1aa5671653293581d403851742f9e",
-    "lean/bridge/audit.py": "47f387dfddec5bc1eb178c8a2bd9b5be847b932af79d6740576733f9f1f64c06",
+    "lean/bridge/OMAIPhyslibThermalGruneisen.lean": "6669b924a8682f135cee4daeda9d2d76b5418aa1ee30117dd7975dc86dddece9",
+    "lean/bridge/audit.py": "18d304cd76f5d4f314bdcc84560a9e78b3e879d560257283b828c650776a303f",
     "lean/bridge/continuum-formula-contract.json": "b5fb4368abccaac9fcde8b6ccb6dfd55402f14f1a9537e898645484ba69b2e8f",
     "lean/bridge/harmonic-density-formula-contract.json": "b3f5f43df5ae50417ec309a996dcdbbef311fcac9bd4bb72957f45da28533ba8",
     "lean/bridge/harmonic-ensemble-formula-contract.json": "787bff6c81de388b2631c77b044b394a03c8562c744493931f09db60e8f663ab",
@@ -4041,10 +4880,11 @@
     "lean/bridge/harmonic-sums-formula-contract.json": "c897e8de5d7c1b7211f95e0cd599479c87a738de946be683bd5ab3ae78be1699",
     "lean/bridge/joint-density-formula-contract.json": "f5a5bb01044f479cf9770573121442a84117af1a84a6976d5ede0765256dfd04",
     "lean/bridge/lake-manifest.json": "d4f51a8aa0ee98c0c8a34a7f9cc00accf43ee3a67571f571c0e35318d0956e53",
-    "lean/bridge/lakefile.toml": "cd888a0815a49eaa5557058455c5dcccbd77afb439f651a79ee2decd05fc40ae",
+    "lean/bridge/lakefile.toml": "7cfa504adf90152202fec50aa5c412a503cd7edc038f3ad6430b09c4b0d2423c",
     "lean/bridge/lean-toolchain": "ca5f1f601d34c49079e38d7e7041eb0f2a9c227fbc1df0f404820069a052330c",
     "lean/bridge/response-formula-contract.json": "f4f446f1967c45ccf508f42232e070d468121b0967459f93fc0c496210adf353",
     "lean/bridge/semantic-formula-contract.json": "21002241bb9dae2d674df0ede26cf7f0804823591675bcb4099142e7a5d1b123",
+    "lean/bridge/thermal-gruneisen-formula-contract.json": "61759afd04057fdd607005bf49ae8ad84e2d3d916f7c331b45886a66620acdca",
     "lean/bridge/verify_contracts.py": "57225331e3e602ec50c4cb707f6b0b8c4f9cc7b7476e978cfa8a94ccd7708ffc"
   },
   "status": "passed",

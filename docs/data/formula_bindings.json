@@ -1333,6 +1333,121 @@
       }
     },
     {
+      "id": "harmonic-static-thermal-gruneisen-identity",
+      "relation": "conditional",
+      "statement": "For the static-plus-harmonic Physlib ensemble on a local stable constant-pressure branch, the heat-capacity-weighted mean of mode Gruneisen parameters, defined from the volume derivatives of the mode frequencies and weighted by the actual canonical mode heat capacities, equals the OMAI identity alpha_V*K/C_V_vol. Expansion, isothermal bulk modulus and volumetric heat capacity must belong to the same free-energy surface, temperature and equilibrium volume.",
+      "targets": [
+        {
+          "kind": "node",
+          "id": "BulkModulus",
+          "uid": "c0a13e64c02811f49b951271c894373267937676e0c657fc9ef09fac72558ced"
+        },
+        {
+          "kind": "node",
+          "id": "ThermalExpansion",
+          "uid": "9b42f8aebb6099cdcd910a272a92208881b598688bac7830c3ae0a412152473e"
+        },
+        {
+          "kind": "node",
+          "id": "ThermalGruneisen",
+          "uid": "22b1bd519d50d93fd24a919e021bab85aff246464a66a08f8274558834983985"
+        },
+        {
+          "kind": "node",
+          "id": "VolumetricHeatCapacity",
+          "uid": "29e324b97f31cdb7d3cd8ef6aec5668fff111fd7ee96bd19dd0426b8728c1d47"
+        },
+        {
+          "kind": "operator",
+          "id": "contract_thermal_gruneisen_identity",
+          "uid": "1348e12defce337587f9c2b152a3a1c88f9d27ec8cc48fc30167aebadd907043",
+          "formula_sha256": "d84872a220cba0af3fed426df7df8137e40c15bf547cdb3a4132d5e20af18f23"
+        }
+      ],
+      "sources": [
+        {
+          "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+          "name": "CanonicalEnsemble.helmholtzFreeEnergy",
+          "kind": "def",
+          "line": 680,
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L680"
+        },
+        {
+          "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+          "name": "CanonicalEnsemble.meanEnergy",
+          "kind": "def",
+          "line": 519,
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L519"
+        },
+        {
+          "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
+          "name": "CanonicalEnsemble.meanEnergyT",
+          "kind": "def",
+          "line": 409,
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L409"
+        },
+        {
+          "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
+          "name": "CanonicalEnsemble.heatCapacity",
+          "kind": "def",
+          "line": 417,
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L417"
+        }
+      ],
+      "conditions": [
+        "Use the same finite family of full Nat harmonic occupation ensembles as the Cp binding: product counting measure, unweighted oscillator energies, dof=0 and phase-space unit=1, with static energy N_q*E_0(v) attached through an actual singleton ensemble before molar normalization.",
+        "Temperature T and primitive-cell volume v are positive. Every frequency is positive and C2 on an open positive-volume domain. Static energy E_0(v) is C2, arbitrary signed, and independent of temperature. No mode may have zero or imaginary frequency; an unmodified Gamma-centred grid with zero acoustic modes does not satisfy the premises.",
+        "Keep masses, composition, atom and q counts, reduced-q labels, uniform q weights and the Avogadro scale fixed, with one q mesh at every volume. Frequencies depend on volume only. Each labelled branch must be followed continuously through band crossings; sorted band order is not sufficient.",
+        "Define the mode Gruneisen parameter as gamma_i(v)=-v*omega_i_prime(v)/omega_i(v) from the volume family itself. Define Gamma(T,v)=sum_i gamma_i*c_i/sum_i c_i, where c_i is the actual derivative-defined canonical heat capacity of mode i at fixed v. Gamma does not use expansion, bulk modulus, the branch, the free energy or the quotient alpha_V*K/C_V_vol.",
+        "Evaluate Gamma, expansion, bulk modulus and volumetric heat capacity at the same temperature and at the branch volume v_B=V_m/N_A, per the same primitive cell that carries E_0(v) and the phonon grid. Supplied static energies, volumes and phonons must refer to that one cell.",
+        "The supplied volume path is differentiable at the evaluation temperature and satisfies domain membership and F_V+p_ext=0 throughout a neighborhood, with constant external pressure. Require F_VV>0 at the evaluation point. A pointwise stationarity equation alone is insufficient.",
+        "Interpret ThermalExpansion as the volumetric coefficient V_m_prime/V_m along that path, BulkModulus as the isothermal modulus V_m*F_VV at the same temperature, and VolumetricHeatCapacity as sum(c)/(N_q*v) at fixed v, equal to C_V_mol/V_m. Linear expansion, adiabatic or elastic moduli, static-only curvature and constant-pressure capacities are not these inputs.",
+        "Use the volumetric form only. The molar form alpha_V*K*V_m/C_V_mol is equivalent only with V_m and C_V_mol per mole of the same primitive cells. An adiabatic modulus paired with C_V_vol gives Gamma*(1+alpha_V*Gamma*T), not Gamma.",
+        "Supporting result, not a separate subject: at every point of the model domain, without a branch, the temperature derivative of pressure at fixed volume equals Gamma*C_V_vol.",
+        "Gamma, every gamma_i and alpha_V may be negative or zero. No statement is made at T=0, where Gamma is a limit of a ratio of vanishing capacities.",
+        "Embed model values coherently in SI: T in K, E_0 in J per primitive cell, v in m^3, V_m in m^3/mol, alpha_V in 1/K, isothermal bulk modulus in Pa and C_V_vol in J/(m^3 K). Convert Angstrom^3 by 10^-30, serving GPa by 10^9 and eV by 1.602176634e-19 J/eV. These exact-real interpretations do not certify floating-point adapters."
+      ],
+      "conventions": {
+        "model_scope": "Local hydrostatic static-plus-independent-harmonic canonical model with volume-dependent positive frequencies and no independent temperature dependence of the spectrum. Gamma is the heat-capacity-weighted mean of derivative-defined mode Gruneisen parameters. This is an OMAI model-specific extension of actual Physlib ensembles, not an upstream Gruneisen theorem or a numerical QHA solver proof.",
+        "component_scope": "Finite uniform-q grid with all 3*N_atoms branches, continuously labelled branches and fixed reduced-q labels; one scalar volume coordinate along a hydrostatic path. Electronic, magnetic, configurational and anisotropic strain contributions are excluded.",
+        "normalization_basis": "One primitive cell carries E_0(v), the volume coordinate and the phonon grid. Molar means per mole of those primitive cells and volumetric means per primitive-cell volume. Gamma, alpha_V, K and C_V_vol are intensive: the Avogadro scale and N_q cancel, and the identity uses the volumetric form only.",
+        "frequency_convention": "Angular SI frequency with exact upstream hbar and kB in the heat-capacity weights. Stored linear THz requires omega_SI=2*pi*10^12*nu_THz. Mode Gruneisen parameters are logarithmic derivatives and do not depend on a constant frequency scale; the weights do.",
+        "unit_embedding": "Coherent SI: alpha_V in 1/K, isothermal bulk modulus in Pa, C_V_vol in J/(m^3 K), primitive-cell v in m^3 and V_m in m^3/mol; Gamma and gamma_i are dimensionless. Use a common numeric-unit embedding, not raw mixed serving values.",
+        "held_fixed": "Composition, masses, q labels and weights, the q mesh, the Avogadro scale and the static-energy and frequency functions are fixed. gamma_i and C_V_vol are taken at fixed v; the bulk modulus at fixed temperature; the expansion along the locally constant-pressure path.",
+        "admissibility": "T>0, v>0, omega>0, N_A>0, N_q>0 and local positive isothermal curvature on the branch. Gamma, gamma_i and alpha_V are sign-free. Totalized values outside the model domain or at T=0 have no asserted physical interpretation.",
+        "reference_energy": "All oscillator zero-point energies remain and shift the equilibrium volume and bulk modulus. The signed temperature-independent static energy enters the actual Hamiltonian and is not silently removed; neither contributes to the mixed temperature-volume derivative.",
+        "qpoint_weighting": "Uniform full-grid q averaging with the same mesh at every volume; varying primitive volume does not change reduced-q labels or introduce fractional oscillator copies. Symmetry-reduced, tetrahedron or other nonuniform weights are outside this definition."
+      },
+      "remaining_obligations": [
+        "Static-energy, phonon, geometry, thermal-expansion, bulk-modulus and heat-capacity producers are interpreted inputs, not verified implementations. The theorem does not validate EOS fits, minimizers, finite-difference or polyfit derivatives, or the numerical QHA producers compute_thermal_expansion, compute_bulk_modulus_qha, compute_qha_gibbs and compute_heat_capacity_p.",
+        "No claim is made about FC3 (Maradudin-Fein) or finite-difference mode Gruneisen producers, including compute_gruneisen. They estimate frequency volume derivatives at a reference volume and are not shown to equal the derivative-defined gamma_i used here.",
+        "Phonopy PhonopyQHA.gruneisen_temperature evaluates a fitted alpha_V*B_T*V/C_V quotient with a finite-difference expansion, a polynomial C_V fit and zero fallbacks. It does not consume mode Gruneisen parameters and is not independent evidence for agreement with the mode-weighted Gamma.",
+        "The opaque weighted contraction contract_thermal_gruneisen is not covered; it needs its own reviewed interpretation.",
+        "The equilibrium branch and the common-potential input interpretation remain explicit local hypotheses. Compiled witnesses establish realizable model examples, including distinct mode Gruneisen parameters and a constant-frequency zero-response control with a single q point; they do not certify any material or numerical volume scan.",
+        "Zero or imaginary modes, Gamma-point acoustic modes, nonuniform or symmetry-reduced q quadrature, q meshes that change with volume, the thermodynamic limit, independent temperature-dependent spectra, intermode coupling, anisotropic strain and tensor Gruneisen parameters, electronic or magnetic free energies, phase coexistence and mechanically unstable branches remain outside scope."
+      ],
+      "evidence": {
+        "kind": "compiled_bridge",
+        "module": "OMAIPhyslibThermalGruneisen",
+        "declarations": [
+          "OMAI.PhyslibBridge.Response.harmonic_static_thermalGruneisen_eq_omai"
+        ],
+        "source_path": "lean/bridge/OMAIPhyslibThermalGruneisen.lean",
+        "build_record": "lean/bridge/build-evidence.json",
+        "proved_targets": [
+          {
+            "kind": "operator",
+            "id": "contract_thermal_gruneisen_identity"
+          },
+          {
+            "kind": "node",
+            "id": "ThermalGruneisen"
+          }
+        ],
+        "source_sha256": "6669b924a8682f135cee4daeda9d2d76b5418aa1ee30117dd7975dc86dddece9"
+      }
+    },
+    {
       "id": "harmonic-volumetric-heat-capacity",
       "targets": [
         {
@@ -1786,7 +1901,8 @@
         "id": "BulkModulus",
         "uid": "c0a13e64c02811f49b951271c894373267937676e0c657fc9ef09fac72558ced",
         "binding_ids": [
-          "harmonic-static-cp-identity"
+          "harmonic-static-cp-identity",
+          "harmonic-static-thermal-gruneisen-identity"
         ],
         "status": "mapped",
         "reason": "See the conditions and evidence for each mapping."
@@ -2051,7 +2167,7 @@
         "uid": "a62ac1eae1e972a0b265a14f8a2af5610deb61eb0c883b7668ac4a64313b3b75",
         "binding_ids": [],
         "status": "gap",
-        "reason": "The local static-plus-harmonic Cp bridge does not verify numerical QHA volume scans, EOS fitting, minimization, or expansion, bulk-modulus and heat-capacity producers. Independent thermal-Gruneisen producer agreement remains unproved. No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "The local static-plus-harmonic Cp and thermal-Gruneisen bridges do not verify numerical QHA volume scans, EOS fitting, minimization, or expansion, bulk-modulus, heat-capacity and Gruneisen producers. The opaque mode-weighted thermal-Gruneisen contraction and agreement between independent Gruneisen producers remain unproved. No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
       },
       {
         "id": "HOMOLUMOGap",
@@ -2377,7 +2493,7 @@
         "uid": "bb10912780eb22d45beff551be14f7f4216f3aae26161e8bfd60cdc051f63f58",
         "binding_ids": [],
         "status": "gap",
-        "reason": "The local static-plus-harmonic Cp bridge does not verify numerical QHA volume scans, EOS fitting, minimization, or expansion, bulk-modulus and heat-capacity producers. Independent thermal-Gruneisen producer agreement remains unproved."
+        "reason": "The local static-plus-harmonic Cp and thermal-Gruneisen bridges do not verify numerical QHA volume scans, EOS fitting, minimization, or expansion, bulk-modulus, heat-capacity and Gruneisen producers. The opaque mode-weighted thermal-Gruneisen contraction and agreement between independent Gruneisen producers remain unproved."
       },
       {
         "id": "QuantumKineticEnergy",
@@ -2606,7 +2722,8 @@
         "id": "ThermalExpansion",
         "uid": "9b42f8aebb6099cdcd910a272a92208881b598688bac7830c3ae0a412152473e",
         "binding_ids": [
-          "harmonic-static-cp-identity"
+          "harmonic-static-cp-identity",
+          "harmonic-static-thermal-gruneisen-identity"
         ],
         "status": "mapped",
         "reason": "See the conditions and evidence for each mapping."
@@ -2614,16 +2731,18 @@
       {
         "id": "ThermalGruneisen",
         "uid": "22b1bd519d50d93fd24a919e021bab85aff246464a66a08f8274558834983985",
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "The local static-plus-harmonic Cp bridge does not verify numerical QHA volume scans, EOS fitting, minimization, or expansion, bulk-modulus and heat-capacity producers. Independent thermal-Gruneisen producer agreement remains unproved. No reviewed Physlib model bridge is established here for the molar-volume producer or an independently defined thermal Gruneisen relation; Cp and thermoelectric mappings are separately classified."
+        "binding_ids": [
+          "harmonic-static-thermal-gruneisen-identity"
+        ],
+        "status": "mapped",
+        "reason": "See the conditions and evidence for each mapping."
       },
       {
         "id": "TotalEnergy",
         "uid": "cf5a36298543de2027b173b757d38d80b38b66a85d2d3a56f55097e3da0e9a5e",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No current Physlib Kohn-Sham, DFT, atomistic derivative, or ground-state producer formula identification found in the audited source. No current Physlib solid-elasticity/Voigt/EOS formula identification found. The bridge proves the signed inviscid stress/pressure contraction under its sign and unit conditions; identification with thermodynamic free-energy pressure remains unproved. No current Physlib molecular Hessian, electronic gap, NEB, or bond-dissociation formula identification; harmonic oscillator analogies remain conceptual. The local static-plus-harmonic Cp bridge does not verify numerical QHA volume scans, EOS fitting, minimization, or expansion, bulk-modulus and heat-capacity producers. Independent thermal-Gruneisen producer agreement remains unproved. No current Physlib matching reference-state, convex-hull, surface, adsorption, reaction, or grain-boundary formula model identified."
+        "reason": "No current Physlib Kohn-Sham, DFT, atomistic derivative, or ground-state producer formula identification found in the audited source. No current Physlib solid-elasticity/Voigt/EOS formula identification found. The bridge proves the signed inviscid stress/pressure contraction under its sign and unit conditions; identification with thermodynamic free-energy pressure remains unproved. No current Physlib molecular Hessian, electronic gap, NEB, or bond-dissociation formula identification; harmonic oscillator analogies remain conceptual. The local static-plus-harmonic Cp and thermal-Gruneisen bridges do not verify numerical QHA volume scans, EOS fitting, minimization, or expansion, bulk-modulus, heat-capacity and Gruneisen producers. The opaque mode-weighted thermal-Gruneisen contraction and agreement between independent Gruneisen producers remain unproved. No current Physlib matching reference-state, convex-hull, surface, adsorption, reaction, or grain-boundary formula model identified."
       },
       {
         "id": "Trajectory",
@@ -2658,6 +2777,7 @@
         "uid": "29e324b97f31cdb7d3cd8ef6aec5668fff111fd7ee96bd19dd0426b8728c1d47",
         "binding_ids": [
           "harmonic-joint-volumetric-heat-capacity",
+          "harmonic-static-thermal-gruneisen-identity",
           "harmonic-volumetric-heat-capacity"
         ],
         "status": "mapped",
@@ -2856,7 +2976,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "The local static-plus-harmonic Cp bridge does not verify numerical QHA volume scans, EOS fitting, minimization, or expansion, bulk-modulus and heat-capacity producers. Independent thermal-Gruneisen producer agreement remains unproved."
+        "reason": "The local static-plus-harmonic Cp and thermal-Gruneisen bridges do not verify numerical QHA volume scans, EOS fitting, minimization, or expansion, bulk-modulus, heat-capacity and Gruneisen producers. The opaque mode-weighted thermal-Gruneisen contraction and agreement between independent Gruneisen producers remain unproved."
       },
       {
         "id": "compute_calphad_entropy",
@@ -3307,7 +3427,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "The local static-plus-harmonic Cp bridge does not verify numerical QHA volume scans, EOS fitting, minimization, or expansion, bulk-modulus and heat-capacity producers. Independent thermal-Gruneisen producer agreement remains unproved."
+        "reason": "The local static-plus-harmonic Cp and thermal-Gruneisen bridges do not verify numerical QHA volume scans, EOS fitting, minimization, or expansion, bulk-modulus, heat-capacity and Gruneisen producers. The opaque mode-weighted thermal-Gruneisen contraction and agreement between independent Gruneisen producers remain unproved."
       },
       {
         "id": "compute_heat_current",
@@ -3640,7 +3760,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "The local static-plus-harmonic Cp bridge does not verify numerical QHA volume scans, EOS fitting, minimization, or expansion, bulk-modulus and heat-capacity producers. Independent thermal-Gruneisen producer agreement remains unproved."
+        "reason": "The local static-plus-harmonic Cp and thermal-Gruneisen bridges do not verify numerical QHA volume scans, EOS fitting, minimization, or expansion, bulk-modulus, heat-capacity and Gruneisen producers. The opaque mode-weighted thermal-Gruneisen contraction and agreement between independent Gruneisen producers remain unproved."
       },
       {
         "id": "compute_reaction_barrier",
@@ -3760,7 +3880,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "The local static-plus-harmonic Cp bridge does not verify numerical QHA volume scans, EOS fitting, minimization, or expansion, bulk-modulus and heat-capacity producers. Independent thermal-Gruneisen producer agreement remains unproved."
+        "reason": "The local static-plus-harmonic Cp and thermal-Gruneisen bridges do not verify numerical QHA volume scans, EOS fitting, minimization, or expansion, bulk-modulus, heat-capacity and Gruneisen producers. The opaque mode-weighted thermal-Gruneisen contraction and agreement between independent Gruneisen producers remain unproved."
       },
       {
         "id": "compute_transition_temperature",
@@ -4144,7 +4264,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No reviewed Physlib model bridge is established here for the molar-volume producer or an independently defined thermal Gruneisen relation; Cp and thermoelectric mappings are separately classified."
+        "reason": "No reviewed Physlib model bridge is established here for the molar-volume producer; the Cp and thermal-Gruneisen identities and the thermoelectric mappings are separately classified."
       },
       {
         "id": "contract_poisson_ratio",
@@ -4247,7 +4367,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "The local static-plus-harmonic Cp bridge does not verify numerical QHA volume scans, EOS fitting, minimization, or expansion, bulk-modulus and heat-capacity producers. Independent thermal-Gruneisen producer agreement remains unproved."
+        "reason": "The local static-plus-harmonic Cp and thermal-Gruneisen bridges do not verify numerical QHA volume scans, EOS fitting, minimization, or expansion, bulk-modulus, heat-capacity and Gruneisen producers. The opaque mode-weighted thermal-Gruneisen contraction and agreement between independent Gruneisen producers remain unproved."
       },
       {
         "id": "contract_thermal_gruneisen_identity",
@@ -4263,9 +4383,11 @@
         "outputs": [
           "ThermalGruneisen"
         ],
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No reviewed Physlib model bridge is established here for the molar-volume producer or an independently defined thermal Gruneisen relation; Cp and thermoelectric mappings are separately classified."
+        "binding_ids": [
+          "harmonic-static-thermal-gruneisen-identity"
+        ],
+        "status": "mapped",
+        "reason": "See the conditions and evidence for each mapping."
       },
       {
         "id": "contract_volumetric_heat_capacity",
@@ -4876,21 +4998,21 @@
   },
   "coverage": {
     "nodes_total": 129,
-    "nodes_mapped": 28,
+    "nodes_mapped": 29,
     "operators_total": 127,
-    "operators_mapped": 14,
-    "bindings_total": 22,
+    "operators_mapped": 15,
+    "bindings_total": 23,
     "source_correspondences": 5,
-    "compiled_bridges": 17,
-    "nodes_compiled": 15,
-    "nodes_compiled_outputs": 14,
+    "compiled_bridges": 18,
+    "nodes_compiled": 16,
+    "nodes_compiled_outputs": 15,
     "nodes_compiled_interpretations": 1,
-    "operators_compiled": 14,
+    "operators_compiled": 15,
     "upstream_declarations_referenced": 33,
     "upstream_modules_referenced": 9,
     "relations": {
       "exact_definition": 1,
-      "conditional": 17,
+      "conditional": 18,
       "conceptual": 4
     }
   }
