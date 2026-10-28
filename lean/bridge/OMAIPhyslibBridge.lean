@@ -20,3 +20,5 @@ public import OMAIPhyslibGibbsBranch
 public import OMAIPhyslibQHA
 public import OMAIPhyslibQHAWitness
 public import OMAIElasticity
+public import OMAICompositeConductivity
+public import OMAICureKinetics

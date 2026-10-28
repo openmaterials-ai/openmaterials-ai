@@ -43,7 +43,7 @@
   <div class="page-body">
     <nav class="toc gtoc" aria-label="Contents">
       <a href="#coverage">Coverage</a><a href="#inventory">OMAI inventory</a><a href="#upstream-inventory">Physlib declarations</a>
-      <a href="#analytic">Harmonic ensemble proofs</a><a href="#response">Cp response</a><a href="#gruneisen">Thermal Gr&uuml;neisen</a><a href="#scope">Evidence and scope</a><a href="#reproduce">Reproduce</a>
+      <a href="#analytic">Harmonic ensemble proofs</a><a href="#response">Cp response</a><a href="#gruneisen">Thermal Gr&uuml;neisen</a><a href="#composites-cure">Composites and cure</a><a href="#scope">Evidence and scope</a><a href="#reproduce">Reproduce</a>
       <a href="../">Lean overview</a>
     </nav>
     <article class="prose gwrap">
@@ -164,6 +164,18 @@
           <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/27f71197ccfac0bbfed535a4376e941113bb567b/lean/bridge/OMAIPhyslibHarmonicVolume.lean">actual volume family</a>,
           <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/27f71197ccfac0bbfed535a4376e941113bb567b/lean/bridge/thermal-gruneisen-formula-contract.json">reviewed endpoint contract</a>,
           and <a href="#operator=contract_thermal_gruneisen_identity">mapping conditions and sources</a>.</p>
+      </section>
+      <section class="gsec" id="composites-cure">
+        <h2>Composites and cure kinetics (local proofs)</h2>
+        <p>Physlib has no effective-medium or polymer-cure model, so these results are local theorems over Mathlib about the catalog's own formulas. They cite no Physlib declaration and are counted apart from the Physlib-anchored proofs.</p>
+        <p>Both closed-form branches of the spheroid depolarization factor and its sphere value equal <code>L33(p) = int_0^1 t^2/(t^2 + p^2 (1 - t^2)) dt</code>. So <code>L33</code> lies in (0, 1), decreases strictly with the aspect ratio <code>p = d3/d1</code>, is continuous through the sphere <code>p = 1</code> where it equals 1/3, and tends to 0 for needles and to 1 for disks.</p>
+        <p>For every spheroid shape the random Nan conductivity exceeds the matrix value by <code>k_m f (2 b11 + b33)/(3 - f (2 L11 b11 + L33 b33))</code> with a positive denominator, so filler whose interface-corrected conductivities both exceed the matrix raises it. For spheres both Nan formulas reduce to Maxwell-Garnett with the corrected filler conductivity <code>k/(1 + 2k/(G d))</code>, which tends to <code>k</code> as the interface conductance grows. Along the alignment axis the aligned conductivity lies strictly between the series and parallel mixtures and, at fixed <code>d3</code>, rises strictly with the aspect ratio.</p>
+        <p>The catalog's <code>d</code> is a full particle dimension, a sphere's diameter, while Hasselman-Johnson's <code>a_rad</code> is its radius. The Hasselman-Johnson formula is Maxwell-Garnett at <code>d = 2 a_rad</code>, so putting the radius into <code>d</code> doubles the interface penalty. It exceeds the matrix conductivity exactly above the critical radius <code>(k_m/G) k/(k - k_m)</code>. Away from spheres the per-direction interface correction is a slab approximation of unvalidated accuracy.</p>
+        <p>The Kamal-Sourour cure time increases strictly with conversion below full cure and its derivative is the reciprocal rate. Near every interior time there is an inverse <code>alpha(t)</code> that solves <code>d alpha/dt = (k1 + k2 alpha^m)(1 - alpha)^n</code> throughout a neighbourhood; no global solution is claimed. The DiBenedetto relation, in kelvin, maps conversions <code>[0, 1]</code> one to one onto <code>[T_g0, T_ginf]</code> and lies strictly below the linear interpolation inside the interval for <code>lambda &lt; 1</code>.</p>
+        <p>Inspect <code>OMAICompositeConductivity.lean</code> and <code>OMAICureKinetics.lean</code> in <code>lean/bridge</code>, and the conditions for
+          <a href="#operator=depolarization_factors">depolarization_factors</a>, <a href="#operator=nan_effective_kappa">nan_effective_kappa</a>,
+          <a href="#operator=nan_effective_kappa_aligned">nan_effective_kappa_aligned</a>, <a href="#operator=hasselman_johnson">hasselman_johnson</a>,
+          <a href="#operator=kamal_cure_conversion">kamal_cure_conversion</a> and <a href="#operator=dibenedetto_glass_transition">dibenedetto_glass_transition</a>.</p>
       </section>
       <section class="gsec" id="scope">
         <h2>Evidence and scope</h2>

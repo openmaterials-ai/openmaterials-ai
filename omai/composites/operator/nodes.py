@@ -7,8 +7,9 @@ via Nan-type effective-medium theory (Nan et al., J. Appl. Phys. 81, 6692
 (J. Compos. Mater. 21, 508 (1987)). The physics this domain adds that no other
 domain carries is the INTERFACE: a per-direction thermal boundary conductance G
 that lumps interface chemistry and dispersion quality, whose reciprocal
-R = 1/G gives the Kapitza radius a_K = km/G (a length), the crossover below which
-adding a conductive filler LOWERS the composite conductivity.
+R = 1/G gives the Kapitza radius a_K = km/G (a length). For spheres of conductivity
+k > km, adding filler raises the composite conductivity exactly above the critical radius
+a_c = a_K k/(k - km), which approaches a_K only when k >> km.
 
 Eight nodes:
 

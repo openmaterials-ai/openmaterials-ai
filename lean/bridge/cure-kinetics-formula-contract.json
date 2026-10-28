@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "scope": "Reviewed OMAI formula endpoints and exact Lean proof source for local theorems with no Physlib physics counterpart. Hash and compiled-name checks detect drift and provenance errors; they are not automatic symbolic translation or numerical validation.",
+  "source_path": "lean/bridge/OMAICureKinetics.lean",
+  "source_sha256": "7575810b36eb5f97bdd12ef4d26e9c9b65e42f2a5e3913609e615e0d90980a2a",
+  "operators": [
+    {
+      "id": "kamal_cure_conversion",
+      "uid": "0b2784cfd1c1758e66988322d83589700be6f7b1184c6f36a8d073eda43b57e1",
+      "formula_sha256": "f997bcdb5ce1ddd5b4061584d0e79463affd1ca1248131741721081bb20c7f00",
+      "formula_latex": "t_{cure} = \\int\\limits_{\\alpha_{0,cure}}^{\\alpha_{cure}} \\frac{\\left(1 - \\alpha'\\right)^{- n_{cure}}}{A_{1,cure} e^{- \\frac{E_{1,cure}}{N_{A} T k_{B}}} + A_{2,cure} \\alpha'^{m_{cure}} e^{- \\frac{E_{2,cure}}{N_{A} T k_{B}}}}\\, d\\alpha'",
+      "lean_definition": "OMAI.PhyslibBridge.CureKinetics.kamalCureTime"
+    },
+    {
+      "id": "dibenedetto_glass_transition",
+      "uid": "68e156cfe2da68f22c0e5c3c0bdc6426ce2fad2aa8a25714d90d79343d8d2ed4",
+      "formula_sha256": "6ec6864e62dbe6e996b088bcc17ed2c238b3839a5ca2ba8a30b6cdbd4f3ea03a",
+      "formula_latex": "T_{g} = T_{g0} + \\frac{\\alpha_{cure} \\lambda_{DiB} \\left(- T_{g0} + T_{g\\infty}\\right)}{- \\alpha_{cure} \\left(1 - \\lambda_{DiB}\\right) + 1}",
+      "lean_definition": "OMAI.PhyslibBridge.CureKinetics.diBenedetto"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "CureConversion",
+      "uid": "a0fea831928d4ff6617a0d102f74966d0ea4ce0a2e4cc160cbd362dd0fb8fc0a"
+    },
+    {
+      "id": "GlassTransitionTemperature",
+      "uid": "5789aa6f8439e8b71b48197dd92c6f608f2bf3ca9900bc631d2321f5eded13cb"
+    }
+  ],
+  "interpretations": [
+    "kamal_cure_conversion gives the isothermal cure time t_cure from alpha_0 to alpha as the integral of 1/((1 - a)^n (k1 + k2 a^m)), with k_i = A_i exp(-E_i/(N_A k_B T)), T in kelvin and E_i per mole; the conversion alpha(t) is its inverse, shown to exist and to solve the rate law locally near every interior cure time. A_1, A_2 >= 0, m >= 0, any real n, 0 <= alpha_0, and either A_1 > 0 or alpha_0 > 0 with A_2 > 0, so that the rate is positive below full cure.",
+    "Conversion is a fraction in [0, 1], not a percentage. The rate law is the single-(1 - alpha)^n Kamal-Sourour form at constant temperature, without diffusion control, a temperature-dependent maximum conversion or separate exponents on the two terms; isothermal values are meaningful only while T_g(alpha(t)) stays below the cure temperature.",
+    "dibenedetto_glass_transition reads the conversion alpha in [0, 1] and the parameters T_g0 (uncured), T_ginf (fully cured) and lambda > 0, in the Pascault-Williams form, with temperatures in kelvin as the GlassTransitionTemperature node stores them. T_g(alpha) is taken as independent of cure path and specific to one stoichiometry. lambda is commonly identified with Delta C_p,inf / Delta C_p,0; that identification is not proved here."
+  ]
+}

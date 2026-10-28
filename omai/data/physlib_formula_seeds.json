@@ -2332,6 +2332,226 @@
         ],
         "source_sha256": "dbc0efc3f35bcc223d28cd60d70fa591ab5f4cf9d285fe97360be6dca0602844"
       }
+    },
+    {
+      "id": "composite-effective-medium",
+      "relation": "local",
+      "targets": [
+        {
+          "kind": "operator",
+          "id": "depolarization_factors",
+          "uid": "e8bd01e04d39ccad6f7046883bfa8e955e67c23fcc2f8868be045f327b18482f",
+          "formula_sha256": "76cf8bc5f2cfa140cf9c69a817c7b4f0219d2b8336edf892f20184c6bfb304d4"
+        },
+        {
+          "kind": "operator",
+          "id": "hasselman_johnson",
+          "uid": "33e0be2a3db8fa86dce200159c6c0a273161ee6d1a49c75a369b1621197e0a1a",
+          "formula_sha256": "9d0e588f6e47a7bc1e8345b77f6593376a9a9d3a07f847fd9ab69b039db49d6b"
+        },
+        {
+          "kind": "operator",
+          "id": "nan_effective_kappa",
+          "uid": "04d65e9f7a2f612eb94d018ebde08e8a1b39c1c5754d03e785ad92991a909fda",
+          "formula_sha256": "11db4a2afb71060dd77bbbb7da720b27898064b0068e327550d1435f1f85783a"
+        },
+        {
+          "kind": "operator",
+          "id": "nan_effective_kappa_aligned",
+          "uid": "e86ac8a4b69dbb670dbe3f8ec7fda7ff0309670bac4713851ced64a061cd7962",
+          "formula_sha256": "78db51dc39f38b3dff3f71c49db5450b2c9e89907cbbd61ba5b01852433353fb"
+        },
+        {
+          "kind": "node",
+          "id": "DepolarizationFactor",
+          "uid": "297b3254a09037f017769b771e19ad849443911048f77078a804cbc334c38309"
+        },
+        {
+          "kind": "node",
+          "id": "ThermalConductivity[effective_medium=nan,orientation=aligned]",
+          "uid": "fc292985123b709c76547dc02721e60797cf5693fbad40b874826291314d5dd3"
+        },
+        {
+          "kind": "node",
+          "id": "ThermalConductivity[effective_medium=nan,orientation=random]",
+          "uid": "8cee68745e003909cd8e65688628af53a35c0803ace3f330394bbf0edf338d7b"
+        }
+      ],
+      "statement": "Both closed-form branches of the catalog's spheroid depolarization factor and its sphere value equal int_0^1 t^2/(t^2 + p^2 (1 - t^2)) dt, so L33 lies in (0, 1), decreases strictly with the aspect ratio, is continuous through the sphere p = 1 with value 1/3, tends to 0 for needles and to 1 for disks. For every spheroid shape and volume fraction in [0, 1], the catalog's random Nan conductivity exceeds the matrix value by k_m f (2 b11 + b33)/(3 - f (2 L11 b11 + L33 b33)) with a positive denominator, so it exceeds k_m exactly when 2 b11 + b33 > 0, and filler whose Kapitza-corrected conductivities both exceed (both fall below) k_m raises (lowers) it. For spheres both Nan formulas reduce to Maxwell-Garnett with the Kapitza-corrected filler conductivity k/(1 + 2k/(G d)), which tends to k as G grows without bound, and the random value lies between the matrix and the corrected filler conductivity. The aligned axial Nan conductivity decreases strictly with L33 on [0, 1] and lies strictly between the series and parallel (Wiener) mixtures for L33 and f in (0, 1), so at fixed d3 it increases strictly with the aspect ratio. The Hasselman-Johnson formula is Maxwell-Garnett with the corrected conductivity at particle dimension d = 2 a_rad, so it agrees with the Nan sphere value under that radius-to-diameter conversion; it exceeds the matrix conductivity exactly above the critical radius (k_m/G) k/(k - k_m).",
+      "sources": [],
+      "conditions": [
+        "The filler is a dilute, monodisperse dispersion of identical axially symmetric spheroids in an isotropic matrix. Axis 3 is the symmetry axis and p = d3/d1 > 0, so p > 1 is prolate (fibre-like) and p < 1 is oblate (platelet-like). One interface conductance G_int > 0 applies to every face of every particle.",
+        "G_int is the interface conductance q_int/Delta T_int with q_int the heat flux across the interface and Delta T_int > 0 the temperature drop in the direction of that flux, so G_int is positive; the formulas add the series resistance 1/G_int once at each of the two interfaces a particle presents along a direction.",
+        "The catalog's d_1 and d_3 are full particle dimensions (the per-direction interface convention of Nan, Liu, Lin and Li, Appl. Phys. Lett. 85, 3549 (2004)), so a sphere has d equal to its diameter, while Hasselman-Johnson's a_rad is the sphere radius. The two formulas agree for spheres with d_1 = d_3 = 2 a_rad. Inserting the radius into d doubles the interface penalty 1/kc - 1/k = 2/(G_int d), from 1/(G_int a_rad) to 2/(G_int a_rad).",
+        "k_f[1,1] is the filler conductivity transverse to axis 3 and k_f[3,3] the conductivity along axis 3 (in-plane and through-plane for a platelet). The sphere reductions require k_f[1,1] = k_f[3,3], d_1 = d_3 and L11 = L33 = 1/3; the Hasselman-Johnson formula reads only k_f[3,3].",
+        "Random means isotropic three-dimensional orientation of the particles. Platelets oriented randomly within a plane are described by neither the random nor the aligned formula. The aligned operator is the component along the alignment axis 3, which is the through-plane direction only for platelets.",
+        "f_vol is the filler volume fraction in [0, 1], not a mass fraction or a percentage. Conductivities, G_int and particle dimensions are positive and use one coherent unit system.",
+        "Strict monotonicity of the aligned value in L33 and the strict Wiener bounds require 0 < f_vol < 1 and a Kapitza-corrected filler conductivity different from k_m; the aspect-ratio monotonicity varies p through L33 with d3, and so the axial Kapitza correction, held fixed. The critical-radius result requires a filler more conductive than the matrix and f_vol > 0."
+      ],
+      "conventions": {
+        "model_scope": "Dilute effective-medium (Maxwell-Garnett, Nan, Hasselman-Johnson) conductivity of filled composites. Physlib has no effective-medium model, so these are local theorems about the OMAI formulas over Mathlib reals; no Physlib declaration is identified.",
+        "component_scope": "Scalar random-orientation conductivity and the axial component of the aligned tensor; spheroidal inclusions with polar axis 3 only.",
+        "normalization_basis": "Volume fraction of filler in the composite; conductivities are intensive.",
+        "frequency_convention": "Not applicable; no frequencies enter these formulas.",
+        "unit_embedding": "Coherent SI: conductivities in W/(m K), G_int in W/(m^2 K), lengths in m; f_vol, p and the depolarization factors are dimensionless.",
+        "held_fixed": "Temperature, filler shape and orientation distribution, and the interface conductance are fixed; the theorems vary one of f_vol, L33, G_int or a_rad at a time as stated, and the aspect-ratio monotonicity varies p at fixed d3.",
+        "admissibility": "p > 0; f_vol in [0, 1]; positive conductivities, lengths and G_int. Values outside these ranges have no asserted interpretation.",
+        "reference_energy": "Not applicable.",
+        "qpoint_weighting": "Not applicable."
+      },
+      "remaining_obligations": [
+        "NEMD or measured producers of G_int and of the filler and matrix conductivities are not verified.",
+        "Away from p = 1 the catalog's per-direction interface correction k/(1 + 2k/(G_int d)) (Nan et al. 2004) is a slab approximation with no validated accuracy; Nan et al., J. Appl. Phys. 81, 6692 (1997) uses K_p/(1 + R K_p L_ii (2 + 1/p)/a_1), and the two agree only at p = 1.",
+        "The effective-medium formulas are dilute approximations. Particle interactions at high loading, percolation, clustering, porosity, polydisperse size or shape, and orientation distributions other than isotropic random or perfectly aligned are not covered.",
+        "L11 = (1 - L33)/2 is the catalog's auxiliary sum rule and is not proved; the transverse aligned component is not proved.",
+        "For non-spherical random filler no bound between the matrix and filler conductivities is proved beyond the sign result, and the Hashin-Shtrikman bounds are not proved.",
+        "Anisotropic filler conductivity tensors beyond the two diagonal values, face-dependent interface conductance and temperature dependence are not covered."
+      ],
+      "evidence": {
+        "kind": "compiled_bridge",
+        "module": "OMAICompositeConductivity",
+        "declarations": [
+          "OMAI.PhyslibBridge.Composites.depolarization_eq_integral",
+          "OMAI.PhyslibBridge.Composites.depolarization_mem_Ioo",
+          "OMAI.PhyslibBridge.Composites.depolarization_strictAntiOn",
+          "OMAI.PhyslibBridge.Composites.depolarization_continuousOn",
+          "OMAI.PhyslibBridge.Composites.tendsto_depolarization_atTop",
+          "OMAI.PhyslibBridge.Composites.tendsto_depolarization_zero",
+          "OMAI.PhyslibBridge.Composites.nanRandom_sub_matrix",
+          "OMAI.PhyslibBridge.Composites.nanRandom_gt_iff",
+          "OMAI.PhyslibBridge.Composites.nanRandom_sign",
+          "OMAI.PhyslibBridge.Composites.nanRandom_sphere",
+          "OMAI.PhyslibBridge.Composites.nanAligned_sphere",
+          "OMAI.PhyslibBridge.Composites.nanRandom_sphere_between",
+          "OMAI.PhyslibBridge.Composites.tendsto_kapitzaCorrected",
+          "OMAI.PhyslibBridge.Composites.tendsto_nanRandom_sphere",
+          "OMAI.PhyslibBridge.Composites.hasselmanJohnson_eq_maxwellGarnett",
+          "OMAI.PhyslibBridge.Composites.hasselmanJohnson_critical_radius",
+          "OMAI.PhyslibBridge.Composites.nanAligned_strictAntiOn",
+          "OMAI.PhyslibBridge.Composites.nanAligned_strict_wiener",
+          "OMAI.PhyslibBridge.Composites.nanAligned_strictMonoOn_aspect"
+        ],
+        "source_path": "lean/bridge/OMAICompositeConductivity.lean",
+        "build_record": "lean/bridge/build-evidence.json",
+        "proved_targets": [
+          {
+            "kind": "operator",
+            "id": "depolarization_factors"
+          },
+          {
+            "kind": "operator",
+            "id": "hasselman_johnson"
+          },
+          {
+            "kind": "operator",
+            "id": "nan_effective_kappa"
+          },
+          {
+            "kind": "operator",
+            "id": "nan_effective_kappa_aligned"
+          },
+          {
+            "kind": "node",
+            "id": "DepolarizationFactor"
+          },
+          {
+            "kind": "node",
+            "id": "ThermalConductivity[effective_medium=nan,orientation=aligned]"
+          },
+          {
+            "kind": "node",
+            "id": "ThermalConductivity[effective_medium=nan,orientation=random]"
+          }
+        ],
+        "source_sha256": "e08799415b1e5345ed0cc6af0b192685f6d0f93606d3f8c0a0f91c3ed178096c"
+      }
+    },
+    {
+      "id": "thermoset-cure-kinetics",
+      "relation": "local",
+      "targets": [
+        {
+          "kind": "operator",
+          "id": "dibenedetto_glass_transition",
+          "uid": "68e156cfe2da68f22c0e5c3c0bdc6426ce2fad2aa8a25714d90d79343d8d2ed4",
+          "formula_sha256": "6ec6864e62dbe6e996b088bcc17ed2c238b3839a5ca2ba8a30b6cdbd4f3ea03a"
+        },
+        {
+          "kind": "operator",
+          "id": "kamal_cure_conversion",
+          "uid": "0b2784cfd1c1758e66988322d83589700be6f7b1184c6f36a8d073eda43b57e1",
+          "formula_sha256": "f997bcdb5ce1ddd5b4061584d0e79463affd1ca1248131741721081bb20c7f00"
+        },
+        {
+          "kind": "node",
+          "id": "CureConversion",
+          "uid": "a0fea831928d4ff6617a0d102f74966d0ea4ce0a2e4cc160cbd362dd0fb8fc0a"
+        },
+        {
+          "kind": "node",
+          "id": "GlassTransitionTemperature",
+          "uid": "5789aa6f8439e8b71b48197dd92c6f608f2bf3ca9900bc631d2321f5eded13cb"
+        }
+      ],
+      "statement": "The catalog's isothermal Kamal-Sourour cure time t(alpha) = int_{alpha_0}^{alpha} da/((1 - a)^n (k1 + k2 a^m)), k_i = A_i exp(-E_i/(N_A k_B T)), increases strictly with conversion below full cure and has derivative 1/rate. Near every interior cure time there is one inverse alpha(t), taking that time back to the conversion, that solves d alpha/dt = (k1 + k2 alpha^m)(1 - alpha)^n at every time of a neighbourhood, and every continuous local inverse solves the rate law. These are local statements, not a global solution of the rate law. The catalog's DiBenedetto relation maps conversions [0, 1] one to one and strictly increasingly onto [T_g0, T_ginf] for lambda > 0 and T_g0 < T_ginf, and for 0 < lambda < 1 and T_g0 < T_ginf it lies strictly below the linear interpolation at every interior conversion.",
+      "sources": [],
+      "conditions": [
+        "Isothermal cure at absolute temperature T in kelvin with A_1, A_2 >= 0 in 1/s, autocatalytic order m >= 0, any real order n, initial conversion alpha_0 >= 0, and either A_1 > 0 (which includes pure nth-order kinetics with A_2 = 0) or alpha_0 > 0 with A_2 > 0, so that the rate is positive from alpha_0 up to full cure; conversions lie in [alpha_0, 1).",
+        "Conversion is a fraction in [0, 1], not a percentage. E_1 and E_2 are activation energies per mole and enter through R = N_A k_B; an activation energy per molecule must not be divided by N_A again.",
+        "The rate law is the single-(1 - alpha)^n Kamal-Sourour form; diffusion control, a temperature-dependent maximum conversion and separate exponents on the two terms are other models. Isothermal Kamal values are meaningful only while T_g(alpha(t)) stays below the cure temperature, before vitrification.",
+        "The DiBenedetto results use the Pascault-Williams form with lambda > 0 and alpha in [0, 1]; monotonicity, the bijection and the strict comparison with the linear interpolation require T_ginf > T_g0, and the comparison also 0 < lambda < 1. T_g0, T_ginf and T_g are in kelvin, as the GlassTransitionTemperature node and its evaluator store them; the Pascault-Williams algebra commutes with shifts of the temperature scale, which is a remark about the formula, not a change of storage unit.",
+        "T_g(alpha) is assumed independent of the cure path and specific to one resin stoichiometry."
+      ],
+      "conventions": {
+        "model_scope": "Phenomenological thermoset cure kinetics and the DiBenedetto glass-transition relation. Physlib has no polymer-cure model, so these are local theorems about the OMAI formulas over Mathlib reals; no Physlib declaration is identified.",
+        "component_scope": "Scalar degree of cure and glass transition temperature of one homogeneous thermoset.",
+        "normalization_basis": "Conversion is the fraction of reacted groups in [0, 1]; activation energies are per mole.",
+        "frequency_convention": "Not applicable; rate constants are in 1/s and enter only through the Arrhenius factors.",
+        "unit_embedding": "Coherent SI: T, T_g0, T_ginf and T_g in K, A_i in 1/s, E_i in J/mol, N_A in 1/mol, k_B in J/K, t_cure in s; alpha, m, n and lambda are dimensionless.",
+        "held_fixed": "Temperature is constant during the cure; the kinetic parameters and the DiBenedetto parameters are fixed.",
+        "admissibility": "T > 0 and the parameter ranges in the conditions; conversions at or above 1 and negative conversions have no asserted interpretation.",
+        "reference_energy": "Not applicable.",
+        "qpoint_weighting": "Not applicable."
+      },
+      "remaining_obligations": [
+        "Fitted Kamal and DiBenedetto parameters and the measurements behind them are not verified.",
+        "Vitrification and diffusion-controlled cure, non-isothermal schedules, cure-path dependence of T_g and the identification lambda = Delta C_p,inf / Delta C_p,0 are not covered.",
+        "The rate law is solved only locally near each interior cure time; a global solution on [0, t(1-)) and the time to full cure, which diverges for n >= 1, are not proved."
+      ],
+      "evidence": {
+        "kind": "compiled_bridge",
+        "module": "OMAICureKinetics",
+        "declarations": [
+          "OMAI.PhyslibBridge.CureKinetics.kamalCureTime_strictMonoOn",
+          "OMAI.PhyslibBridge.CureKinetics.kamalCureTime_hasDerivAt",
+          "OMAI.PhyslibBridge.CureKinetics.kamal_inverse_exists",
+          "OMAI.PhyslibBridge.CureKinetics.kamal_inverse_solves_rate_law",
+          "OMAI.PhyslibBridge.CureKinetics.diBenedetto_strictMonoOn",
+          "OMAI.PhyslibBridge.CureKinetics.diBenedetto_bijOn",
+          "OMAI.PhyslibBridge.CureKinetics.diBenedetto_lt_linear"
+        ],
+        "source_path": "lean/bridge/OMAICureKinetics.lean",
+        "build_record": "lean/bridge/build-evidence.json",
+        "proved_targets": [
+          {
+            "kind": "operator",
+            "id": "dibenedetto_glass_transition"
+          },
+          {
+            "kind": "operator",
+            "id": "kamal_cure_conversion"
+          },
+          {
+            "kind": "node",
+            "id": "CureConversion"
+          },
+          {
+            "kind": "node",
+            "id": "GlassTransitionTemperature"
+          }
+        ],
+        "source_sha256": "7575810b36eb5f97bdd12ef4d26e9c9b65e42f2a5e3913609e615e0d90980a2a"
+      }
     }
   ],
   "gap_reasons": {

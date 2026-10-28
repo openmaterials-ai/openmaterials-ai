@@ -198,8 +198,8 @@ def test_zero_loading_returns_the_matrix_conductivity():
 
 
 def test_small_filler_weak_interface_degrades_below_the_matrix():
-    """Below the Kapitza radius a conductive filler LOWERS kappa (the interface
-    resistance dominates): a nanoscale platelet with a weak interface."""
+    """A nanoscale platelet with a weak interface: the interface resistance
+    dominates, so the conductive filler LOWERS kappa."""
     rand, *_ = _effective_kappa(km=0.2, k11=1200, k33=6, d1um=0.05, d3um=0.005,
                                 g_MW=1.0, f=0.05)
     assert rand < 0.2

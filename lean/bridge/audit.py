@@ -119,6 +119,7 @@ def run() -> dict:
         "harmonic-product-formula-contract.json", "harmonic-density-formula-contract.json",
         "joint-density-formula-contract.json", "response-formula-contract.json",
         "thermal-gruneisen-formula-contract.json", "qha-formula-contract.json", "elasticity-formula-contract.json",
+        "composites-formula-contract.json", "cure-kinetics-formula-contract.json",
     }
     missing = required_contracts - {path.name for path in contracts}
     if missing:

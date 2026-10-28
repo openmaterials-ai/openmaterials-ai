@@ -21,7 +21,7 @@ Physics (Nan et al., J. Appl. Phys. 81, 6692 (1997)) with the interface as a
 per-direction series film (Nan et al., Appl. Phys. Lett. 85, 3549 (2004) form):
 the interface-corrected filler conductivity along axis i is
 kc_ii = k_ii / (1 + 2 R k_ii / d_i) with R = 1/G the interface resistance and
-d_i the full inclusion dimension. The Bruggeman-Nan beta terms are
+d_i the full inclusion dimension. The Nan beta terms are
 beta_ii = (kc_ii - km) / (km + L_ii (kc_ii - km)); the randomly-oriented scalar
 and the perfectly-aligned tensor are the two mixing formulas. At aspect ratio 1
 (a sphere, isotropic filler) the Nan random result reduces EXACTLY to the

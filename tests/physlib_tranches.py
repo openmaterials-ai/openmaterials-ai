@@ -38,17 +38,36 @@ TRANCHES = (
             "eosBulk", "poissonRatio", "voigtBulk", "voigtShear", "youngsModulus")),
         "modules": ("OMAIElasticity",),
     },
+    {
+        "name": "composites-cure",
+        "contracts": ("composites-formula-contract.json", "cure-kinetics-formula-contract.json"),
+        "bindings": frozenset({"composite-effective-medium", "thermoset-cure-kinetics"}),
+        "subjects": frozenset({
+            ("node", "CureConversion"), ("node", "DepolarizationFactor"),
+            ("node", "GlassTransitionTemperature"),
+            ("node", "ThermalConductivity[effective_medium=nan,orientation=aligned]"),
+            ("node", "ThermalConductivity[effective_medium=nan,orientation=random]"),
+            ("operator", "depolarization_factors"), ("operator", "dibenedetto_glass_transition"),
+            ("operator", "hasselman_johnson"), ("operator", "kamal_cure_conversion"),
+            ("operator", "nan_effective_kappa"), ("operator", "nan_effective_kappa_aligned")}),
+        "pairs": tuple(
+            [{"name": "OMAI.PhyslibBridge.Composites." + name, "module": "OMAICompositeConductivity"}
+             for name in ("depolarization", "hasselmanJohnson", "nanAligned", "nanRandom")]
+            + [{"name": "OMAI.PhyslibBridge.CureKinetics." + name, "module": "OMAICureKinetics"}
+               for name in ("diBenedetto", "kamalCureTime")]),
+        "modules": ("OMAICompositeConductivity", "OMAICureKinetics"),
+    },
 )
 
 # The one frozen global coverage ledger of the published bindings.
 GLOBAL_COVERAGE = {
     "nodes_total": 129, "nodes_mapped": 30, "operators_total": 127, "operators_mapped": 20,
-    "nodes_local": 3, "operators_local": 5, "bindings_total": 29, "source_correspondences": 5,
-    "compiled_bridges": 24, "nodes_compiled": 18, "nodes_compiled_outputs": 17,
-    "nodes_compiled_interpretations": 1, "operators_compiled": 20, "operators_compiled_local": 5,
-    "nodes_compiled_local": 4, "operators_proved": 25, "nodes_proved": 22,
+    "nodes_local": 8, "operators_local": 11, "bindings_total": 31, "source_correspondences": 5,
+    "compiled_bridges": 26, "nodes_compiled": 18, "nodes_compiled_outputs": 17,
+    "nodes_compiled_interpretations": 1, "operators_compiled": 20, "operators_compiled_local": 11,
+    "nodes_compiled_local": 9, "operators_proved": 31, "nodes_proved": 27,
     "upstream_declarations_referenced": 33, "upstream_modules_referenced": 9,
-    "relations": {"exact_definition": 1, "conditional": 23, "conceptual": 4, "local": 1},
+    "relations": {"exact_definition": 1, "conditional": 23, "conceptual": 4, "local": 3},
 }
 
 
