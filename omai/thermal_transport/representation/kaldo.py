@@ -32,7 +32,6 @@ from __future__ import annotations
 from omai.representation.adapter import OperatorRepresentationSpec, SpaceRepresentationSpec
 from omai.thermal_transport.operator.edges import (
     apply_nac_correction,
-    combine_kappa_wigner,
     compute_anharmonic_linewidth,
     compute_boundary_scattering,
     compute_dispersion,
@@ -45,17 +44,12 @@ from omai.thermal_transport.operator.edges import (
     compute_heat_capacity,
     compute_isotope_scattering,
     compute_kappa_qhgk,
-    compute_kappa_wigner_coherences,
-    compute_kappa_wigner_populations,
     compute_phase_space_3phonon,
-    contract_cumulative_kappa_mfp,
-    contract_cumulative_kappa_omega,
     contract_kappa_direct,
     contract_kappa_rta,
     contract_molar_heat_capacity,
     contract_volumetric_heat_capacity,
     identity_dm,
-    provide_born_charges,
     provide_dielectric_tensor,
     provide_isotope_abundances,
     provide_potential,
@@ -67,10 +61,7 @@ from omai.thermal_transport.operator.edges import (
 from omai.thermal_transport.operator.nodes import (
     ANHARMONIC_LINEWIDTH,
     BARE_DYNAMICAL_MATRIX,
-    BORN_CHARGES,
     BOUNDARY_LINEWIDTH,
-    CUMULATIVE_KAPPA_MFP,
-    CUMULATIVE_KAPPA_OMEGA,
     DIELECTRIC_TENSOR,
     DYNAMICAL_MATRIX,
     EIGENVECTORS,
@@ -95,8 +86,6 @@ from omai.thermal_transport.operator.nodes import (
     THERMAL_CONDUCTIVITY_QHGK,
     THERMAL_CONDUCTIVITY_RTA,
     THERMAL_CONDUCTIVITY_WIGNER,
-    THERMAL_CONDUCTIVITY_WIGNER_COHERENCES,
-    THERMAL_CONDUCTIVITY_WIGNER_POPULATIONS,
     TOTAL_LINEWIDTH,
     VOLUMETRIC_HEAT_CAPACITY,
 )
@@ -578,24 +567,9 @@ KALDO_COMPUTE_PHASE_SPACE_3PH = OperatorRepresentationSpec(
 
 
 # ---------------------------------------------------------------------------
-# NAC. kaldo reads Born charges and ε∞ from the ASE Atoms.info dict (the
-# shengbte_io reader populates atoms.info['born_charges'] and
-# atoms.info['dielectric']); the HarmonicWithQ machinery applies the
-# correction whenever those keys are present.
+# NAC. kaldo reads ε∞ from the ASE Atoms.info dict; the HarmonicWithQ
+# machinery applies the correction whenever the key is present.
 # ---------------------------------------------------------------------------
-
-
-KALDO_BORN_CHARGES = SpaceRepresentationSpec(
-    space=BORN_CHARGES,
-    representation_name="kaldo",
-    observable_units={"Z_star": "dimensionless"},
-    code_api={"Z_star": "atoms.info['born_charges']"},
-    notes=(
-        "kaldo expects Z* on the ASE Atoms object's info dict; the shengbte "
-        "BORN-file reader (kaldo.interfaces.shengbte_io) is the standard "
-        "way to populate it. Shape (n_atoms_primitive, 3, 3)."
-    ),
-)
 
 
 KALDO_BARE_DYNAMICAL_MATRIX = SpaceRepresentationSpec(
@@ -620,16 +594,6 @@ KALDO_DIELECTRIC_TENSOR = SpaceRepresentationSpec(
     notes=(
         "Stored on atoms.info['dielectric'] (3×3, dimensionless). The "
         "presence of this key triggers HarmonicWithQ.is_nac = True."
-    ),
-)
-
-
-KALDO_PROVIDE_BORN_CHARGES = OperatorRepresentationSpec(
-    operator=provide_born_charges,
-    representation_name="kaldo",
-    notes=(
-        "Populated via kaldo.interfaces.shengbte_io's BORN reader, which "
-        "fills atoms.info from a ShengBTE-format BORN file."
     ),
 )
 
@@ -665,42 +629,11 @@ KALDO_APPLY_NAC_CORRECTION = OperatorRepresentationSpec(
 
 
 # ---------------------------------------------------------------------------
-# Wigner + QHGK transport models. kaldo is the only one of the four
-# adapters that implements either: Conductivity(method='wigner') and
-# Conductivity(method='qhgk').
+# QHGK transport model: Conductivity(method='qhgk'). The Wigner split, the
+# cumulative kappa distributions and Born charges on atoms.info are not in
+# kaldo 2.2.1 (checked against the wheel, omai issue 180) and have no
+# representation here until a release carries them.
 # ---------------------------------------------------------------------------
-
-
-KALDO_THERMAL_CONDUCTIVITY_WIGNER = SpaceRepresentationSpec(
-    space=THERMAL_CONDUCTIVITY_WIGNER,
-    representation_name="kaldo",
-    observable_units={"kappa": "W_per_m_per_K"},
-    code_api={"kappa": "Conductivity(method='wigner').conductivity"},
-    notes=(
-        "kaldo's Conductivity(method='wigner') emits the unified Wigner κ "
-        "tensor. The populations / coherences split is also exposed as "
-        "Conductivity.populations_conductivity / .coherences_conductivity "
-        "on the same object."
-    ),
-)
-
-
-KALDO_THERMAL_CONDUCTIVITY_WIGNER_POPULATIONS = SpaceRepresentationSpec(
-    space=THERMAL_CONDUCTIVITY_WIGNER_POPULATIONS,
-    representation_name="kaldo",
-    observable_units={"kappa": "W_per_m_per_K"},
-    code_api={"kappa": "Conductivity(method='wigner').populations_conductivity"},
-    notes="The diagonal-in-band (particle) part of the Wigner κ.",
-)
-
-
-KALDO_THERMAL_CONDUCTIVITY_WIGNER_COHERENCES = SpaceRepresentationSpec(
-    space=THERMAL_CONDUCTIVITY_WIGNER_COHERENCES,
-    representation_name="kaldo",
-    observable_units={"kappa": "W_per_m_per_K"},
-    code_api={"kappa": "Conductivity(method='wigner').coherences_conductivity"},
-    notes="The off-diagonal (coherence / wave-like) part of the Wigner κ.",
-)
 
 
 KALDO_THERMAL_CONDUCTIVITY_QHGK = SpaceRepresentationSpec(
@@ -717,37 +650,6 @@ KALDO_THERMAL_CONDUCTIVITY_QHGK = SpaceRepresentationSpec(
 )
 
 
-KALDO_COMPUTE_KAPPA_WIGNER_POPULATIONS = OperatorRepresentationSpec(
-    operator=compute_kappa_wigner_populations,
-    representation_name="kaldo",
-    notes=(
-        "Computed alongside the coherences channel inside "
-        "Conductivity(method='wigner'); exposed separately via "
-        "populations_conductivity."
-    ),
-)
-
-
-KALDO_COMPUTE_KAPPA_WIGNER_COHERENCES = OperatorRepresentationSpec(
-    operator=compute_kappa_wigner_coherences,
-    representation_name="kaldo",
-    notes=(
-        "Lorentzian-weighted off-diagonal mode overlap; the linewidth "
-        "feeds in as the broadening width."
-    ),
-)
-
-
-KALDO_COMBINE_KAPPA_WIGNER = OperatorRepresentationSpec(
-    operator=combine_kappa_wigner,
-    representation_name="kaldo",
-    notes=(
-        "The kaldo Conductivity object exposes the sum directly as "
-        ".conductivity when method='wigner'."
-    ),
-)
-
-
 KALDO_COMPUTE_KAPPA_QHGK = OperatorRepresentationSpec(
     operator=compute_kappa_qhgk,
     representation_name="kaldo",
@@ -759,49 +661,6 @@ KALDO_COMPUTE_KAPPA_QHGK = OperatorRepresentationSpec(
 )
 
 
-# ---------------------------------------------------------------------------
-# Cumulative κ distributions. kaldo's Conductivity object exposes
-# .cumulative_conductivity_per_omega and .cumulative_conductivity_per_mfp
-# for plotting.
-# ---------------------------------------------------------------------------
-
-
-KALDO_CUMULATIVE_KAPPA_OMEGA = SpaceRepresentationSpec(
-    space=CUMULATIVE_KAPPA_OMEGA,
-    representation_name="kaldo",
-    observable_units={"kappa_cum": "W_per_m_per_K"},
-    code_api={"kappa_cum": "Conductivity.cumulative_conductivity_per_omega"},
-    notes=(
-        "Cumulative κ thresholded on phonon frequency, computed via the "
-        "LBTE F (Conductivity(method='inverse')). Available for the "
-        "Wigner κ as well by switching method='wigner'."
-    ),
-)
-
-
-KALDO_CUMULATIVE_KAPPA_MFP = SpaceRepresentationSpec(
-    space=CUMULATIVE_KAPPA_MFP,
-    representation_name="kaldo",
-    observable_units={"kappa_cum": "W_per_m_per_K"},
-    code_api={"kappa_cum": "Conductivity.cumulative_conductivity_per_mfp"},
-    notes="Cumulative κ vs |F| (mean-free-path threshold).",
-)
-
-
-KALDO_CONTRACT_CUMULATIVE_KAPPA_OMEGA = OperatorRepresentationSpec(
-    operator=contract_cumulative_kappa_omega,
-    representation_name="kaldo",
-    scheme_overrides={"binning": "linear"},
-    notes="Linear ω-axis binning by default.",
-)
-
-
-KALDO_CONTRACT_CUMULATIVE_KAPPA_MFP = OperatorRepresentationSpec(
-    operator=contract_cumulative_kappa_mfp,
-    representation_name="kaldo",
-    scheme_overrides={"binning": "log"},
-    notes="Logarithmic Λ-axis binning to span the wide MFP distribution.",
-)
 
 
 # ---------------------------------------------------------------------------
