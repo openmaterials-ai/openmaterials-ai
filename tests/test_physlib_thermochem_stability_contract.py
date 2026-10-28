@@ -27,7 +27,6 @@ TRANCHES = {
         "ns": "OMAI.PhyslibBridge.Stability.",
         "definitions": {
             "compute_energy_above_hull": ("energyAboveHull", "def energyAboveHull (S : Set ι) (x : ι → κ → ℝ) (h : ι → ℝ) (i : ι) : ℝ :=\n  h i - hullEnergy S x h (x i)"),
-            "compute_reaction_energy": ("reactionEnergy", "def reactionEnergy {ι : Type*} [Fintype ι] (c h : ι → ℝ) : ℝ := ∑ i, h i * c i"),
             "compute_adsorption_energy": ("adsorptionEnergy", "def adsorptionEnergy (Eadslab Eslab Eadsorbate : ℝ) : ℝ := Eadslab - Eadsorbate - Eslab"),
             "compute_intercalation_voltage": ("intercalationVoltage", "def intercalationVoltage (Efull Eempty n mu q : ℝ) : ℝ := (mu * n + Eempty - Efull) / (n * q)"),
             "compute_surface_energy": ("surfaceEnergy", "def surfaceEnergy (Eslab Ebulk N A : ℝ) : ℝ := (-N * Ebulk + Eslab) / (2 * A)"),
@@ -37,15 +36,13 @@ TRANCHES = {
             "def hullEnergy (S : Set ι) (x : ι → κ → ℝ) (h : ι → ℝ) (y : κ → ℝ) : ℝ :=\n  sInf (decompositionEnergies S x h y)",
             "(∀ j, 0 ≤ w j) ∧ (∀ j, j ∉ S → w j = 0) ∧ ∑ j, w j = 1 ∧ ∀ a, ∑ j, w j * x j a = y a",
         ],
-        "outputs": {"EnergyAboveHull", "ReactionEnergy", "AdsorptionEnergy", "Voltage", "SurfaceEnergy",
-                    "GrainBoundaryEnergy"},
+        "outputs": {"EnergyAboveHull", "AdsorptionEnergy", "Voltage", "SurfaceEnergy", "GrainBoundaryEnergy"},
         "key_theorems": {
             "energyAboveHull_affine_invariant": "energyAboveHull S x (fun j => h j + (c + ∑ a, δ a * x j a)) i = energyAboveHull S x h i",
-            "energyAboveHull_mono_competitors": "energyAboveHull S x h i ≤ energyAboveHull S' x h i",
-            "reactionEnergy_reference_independent_iff": "∀ a, ∑ s, ν s * n s a = 0",
+            "energyAboveHull_formationEnergy_reference_independent": "energyAboveHull S (fun j a => n j a / ∑ b, n j b) (fun j => formationEnergy (Ecell j) (n j) μ') i =",
             "adsorptionEnergy_offset_invariant_iff": "nAdslab = nSlab + nAdsorbate",
             "intercalationVoltage_offset_invariant_iff": "nFull = nEmpty + n • Pi.single ion 1",
-            "intercalationVoltage_eq_mean_ocv": "(∫ x in (0 : ℝ)..n, (mu - E' x) / q) / n",
+            "intercalationVoltage_eq_mean_ocv": "(hderiv : ∀ x ∈ Set.Ioo (min 0 n) (max 0 n) \\ s, HasDerivAt Ecell (E' x) x)",
             "surfaceEnergy_thickness_independent_iff": "Tendsto (fun N : ℝ => |surfaceEnergy (N * e + c) Ebulk N A|) atTop atTop",
         },
     },
@@ -56,20 +53,20 @@ TRANCHES = {
         "ns": "OMAI.PhyslibBridge.Calphad.",
         "definitions": {
             "solve_equilibrium": ("equilibriumGibbs", "def equilibriumGibbs {P : Type*} (g : P → ℝ → ℝ) (x : ℝ) : ℝ := sInf (mixtureEnergies g x)"),
-            "compute_molar_enthalpy": ("molarEnthalpy", "def molarEnthalpy (G : ℝ → ℝ) (T : ℝ) : ℝ := G T - T * deriv G T"),
-            "compute_calphad_entropy": ("calphadEntropy", "def calphadEntropy (G : ℝ → ℝ) (T : ℝ) : ℝ := -deriv G T"),
+            "compute_molar_enthalpy": ("molarEnthalpy", "def molarEnthalpy (G : ℝ → ℝ) (T : ℝ) : ℝ := G T - T * derivWithin G (Ioi T) T"),
+            "compute_calphad_entropy": ("calphadEntropy", "def calphadEntropy (G : ℝ → ℝ) (T : ℝ) : ℝ := -derivWithin G (Ioi T) T"),
             "compute_chemical_potentials": ("chemicalPotentials", "def chemicalPotentials (G : ℝ → ℝ) (x : ℝ) : Fin 2 → ℝ :=\n  ![G x - x * deriv G x, G x + (1 - x) * deriv G x]"),
             "compute_phase_fractions": ("leverFractions", "def leverFractions (x1 x2 x : ℝ) : Fin 2 → ℝ := ![(x2 - x) / (x2 - x1), (x - x1) / (x2 - x1)]"),
             "compute_transition_temperature": ("transitionTemperature", "def transitionTemperature (dG : ℝ → ℝ) (T1 T2 : ℝ) : ℝ := sInf {T | T ∈ Icc T1 T2 ∧ dG T ≤ 0}"),
         },
-        "helpers": [],
+        "helpers": ["def equilibriumGibbsT {P : Type*} (gT : ℝ → P → ℝ → ℝ) (x T : ℝ) : ℝ := equilibriumGibbs (gT T) x"],
         "outputs": {"MolarGibbsEnergy", "MolarEnthalpy", "CalphadMolarEntropy", "ChemicalPotential",
                     "PhaseFraction", "TransitionTemperature"},
         "key_theorems": {
-            "equilibriumGibbs_convexOn": "ConvexOn ℝ (Icc 0 1) (equilibriumGibbs g)",
-            "le_equilibriumGibbs_of_convex": "φ x ≤ equilibriumGibbs g x",
-            "molarEnthalpy_calphadEntropy_heatCapacity": "HasDerivAt (molarEnthalpy G) (T * -G'') T ∧ HasDerivAt (calphadEntropy G) (-G'') T",
-            "gibbs_duhem": "x * deriv (fun t => chemicalPotentials G t 1) x = 0",
+            "equilibriumGibbs_isConvexEnvelope": "(∀ p y, y ∈ Icc (0 : ℝ) 1 → equilibriumGibbs g y ≤ g p y) ∧",
+            "equilibriumGibbsT_concaveOn": "ConcaveOn ℝ I (equilibriumGibbsT gT x)",
+            "equilibrium_entropy_monotoneOn": "MonotoneOn (calphadEntropy (equilibriumGibbsT gT x)) (interior I)",
+            "equilibrium_enthalpy_monotoneOn": "MonotoneOn (molarEnthalpy (equilibriumGibbsT gT x)) (interior I)",
             "commonTangent_of_isLocalMin": "chemicalPotentials g1 x1 = chemicalPotentials g2 x2",
             "transitionTemperature_unique": "(∀ T ∈ Icc T1 T2, dG T = 0 → T = transitionTemperature dG T1 T2)",
         },
@@ -78,8 +75,18 @@ TRANCHES = {
 # Restatements of a definition and support lemmas kept out of the citations.
 NOT_CITED = {
     "OMAI.PhyslibBridge.Stability.energyAboveHull_nonneg",
+    "OMAI.PhyslibBridge.Stability.energyAboveHull_mono_competitors",
     "OMAI.PhyslibBridge.Stability.combination_offset_invariant_iff",
+    "OMAI.PhyslibBridge.Stability.reactionEnergy_reference_independent_iff",
+    "OMAI.PhyslibBridge.Stability.grainBoundaryEnergy_eq_surfaceEnergy",
+    "OMAI.PhyslibBridge.Calphad.equilibriumGibbs_convexOn",
+    "OMAI.PhyslibBridge.Calphad.equilibriumGibbs_le",
+    "OMAI.PhyslibBridge.Calphad.le_equilibriumGibbs_of_convex",
+    "OMAI.PhyslibBridge.Calphad.calphadEntropy_monotoneOn",
+    "OMAI.PhyslibBridge.Calphad.molarEnthalpy_monotoneOn",
 }
+# Removed after review as obvious (quotient and product rules); must not come back.
+REMOVED = ("gibbs_helmholtz", "gibbs_duhem", "molarEnthalpy_calphadEntropy_heatCapacity")
 # Closed-form definitions with nothing to prove: never proof subjects of these tranches.
 DEFINITIONS_ONLY = {"compute_formation_energy", "contract_gibbs_hts"}
 
@@ -171,16 +178,35 @@ def test_closed_form_definitions_are_not_proof_subjects():
     assert not proven & DEFINITIONS_ONLY
 
 
+def test_reaction_energy_is_a_recorded_catalog_defect():
+    rows = {row["id"]: row for row in _packaged_bindings()["inventory"]["operators"]}
+    row = rows["compute_reaction_energy"]
+    assert row["status"] == "gap" and row["binding_ids"] == []
+    for phrase in ("Catalog defect", "-2.0616 eV", "-6.1848 eV", "nu_i N_i", "reactionEnergy_reference_independent_iff"):
+        assert phrase in row["reason"], phrase
+
+
+def test_obvious_calculus_identities_are_gone():
+    source = (ROOT / TRANCHES["calphad-binary-equilibrium"]["source"]).read_text()
+    for name in REMOVED:
+        assert not re.search(r"theorem " + name + r"\b", source), name
+
+
 def test_conventions_a_user_could_get_wrong_are_stated():
     stability = " ".join(_binding("dft-stability-energy-differences")["conditions"])
-    for phrase in ("nu_i N_i", "per atom", "MP2020", "-(E_full - E_empty - n mu)/(n q)",
-                   "affine in the number N of bulk units", "two equivalent surfaces"):
+    for phrase in ("lower convex hull, not only for a unique ground state", "MP2020", "one correction class",
+                   "MaterialsProjectDFTMixingScheme", "n z e", "q = z e", "stoichiometric slab",
+                   "fully periodic bicrystal", "relax_cell=False", "fractional gas-phase references",
+                   "-(E_full - E_empty - n mu)/(n q)", "countable set"):
         assert phrase in stability, phrase
     calphad = " ".join(_binding("calphad-binary-equilibrium")["conditions"])
-    for phrase in ("per mole of atoms", "Gibbs is not Helmholtz", "binary system", "first-order transition",
-                   "S_beta > S_alpha"):
+    for phrase in ("per mole of atoms", "Gibbs is not Helmholtz", "binary system", "right temperature derivative",
+                   "apparent heat capacity", "line compounds", "unary system or a congruent", "T0 temperature",
+                   "1250.0 K", "Continuous transitions"):
         assert phrase in calphad, phrase
-    assert "Caratheodory" in " ".join(_binding("calphad-binary-equilibrium")["remaining_obligations"])
+    assert "boundary locus" not in _binding("calphad-binary-equilibrium")["statement"]
+    obligations = " ".join(_binding("calphad-binary-equilibrium")["remaining_obligations"])
+    assert "Caratheodory" in obligations and "reference shift linear in composition" in obligations
 
 
 def test_compiled_theorems_use_standard_axioms_only():

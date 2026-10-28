@@ -2924,12 +2924,6 @@
         },
         {
           "kind": "operator",
-          "id": "compute_reaction_energy",
-          "uid": "2f0b118bbe3ef2e43e0d70c9b5d5316cc28dc4d0019ad8e7d0fc463cc6938a9c",
-          "formula_sha256": "2679bf8f5cc6b11e691142dbe4eb1ed23003bf4718ef5e528a12ef488d27fc27"
-        },
-        {
-          "kind": "operator",
           "id": "compute_adsorption_energy",
           "uid": "35f53c511ef6202b79b33e89856071aa1f3f8610ad7705bd3f608784d6216a1f",
           "formula_sha256": "55f4d4ba2cc61605a32dbe38ea3b7883519a192efc4d173bca1a654bd09810f0"
@@ -2959,11 +2953,6 @@
         },
         {
           "kind": "node",
-          "id": "ReactionEnergy",
-          "uid": "a5736aa4760c27562f9e189829763a891b6fed83fe4a030a7e306b8d909d825c"
-        },
-        {
-          "kind": "node",
           "id": "AdsorptionEnergy",
           "uid": "949582fba59372799c672b38510bd07f2e733f8bd6e63887b9728a672b1c5b25"
         },
@@ -2983,51 +2972,50 @@
           "uid": "f81c9c7907dc4297e44624098da25bfd87c1654a4198853bb185891282c24528"
         }
       ],
-      "statement": "The interpreted hull distance does not change when every competing entry's formation energy is shifted by the same affine function of composition, in particular when the elemental reference energies change; it can only grow when competitors are added, so a value computed against an incomplete competing set is a lower bound; and a supporting affine function of composition that touches an entry certifies a zero distance. The catalog's reaction energy summed over per-atom formation energies with weights nu_i N_i equals the reaction energy of the cell energies for every set of elemental references exactly when the reaction is balanced, and the adsorption energy and the average intercalation voltage are unchanged by every per-element energy offset exactly when the cells conserve atoms. The average intercalation voltage is the mean of the open-circuit voltage profile -(E'(x) - mu)/q over the ion content. For slab energies affine in the number of bulk units, the catalog's surface and grain-boundary energies are independent of slab thickness exactly when the bulk reference equals the slab slope, equal intercept/(2A) then, and grow without bound with thickness otherwise.",
+      "statement": "The interpreted hull distance of per-atom formation energies is the same for every set of elemental reference energies, and more generally does not change when every competing entry's formation energy is shifted by the same affine function of composition; a supporting affine function of composition that touches an entry certifies a zero distance. The adsorption energy and the average intercalation voltage are unchanged by every per-element energy offset exactly when the cells conserve atoms. The average intercalation voltage is the mean of the open-circuit voltage profile -(E'(x) - mu)/q over the ion content, also for a convex-hull cell energy with kinks between voltage plateaus. For slab energies affine in the number of bulk units, the catalog's surface energy, and its grain-boundary energy, which is the same function (grainBoundaryEnergy_eq_surfaceEnergy), are independent of slab thickness exactly when the bulk reference equals the slab slope, equal intercept/(2A) then, and grow without bound with thickness otherwise.",
       "sources": [],
       "conditions": [
-        "compute_energy_above_hull is opaque in the catalog and is interpreted as the per-atom distance of the entry's formation energy above the lower convex hull of the competing entries, the hull being the least weighted formation energy of nonnegative weights on the competing set that sum to one and reproduce the composition in atomic fractions. The entry belongs to the competing set. Formation energies are per atom and compositions are atomic fractions.",
-        "The affine invariance covers any shift c + sum_a delta_a x_a applied to every competing entry alike, including a change of the elemental reference chemical potentials of compute_formation_energy and a uniform per-atom correction. Corrections applied to some entries and not others, such as mixing GGA and GGA+U energies or anion corrections of the MP2020 scheme that depend on the entry, are not such a shift.",
-        "With per-atom formation energies the catalog's reaction-energy weights c_rxn[i] must be nu_i N_i: the balancing coefficient of species i in formula units times its atoms per formula unit. With formula-unit coefficients the sum depends on the elemental references, which the iff theorem shows.",
-        "The adsorption energy, intercalation voltage, surface energy and grain-boundary energy use cell energies from one energy model and one calculator setting, so that a per-element energy offset is common to every cell. The working-ion reservoir energy mu is per atom of the same element in the same model.",
-        "The intercalation voltage sign follows the catalog: V = -(E_full - E_empty - n mu)/(n q), positive when inserting n ions from the metal lowers the energy. In eV per elementary charge V is in volts. The mean-voltage theorem needs the cell energy E(x) differentiable in the ion content on [0, n] with an integrable derivative; for a phase-separating electrode E(x) is the convex hull energy and the profile has plateaus.",
-        "The surface and grain-boundary theorems assume slab energies affine in the number N of bulk units, E_slab(N) = N e + c, which holds once the surfaces of a symmetric slab no longer interact. The factor 2 counts the two equivalent surfaces or boundaries of the periodic slab."
+        "compute_energy_above_hull is opaque in the catalog and is interpreted as the per-atom distance of the entry's formation energy above the lower convex hull of the competing entries, the hull being the least weighted formation energy of nonnegative weights on the competing set that sum to one and reproduce the composition in atomic fractions. The entry belongs to the competing set. The distance is zero for every entry on the lower convex hull, not only for a unique ground state.",
+        "The target and its competitors share one energy model and one correction scheme; an MLIP candidate against MP2020-corrected DFT competitors is not covered. The affine invariance covers a change of the elemental reference energies and any per-atom correction c + sum_a delta_a x_a applied to every entry alike. The MP2020 scheme is not such a shift (its correction class depends on the U value and the anion type, and elemental entries are uncorrected), so the theorem applies only within one correction class.",
+        "Adding competitors can only raise the hull distance, so a value against an incomplete competing set is a lower bound of the value against a complete one, provided the entry energies do not depend on the competing set; MaterialsProjectDFTMixingScheme recomputes R2SCAN energies from the whole entry set and breaks this reading.",
+        "The adsorption energy uses three cells from one energy model and one calculator setting. The three-term catalog formula cannot express fractional gas-phase references (1/2 E_O2, E_H2O - E_H2), has no per-adsorbate normalization for a coverage theta, and needs a dipole correction for one-sided slabs.",
+        "The intercalation voltage sign follows the catalog: V = -(E_full - E_empty - n mu)/(n q), positive when inserting n ions from the metal lowers the energy, with q the charge transferred per ion. The catalog's n_ion q_e hard-codes one electron per ion, which is correct for Li, Na and K; for an ion of valence z the transferred charge is n z e, so q = z e (recorded as a catalog defect). The theorems hold for any q != 0. The mean-voltage theorem needs E(x) continuous on [0, n] and differentiable off a countable set with an integrable derivative, which admits the kinks of a convex-hull energy with several plateaus.",
+        "The surface-energy formula needs a stoichiometric slab with two equivalent, equally relaxed terminations; otherwise gamma depends on the chemical potentials of the excess species (pymatgen SlabEntry). The grain-boundary form with 2A holds only for a fully periodic bicrystal with two equivalent boundaries; with vacuum the cell holds one boundary and two free surfaces, and relax_cell=False biases gamma_GB high. Both thickness results assume slab energies affine in the number N of bulk units, which holds once the two surfaces or boundaries no longer interact.",
+        "compute_formation_energy is a per-atom definition with nothing to prove on its own and is not a proof subject; its reference set drops out of the hull distance. compute_reaction_energy is not covered: its catalog formula applies signed formula-unit coefficients to per-atom formation energies, a catalog defect recorded in its gap reason."
       ],
       "conventions": {
         "model_scope": "Ground-state energy differences built from cell energies of one electronic-structure or interatomic model. Physlib has no model of convex hulls, slabs or electrodes, so these are local theorems over Mathlib reals that identify no Physlib declaration.",
         "component_scope": "Finite competing sets and finite element sets; cells are described by their atom counts per element. Slab thickness is the number of bulk units; the in-plane area is fixed.",
-        "normalization_basis": "Formation energies and hull distances per atom; reaction-energy weights per atom of each species (nu_i N_i); adsorption energies per adsorbate configuration; voltages per transferred elementary charge; surface and grain-boundary energies per unit area of one surface or boundary.",
+        "normalization_basis": "Formation energies and hull distances per atom; adsorption energies per adsorbate configuration; voltages per transferred charge q per ion; surface and grain-boundary energies per unit area of one surface or boundary.",
         "frequency_convention": "Not applicable; no frequencies enter these formulas.",
         "unit_embedding": "Energies in eV or J in one embedding throughout, areas in A^2 or m^2 (1 eV/A^2 = 16.021766 J/m^2), charge in elementary charges so that eV/e is one volt.",
         "held_fixed": "The energy model, its settings and the elemental reference energies are common to every cell entering one difference; the competing set is fixed for one hull; the slab area is fixed across thicknesses.",
-        "admissibility": "The entry belongs to its competing set; per-atom formation energies need a positive atom count; the intercalation iff needs n != 0 and q != 0; the thickness criterion needs a positive area.",
+        "admissibility": "The entry belongs to its competing set; per-atom formation energies need a nonzero atom count; the intercalation iff needs n != 0 and q != 0; the thickness criterion needs a nonzero area.",
         "reference_energy": "Elemental reference chemical potentials enter formation energies and drop out of hull distances and of balanced reaction energies. The working-ion reservoir mu is the energy per atom of the metal in the same model.",
         "qpoint_weighting": "Not applicable; no Brillouin-zone sums enter these formulas."
       },
       "remaining_obligations": [
         "The DFT or interatomic total energies, relaxations and structure selection of compute_formation_energy's reference set, the hull_source competing set, slab and grain-boundary construction and the adsorption site are not verified, nor the MP2020 or GGA/GGA+U mixing corrections, which are not common affine shifts of every entry.",
         "Only the sufficiency of a supporting affine function for a zero hull distance is proved; its necessity, which needs convex duality, is not.",
-        "Finite-size slab effects beyond the affine regime (surface-surface interaction in thin slabs, dipole corrections for asymmetric or polar slabs) are not covered; asymmetric terminations change what compute_surface_energy computes.",
+        "Finite-size slab effects beyond the affine regime (surface-surface interaction in thin slabs, dipole corrections for asymmetric or polar slabs) and non-stoichiometric slabs are not covered.",
         "Finite-temperature, vibrational, configurational and electrolyte contributions to stability, voltage and adsorption are not covered; the energies are ground-state values.",
-        "compute_formation_energy has no theorem of its own: it is a per-atom definition, and its reference choice drops out of the hull distance and balanced reaction energies proved here."
+        "The multivalent transferred charge n z e of compute_intercalation_voltage and the reaction-energy weights nu_i N_i of compute_reaction_energy are catalog defects to fix in the catalog; the theorems here take q and the weights as stated in the conditions."
       ],
       "evidence": {
         "kind": "compiled_bridge",
         "module": "OMAIStabilityEnergies",
         "declarations": [
+          "OMAI.PhyslibBridge.Stability.energyAboveHull_formationEnergy_reference_independent",
           "OMAI.PhyslibBridge.Stability.energyAboveHull_affine_invariant",
-          "OMAI.PhyslibBridge.Stability.energyAboveHull_mono_competitors",
           "OMAI.PhyslibBridge.Stability.energyAboveHull_eq_zero_of_supporting",
-          "OMAI.PhyslibBridge.Stability.reactionEnergy_reference_independent_iff",
           "OMAI.PhyslibBridge.Stability.adsorptionEnergy_offset_invariant_iff",
           "OMAI.PhyslibBridge.Stability.intercalationVoltage_offset_invariant_iff",
           "OMAI.PhyslibBridge.Stability.intercalationVoltage_eq_mean_ocv",
-          "OMAI.PhyslibBridge.Stability.surfaceEnergy_thickness_independent_iff",
-          "OMAI.PhyslibBridge.Stability.grainBoundaryEnergy_thickness_independent_iff"
+          "OMAI.PhyslibBridge.Stability.surfaceEnergy_thickness_independent_iff"
         ],
         "source_path": "lean/bridge/OMAIStabilityEnergies.lean",
         "build_record": "lean/bridge/build-evidence.json",
-        "source_sha256": "e05bc66e40a4c72d4f6fe36425c8bc2f5dbd581485f90049485603efa9e9911d"
+        "source_sha256": "d5da7a1eb03e27c9869c6f8f735f37c0256cc03eebaf8eba7d90a7cb221eaa34"
       }
     },
     {
@@ -3101,49 +3089,49 @@
           "uid": "8b9dd2a79db11c01e15d37f64a7bd0d9c95f09ea080a67f7912d9b8aabd7b132"
         }
       ],
-      "statement": "For a binary system the interpreted equilibrium molar Gibbs energy, the least energy of any finite mixture of phases with the overall composition, is convex in composition on [0, 1] and is the greatest convex function below every phase's Gibbs curve, its convex envelope. The enthalpy and entropy channels H = G - T G' and S = -G' of a molar Gibbs energy twice differentiable in temperature give the same heat capacity, dH/dT = T dS/dT = -T G'', and satisfy the Gibbs-Helmholtz relation d(G/T)/dT = -H/T^2. The tangent-intercept chemical potentials obey the Gibbs-Duhem relation (1 - x) dmu_A/dx + x dmu_B/dx = 0, and at a two-phase minimum with interior compositions both phase tangents are the common chord, so both phases have the same chemical potentials. Mass balance fixes the two phase fractions to the lever rule, both in [0, 1] exactly when the overall composition lies between the phase compositions. A Gibbs-energy difference that changes sign on [T1, T2] with a positive entropy difference has exactly one transition temperature, which the catalog's boundary locus returns, with phase alpha stable below it and phase beta above it.",
+      "statement": "For a binary system the interpreted equilibrium molar Gibbs energy, the least energy of any finite mixture of phases with the overall composition, is the convex envelope of the phase Gibbs curves on [0, 1]: it is convex, lies below every phase curve and lies above every convex function below them; the phase set need not be finite and the infimum need not be attained. If every phase's Gibbs function is concave in temperature on a temperature interval, the equilibrium Gibbs energy at any fixed composition is concave in temperature, so the equilibrium entropy S = -dG/dT and, at nonnegative temperatures, the equilibrium enthalpy H = G - T dG/dT (right derivatives) are nondecreasing through every phase transition: the equilibrium heat capacity, latent heats included, is nonnegative. At a two-phase minimum with interior compositions both differentiable phase curves share the common tangent, so both phases have the same chemical potentials. Mass balance fixes the two phase fractions to the lever rule, both in [0, 1] exactly when the overall composition lies between the phase compositions. For a unary system or a congruent transformation, a Gibbs-energy difference that changes sign with a positive entropy difference has exactly one transition temperature, with phase alpha stable below it and phase beta above.",
       "sources": [],
       "conditions": [
         "Every producer except contract_gibbs_hts is an opaque solver call in the catalog. The interpretations read molar Gibbs functions of the assessed phases per mole of atoms at fixed pressure with the SER reference, as pycalphad's GM, HM, SM, MU and NP; they are not the harmonic quantities per mole of primitive cells of the phonon bridge, and Gibbs is not Helmholtz.",
         "The equilibrium and chemical-potential results are for a binary system, composition the mole fraction x of the second component in [0, 1], at the temperature and pressure built into the phase functions. The phase Gibbs curves are bounded below on [0, 1]; ideal-mixing terms x ln x are bounded there.",
-        "The enthalpy, entropy and Gibbs-Helmholtz results need G twice differentiable in temperature at fixed composition, which fails at a first-order transition, where H and S jump; the heat-capacity identity holds within one phase field.",
-        "The common-tangent theorem assumes a local minimum of the two-phase mixture energy in each phase composition with x1 < x < x2 and both phase curves differentiable there; it does not establish that the global minimum is two-phase.",
-        "compute_transition_temperature is interpreted for one composition and two competing phases bracketed in [T1, T2] by a sign change of G_beta - G_alpha, with S_beta > S_alpha inside, as for melting or a polymorphic transition on heating. Invariant points and solvus lines of multicomponent systems are not covered.",
+        "compute_molar_enthalpy and compute_calphad_entropy use the right temperature derivative of the equilibrium Gibbs energy at fixed composition, the values of the state stable just above T, equal to G - T G' and -G' wherever G is differentiable. The monotonicity results need every phase Gibbs function concave in temperature (nonnegative phase heat capacities) on the interval; assessed functions extrapolated outside their valid range can have negative heat capacity. Within a two-phase field -T d2G_eq/dT2 is the apparent heat capacity, latent heat of the moving phase boundary included, not pycalphad's phase-local value.",
+        "compute_chemical_potentials returns the tangent intercepts mu_A = G - x G' and mu_B = G + (1 - x) G' of the equilibrium envelope G. The common-tangent theorem assumes a local minimum of the two-phase mixture energy in each phase composition with x1 < x < x2 and both phase curves differentiable there, which excludes line compounds; it does not establish that the global minimum is two-phase.",
+        "compute_transition_temperature is covered only for a unary system or a congruent (partitionless) transformation between two phases of one composition, bracketed in [T1, T2] by a sign change of G_beta - G_alpha with S_beta > S_alpha inside. For an alloy the temperature of equal phase Gibbs energies at one composition is the T0 temperature, not the catalog's boundary locus (liquidus, solidus or solvus, where a phase fraction reaches 0 or 1): an ideal lens at x = 0.5 has T0 = 1250.0 K, solidus 1219.5 K and liquidus 1279.1 K, with a two-phase equilibrium across that window. Continuous transitions (order-disorder, magnetic) are excluded.",
         "contract_gibbs_hts, G = H - T S, is a definition with nothing to prove beyond these interpretations and is not a proof subject."
       ],
       "conventions": {
         "model_scope": "Equilibrium thermodynamics of assessed CALPHAD phase models. Physlib has no model of Gibbs minimization over assessed phases, so these are local theorems over Mathlib reals that identify no Physlib declaration.",
-        "component_scope": "Binary systems for the equilibrium, chemical-potential and phase-fraction results; one composition and two phases for the transition temperature; any number of assessed phases in the convex envelope.",
+        "component_scope": "Binary systems for the equilibrium, chemical-potential and phase-fraction results; any fixed composition for the temperature monotonicity; one composition and two phases of a unary or congruent transformation for the transition temperature.",
         "normalization_basis": "Per mole of atoms (pycalphad v.N = 1), not per mole of formula units or primitive cells.",
         "frequency_convention": "Not applicable; no frequencies enter these formulas.",
         "unit_embedding": "Molar energies in J/mol, entropies in J/(mol K), temperatures in kelvin, compositions as mole fractions in [0, 1], not percentages.",
         "held_fixed": "Pressure throughout; composition for the temperature derivatives; temperature for the composition derivatives and the equilibrium minimization.",
-        "admissibility": "Phase Gibbs curves bounded below on [0, 1]; T != 0 for Gibbs-Helmholtz; x1 < x2 for the lever rule and x1 < x < x2 for the common tangent; T1 < T2 with a sign change and positive entropy difference for the transition.",
-        "reference_energy": "The SER reference of the assessed database; a reference shift linear in composition shifts G, mu_A and mu_B consistently and does not change phase fractions or transition temperatures.",
+        "admissibility": "Phase Gibbs curves bounded below on [0, 1] (at each temperature of the interval for the temperature results); phase Gibbs functions concave in temperature for the monotonicity results and T >= 0 for the enthalpy; x1 < x2 for the lever rule and x1 < x < x2 for the common tangent; T1 < T2 with a sign change and positive entropy difference for the transition.",
+        "reference_energy": "The SER reference of the assessed database. A reference shift linear in composition shifts G, mu_A and mu_B consistently; its effect on phase fractions and transition temperatures is not proved here (see the remaining obligations).",
         "qpoint_weighting": "Not applicable; no Brillouin-zone sums enter these formulas."
       },
       "remaining_obligations": [
         "The fidelity of the assessed database to experiment and the solver's global minimization (pycalphad's grid sampling and refinement) are not verified; the theorems hold for the interpreted definitions.",
         "Multicomponent systems, sublattice site-fraction minimization inside a phase, magnetic and ordering contributions as separate terms, and pressure dependence are not covered.",
         "That the global minimum is attained by at most two phases in a binary system (Caratheodory) and that a two-phase minimum exists between the common-tangent compositions are not proved.",
-        "Invariant points, solvus and liquidus lines in composition-temperature space, and the boundary-locus extraction from a swept phase-fraction grid, are not verified beyond the one-composition two-phase transition."
+        "The catalog's boundary locus for alloys (liquidus, solidus, solvus and invariant points in composition-temperature space, extracted from a swept phase-fraction grid) is not verified; only the unary or congruent transition is.",
+        "Invariance of phase fractions and transition temperatures under a reference shift linear in composition is not proved."
       ],
       "evidence": {
         "kind": "compiled_bridge",
         "module": "OMAICalphad",
         "declarations": [
-          "OMAI.PhyslibBridge.Calphad.equilibriumGibbs_convexOn",
-          "OMAI.PhyslibBridge.Calphad.le_equilibriumGibbs_of_convex",
-          "OMAI.PhyslibBridge.Calphad.molarEnthalpy_calphadEntropy_heatCapacity",
-          "OMAI.PhyslibBridge.Calphad.gibbs_helmholtz",
-          "OMAI.PhyslibBridge.Calphad.gibbs_duhem",
+          "OMAI.PhyslibBridge.Calphad.equilibriumGibbs_isConvexEnvelope",
+          "OMAI.PhyslibBridge.Calphad.equilibriumGibbsT_concaveOn",
+          "OMAI.PhyslibBridge.Calphad.equilibrium_entropy_monotoneOn",
+          "OMAI.PhyslibBridge.Calphad.equilibrium_enthalpy_monotoneOn",
           "OMAI.PhyslibBridge.Calphad.commonTangent_of_isLocalMin",
           "OMAI.PhyslibBridge.Calphad.leverFractions_unique_and_bounds",
           "OMAI.PhyslibBridge.Calphad.transitionTemperature_unique"
         ],
         "source_path": "lean/bridge/OMAICalphad.lean",
         "build_record": "lean/bridge/build-evidence.json",
-        "source_sha256": "aac625ec604cf4802a1e50da16125ffdd4d92d00e736b7a1cc34f0201b70db6c"
+        "source_sha256": "1864ba3c15e2bcd98fcbb932d6e3b6d450e2499d40b46f5537ac8cc9194d4852"
       }
     }
   ],
@@ -3170,7 +3158,8 @@
       "contract_kappa[bte_solver=direct_inverse]": "Depends on the defective collision matrix of solve_bte[bte_solver=direct_inverse]. OMAIPhyslibKappaContraction proves, over Mathlib, that the contraction is symmetric and positive semidefinite whenever the collision matrix is symmetric positive semidefinite, but no catalog M satisfies that hypothesis, so the result is not bound.",
       "contract_cumulative_kappa[wrt=omega]": "Catalog defect. The cumulative operators take the linearized-BTE F (MeanFreeDisplacement[bte_solver=direct_inverse]), for which kappa_cum is a signed partial sum, so the catalog's saturating-distribution and median-mean-free-path semantics do not hold. OMAIPhyslibKappaContraction proves an exact three-mode linearized BTE (one process 1+2 <-> 3, Casimir boundary scattering, Bose-Einstein weights, symmetric positive-definite collision matrix) whose cumulative kappa_xx is not monotone in the cutoff, in both the frequency and the mean-free-path binning; monotonicity holds when every modal contribution is nonnegative, as in the relaxation-time approximation.",
       "contract_cumulative_kappa[wrt=mfp]": "Catalog defect. The cumulative operators take the linearized-BTE F (MeanFreeDisplacement[bte_solver=direct_inverse]), for which kappa_cum is a signed partial sum, so the catalog's saturating-distribution and median-mean-free-path semantics do not hold. OMAIPhyslibKappaContraction proves an exact three-mode linearized BTE (one process 1+2 <-> 3, Casimir boundary scattering, Bose-Einstein weights, symmetric positive-definite collision matrix) whose cumulative kappa_xx is not monotone in the cutoff, in both the frequency and the mean-free-path binning; monotonicity holds when every modal contribution is nonnegative, as in the relaxation-time approximation.",
-      "compute_participation_ratio": "No Physlib model covers this formula."
+      "compute_participation_ratio": "No Physlib model covers this formula.",
+      "compute_reaction_energy": "Catalog defect. The formula sums signed formula-unit coefficients c_rxn[i] times per-atom formation energies (FormationEnergy is in eV/atom), which is neither the reaction energy nor independent of the elemental references: for 2 Li + 1/2 O2 -> Li2O it gives -2.0616 eV, and -1.6616 eV with mu_Li shifted by 0.3 eV, against the true -6.1848 eV. The reaction energy is Delta E_rxn = sum_i nu_i N_i Delta H_f,i with nu_i the signed formula-unit coefficients and N_i the atoms per reduced formula unit, per reaction as balanced (divide by the atoms of the reaction for eV/atom); it is independent of the elemental references exactly when the reaction is balanced (reactionEnergy_reference_independent_iff in OMAIStabilityEnergies). The ReactionEnergy node excludes the SISSO dGf(T) cousin, but its only representation computes from GibbsComputedEntry dGf(T); the edge should state which quantity it consumes."
     }
   }
 }

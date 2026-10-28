@@ -5,7 +5,7 @@
       "Quot.sound",
       "propext"
     ],
-    "declaration_count": 1483,
+    "declaration_count": 1496,
     "declarations": {
       "CanonicalEnsemble.heatCapacity.eq_1": [
         "Classical.choice",
@@ -18,6 +18,11 @@
         "propext"
       ],
       "OMAI.PhyslibBridge.Calphad.calphadEntropy.eq_1": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Calphad.calphadEntropy_monotoneOn": [
         "Classical.choice",
         "Quot.sound",
         "propext"
@@ -47,17 +52,42 @@
         "Quot.sound",
         "propext"
       ],
+      "OMAI.PhyslibBridge.Calphad.equilibriumGibbsT": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Calphad.equilibriumGibbsT.eq_1": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Calphad.equilibriumGibbsT_concaveOn": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
       "OMAI.PhyslibBridge.Calphad.equilibriumGibbs_convexOn": [
         "Classical.choice",
         "Quot.sound",
         "propext"
       ],
-      "OMAI.PhyslibBridge.Calphad.gibbs_duhem": [
+      "OMAI.PhyslibBridge.Calphad.equilibriumGibbs_isConvexEnvelope": [
         "Classical.choice",
         "Quot.sound",
         "propext"
       ],
-      "OMAI.PhyslibBridge.Calphad.gibbs_helmholtz": [
+      "OMAI.PhyslibBridge.Calphad.equilibriumGibbs_le": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Calphad.equilibrium_enthalpy_monotoneOn": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Calphad.equilibrium_entropy_monotoneOn": [
         "Classical.choice",
         "Quot.sound",
         "propext"
@@ -97,12 +127,7 @@
         "Quot.sound",
         "propext"
       ],
-      "OMAI.PhyslibBridge.Calphad.molarEnthalpy.eq_1": [
-        "Classical.choice",
-        "Quot.sound",
-        "propext"
-      ],
-      "OMAI.PhyslibBridge.Calphad.molarEnthalpy_calphadEntropy_heatCapacity": [
+      "OMAI.PhyslibBridge.Calphad.molarEnthalpy_monotoneOn": [
         "Classical.choice",
         "Quot.sound",
         "propext"
@@ -4411,6 +4436,11 @@
         "Quot.sound",
         "propext"
       ],
+      "OMAI.PhyslibBridge.Stability.energyAboveHull_formationEnergy_reference_independent": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
       "OMAI.PhyslibBridge.Stability.energyAboveHull_mono_competitors": [
         "Classical.choice",
         "Quot.sound",
@@ -4431,7 +4461,7 @@
         "Quot.sound",
         "propext"
       ],
-      "OMAI.PhyslibBridge.Stability.grainBoundaryEnergy_thickness_independent_iff": [
+      "OMAI.PhyslibBridge.Stability.grainBoundaryEnergy_eq_surfaceEnergy": [
         "Classical.choice",
         "Quot.sound",
         "propext"
@@ -6824,6 +6854,29 @@
         "Quot.sound",
         "propext"
       ],
+      "_private.OMAIStabilityEnergies.0.OMAI.PhyslibBridge.Stability.energyAboveHull_formationEnergy_reference_independent._simp_1_1": [
+        "propext"
+      ],
+      "_private.OMAIStabilityEnergies.0.OMAI.PhyslibBridge.Stability.energyAboveHull_formationEnergy_reference_independent._simp_1_2": [
+        "propext"
+      ],
+      "_private.OMAIStabilityEnergies.0.OMAI.PhyslibBridge.Stability.energyAboveHull_formationEnergy_reference_independent._simp_1_3": [
+        "propext"
+      ],
+      "_private.OMAIStabilityEnergies.0.OMAI.PhyslibBridge.Stability.energyAboveHull_formationEnergy_reference_independent._simp_1_4": [
+        "propext"
+      ],
+      "_private.OMAIStabilityEnergies.0.OMAI.PhyslibBridge.Stability.energyAboveHull_formationEnergy_reference_independent._simp_1_5": [
+        "propext"
+      ],
+      "_private.OMAIStabilityEnergies.0.OMAI.PhyslibBridge.Stability.energyAboveHull_formationEnergy_reference_independent._simp_1_6": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "_private.OMAIStabilityEnergies.0.OMAI.PhyslibBridge.Stability.energyAboveHull_formationEnergy_reference_independent._simp_1_7": [
+        "propext"
+      ],
       "_private.OMAIStabilityEnergies.0.OMAI.PhyslibBridge.Stability.reactionEnergy_reference_independent_iff._simp_1_1": [
         "propext"
       ],
@@ -6891,11 +6944,11 @@
       "OMAIStabilityEnergies"
     ],
     "status": "passed",
-    "theorem_count": 1062
+    "theorem_count": 1074
   },
   "command": "lake build --wfail",
   "contract_name_audit": {
-    "pair_count": 48,
+    "pair_count": 47,
     "pairs": [
       {
         "module": "OMAICalphad",
@@ -7031,10 +7084,6 @@
       },
       {
         "module": "OMAIStabilityEnergies",
-        "name": "OMAI.PhyslibBridge.Stability.reactionEnergy"
-      },
-      {
-        "module": "OMAIStabilityEnergies",
         "name": "OMAI.PhyslibBridge.Stability.surfaceEnergy"
       },
       {
@@ -7109,7 +7158,7 @@
   "schema_version": 1,
   "scope": "ISQ dimension encodings and explicitly stated bridge theorems; not numerical-code validation",
   "sources": {
-    "lean/bridge/OMAICalphad.lean": "aac625ec604cf4802a1e50da16125ffdd4d92d00e736b7a1cc34f0201b70db6c",
+    "lean/bridge/OMAICalphad.lean": "1864ba3c15e2bcd98fcbb932d6e3b6d450e2499d40b46f5537ac8cc9194d4852",
     "lean/bridge/OMAICompositeConductivity.lean": "e08799415b1e5345ed0cc6af0b192685f6d0f93606d3f8c0a0f91c3ed178096c",
     "lean/bridge/OMAICureKinetics.lean": "7575810b36eb5f97bdd12ef4d26e9c9b65e42f2a5e3913609e615e0d90980a2a",
     "lean/bridge/OMAIElasticity.lean": "dbc0efc3f35bcc223d28cd60d70fa591ab5f4cf9d285fe97360be6dca0602844",
@@ -7141,7 +7190,7 @@
     "lean/bridge/OMAIPhyslibSemantics.lean": "9ce9bbe14c751333465a9f08bdb5319f369361e136f2f8233e8e72e6614797a5",
     "lean/bridge/OMAIPhyslibStaticEnsemble.lean": "5d949848a8253d234f8058391b3641ec3ce1aa5671653293581d403851742f9e",
     "lean/bridge/OMAIPhyslibThermalGruneisen.lean": "6669b924a8682f135cee4daeda9d2d76b5418aa1ee30117dd7975dc86dddece9",
-    "lean/bridge/OMAIStabilityEnergies.lean": "e05bc66e40a4c72d4f6fe36425c8bc2f5dbd581485f90049485603efa9e9911d",
+    "lean/bridge/OMAIStabilityEnergies.lean": "d5da7a1eb03e27c9869c6f8f735f37c0256cc03eebaf8eba7d90a7cb221eaa34",
     "lean/bridge/audit.py": "e78a6e3f1d647fb1f12d57d420516483c182011044d2299866c965230908cfca",
     "lean/bridge/composites-formula-contract.json": "734b687bf6b86e9137262d777abe60958f8452ff53f6ec6532c482d9098cba32",
     "lean/bridge/continuum-formula-contract.json": "b5fb4368abccaac9fcde8b6ccb6dfd55402f14f1a9537e898645484ba69b2e8f",
@@ -7159,9 +7208,9 @@
     "lean/bridge/qha-formula-contract.json": "60876d432d5819f8ed568770ec7df5ed7ad64fdc1e00c2c2fd03bd061b9f83c1",
     "lean/bridge/response-formula-contract.json": "f4f446f1967c45ccf508f42232e070d468121b0967459f93fc0c496210adf353",
     "lean/bridge/semantic-formula-contract.json": "21002241bb9dae2d674df0ede26cf7f0804823591675bcb4099142e7a5d1b123",
-    "lean/bridge/stability-formula-contract.json": "8f96598e3ca417b085e1d43d185409bbfe8f0a9b46ceb61c1472495b4fd7b998",
+    "lean/bridge/stability-formula-contract.json": "50e12a50ec2da999d1baec8e0c9af7ca36576eef49bc4a7c6955a81998228e42",
     "lean/bridge/thermal-gruneisen-formula-contract.json": "61759afd04057fdd607005bf49ae8ad84e2d3d916f7c331b45886a66620acdca",
-    "lean/bridge/thermochemistry-formula-contract.json": "1143c0ad97fa275c1fd38497035d44d118b3eb34a298241fa2bd973ea6376aba",
+    "lean/bridge/thermochemistry-formula-contract.json": "4afff8e935bfe1756e68e4d985c048232b6a31d487c86582f26d64780e99513d",
     "lean/bridge/verify_contracts.py": "57225331e3e602ec50c4cb707f6b0b8c4f9cc7b7476e978cfa8a94ccd7708ffc"
   },
   "status": "passed",

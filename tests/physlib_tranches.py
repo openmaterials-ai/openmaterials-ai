@@ -85,10 +85,10 @@ TRANCHES = (
         "bindings": frozenset({"dft-stability-energy-differences", "calphad-binary-equilibrium"}),
         "subjects": frozenset({
             ("node", "AdsorptionEnergy"), ("node", "EnergyAboveHull"), ("node", "GrainBoundaryEnergy"),
-            ("node", "ReactionEnergy"), ("node", "SurfaceEnergy"), ("node", "Voltage"),
+            ("node", "SurfaceEnergy"), ("node", "Voltage"),
             ("operator", "compute_adsorption_energy"), ("operator", "compute_energy_above_hull"),
             ("operator", "compute_grain_boundary_energy"), ("operator", "compute_intercalation_voltage"),
-            ("operator", "compute_reaction_energy"), ("operator", "compute_surface_energy"),
+            ("operator", "compute_surface_energy"),
             ("node", "CalphadMolarEntropy"), ("node", "ChemicalPotential"), ("node", "MolarEnthalpy"),
             ("node", "MolarGibbsEnergy"), ("node", "PhaseFraction"), ("node", "TransitionTemperature"),
             ("operator", "compute_calphad_entropy"), ("operator", "compute_chemical_potentials"),
@@ -97,7 +97,7 @@ TRANCHES = (
         "pairs": tuple(
             [{"name": "OMAI.PhyslibBridge.Stability." + name, "module": "OMAIStabilityEnergies"}
              for name in ("adsorptionEnergy", "energyAboveHull", "grainBoundaryEnergy",
-                          "intercalationVoltage", "reactionEnergy", "surfaceEnergy")]
+                          "intercalationVoltage", "surfaceEnergy")]
             + [{"name": "OMAI.PhyslibBridge.Calphad." + name, "module": "OMAICalphad"}
                for name in ("calphadEntropy", "chemicalPotentials", "equilibriumGibbs", "leverFractions",
                             "molarEnthalpy", "transitionTemperature")]),
@@ -108,10 +108,10 @@ TRANCHES = (
 # The one frozen global coverage ledger of the published bindings.
 GLOBAL_COVERAGE = {
     "nodes_total": 129, "nodes_mapped": 33, "operators_total": 127, "operators_mapped": 24,
-    "nodes_local": 21, "operators_local": 24, "bindings_total": 38, "source_correspondences": 5,
+    "nodes_local": 20, "operators_local": 23, "bindings_total": 38, "source_correspondences": 5,
     "compiled_bridges": 33, "nodes_compiled": 21, "nodes_compiled_outputs": 20,
-    "nodes_compiled_interpretations": 1, "operators_compiled": 24, "operators_compiled_local": 24,
-    "nodes_compiled_local": 22, "operators_proved": 48, "nodes_proved": 43,
+    "nodes_compiled_interpretations": 1, "operators_compiled": 24, "operators_compiled_local": 23,
+    "nodes_compiled_local": 21, "operators_proved": 47, "nodes_proved": 42,
     "upstream_declarations_referenced": 36, "upstream_modules_referenced": 10,
     "relations": {"exact_definition": 1, "conditional": 27, "conceptual": 4, "local": 6},
 }

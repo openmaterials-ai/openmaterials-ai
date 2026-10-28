@@ -2,7 +2,7 @@
   "schema_version": 1,
   "scope": "Reviewed OMAI formula endpoints and exact Lean proof source for local theorems with no Physlib physics counterpart. Hash and compiled-name checks detect drift and provenance errors; they are not automatic symbolic translation or numerical validation.",
   "source_path": "lean/bridge/OMAICalphad.lean",
-  "source_sha256": "aac625ec604cf4802a1e50da16125ffdd4d92d00e736b7a1cc34f0201b70db6c",
+  "source_sha256": "1864ba3c15e2bcd98fcbb932d6e3b6d450e2499d40b46f5537ac8cc9194d4852",
   "operators": [
     {
       "id": "solve_equilibrium",
@@ -76,9 +76,9 @@
   "interpretations": [
     "Every thermochemistry producer except contract_gibbs_hts is an opaque solver call in the catalog. The interpreted definitions read molar Gibbs functions of the assessed phases, per mole of atoms at fixed pressure and the SER reference, as pycalphad evaluates them; they are not the harmonic per-mole-of-cells quantities of the phonon bridge.",
     "solve_equilibrium is the least molar Gibbs energy of any finite mixture of phases with the overall composition, for a binary system with composition the mole fraction x of the second component in [0, 1], at the temperature and pressure built into the phase functions.",
-    "compute_molar_enthalpy and compute_calphad_entropy are H = G - T dG/dT and S = -dG/dT of a molar Gibbs energy G(T) at fixed composition and pressure, the Legendre and temperature-derivative channels pycalphad reports as HM and SM.",
-    "compute_chemical_potentials returns, for a binary system, the intercepts at x = 0 and x = 1 of the tangent to G(x): mu_A = G - x G' and mu_B = G + (1 - x) G'.",
-    "compute_phase_fractions is the lever rule for two phases of compositions x1 < x2 at overall composition x. compute_transition_temperature is the lowest temperature in a bracket [T1, T2] at which phase beta is at least as stable as phase alpha, dG = G_beta - G_alpha <= 0.",
+    "compute_molar_enthalpy and compute_calphad_entropy are H = G - T dG/dT and S = -dG/dT of the equilibrium molar Gibbs energy G(T) at fixed composition and pressure, with the right temperature derivative: the values of the state stable just above T, equal to pycalphad's HM and SM wherever G is differentiable.",
+    "compute_chemical_potentials returns, for a binary system, the intercepts at x = 0 and x = 1 of the tangent to the equilibrium envelope G(x): mu_A = G - x G' and mu_B = G + (1 - x) G'.",
+    "compute_phase_fractions is the lever rule for two phases of compositions x1 < x2 at overall composition x. compute_transition_temperature is the lowest temperature in a bracket [T1, T2] at which phase beta is at least as stable as phase alpha, dG = G_beta - G_alpha <= 0, for a unary system or a congruent transformation; for an alloy this is the T0 temperature, not the catalog's boundary locus.",
     "contract_gibbs_hts, G = H - T S, is a definition with nothing to prove beyond the interpretations above and is not a proof subject."
   ]
 }

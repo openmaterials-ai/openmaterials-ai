@@ -1,6 +1,7 @@
 module
 
 public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
+public import Mathlib.MeasureTheory.Integral.DivergenceTheorem
 public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 public import Mathlib.Tactic
 
@@ -13,17 +14,16 @@ energy, an adsorption energy, an average intercalation voltage, and surface and
 grain-boundary energies from slab supercells. Physlib has no model of these
 constructions, so these results use Mathlib only and identify no Physlib declaration.
 
-The hull distance of every competing entry is nonnegative, it does not change when every
-entry's formation energy is shifted by the same affine function of composition (in
-particular when the elemental reference energies change), it grows when competitors are
-added, and a supporting affine function certifies a zero distance. A linear combination
-of cell energies is unchanged by every per-element energy offset exactly when it
-conserves atoms, which for the catalog's reaction, adsorption and voltage formulas is
-the balance of the reaction. The average intercalation voltage is the mean of the
-open-circuit voltage profile over the ion content. For slab energies affine in the number
-of bulk units, the catalog's surface and grain-boundary energies are independent of slab
-thickness exactly when the bulk reference equals the slab slope, and grow without bound
-otherwise.
+The hull distance does not change when every entry's formation energy is shifted by the
+same affine function of composition; in particular the hull distance of per-atom formation
+energies does not depend on the elemental reference energies. A supporting affine function
+certifies a zero distance. A linear combination of cell energies is unchanged by every
+per-element energy offset exactly when it conserves atoms, which for the catalog's adsorption
+and voltage formulas is the balance of the cells. The average intercalation voltage is the
+mean of the open-circuit voltage profile over the ion content, also for a cell energy with
+kinks between voltage plateaus. For slab energies affine in the number of bulk units, the
+catalog's surface and grain-boundary energies are independent of slab thickness exactly when
+the bulk reference equals the slab slope, and grow without bound otherwise.
 -/
 
 @[expose] public section
@@ -167,6 +167,33 @@ theorem energyAboveHull_affine_invariant {S : Set ι} (x : ι → κ → ℝ) (h
   unfold energyAboveHull
   rw [hhull]
   ring
+
+/-- The hull distance of per-atom formation energies `(E_j - sum_a n_ja mu_a) / N_j`, with
+atomic fractions `n_ja / N_j`, is the same for every set of elemental reference energies
+`mu`. -/
+theorem energyAboveHull_formationEnergy_reference_independent (S : Set ι) (Ecell : ι → ℝ)
+    (n : ι → κ → ℝ) (hN : ∀ j, ∑ a, n j a ≠ 0) {i : ι} (hi : i ∈ S) (μ μ' : κ → ℝ) :
+    energyAboveHull S (fun j a => n j a / ∑ b, n j b) (fun j => formationEnergy (Ecell j) (n j) μ') i =
+      energyAboveHull S (fun j a => n j a / ∑ b, n j b) (fun j => formationEnergy (Ecell j) (n j) μ) i := by
+  have hshift : (fun j => formationEnergy (Ecell j) (n j) μ') =
+      fun j => formationEnergy (Ecell j) (n j) μ +
+        (0 + ∑ a, (μ a - μ' a) * (n j a / ∑ b, n j b)) := by
+    funext j
+    unfold formationEnergy
+    have hNj := hN j
+    rw [zero_add, div_add' _ _ _ hNj]
+    congr 1
+    have : (∑ a, (μ a - μ' a) * (n j a / ∑ b, n j b)) * ∑ b, n j b = ∑ a, (μ a - μ' a) * n j a := by
+      rw [sum_mul]
+      exact sum_congr rfl fun a _ => by field_simp
+    rw [this]
+    simp only [sub_mul, sum_sub_distrib]
+    have e1 : ∑ a, μ a * n j a = ∑ a, n j a * μ a := sum_congr rfl fun a _ => mul_comm _ _
+    have e2 : ∑ a, μ' a * n j a = ∑ a, n j a * μ' a := sum_congr rfl fun a _ => mul_comm _ _
+    rw [e1, e2]
+    ring
+  rw [hshift]
+  exact energyAboveHull_affine_invariant _ _ 0 _ hi
 
 omit [Fintype κ] in
 /-- Adding competing phases can only lower the hull, so the hull distance of an entry
@@ -313,16 +340,18 @@ theorem intercalationVoltage_offset_invariant_iff {E : Type*} [Fintype E] [Decid
 
 /-! ## Average voltage and open-circuit voltage profile -/
 
-/-- If the cell energy `E(x)` is continuously differentiable in the ion content `x` on
-`[0, n]`, the catalog's average intercalation voltage between the empty (`x = 0`) and full
+/-- If the cell energy `E(x)` is continuous in the ion content `x` on `[0, n]` and has
+derivative `E'(x)` off a countable set, as the convex-hull energy of a multi-plateau electrode
+does, the catalog's average intercalation voltage between the empty (`x = 0`) and full
 (`x = n`) cells is the mean over `[0, n]` of the open-circuit voltage profile
 `V(x) = (mu - E'(x)) / q`. -/
-theorem intercalationVoltage_eq_mean_ocv {Ecell E' : ℝ → ℝ} {n mu q : ℝ}
-    (hderiv : ∀ x ∈ Set.uIcc 0 n, HasDerivAt Ecell (E' x) x)
+theorem intercalationVoltage_eq_mean_ocv {Ecell E' : ℝ → ℝ} {n mu q : ℝ} {s : Set ℝ}
+    (hs : s.Countable) (hc : ContinuousOn Ecell (Set.uIcc 0 n))
+    (hderiv : ∀ x ∈ Set.Ioo (min 0 n) (max 0 n) \ s, HasDerivAt Ecell (E' x) x)
     (hint : IntervalIntegrable E' MeasureTheory.volume 0 n) :
     intercalationVoltage (Ecell n) (Ecell 0) n mu q =
       (∫ x in (0 : ℝ)..n, (mu - E' x) / q) / n := by
-  have hftc := intervalIntegral.integral_eq_sub_of_hasDerivAt hderiv hint
+  have hftc := MeasureTheory.integral_eq_of_hasDerivAt_off_countable Ecell E' hs hc hderiv hint
   have hsplit : ∫ x in (0 : ℝ)..n, (mu - E' x) / q = (mu * n - (Ecell n - Ecell 0)) / q := by
     simp only [div_eq_mul_inv]
     rw [intervalIntegral.integral_mul_const, intervalIntegral.integral_sub intervalIntegrable_const hint,
@@ -341,7 +370,7 @@ theorem intercalationVoltage_eq_mean_ocv {Ecell E' : ℝ → ℝ} {n mu q : ℝ}
 surface energy with bulk reference `E_bulk` is the same for two different thicknesses
 exactly when `E_bulk = e`, and is then `c / (2 A)`; otherwise it grows without bound with
 the slab thickness. -/
-theorem surfaceEnergy_thickness_independent_iff {e c Ebulk A : ℝ} (hA : 0 < A) :
+theorem surfaceEnergy_thickness_independent_iff {e c Ebulk A : ℝ} (hA : A ≠ 0) :
     ((∀ N M : ℝ, surfaceEnergy (N * e + c) Ebulk N A = surfaceEnergy (M * e + c) Ebulk M A) ↔
         Ebulk = e) ∧
       (Ebulk = e → ∀ N, surfaceEnergy (N * e + c) Ebulk N A = c / (2 * A)) ∧
@@ -351,14 +380,14 @@ theorem surfaceEnergy_thickness_independent_iff {e c Ebulk A : ℝ} (hA : 0 < A)
   refine ⟨⟨fun h => ?_, fun h N M => ?_⟩, fun h N => ?_, fun h => ?_⟩
   · have := h 0 1
     rw [hform, hform] at this
-    have h2A : (2 * A) ≠ 0 := by positivity
+    have h2A : (2 * A) ≠ 0 := mul_ne_zero two_ne_zero hA
     have : (e - Ebulk) / (2 * A) = 0 := by linarith
     rcases div_eq_zero_iff.mp this with h' | h'
     · linarith
     · exact absurd h' h2A
   · rw [hform, hform, h]; simp
   · rw [hform, h]; simp
-  · have hk : (e - Ebulk) / (2 * A) ≠ 0 := div_ne_zero (sub_ne_zero.mpr (Ne.symm h)) (by positivity)
+  · have hk : (e - Ebulk) / (2 * A) ≠ 0 := div_ne_zero (sub_ne_zero.mpr (Ne.symm h)) (mul_ne_zero two_ne_zero hA)
     simp only [hform]
     have hlin : Tendsto (fun N : ℝ => |N| * |(e - Ebulk) / (2 * A)| - |c / (2 * A)|) atTop atTop := by
       apply tendsto_atTop_add_const_right
@@ -369,14 +398,8 @@ theorem surfaceEnergy_thickness_independent_iff {e c Ebulk A : ℝ} (hA : 0 < A)
     rw [abs_neg, sub_neg_eq_add, add_comm, abs_mul] at h1
     exact h1
 
-/-- The same thickness criterion for the catalog's grain-boundary energy of a periodic
-coincidence-site-lattice slab with two boundaries. -/
-theorem grainBoundaryEnergy_thickness_independent_iff {e c Ebulk A : ℝ} (hA : 0 < A) :
-    ((∀ N M : ℝ, grainBoundaryEnergy (N * e + c) Ebulk N A =
-        grainBoundaryEnergy (M * e + c) Ebulk M A) ↔ Ebulk = e) ∧
-      (Ebulk = e → ∀ N, grainBoundaryEnergy (N * e + c) Ebulk N A = c / (2 * A)) ∧
-      (Ebulk ≠ e →
-        Tendsto (fun N : ℝ => |grainBoundaryEnergy (N * e + c) Ebulk N A|) atTop atTop) :=
-  surfaceEnergy_thickness_independent_iff hA
+/-- The catalog's grain-boundary energy is the same slab-difference function as its surface
+energy, so the thickness criterion above applies to it unchanged. -/
+theorem grainBoundaryEnergy_eq_surfaceEnergy : grainBoundaryEnergy = surfaceEnergy := rfl
 
 end OMAI.PhyslibBridge.Stability

@@ -2,6 +2,7 @@ module
 
 public import Mathlib.Analysis.Calculus.Deriv.Inv
 public import Mathlib.Analysis.Calculus.Deriv.MeanValue
+public import Mathlib.Analysis.Convex.Deriv
 public import Mathlib.Analysis.Calculus.LocalExtr.Basic
 public import Mathlib.Analysis.Convex.Jensen
 public import Mathlib.Topology.Order.IntermediateValue
@@ -18,13 +19,15 @@ the assessed phases, per mole of atoms at fixed pressure, and Physlib has no mod
 these constructions, so these results use Mathlib only.
 
 For a binary system the equilibrium molar Gibbs energy, the least energy of any finite
-mixture of phases with the overall composition, is convex in composition and is the
-greatest convex function below every phase's Gibbs curve. Its enthalpy and entropy
-channels `H = G - T G'` and `S = -G'` give the same heat capacity, `dH/dT = T dS/dT`, and
-satisfy the Gibbs-Helmholtz relation. The tangent-intercept chemical potentials obey the
-Gibbs-Duhem relation, and at a two-phase minimum with interior compositions both phases
-share the common tangent, so the chemical potentials agree. Mass balance fixes the phase
-fractions to the lever rule. A Gibbs-energy difference that changes sign with a positive
+mixture of phases with the overall composition, is the convex envelope of the phase Gibbs
+curves: convex in composition, below every phase curve, and above every convex function
+below them. If every phase's Gibbs function is concave in temperature, the equilibrium
+Gibbs energy at fixed composition is concave in temperature, so its entropy is
+nondecreasing and, at nonnegative temperature, its enthalpy is nondecreasing, through
+every phase transition. At a two-phase minimum with interior compositions both
+differentiable phase curves share the common tangent, so the chemical potentials agree.
+Mass balance fixes the phase fractions to the lever rule. For a unary system or a
+congruent transformation, a Gibbs-energy difference that changes sign with a positive
 entropy difference has exactly one transition temperature, where the stable phase
 switches.
 -/
@@ -54,12 +57,20 @@ proof. -/
 def equilibriumGibbs {P : Type*} (g : P → ℝ → ℝ) (x : ℝ) : ℝ := sInf (mixtureEnergies g x)
 
 /-- Interpreted definition of the catalog's opaque producer `compute_molar_enthalpy`,
-`H = G - T dG/dT`. This definition alone is not a physical proof. -/
-def molarEnthalpy (G : ℝ → ℝ) (T : ℝ) : ℝ := G T - T * deriv G T
+`H = G - T dG/dT` with the right derivative in temperature, the enthalpy of the state stable
+just above `T` (it is `G - T G'` wherever `G` is differentiable). This definition alone is
+not a physical proof. -/
+def molarEnthalpy (G : ℝ → ℝ) (T : ℝ) : ℝ := G T - T * derivWithin G (Ioi T) T
 
 /-- Interpreted definition of the catalog's opaque producer `compute_calphad_entropy`,
-`S = -dG/dT`. This definition alone is not a physical proof. -/
-def calphadEntropy (G : ℝ → ℝ) (T : ℝ) : ℝ := -deriv G T
+`S = -dG/dT` with the right derivative in temperature, the entropy of the state stable just
+above `T` (it is `-G'` wherever `G` is differentiable). This definition alone is not a
+physical proof. -/
+def calphadEntropy (G : ℝ → ℝ) (T : ℝ) : ℝ := -derivWithin G (Ioi T) T
+
+/-- The equilibrium molar Gibbs energy at fixed composition `x` as a function of temperature,
+for phase Gibbs functions `gT T p y`. -/
+def equilibriumGibbsT {P : Type*} (gT : ℝ → P → ℝ → ℝ) (x T : ℝ) : ℝ := equilibriumGibbs (gT T) x
 
 /-- Interpreted definition of the catalog's opaque producer `compute_chemical_potentials`
 for a binary system: the intercepts at `x = 0` and `x = 1` of the tangent to the molar
@@ -171,57 +182,111 @@ theorem le_equilibriumGibbs_of_convex {φ : ℝ → ℝ} (hφ : ConvexOn ℝ (Ic
   rw [hwx] at hj
   exact hj.trans (sum_le_sum fun j _ => mul_le_mul_of_nonneg_left (hle _ _ (hy j)) (hw0 j))
 
+/-- The equilibrium molar Gibbs energy lies below every phase's Gibbs curve. -/
+theorem equilibriumGibbs_le {B : ℝ} (hB : ∀ p y, y ∈ Icc (0 : ℝ) 1 → B ≤ g p y) (p : P) {y : ℝ}
+    (hy : y ∈ Icc (0 : ℝ) 1) : equilibriumGibbs g y ≤ g p y :=
+  csInf_le (mixtureEnergies_bddBelow hB y) (single_mem p hy)
+
+/-- The equilibrium molar Gibbs energy of a binary system is the convex envelope of the phase
+Gibbs curves on `[0, 1]`: it is convex, it lies below every phase curve, and it lies above
+every convex function that lies below every phase curve. The phase set need not be finite
+and the infimum over mixtures need not be attained. -/
+theorem equilibriumGibbs_isConvexEnvelope [Nonempty P] {B : ℝ}
+    (hB : ∀ p y, y ∈ Icc (0 : ℝ) 1 → B ≤ g p y) :
+    ConvexOn ℝ (Icc 0 1) (equilibriumGibbs g) ∧
+      (∀ p y, y ∈ Icc (0 : ℝ) 1 → equilibriumGibbs g y ≤ g p y) ∧
+      ∀ φ : ℝ → ℝ, ConvexOn ℝ (Icc 0 1) φ → (∀ p y, y ∈ Icc (0 : ℝ) 1 → φ y ≤ g p y) →
+        ∀ x ∈ Icc (0 : ℝ) 1, φ x ≤ equilibriumGibbs g x := by
+  obtain ⟨p⟩ := ‹Nonempty P›
+  exact ⟨equilibriumGibbs_convexOn hB, fun q y hy => equilibriumGibbs_le hB q hy,
+    fun φ hφ hle x hx => le_equilibriumGibbs_of_convex hφ hle ⟨_, single_mem p hx⟩⟩
+
+/-- If every phase's Gibbs function is concave in temperature on a convex set `I` of
+temperatures (nonnegative phase heat capacities), the equilibrium molar Gibbs energy at any
+fixed composition is concave in temperature on `I`. -/
+theorem equilibriumGibbsT_concaveOn {gT : ℝ → P → ℝ → ℝ} {I : Set ℝ} (hI : Convex ℝ I)
+    {B : ℝ → ℝ} (hB : ∀ T ∈ I, ∀ p y, y ∈ Icc (0 : ℝ) 1 → B T ≤ gT T p y)
+    (hconc : ∀ p y, y ∈ Icc (0 : ℝ) 1 → ConcaveOn ℝ I (fun T => gT T p y)) (x : ℝ) :
+    ConcaveOn ℝ I (equilibriumGibbsT gT x) := by
+  refine ⟨hI, fun T1 h1 T2 h2 a b ha hb hab => ?_⟩
+  simp only [smul_eq_mul, equilibriumGibbsT, equilibriumGibbs]
+  -- The admissible mixtures do not depend on temperature, only their energies do.
+  have hmove : ∀ T T', (mixtureEnergies (gT T) x).Nonempty → (mixtureEnergies (gT T') x).Nonempty := by
+    rintro T T' ⟨_, m, w, q, y, hw0, hy, hw1, hwx, rfl⟩
+    exact ⟨_, m, w, q, y, hw0, hy, hw1, hwx, rfl⟩
+  rcases (mixtureEnergies (gT (a * T1 + b * T2)) x).eq_empty_or_nonempty with hemp | hne
+  · have e1 : mixtureEnergies (gT T1) x = ∅ := by
+      by_contra h; exact (Set.nonempty_iff_ne_empty.mp (hmove _ _ (Set.nonempty_iff_ne_empty.mpr h))) hemp
+    have e2 : mixtureEnergies (gT T2) x = ∅ := by
+      by_contra h; exact (Set.nonempty_iff_ne_empty.mp (hmove _ _ (Set.nonempty_iff_ne_empty.mpr h))) hemp
+    simp [hemp, e1, e2]
+  apply le_csInf hne
+  rintro e ⟨m, w, q, y, hw0, hy, hw1, hwx, rfl⟩
+  have l1 := csInf_le (mixtureEnergies_bddBelow (hB T1 h1) x) ⟨m, w, q, y, hw0, hy, hw1, hwx, rfl⟩
+  have l2 := csInf_le (mixtureEnergies_bddBelow (hB T2 h2) x) ⟨m, w, q, y, hw0, hy, hw1, hwx, rfl⟩
+  have hpt : ∀ j, a * gT T1 (q j) (y j) + b * gT T2 (q j) (y j) ≤ gT (a * T1 + b * T2) (q j) (y j) :=
+    fun j => by simpa [smul_eq_mul] using (hconc (q j) (y j) (hy j)).2 h1 h2 ha hb hab
+  calc a * sInf (mixtureEnergies (gT T1) x) + b * sInf (mixtureEnergies (gT T2) x)
+      ≤ a * ∑ j, w j * gT T1 (q j) (y j) + b * ∑ j, w j * gT T2 (q j) (y j) :=
+        add_le_add (mul_le_mul_of_nonneg_left l1 ha) (mul_le_mul_of_nonneg_left l2 hb)
+    _ = ∑ j, w j * (a * gT T1 (q j) (y j) + b * gT T2 (q j) (y j)) := by
+        rw [mul_sum, mul_sum, ← sum_add_distrib]
+        exact sum_congr rfl fun j _ => by ring
+    _ ≤ ∑ j, w j * gT (a * T1 + b * T2) (q j) (y j) :=
+        sum_le_sum fun j _ => mul_le_mul_of_nonneg_left (hpt j) (hw0 j)
+
 end Envelope
 
-/-! ## Enthalpy and entropy channels -/
+/-! ## Entropy and enthalpy through phase transitions -/
 
-/-- The enthalpy channel `H = G - T G'` and the entropy channel `S = -G'` of a molar Gibbs
-energy that is twice differentiable in temperature give the same heat capacity:
-`dH/dT = T dS/dT = -T G''`. -/
-theorem molarEnthalpy_calphadEntropy_heatCapacity {G G' : ℝ → ℝ} {T G'' : ℝ}
-    (hG : ∀ᶠ t in 𝓝 T, HasDerivAt G (G' t) t) (hG' : HasDerivAt G' G'' T) :
-    HasDerivAt (molarEnthalpy G) (T * -G'') T ∧ HasDerivAt (calphadEntropy G) (-G'') T := by
-  have hderiv : deriv G =ᶠ[𝓝 T] G' := hG.mono fun t ht => ht.deriv
-  constructor
-  · have hH : HasDerivAt (fun t => G t - t * G' t) (G' T - (1 * G' T + T * G'')) T :=
-      hG.self_of_nhds.sub ((hasDerivAt_id T).mul hG')
-    refine (hH.congr_of_eventuallyEq ?_).congr_deriv (by ring)
-    filter_upwards [hderiv] with t ht
-    simp [molarEnthalpy, ht]
-  · refine (hG'.neg.congr_of_eventuallyEq ?_)
-    filter_upwards [hderiv] with t ht
-    simp [calphadEntropy, ht]
+/-- A molar Gibbs energy concave in temperature on `I` has a nondecreasing entropy channel on
+the interior of `I`, kinks at phase transitions included. -/
+theorem calphadEntropy_monotoneOn {G : ℝ → ℝ} {I : Set ℝ} (hG : ConcaveOn ℝ I G) :
+    MonotoneOn (calphadEntropy G) (interior I) := by
+  intro x hx y hy hxy
+  have := hG.neg.monotoneOn_rightDeriv hx hy hxy
+  simp only [derivWithin.neg] at this
+  simpa [calphadEntropy] using this
 
-/-- The Gibbs-Helmholtz relation: `d(G/T)/dT = -H/T^2` with the enthalpy channel `H`. -/
-theorem gibbs_helmholtz {G : ℝ → ℝ} {T : ℝ} (hT : T ≠ 0) (hG : DifferentiableAt ℝ G T) :
-    HasDerivAt (fun t => G t / t) (-molarEnthalpy G T / T ^ 2) T := by
-  refine (hG.hasDerivAt.div (hasDerivAt_id T) hT).congr_deriv ?_
-  simp only [molarEnthalpy, id_eq, mul_one]
-  field_simp
-  ring
+/-- A molar Gibbs energy concave in temperature on a set `I` of nonnegative temperatures has a
+nondecreasing enthalpy channel on the interior of `I`, latent heats at transitions
+included. -/
+theorem molarEnthalpy_monotoneOn {G : ℝ → ℝ} {I : Set ℝ} (hG : ConcaveOn ℝ I G)
+    (hpos : ∀ T ∈ I, 0 ≤ T) : MonotoneOn (molarEnthalpy G) (interior I) := by
+  intro T1 h1 T2 h2 hle
+  rcases hle.eq_or_lt with rfl | hlt
+  · rfl
+  have hf := hG.neg
+  have hs := hf.slope_le_leftDeriv_of_mem_interior (interior_subset h1) h2 hlt
+  have hlr := hf.leftDeriv_le_rightDeriv_of_mem_interior h2
+  have hmono := hf.monotoneOn_rightDeriv h1 h2 hlt.le
+  have hT1 := hpos T1 (interior_subset h1)
+  rw [slope_def_field] at hs
+  simp only [derivWithin.neg, Pi.neg_apply] at hs hlr hmono
+  have hd : 0 < T2 - T1 := sub_pos.mpr hlt
+  rw [div_le_iff₀ hd] at hs
+  unfold molarEnthalpy
+  nlinarith [mul_nonneg hT1 (sub_nonneg.mpr hmono)]
+
+/-- If every phase's Gibbs function is concave in temperature on a convex set `I`, the
+equilibrium entropy at any fixed composition is nondecreasing on the interior of `I`,
+through every phase transition: the equilibrium heat capacity, latent heats included, is
+nonnegative. -/
+theorem equilibrium_entropy_monotoneOn {P : Type*} {gT : ℝ → P → ℝ → ℝ} {I : Set ℝ}
+    (hI : Convex ℝ I) {B : ℝ → ℝ} (hB : ∀ T ∈ I, ∀ p y, y ∈ Icc (0 : ℝ) 1 → B T ≤ gT T p y)
+    (hconc : ∀ p y, y ∈ Icc (0 : ℝ) 1 → ConcaveOn ℝ I (fun T => gT T p y)) (x : ℝ) :
+    MonotoneOn (calphadEntropy (equilibriumGibbsT gT x)) (interior I) :=
+  calphadEntropy_monotoneOn (equilibriumGibbsT_concaveOn hI hB hconc x)
+
+/-- Under the same hypotheses and nonnegative temperatures, the equilibrium enthalpy at any
+fixed composition is nondecreasing on the interior of `I`, latent heats included. -/
+theorem equilibrium_enthalpy_monotoneOn {P : Type*} {gT : ℝ → P → ℝ → ℝ} {I : Set ℝ}
+    (hI : Convex ℝ I) {B : ℝ → ℝ} (hB : ∀ T ∈ I, ∀ p y, y ∈ Icc (0 : ℝ) 1 → B T ≤ gT T p y)
+    (hconc : ∀ p y, y ∈ Icc (0 : ℝ) 1 → ConcaveOn ℝ I (fun T => gT T p y)) (hpos : ∀ T ∈ I, 0 ≤ T)
+    (x : ℝ) : MonotoneOn (molarEnthalpy (equilibriumGibbsT gT x)) (interior I) :=
+  molarEnthalpy_monotoneOn (equilibriumGibbsT_concaveOn hI hB hconc x) hpos
 
 /-! ## Chemical potentials -/
-
-/-- The Gibbs-Duhem relation at fixed temperature and pressure: the tangent-intercept
-chemical potentials of a molar Gibbs function twice differentiable in composition satisfy
-`(1 - x) dmu_A/dx + x dmu_B/dx = 0`. -/
-theorem gibbs_duhem {G G' : ℝ → ℝ} {x G'' : ℝ} (hG : ∀ᶠ t in 𝓝 x, HasDerivAt G (G' t) t)
-    (hG' : HasDerivAt G' G'' x) :
-    (1 - x) * deriv (fun t => chemicalPotentials G t 0) x +
-      x * deriv (fun t => chemicalPotentials G t 1) x = 0 := by
-  have hderiv : deriv G =ᶠ[𝓝 x] G' := hG.mono fun t ht => ht.deriv
-  have hA : HasDerivAt (fun t => chemicalPotentials G t 0) (-x * G'') x := by
-    have h := hG.self_of_nhds.sub ((hasDerivAt_id x).mul hG')
-    refine (h.congr_of_eventuallyEq ?_).congr_deriv (by simp)
-    filter_upwards [hderiv] with t ht
-    simp [chemicalPotentials, ht]
-  have hB : HasDerivAt (fun t => chemicalPotentials G t 1) ((1 - x) * G'') x := by
-    have h := hG.self_of_nhds.add (((hasDerivAt_id x).const_sub 1).mul hG')
-    refine (h.congr_of_eventuallyEq ?_).congr_deriv (by simp)
-    filter_upwards [hderiv] with t ht
-    simp [chemicalPotentials, ht]
-  rw [hA.deriv, hB.deriv]
-  ring
 
 /-- Molar Gibbs energy of a two-phase mixture at overall composition `x` with phase
 compositions `y1 < x < y2`, each phase weighted by the lever rule. -/
@@ -310,11 +375,13 @@ theorem leverFractions_unique_and_bounds {x1 x2 x : ℝ} (h12 : x1 < x2) :
 
 /-! ## Transition temperature -/
 
-/-- If the Gibbs-energy difference `dG = G_beta - G_alpha` is continuous on `[T1, T2]`,
+/-- For a unary system or a congruent (partitionless) transformation between phases `alpha`
+and `beta` of the same composition: if `dG = G_beta - G_alpha` is continuous on `[T1, T2]`,
 positive at `T1`, negative at `T2`, and has derivative `-dS` with a positive entropy
-difference `dS = S_beta - S_alpha` inside, then the catalog's transition temperature is the
+difference `dS = S_beta - S_alpha` inside, then the interpreted transition temperature is the
 unique temperature in `(T1, T2)` with `dG = 0`; phase `alpha` is stable below it and phase
-`beta` above it. -/
+`beta` above it. For an alloy this temperature is the T0 temperature, not a phase-diagram
+boundary. -/
 theorem transitionTemperature_unique {dG dS : ℝ → ℝ} {T1 T2 : ℝ} (h12 : T1 < T2)
     (hcont : ContinuousOn dG (Icc T1 T2))
     (hderiv : ∀ T ∈ Ioo T1 T2, HasDerivAt dG (-dS T) T) (hS : ∀ T ∈ Ioo T1 T2, 0 < dS T)
