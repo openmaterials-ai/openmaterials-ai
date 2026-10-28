@@ -1,0 +1,74 @@
+{
+ "key": "shengbte",
+ "code": [
+  {
+   "doi": "10.1016/j.cpc.2014.02.015",
+   "title": "ShengBTE: A solver of the Boltzmann transport equation for phonons",
+   "authors": [
+    "W. Li",
+    "J. Carrete",
+    "N. A. Katcho",
+    "N. Mingo"
+   ],
+   "year": 2014,
+   "journal": "Computer Physics Communications"
+  }
+ ],
+ "methods": [],
+ "applications": [
+  {
+   "doi": "10.1038/nphys3492",
+   "title": "Orbitally driven giant phonon anharmonicity in SnSe",
+   "authors": [
+    "C. W. Li",
+    "J. Hong",
+    "A. F. May",
+    "D. Bansal",
+    "S. Chi",
+    "T. Hong",
+    "G. Ehlers",
+    "O. Delaire"
+   ],
+   "year": 2015,
+   "journal": "Nature Physics"
+  },
+  {
+   "doi": "10.1126/science.aat5522",
+   "title": "Experimental observation of high thermal conductivity in boron arsenide",
+   "authors": [
+    "J. S. Kang",
+    "M. Li",
+    "H. Wu",
+    "H. Nguyen",
+    "Y. Hu"
+   ],
+   "year": 2018,
+   "journal": "Science"
+  },
+  {
+   "doi": "10.1016/j.nanoen.2020.105716",
+   "title": "Exceptional piezoelectricity, high thermal conductivity and stiffness and promising photocatalysis in two-dimensional MoSi2N4 family confirmed by first-principles",
+   "authors": [
+    "B. Mortazavi",
+    "B. Javvaji",
+    "F. Shojaei",
+    "T. Rabczuk",
+    "A. V. Shapeev",
+    "X. Zhuang"
+   ],
+   "year": 2021,
+   "journal": "Nano Energy"
+  },
+  {
+   "doi": "10.1038/s41563-021-00918-3",
+   "title": "Phonon-engineered extreme thermal conductivity materials",
+   "authors": [
+    "X. Qian",
+    "J. Zhou",
+    "G. Chen"
+   ],
+   "year": 2021,
+   "journal": "Nature Materials"
+  }
+ ]
+}

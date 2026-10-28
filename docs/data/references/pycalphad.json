@@ -1,0 +1,70 @@
+{
+ "key": "pycalphad",
+ "code": [
+  {
+   "doi": "10.5334/jors.140",
+   "title": "pycalphad: CALPHAD-based Computational Thermodynamics in Python",
+   "authors": [
+    "R. Otis",
+    "Z. K. Liu"
+   ],
+   "year": 2017,
+   "journal": "Journal of Open Research Software"
+  }
+ ],
+ "methods": [],
+ "applications": [
+  {
+   "doi": "10.1016/j.actamat.2020.08.008",
+   "title": "Computational thermodynamics and its applications",
+   "authors": [
+    "Z. K. Liu"
+   ],
+   "year": 2020,
+   "journal": "Acta Materialia"
+  },
+  {
+   "doi": "10.1080/09506608.2019.1709354",
+   "title": "Advances in additive manufacturing of metal-based functionally graded materials",
+   "authors": [
+    "A. Reichardt",
+    "A. A. Shapiro",
+    "R. Otis",
+    "R. P. Dillon",
+    "J. P. Borgonia",
+    "B. W. McEnerney",
+    "P. Hosemann",
+    "A. M. Beese"
+   ],
+   "year": 2021,
+   "journal": "International Materials Reviews"
+  },
+  {
+   "doi": "10.1016/j.actamat.2020.10.043",
+   "title": "Thermodynamics of high entropy oxides",
+   "authors": [
+    "S. J. McCormack",
+    "A. Navrotsky"
+   ],
+   "year": 2021,
+   "journal": "Acta Materialia"
+  },
+  {
+   "doi": "10.1016/j.mser.2021.100645",
+   "title": "Machine-learning and high-throughput studies for high-entropy materials",
+   "authors": [
+    "E. W. Huang",
+    "W. J. Lee",
+    "S. S. Singh",
+    "P. Kumar",
+    "C. Y. Lee",
+    "T. N. Lam",
+    "H. H. Chin",
+    "B. H. Lin",
+    "P. K. Liaw"
+   ],
+   "year": 2022,
+   "journal": "Materials Science and Engineering: R: Reports"
+  }
+ ]
+}

@@ -1,0 +1,106 @@
+{
+ "key": "orca",
+ "code": [
+  {
+   "doi": "10.1002/wcms.81",
+   "title": "The ORCA program system",
+   "authors": [
+    "F. Neese"
+   ],
+   "year": 2012,
+   "journal": "WIREs Computational Molecular Science"
+  },
+  {
+   "doi": "10.1002/wcms.1327",
+   "title": "Software update: the ORCA program system, version 4.0",
+   "authors": [
+    "F. Neese"
+   ],
+   "year": 2018,
+   "journal": "WIREs Computational Molecular Science"
+  },
+  {
+   "doi": "10.1063/5.0004608",
+   "title": "The ORCA quantum chemistry program package",
+   "authors": [
+    "F. Neese",
+    "F. Wennmohs",
+    "U. Becker",
+    "C. Riplinger"
+   ],
+   "year": 2020,
+   "journal": "The Journal of Chemical Physics"
+  },
+  {
+   "doi": "10.1002/wcms.1606",
+   "title": "Software update: The ORCA program system: Version 5.0",
+   "authors": [
+    "F. Neese"
+   ],
+   "year": 2022,
+   "journal": "WIREs Computational Molecular Science"
+  }
+ ],
+ "methods": [],
+ "applications": [
+  {
+   "doi": "10.1039/C7SC02832F",
+   "title": "Intra-molecular origin of the spin-phonon coupling in slow-relaxing molecular magnets",
+   "authors": [
+    "A. Lunghi",
+    "F. Totti",
+    "S. Sanvito",
+    "R. Sessoli"
+   ],
+   "year": 2017,
+   "journal": "Chemical Science"
+  },
+  {
+   "doi": "10.1038/ncomms14620",
+   "title": "The role of anharmonic phonons in under-barrier spin relaxation of single molecule magnets",
+   "authors": [
+    "A. Lunghi",
+    "F. Totti",
+    "R. Sessoli",
+    "S. Sanvito"
+   ],
+   "year": 2017,
+   "journal": "Nature Communications"
+  },
+  {
+   "doi": "10.1002/adma.201902407",
+   "title": "Chasing the “Killer” Phonon Mode for the Rational Design of Low‐Disorder, High‐Mobility Molecular Semiconductors",
+   "authors": [
+    "G. Schweicher",
+    "G. D'Avino",
+    "M. T. Ruggiero",
+    "D. J. Harkin",
+    "K. Broch",
+    "D. Venkateshvaran",
+    "G. Liu",
+    "A. Richard",
+    "C. Ruzié",
+    "J. Armstrong",
+    "A. R. Kennedy",
+    "K. Shankland",
+    "K. Takimiya",
+    "Y. H. Geerts",
+    "J. A. Zeitler",
+    "S. Fratini",
+    "H. Sirringhaus"
+   ],
+   "year": 2019,
+   "journal": "Advanced Materials"
+  },
+  {
+   "doi": "10.1126/sciadv.aax7163",
+   "title": "How do phonons relax molecular spins?",
+   "authors": [
+    "A. Lunghi",
+    "S. Sanvito"
+   ],
+   "year": 2019,
+   "journal": "Science Advances"
+  }
+ ]
+}

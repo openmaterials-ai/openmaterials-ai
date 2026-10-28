@@ -1,0 +1,85 @@
+{
+ "key": "pymatgen-analysis-diffusion",
+ "code": [
+  {
+   "doi": "10.1021/acs.chemmater.6b02648",
+   "title": "Data-Driven First-Principles Methods for the Study and Design of Alkali Superionic Conductors",
+   "authors": [
+    "Z. Deng",
+    "Z. Zhu",
+    "I. H. Chu",
+    "S. P. Ong"
+   ],
+   "year": 2017,
+   "journal": "Chemistry of Materials"
+  }
+ ],
+ "methods": [],
+ "applications": [
+  {
+   "doi": "10.1002/aenm.201800035",
+   "title": "Design Strategies, Practical Considerations, and New Solution Processes of Sulfide Solid Electrolytes for All‐Solid‐State Batteries",
+   "authors": [
+    "K. H. Park",
+    "Q. Bai",
+    "D. H. Kim",
+    "D. Y. Oh",
+    "Y. Zhu",
+    "Y. Mo",
+    "Y. S. Jung"
+   ],
+   "year": 2018,
+   "journal": "Advanced Energy Materials"
+  },
+  {
+   "doi": "10.1039/C7EE03364H",
+   "title": "Tuning mobility and stability of lithium ion conductors based on lattice dynamics",
+   "authors": [
+    "S. Muy",
+    "J. C. Bachman",
+    "L. Giordano",
+    "H. H. Chang",
+    "D. L. Abernathy",
+    "D. Bansal",
+    "O. Delaire",
+    "S. Hori",
+    "R. Kanno",
+    "F. Maglia",
+    "S. Lupart",
+    "P. Lamp",
+    "Y. Shao-Horn"
+   ],
+   "year": 2018,
+   "journal": "Energy & Environmental Science"
+  },
+  {
+   "doi": "10.1038/s41578-019-0157-5",
+   "title": "Understanding interface stability in solid-state batteries",
+   "authors": [
+    "Y. Xiao",
+    "Y. Wang",
+    "S. H. Bo",
+    "J. C. Kim",
+    "L. J. Miara",
+    "G. Ceder"
+   ],
+   "year": 2019,
+   "journal": "Nature Reviews Materials"
+  },
+  {
+   "doi": "10.1016/j.esci.2022.02.008",
+   "title": "Solid-state lithium batteries: Safety and prospects",
+   "authors": [
+    "Y. Guo",
+    "S. Wu",
+    "Y. B. He",
+    "F. Kang",
+    "L. Chen",
+    "H. Li",
+    "Q. H. Yang"
+   ],
+   "year": 2022,
+   "journal": "eScience"
+  }
+ ]
+}

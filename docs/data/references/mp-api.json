@@ -1,0 +1,62 @@
+{
+ "key": "mp-api",
+ "code": [
+  {
+   "doi": "10.1063/1.4812323",
+   "title": "Commentary: The Materials Project: A materials genome approach to accelerating materials innovation",
+   "authors": [
+    "A. Jain",
+    "S. P. Ong",
+    "G. Hautier",
+    "W. Chen",
+    "W. D. Richards",
+    "S. Dacek",
+    "S. Cholia",
+    "D. Gunter",
+    "D. Skinner",
+    "G. Ceder",
+    "K. A. Persson"
+   ],
+   "year": 2013,
+   "journal": "APL Materials"
+  }
+ ],
+ "methods": [],
+ "applications": [
+  {
+   "doi": "10.1103/PhysRevLett.115.205901",
+   "title": "Prediction of Low-Thermal-Conductivity Compounds with First-Principles Anharmonic Lattice-Dynamics Calculations and Bayesian Optimization",
+   "authors": [
+    "A. Seko",
+    "A. Togo",
+    "H. Hayashi",
+    "K. Tsuda",
+    "L. Chaput",
+    "I. Tanaka"
+   ],
+   "year": 2015,
+   "journal": "Physical Review Letters"
+  },
+  {
+   "doi": "10.1039/C7EE03364H",
+   "title": "Tuning mobility and stability of lithium ion conductors based on lattice dynamics",
+   "authors": [
+    "S. Muy",
+    "J. C. Bachman",
+    "L. Giordano",
+    "H. H. Chang",
+    "D. L. Abernathy",
+    "D. Bansal",
+    "O. Delaire",
+    "S. Hori",
+    "R. Kanno",
+    "F. Maglia",
+    "S. Lupart",
+    "P. Lamp",
+    "Y. Shao-Horn"
+   ],
+   "year": 2018,
+   "journal": "Energy & Environmental Science"
+  }
+ ]
+}

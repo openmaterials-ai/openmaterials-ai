@@ -1,0 +1,88 @@
+{
+ "key": "matgl",
+ "code": [
+  {
+   "doi": "10.1038/s43588-022-00349-3",
+   "title": "A universal graph deep learning interatomic potential for the periodic table",
+   "authors": [
+    "C. Chen",
+    "S. P. Ong"
+   ],
+   "year": 2022,
+   "journal": "Nature Computational Science"
+  },
+  {
+   "doi": "10.1038/s42256-023-00716-3",
+   "title": "CHGNet as a pretrained universal neural network potential for charge-informed atomistic modelling",
+   "authors": [
+    "B. Deng",
+    "P. Zhong",
+    "K. Jun",
+    "J. Riebesell",
+    "K. Han",
+    "C. J. Bartel",
+    "G. Ceder"
+   ],
+   "year": 2023,
+   "journal": "Nature Machine Intelligence"
+  }
+ ],
+ "methods": [],
+ "applications": [
+  {
+   "doi": "10.1038/s41586-023-06735-9",
+   "title": "Scaling deep learning for materials discovery",
+   "authors": [
+    "A. Merchant",
+    "S. Batzner",
+    "S. S. Schoenholz",
+    "M. Aykol",
+    "G. Cheon",
+    "E. D. Cubuk"
+   ],
+   "year": 2023,
+   "journal": "Nature"
+  },
+  {
+   "doi": "10.1038/s41563-025-02272-0",
+   "title": "Accelerated data-driven materials science with the Materials Project",
+   "authors": [
+    "M. K. Horton",
+    "P. Huck",
+    "R. X. Yang",
+    "J. M. Munro",
+    "S. Dwaraknath",
+    "A. M. Ganose",
+    "R. S. Kingsbury",
+    "M. Wen",
+    "J. X. Shen",
+    "T. S. Mathis",
+    "A. D. Kaplan",
+    "K. Berket",
+    "J. Riebesell",
+    "J. George",
+    "A. S. Rosen",
+    "E. W. C. Spotte-Smith",
+    "M. J. McDermott",
+    "O. A. Cohen",
+    "A. Dunn",
+    "M. C. Kuner",
+    "G. M. Rignanese",
+    "G. Petretto",
+    "D. Waroquiers",
+    "S. M. Griffin",
+    "J. B. Neaton",
+    "D. C. Chrzan",
+    "M. Asta",
+    "G. Hautier",
+    "S. Cholia",
+    "G. Ceder",
+    "S. P. Ong",
+    "A. Jain",
+    "K. A. Persson"
+   ],
+   "year": 2025,
+   "journal": "Nature Materials"
+  }
+ ]
+}

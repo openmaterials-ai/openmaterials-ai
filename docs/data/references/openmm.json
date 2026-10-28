@@ -1,0 +1,148 @@
+{
+ "key": "openmm",
+ "code": [
+  {
+   "doi": "10.1371/journal.pcbi.1005659",
+   "title": "OpenMM 7: Rapid development of high performance algorithms for molecular dynamics",
+   "authors": [
+    "P. Eastman",
+    "J. Swails",
+    "J. D. Chodera",
+    "R. T. McGibbon",
+    "Y. Zhao",
+    "K. A. Beauchamp",
+    "L. P. Wang",
+    "A. C. Simmonett",
+    "M. P. Harrigan",
+    "C. D. Stern",
+    "R. P. Wiewiora",
+    "B. R. Brooks",
+    "V. S. Pande"
+   ],
+   "year": 2017,
+   "journal": "PLOS Computational Biology"
+  },
+  {
+   "doi": "10.1021/acs.jpcb.3c06662",
+   "title": "OpenMM 8: Molecular Dynamics Simulation with Machine Learning Potentials",
+   "authors": [
+    "P. Eastman",
+    "R. Galvelis",
+    "R. P. Peláez",
+    "C. R. A. Abreu",
+    "S. E. Farr",
+    "E. Gallicchio",
+    "A. Gorenko",
+    "M. M. Henry",
+    "F. Hu",
+    "J. Huang",
+    "A. Krämer",
+    "J. Michel",
+    "J. A. Mitchell",
+    "V. S. Pande",
+    "J. P. Rodrigues",
+    "J. Rodriguez-Guerra",
+    "A. C. Simmonett",
+    "S. Singh",
+    "J. Swails",
+    "P. Turner",
+    "Y. Wang",
+    "I. Zhang",
+    "J. D. Chodera",
+    "G. De Fabritiis",
+    "T. E. Markland"
+   ],
+   "year": 2024,
+   "journal": "The Journal of Physical Chemistry B"
+  }
+ ],
+ "methods": [],
+ "applications": [
+  {
+   "doi": "10.1016/j.neuron.2018.08.011",
+   "title": "Molecular Dynamics Simulation for All",
+   "authors": [
+    "S. A. Hollingsworth",
+    "R. O. Dror"
+   ],
+   "year": 2018,
+   "journal": "Neuron"
+  },
+  {
+   "doi": "10.1093/nar/gky427",
+   "title": "SWISS-MODEL: homology modelling of protein structures and complexes",
+   "authors": [
+    "A. Waterhouse",
+    "M. Bertoni",
+    "S. Bienert",
+    "G. Studer",
+    "G. Tauriello",
+    "R. Gumienny",
+    "F. T. Heer",
+    "T. A. P. de Beer",
+    "C. Rempfer",
+    "L. Bordoli",
+    "R. Lepore",
+    "T. Schwede"
+   ],
+   "year": 2018,
+   "journal": "Nucleic Acids Research"
+  },
+  {
+   "doi": "10.1038/s41586-021-03819-2",
+   "title": "Highly accurate protein structure prediction with AlphaFold",
+   "authors": [
+    "J. Jumper",
+    "R. Evans",
+    "A. Pritzel",
+    "T. Green",
+    "M. Figurnov",
+    "O. Ronneberger",
+    "K. Tunyasuvunakool",
+    "R. Bates",
+    "A. Žídek",
+    "A. Potapenko",
+    "A. Bridgland",
+    "C. Meyer",
+    "S. A. A. Kohl",
+    "A. J. Ballard",
+    "A. Cowie",
+    "B. Romera-Paredes",
+    "S. Nikolov",
+    "R. Jain",
+    "J. Adler",
+    "T. Back",
+    "S. Petersen",
+    "D. Reiman",
+    "E. Clancy",
+    "M. Zielinski",
+    "M. Steinegger",
+    "M. Pacholska",
+    "T. Berghammer",
+    "S. Bodenstein",
+    "D. Silver",
+    "O. Vinyals",
+    "A. W. Senior",
+    "K. Kavukcuoglu",
+    "P. Kohli",
+    "D. Hassabis"
+   ],
+   "year": 2021,
+   "journal": "Nature"
+  },
+  {
+   "doi": "10.1038/s41592-022-01488-1",
+   "title": "ColabFold: making protein folding accessible to all",
+   "authors": [
+    "M. Mirdita",
+    "K. Schütze",
+    "Y. Moriwaki",
+    "L. Heo",
+    "S. Ovchinnikov",
+    "M. Steinegger"
+   ],
+   "year": 2022,
+   "journal": "Nature Methods"
+  }
+ ]
+}

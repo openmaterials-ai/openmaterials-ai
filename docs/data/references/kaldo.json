@@ -1,0 +1,87 @@
+{
+ "key": "kaldo",
+ "code": [
+  {
+   "doi": "10.1063/5.0020443",
+   "title": "Efficient anharmonic lattice dynamics calculations of thermal transport in crystalline and disordered solids",
+   "authors": [
+    "G. Barbalinardo",
+    "Z. Chen",
+    "N. W. Lundgren",
+    "D. Donadio"
+   ],
+   "year": 2020,
+   "journal": "Journal of Applied Physics"
+  }
+ ],
+ "methods": [],
+ "applications": [
+  {
+   "doi": "10.1063/5.0055593",
+   "title": "Thermal transport in defective and disordered materials",
+   "authors": [
+    "R. Hanus",
+    "R. Gurunathan",
+    "L. Lindsay",
+    "M. T. Agne",
+    "J. Shi",
+    "S. Graham",
+    "G. Jeffrey Snyder"
+   ],
+   "year": 2021,
+   "journal": "Applied Physics Reviews"
+  },
+  {
+   "doi": "10.1103/PhysRevLett.127.025902",
+   "title": "Ultrahigh Convergent Thermal Conductivity of Carbon Nanotubes from Comprehensive Atomistic Modeling",
+   "authors": [
+    "G. Barbalinardo",
+    "Z. Chen",
+    "H. Dong",
+    "Z. Fan",
+    "D. Donadio"
+   ],
+   "year": 2021,
+   "journal": "Physical Review Letters"
+  },
+  {
+   "doi": "10.1038/s41524-022-00776-w",
+   "title": "How coherence is governing diffuson heat transfer in amorphous solids",
+   "authors": [
+    "Z. Zhang",
+    "Y. Guo",
+    "M. Bescond",
+    "J. Chen",
+    "M. Nomura",
+    "S. Volz"
+   ],
+   "year": 2022,
+   "journal": "npj Computational Materials"
+  },
+  {
+   "doi": "10.1007/s40766-023-00041-w",
+   "title": "Non-Fourier heat transport in nanosystems",
+   "authors": [
+    "G. Benenti",
+    "D. Donadio",
+    "S. Lepri",
+    "R. Livi"
+   ],
+   "year": 2023,
+   "journal": "La Rivista del Nuovo Cimento"
+  },
+  {
+   "doi": "10.1038/s41586-025-09108-6",
+   "title": "Probing phonon transport dynamics across an interface by electron microscopy",
+   "authors": [
+    "F. Liu",
+    "R. Mao",
+    "Z. Liu",
+    "J. Du",
+    "P. Gao"
+   ],
+   "year": 2025,
+   "journal": "Nature"
+  }
+ ]
+}

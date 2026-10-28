@@ -1,0 +1,204 @@
+{
+ "key": "gpumd",
+ "code": [
+  {
+   "doi": "10.1016/j.cpc.2017.05.003",
+   "title": "Efficient molecular dynamics simulations with many-body potentials on graphics processing units",
+   "authors": [
+    "Z. Fan",
+    "W. Chen",
+    "V. Vierimaa",
+    "A. Harju"
+   ],
+   "year": 2017,
+   "journal": "Computer Physics Communications"
+  },
+  {
+   "doi": "10.1063/5.0106617",
+   "title": "GPUMD: A package for constructing accurate machine-learned potentials and performing highly efficient atomistic simulations",
+   "authors": [
+    "Z. Fan",
+    "Y. Wang",
+    "P. Ying",
+    "K. Song",
+    "J. Wang",
+    "Y. Wang",
+    "Z. Zeng",
+    "K. Xu",
+    "E. Lindgren",
+    "J. M. Rahm",
+    "A. J. Gabourie",
+    "J. Liu",
+    "H. Dong",
+    "J. Wu",
+    "Y. Chen",
+    "Z. Zhong",
+    "J. Sun",
+    "P. Erhart",
+    "Y. Su",
+    "T. Ala-Nissila"
+   ],
+   "year": 2022,
+   "journal": "The Journal of Chemical Physics"
+  },
+  {
+   "doi": "10.1002/mgea.70028",
+   "title": "GPUMD 4.0: A high‐performance molecular dynamics package for versatile materials simulations with machine‐learned potentials",
+   "authors": [
+    "K. Xu",
+    "H. Bu",
+    "S. Pan",
+    "E. Lindgren",
+    "Y. Wu",
+    "Y. Wang",
+    "J. Liu",
+    "K. Song",
+    "B. Xu",
+    "Y. Li",
+    "T. Hainer",
+    "L. Svensson",
+    "J. Wiktor",
+    "R. Zhao",
+    "H. Huang",
+    "C. Qian",
+    "S. Zhang",
+    "Z. Zeng",
+    "B. Zhang",
+    "B. Tang",
+    "Y. Xiao",
+    "Z. Yan",
+    "J. Shi",
+    "Z. Liang",
+    "J. Wang",
+    "T. Liang",
+    "S. Cao",
+    "Y. Wang",
+    "P. Ying",
+    "N. Xu",
+    "C. Chen",
+    "Y. Zhang",
+    "Z. Chen",
+    "X. Wu",
+    "W. Jiang",
+    "E. Berger",
+    "Y. Li",
+    "S. Chen",
+    "A. J. Gabourie",
+    "H. Dong",
+    "S. Xiong",
+    "N. Wei",
+    "Y. Chen",
+    "J. Xu",
+    "F. Ding",
+    "Z. Sun",
+    "T. Ala‐Nissila",
+    "A. Harju",
+    "J. Zheng",
+    "P. Guan",
+    "P. Erhart",
+    "J. Sun",
+    "W. Ouyang",
+    "Y. Su",
+    "Z. Fan"
+   ],
+   "year": 2025,
+   "journal": "Materials Genome Engineering Advances"
+  }
+ ],
+ "methods": [
+  {
+   "doi": "10.1103/PhysRevB.92.094301",
+   "title": "Force and heat current formulas for many-body potentials in molecular dynamics simulations with applications to thermal conductivity calculations",
+   "authors": [
+    "Z. Fan",
+    "L. F. C. Pereira",
+    "H. Q. Wang",
+    "J. C. Zheng",
+    "D. Donadio",
+    "A. Harju"
+   ],
+   "year": 2015,
+   "journal": "Physical Review B"
+  },
+  {
+   "doi": "10.1103/PhysRevB.99.064308",
+   "title": "Homogeneous nonequilibrium molecular dynamics method for heat transport and spectral decomposition with many-body potentials",
+   "authors": [
+    "Z. Fan",
+    "H. Dong",
+    "A. Harju",
+    "T. Ala-Nissila"
+   ],
+   "year": 2019,
+   "journal": "Physical Review B"
+  }
+ ],
+ "applications": [
+  {
+   "doi": "10.1063/1.5132543",
+   "title": "Influence of thermostatting on nonequilibrium molecular dynamics simulations of heat conduction in solids",
+   "authors": [
+    "Z. Li",
+    "S. Xiong",
+    "C. Sievers",
+    "Y. Hu",
+    "Z. Fan",
+    "N. Wei",
+    "H. Bao",
+    "S. Chen",
+    "D. Donadio",
+    "T. Ala-Nissila"
+   ],
+   "year": 2019,
+   "journal": "The Journal of Chemical Physics"
+  },
+  {
+   "doi": "10.1038/s41586-021-03867-8",
+   "title": "Extremely anisotropic van der Waals thermal conductors",
+   "authors": [
+    "S. E. Kim",
+    "F. Mujid",
+    "A. Rai",
+    "F. Eriksson",
+    "J. Suh",
+    "P. Poddar",
+    "A. Ray",
+    "C. Park",
+    "E. Fransson",
+    "Y. Zhong",
+    "D. A. Muller",
+    "P. Erhart",
+    "D. G. Cahill",
+    "J. Park"
+   ],
+   "year": 2021,
+   "journal": "Nature"
+  },
+  {
+   "doi": "10.1063/5.0069175",
+   "title": "Thermal conductivity prediction by atomistic simulation methods: Recent advances and detailed comparison",
+   "authors": [
+    "X. Gu",
+    "Z. Fan",
+    "H. Bao"
+   ],
+   "year": 2021,
+   "journal": "Journal of Applied Physics"
+  },
+  {
+   "doi": "10.1063/5.0147039",
+   "title": "Accurate prediction of heat conductivity of water by a neuroevolution potential",
+   "authors": [
+    "K. Xu",
+    "Y. Hao",
+    "T. Liang",
+    "P. Ying",
+    "J. Xu",
+    "J. Wu",
+    "Z. Fan"
+   ],
+   "year": 2023,
+   "journal": "The Journal of Chemical Physics"
+  }
+ ]
+}

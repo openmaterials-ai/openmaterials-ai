@@ -1,0 +1,136 @@
+{
+ "key": "fairchem",
+ "code": [
+  {
+   "doi": "10.1021/acscatal.0c04525",
+   "title": "Open Catalyst 2020 (OC20) Dataset and Community Challenges",
+   "authors": [
+    "L. Chanussot",
+    "A. Das",
+    "S. Goyal",
+    "T. Lavril",
+    "M. Shuaibi",
+    "M. Riviere",
+    "K. Tran",
+    "J. Heras-Domingo",
+    "C. Ho",
+    "W. Hu",
+    "A. Palizhati",
+    "A. Sriram",
+    "B. Wood",
+    "J. Yoon",
+    "D. Parikh",
+    "C. L. Zitnick",
+    "Z. Ulissi"
+   ],
+   "year": 2021,
+   "journal": "ACS Catalysis"
+  },
+  {
+   "doi": "10.1021/acscatal.2c05426",
+   "title": "The Open Catalyst 2022 (OC22) Dataset and Challenges for Oxide Electrocatalysts",
+   "authors": [
+    "R. Tran",
+    "J. Lan",
+    "M. Shuaibi",
+    "B. M. Wood",
+    "S. Goyal",
+    "A. Das",
+    "J. Heras-Domingo",
+    "A. Kolluru",
+    "A. Rizvi",
+    "N. Shoghi",
+    "A. Sriram",
+    "F. Therrien",
+    "J. Abed",
+    "O. Voznyy",
+    "E. H. Sargent",
+    "Z. Ulissi",
+    "C. L. Zitnick"
+   ],
+   "year": 2023,
+   "journal": "ACS Catalysis"
+  }
+ ],
+ "methods": [],
+ "applications": [
+  {
+   "doi": "10.1038/s43246-022-00315-6",
+   "title": "Graph neural networks for materials science and chemistry",
+   "authors": [
+    "P. Reiser",
+    "M. Neubert",
+    "A. Eberhard",
+    "L. Torresi",
+    "C. Zhou",
+    "C. Shao",
+    "H. Metni",
+    "C. Van Hoesel",
+    "H. Schopmans",
+    "T. Sommer",
+    "P. Friederich"
+   ],
+   "year": 2022,
+   "journal": "Communications Materials"
+  },
+  {
+   "doi": "10.1038/s41524-022-00734-6",
+   "title": "Recent advances and applications of deep learning methods in materials science",
+   "authors": [
+    "K. Choudhary",
+    "B. DeCost",
+    "C. Chen",
+    "A. Jain",
+    "F. Tavazza",
+    "R. Cohn",
+    "C. W. Park",
+    "A. Choudhary",
+    "A. Agrawal",
+    "S. J. L. Billinge",
+    "E. Holm",
+    "S. P. Ong",
+    "C. Wolverton"
+   ],
+   "year": 2022,
+   "journal": "npj Computational Materials"
+  },
+  {
+   "doi": "10.1038/s41586-023-06221-2",
+   "title": "Scientific discovery in the age of artificial intelligence",
+   "authors": [
+    "H. Wang",
+    "T. Fu",
+    "Y. Du",
+    "W. Gao",
+    "K. Huang",
+    "Z. Liu",
+    "P. Chandak",
+    "S. Liu",
+    "P. Van Katwyk",
+    "A. Deac",
+    "A. Anandkumar",
+    "K. Bergen",
+    "C. P. Gomes",
+    "S. Ho",
+    "P. Kohli",
+    "J. Lasenby",
+    "J. Leskovec",
+    "T. Y. Liu",
+    "A. Manrai",
+    "D. Marks",
+    "B. Ramsundar",
+    "L. Song",
+    "J. Sun",
+    "J. Tang",
+    "P. Veličković",
+    "M. Welling",
+    "L. Zhang",
+    "C. W. Coley",
+    "Y. Bengio",
+    "M. Zitnik"
+   ],
+   "year": 2023,
+   "journal": "Nature"
+  }
+ ]
+}

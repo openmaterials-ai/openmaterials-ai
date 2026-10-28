@@ -1,0 +1,109 @@
+{
+ "key": "rxn-network",
+ "code": [
+  {
+   "doi": "10.1038/s41467-021-23339-x",
+   "title": "A graph-based network for predicting chemical reaction pathways in solid-state materials synthesis",
+   "authors": [
+    "M. J. McDermott",
+    "S. S. Dwaraknath",
+    "K. A. Persson"
+   ],
+   "year": 2021,
+   "journal": "Nature Communications"
+  }
+ ],
+ "methods": [],
+ "applications": [
+  {
+   "doi": "10.1007/s10853-022-06915-4",
+   "title": "Review of computational approaches to predict the thermodynamic stability of inorganic solids",
+   "authors": [
+    "C. J. Bartel"
+   ],
+   "year": 2022,
+   "journal": "Journal of Materials Science"
+  },
+  {
+   "doi": "10.1021/acs.chemrev.1c00637",
+   "title": "Solid-State Reaction Synthesis of Nanoscale Materials: Strategies and Applications",
+   "authors": [
+    "A. Kumar",
+    "S. Dutta",
+    "S. Kim",
+    "T. Kwon",
+    "S. S. Patil",
+    "N. Kumari",
+    "S. Jeevanandham",
+    "I. S. Lee"
+   ],
+   "year": 2022,
+   "journal": "Chemical Reviews"
+  },
+  {
+   "doi": "10.1021/acs.chemrev.4c00055",
+   "title": "Self-Driving Laboratories for Chemistry and Materials Science",
+   "authors": [
+    "G. Tom",
+    "S. P. Schmid",
+    "S. G. Baird",
+    "Y. Cao",
+    "K. Darvish",
+    "H. Hao",
+    "S. Lo",
+    "S. Pablo-García",
+    "E. M. Rajaonson",
+    "M. Skreta",
+    "N. Yoshikawa",
+    "S. Corapi",
+    "G. D. Akkoc",
+    "F. Strieth-Kalthoff",
+    "M. Seifrid",
+    "A. Aspuru-Guzik"
+   ],
+   "year": 2024,
+   "journal": "Chemical Reviews"
+  },
+  {
+   "doi": "10.1038/s41563-025-02272-0",
+   "title": "Accelerated data-driven materials science with the Materials Project",
+   "authors": [
+    "M. K. Horton",
+    "P. Huck",
+    "R. X. Yang",
+    "J. M. Munro",
+    "S. Dwaraknath",
+    "A. M. Ganose",
+    "R. S. Kingsbury",
+    "M. Wen",
+    "J. X. Shen",
+    "T. S. Mathis",
+    "A. D. Kaplan",
+    "K. Berket",
+    "J. Riebesell",
+    "J. George",
+    "A. S. Rosen",
+    "E. W. C. Spotte-Smith",
+    "M. J. McDermott",
+    "O. A. Cohen",
+    "A. Dunn",
+    "M. C. Kuner",
+    "G. M. Rignanese",
+    "G. Petretto",
+    "D. Waroquiers",
+    "S. M. Griffin",
+    "J. B. Neaton",
+    "D. C. Chrzan",
+    "M. Asta",
+    "G. Hautier",
+    "S. Cholia",
+    "G. Ceder",
+    "S. P. Ong",
+    "A. Jain",
+    "K. A. Persson"
+   ],
+   "year": 2025,
+   "journal": "Nature Materials"
+  }
+ ]
+}

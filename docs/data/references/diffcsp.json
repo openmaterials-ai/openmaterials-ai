@@ -1,0 +1,68 @@
+{
+ "key": "diffcsp",
+ "code": [
+  {
+   "doi": "10.52202/075280-0767",
+   "title": "Crystal Structure Prediction by Joint Equivariant Diffusion",
+   "authors": [
+    "R. Jiao",
+    "W. Huang",
+    "P. Lin",
+    "J. Han",
+    "P. Chen",
+    "Y. Lu",
+    "Y. Liu"
+   ],
+   "year": 2023,
+   "journal": "Advances in Neural Information Processing Systems 36"
+  }
+ ],
+ "methods": [],
+ "applications": [
+  {
+   "doi": "10.1038/s41524-024-01443-y",
+   "title": "Deep learning generative model for crystal structure prediction",
+   "authors": [
+    "X. Luo",
+    "Z. Wang",
+    "P. Gao",
+    "J. Lv",
+    "Y. Wang",
+    "C. Chen",
+    "Y. Ma"
+   ],
+   "year": 2024,
+   "journal": "npj Computational Materials"
+  },
+  {
+   "doi": "10.1016/j.matt.2024.05.017",
+   "title": "Has generative artificial intelligence solved inverse materials design?",
+   "authors": [
+    "H. Park",
+    "Z. Li",
+    "A. Walsh"
+   ],
+   "year": 2024,
+   "journal": "Matter"
+  },
+  {
+   "doi": "10.1016/j.cocom.2025.e01139",
+   "title": "Machine learning-driven materials discovery: Unlocking next-generation functional materials - A review",
+   "authors": [
+    "D. Nematov",
+    "M. Hojamberdiev"
+   ],
+   "year": 2025,
+   "journal": "Computational Condensed Matter"
+  },
+  {
+   "doi": "10.1002/aenm.202403876",
+   "title": "Recent Advances in Machine Learning‐Assisted Multiscale Design of Energy Materials",
+   "authors": [
+    "B. Mortazavi"
+   ],
+   "year": 2025,
+   "journal": "Advanced Energy Materials"
+  }
+ ]
+}
