@@ -164,6 +164,8 @@ def page(key: str, rep: dict, reg: dict, refs: dict | None, text: dict, has_card
             items = refs.get(g) or []
             if items:
                 ref_sections += f'<h3 id="refs-{g}">{title}</h3><p>{lead}</p><ol class="refs">{"".join(ref_line(r) for r in items)}</ol>'
+            elif g == "applications":
+                ref_sections += f'<h3 id="refs-{g}">{title}</h3><p>No independent study using {esc(name)} is on record here yet. The list fills in when one is verified.</p>'
     else:
         ref_sections += "<p>No curated reference list yet. The citations recorded on the map representation are listed under How to cite.</p>"
 

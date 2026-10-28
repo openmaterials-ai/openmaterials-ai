@@ -3,7 +3,7 @@
  "code": [
   {
    "doi": "10.1021/acs.jctc.8b01176",
-   "title": "GFN2-xTB─An Accurate and Broadly ParametrizedSelf-Consistent Tight-Binding Quantum Chemical Method with MultipoleElectrostatics and Density-Dependent Dispersion Contributions",
+   "title": "GFN2-xTB─An Accurate and Broadly Parametrized Self-Consistent Tight-Binding Quantum Chemical Method with Multipole Electrostatics and Density-Dependent Dispersion Contributions",
    "authors": [
     "C. Bannwarth",
     "S. Ehlert",
@@ -25,7 +25,7 @@
     "S. Spicher",
     "S. Grimme"
    ],
-   "year": 2021,
+   "year": 2020,
    "journal": "WIREs Computational Molecular Science"
   }
  ],

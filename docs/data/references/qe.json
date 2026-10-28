@@ -40,17 +40,17 @@
     "R. M. Wentzcovitch"
    ],
    "year": 2009,
-   "journal": "J Phys-Condens Mat"
+   "journal": "Journal of Physics: Condensed Matter"
   },
   {
    "doi": "10.1088/1361-648X/aa8f79",
-   "title": "Advanced capabilities for materials modelling with QUANTUM ESPRESSO",
+   "title": "Advanced capabilities for materials modelling with Q uantum ESPRESSO",
    "authors": [
     "P. Giannozzi",
     "O. Andreussi",
     "T. Brumme",
     "O. Bunau",
-    "M. B. Nardelli",
+    "M. Buongiorno Nardelli",
     "M. Calandra",
     "R. Car",
     "C. Cavazzoni",
@@ -58,10 +58,10 @@
     "M. Cococcioni",
     "N. Colonna",
     "I. Carnimeo",
-    "A. D. Corso",
+    "A. Dal Corso",
     "S. de Gironcoli",
     "P. Delugas",
-    "R. A. DiStasio Jr",
+    "R. A. DiStasio",
     "A. Ferretti",
     "A. Floris",
     "G. Fratesi",
@@ -102,7 +102,7 @@
   },
   {
    "doi": "10.1063/5.0005082",
-   "title": "Quantum ESPRESSO toward the exascale",
+   "title": "Q uantum ESPRESSO toward the exascale",
    "authors": [
     "P. Giannozzi",
     "O. Baseggio",
@@ -111,7 +111,7 @@
     "R. Car",
     "I. Carnimeo",
     "C. Cavazzoni",
-    "S. De Gironcoli",
+    "S. de Gironcoli",
     "P. Delugas",
     "F. Ferrari Ruffino",
     "A. Ferretti",
@@ -130,7 +130,7 @@
    "title": "Phonons and related crystal properties from density-functional perturbation theory",
    "authors": [
     "S. Baroni",
-    "S. De Gironcoli",
+    "S. de Gironcoli",
     "A. Dal Corso",
     "P. Giannozzi"
    ],
@@ -151,7 +151,7 @@
     "I. E. Castelli",
     "S. J. Clark",
     "A. Dal Corso",
-    "S. De Gironcoli",
+    "S. de Gironcoli",
     "T. Deutsch",
     "J. K. Dewhurst",
     "I. Di Marco",
@@ -204,7 +204,7 @@
     "A. Tkatchenko",
     "M. Torrent",
     "D. Vanderbilt",
-    "M. J. Van Setten",
+    "M. J. van Setten",
     "V. Van Speybroeck",
     "J. M. Wills",
     "J. R. Yates",
@@ -231,7 +231,7 @@
    "doi": "10.1016/j.cpc.2018.01.012",
    "title": "The PseudoDojo: Training and grading a 85 element optimized norm-conserving pseudopotential table",
    "authors": [
-    "M. Van Setten",
+    "M. van Setten",
     "M. Giantomassi",
     "E. Bousquet",
     "M. Verstraete",
