@@ -2552,11 +2552,370 @@
         ],
         "source_sha256": "7575810b36eb5f97bdd12ef4d26e9c9b65e42f2a5e3913609e615e0d90980a2a"
       }
+    },
+    {
+      "id": "crystal-dynamical-matrix",
+      "relation": "conditional",
+      "statement": "For second-order force constants on the sites of a Physlib crystal with equal mixed partials, translation invariance and finite range, the index-permutation symmetry Phi_ij(-R) = Phi_ji(R) follows from the translation invariance, the OMAI dynamical matrix D_ij(q) = sum_R e^{i q.R} Phi_ij(R)/sqrt(M_i M_j) is Hermitian at every wavevector, and with the acoustic sum rule the Gamma-point matrix has at least three independent zero modes, the mass-weighted rigid translations.",
+      "targets": [
+        {
+          "kind": "operator",
+          "id": "compute_dynamical_matrix",
+          "uid": "67d4d9c1ad01e2aa1705e54ed9edb2d1a0ce601aa0e7c9929a7ba7cbd7259f28",
+          "formula_sha256": "d084d4d043a870f7a1d7dcb9931a150768819a4ce1f993c3620ad5b8e99e8897"
+        },
+        {
+          "kind": "node",
+          "id": "BareDynamicalMatrix",
+          "uid": "e62e58716111fdc1dff24d18e75c70904cbb07ce6e0025e24fcdac8c4ed0a53d"
+        }
+      ],
+      "sources": [
+        {
+          "module": "Physlib.CondensedMatter.Crystal.Basic",
+          "name": "Physlib.CondensedMatter.Crystal",
+          "kind": "structure",
+          "line": 65
+        },
+        {
+          "module": "Physlib.CondensedMatter.Crystal.Basic",
+          "name": "Physlib.CondensedMatter.Crystal.Site",
+          "kind": "structure",
+          "line": 90
+        }
+      ],
+      "conditions": [
+        "Represent the crystal with Physlib.CondensedMatter.Crystal: a finitely generated abelian translation group, a finite nonempty unit cell and sites (cell, label), on which the translation action moves the cell and keeps the label. A mode index is a unit-cell label with a Cartesian axis, and Phi_ij(R) is the reference-cell component i against component j in cell R.",
+        "Force constants are real second derivatives of the lattice potential with equal mixed partials, invariant under every lattice translation, and the reference-cell interactions vanish outside a finite set of cells, so the catalog sum over all R is finite.",
+        "The phase e^{i R q} is exp(i q.pos(R)) for an additive embedding pos of the translations into Cartesian space, the catalog's cell-vector convention. Masses are positive and per unit-cell label.",
+        "The acoustic sum rule, sum over cells and labels of Phi_{(kappa,alpha),(kappa',beta)}(R) = 0, is a stated hypothesis for the Gamma-point result. Phonopy and other producers enforce it numerically; it is not derived here from a potential."
+      ],
+      "conventions": {
+        "model_scope": "Harmonic lattice dynamics. Physlib's Crystal supplies the site and translation bookkeeping (sites, cells, the translation action and the site equivalence); the force-constant and dynamical-matrix content is OMAI-local. No anharmonic, non-analytic, electronic or numerical producer is modeled.",
+        "component_scope": "Mode index (unit-cell label, Cartesian axis); one dynamical matrix per wavevector, with all tensor components kept.",
+        "normalization_basis": "Mass weighting 1/sqrt(M_i M_j) with masses per unit-cell label; the lattice sum runs over the finite set of interacting cells closed under inversion.",
+        "frequency_convention": "Eigenvalues are angular omega^2 in (rad/s)^2 with force constants in J/m^2 and masses in kg. Stored linear THz frequencies require omega_SI = 2*pi*10^12*nu_THz. Group velocities stored in Angstrom THz are already d omega/dq, 1 Angstrom THz = 100 m/s, with no factor 2*pi.",
+        "unit_embedding": "Coherent SI: force constants in J/m^2 (1 eV/Angstrom^2 = 16.02176634 J/m^2), masses in kg, lattice vectors in m and wavevectors in rad/m. These exact-real statements do not certify floating-point adapters.",
+        "held_fixed": "Crystal, unit cell, masses, force constants and the lattice embedding are fixed; only the wavevector varies.",
+        "admissibility": "Positive masses; real force constants with equal mixed partials, translation invariance and finite range. Phase convention: the catalog and the Lean definitions use the cell-vector phase e^{+i q.R}. Phonopy and phono3py use atom positions, D_ph = U^dagger D_cat U with U = diag(e^{i q.tau_kappa}). omega^2 and nondegenerate velocities agree; eigenvectors differ by e^{-i q.tau} and off-diagonal velocity-operator elements differ, so phonopy eigenvectors fed into the catalog's dD/dq give wrong velocities.",
+        "reference_energy": "The static lattice energy and any constant potential offset do not enter second derivatives.",
+        "qpoint_weighting": "No q-point weighting is involved; the Hermiticity holds at every wavevector and the zero modes at Gamma."
+      },
+      "remaining_obligations": [
+        "Finite-displacement, DFPT and potential-based force-constant producers (compute_force_constants[order=2], compute_fc2_finite_displacement) are interpreted inputs, not verified implementations; supercell folding of computed force constants and their symmetrization are not modeled.",
+        "The non-analytic correction apply_nac_correction is not covered: its catalog formula is independent of q (see its gap reason).",
+        "Long-range force constants without a finite range, Ewald-summed dipole tails and the thermodynamic limit of an infinite sum are outside scope."
+      ],
+      "evidence": {
+        "kind": "compiled_bridge",
+        "module": "OMAIPhyslibLatticeDynamics",
+        "declarations": [
+          "OMAI.PhyslibBridge.Lattice.ForceConstants.fc_neg",
+          "OMAI.PhyslibBridge.Lattice.ForceConstants.dynamicalMatrix_isHermitian",
+          "OMAI.PhyslibBridge.Lattice.ForceConstants.three_le_finrank_ker_gamma"
+        ],
+        "source_path": "lean/bridge/OMAIPhyslibLatticeDynamics.lean",
+        "build_record": "lean/bridge/build-evidence.json",
+        "proved_targets": [
+          {
+            "kind": "operator",
+            "id": "compute_dynamical_matrix"
+          },
+          {
+            "kind": "node",
+            "id": "BareDynamicalMatrix"
+          }
+        ],
+        "source_sha256": "25358d33a2c4e12bfc1a45440cbcee81b83eed6d5dd62592499924399f3989c6"
+      }
+    },
+    {
+      "id": "crystal-phonon-dispersion",
+      "relation": "conditional",
+      "statement": "Let N be the sublattice of a finite Born-von Karman supercell of a Physlib crystal and fold the crystal force constants into the supercell, Phi_BvK(R) = sum_L Phi(R + L). At every wavevector q commensurate with the supercell (e^{i q.L} = 1 for every L in N), the supercell dynamical matrix at the corresponding character equals the OMAI dynamical matrix D(q). If the folded supercell is mechanically stable (its harmonic energy is never negative), D(q) is positive semidefinite there, so every solution of the OMAI dispersion relation has omega^2 >= 0 and a real frequency.",
+      "targets": [
+        {
+          "kind": "operator",
+          "id": "compute_dispersion",
+          "uid": "1ab7a3aee9b25b786739afcd517b909e4fdf091c768ab4ecbea007e53633be92",
+          "formula_sha256": "58532a304fabac6818bbb184abfe0a1f3b140583aec52ace8a1b4a73f1d8db5e"
+        }
+      ],
+      "sources": [
+        {
+          "module": "Physlib.CondensedMatter.Crystal.Basic",
+          "name": "Physlib.CondensedMatter.Crystal",
+          "kind": "structure",
+          "line": 65
+        },
+        {
+          "module": "Physlib.CondensedMatter.Crystal.Basic",
+          "name": "Physlib.CondensedMatter.Crystal.Site",
+          "kind": "structure",
+          "line": 90
+        },
+        {
+          "module": "Physlib.CondensedMatter.Crystal.Basic",
+          "name": "Physlib.CondensedMatter.Crystal.siteEquiv",
+          "kind": "def",
+          "line": 97
+        }
+      ],
+      "conditions": [
+        "DynamicalMatrix is the crystal dynamical matrix of the crystal-dynamical-matrix binding, passed through identity_dm without the non-analytic correction, under the same force-constant conditions.",
+        "The supercell is the quotient of the translations by a sublattice N with finitely many cosets (periodic boundary conditions). Its force constants are the folded sums of the crystal force constants; mechanical stability is the hypothesis that the real harmonic energy sum u_a Phi_BvK,ab u_b of the supercell is never negative.",
+        "Only wavevectors commensurate with the supercell are covered. Incommensurate meshes are the normal case for BTE (for example a 4x4x4 force-constant supercell with a 19x19x19 kappa mesh), and Fourier interpolation of supercell force constants is exact only at commensurate q; nothing is stated at the other mesh points.",
+        "omega is the nonnegative square root of omega^2 on a stable supercell; imaginary modes of an unstable structure are excluded by the hypothesis, not removed. A compiled Einstein-spring ring on ofUnitCell (ZMod 3) Unit shows the stability hypothesis is satisfiable."
+      ],
+      "conventions": {
+        "model_scope": "Harmonic lattice dynamics. Physlib's Crystal supplies the site and translation bookkeeping (sites, cells, the translation action and the site equivalence); the force-constant and dynamical-matrix content is OMAI-local. No anharmonic, non-analytic, electronic or numerical producer is modeled.",
+        "component_scope": "Mode index (unit-cell label, Cartesian axis); one dynamical matrix per wavevector, with all tensor components kept.",
+        "normalization_basis": "Mass weighting 1/sqrt(M_i M_j) with masses per unit-cell label; the lattice sum runs over the finite set of interacting cells closed under inversion.",
+        "frequency_convention": "Eigenvalues are angular omega^2 in (rad/s)^2 with force constants in J/m^2 and masses in kg. Stored linear THz frequencies require omega_SI = 2*pi*10^12*nu_THz. Group velocities stored in Angstrom THz are already d omega/dq, 1 Angstrom THz = 100 m/s, with no factor 2*pi.",
+        "unit_embedding": "Coherent SI: force constants in J/m^2 (1 eV/Angstrom^2 = 16.02176634 J/m^2), masses in kg, lattice vectors in m and wavevectors in rad/m. These exact-real statements do not certify floating-point adapters.",
+        "held_fixed": "Crystal, unit cell, masses, force constants and the lattice embedding are fixed; only the wavevector varies.",
+        "admissibility": "Positive masses; real force constants with equal mixed partials, translation invariance and finite range. Phase convention: the catalog and the Lean definitions use the cell-vector phase e^{+i q.R}. Phonopy and phono3py use atom positions, D_ph = U^dagger D_cat U with U = diag(e^{i q.tau_kappa}). omega^2 and nondegenerate velocities agree; eigenvectors differ by e^{-i q.tau} and off-diagonal velocity-operator elements differ, so phonopy eigenvectors fed into the catalog's dD/dq give wrong velocities.",
+        "reference_energy": "The static lattice energy and any constant potential offset do not enter second derivatives.",
+        "qpoint_weighting": "Commensurate wavevectors of the supercell only: the characters of the translations modulo N. No mesh weights enter."
+      },
+      "remaining_obligations": [
+        "Numerical eigensolvers, branch sorting and band-crossing tracking in phonopy, kaldo or ShengBTE are not verified.",
+        "Mechanical stability of a particular material and the folding of computed supercell force constants are hypotheses; the theorem does not certify that a computed structure is a minimum.",
+        "Incommensurate wavevectors, Fourier interpolation between commensurate points, the infinite-crystal limit of stability and NAC-corrected matrices are outside scope."
+      ],
+      "evidence": {
+        "kind": "compiled_bridge",
+        "module": "OMAIPhyslibPhononDispersion",
+        "declarations": [
+          "OMAI.PhyslibBridge.Lattice.ForceConstants.dynamicalMatrix_posSemidef_of_stable",
+          "OMAI.PhyslibBridge.Lattice.ForceConstants.fold_dynamicalMatrix",
+          "OMAI.PhyslibBridge.Lattice.ForceConstants.planeWave_dynamicalMatrix_posSemidef_of_folded_stable"
+        ],
+        "source_path": "lean/bridge/OMAIPhyslibPhononDispersion.lean",
+        "build_record": "lean/bridge/build-evidence.json",
+        "proved_targets": [
+          {
+            "kind": "operator",
+            "id": "compute_dispersion"
+          }
+        ],
+        "source_sha256": "70bd052d1d32afe828a3a8f7e26e406d5ec1e121b86ad0d9b08717f8c0f87f1a"
+      }
+    },
+    {
+      "id": "crystal-group-velocity",
+      "relation": "conditional",
+      "statement": "On a differentiable eigenvector path, away from Gamma: for the dynamical matrix of a Physlib crystal and a differentiable normalized eigenvector path along the wavevector line q + s e_alpha with eigenvalue omega^2 > 0 at s = 0, the eigenvalue is differentiable and the OMAI group velocity e^dagger (dD/dq_alpha) e / (2 omega), with dD/dq_alpha the actual derivative of the catalog dynamical matrix, is a real number equal to d omega/d q_alpha (Hellmann-Feynman). A compiled monatomic chain gives the textbook a sqrt(K/M) cos(q a / 2).",
+      "targets": [
+        {
+          "kind": "operator",
+          "id": "compute_group_velocity",
+          "uid": "3cf7b8aa48dca910c062ce17738ede9cb609bacd7bd685bae23ac698897e38c3",
+          "formula_sha256": "0b3f5977eb1cc8e4d87d72b54acc6ad49ac808800d4c3fbe88b7e9408ab41887"
+        },
+        {
+          "kind": "node",
+          "id": "GroupVelocity",
+          "uid": "d1934e166dbd0c91125936f9b2ccc0100af0ba44ed439003aae76b47b6d26fc6"
+        }
+      ],
+      "sources": [
+        {
+          "module": "Physlib.CondensedMatter.Crystal.Basic",
+          "name": "Physlib.CondensedMatter.Crystal",
+          "kind": "structure",
+          "line": 65
+        },
+        {
+          "module": "Physlib.CondensedMatter.Crystal.Basic",
+          "name": "Physlib.CondensedMatter.Crystal.Site",
+          "kind": "structure",
+          "line": 90
+        }
+      ],
+      "conditions": [
+        "DynamicalMatrix is the crystal dynamical matrix of the crystal-dynamical-matrix binding without the non-analytic correction, and dD/dq_alpha is its exact derivative sum_R i R_alpha e^{i q.R} Phi_ij(R)/sqrt(M_i M_j) along the Cartesian axis alpha.",
+        "Along the line q + s e_alpha the eigenvector e(s) is differentiable and normalized with real eigenvalue omega^2(s), and omega^2(0) > 0. A nondegenerate branch away from Gamma admits such a path by analytic perturbation theory; that existence is a hypothesis. Symmetry-enforced degeneracies are generic (transverse pairs along Gamma-X and Gamma-L), and at such points the eigenvector a code returns is not on the path: phonopy projects the velocity per direction and phono3py averages over degenerate sets and the q-star.",
+        "omega = sqrt(omega^2) is angular frequency; the velocity is in m/s when q is in rad/m. Velocities stored in Angstrom THz are already d omega/dq (1 Angstrom THz = 100 m/s, no 2*pi). The eigenvectors must be in the catalog's cell-vector phase convention.",
+        "The compiled monatomic chain (Physlib ofUnitCell Z Unit, nearest-neighbour longitudinal springs K, mass M, spacing a) has omega^2 = (2K/M)(1 - cos(q_x a)) and catalog velocity a sqrt(K/M) cos(q_x a / 2) on 0 < q_x a < pi. It is an exact model example, not a material fit."
+      ],
+      "conventions": {
+        "model_scope": "Harmonic lattice dynamics. Physlib's Crystal supplies the site and translation bookkeeping (sites, cells, the translation action and the site equivalence); the force-constant and dynamical-matrix content is OMAI-local. No anharmonic, non-analytic, electronic or numerical producer is modeled.",
+        "component_scope": "Mode index (unit-cell label, Cartesian axis); one dynamical matrix per wavevector, with all tensor components kept.",
+        "normalization_basis": "Mass weighting 1/sqrt(M_i M_j) with masses per unit-cell label; the lattice sum runs over the finite set of interacting cells closed under inversion.",
+        "frequency_convention": "Eigenvalues are angular omega^2 in (rad/s)^2 with force constants in J/m^2 and masses in kg. Stored linear THz frequencies require omega_SI = 2*pi*10^12*nu_THz. Group velocities stored in Angstrom THz are already d omega/dq, 1 Angstrom THz = 100 m/s, with no factor 2*pi.",
+        "unit_embedding": "Coherent SI: force constants in J/m^2 (1 eV/Angstrom^2 = 16.02176634 J/m^2), masses in kg, lattice vectors in m and wavevectors in rad/m. These exact-real statements do not certify floating-point adapters.",
+        "held_fixed": "Crystal, unit cell, masses, force constants and the lattice embedding are fixed; only the wavevector varies.",
+        "admissibility": "Positive masses; real force constants with equal mixed partials, translation invariance and finite range. Phase convention: the catalog and the Lean definitions use the cell-vector phase e^{+i q.R}. Phonopy and phono3py use atom positions, D_ph = U^dagger D_cat U with U = diag(e^{i q.tau_kappa}). omega^2 and nondegenerate velocities agree; eigenvectors differ by e^{-i q.tau} and off-diagonal velocity-operator elements differ, so phonopy eigenvectors fed into the catalog's dD/dq give wrong velocities.",
+        "reference_energy": "The static lattice energy and any constant potential offset do not enter second derivatives.",
+        "qpoint_weighting": "No q-point weighting is involved; the result holds along each differentiable eigenvector path."
+      },
+      "remaining_obligations": [
+        "Finite-difference velocity estimators, degenerate-subspace treatments and symmetry-averaged velocities in phonopy, phono3py, kaldo and ShengBTE are not verified.",
+        "The existence of a differentiable eigenvector path on a nondegenerate branch is not proved here.",
+        "NAC-corrected velocities near Gamma and velocities at band crossings are outside scope."
+      ],
+      "evidence": {
+        "kind": "compiled_bridge",
+        "module": "OMAIPhyslibGroupVelocity",
+        "declarations": [
+          "OMAI.PhyslibBridge.Lattice.hellmann_feynman",
+          "OMAI.PhyslibBridge.Lattice.ForceConstants.catalogGroupVelocity_eq_deriv"
+        ],
+        "source_path": "lean/bridge/OMAIPhyslibGroupVelocity.lean",
+        "build_record": "lean/bridge/build-evidence.json",
+        "proved_targets": [
+          {
+            "kind": "operator",
+            "id": "compute_group_velocity"
+          },
+          {
+            "kind": "node",
+            "id": "GroupVelocity"
+          }
+        ],
+        "source_sha256": "3171ae35f6773c00402dbd3a2de60310a20f230858f1477e503137c483ac5c96"
+      }
+    },
+    {
+      "id": "canonical-rta-thermal-conductivity",
+      "relation": "conditional",
+      "statement": "With the relaxation-time mean free displacement F = v/(2 Gamma) and, as c, the actual Physlib canonical heat capacity of each harmonic mode at T > 0, the OMAI contraction kappa_ab = sum_m F_b c v_a/(N_q V_cell) is symmetric and positive semidefinite for positive linewidths and N_q V_cell > 0, and positive definite exactly when the group velocities of the modes span space.",
+      "targets": [
+        {
+          "kind": "operator",
+          "id": "contract_kappa[bte_solver=rta]",
+          "uid": "712b8145370a0072f225bd2f1d8c954b64311a3ca2f387320aa17e466926513c",
+          "formula_sha256": "2e54bbf0cc370a56c0ffd43f2ca8cdefa185eb02d8d2388124e6586960adac5c"
+        },
+        {
+          "kind": "node",
+          "id": "ThermalConductivity[bte_solver=rta]",
+          "uid": "d79d88d53266c147ea8d806cdbd30df309199469351ee13bcc9040a98745ebc4"
+        }
+      ],
+      "sources": [
+        {
+          "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
+          "name": "CanonicalEnsemble.heatCapacity",
+          "kind": "def",
+          "line": 417
+        },
+        {
+          "module": "Physlib.QuantumMechanics.HarmonicOscillator.OneDimension.Basic",
+          "name": "QuantumMechanics.OneDimension.HarmonicOscillator",
+          "kind": "structure",
+          "line": 63
+        }
+      ],
+      "conditions": [
+        "MeanFreeDisplacement[bte_solver=rta] is F_a = v_a/(2 Gamma) from solve_bte[bte_solver=rta], with Gamma the total half-width Im Sigma (phono3py's gamma), positive for every mode, so 1/tau = 2 Gamma. ShengBTE and kALDo report 1/tau, which must be halved before use as Gamma.",
+        "HeatCapacity is, for each mode, the derivative-defined heat capacity of the full Nat harmonic-oscillator canonical ensemble of Physlib at the mode's positive angular frequency and T > 0, as in the harmonic-mode-heat-capacity binding. The oscillator mass does not enter.",
+        "N_q and V_cell are positive; the mode sum is finite.",
+        "Positive definiteness holds exactly when, for every nonzero direction x, some mode has v.x != 0. A crystal whose velocities all lie in a plane gives a semidefinite, singular kappa."
+      ],
+      "conventions": {
+        "model_scope": "Relaxation-time contraction of independent harmonic modes with Physlib canonical heat capacities. Linewidths are positive inputs; no scattering model is verified.",
+        "component_scope": "Full 3x3 Cartesian tensor kappa_ab; no isotropic reduction.",
+        "normalization_basis": "Uniform mode sum divided by N_q V_cell with positive primitive-cell volume.",
+        "frequency_convention": "Angular SI frequency in the canonical heat capacities. Gamma is the half-width Im Sigma in rad/s, with 1/tau = 2 Gamma. Stored linear THz requires omega_SI = 2*pi*10^12*nu_THz; velocities stored in Angstrom THz are already d omega/dq (1 Angstrom THz = 100 m/s).",
+        "unit_embedding": "Coherent SI: c in J/K per mode, v in m/s, Gamma in rad/s, F in m, V_cell in m^3, kappa in W/(m K). These exact-real statements do not certify floating-point adapters.",
+        "held_fixed": "Temperature, frequencies, velocities, linewidths, N_q and V_cell are fixed inputs.",
+        "admissibility": "T > 0, every frequency positive, every linewidth positive, N_q V_cell > 0.",
+        "reference_energy": "Zero-point energy does not enter the canonical heat capacity; no reference energy enters kappa.",
+        "qpoint_weighting": "Uniform weights over a finite mode set; symmetry-reduced or tetrahedron weights are outside this definition."
+      },
+      "remaining_obligations": [
+        "Linewidth producers (three-phonon, isotope, boundary) and their positivity are interpreted inputs, not verified.",
+        "The full linearized-BTE kappa and the cumulative distributions are not covered; their catalog formulas are recorded as defects (see their gap reasons).",
+        "Zero-frequency Gamma modes, which have no finite relaxation-time contribution, are excluded; convergence in the q mesh is not addressed."
+      ],
+      "evidence": {
+        "kind": "compiled_bridge",
+        "module": "OMAIPhyslibRTAConductivity",
+        "declarations": [
+          "OMAI.PhyslibBridge.Lattice.rtaKappa_canonical"
+        ],
+        "source_path": "lean/bridge/OMAIPhyslibRTAConductivity.lean",
+        "build_record": "lean/bridge/build-evidence.json",
+        "proved_targets": [
+          {
+            "kind": "operator",
+            "id": "contract_kappa[bte_solver=rta]"
+          },
+          {
+            "kind": "node",
+            "id": "ThermalConductivity[bte_solver=rta]"
+          }
+        ],
+        "source_sha256": "13267fa6d967df842f39251b23a0c2b70cd230f2553a444964f4bdc2229e34a8"
+      }
+    },
+    {
+      "id": "participation-ratio-bounds",
+      "relation": "local",
+      "statement": "For a normalized vibrational mode on N >= 1 atoms, with per-atom amplitudes a_i = sum_alpha |e_{i,alpha}|^2, the OMAI participation ratio p = 1/(N sum_i a_i^2) satisfies 1/N <= p <= 1, with p = 1 exactly when a_i = 1/N on every atom and p = 1/N exactly when the mode lives on a single atom.",
+      "targets": [
+        {
+          "kind": "operator",
+          "id": "compute_participation_ratio",
+          "uid": "93c6afe349f877656a16d18074e195ac4257226ce9d863d7f5d10ce96b679715",
+          "formula_sha256": "5f3e67dbd9381917a0ab1c443fbf2698a741f2b3ce881210caac47777a0d07a9"
+        },
+        {
+          "kind": "node",
+          "id": "ParticipationRatio",
+          "uid": "09138ae29cee41ae5f1a1758ac65a479625ef4d3c6026bf7ad5b60f884d668a0"
+        }
+      ],
+      "sources": [],
+      "conditions": [
+        "The eigenvector is normalized, sum_i sum_alpha |e_{i,alpha}|^2 = 1, over N >= 1 atoms and three Cartesian components, and a_i is the auxiliary per-atom amplitude of the catalog.",
+        "The amplitudes are those of the mass-weighted eigenvector (the kALDo convention). In a multi-species crystal this differs from the displacement-based Bell-Dean participation ratio, which weights the amplitudes by 1/sqrt(M).",
+        "The ratio measures the spread of one mode over the N basis atoms at fixed q, not its spatial extent in a supercell. The bounds use only the normalization and hold for any normalized vector."
+      ],
+      "conventions": {
+        "model_scope": "Mathlib-only result about the participation ratio. Physlib has no vibrational-localization model, so no Physlib declaration is identified.",
+        "component_scope": "One mode at fixed q; per-atom amplitudes summed over the three Cartesian components.",
+        "normalization_basis": "1/N normalization over the N basis atoms; the eigenvector is normalized to one.",
+        "frequency_convention": "Not applicable; no frequency enters the formula.",
+        "unit_embedding": "Dimensionless.",
+        "held_fixed": "The mode, its wavevector and its eigenvector.",
+        "admissibility": "N >= 1 and a normalized mass-weighted eigenvector.",
+        "reference_energy": "Not applicable.",
+        "qpoint_weighting": "Not applicable; the ratio is per mode at fixed q."
+      },
+      "remaining_obligations": [
+        "Eigenvector producers (phonopy, kaldo) and their normalization are not verified; an unnormalized eigenvector shifts p by the squared norm.",
+        "Localization thresholds and the scaling of p with system size used to classify extended, diffusive and localized modes are not addressed."
+      ],
+      "evidence": {
+        "kind": "compiled_bridge",
+        "module": "OMAIPhyslibParticipationRatio",
+        "declarations": [
+          "OMAI.PhyslibBridge.Lattice.participationRatio_bounds",
+          "OMAI.PhyslibBridge.Lattice.participationRatio_eq_one_iff",
+          "OMAI.PhyslibBridge.Lattice.participationRatio_eq_inv_iff"
+        ],
+        "source_path": "lean/bridge/OMAIPhyslibParticipationRatio.lean",
+        "build_record": "lean/bridge/build-evidence.json",
+        "proved_targets": [
+          {
+            "kind": "operator",
+            "id": "compute_participation_ratio"
+          },
+          {
+            "kind": "node",
+            "id": "ParticipationRatio"
+          }
+        ],
+        "source_sha256": "2306537ae007125fc41ba3654b265cb1fd19cca3ab33769cf1590bad269203fa"
+      }
     }
   ],
   "gap_reasons": {
     "domains": {
-      "thermal_transport": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions.",
+      "thermal_transport": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas.",
       "dft_ground_state": "No current Physlib Kohn-Sham, DFT, atomistic derivative, or ground-state producer formula identification found in the audited source.",
       "mechanics": "No current Physlib solid-elasticity/Voigt/EOS formula identification found. The bridge proves the signed inviscid stress/pressure contraction under its sign and unit conditions; identification with thermodynamic free-energy pressure remains unproved.",
       "stability": "No current Physlib matching reference-state, convex-hull, surface, adsorption, reaction, or grain-boundary formula model identified.",
@@ -2571,6 +2930,13 @@
       "cure_kinetics": "No matching current Physlib Kamal cure or DiBenedetto glass-transition model identified."
     },
     "nodes": {},
-    "operators": {}
+    "operators": {
+      "apply_nac_correction": "Catalog defect. The wavevector enters as the free component q^alpha and q^beta instead of the contracted q_gamma and q_delta, so the q dependence cancels and the term is independent of q; the formula also lacks e^2 and ties alpha and beta to nothing in D_{i,j}. The q -> 0 form is D^NA_{kappa alpha, kappa' beta} = (4 pi e^2 / Omega) (sum_gamma q_gamma Z*_{kappa, gamma alpha}) (sum_delta q_delta Z*_{kappa', delta beta}) / ((sum_{gamma delta} q_gamma eps_inf_{gamma delta} q_delta) sqrt(M_kappa M_kappa')) in Gaussian units (4 pi e^2 -> e^2/eps_0 in SI), with Gonze-Lee Ewald sums at finite q.",
+      "solve_bte[bte_solver=direct_inverse]": "Catalog defect. The collision matrix M = (2 Gamma/hbar) delta - Xi of the auxiliary formula has the wrong relaxation-time limit (it gives F = hbar c v/(2 Gamma), not the catalog's F = v/(2 Gamma)), is dimensionally inconsistent, and is not symmetric (the energy delta functions and q'' = q - q' in the absorption channel instead of q + q'). A symmetric weighting is M = C^(1/2) Omega~ C^(1/2), with Omega~ the detailed-balance-symmetric collision matrix in rate units and C = diag(c), whose relaxation-time limit is diag(2 Gamma c).",
+      "contract_kappa[bte_solver=direct_inverse]": "Depends on the defective collision matrix of solve_bte[bte_solver=direct_inverse]. OMAIPhyslibKappaContraction proves, over Mathlib, that the contraction is symmetric and positive semidefinite whenever the collision matrix is symmetric positive semidefinite, but no catalog M satisfies that hypothesis, so the result is not bound.",
+      "contract_cumulative_kappa[wrt=omega]": "Catalog defect. The cumulative operators take the linearized-BTE F (MeanFreeDisplacement[bte_solver=direct_inverse]), for which kappa_cum is a signed partial sum, so the catalog's saturating-distribution and median-mean-free-path semantics do not hold. OMAIPhyslibKappaContraction proves an exact three-mode linearized BTE (one process 1+2 <-> 3, Casimir boundary scattering, Bose-Einstein weights, symmetric positive-definite collision matrix) whose cumulative kappa_xx is not monotone in the cutoff, in both the frequency and the mean-free-path binning; monotonicity holds when every modal contribution is nonnegative, as in the relaxation-time approximation.",
+      "contract_cumulative_kappa[wrt=mfp]": "Catalog defect. The cumulative operators take the linearized-BTE F (MeanFreeDisplacement[bte_solver=direct_inverse]), for which kappa_cum is a signed partial sum, so the catalog's saturating-distribution and median-mean-free-path semantics do not hold. OMAIPhyslibKappaContraction proves an exact three-mode linearized BTE (one process 1+2 <-> 3, Casimir boundary scattering, Bose-Einstein weights, symmetric positive-definite collision matrix) whose cumulative kappa_xx is not monotone in the cutoff, in both the frequency and the mean-free-path binning; monotonicity holds when every modal contribution is nonnegative, as in the relaxation-time approximation.",
+      "compute_participation_ratio": "No Physlib model covers this formula."
+    }
   }
 }

@@ -129,3 +129,26 @@ for operator, (binding_id, output) in qha_expected.items():
         module="Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
     )
 print("installed wheel ok: local quasiharmonic producers, not mode-Gruneisen producers")
+
+lattice = {
+    "compute_dynamical_matrix": ("crystal-dynamical-matrix", "conditional"),
+    "compute_dispersion": ("crystal-phonon-dispersion", "conditional"),
+    "compute_group_velocity": ("crystal-group-velocity", "conditional"),
+    "contract_kappa[bte_solver=rta]": ("canonical-rta-thermal-conductivity", "conditional"),
+    "compute_participation_ratio": ("participation-ratio-bounds", "local"),
+}
+for operator, (binding_id, relation) in lattice.items():
+    rows = formula_bindings_for(operator, kind="operator")
+    assert [row["id"] for row in rows] == [binding_id], operator
+    assert rows[0]["relation"] == relation and rows[0]["evidence"]["kind"] == "compiled_bridge"
+    assert (relation == "local") == (rows[0]["sources"] == [])
+crystal_rows = formula_bindings_for_physlib(
+    declaration="Physlib.CondensedMatter.Crystal", module="Physlib.CondensedMatter.Crystal.Basic")
+assert {"crystal-dynamical-matrix", "crystal-phonon-dispersion", "crystal-group-velocity"} <= {
+    row["id"] for row in crystal_rows}
+for unbound in ("apply_nac_correction", "solve_bte[bte_solver=direct_inverse]",
+                "contract_kappa[bte_solver=direct_inverse]", "contract_cumulative_kappa[wrt=omega]",
+                "contract_cumulative_kappa[wrt=mfp]", "identity_dm", "sum_linewidths",
+                "solve_bte[bte_solver=rta]"):
+    assert formula_bindings_for(unbound, kind="operator") == []
+print("installed wheel ok: lattice dynamics on Physlib crystals, catalog transport defects unbound")

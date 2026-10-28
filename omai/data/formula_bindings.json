@@ -129,6 +129,82 @@
       }
     },
     {
+      "id": "canonical-rta-thermal-conductivity",
+      "relation": "conditional",
+      "statement": "With the relaxation-time mean free displacement F = v/(2 Gamma) and, as c, the actual Physlib canonical heat capacity of each harmonic mode at T > 0, the OMAI contraction kappa_ab = sum_m F_b c v_a/(N_q V_cell) is symmetric and positive semidefinite for positive linewidths and N_q V_cell > 0, and positive definite exactly when the group velocities of the modes span space.",
+      "targets": [
+        {
+          "kind": "node",
+          "id": "ThermalConductivity[bte_solver=rta]",
+          "uid": "d79d88d53266c147ea8d806cdbd30df309199469351ee13bcc9040a98745ebc4"
+        },
+        {
+          "kind": "operator",
+          "id": "contract_kappa[bte_solver=rta]",
+          "uid": "712b8145370a0072f225bd2f1d8c954b64311a3ca2f387320aa17e466926513c",
+          "formula_sha256": "2e54bbf0cc370a56c0ffd43f2ca8cdefa185eb02d8d2388124e6586960adac5c"
+        }
+      ],
+      "sources": [
+        {
+          "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
+          "name": "CanonicalEnsemble.heatCapacity",
+          "kind": "def",
+          "line": 417,
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L417"
+        },
+        {
+          "module": "Physlib.QuantumMechanics.HarmonicOscillator.OneDimension.Basic",
+          "name": "QuantumMechanics.OneDimension.HarmonicOscillator",
+          "kind": "structure",
+          "line": 63,
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/Basic.lean#L63"
+        }
+      ],
+      "conditions": [
+        "MeanFreeDisplacement[bte_solver=rta] is F_a = v_a/(2 Gamma) from solve_bte[bte_solver=rta], with Gamma the total half-width Im Sigma (phono3py's gamma), positive for every mode, so 1/tau = 2 Gamma. ShengBTE and kALDo report 1/tau, which must be halved before use as Gamma.",
+        "HeatCapacity is, for each mode, the derivative-defined heat capacity of the full Nat harmonic-oscillator canonical ensemble of Physlib at the mode's positive angular frequency and T > 0, as in the harmonic-mode-heat-capacity binding. The oscillator mass does not enter.",
+        "N_q and V_cell are positive; the mode sum is finite.",
+        "Positive definiteness holds exactly when, for every nonzero direction x, some mode has v.x != 0. A crystal whose velocities all lie in a plane gives a semidefinite, singular kappa."
+      ],
+      "conventions": {
+        "model_scope": "Relaxation-time contraction of independent harmonic modes with Physlib canonical heat capacities. Linewidths are positive inputs; no scattering model is verified.",
+        "component_scope": "Full 3x3 Cartesian tensor kappa_ab; no isotropic reduction.",
+        "normalization_basis": "Uniform mode sum divided by N_q V_cell with positive primitive-cell volume.",
+        "frequency_convention": "Angular SI frequency in the canonical heat capacities. Gamma is the half-width Im Sigma in rad/s, with 1/tau = 2 Gamma. Stored linear THz requires omega_SI = 2*pi*10^12*nu_THz; velocities stored in Angstrom THz are already d omega/dq (1 Angstrom THz = 100 m/s).",
+        "unit_embedding": "Coherent SI: c in J/K per mode, v in m/s, Gamma in rad/s, F in m, V_cell in m^3, kappa in W/(m K). These exact-real statements do not certify floating-point adapters.",
+        "held_fixed": "Temperature, frequencies, velocities, linewidths, N_q and V_cell are fixed inputs.",
+        "admissibility": "T > 0, every frequency positive, every linewidth positive, N_q V_cell > 0.",
+        "reference_energy": "Zero-point energy does not enter the canonical heat capacity; no reference energy enters kappa.",
+        "qpoint_weighting": "Uniform weights over a finite mode set; symmetry-reduced or tetrahedron weights are outside this definition."
+      },
+      "remaining_obligations": [
+        "Linewidth producers (three-phonon, isotope, boundary) and their positivity are interpreted inputs, not verified.",
+        "The full linearized-BTE kappa and the cumulative distributions are not covered; their catalog formulas are recorded as defects (see their gap reasons).",
+        "Zero-frequency Gamma modes, which have no finite relaxation-time contribution, are excluded; convergence in the q mesh is not addressed."
+      ],
+      "evidence": {
+        "kind": "compiled_bridge",
+        "module": "OMAIPhyslibRTAConductivity",
+        "declarations": [
+          "OMAI.PhyslibBridge.Lattice.rtaKappa_canonical"
+        ],
+        "source_path": "lean/bridge/OMAIPhyslibRTAConductivity.lean",
+        "build_record": "lean/bridge/build-evidence.json",
+        "proved_targets": [
+          {
+            "kind": "operator",
+            "id": "contract_kappa[bte_solver=rta]"
+          },
+          {
+            "kind": "node",
+            "id": "ThermalConductivity[bte_solver=rta]"
+          }
+        ],
+        "source_sha256": "13267fa6d967df842f39251b23a0c2b70cd230f2553a444964f4bdc2229e34a8"
+      }
+    },
+    {
       "id": "classical-harmonic-frequency",
       "targets": [
         {
@@ -445,6 +521,237 @@
             "id": "Pressure"
           }
         ]
+      }
+    },
+    {
+      "id": "crystal-dynamical-matrix",
+      "relation": "conditional",
+      "statement": "For second-order force constants on the sites of a Physlib crystal with equal mixed partials, translation invariance and finite range, the index-permutation symmetry Phi_ij(-R) = Phi_ji(R) follows from the translation invariance, the OMAI dynamical matrix D_ij(q) = sum_R e^{i q.R} Phi_ij(R)/sqrt(M_i M_j) is Hermitian at every wavevector, and with the acoustic sum rule the Gamma-point matrix has at least three independent zero modes, the mass-weighted rigid translations.",
+      "targets": [
+        {
+          "kind": "node",
+          "id": "BareDynamicalMatrix",
+          "uid": "e62e58716111fdc1dff24d18e75c70904cbb07ce6e0025e24fcdac8c4ed0a53d"
+        },
+        {
+          "kind": "operator",
+          "id": "compute_dynamical_matrix",
+          "uid": "67d4d9c1ad01e2aa1705e54ed9edb2d1a0ce601aa0e7c9929a7ba7cbd7259f28",
+          "formula_sha256": "d084d4d043a870f7a1d7dcb9931a150768819a4ce1f993c3620ad5b8e99e8897"
+        }
+      ],
+      "sources": [
+        {
+          "module": "Physlib.CondensedMatter.Crystal.Basic",
+          "name": "Physlib.CondensedMatter.Crystal",
+          "kind": "structure",
+          "line": 65,
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Crystal/Basic.lean#L65"
+        },
+        {
+          "module": "Physlib.CondensedMatter.Crystal.Basic",
+          "name": "Physlib.CondensedMatter.Crystal.Site",
+          "kind": "structure",
+          "line": 90,
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Crystal/Basic.lean#L90"
+        }
+      ],
+      "conditions": [
+        "Represent the crystal with Physlib.CondensedMatter.Crystal: a finitely generated abelian translation group, a finite nonempty unit cell and sites (cell, label), on which the translation action moves the cell and keeps the label. A mode index is a unit-cell label with a Cartesian axis, and Phi_ij(R) is the reference-cell component i against component j in cell R.",
+        "Force constants are real second derivatives of the lattice potential with equal mixed partials, invariant under every lattice translation, and the reference-cell interactions vanish outside a finite set of cells, so the catalog sum over all R is finite.",
+        "The phase e^{i R q} is exp(i q.pos(R)) for an additive embedding pos of the translations into Cartesian space, the catalog's cell-vector convention. Masses are positive and per unit-cell label.",
+        "The acoustic sum rule, sum over cells and labels of Phi_{(kappa,alpha),(kappa',beta)}(R) = 0, is a stated hypothesis for the Gamma-point result. Phonopy and other producers enforce it numerically; it is not derived here from a potential."
+      ],
+      "conventions": {
+        "model_scope": "Harmonic lattice dynamics. Physlib's Crystal supplies the site and translation bookkeeping (sites, cells, the translation action and the site equivalence); the force-constant and dynamical-matrix content is OMAI-local. No anharmonic, non-analytic, electronic or numerical producer is modeled.",
+        "component_scope": "Mode index (unit-cell label, Cartesian axis); one dynamical matrix per wavevector, with all tensor components kept.",
+        "normalization_basis": "Mass weighting 1/sqrt(M_i M_j) with masses per unit-cell label; the lattice sum runs over the finite set of interacting cells closed under inversion.",
+        "frequency_convention": "Eigenvalues are angular omega^2 in (rad/s)^2 with force constants in J/m^2 and masses in kg. Stored linear THz frequencies require omega_SI = 2*pi*10^12*nu_THz. Group velocities stored in Angstrom THz are already d omega/dq, 1 Angstrom THz = 100 m/s, with no factor 2*pi.",
+        "unit_embedding": "Coherent SI: force constants in J/m^2 (1 eV/Angstrom^2 = 16.02176634 J/m^2), masses in kg, lattice vectors in m and wavevectors in rad/m. These exact-real statements do not certify floating-point adapters.",
+        "held_fixed": "Crystal, unit cell, masses, force constants and the lattice embedding are fixed; only the wavevector varies.",
+        "admissibility": "Positive masses; real force constants with equal mixed partials, translation invariance and finite range. Phase convention: the catalog and the Lean definitions use the cell-vector phase e^{+i q.R}. Phonopy and phono3py use atom positions, D_ph = U^dagger D_cat U with U = diag(e^{i q.tau_kappa}). omega^2 and nondegenerate velocities agree; eigenvectors differ by e^{-i q.tau} and off-diagonal velocity-operator elements differ, so phonopy eigenvectors fed into the catalog's dD/dq give wrong velocities.",
+        "reference_energy": "The static lattice energy and any constant potential offset do not enter second derivatives.",
+        "qpoint_weighting": "No q-point weighting is involved; the Hermiticity holds at every wavevector and the zero modes at Gamma."
+      },
+      "remaining_obligations": [
+        "Finite-displacement, DFPT and potential-based force-constant producers (compute_force_constants[order=2], compute_fc2_finite_displacement) are interpreted inputs, not verified implementations; supercell folding of computed force constants and their symmetrization are not modeled.",
+        "The non-analytic correction apply_nac_correction is not covered: its catalog formula is independent of q (see its gap reason).",
+        "Long-range force constants without a finite range, Ewald-summed dipole tails and the thermodynamic limit of an infinite sum are outside scope."
+      ],
+      "evidence": {
+        "kind": "compiled_bridge",
+        "module": "OMAIPhyslibLatticeDynamics",
+        "declarations": [
+          "OMAI.PhyslibBridge.Lattice.ForceConstants.fc_neg",
+          "OMAI.PhyslibBridge.Lattice.ForceConstants.dynamicalMatrix_isHermitian",
+          "OMAI.PhyslibBridge.Lattice.ForceConstants.three_le_finrank_ker_gamma"
+        ],
+        "source_path": "lean/bridge/OMAIPhyslibLatticeDynamics.lean",
+        "build_record": "lean/bridge/build-evidence.json",
+        "proved_targets": [
+          {
+            "kind": "operator",
+            "id": "compute_dynamical_matrix"
+          },
+          {
+            "kind": "node",
+            "id": "BareDynamicalMatrix"
+          }
+        ],
+        "source_sha256": "25358d33a2c4e12bfc1a45440cbcee81b83eed6d5dd62592499924399f3989c6"
+      }
+    },
+    {
+      "id": "crystal-group-velocity",
+      "relation": "conditional",
+      "statement": "On a differentiable eigenvector path, away from Gamma: for the dynamical matrix of a Physlib crystal and a differentiable normalized eigenvector path along the wavevector line q + s e_alpha with eigenvalue omega^2 > 0 at s = 0, the eigenvalue is differentiable and the OMAI group velocity e^dagger (dD/dq_alpha) e / (2 omega), with dD/dq_alpha the actual derivative of the catalog dynamical matrix, is a real number equal to d omega/d q_alpha (Hellmann-Feynman). A compiled monatomic chain gives the textbook a sqrt(K/M) cos(q a / 2).",
+      "targets": [
+        {
+          "kind": "node",
+          "id": "GroupVelocity",
+          "uid": "d1934e166dbd0c91125936f9b2ccc0100af0ba44ed439003aae76b47b6d26fc6"
+        },
+        {
+          "kind": "operator",
+          "id": "compute_group_velocity",
+          "uid": "3cf7b8aa48dca910c062ce17738ede9cb609bacd7bd685bae23ac698897e38c3",
+          "formula_sha256": "0b3f5977eb1cc8e4d87d72b54acc6ad49ac808800d4c3fbe88b7e9408ab41887"
+        }
+      ],
+      "sources": [
+        {
+          "module": "Physlib.CondensedMatter.Crystal.Basic",
+          "name": "Physlib.CondensedMatter.Crystal",
+          "kind": "structure",
+          "line": 65,
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Crystal/Basic.lean#L65"
+        },
+        {
+          "module": "Physlib.CondensedMatter.Crystal.Basic",
+          "name": "Physlib.CondensedMatter.Crystal.Site",
+          "kind": "structure",
+          "line": 90,
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Crystal/Basic.lean#L90"
+        }
+      ],
+      "conditions": [
+        "DynamicalMatrix is the crystal dynamical matrix of the crystal-dynamical-matrix binding without the non-analytic correction, and dD/dq_alpha is its exact derivative sum_R i R_alpha e^{i q.R} Phi_ij(R)/sqrt(M_i M_j) along the Cartesian axis alpha.",
+        "Along the line q + s e_alpha the eigenvector e(s) is differentiable and normalized with real eigenvalue omega^2(s), and omega^2(0) > 0. A nondegenerate branch away from Gamma admits such a path by analytic perturbation theory; that existence is a hypothesis. Symmetry-enforced degeneracies are generic (transverse pairs along Gamma-X and Gamma-L), and at such points the eigenvector a code returns is not on the path: phonopy projects the velocity per direction and phono3py averages over degenerate sets and the q-star.",
+        "omega = sqrt(omega^2) is angular frequency; the velocity is in m/s when q is in rad/m. Velocities stored in Angstrom THz are already d omega/dq (1 Angstrom THz = 100 m/s, no 2*pi). The eigenvectors must be in the catalog's cell-vector phase convention.",
+        "The compiled monatomic chain (Physlib ofUnitCell Z Unit, nearest-neighbour longitudinal springs K, mass M, spacing a) has omega^2 = (2K/M)(1 - cos(q_x a)) and catalog velocity a sqrt(K/M) cos(q_x a / 2) on 0 < q_x a < pi. It is an exact model example, not a material fit."
+      ],
+      "conventions": {
+        "model_scope": "Harmonic lattice dynamics. Physlib's Crystal supplies the site and translation bookkeeping (sites, cells, the translation action and the site equivalence); the force-constant and dynamical-matrix content is OMAI-local. No anharmonic, non-analytic, electronic or numerical producer is modeled.",
+        "component_scope": "Mode index (unit-cell label, Cartesian axis); one dynamical matrix per wavevector, with all tensor components kept.",
+        "normalization_basis": "Mass weighting 1/sqrt(M_i M_j) with masses per unit-cell label; the lattice sum runs over the finite set of interacting cells closed under inversion.",
+        "frequency_convention": "Eigenvalues are angular omega^2 in (rad/s)^2 with force constants in J/m^2 and masses in kg. Stored linear THz frequencies require omega_SI = 2*pi*10^12*nu_THz. Group velocities stored in Angstrom THz are already d omega/dq, 1 Angstrom THz = 100 m/s, with no factor 2*pi.",
+        "unit_embedding": "Coherent SI: force constants in J/m^2 (1 eV/Angstrom^2 = 16.02176634 J/m^2), masses in kg, lattice vectors in m and wavevectors in rad/m. These exact-real statements do not certify floating-point adapters.",
+        "held_fixed": "Crystal, unit cell, masses, force constants and the lattice embedding are fixed; only the wavevector varies.",
+        "admissibility": "Positive masses; real force constants with equal mixed partials, translation invariance and finite range. Phase convention: the catalog and the Lean definitions use the cell-vector phase e^{+i q.R}. Phonopy and phono3py use atom positions, D_ph = U^dagger D_cat U with U = diag(e^{i q.tau_kappa}). omega^2 and nondegenerate velocities agree; eigenvectors differ by e^{-i q.tau} and off-diagonal velocity-operator elements differ, so phonopy eigenvectors fed into the catalog's dD/dq give wrong velocities.",
+        "reference_energy": "The static lattice energy and any constant potential offset do not enter second derivatives.",
+        "qpoint_weighting": "No q-point weighting is involved; the result holds along each differentiable eigenvector path."
+      },
+      "remaining_obligations": [
+        "Finite-difference velocity estimators, degenerate-subspace treatments and symmetry-averaged velocities in phonopy, phono3py, kaldo and ShengBTE are not verified.",
+        "The existence of a differentiable eigenvector path on a nondegenerate branch is not proved here.",
+        "NAC-corrected velocities near Gamma and velocities at band crossings are outside scope."
+      ],
+      "evidence": {
+        "kind": "compiled_bridge",
+        "module": "OMAIPhyslibGroupVelocity",
+        "declarations": [
+          "OMAI.PhyslibBridge.Lattice.hellmann_feynman",
+          "OMAI.PhyslibBridge.Lattice.ForceConstants.catalogGroupVelocity_eq_deriv"
+        ],
+        "source_path": "lean/bridge/OMAIPhyslibGroupVelocity.lean",
+        "build_record": "lean/bridge/build-evidence.json",
+        "proved_targets": [
+          {
+            "kind": "operator",
+            "id": "compute_group_velocity"
+          },
+          {
+            "kind": "node",
+            "id": "GroupVelocity"
+          }
+        ],
+        "source_sha256": "3171ae35f6773c00402dbd3a2de60310a20f230858f1477e503137c483ac5c96"
+      }
+    },
+    {
+      "id": "crystal-phonon-dispersion",
+      "relation": "conditional",
+      "statement": "Let N be the sublattice of a finite Born-von Karman supercell of a Physlib crystal and fold the crystal force constants into the supercell, Phi_BvK(R) = sum_L Phi(R + L). At every wavevector q commensurate with the supercell (e^{i q.L} = 1 for every L in N), the supercell dynamical matrix at the corresponding character equals the OMAI dynamical matrix D(q). If the folded supercell is mechanically stable (its harmonic energy is never negative), D(q) is positive semidefinite there, so every solution of the OMAI dispersion relation has omega^2 >= 0 and a real frequency.",
+      "targets": [
+        {
+          "kind": "operator",
+          "id": "compute_dispersion",
+          "uid": "1ab7a3aee9b25b786739afcd517b909e4fdf091c768ab4ecbea007e53633be92",
+          "formula_sha256": "58532a304fabac6818bbb184abfe0a1f3b140583aec52ace8a1b4a73f1d8db5e"
+        }
+      ],
+      "sources": [
+        {
+          "module": "Physlib.CondensedMatter.Crystal.Basic",
+          "name": "Physlib.CondensedMatter.Crystal",
+          "kind": "structure",
+          "line": 65,
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Crystal/Basic.lean#L65"
+        },
+        {
+          "module": "Physlib.CondensedMatter.Crystal.Basic",
+          "name": "Physlib.CondensedMatter.Crystal.Site",
+          "kind": "structure",
+          "line": 90,
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Crystal/Basic.lean#L90"
+        },
+        {
+          "module": "Physlib.CondensedMatter.Crystal.Basic",
+          "name": "Physlib.CondensedMatter.Crystal.siteEquiv",
+          "kind": "def",
+          "line": 97,
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Crystal/Basic.lean#L97"
+        }
+      ],
+      "conditions": [
+        "DynamicalMatrix is the crystal dynamical matrix of the crystal-dynamical-matrix binding, passed through identity_dm without the non-analytic correction, under the same force-constant conditions.",
+        "The supercell is the quotient of the translations by a sublattice N with finitely many cosets (periodic boundary conditions). Its force constants are the folded sums of the crystal force constants; mechanical stability is the hypothesis that the real harmonic energy sum u_a Phi_BvK,ab u_b of the supercell is never negative.",
+        "Only wavevectors commensurate with the supercell are covered. Incommensurate meshes are the normal case for BTE (for example a 4x4x4 force-constant supercell with a 19x19x19 kappa mesh), and Fourier interpolation of supercell force constants is exact only at commensurate q; nothing is stated at the other mesh points.",
+        "omega is the nonnegative square root of omega^2 on a stable supercell; imaginary modes of an unstable structure are excluded by the hypothesis, not removed. A compiled Einstein-spring ring on ofUnitCell (ZMod 3) Unit shows the stability hypothesis is satisfiable."
+      ],
+      "conventions": {
+        "model_scope": "Harmonic lattice dynamics. Physlib's Crystal supplies the site and translation bookkeeping (sites, cells, the translation action and the site equivalence); the force-constant and dynamical-matrix content is OMAI-local. No anharmonic, non-analytic, electronic or numerical producer is modeled.",
+        "component_scope": "Mode index (unit-cell label, Cartesian axis); one dynamical matrix per wavevector, with all tensor components kept.",
+        "normalization_basis": "Mass weighting 1/sqrt(M_i M_j) with masses per unit-cell label; the lattice sum runs over the finite set of interacting cells closed under inversion.",
+        "frequency_convention": "Eigenvalues are angular omega^2 in (rad/s)^2 with force constants in J/m^2 and masses in kg. Stored linear THz frequencies require omega_SI = 2*pi*10^12*nu_THz. Group velocities stored in Angstrom THz are already d omega/dq, 1 Angstrom THz = 100 m/s, with no factor 2*pi.",
+        "unit_embedding": "Coherent SI: force constants in J/m^2 (1 eV/Angstrom^2 = 16.02176634 J/m^2), masses in kg, lattice vectors in m and wavevectors in rad/m. These exact-real statements do not certify floating-point adapters.",
+        "held_fixed": "Crystal, unit cell, masses, force constants and the lattice embedding are fixed; only the wavevector varies.",
+        "admissibility": "Positive masses; real force constants with equal mixed partials, translation invariance and finite range. Phase convention: the catalog and the Lean definitions use the cell-vector phase e^{+i q.R}. Phonopy and phono3py use atom positions, D_ph = U^dagger D_cat U with U = diag(e^{i q.tau_kappa}). omega^2 and nondegenerate velocities agree; eigenvectors differ by e^{-i q.tau} and off-diagonal velocity-operator elements differ, so phonopy eigenvectors fed into the catalog's dD/dq give wrong velocities.",
+        "reference_energy": "The static lattice energy and any constant potential offset do not enter second derivatives.",
+        "qpoint_weighting": "Commensurate wavevectors of the supercell only: the characters of the translations modulo N. No mesh weights enter."
+      },
+      "remaining_obligations": [
+        "Numerical eigensolvers, branch sorting and band-crossing tracking in phonopy, kaldo or ShengBTE are not verified.",
+        "Mechanical stability of a particular material and the folding of computed supercell force constants are hypotheses; the theorem does not certify that a computed structure is a minimum.",
+        "Incommensurate wavevectors, Fourier interpolation between commensurate points, the infinite-crystal limit of stability and NAC-corrected matrices are outside scope."
+      ],
+      "evidence": {
+        "kind": "compiled_bridge",
+        "module": "OMAIPhyslibPhononDispersion",
+        "declarations": [
+          "OMAI.PhyslibBridge.Lattice.ForceConstants.dynamicalMatrix_posSemidef_of_stable",
+          "OMAI.PhyslibBridge.Lattice.ForceConstants.fold_dynamicalMatrix",
+          "OMAI.PhyslibBridge.Lattice.ForceConstants.planeWave_dynamicalMatrix_posSemidef_of_folded_stable"
+        ],
+        "source_path": "lean/bridge/OMAIPhyslibPhononDispersion.lean",
+        "build_record": "lean/bridge/build-evidence.json",
+        "proved_targets": [
+          {
+            "kind": "operator",
+            "id": "compute_dispersion"
+          }
+        ],
+        "source_sha256": "70bd052d1d32afe828a3a8f7e26e406d5ec1e121b86ad0d9b08717f8c0f87f1a"
       }
     },
     {
@@ -2236,6 +2543,67 @@
       }
     },
     {
+      "id": "participation-ratio-bounds",
+      "relation": "local",
+      "statement": "For a normalized vibrational mode on N >= 1 atoms, with per-atom amplitudes a_i = sum_alpha |e_{i,alpha}|^2, the OMAI participation ratio p = 1/(N sum_i a_i^2) satisfies 1/N <= p <= 1, with p = 1 exactly when a_i = 1/N on every atom and p = 1/N exactly when the mode lives on a single atom.",
+      "targets": [
+        {
+          "kind": "node",
+          "id": "ParticipationRatio",
+          "uid": "09138ae29cee41ae5f1a1758ac65a479625ef4d3c6026bf7ad5b60f884d668a0"
+        },
+        {
+          "kind": "operator",
+          "id": "compute_participation_ratio",
+          "uid": "93c6afe349f877656a16d18074e195ac4257226ce9d863d7f5d10ce96b679715",
+          "formula_sha256": "5f3e67dbd9381917a0ab1c443fbf2698a741f2b3ce881210caac47777a0d07a9"
+        }
+      ],
+      "sources": [],
+      "conditions": [
+        "The eigenvector is normalized, sum_i sum_alpha |e_{i,alpha}|^2 = 1, over N >= 1 atoms and three Cartesian components, and a_i is the auxiliary per-atom amplitude of the catalog.",
+        "The amplitudes are those of the mass-weighted eigenvector (the kALDo convention). In a multi-species crystal this differs from the displacement-based Bell-Dean participation ratio, which weights the amplitudes by 1/sqrt(M).",
+        "The ratio measures the spread of one mode over the N basis atoms at fixed q, not its spatial extent in a supercell. The bounds use only the normalization and hold for any normalized vector."
+      ],
+      "conventions": {
+        "model_scope": "Mathlib-only result about the participation ratio. Physlib has no vibrational-localization model, so no Physlib declaration is identified.",
+        "component_scope": "One mode at fixed q; per-atom amplitudes summed over the three Cartesian components.",
+        "normalization_basis": "1/N normalization over the N basis atoms; the eigenvector is normalized to one.",
+        "frequency_convention": "Not applicable; no frequency enters the formula.",
+        "unit_embedding": "Dimensionless.",
+        "held_fixed": "The mode, its wavevector and its eigenvector.",
+        "admissibility": "N >= 1 and a normalized mass-weighted eigenvector.",
+        "reference_energy": "Not applicable.",
+        "qpoint_weighting": "Not applicable; the ratio is per mode at fixed q."
+      },
+      "remaining_obligations": [
+        "Eigenvector producers (phonopy, kaldo) and their normalization are not verified; an unnormalized eigenvector shifts p by the squared norm.",
+        "Localization thresholds and the scaling of p with system size used to classify extended, diffusive and localized modes are not addressed."
+      ],
+      "evidence": {
+        "kind": "compiled_bridge",
+        "module": "OMAIPhyslibParticipationRatio",
+        "declarations": [
+          "OMAI.PhyslibBridge.Lattice.participationRatio_bounds",
+          "OMAI.PhyslibBridge.Lattice.participationRatio_eq_one_iff",
+          "OMAI.PhyslibBridge.Lattice.participationRatio_eq_inv_iff"
+        ],
+        "source_path": "lean/bridge/OMAIPhyslibParticipationRatio.lean",
+        "build_record": "lean/bridge/build-evidence.json",
+        "proved_targets": [
+          {
+            "kind": "operator",
+            "id": "compute_participation_ratio"
+          },
+          {
+            "kind": "node",
+            "id": "ParticipationRatio"
+          }
+        ],
+        "source_sha256": "2306537ae007125fc41ba3654b265cb1fd19cca3ab33769cf1590bad269203fa"
+      }
+    },
+    {
       "id": "thermodynamic-pressure",
       "targets": [
         {
@@ -2675,9 +3043,11 @@
       {
         "id": "BareDynamicalMatrix",
         "uid": "e62e58716111fdc1dff24d18e75c70904cbb07ce6e0025e24fcdac8c4ed0a53d",
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "binding_ids": [
+          "crystal-dynamical-matrix"
+        ],
+        "status": "mapped",
+        "reason": "See the conditions and evidence for each mapping."
       },
       {
         "id": "BondDissociationEnergy",
@@ -2691,7 +3061,7 @@
         "uid": "438f0314dee5f9e98d88e4a7ba4425ef0edd207605338b318340da27bf28b2a4",
         "binding_ids": [],
         "status": "gap",
-        "reason": "Physlib scalar thermoelectric coefficients do not prove OMAI ab-initio BTE/scattering/electronic-DOS producers. No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "Physlib scalar thermoelectric coefficients do not prove OMAI ab-initio BTE/scattering/electronic-DOS producers. The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "BulkModulus",
@@ -2773,14 +3143,14 @@
         "uid": "b6a79d756cf45fc64a3a07feb9e46c7372f398b3ee54806bf1c9903d8a42039f",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "CumulativeKappa[wrt=omega]",
         "uid": "55eaa32f15db94d55448456fb26f1c3ecaafcc9a3da2947f1615258c492542ef",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "CureConversion",
@@ -2805,7 +3175,7 @@
         "uid": "a84077d8f12cf490f370b5cd0b98a47e3e31b7ec75fc8763699763f8b2313db4",
         "binding_ids": [],
         "status": "gap",
-        "reason": "Physlib scalar thermoelectric coefficients do not prove OMAI ab-initio BTE/scattering/electronic-DOS producers. No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "Physlib scalar thermoelectric coefficients do not prove OMAI ab-initio BTE/scattering/electronic-DOS producers. The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "Diffusivity",
@@ -2826,14 +3196,14 @@
         "uid": "a883ea19a62fcb80dc79d8c347fc583bef6a56d8764aef89455da764b4732031",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "Eigenvectors",
         "uid": "21ba7756f45c808d3d91ed059c34c532f04845781d549b4c16573d9462bb2902",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "ElasticConstants",
@@ -2909,14 +3279,14 @@
         "uid": "78d005a949ff56a526a1911f0b24e766daecad0a7f5ce9c1cc15222f2ed73551",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No current Physlib Kohn-Sham, DFT, atomistic derivative, or ground-state producer formula identification found in the audited source. No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "No current Physlib Kohn-Sham, DFT, atomistic derivative, or ground-state producer formula identification found in the audited source. The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "ForceConstants[order=3]",
         "uid": "73372380af126dde147e403f69339b87ee2f938a896dd5b56e9100c055dc8f93",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "Forces",
@@ -2962,16 +3332,18 @@
       {
         "id": "GroupVelocity",
         "uid": "d1934e166dbd0c91125936f9b2ccc0100af0ba44ed439003aae76b47b6d26fc6",
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "binding_ids": [
+          "crystal-group-velocity"
+        ],
+        "status": "mapped",
+        "reason": "See the conditions and evidence for each mapping."
       },
       {
         "id": "Gruneisen",
         "uid": "a62ac1eae1e972a0b265a14f8a2af5610deb61eb0c883b7668ac4a64313b3b75",
         "binding_ids": [],
         "status": "gap",
-        "reason": "The local quasiharmonic bridges cover the windowed Gibbs minimum, its C_P, expansion and isothermal modulus, and the mode-weighted Gamma contraction on a stable equilibrium family of the static-plus-harmonic model. Mode-Gruneisen producers, static-energy and phonon producers, numerical volume scans, EOS fits and global minimization remain unverified. No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "The local quasiharmonic bridges cover the windowed Gibbs minimum, its C_P, expansion and isothermal modulus, and the mode-weighted Gamma contraction on a stable equilibrium family of the static-plus-harmonic model. Mode-Gruneisen producers, static-energy and phonon producers, numerical volume scans, EOS fits and global minimization remain unverified. The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "HOMOLUMOGap",
@@ -3004,21 +3376,21 @@
         "uid": "3064108b9fe3839c9ca154ba7887f73cd550c02944ddf61dc26fcbdf07cf6fe0",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "HeatCurrent",
         "uid": "aab7019fbc014398b74ece01428527aa95e89da6f6d51efc0323b0acf59248c6",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No matching current Physlib Nan/Hasselman-Johnson/depolarization/interfacial NEMD formula model identified. No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "No matching current Physlib Nan/Hasselman-Johnson/depolarization/interfacial NEMD formula model identified. The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "HeatCurrentACF",
         "uid": "d8f44a4cce5e3dfea1ec9329189d49ac70e33d69cab222e2679f7791a30613ac",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "HelmholtzFreeEnergy",
@@ -3057,35 +3429,35 @@
         "uid": "f8e4253dc1f218daff8e76af5b433dc230bf952f910ba163f87c6fa331aa033d",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "Linewidth[channel=anharmonic_3ph]",
         "uid": "f52d161ad0be284c121c6fd10fe403c922aaa59646746c12719622004da5fa3a",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "Linewidth[channel=boundary]",
         "uid": "81288248a2b40f0abfe78b058ffa4025a0312324e8af26b801017b9a0971961e",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "Linewidth[channel=isotope]",
         "uid": "6cbd3322c5b6eb0105f9ca22d9ddc88334206ec9c115a31e6fb87409cc374c45",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "Linewidth[channel=total]",
         "uid": "50c33a1edd60bff6fb74124af1a8847a4c8a2c58d39554b4661e6a2cddb62f30",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "MagneticMoment",
@@ -3106,21 +3478,21 @@
         "uid": "b24a26725f5641ffb16720514a7fdb23bf03304ce0d51c9f39501d1c8c009b6c",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "MeanFreeDisplacement[bte_solver=rta]",
         "uid": "ad1373f31b9dbb8bd24ea16e1f90f1d92a39d309f2dc22583fad4fd82eca6f59",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "MeanSquaredDisplacement",
         "uid": "28ebe96bc049a92e4318fd5242778f30e5647531d0a2b39c5891546329c8bca0",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No matching current Physlib Einstein-MSD, Arrhenius, Nernst-Einstein, or cluster-expansion formula theorem identified. No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "No matching current Physlib Einstein-MSD, Arrhenius, Nernst-Einstein, or cluster-expansion formula theorem identified. The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "MigrationBarrier",
@@ -3134,7 +3506,7 @@
         "uid": "6052fe7e6aa8d2116b369886bffe59b04859f21145640184d24dfd96fbb60513",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "MolarEnthalpy",
@@ -3212,9 +3584,11 @@
       {
         "id": "ParticipationRatio",
         "uid": "09138ae29cee41ae5f1a1758ac65a479625ef4d3c6026bf7ad5b60f884d668a0",
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "binding_ids": [
+          "participation-ratio-bounds"
+        ],
+        "status": "local",
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
       },
       {
         "id": "PhaseFraction",
@@ -3228,21 +3602,21 @@
         "uid": "ec483cecbdbfec9e13ce3b2033b03e4581edf7bc0ff935d09ab9c24a7e481080",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "PhononDOS",
         "uid": "e14b6cdd007ca3af971aa52880811138606efdb47e30d5a26c2335903ce796f3",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "PhononTransmission",
         "uid": "1e8b145f7ea4fc232aac842c985a46fee4a6d2b2a04118a38d67dce470ed1b50",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "PoissonRatio",
@@ -3267,7 +3641,7 @@
         "uid": "7a4fd6ca35f412c375006146204be07210a037901b0e4fb33e1805f243c74b6a",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "PowerFactor",
@@ -3311,7 +3685,7 @@
         "uid": "a9a8eae4014c21afe87f7332c4aa842b0fd9002a7ed33e0bdb1ec339402fc9c9",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "ReactionBarrier[construction=neb_mep]",
@@ -3420,14 +3794,14 @@
         "uid": "50084cef8405999bb14c2ff71b98f70f982d71254e3ec35bed543a10bbbbf542",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "ThermalConductivity",
         "uid": "a03324d4def54619f16ee80ccf176b95a59808141651debabbf1611b7e3a12d5",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No matching current Physlib Nan/Hasselman-Johnson/depolarization/interfacial NEMD formula model identified. No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "No matching current Physlib Nan/Hasselman-Johnson/depolarization/interfacial NEMD formula model identified. The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "ThermalConductivity[bte_solver=direct_inverse]",
@@ -3441,9 +3815,11 @@
       {
         "id": "ThermalConductivity[bte_solver=rta]",
         "uid": "d79d88d53266c147ea8d806cdbd30df309199469351ee13bcc9040a98745ebc4",
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "binding_ids": [
+          "canonical-rta-thermal-conductivity"
+        ],
+        "status": "mapped",
+        "reason": "See the conditions and evidence for each mapping."
       },
       {
         "id": "ThermalConductivity[contribution=total]",
@@ -3491,49 +3867,49 @@
         "uid": "25dc9f7af8aec52efb6be16b7b7c76f8334b03056f8838c3ff432fdad8482fb6",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "ThermalConductivity[transport_model=hnemd]",
         "uid": "e7157a52da5eb7d2ae79e57692acc30d7e63a3a0d1c731b14da4d6ab8fd5eb88",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "ThermalConductivity[transport_model=nemd]",
         "uid": "d3e529fd2e7fa0a009440c21bd64949d6326c04eaa109fbed4cafac798608118",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "ThermalConductivity[transport_model=qhgk]",
         "uid": "8932e3cbadef74a82802b43fd1d25328cb40e6136c90df3b6a4a998e77f9567b",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "ThermalConductivity[transport_model=wigner]",
         "uid": "35e6000d8a0f2e4572e667befbd4cd5a8c6005fa8f6ef08791b6879c77baba64",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "ThermalConductivity[transport_model=wigner_coherences]",
         "uid": "7f8d407ef3f36290c7f8e385cddb4a06a3c1bf34563f1df35ded2bb532e69fa4",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "ThermalConductivity[transport_model=wigner_populations]",
         "uid": "3f837e061bf37d1ad104455abad3b9bd3d8bb16048a656977c2488fd3c4bd521",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "ThermalExpansion",
@@ -3568,7 +3944,7 @@
         "uid": "12cde23e9a333fdd03313c4cdbd82d51033f9bb3bd505466a8db5360faf166b4",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "TransitionTemperature",
@@ -3582,7 +3958,7 @@
         "uid": "f8b092359048e5130d56697ca9504bb4740b875aca685a8f760316bfb5e9a661",
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "Voltage",
@@ -3661,7 +4037,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "Catalog defect. The wavevector enters as the free component q^alpha and q^beta instead of the contracted q_gamma and q_delta, so the q dependence cancels and the term is independent of q; the formula also lacks e^2 and ties alpha and beta to nothing in D_{i,j}. The q -> 0 form is D^NA_{kappa alpha, kappa' beta} = (4 pi e^2 / Omega) (sum_gamma q_gamma Z*_{kappa, gamma alpha}) (sum_delta q_delta Z*_{kappa', delta beta}) / ((sum_{gamma delta} q_gamma eps_inf_{gamma delta} q_delta) sqrt(M_kappa M_kappa')) in Gaussian units (4 pi e^2 -> e^2/eps_0 in SI), with Gonze-Lee Ewald sums at finite q."
       },
       {
         "id": "autocorrelate_heat_current",
@@ -3677,7 +4053,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "combine_kappa_wigner",
@@ -3694,7 +4070,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "compute_adsorption_energy",
@@ -3762,7 +4138,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "compute_bulk_modulus_eos",
@@ -3887,7 +4263,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "compute_configurational_energy",
@@ -3919,9 +4295,11 @@
           "Frequency",
           "Eigenvectors"
         ],
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "binding_ids": [
+          "crystal-phonon-dispersion"
+        ],
+        "status": "mapped",
+        "reason": "See the conditions and evidence for each mapping."
       },
       {
         "id": "compute_dos",
@@ -3937,7 +4315,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "compute_dynamical_matrix",
@@ -3951,9 +4329,11 @@
         "outputs": [
           "BareDynamicalMatrix"
         ],
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "binding_ids": [
+          "crystal-dynamical-matrix"
+        ],
+        "status": "mapped",
+        "reason": "See the conditions and evidence for each mapping."
       },
       {
         "id": "compute_elastic_constants",
@@ -4094,7 +4474,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "compute_force_constants[order=3]",
@@ -4110,7 +4490,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "compute_forces_hf",
@@ -4196,9 +4576,11 @@
         "outputs": [
           "GroupVelocity"
         ],
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "binding_ids": [
+          "crystal-group-velocity"
+        ],
+        "status": "mapped",
+        "reason": "See the conditions and evidence for each mapping."
       },
       {
         "id": "compute_gruneisen",
@@ -4217,7 +4599,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "compute_heat_capacity",
@@ -4270,7 +4652,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "compute_homo_lumo_gap",
@@ -4359,7 +4741,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "compute_kappa[transport_model=qhgk]",
@@ -4379,7 +4761,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "compute_kappa[transport_model=wigner_coherences]",
@@ -4398,7 +4780,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "compute_kappa[transport_model=wigner_populations]",
@@ -4416,7 +4798,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "compute_linewidth[channel=anharmonic_3ph]",
@@ -4435,7 +4817,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "compute_magnetic_moments",
@@ -4470,7 +4852,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "compute_molar_enthalpy",
@@ -4520,7 +4902,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "compute_participation_ratio",
@@ -4534,9 +4916,11 @@
         "outputs": [
           "ParticipationRatio"
         ],
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "binding_ids": [
+          "participation-ratio-bounds"
+        ],
+        "status": "local",
+        "reason": "No Physlib model covers this formula. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
       },
       {
         "id": "compute_phase_fractions",
@@ -4569,7 +4953,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "compute_qha_gibbs",
@@ -4744,7 +5128,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "contract_bulk_modulus",
@@ -4796,7 +5180,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "Catalog defect. The cumulative operators take the linearized-BTE F (MeanFreeDisplacement[bte_solver=direct_inverse]), for which kappa_cum is a signed partial sum, so the catalog's saturating-distribution and median-mean-free-path semantics do not hold. OMAIPhyslibKappaContraction proves an exact three-mode linearized BTE (one process 1+2 <-> 3, Casimir boundary scattering, Bose-Einstein weights, symmetric positive-definite collision matrix) whose cumulative kappa_xx is not monotone in the cutoff, in both the frequency and the mean-free-path binning; monotonicity holds when every modal contribution is nonnegative, as in the relaxation-time approximation."
       },
       {
         "id": "contract_cumulative_kappa[wrt=omega]",
@@ -4815,7 +5199,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "Catalog defect. The cumulative operators take the linearized-BTE F (MeanFreeDisplacement[bte_solver=direct_inverse]), for which kappa_cum is a signed partial sum, so the catalog's saturating-distribution and median-mean-free-path semantics do not hold. OMAIPhyslibKappaContraction proves an exact three-mode linearized BTE (one process 1+2 <-> 3, Casimir boundary scattering, Bose-Einstein weights, symmetric positive-definite collision matrix) whose cumulative kappa_xx is not monotone in the cutoff, in both the frequency and the mean-free-path binning; monotonicity holds when every modal contribution is nonnegative, as in the relaxation-time approximation."
       },
       {
         "id": "contract_density",
@@ -4938,7 +5322,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "Depends on the defective collision matrix of solve_bte[bte_solver=direct_inverse]. OMAIPhyslibKappaContraction proves, over Mathlib, that the contraction is symmetric and positive semidefinite whenever the collision matrix is symmetric positive semidefinite, but no catalog M satisfies that hypothesis, so the result is not bound."
       },
       {
         "id": "contract_kappa[bte_solver=rta]",
@@ -4954,9 +5338,11 @@
         "outputs": [
           "ThermalConductivity[bte_solver=rta]"
         ],
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "binding_ids": [
+          "canonical-rta-thermal-conductivity"
+        ],
+        "status": "mapped",
+        "reason": "See the conditions and evidence for each mapping."
       },
       {
         "id": "contract_kappa[transport_model=green_kubo]",
@@ -4973,7 +5359,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "contract_kappa[transport_model=hnemd]",
@@ -4990,7 +5376,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "contract_kappa[transport_model=nemd]",
@@ -5007,7 +5393,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "contract_molar_entropy",
@@ -5384,7 +5770,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "hasselman_johnson",
@@ -5421,7 +5807,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "kamal_cure_conversion",
@@ -5514,7 +5900,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "provide_dielectric_tensor",
@@ -5528,7 +5914,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "provide_isotope_abundances",
@@ -5542,7 +5928,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "provide_potential",
@@ -5556,7 +5942,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "provide_temperature",
@@ -5570,7 +5956,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "provide_transmission",
@@ -5584,7 +5970,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "ramp_set_voltage",
@@ -5633,7 +6019,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "run_md",
@@ -5650,7 +6036,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "sample_pmf",
@@ -5667,7 +6053,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "sample_quantum_heat_capacity",
@@ -5684,7 +6070,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "sample_quantum_kinetic_energy",
@@ -5701,7 +6087,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "schottky_mott_barrier",
@@ -5738,7 +6124,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "Catalog defect. The collision matrix M = (2 Gamma/hbar) delta - Xi of the auxiliary formula has the wrong relaxation-time limit (it gives F = hbar c v/(2 Gamma), not the catalog's F = v/(2 Gamma)), is dimensionally inconsistent, and is not symmetric (the energy delta functions and q'' = q - q' in the absorption channel instead of q + q'). A symmetric weighting is M = C^(1/2) Omega~ C^(1/2), with Omega~ the detailed-balance-symmetric collision matrix in rate units and C = diag(c), whose relaxation-time limit is diag(2 Gamma c)."
       },
       {
         "id": "solve_bte[bte_solver=rta]",
@@ -5757,7 +6143,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "solve_equilibrium",
@@ -5809,7 +6195,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No corresponding current Physlib phonon transport, scattering, numerical estimator, or normalization theorem identified in the reviewed source; the compiled harmonic results retain explicit model, frequency, and normalization conditions."
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "sum_thermal_conductivity",
@@ -5851,29 +6237,29 @@
   },
   "coverage": {
     "nodes_total": 129,
-    "nodes_mapped": 30,
+    "nodes_mapped": 33,
     "operators_total": 127,
-    "operators_mapped": 20,
-    "nodes_local": 8,
-    "operators_local": 11,
-    "bindings_total": 31,
+    "operators_mapped": 24,
+    "nodes_local": 9,
+    "operators_local": 12,
+    "bindings_total": 36,
     "source_correspondences": 5,
-    "compiled_bridges": 26,
-    "nodes_compiled": 18,
-    "nodes_compiled_outputs": 17,
+    "compiled_bridges": 31,
+    "nodes_compiled": 21,
+    "nodes_compiled_outputs": 20,
     "nodes_compiled_interpretations": 1,
-    "operators_compiled": 20,
-    "operators_compiled_local": 11,
-    "nodes_compiled_local": 9,
-    "operators_proved": 31,
-    "nodes_proved": 27,
-    "upstream_declarations_referenced": 33,
-    "upstream_modules_referenced": 9,
+    "operators_compiled": 24,
+    "operators_compiled_local": 12,
+    "nodes_compiled_local": 10,
+    "operators_proved": 36,
+    "nodes_proved": 31,
+    "upstream_declarations_referenced": 36,
+    "upstream_modules_referenced": 10,
     "relations": {
       "exact_definition": 1,
-      "conditional": 23,
+      "conditional": 27,
       "conceptual": 4,
-      "local": 3
+      "local": 4
     }
   }
 }

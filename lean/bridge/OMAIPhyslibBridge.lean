@@ -22,3 +22,10 @@ public import OMAIPhyslibQHAWitness
 public import OMAIElasticity
 public import OMAICompositeConductivity
 public import OMAICureKinetics
+public import OMAIPhyslibLatticeDynamics
+public import OMAIPhyslibPhononDispersion
+public import OMAIPhyslibGroupVelocity
+public import OMAIPhyslibLatticeWitness
+public import OMAIPhyslibKappaContraction
+public import OMAIPhyslibRTAConductivity
+public import OMAIPhyslibParticipationRatio

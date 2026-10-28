@@ -57,17 +57,39 @@ TRANCHES = (
                for name in ("diBenedetto", "kamalCureTime")]),
         "modules": ("OMAICompositeConductivity", "OMAICureKinetics"),
     },
+    {
+        "name": "phonon",
+        "contracts": ("phonon-structure-formula-contract.json",),
+        "bindings": frozenset({
+            "canonical-rta-thermal-conductivity", "crystal-dynamical-matrix", "crystal-group-velocity",
+            "crystal-phonon-dispersion", "participation-ratio-bounds"}),
+        "subjects": frozenset({
+            ("node", "BareDynamicalMatrix"), ("node", "GroupVelocity"), ("node", "ParticipationRatio"),
+            ("node", "ThermalConductivity[bte_solver=rta]"), ("operator", "compute_dispersion"),
+            ("operator", "compute_dynamical_matrix"), ("operator", "compute_group_velocity"),
+            ("operator", "compute_participation_ratio"), ("operator", "contract_kappa[bte_solver=rta]")}),
+        "pairs": (
+            {"name": "OMAI.PhyslibBridge.Lattice.DispersionRelation", "module": "OMAIPhyslibLatticeDynamics"},
+            {"name": "OMAI.PhyslibBridge.Lattice.ForceConstants.dynamicalMatrix",
+             "module": "OMAIPhyslibLatticeDynamics"},
+            {"name": "OMAI.PhyslibBridge.Lattice.catalogGroupVelocity", "module": "OMAIPhyslibGroupVelocity"},
+            {"name": "OMAI.PhyslibBridge.Lattice.modeContractedKappa", "module": "OMAIPhyslibKappaContraction"},
+            {"name": "OMAI.PhyslibBridge.Lattice.participationRatio", "module": "OMAIPhyslibParticipationRatio"}),
+        "modules": ("OMAIPhyslibLatticeDynamics", "OMAIPhyslibPhononDispersion", "OMAIPhyslibGroupVelocity",
+                    "OMAIPhyslibLatticeWitness", "OMAIPhyslibKappaContraction", "OMAIPhyslibRTAConductivity",
+                    "OMAIPhyslibParticipationRatio"),
+    },
 )
 
 # The one frozen global coverage ledger of the published bindings.
 GLOBAL_COVERAGE = {
-    "nodes_total": 129, "nodes_mapped": 30, "operators_total": 127, "operators_mapped": 20,
-    "nodes_local": 8, "operators_local": 11, "bindings_total": 31, "source_correspondences": 5,
-    "compiled_bridges": 26, "nodes_compiled": 18, "nodes_compiled_outputs": 17,
-    "nodes_compiled_interpretations": 1, "operators_compiled": 20, "operators_compiled_local": 11,
-    "nodes_compiled_local": 9, "operators_proved": 31, "nodes_proved": 27,
-    "upstream_declarations_referenced": 33, "upstream_modules_referenced": 9,
-    "relations": {"exact_definition": 1, "conditional": 23, "conceptual": 4, "local": 3},
+    "nodes_total": 129, "nodes_mapped": 33, "operators_total": 127, "operators_mapped": 24,
+    "nodes_local": 9, "operators_local": 12, "bindings_total": 36, "source_correspondences": 5,
+    "compiled_bridges": 31, "nodes_compiled": 21, "nodes_compiled_outputs": 20,
+    "nodes_compiled_interpretations": 1, "operators_compiled": 24, "operators_compiled_local": 12,
+    "nodes_compiled_local": 10, "operators_proved": 36, "nodes_proved": 31,
+    "upstream_declarations_referenced": 36, "upstream_modules_referenced": 10,
+    "relations": {"exact_definition": 1, "conditional": 27, "conceptual": 4, "local": 4},
 }
 
 

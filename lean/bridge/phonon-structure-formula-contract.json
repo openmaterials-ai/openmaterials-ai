@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "scope": "Reviewed OMAI formula endpoints and exact Lean proof sources for the harmonic lattice-dynamics layer. Hash and compiled-name checks detect drift and provenance errors; they are not automatic symbolic translation or numerical validation.",
+  "source_path": "lean/bridge/OMAIPhyslibLatticeDynamics.lean",
+  "source_sha256": "25358d33a2c4e12bfc1a45440cbcee81b83eed6d5dd62592499924399f3989c6",
+  "operators": [
+    {
+      "id": "compute_dynamical_matrix",
+      "uid": "67d4d9c1ad01e2aa1705e54ed9edb2d1a0ce601aa0e7c9929a7ba7cbd7259f28",
+      "formula_sha256": "d084d4d043a870f7a1d7dcb9931a150768819a4ce1f993c3620ad5b8e99e8897",
+      "formula_latex": "{D^{bare}}_{i,j,\\mathbf{q}} = \\frac{\\sum_{\\mathbf{R}=-\\infty}^{\\infty} e^{i \\mathbf{R} \\mathbf{q}} {\\Phi^{(2)}}_{i,j,\\mathbf{R}}}{\\sqrt{{M}_{i} {M}_{j}}}",
+      "lean_definition": "OMAI.PhyslibBridge.Lattice.ForceConstants.dynamicalMatrix"
+    },
+    {
+      "id": "compute_dispersion",
+      "uid": "1ab7a3aee9b25b786739afcd517b909e4fdf091c768ab4ecbea007e53633be92",
+      "formula_sha256": "58532a304fabac6818bbb184abfe0a1f3b140583aec52ace8a1b4a73f1d8db5e",
+      "formula_latex": "\\sum_{j=1}^{3 N} {D}_{i,j,\\mathbf{q}} {e}_{j,\\mathbf{q},\\nu} = {\\omega}_{\\mathbf{q},\\nu}^{2} {e}_{i,\\mathbf{q},\\nu}",
+      "lean_definition": "OMAI.PhyslibBridge.Lattice.DispersionRelation"
+    },
+    {
+      "id": "compute_group_velocity",
+      "uid": "3cf7b8aa48dca910c062ce17738ede9cb609bacd7bd685bae23ac698897e38c3",
+      "formula_sha256": "0b3f5977eb1cc8e4d87d72b54acc6ad49ac808800d4c3fbe88b7e9408ab41887",
+      "formula_latex": "{v}_{\\alpha,\\mathbf{q},\\nu} = \\frac{\\sum_{\\substack{1 \\leq j \\leq 3 N\\\\1 \\leq i \\leq 3 N}} \\overline{{e}_{i,\\mathbf{q},\\nu}} {\\partial D/\\partial q}_{i,j,\\alpha,\\mathbf{q}} {e}_{j,\\mathbf{q},\\nu}}{2 {\\omega}_{\\mathbf{q},\\nu}}",
+      "lean_definition": "OMAI.PhyslibBridge.Lattice.catalogGroupVelocity",
+      "definition_source_path": "lean/bridge/OMAIPhyslibGroupVelocity.lean"
+    },
+    {
+      "id": "contract_kappa[bte_solver=rta]",
+      "uid": "712b8145370a0072f225bd2f1d8c954b64311a3ca2f387320aa17e466926513c",
+      "formula_sha256": "2e54bbf0cc370a56c0ffd43f2ca8cdefa185eb02d8d2388124e6586960adac5c",
+      "formula_latex": "{\\kappa}_{\\alpha,\\beta} = \\frac{\\sum_{\\substack{1 \\leq \\mathbf{q} \\leq N_{q}\\\\1 \\leq \\nu \\leq 3 N}} {F}_{\\beta,\\mathbf{q},\\nu} {c}_{\\mathbf{q},\\nu} {v}_{\\alpha,\\mathbf{q},\\nu}}{N_{q} V_{cell}}",
+      "lean_definition": "OMAI.PhyslibBridge.Lattice.modeContractedKappa",
+      "definition_source_path": "lean/bridge/OMAIPhyslibKappaContraction.lean"
+    },
+    {
+      "id": "compute_participation_ratio",
+      "uid": "93c6afe349f877656a16d18074e195ac4257226ce9d863d7f5d10ce96b679715",
+      "formula_sha256": "5f3e67dbd9381917a0ab1c443fbf2698a741f2b3ce881210caac47777a0d07a9",
+      "formula_latex": "{p}_{\\mathbf{q},\\nu} = \\frac{1}{N \\sum_{i=1}^{N} {a}_{i,\\mathbf{q},\\nu}^{2}}",
+      "lean_definition": "OMAI.PhyslibBridge.Lattice.participationRatio",
+      "definition_source_path": "lean/bridge/OMAIPhyslibParticipationRatio.lean"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "BareDynamicalMatrix",
+      "uid": "e62e58716111fdc1dff24d18e75c70904cbb07ce6e0025e24fcdac8c4ed0a53d"
+    },
+    {
+      "id": "GroupVelocity",
+      "uid": "d1934e166dbd0c91125936f9b2ccc0100af0ba44ed439003aae76b47b6d26fc6"
+    },
+    {
+      "id": "ThermalConductivity[bte_solver=rta]",
+      "uid": "d79d88d53266c147ea8d806cdbd30df309199469351ee13bcc9040a98745ebc4"
+    },
+    {
+      "id": "ParticipationRatio",
+      "uid": "09138ae29cee41ae5f1a1758ac65a479625ef4d3c6026bf7ad5b60f884d668a0"
+    }
+  ],
+  "interpretations": [
+    "Physlib.CondensedMatter.Crystal supplies the site and translation bookkeeping: a finitely generated abelian translation group, a finite nonempty unit cell, sites (cell, label) and the translation action. The force-constant and dynamical-matrix content is OMAI-local. A mode index is a unit-cell label with a Cartesian axis.",
+    "Force constants are real second derivatives phi(a, alpha, b, beta) of the lattice potential with equal mixed partials, invariance under every lattice translation and finite range, so the catalog sum over all R is finite. Phi_ij(R) is the reference-cell component i against component j in cell R.",
+    "The index-permutation symmetry Phi_ij(-R) = Phi_ji(R) is derived from the symmetry and translation invariance, not assumed. The phase is the catalog's cell-vector convention e^{+i q.R} = exp(i q.pos(R)); phonopy's atom-position convention conjugates D by diag(e^{i q.tau}), leaves omega^2 and nondegenerate velocities unchanged, and changes eigenvectors by e^{-i q.tau}.",
+    "The dynamical matrix is Hermitian at every wavevector. With the acoustic sum rule the Gamma-point matrix annihilates the three mass-weighted rigid translations, which are linearly independent, so zero has multiplicity at least three.",
+    "DispersionRelation is the catalog equation sum_j D_ij e_j = omega^2 e_i. Folding the crystal force constants into a finite Born-von Karman supercell, Phi_BvK(R) = sum_L Phi(R + L), the supercell dynamical matrix at the character of a commensurate wavevector equals the catalog D(q). If the folded supercell is mechanically stable, D(q) is positive semidefinite at every commensurate q, so omega^2 >= 0 there. Incommensurate wavevectors are not covered.",
+    "Group velocity, on a differentiable eigenvector path away from Gamma: along q + s e_alpha with a differentiable normalized eigenvector and eigenvalue omega^2 > 0 at s = 0, the eigenvalue is differentiable and the catalog expression e^dagger (dD/dq_alpha) e / (2 omega), with the exact derivative of the catalog matrix, is real and equals d omega/d q_alpha (Hellmann-Feynman). The existence of such a path on a nondegenerate branch is a hypothesis; symmetry-enforced degeneracies are excluded.",
+    "Compiled witnesses: the monatomic chain on ofUnitCell Z Unit gives omega^2 = (2K/M)(1 - cos(q_x a)) and catalog velocity a sqrt(K/M) cos(q_x a / 2) on 0 < q_x a < pi; Einstein springs on ofUnitCell (ZMod 3) Unit are mechanically stable.",
+    "The relaxation-time conductivity uses F_alpha = v_alpha/(2 Gamma), Gamma the half-width Im Sigma, and the actual Physlib canonical heat capacity of each harmonic mode at T > 0. With positive linewidths and N_q V_cell > 0 it is symmetric and positive semidefinite, and positive definite exactly when the group velocities span space.",
+    "Local (Mathlib-only): for a normalized mass-weighted eigenvector the participation ratio lies in [1/N, 1], with p = 1 exactly for uniform amplitudes and p = 1/N exactly for a single-atom mode.",
+    "Physlib-anchored proof subjects: compute_dynamical_matrix with BareDynamicalMatrix, compute_dispersion, compute_group_velocity with GroupVelocity, and contract_kappa[bte_solver=rta] with ThermalConductivity[bte_solver=rta]. Local proof subjects: compute_participation_ratio with ParticipationRatio. The non-analytic correction, the linearized BTE, its conductivity and the cumulative distributions are catalog defects and are not covered."
+  ]
+}
