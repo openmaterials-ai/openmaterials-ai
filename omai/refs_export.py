@@ -34,17 +34,31 @@ CURATED = {
     "kaldo": {"methods": ["10.1038/s41467-019-11572-4", "10.1103/PhysRevB.48.12581"]},  # QHGK (Isaeva 2019); Allen-Feldman
     "shengbte": {"methods": ["10.1016/0921-4526(95)00016-3"]},  # iterative BTE (Omini and Sparavigna 1995)
     "phono3py": {"methods": ["10.1103/PhysRevLett.110.265506"]},  # direct solution of the BTE (Chaput 2013)
-    "fairchem": {"code": ["10.48550/arXiv.2410.12771"]},  # OMat24 dataset and models
     "xtb": {"methods": ["10.1021/acs.jctc.9b00143"]},  # xtb's own metadynamics on GFN2-xTB (Grimme 2019); CREST is a separate program and stays out
     "plumed": {"applications": ["10.1103/PhysRevLett.104.190601", "10.1073/pnas.1303186110", "10.1103/PhysRevLett.111.230602", "10.1073/pnas.1811056115"]},  # well-tempered ensemble; funnel metadynamics; infrequent metadynamics; polymorph prediction
     "i-pi": {"applications": ["10.1063/1.4883861", "10.1063/1.4971438", "10.1073/pnas.1815117116"]},  # TRPMD; high-order PIMD; ab initio water thermodynamics
     "mp-api": {"applications": ["10.1126/sciadv.1600225", "10.1126/sciadv.aaq0148", "10.1038/s41524-020-00362-y"]},  # metastability scale; synthesis limit; stability predictions, all on Materials Project data
     "pymatgen-analysis-diffusion": {"applications": ["10.1021/acs.chemmater.5b04013", "10.1038/ncomms11009", "10.1021/acs.chemmater.5b03656"]},  # Na3PSe4 (Ceder group); Na10SnP2S12, pymatgen named for the MSD fit; Na3PS4 (Ong group)
     "rxn-network": {"applications": ["10.1021/jacs.1c06229", "10.1021/acscentsci.3c01051"]},
+    "matgl": {"applications": ["10.1038/s41524-024-01500-6"]},  # fine-tuning universal potentials, benchmarks M3GNet-matgl and CHGNet-matgl
+    "fairchem": {"code": ["10.48550/arXiv.2410.12771"], "applications": ["10.1038/s41524-023-01121-5"]},  # OMat24; AdsorbML with the OCP pretrained checkpoints
+    "pycalphad": {"applications": ["10.1557/mrc.2019.59"]},  # ESPEI, pycalphad as the thermodynamic engine, applied to Cu-Mg
+    "pymatgen": {"applications": ["10.1126/sciadv.1600225", "10.1126/sciadv.aaq0148"]},  # metastability scale (pymatgen input sets, substitutions); synthesis limit (pymatgen workflow)
     "mattergen": {"applications": ["10.1021/acs.jpclett.6c01568", "10.1016/j.jpowsour.2026.240034", "10.1002/batt.202500309", "10.1039/d5mh00010f"]},  # Li-Ga-Sn phase diagrams; garnet conductors; battery chemical space; Szymanski-Bartel benchmark (full text: MatterGen run and retrained)
     "diffcsp": {"applications": ["10.1038/s41524-026-02117-7", "10.1016/j.patter.2026.101537", "10.1038/s41563-025-02355-y"]},  # guided diffusion for superconductors (DiffCSP pretrained and fine-tuned); diffusion models in unexplored chemical space; SCIGEN on DiffCSP  # YMnO3 selectivity, enumerated with the reaction-network package; thermodynamic selectivity with experiments
 }
 EXCLUDE_APPLICATIONS_REVIEWS = {  # reviews, perspectives and overviews that cite a code without using it
+    "10.1038/s41586-023-06735-9": "GNoME trains its own network; M3GNet appears as a baseline only (Merchant 2023)",
+    "10.1038/s43246-022-00315-6": "review of graph neural networks, OC20 named as a dataset (Reiser 2022)",
+    "10.1038/s41524-022-00734-6": "review of deep learning methods, Open Catalyst in passing (Choudhary 2022)",
+    "10.1038/s41586-023-06221-2": "perspective on AI in science, OC20 in the references only (Wang 2023)",
+    "10.1016/j.softx.2015.06.001": "GROMACS software paper (Abraham 2015)",
+    "10.1088/1361-648x/ab4007": "QuantumATK software paper (Smidstrup 2019)",
+    "10.1063/1.5143190": "DFTB+ software paper (Hourahine 2020)",
+    "10.1016/j.actamat.2020.08.008": "review of computational thermodynamics, pycalphad among the references (Liu 2020)",
+    "10.1016/j.actamat.2020.10.043": "high-entropy oxide thermodynamics review, no CALPHAD computation stated (McCormack 2021)",
+    "10.1039/c7ee03364h": "lattice-dynamics descriptor study; package use not verifiable, full text closed (Muy 2018)",
+    "10.1103/physrevlett.115.205901": "screening on Materials Project data; pymatgen cited next to the data, no use statement (Seko 2015)",
     "10.1016/j.neuron.2018.08.011": "review (Molecular Dynamics Simulation for All), not an OpenMM study",
     "10.1002/aenm.201800035": "review of solid electrolyte design strategies (Park 2018)",
     "10.1038/s41578-019-0157-5": "review of interface stability in solid-state batteries (Xiao 2019)",

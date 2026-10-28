@@ -23,18 +23,21 @@
  "methods": [],
  "applications": [
   {
-   "doi": "10.1103/PhysRevLett.115.205901",
-   "title": "Prediction of Low-Thermal-Conductivity Compounds with First-Principles Anharmonic Lattice-Dynamics Calculations and Bayesian Optimization",
+   "doi": "10.1126/sciadv.1600225",
+   "title": "The thermodynamic scale of inorganic crystalline metastability",
    "authors": [
-    "A. Seko",
-    "A. Togo",
-    "H. Hayashi",
-    "K. Tsuda",
-    "L. Chaput",
-    "I. Tanaka"
+    "W. Sun",
+    "S. T. Dacek",
+    "S. P. Ong",
+    "G. Hautier",
+    "A. Jain",
+    "W. D. Richards",
+    "A. C. Gamst",
+    "K. A. Persson",
+    "G. Ceder"
    ],
-   "year": 2015,
-   "journal": "Physical Review Letters"
+   "year": 2016,
+   "journal": "Science Advances"
   },
   {
    "doi": "10.1038/sdata.2018.65",
@@ -55,25 +58,16 @@
    "journal": "Scientific Data"
   },
   {
-   "doi": "10.1039/C7EE03364H",
-   "title": "Tuning mobility and stability of lithium ion conductors based on lattice dynamics",
+   "doi": "10.1126/sciadv.aaq0148",
+   "title": "Thermodynamic limit for synthesis of metastable inorganic materials",
    "authors": [
-    "S. Muy",
-    "J. C. Bachman",
-    "L. Giordano",
-    "H. H. Chang",
-    "D. L. Abernathy",
-    "D. Bansal",
-    "O. Delaire",
-    "S. Hori",
-    "R. Kanno",
-    "F. Maglia",
-    "S. Lupart",
-    "P. Lamp",
-    "Y. Shao-Horn"
+    "M. Aykol",
+    "S. S. Dwaraknath",
+    "W. Sun",
+    "K. A. Persson"
    ],
    "year": 2018,
-   "journal": "Energy &amp; Environmental Science"
+   "journal": "Science Advances"
   }
  ]
 }

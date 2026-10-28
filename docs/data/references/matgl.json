@@ -30,18 +30,21 @@
  "methods": [],
  "applications": [
   {
-   "doi": "10.1038/s41586-023-06735-9",
-   "title": "Scaling deep learning for materials discovery",
+   "doi": "10.1038/s41524-024-01500-6",
+   "title": "Systematic softening in universal machine learning interatomic potentials",
    "authors": [
-    "A. Merchant",
-    "S. Batzner",
-    "S. S. Schoenholz",
-    "M. Aykol",
-    "G. Cheon",
-    "E. D. Cubuk"
+    "B. Deng",
+    "Y. Choi",
+    "P. Zhong",
+    "J. Riebesell",
+    "S. Anand",
+    "Z. Li",
+    "K. Jun",
+    "K. A. Persson",
+    "G. Ceder"
    ],
-   "year": 2023,
-   "journal": "Nature"
+   "year": 2025,
+   "journal": "npj Computational Materials"
   }
  ]
 }

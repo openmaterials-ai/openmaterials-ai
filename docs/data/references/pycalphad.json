@@ -15,23 +15,18 @@
  "methods": [],
  "applications": [
   {
-   "doi": "10.1016/j.actamat.2020.08.008",
-   "title": "Computational thermodynamics and its applications",
+   "doi": "10.1557/mrc.2019.59",
+   "title": "ESPEI for efficient thermodynamic database development, modification, and uncertainty quantification: application to Cu-Mg",
    "authors": [
+    "B. Bocklund",
+    "R. Otis",
+    "A. Egorov",
+    "A. Obaied",
+    "I. Roslyakova",
     "Z. K. Liu"
    ],
-   "year": 2020,
-   "journal": "Acta Materialia"
-  },
-  {
-   "doi": "10.1016/j.actamat.2020.10.043",
-   "title": "Thermodynamics of high entropy oxides",
-   "authors": [
-    "S. J. McCormack",
-    "A. Navrotsky"
-   ],
-   "year": 2021,
-   "journal": "Acta Materialia"
+   "year": 2019,
+   "journal": "MRS Communications"
   }
  ]
 }

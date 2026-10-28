@@ -56,20 +56,6 @@
    "journal": "Physical Review B"
   },
   {
-   "doi": "10.1103/PhysRevLett.115.205901",
-   "title": "Prediction of Low-Thermal-Conductivity Compounds with First-Principles Anharmonic Lattice-Dynamics Calculations and Bayesian Optimization",
-   "authors": [
-    "A. Seko",
-    "A. Togo",
-    "H. Hayashi",
-    "K. Tsuda",
-    "L. Chaput",
-    "I. Tanaka"
-   ],
-   "year": 2015,
-   "journal": "Physical Review Letters"
-  },
-  {
    "doi": "10.1039/C6CP03474H",
    "title": "Dynamic disorder, phonon lifetimes, and the assignment of modes to the vibrational spectra of methylammonium lead halide perovskites",
    "authors": [
