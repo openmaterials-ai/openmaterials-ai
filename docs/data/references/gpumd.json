@@ -103,33 +103,6 @@
    ],
    "year": 2025,
    "journal": "Materials Genome Engineering Advances"
-  },
-  {
-   "doi": "10.1038/s43588-026-01009-6",
-   "title": "NEP89: universal neuroevolution potential for inorganic and organic materials across 89 elements",
-   "authors": [
-    "T. Liang",
-    "K. Xu",
-    "E. Lindgren",
-    "Z. Chen",
-    "R. Zhao",
-    "J. Liu",
-    "E. Berger",
-    "B. Tang",
-    "B. Zhang",
-    "Y. Wang",
-    "K. Song",
-    "P. Ying",
-    "N. Xu",
-    "H. Dong",
-    "S. Chen",
-    "P. Erhart",
-    "Z. Fan",
-    "T. Ala-Nissila",
-    "J. Xu"
-   ],
-   "year": 2026,
-   "journal": "Nature Computational Science"
   }
  ],
  "methods": [
@@ -174,9 +147,49 @@
    ],
    "year": 2021,
    "journal": "Physical Review B"
+  },
+  {
+   "doi": "10.1038/s43588-026-01009-6",
+   "title": "NEP89: universal neuroevolution potential for inorganic and organic materials across 89 elements",
+   "authors": [
+    "T. Liang",
+    "K. Xu",
+    "E. Lindgren",
+    "Z. Chen",
+    "R. Zhao",
+    "J. Liu",
+    "E. Berger",
+    "B. Tang",
+    "B. Zhang",
+    "Y. Wang",
+    "K. Song",
+    "P. Ying",
+    "N. Xu",
+    "H. Dong",
+    "S. Chen",
+    "P. Erhart",
+    "Z. Fan",
+    "T. Ala-Nissila",
+    "J. Xu"
+   ],
+   "year": 2026,
+   "journal": "Nature Computational Science"
   }
  ],
  "applications": [
+  {
+   "doi": "10.1103/PhysRevB.97.094305",
+   "title": "Equivalence of the equilibrium and the nonequilibrium molecular dynamics methods for thermal conductivity calculations: From bulk to nanowire silicon",
+   "authors": [
+    "H. Dong",
+    "Z. Fan",
+    "L. Shi",
+    "A. Harju",
+    "T. Ala-Nissila"
+   ],
+   "year": 2018,
+   "journal": "Physical Review B"
+  },
   {
    "doi": "10.1063/1.5132543",
    "title": "Influence of thermostatting on nonequilibrium molecular dynamics simulations of heat conduction in solids",
@@ -194,6 +207,18 @@
    ],
    "year": 2019,
    "journal": "The Journal of Chemical Physics"
+  },
+  {
+   "doi": "10.1103/PhysRevB.100.064306",
+   "title": "Revisiting phonon-phonon scattering in single-layer graphene",
+   "authors": [
+    "X. Gu",
+    "Z. Fan",
+    "H. Bao",
+    "C. Y. Zhao"
+   ],
+   "year": 2019,
+   "journal": "Physical Review B"
   },
   {
    "doi": "10.1038/s41586-021-03867-8",
@@ -218,17 +243,6 @@
    "journal": "Nature"
   },
   {
-   "doi": "10.1063/5.0069175",
-   "title": "Thermal conductivity prediction by atomistic simulation methods: Recent advances and detailed comparison",
-   "authors": [
-    "X. Gu",
-    "Z. Fan",
-    "H. Bao"
-   ],
-   "year": 2021,
-   "journal": "Journal of Applied Physics"
-  },
-  {
    "doi": "10.1063/5.0147039",
    "title": "Accurate prediction of heat conductivity of water by a neuroevolution potential",
    "authors": [
@@ -242,6 +256,42 @@
    ],
    "year": 2023,
    "journal": "The Journal of Chemical Physics"
+  },
+  {
+   "doi": "10.1038/s41467-024-54554-x",
+   "title": "General-purpose machine-learned potential for 16 elemental metals and their alloys",
+   "authors": [
+    "K. Song",
+    "R. Zhao",
+    "J. Liu",
+    "Y. Wang",
+    "E. Lindgren",
+    "Y. Wang",
+    "S. Chen",
+    "K. Xu",
+    "T. Liang",
+    "P. Ying",
+    "N. Xu",
+    "Z. Zhao",
+    "J. Shi",
+    "J. Wang",
+    "S. Lyu",
+    "Z. Zeng",
+    "S. Liang",
+    "H. Dong",
+    "L. Sun",
+    "Y. Chen",
+    "Z. Zhang",
+    "W. Guo",
+    "P. Qian",
+    "J. Sun",
+    "P. Erhart",
+    "T. Ala-Nissila",
+    "Y. Su",
+    "Z. Fan"
+   ],
+   "year": 2024,
+   "journal": "Nature Communications"
   }
  ]
 }

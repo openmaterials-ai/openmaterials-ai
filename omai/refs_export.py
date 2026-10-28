@@ -30,10 +30,17 @@ GROUPS = ("code", "methods", "applications")
 # there, otherwise from doi.org (CSL JSON). The Zotero collections should carry them too; this map
 # is the record of what was curated and why until they do.
 CURATED = {
-    "gpumd": {"methods": ["10.1103/PhysRevB.104.104309"], "code": ["10.1038/s43588-026-01009-6"]},  # NEP framework; NEP89, a model the code serves
-    "kaldo": {"methods": ["10.1038/s41467-019-11572-4", "10.1103/PhysRevB.48.12581"]},  # QHGK (Isaeva 2019); Allen-Feldman
-    "shengbte": {"methods": ["10.1016/0921-4526(95)00016-3"]},  # iterative BTE (Omini and Sparavigna 1995)
-    "phono3py": {"methods": ["10.1103/PhysRevLett.110.265506"]},  # direct solution of the BTE (Chaput 2013)
+    "gpumd": {"methods": ["10.1103/PhysRevB.104.104309", "10.1038/s43588-026-01009-6"],  # NEP framework; NEP89, the potential the platform serves through GPUMD
+              "applications": ["10.1103/PhysRevB.100.064306", "10.1103/PhysRevB.97.094305", "10.1038/s41467-024-54554-x"]},  # graphene HNEMD; EMD vs NEMD silicon; 16-metal NEP, all name GPUMD as the engine
+    "kaldo": {"methods": ["10.1038/s41467-019-11572-4", "10.1103/PhysRevB.48.12581"],  # QHGK (Isaeva 2019); Allen-Feldman
+              "applications": ["10.1038/s41524-023-01116-2", "10.1103/PhysRevB.103.024204"]},  # finite-size scaling in glasses; amorphous alloys, both computed with kALDo
+    "shengbte": {"methods": ["10.1016/0921-4526(95)00016-3"],  # iterative BTE (Omini and Sparavigna 1995)
+                 "applications": ["10.1103/PhysRevLett.113.185501", "10.1039/c4cp04858j", "10.1038/s41567-019-0520-x"]},  # compressive sensing lattice dynamics; phosphorene; Wigner transport in glasses, all run ShengBTE
+    "phono3py": {"methods": ["10.1103/PhysRevLett.110.265506"],  # direct solution of the BTE (Chaput 2013)
+                 "applications": ["10.1103/PhysRevX.12.041011", "10.1039/c8cp00350e"]},  # Wigner formulation implemented in phono3py; Janus MoSSe with phono3py
+    "phonopy": {"applications": ["10.1103/PhysRevB.92.144308", "10.1039/c6cp03474h"]},  # MAPbI3 lattice dynamics; dynamic disorder in hybrid perovskites, both with phonopy
+    "amset": {"applications": ["10.1021/acsenergylett.2c01464", "10.1038/s41524-021-00521-9"]},  # band versus polaron mobilities; Cs3Cu2I5, both with AMSET
+    "ase": {"applications": ["10.1088/2053-1583/aacfc1", "10.1038/s41467-022-29939-5"]},  # C2DB workflow in ASE; NequIP forces through ASE
     "xtb": {"methods": ["10.1021/acs.jctc.9b00143"]},  # xtb's own metadynamics on GFN2-xTB (Grimme 2019); CREST is a separate program and stays out
     "plumed": {"applications": ["10.1103/PhysRevLett.104.190601", "10.1073/pnas.1303186110", "10.1103/PhysRevLett.111.230602", "10.1073/pnas.1811056115"]},  # well-tempered ensemble; funnel metadynamics; infrequent metadynamics; polymorph prediction
     "i-pi": {"applications": ["10.1063/1.4883861", "10.1063/1.4971438", "10.1073/pnas.1815117116"]},  # TRPMD; high-order PIMD; ab initio water thermodynamics
@@ -48,6 +55,12 @@ CURATED = {
     "diffcsp": {"applications": ["10.1038/s41524-026-02117-7", "10.1016/j.patter.2026.101537", "10.1038/s41563-025-02355-y"]},  # guided diffusion for superconductors (DiffCSP pretrained and fine-tuned); diffusion models in unexplored chemical space; SCIGEN on DiffCSP  # YMnO3 selectivity, enumerated with the reaction-network package; thermodynamic selectivity with experiments
 }
 EXCLUDE_APPLICATIONS_REVIEWS = {  # reviews, perspectives and overviews that cite a code without using it
+    "10.1063/5.0055593": "review of thermal transport in defective materials, kALDo in the references only (Hanus 2021)",
+    "10.1007/s40766-023-00041-w": "review of non-Fourier transport, kALDo in the references only (Benenti 2023)",
+    "10.1038/s41563-021-00918-3": "review of phonon-engineered materials, ShengBTE in the references only (Qian 2021)",
+    "10.1038/s41524-023-01107-3": "EPW review, AMSET named among alternative codes (Lee 2023)",
+    "10.1063/1.5064602": "tutorial review of phonon frameworks, no ASE-driven calculation (McGaughey 2019)",
+    "10.1063/5.0069175": "perspective, paywalled, GPUMD use not verifiable (Gu 2021)",
     "10.1038/s41586-023-06735-9": "GNoME trains its own network; M3GNet appears as a baseline only (Merchant 2023)",
     "10.1038/s43246-022-00315-6": "review of graph neural networks, OC20 named as a dataset (Reiser 2022)",
     "10.1038/s41524-022-00734-6": "review of deep learning methods, Open Catalyst in passing (Choudhary 2022)",
@@ -82,6 +95,10 @@ EXCLUDE_APPLICATIONS_REVIEWS = {  # reviews, perspectives and overviews that cit
 # Never exported as an application: a paper that cites the code but is another tool's software or
 # method paper, a dataset, or a review, found in the 2026-10-28 physics review. Kept here rather
 # than in Zotero so a re-export stays consistent; the Zotero items carry the tag "not-an-application".
+EXCLUDE_PER_CODE = {  # a paper that uses another code of the roster: (code key, doi) pairs
+    ("phono3py", "10.1103/physrevb.92.144308"): "harmonic phonons with phonopy, no lifetimes (Brivio 2015)",
+    ("phono3py", "10.1039/c6cp03474h"): "finite displacements with phonopy, lifetimes measured by Raman (Leguy 2016)",
+}
 EXCLUDE_APPLICATIONS = {
     "10.1103/physrevb.73.155114": "CASTEP DFPT paper (Refson 2006), not a VASP study",
     "10.1063/5.0155600": "DeePMD-kit software paper",
@@ -210,7 +227,8 @@ def _export(db: sqlite3.Connection, out_dir: Path) -> dict[str, dict[str, int]]:
             ).fetchall()
             for (item_id,) in items:
                 e = _entry(db, item_id)
-                if e and group == "applications" and e["doi"].lower() in {*EXCLUDE_APPLICATIONS, *EXCLUDE_APPLICATIONS_REVIEWS}:
+                if e and group == "applications" and (e["doi"].lower() in {*EXCLUDE_APPLICATIONS, *EXCLUDE_APPLICATIONS_REVIEWS}
+                                                      or (key, e["doi"].lower()) in EXCLUDE_PER_CODE):
                     continue
                 if e:  # the registry record is the reference of record; Zotero's copy can carry a PDF's embedded metadata
                     try:

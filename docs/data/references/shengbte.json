@@ -28,6 +28,32 @@
  ],
  "applications": [
   {
+   "doi": "10.1103/PhysRevLett.113.185501",
+   "title": "Lattice Anharmonicity and Thermal Conductivity from Compressive Sensing of First-Principles Calculations",
+   "authors": [
+    "F. Zhou",
+    "W. Nielson",
+    "Y. Xia",
+    "V. Ozoliņš"
+   ],
+   "year": 2014,
+   "journal": "Physical Review Letters"
+  },
+  {
+   "doi": "10.1039/c4cp04858j",
+   "title": "Anisotropic intrinsic lattice thermal conductivity of phosphorene from first principles",
+   "authors": [
+    "G. Qin",
+    "Q. B. Yan",
+    "Z. Qin",
+    "S. Y. Yue",
+    "M. Hu",
+    "G. Su"
+   ],
+   "year": 2015,
+   "journal": "Physical Chemistry Chemical Physics"
+  },
+  {
    "doi": "10.1038/nphys3492",
    "title": "Orbitally driven giant phonon anharmonicity in SnSe",
    "authors": [
@@ -57,6 +83,17 @@
    "journal": "Science"
   },
   {
+   "doi": "10.1038/s41567-019-0520-x",
+   "title": "Unified theory of thermal transport in crystals and glasses",
+   "authors": [
+    "M. Simoncelli",
+    "N. Marzari",
+    "F. Mauri"
+   ],
+   "year": 2019,
+   "journal": "Nature Physics"
+  },
+  {
    "doi": "10.1016/j.nanoen.2020.105716",
    "title": "Exceptional piezoelectricity, high thermal conductivity and stiffness and promising photocatalysis in two-dimensional MoSi2N4 family confirmed by first-principles",
    "authors": [
@@ -69,17 +106,6 @@
    ],
    "year": 2021,
    "journal": "Nano Energy"
-  },
-  {
-   "doi": "10.1038/s41563-021-00918-3",
-   "title": "Phonon-engineered extreme thermal conductivity materials",
-   "authors": [
-    "X. Qian",
-    "J. Zhou",
-    "G. Chen"
-   ],
-   "year": 2021,
-   "journal": "Nature Materials"
   }
  ]
 }

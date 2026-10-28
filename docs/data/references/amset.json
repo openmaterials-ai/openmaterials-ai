@@ -34,31 +34,28 @@
    "journal": "Advanced Functional Materials"
   },
   {
-   "doi": "10.1038/s41524-023-01107-3",
-   "title": "Electron-phonon physics from first principles using the EPW code",
+   "doi": "10.1038/s41524-021-00521-9",
+   "title": "Prediction of high thermoelectric performance in the low-dimensional metal halide Cs3Cu2I5",
    "authors": [
-    "H. Lee",
-    "S. Poncé",
-    "K. Bushick",
-    "S. Hajinazar",
-    "J. Lafuente-Bartolome",
-    "J. Leveillee",
-    "C. Lian",
-    "J. M. Lihm",
-    "F. Macheda",
-    "H. Mori",
-    "H. Paudyal",
-    "W. H. Sio",
-    "S. Tiwari",
-    "M. Zacharias",
-    "X. Zhang",
-    "N. Bonini",
-    "E. Kioupakis",
-    "E. R. Margine",
-    "F. Giustino"
+    "Y. K. Jung",
+    "I. T. Han",
+    "Y. C. Kim",
+    "A. Walsh"
    ],
-   "year": 2023,
+   "year": 2021,
    "journal": "npj Computational Materials"
+  },
+  {
+   "doi": "10.1021/acsenergylett.2c01464",
+   "title": "Band versus Polaron: Charge Transport in Antimony Chalcogenides",
+   "authors": [
+    "X. Wang",
+    "A. M. Ganose",
+    "S. R. Kavanagh",
+    "A. Walsh"
+   ],
+   "year": 2022,
+   "journal": "ACS Energy Letters"
   },
   {
    "doi": "10.1103/PhysRevApplied.19.044052",
