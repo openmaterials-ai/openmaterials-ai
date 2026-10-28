@@ -59,16 +59,6 @@
  "methods": [],
  "applications": [
   {
-   "doi": "10.1016/j.neuron.2018.08.011",
-   "title": "Molecular Dynamics Simulation for All",
-   "authors": [
-    "S. A. Hollingsworth",
-    "R. O. Dror"
-   ],
-   "year": 2018,
-   "journal": "Neuron"
-  },
-  {
    "doi": "10.1093/nar/gky427",
    "title": "SWISS-MODEL: homology modelling of protein structures and complexes",
    "authors": [

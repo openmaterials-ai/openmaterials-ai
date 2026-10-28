@@ -14,7 +14,21 @@
    "journal": "Computer Physics Communications"
   }
  ],
- "methods": [],
+ "methods": [
+  {
+   "doi": "10.1016/0921-4526(95)00016-3",
+   "title": "Ab initio variational approach for evaluating lattice thermal conductivity",
+   "authors": [
+    "G. Fugallo",
+    "M. Lazzeri",
+    "L. Paulatto",
+    "F. M. P. R. B",
+    "2013"
+   ],
+   "year": 2020,
+   "journal": "APS"
+  }
+ ],
  "applications": [
   {
    "doi": "10.1038/nphys3492",

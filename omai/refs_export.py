@@ -24,6 +24,22 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 OUT_DIR = ROOT / "docs" / "data" / "references"
 GROUPS = ("code", "methods", "applications")
+# Papers added by hand to a group (DOIs). Metadata comes from the Zotero library when the item is
+# there, otherwise from doi.org (CSL JSON). The Zotero collections should carry them too; this map
+# is the record of what was curated and why until they do.
+CURATED = {
+    "gpumd": {"methods": ["10.1103/PhysRevB.104.104309", "10.1038/s43588-026-01009-6"]},  # NEP framework; NEP89
+    "kaldo": {"methods": ["10.1038/s41467-019-11572-4", "10.1103/PhysRevB.48.12581"]},  # QHGK (Isaeva 2019); Allen-Feldman
+    "shengbte": {"methods": ["10.1016/0921-4526(95)00016-3"]},  # iterative BTE (Omini and Sparavigna 1995)
+    "phono3py": {"methods": ["10.1103/PhysRevLett.110.265506"]},  # direct solution of the BTE (Chaput 2013)
+    "fairchem": {"code": ["10.48550/arXiv.2410.12771"]},  # OMat24 dataset and models
+    "xtb": {"applications": ["10.1021/acs.jctc.9b00143", "10.1039/C9CP06869D"]},  # CREST conformer search on GFN2-xTB
+    "plumed": {"applications": ["10.1103/PhysRevLett.104.190601", "10.1073/pnas.1303186110", "10.1103/PhysRevLett.111.230602", "10.1073/pnas.1811056115"]},  # well-tempered ensemble; funnel metadynamics; infrequent metadynamics; polymorph prediction
+    "i-pi": {"applications": ["10.1063/1.4883861", "10.1063/1.4971438", "10.1073/pnas.1815117116"]},  # TRPMD; high-order PIMD; ab initio water thermodynamics
+}
+EXCLUDE_APPLICATIONS_REVIEWS = {
+    "10.1016/j.neuron.2018.08.011": "review (Molecular Dynamics Simulation for All), not an OpenMM study",
+}
 # Never exported as an application: a paper that cites the code but is another tool's software or
 # method paper, a dataset, or a review, found in the 2026-10-28 physics review. Kept here rather
 # than in Zotero so a re-export stays consistent; the Zotero items carry the tag "not-an-application".
@@ -79,6 +95,28 @@ def _authors(db: sqlite3.Connection, item_id: int) -> list[str]:
     return out
 
 
+def _entry_from_doi(db: sqlite3.Connection, doi: str) -> dict | None:
+    """The Zotero item with this DOI, or the doi.org CSL record when the library lacks it."""
+    row = db.execute(
+        "select d.itemID from itemData d join itemDataValues v on v.valueID=d.valueID join fields f on f.fieldID=d.fieldID "
+        "where f.fieldName='DOI' and lower(v.value)=lower(?)",
+        (doi,),
+    ).fetchone()
+    if row:
+        return _entry(db, row[0])
+    import json as _json
+    import urllib.request
+
+    req = urllib.request.Request("https://doi.org/" + doi, headers={"Accept": "application/vnd.citationstyles.csl+json"})
+    with urllib.request.urlopen(req, timeout=30) as r:
+        csl = _json.load(r)
+    year = (csl.get("issued") or {}).get("date-parts", [[None]])[0][0]
+    authors = [f"{' '.join(p[0] + '.' for p in a.get('given', '').replace('-', ' ').split())} {a.get('family', '')}".strip()
+               for a in csl.get("author", []) if a.get("family")]
+    return {"doi": doi, "title": " ".join(str(csl.get("title", "")).split()), "authors": authors, "year": year,
+            "journal": csl.get("container-title") or csl.get("publisher") or ""}
+
+
 def _entry(db: sqlite3.Connection, item_id: int) -> dict | None:
     title = _field(db, item_id, "title").strip()
     doi = _field(db, item_id, "DOI").strip()
@@ -125,10 +163,16 @@ def _export(db: sqlite3.Connection, out_dir: Path) -> dict[str, dict[str, int]]:
             ).fetchall()
             for (item_id,) in items:
                 e = _entry(db, item_id)
-                if e and group == "applications" and e["doi"].lower() in EXCLUDE_APPLICATIONS:
+                if e and group == "applications" and e["doi"].lower() in {*EXCLUDE_APPLICATIONS, *EXCLUDE_APPLICATIONS_REVIEWS}:
                     continue
                 if e and e["doi"].lower() not in {x["doi"].lower() for x in groups[group]}:
                     groups[group].append(e)
+        for group, dois in CURATED.get(key, {}).items():
+            for doi in dois:
+                if doi.lower() not in {x["doi"].lower() for x in groups[group]}:
+                    e = _entry_from_doi(db, doi)
+                    if e:
+                        groups[group].append(e)
         for g in GROUPS:  # year ascending inside a group: the story of a code reads forward
             groups[g].sort(key=lambda e: (e["year"] or 0, e["title"]))
         (out_dir / f"{key}.json").write_text(json.dumps({"key": key, **groups}, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")

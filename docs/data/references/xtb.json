@@ -30,5 +30,26 @@
   }
  ],
  "methods": [],
- "applications": []
+ "applications": [
+  {
+   "doi": "10.1021/acs.jctc.9b00143",
+   "title": "Exploration of Chemical Compound, Conformer, and ReactionSpace with Meta-Dynamics Simulations Based on Tight-Binding QuantumChemical Calculations",
+   "authors": [
+    "S. Grimme"
+   ],
+   "year": 2019,
+   "journal": "Journal of Chemical Theory and Computation"
+  },
+  {
+   "doi": "10.1039/C9CP06869D",
+   "title": "Automated exploration of the low-energy chemical space with fast quantum chemical methods",
+   "authors": [
+    "P. Pracht",
+    "F. Bohle",
+    "S. Grimme"
+   ],
+   "year": 2020,
+   "journal": "Physical Chemistry Chemical Physics"
+  }
+ ]
 }

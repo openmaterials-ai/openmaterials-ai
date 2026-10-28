@@ -25,7 +25,17 @@
    "journal": "Journal of Physics: Condensed Matter"
   }
  ],
- "methods": [],
+ "methods": [
+  {
+   "doi": "10.1103/PhysRevLett.110.265506",
+   "title": "Direct Solution to the Linearized Phonon Boltzmann Equation",
+   "authors": [
+    "L. Chaput"
+   ],
+   "year": 2013,
+   "journal": "Physical Review Letters"
+  }
+ ],
  "applications": [
   {
    "doi": "10.1103/PhysRevB.92.144308",
