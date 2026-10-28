@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "scope": "Reviewed OMAI formula endpoints and exact Lean proof source for local theorems with no Physlib physics counterpart. Hash and compiled-name checks detect drift and provenance errors; they are not automatic symbolic translation or numerical validation.",
+  "source_path": "lean/bridge/OMAIDeviceMetrology.lean",
+  "source_sha256": "8dfed303eb739c86d244aff50d74f1050b71a1ddf7d443902de2d50912507060",
+  "operators": [
+    {
+      "id": "apply_conductance_drift",
+      "uid": "f1e70e363faaf1f396092f32ad11a3807bdc9e0a4a11c95e8479a9d069e4f2ec",
+      "formula_sha256": "4fd6bd7d557005282f8b1babd293cc0d95e6fc85b93deeb6c49956a491a8718f",
+      "formula_latex": "G_{c} = G_{0} \\left(\\frac{t_{d}}{t_{d,0}}\\right)^{- \\nu_{drift}}",
+      "lean_definition": "OMAI.PhyslibBridge.DeviceMetrology.driftConductance"
+    },
+    {
+      "id": "emit_thermionic_conductance",
+      "uid": "58a959a412e7f92ec955cad34321812f5df453e9db8dcf4f8eb706f109bdf09a",
+      "formula_sha256": "ae5ff88ffc8727046fd976c9097a5bb5745bb1908718b89aceb84914d38ed3da",
+      "formula_latex": "G_{c} = \\frac{P_{th} T q_{e} e^{- \\frac{\\Phi_{Bn}}{T k_{B}}}}{k_{B}}",
+      "lean_definition": "OMAI.PhyslibBridge.DeviceMetrology.thermionicConductance"
+    },
+    {
+      "id": "zero_bias_retention",
+      "uid": "10e6c7d5ab4087efdea29cf2219771cd55f19a87c50c19ca46756620116344e8",
+      "formula_sha256": "0d49b118dcf2f3478766bb23218c8161e098df186770bcebe8779d0aa58aaf61",
+      "formula_latex": "\\tau_{ret} = \\frac{e^{\\frac{E_{m}}{T k_{B}}}}{\\nu_{0}}",
+      "lean_definition": "OMAI.PhyslibBridge.DeviceMetrology.retentionTime"
+    },
+    {
+      "id": "ramp_set_voltage",
+      "uid": "9ab6278d7c06fcac5a8f9bcea7c65eb193c793c435822f24ca6762da34880dea",
+      "formula_sha256": "dd1bf4e3e7338f03029e6d92efb5631aed804fe383d0cf857b8fb26703ce77a9",
+      "formula_latex": "V_{set} = - \\frac{\\gamma T k_{B}}{\\alpha_{F}} + \\frac{E_{m} - T k_{B} \\log{\\left(\\frac{T g_{r} k_{B} \\nu_{0}}{\\alpha_{F}} \\right)}}{\\alpha_{F}}",
+      "lean_definition": "OMAI.PhyslibBridge.DeviceMetrology.rampSetVoltage"
+    },
+    {
+      "id": "propagate_programming_error",
+      "uid": "4517674f602a29f64ecc7140384fc486ee295233ce03ca7dc6bbec7eb00a91c2",
+      "formula_sha256": "4977f8d380bdaa87a5000420f6c515cae3a2203ab4269d84301a6252b65c8917",
+      "formula_latex": "\\epsilon_{dot} = \\frac{c_{G} \\sqrt{\\frac{S_{1} w_{max}}{W_{G} - 1} + \\frac{S_{2}}{2} + \\frac{n_{w} w_{max}^{2}}{2 \\left(W_{G} - 1\\right)^{2}}}}{S_{1}}",
+      "lean_definition": "OMAI.PhyslibBridge.DeviceMetrology.programmingError"
+    },
+    {
+      "id": "dissipate_pulse_energy",
+      "uid": "3714b2588a2c9400c356080644dab2fcdf778f5224235d6389519e648f41ab8a",
+      "formula_sha256": "e9880765ed8745f0415055ed80e1770d0fcf29a8935ec292448b5594058bb8e7",
+      "formula_latex": "E_{pulse} = G_{c} V_{p}^{2} t_{p}",
+      "lean_definition": "OMAI.PhyslibBridge.DeviceMetrology.pulseEnergy"
+    },
+    {
+      "id": "contract_device_conductance",
+      "uid": "7f5e524af6d302713934d4a2bd5901abc64efdad9a5f8822bd19fe28b5b27cdf",
+      "formula_sha256": "a57aff2c7d45172298a807999f389328df1fbd97817154a86ab9c138a420dd19",
+      "formula_latex": "G_{c} = \\frac{A_{g} \\sigma_{el}}{L_{g}}",
+      "lean_definition": "OMAI.PhyslibBridge.DeviceMetrology.deviceConductance"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "ConductanceState",
+      "uid": "325f09352a8872995fe6ab0a40b9df8780a778389fa0fe00ebcbd9ef7758f4a3"
+    },
+    {
+      "id": "DotProductError",
+      "uid": "1e6467a5b03397510e0d7f33403fd1cb42de5ea579e1f36b074d8dbbc620da20"
+    },
+    {
+      "id": "ProgrammingPulseEnergy",
+      "uid": "4dc358661b8a847db69d30a786b2b1475f1a291809bb34f55612d3203975be34"
+    },
+    {
+      "id": "RetentionTime",
+      "uid": "4280779257128d9b63d9180e7b7b03ab80beac66ee35480b178a09fa46b289f2"
+    },
+    {
+      "id": "SetVoltage",
+      "uid": "5b46cb4fc1bf84f1fa97e2b52a352694f5c98c856e9b9034763243994a1c2d21"
+    }
+  ],
+  "interpretations": [
+    "Energies (Phi_Bn, E_m) are in joules, T in kelvin, k_B and q_e exact SI; an energy in eV read as joules gives a wrong result by a factor 1.6e-19. The theorems hold in any coherent unit embedding.",
+    "apply_conductance_drift is G_0 (t_d/t_{d,0})^(-nu) for positive times inside the fitted range; the drift exponent is minus the slope of log G against log t_d at every time and does not depend on the reference time.",
+    "emit_thermionic_conductance is the zero-bias small-signal slope of the three-dimensional Richardson-Dushman current of one contact with ideality factor 1; with an ideality factor n the slope is G/n for I_s (exp(q_e V/(n k_B T)) - 1) and G for I_s exp(q_e V/(n k_B T)) (1 - exp(-q_e V/(k_B T))).",
+    "zero_bias_retention is the mean of the exponential exit time of one path at the Arrhenius rate nu_0 exp(-E_m/(k_B T)); M equivalent paths divide it by M.",
+    "ramp_set_voltage is the mean of the minimum-Gumbel law of the first hop under a linear ramp with dwell g_r per volt, the hop rate nu_0 exp(-(E_m - alpha_F V)/(k_B T)) and the hops at zero and negative bias neglected; the neglected expected count is g_r k_B T/(alpha_F tau_ret).",
+    "propagate_programming_error is the per-cell model of the catalog description (affine mapping, positive and negative column groups, binary inputs with E[x^2] = 1/2, independent unbiased cell errors of coefficient of variation c) written with the kernel moments n_w, w_max, S_1 = sum |w_i| and S_2 = sum w_i^2 of the nonzero weights.",
+    "dissipate_pulse_energy is V_p^2 G t_p for a conductance constant during the pulse; for a conductance that changes monotonically the dissipated energy lies between its values at the initial and the final conductance.",
+    "contract_device_conductance is the uniform-channel conductance; for segments in series it is an upper bound when sigma is the length-averaged conductivity."
+  ]
+}

@@ -66,10 +66,12 @@ This Lean 4.35 package pins Physlib `9b583cb6ef6e9cc537c4d4b786b508de1abbcf42`. 
 - `OMAIPhyslibRTAConductivity.lean`: the relaxation-time conductivity with the actual Physlib canonical mode heat capacities at `T > 0` and positive half-widths `Gamma = Im Sigma` is symmetric and positive semidefinite, and positive definite exactly when the group velocities span space.
 - `OMAIPhyslibKappaContraction.lean` (Mathlib only, not bound): the linearized-BTE conductivity is positive semidefinite when the collision matrix is, but the catalog's collision matrix is defective. A three-mode linearized BTE with one process `1 + 2 <-> 3`, Casimir boundary scattering and Bose-Einstein weights has a negative modal contribution, so its cumulative conductivity is not monotone in either binning, which refutes the catalog's cumulative-distribution semantics.
 - `OMAIPhyslibParticipationRatio.lean` (Mathlib only): `1/N <= p <= 1` for a normalized mass-weighted mode, with `p = 1` exactly for uniform amplitudes and `p = 1/N` exactly for a single-atom mode.
+- `OMAIDeviceMetrology.lean`: local theorems over Mathlib for the analog-device formulas. The drift law does not depend on the reference time and its exponent is the log-log slope; the thermionic conductance is the zero-bias slope of the Richardson current, with the ideality-factor cases, and the barrier follows from two temperatures; the retention time is the mean exit time over M paths; the ramp set voltage is the Gumbel mean of the first hop, through Gamma'(1) = -gamma; the programming error equals its per-cell model, decreases with the window and exceeds c/sqrt(2 n_w); the pulse energy brackets a monotone switching pulse; the uniform-channel conductance bounds a series channel.
+- `OMAIMaterialsTransport.lean`: local theorems over Mathlib for Arrhenius diffusion and Nernst-Einstein conduction. Weighted least squares on log D against 1/T recovers E_a exactly; sigma T is Arrhenius with E_a and sigma alone has the apparent activation energy E_a - k_B T.
 - `OMAIPhyslibContinuum.lean`: absolute-temperature round trips and beta unit
   scaling; signed three-dimensional inviscid stress and pressure contraction.
 - `*-formula-contract.json`: separately reviewed OMAI endpoint identities and
-  source hashes. All fourteen contracts are required by the audit. New proofs do
+  source hashes. All sixteen contracts are required by the audit. New proofs do
   not rewrite the historical six-formula contract.
 - `build-evidence.json`: source and configuration hashes, pinned dependencies,
   and the transitive axiom audit from a build with warnings treated as errors.

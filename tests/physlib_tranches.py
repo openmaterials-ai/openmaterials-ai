@@ -79,17 +79,39 @@ TRANCHES = (
                     "OMAIPhyslibLatticeWitness", "OMAIPhyslibKappaContraction", "OMAIPhyslibRTAConductivity",
                     "OMAIPhyslibParticipationRatio"),
     },
+    {
+        "name": "devices-materials",
+        "contracts": ("device-metrology-formula-contract.json", "materials-transport-formula-contract.json"),
+        "bindings": frozenset({"analog-device-metrology", "arrhenius-ionic-transport"}),
+        "subjects": frozenset({
+            ("node", "ActivationEnergy"), ("node", "ConductanceState"), ("node", "DotProductError"),
+            ("node", "ElectricalConductivity[carrier=ionic]"), ("node", "ProgrammingPulseEnergy"),
+            ("node", "RetentionTime"), ("node", "SetVoltage"),
+            ("operator", "apply_conductance_drift"), ("operator", "compute_ionic_conductivity"),
+            ("operator", "contract_device_conductance"), ("operator", "dissipate_pulse_energy"),
+            ("operator", "emit_thermionic_conductance"), ("operator", "fit_arrhenius"),
+            ("operator", "propagate_programming_error"), ("operator", "ramp_set_voltage"),
+            ("operator", "zero_bias_retention")}),
+        "pairs": tuple(
+            [{"name": "OMAI.PhyslibBridge.DeviceMetrology." + name, "module": "OMAIDeviceMetrology"}
+             for name in ("deviceConductance", "driftConductance", "programmingError", "pulseEnergy",
+                          "rampSetVoltage", "retentionTime", "thermionicConductance")]
+            + [{"name": "OMAI.PhyslibBridge.MaterialsTransport." + name, "module": "OMAIMaterialsTransport"}
+               for name in ("arrheniusDiffusivity", "ionicConductivity")]),
+        "modules": ("OMAIDeviceMetrology", "OMAIMaterialsTransport"),
+    },
 )
 
 # The one frozen global coverage ledger of the published bindings.
 GLOBAL_COVERAGE = {
     "nodes_total": 129, "nodes_mapped": 33, "operators_total": 127, "operators_mapped": 24,
-    "nodes_local": 9, "operators_local": 12, "bindings_total": 36, "source_correspondences": 5,
-    "compiled_bridges": 31, "nodes_compiled": 21, "nodes_compiled_outputs": 20,
-    "nodes_compiled_interpretations": 1, "operators_compiled": 24, "operators_compiled_local": 12,
-    "nodes_compiled_local": 10, "operators_proved": 36, "nodes_proved": 31,
-    "upstream_declarations_referenced": 36, "upstream_modules_referenced": 10,
-    "relations": {"exact_definition": 1, "conditional": 27, "conceptual": 4, "local": 4},
+    "nodes_local": 16, "operators_local": 21, "bindings_total": 38, "source_correspondences": 5,
+    "compiled_bridges": 33, "nodes_compiled": 21, "nodes_compiled_outputs": 20,
+    "nodes_compiled_interpretations": 1, "operators_compiled": 24,
+    "operators_compiled_local": 21, "nodes_compiled_local": 17, "operators_proved": 45,
+    "nodes_proved": 38, "upstream_declarations_referenced": 36,
+    "upstream_modules_referenced": 10,
+    "relations": {"exact_definition": 1, "conditional": 27, "conceptual": 4, "local": 6},
 }
 
 

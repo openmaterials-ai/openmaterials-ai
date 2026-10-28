@@ -129,6 +129,264 @@
       }
     },
     {
+      "id": "analog-device-metrology",
+      "relation": "local",
+      "targets": [
+        {
+          "kind": "node",
+          "id": "ConductanceState",
+          "uid": "325f09352a8872995fe6ab0a40b9df8780a778389fa0fe00ebcbd9ef7758f4a3"
+        },
+        {
+          "kind": "node",
+          "id": "DotProductError",
+          "uid": "1e6467a5b03397510e0d7f33403fd1cb42de5ea579e1f36b074d8dbbc620da20"
+        },
+        {
+          "kind": "node",
+          "id": "ProgrammingPulseEnergy",
+          "uid": "4dc358661b8a847db69d30a786b2b1475f1a291809bb34f55612d3203975be34"
+        },
+        {
+          "kind": "node",
+          "id": "RetentionTime",
+          "uid": "4280779257128d9b63d9180e7b7b03ab80beac66ee35480b178a09fa46b289f2"
+        },
+        {
+          "kind": "node",
+          "id": "SetVoltage",
+          "uid": "5b46cb4fc1bf84f1fa97e2b52a352694f5c98c856e9b9034763243994a1c2d21"
+        },
+        {
+          "kind": "operator",
+          "id": "apply_conductance_drift",
+          "uid": "f1e70e363faaf1f396092f32ad11a3807bdc9e0a4a11c95e8479a9d069e4f2ec",
+          "formula_sha256": "4fd6bd7d557005282f8b1babd293cc0d95e6fc85b93deeb6c49956a491a8718f"
+        },
+        {
+          "kind": "operator",
+          "id": "contract_device_conductance",
+          "uid": "7f5e524af6d302713934d4a2bd5901abc64efdad9a5f8822bd19fe28b5b27cdf",
+          "formula_sha256": "a57aff2c7d45172298a807999f389328df1fbd97817154a86ab9c138a420dd19"
+        },
+        {
+          "kind": "operator",
+          "id": "dissipate_pulse_energy",
+          "uid": "3714b2588a2c9400c356080644dab2fcdf778f5224235d6389519e648f41ab8a",
+          "formula_sha256": "e9880765ed8745f0415055ed80e1770d0fcf29a8935ec292448b5594058bb8e7"
+        },
+        {
+          "kind": "operator",
+          "id": "emit_thermionic_conductance",
+          "uid": "58a959a412e7f92ec955cad34321812f5df453e9db8dcf4f8eb706f109bdf09a",
+          "formula_sha256": "ae5ff88ffc8727046fd976c9097a5bb5745bb1908718b89aceb84914d38ed3da"
+        },
+        {
+          "kind": "operator",
+          "id": "propagate_programming_error",
+          "uid": "4517674f602a29f64ecc7140384fc486ee295233ce03ca7dc6bbec7eb00a91c2",
+          "formula_sha256": "4977f8d380bdaa87a5000420f6c515cae3a2203ab4269d84301a6252b65c8917"
+        },
+        {
+          "kind": "operator",
+          "id": "ramp_set_voltage",
+          "uid": "9ab6278d7c06fcac5a8f9bcea7c65eb193c793c435822f24ca6762da34880dea",
+          "formula_sha256": "dd1bf4e3e7338f03029e6d92efb5631aed804fe383d0cf857b8fb26703ce77a9"
+        },
+        {
+          "kind": "operator",
+          "id": "zero_bias_retention",
+          "uid": "10e6c7d5ab4087efdea29cf2219771cd55f19a87c50c19ca46756620116344e8",
+          "formula_sha256": "0d49b118dcf2f3478766bb23218c8161e098df186770bcebe8779d0aa58aaf61"
+        }
+      ],
+      "statement": "The catalog's conductance drift law does not depend on the reference time, and its exponent is minus the slope of log G against log t_d. Its thermionic conductance is the zero-bias slope of the Richardson-Dushman current; with an ideality factor n that slope is G/n in the form I_s (exp(q_e V/(n k_B T)) - 1) and G in the form I_s exp(q_e V/(n k_B T)) (1 - exp(-q_e V/(k_B T))), and the barrier follows exactly from conductances at two temperatures. Its retention time is the mean exit time of a constant-rate escape, divided by M for M exit paths, and the barrier follows exactly from retention times at two temperatures. Under a linear voltage ramp the expected hop count from zero bias is the leading term minus g_r k_B T/(alpha_F tau_ret); the leading term is exp((V - V*)/b), b = k_B T/alpha_F, equal to one at the catalog's location V*, and the first-hop voltage with survival exp(-exp((V - V*)/b)) has mean V* - gamma b, the catalog's set voltage. Its programming error equals the per-cell model it was written from, decreases strictly as the conductance window widens, tends to c sqrt(S_2/2)/S_1, and exceeds c/sqrt(2 n_w) for every kernel and window. For a conductance that rises (or falls) monotonically during a pulse, the dissipated energy lies between the catalog's pulse energies at the initial and the final conductance. For a channel of segments in series, the catalog's conductance with the length-averaged conductivity is an upper bound on the true conductance.",
+      "sources": [],
+      "conditions": [
+        "Energies Phi_Bn and E_m are in joules, T in kelvin, k_B and q_e exact SI; P_th in A/K^2, G in siemens, nu_0 in THz and g_r in ps/V as the catalog stores them. An energy in eV read as joules is wrong by a factor 1.6e-19.",
+        "Drift: G_0 is nonzero and all times are positive; the law is the fitted power law inside the time range where nu was fitted.",
+        "Thermionic: one contact, thermionic emission over the barrier without field emission, the three-dimensional T^2 Richardson law, small signal |V| much smaller than k_B T/q_e; the catalog's G is the slope for ideality factor 1, and for an ideality factor n the slope is G/n or G depending on the form of the current law; Phi_Bn is the effective zero-bias barrier. The two-temperature inversion assumes Phi_Bn and P_th independent of temperature for the same contact.",
+        "Retention: one back-hop path at the Arrhenius rate nu_0 exp(-E_m/(k_B T)), or M equivalent paths; the two-temperature inversion assumes E_m and nu_0 independent of temperature. At one temperature E_m and nu_0 cannot be separated.",
+        "Ramp: a linear ramp with dwell g_r per volt (1/ramp rate, or t_p/dV for a staircase), alpha_F > 0, a barrier falling linearly with V, one hop switching the device, the device at temperature T. The mean set voltage uses the leading hop count and neglects hops at zero and negative bias, whose expected number g_r k_B T/(alpha_F tau_ret) must be much smaller than one.",
+        "Programming error: the per-cell model of the catalog description with c > 0, W > 1, w_max > 0, n_w the count of nonzero weights, S_1 = sum |w_i| and S_2 = sum w_i^2. Read noise, drift, IR drop, sneak paths and correlated errors are not included.",
+        "Pulse energy: G is the chord conductance I(V_p)/V_p and changes monotonically during the pulse (rising for SET, falling for RESET); the bracket holds for any width t_p >= 0 in the catalog's time unit.",
+        "Device conductance: current flows along the channel through segments of positive length and conductivity with one cross-section A; the catalog's sigma is then the length-averaged conductivity and the catalog conductance an upper bound, equal for a uniform channel."
+      ],
+      "conventions": {
+        "model_scope": "Closed-form device models: power-law drift, thermionic emission over a Schottky barrier, Arrhenius hopping for retention and ramped set, a per-cell programming-error model, Joule dissipation and series conduction. Physlib has no device model, so these are local theorems about the OMAI formulas over Mathlib reals; no Physlib declaration is identified.",
+        "component_scope": "One device, one contact or one cell array as each operator describes; scalar quantities.",
+        "normalization_basis": "Conductances per device; the programming error is relative to the ideal dot product; hop counts are expected numbers per device.",
+        "frequency_convention": "nu_0 is an attempt frequency in hops per unit time (THz in the catalog), not an angular frequency.",
+        "unit_embedding": "Joules for energies, kelvin, siemens, volts, A/K^2 for P_th, coulombs for alpha_F, and the catalog's canonical ps for times and THz for frequencies; the theorems hold in any coherent embedding.",
+        "held_fixed": "Temperature during a measurement; for the two-temperature inversions the barrier and prefactor are held fixed between the two temperatures; the drift exponent within its fitted range.",
+        "admissibility": "Positive temperatures, times, attempt frequency, alpha_F, g_r and P_th; W > 1 and c > 0 for the programming error; monotone conductance during a pulse; positive segment lengths and conductivities.",
+        "reference_energy": "Barriers are measured from the state that is left: the programmed state for retention, the unprogrammed state for the ramp.",
+        "qpoint_weighting": "Not applicable."
+      },
+      "remaining_obligations": [
+        "Measured or fitted parameters (nu, P_th, Phi_Bn, E_m, nu_0, alpha_F, c) and the measurements behind them are not verified.",
+        "Field and thermionic-field emission, the image-force temperature dependence of the barrier and the T^(3/2) law of two-dimensional injection are not covered.",
+        "The Gumbel standard deviation pi k_B T/(sqrt(6) alpha_F), the N-hop generalization (k_B T/alpha_F)(psi(N) + gamma), device-to-device barrier spread, staircase discretization and Joule heating are not proved.",
+        "The programming-error model's derivation from the stochastic cell model and inputs is stated in the catalog description and checked here only as an identity with its per-cell form; read noise, drift, IR drop, sneak paths, quantization and correlated errors are excluded.",
+        "Capacitive charging energy, drive-electronics energy, contact resistance and short-channel (Landauer) transport are not covered.",
+        "contract_conductance_window, contract_state_coefficient_of_variation and schottky_mott_barrier are definitions with nothing non-obvious to prove and are not bound."
+      ],
+      "evidence": {
+        "kind": "compiled_bridge",
+        "module": "OMAIDeviceMetrology",
+        "declarations": [
+          "OMAI.PhyslibBridge.DeviceMetrology.driftConductance_rereference",
+          "OMAI.PhyslibBridge.DeviceMetrology.driftConductance_logSlope",
+          "OMAI.PhyslibBridge.DeviceMetrology.thermionicConductance_eq_zeroBiasSlope",
+          "OMAI.PhyslibBridge.DeviceMetrology.thermionicConductance_ideality",
+          "OMAI.PhyslibBridge.DeviceMetrology.thermionic_barrier_two_temperatures",
+          "OMAI.PhyslibBridge.DeviceMetrology.retentionTime_mean_exit",
+          "OMAI.PhyslibBridge.DeviceMetrology.retention_barrier_two_temperatures",
+          "OMAI.PhyslibBridge.DeviceMetrology.ramp_expectedHops",
+          "OMAI.PhyslibBridge.DeviceMetrology.leadingHops_eq_exp",
+          "OMAI.PhyslibBridge.DeviceMetrology.ramp_meanSetVoltage",
+          "OMAI.PhyslibBridge.DeviceMetrology.programmingError_eq_cells",
+          "OMAI.PhyslibBridge.DeviceMetrology.programmingError_strictAntiOn",
+          "OMAI.PhyslibBridge.DeviceMetrology.tendsto_programmingError",
+          "OMAI.PhyslibBridge.DeviceMetrology.programmingError_gt",
+          "OMAI.PhyslibBridge.DeviceMetrology.pulseEnergy_bracket",
+          "OMAI.PhyslibBridge.DeviceMetrology.deviceConductance_series_le"
+        ],
+        "source_path": "lean/bridge/OMAIDeviceMetrology.lean",
+        "build_record": "lean/bridge/build-evidence.json",
+        "proved_targets": [
+          {
+            "kind": "operator",
+            "id": "apply_conductance_drift"
+          },
+          {
+            "kind": "operator",
+            "id": "contract_device_conductance"
+          },
+          {
+            "kind": "operator",
+            "id": "dissipate_pulse_energy"
+          },
+          {
+            "kind": "operator",
+            "id": "emit_thermionic_conductance"
+          },
+          {
+            "kind": "operator",
+            "id": "propagate_programming_error"
+          },
+          {
+            "kind": "operator",
+            "id": "ramp_set_voltage"
+          },
+          {
+            "kind": "operator",
+            "id": "zero_bias_retention"
+          },
+          {
+            "kind": "node",
+            "id": "ConductanceState"
+          },
+          {
+            "kind": "node",
+            "id": "DotProductError"
+          },
+          {
+            "kind": "node",
+            "id": "ProgrammingPulseEnergy"
+          },
+          {
+            "kind": "node",
+            "id": "RetentionTime"
+          },
+          {
+            "kind": "node",
+            "id": "SetVoltage"
+          }
+        ],
+        "source_sha256": "8dfed303eb739c86d244aff50d74f1050b71a1ddf7d443902de2d50912507060"
+      }
+    },
+    {
+      "id": "arrhenius-ionic-transport",
+      "relation": "local",
+      "targets": [
+        {
+          "kind": "node",
+          "id": "ActivationEnergy",
+          "uid": "5d35f8f6975629291c51d432d3b137fb5bd92165706d37dbab71366a4714b71d"
+        },
+        {
+          "kind": "node",
+          "id": "ElectricalConductivity[carrier=ionic]",
+          "uid": "3f5753096d30cc6741fe9c6fd5e247e9afbb87b94f5844ec233f9243345d3712"
+        },
+        {
+          "kind": "operator",
+          "id": "compute_ionic_conductivity",
+          "uid": "d4303ca638ffb5ca529f8c681909d728647149d1b79fd02ec8a18c9270afc05c",
+          "formula_sha256": "8beec3f9dffff073f2679da513e2faea9a31883e2e816ad3815c04d18cdc6af5"
+        },
+        {
+          "kind": "operator",
+          "id": "fit_arrhenius",
+          "uid": "1038d2249c062baff931bbc06138496d90157bb4365334cae8c5092866e9b6a4",
+          "formula_sha256": "30b75223fc1faba9136c4731d024ff4a258a6bb2ff8dcb7a170ffc25f9b633d5"
+        }
+      ],
+      "statement": "The weighted least-squares slope of log D against 1/T returns the activation energy exactly, E_a = -k_B times the slope, on data that follow the catalog's Arrhenius law, for every choice of positive weights and at least two distinct temperatures. For such a diffusivity and a temperature-independent carrier density, the catalog's Nernst-Einstein ionic conductivity satisfies d log(sigma T)/d(1/T) = -E_a/k_B and d log(sigma)/d(1/T) = -(E_a - k_B T)/k_B: sigma T is Arrhenius with the diffusion barrier, and fitting sigma alone underestimates it by k_B T.",
+      "sources": [],
+      "conditions": [
+        "E_a is an energy per particle in joules, k_B exact SI, T in kelvin; D_0 > 0. The regression is of log D against 1/T with positive weights and at least two distinct temperatures, on data that follow the Arrhenius law exactly.",
+        "Nernst-Einstein with the tracer diffusivity (Haven ratio 1); the carrier density n_c, the charge number z (nonzero), the elementary charge e_c and the Arrhenius parameters do not depend on temperature."
+      ],
+      "conventions": {
+        "model_scope": "Arrhenius thermally activated diffusion and the Nernst-Einstein relation. Physlib has no solid-state diffusion model, so these are local theorems about the OMAI formulas over Mathlib reals; no Physlib declaration is identified.",
+        "component_scope": "One mobile species with a scalar diffusivity and conductivity.",
+        "normalization_basis": "Activation energies per particle; carrier density per unit volume.",
+        "frequency_convention": "Not applicable.",
+        "unit_embedding": "Coherent SI: D in m^2/s, E_a in J, k_B in J/K, T in K, n_c in 1/m^3, e_c in C, sigma in S/m.",
+        "held_fixed": "Carrier density, charge number and Arrhenius parameters across the temperature range.",
+        "admissibility": "T > 0 at every data point, positive weights, D_0 > 0, n_c > 0, z and e_c nonzero.",
+        "reference_energy": "Not applicable.",
+        "qpoint_weighting": "Not applicable."
+      },
+      "remaining_obligations": [
+        "Molecular-dynamics or experimental producers of the diffusivity and the noise in fitted data are not verified; the theorem covers exact Arrhenius data only.",
+        "Non-Arrhenius curvature, correlated (Haven ratio different from 1) conduction and temperature-dependent carrier densities are not covered.",
+        "contract_diffusivity (D = slope/(2d)) is a definition with nothing non-obvious to prove and is not bound; compute_carrier_density and compute_configurational_energy are external selectors with nothing algebraic to prove."
+      ],
+      "evidence": {
+        "kind": "compiled_bridge",
+        "module": "OMAIMaterialsTransport",
+        "declarations": [
+          "OMAI.PhyslibBridge.MaterialsTransport.arrhenius_wls_recovers_activation",
+          "OMAI.PhyslibBridge.MaterialsTransport.ionicConductivity_arrhenius"
+        ],
+        "source_path": "lean/bridge/OMAIMaterialsTransport.lean",
+        "build_record": "lean/bridge/build-evidence.json",
+        "proved_targets": [
+          {
+            "kind": "operator",
+            "id": "compute_ionic_conductivity"
+          },
+          {
+            "kind": "operator",
+            "id": "fit_arrhenius"
+          },
+          {
+            "kind": "node",
+            "id": "ActivationEnergy"
+          },
+          {
+            "kind": "node",
+            "id": "ElectricalConductivity[carrier=ionic]"
+          }
+        ],
+        "source_sha256": "64b14397c877b98361d6bd293b851e3e257901ca12721eea4fa01ff6c0482e14"
+      }
+    },
+    {
       "id": "canonical-rta-thermal-conductivity",
       "relation": "conditional",
       "statement": "With the relaxation-time mean free displacement F = v/(2 Gamma) and, as c, the actual Physlib canonical heat capacity of each harmonic mode at T > 0, the OMAI contraction kappa_ab = sum_m F_b c v_a/(N_q V_cell) is symmetric and positive semidefinite for positive linewidths and N_q V_cell > 0, and positive definite exactly when the group velocities of the modes span space.",
@@ -3001,9 +3259,11 @@
       {
         "id": "ActivationEnergy",
         "uid": "5d35f8f6975629291c51d432d3b137fb5bd92165706d37dbab71366a4714b71d",
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No matching current Physlib Einstein-MSD, Arrhenius, Nernst-Einstein, or cluster-expansion formula theorem identified."
+        "binding_ids": [
+          "arrhenius-ionic-transport"
+        ],
+        "status": "local",
+        "reason": "No matching current Physlib Einstein-MSD, Arrhenius, Nernst-Einstein, or cluster-expansion formula theorem identified. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
       },
       {
         "id": "AdsorptionEnergy",
@@ -3120,9 +3380,11 @@
       {
         "id": "ConductanceState",
         "uid": "325f09352a8872995fe6ab0a40b9df8780a778389fa0fe00ebcbd9ef7758f4a3",
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention."
+        "binding_ids": [
+          "analog-device-metrology"
+        ],
+        "status": "local",
+        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
       },
       {
         "id": "ConductanceWindow",
@@ -3187,9 +3449,11 @@
       {
         "id": "DotProductError",
         "uid": "1e6467a5b03397510e0d7f33403fd1cb42de5ea579e1f36b074d8dbbc620da20",
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention."
+        "binding_ids": [
+          "analog-device-metrology"
+        ],
+        "status": "local",
+        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
       },
       {
         "id": "DynamicalMatrix",
@@ -3224,9 +3488,11 @@
       {
         "id": "ElectricalConductivity[carrier=ionic]",
         "uid": "3f5753096d30cc6741fe9c6fd5e247e9afbb87b94f5844ec233f9243345d3712",
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No matching current Physlib Einstein-MSD, Arrhenius, Nernst-Einstein, or cluster-expansion formula theorem identified."
+        "binding_ids": [
+          "arrhenius-ionic-transport"
+        ],
+        "status": "local",
+        "reason": "No matching current Physlib Einstein-MSD, Arrhenius, Nernst-Einstein, or cluster-expansion formula theorem identified. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
       },
       {
         "id": "ElectronAffinity",
@@ -3665,9 +3931,11 @@
       {
         "id": "ProgrammingPulseEnergy",
         "uid": "4dc358661b8a847db69d30a786b2b1475f1a291809bb34f55612d3203975be34",
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention."
+        "binding_ids": [
+          "analog-device-metrology"
+        ],
+        "status": "local",
+        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
       },
       {
         "id": "QHAGibbsEnergy",
@@ -3704,9 +3972,11 @@
       {
         "id": "RetentionTime",
         "uid": "4280779257128d9b63d9180e7b7b03ab80beac66ee35480b178a09fa46b289f2",
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention."
+        "binding_ids": [
+          "analog-device-metrology"
+        ],
+        "status": "local",
+        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
       },
       {
         "id": "SchottkyBarrierHeight[band_carrier=electron]",
@@ -3727,9 +3997,11 @@
       {
         "id": "SetVoltage",
         "uid": "5b46cb4fc1bf84f1fa97e2b52a352694f5c98c856e9b9034763243994a1c2d21",
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention."
+        "binding_ids": [
+          "analog-device-metrology"
+        ],
+        "status": "local",
+        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
       },
       {
         "id": "ShearModulus",
@@ -4017,9 +4289,11 @@
         "outputs": [
           "ConductanceState"
         ],
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention."
+        "binding_ids": [
+          "analog-device-metrology"
+        ],
+        "status": "local",
+        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
       },
       {
         "id": "apply_nac_correction",
@@ -4210,7 +4484,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No matching current Physlib Einstein-MSD, Arrhenius, Nernst-Einstein, or cluster-expansion formula theorem identified."
+        "reason": "An external selector over the structure (which species are mobile, counted over the cell volume); nothing algebraic to prove beyond its dimension."
       },
       {
         "id": "compute_carrier_mobility",
@@ -4280,7 +4554,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No matching current Physlib Einstein-MSD, Arrhenius, Nernst-Einstein, or cluster-expansion formula theorem identified."
+        "reason": "An external cluster-expansion evaluation over a fitted checkpoint; nothing algebraic to prove beyond its dimension."
       },
       {
         "id": "compute_dispersion",
@@ -4721,9 +4995,11 @@
         "outputs": [
           "ElectricalConductivity[carrier=ionic]"
         ],
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No matching current Physlib Einstein-MSD, Arrhenius, Nernst-Einstein, or cluster-expansion formula theorem identified."
+        "binding_ids": [
+          "arrhenius-ionic-transport"
+        ],
+        "status": "local",
+        "reason": "No matching current Physlib Einstein-MSD, Arrhenius, Nernst-Einstein, or cluster-expansion formula theorem identified. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
       },
       {
         "id": "compute_isotope_scattering",
@@ -5162,7 +5438,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention."
+        "reason": "A closed-form definition with nothing non-obvious to prove; no Lean theorem restates it, and it is not bound."
       },
       {
         "id": "contract_cumulative_kappa[wrt=mfp]",
@@ -5229,9 +5505,11 @@
         "outputs": [
           "ConductanceState"
         ],
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention."
+        "binding_ids": [
+          "analog-device-metrology"
+        ],
+        "status": "local",
+        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
       },
       {
         "id": "contract_diffusivity",
@@ -5247,7 +5525,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No matching current Physlib Einstein-MSD, Arrhenius, Nernst-Einstein, or cluster-expansion formula theorem identified."
+        "reason": "A closed-form definition with nothing non-obvious to prove; no Lean theorem restates it, and it is not bound."
       },
       {
         "id": "contract_gibbs_hts",
@@ -5573,7 +5851,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention."
+        "reason": "A closed-form definition with nothing non-obvious to prove; no Lean theorem restates it, and it is not bound."
       },
       {
         "id": "contract_thermal_gruneisen",
@@ -5718,9 +5996,11 @@
         "outputs": [
           "ProgrammingPulseEnergy"
         ],
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention."
+        "binding_ids": [
+          "analog-device-metrology"
+        ],
+        "status": "local",
+        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
       },
       {
         "id": "emit_thermionic_conductance",
@@ -5735,9 +6015,11 @@
         "outputs": [
           "ConductanceState"
         ],
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention."
+        "binding_ids": [
+          "analog-device-metrology"
+        ],
+        "status": "local",
+        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
       },
       {
         "id": "fit_arrhenius",
@@ -5752,9 +6034,11 @@
         "outputs": [
           "ActivationEnergy"
         ],
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No matching current Physlib Einstein-MSD, Arrhenius, Nernst-Einstein, or cluster-expansion formula theorem identified."
+        "binding_ids": [
+          "arrhenius-ionic-transport"
+        ],
+        "status": "local",
+        "reason": "No matching current Physlib Einstein-MSD, Arrhenius, Nernst-Einstein, or cluster-expansion formula theorem identified. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
       },
       {
         "id": "fourier_to_dos",
@@ -5884,9 +6168,11 @@
         "outputs": [
           "DotProductError"
         ],
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention."
+        "binding_ids": [
+          "analog-device-metrology"
+        ],
+        "status": "local",
+        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
       },
       {
         "id": "provide_born_charges",
@@ -5985,9 +6271,11 @@
         "outputs": [
           "SetVoltage"
         ],
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention."
+        "binding_ids": [
+          "analog-device-metrology"
+        ],
+        "status": "local",
+        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
       },
       {
         "id": "resolve_effective_conductivity",
@@ -6104,7 +6392,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention."
+        "reason": "A closed-form definition with nothing non-obvious to prove; no Lean theorem restates it, and it is not bound."
       },
       {
         "id": "solve_bte[bte_solver=direct_inverse]",
@@ -6229,9 +6517,11 @@
         "outputs": [
           "RetentionTime"
         ],
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention."
+        "binding_ids": [
+          "analog-device-metrology"
+        ],
+        "status": "local",
+        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
       }
     ]
   },
@@ -6240,26 +6530,26 @@
     "nodes_mapped": 33,
     "operators_total": 127,
     "operators_mapped": 24,
-    "nodes_local": 9,
-    "operators_local": 12,
-    "bindings_total": 36,
+    "nodes_local": 16,
+    "operators_local": 21,
+    "bindings_total": 38,
     "source_correspondences": 5,
-    "compiled_bridges": 31,
+    "compiled_bridges": 33,
     "nodes_compiled": 21,
     "nodes_compiled_outputs": 20,
     "nodes_compiled_interpretations": 1,
     "operators_compiled": 24,
-    "operators_compiled_local": 12,
-    "nodes_compiled_local": 10,
-    "operators_proved": 36,
-    "nodes_proved": 31,
+    "operators_compiled_local": 21,
+    "nodes_compiled_local": 17,
+    "operators_proved": 45,
+    "nodes_proved": 38,
     "upstream_declarations_referenced": 36,
     "upstream_modules_referenced": 10,
     "relations": {
       "exact_definition": 1,
       "conditional": 27,
       "conceptual": 4,
-      "local": 4
+      "local": 6
     }
   }
 }
