@@ -48,8 +48,7 @@ EXCLUDE_APPLICATIONS = {
 }
 
 
-def _open_copy(db_path: Path) -> sqlite3.Connection:
-    tmp = Path(tempfile.mkdtemp())
+def _open_copy(db_path: Path, tmp: Path) -> sqlite3.Connection:
     for ext in ("-wal", "-shm", ""):
         src = Path(str(db_path) + ext)
         if src.exists():
@@ -69,7 +68,8 @@ def _field(db: sqlite3.Connection, item_id: int, name: str) -> str:
 def _authors(db: sqlite3.Connection, item_id: int) -> list[str]:
     rows = db.execute(
         "select c.lastName, c.firstName from itemCreators ic join creators c on c.creatorID=ic.creatorID "
-        "where ic.itemID=? order by ic.orderIndex",
+        "join creatorTypes ct on ct.creatorTypeID=ic.creatorTypeID "
+        "where ic.itemID=? and ct.creatorType='author' order by ic.orderIndex",
         (item_id,),
     ).fetchall()
     out = []
@@ -91,12 +91,16 @@ def _entry(db: sqlite3.Connection, item_id: int) -> dict | None:
         "title": " ".join(title.replace(chr(0x2014), ": ").replace(chr(0x2013), "-").split()),  # em and en dashes in titles become colon and hyphen, the site's house style
         "authors": _authors(db, item_id),
         "year": year,
-        "journal": _field(db, item_id, "publicationTitle").strip() or _field(db, item_id, "journalAbbreviation").strip(),
+        "journal": next((v for v in (_field(db, item_id, f).strip() for f in ("publicationTitle", "proceedingsTitle", "conferenceName", "journalAbbreviation", "repository")) if v), ""),
     }
 
 
 def export(db_path: Path, out_dir: Path = OUT_DIR) -> dict[str, dict[str, int]]:
-    db = _open_copy(db_path)
+    with tempfile.TemporaryDirectory() as tmp:
+        return _export(_open_copy(db_path, Path(tmp)), out_dir)
+
+
+def _export(db: sqlite3.Connection, out_dir: Path) -> dict[str, dict[str, int]]:
     row = db.execute("select collectionID from collections where collectionName='MCG codes'").fetchone()
     if not row:
         raise SystemExit("no 'MCG codes' collection in this Zotero library")

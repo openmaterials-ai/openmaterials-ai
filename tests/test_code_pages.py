@@ -24,9 +24,8 @@ DOI = re.compile(r"^10\.\d{4,9}/\S+$")
 
 
 def test_every_public_code_has_a_page_and_private_ones_do_not():
-    for key in CODES:
-        page = DOCS / "codes" / key / "index.html"
-        assert page.exists() == (key in PUBLIC), key
+    on_disk = sorted(p.parent.name for p in (DOCS / "codes").glob("*/index.html"))
+    assert on_disk == PUBLIC
 
 
 def test_generation_is_deterministic(tmp_path, monkeypatch):
@@ -68,7 +67,7 @@ def test_every_served_quantity_is_listed_and_linked():
             assert f'href="../../map/#node={code_pages.esc(node)}"' in html, (key, node)
 
 
-def test_references_resolve_and_are_grouped():
+def test_references_have_doi_shape_and_are_grouped():
     seen = 0
     for path in sorted((DOCS / "data" / "references").glob("*.json")):
         refs = json.loads(path.read_text())
@@ -89,22 +88,19 @@ def test_pages_are_discoverable():
     for key in PUBLIC:
         assert f"<loc>https://openmaterials.ai/codes/{key}/</loc>" in sitemap, key
     assert "/codes/<key>/" in llms or "/codes/gpumd/" in llms
-    assert "Code page" in bibliography
-    assert "encodeURIComponent(name)) + '/\">Code page</a>'" in bibliography, "the card links its code page"
+    assert "Code page" in bibliography and "privateCodes[name] ? ''" in bibliography, \
+        "the card links its code page, except for a private code"
 
 
-def test_map_embed_mode():
+def test_map_embed_markup_present_and_script_parses(tmp_path):
     page = (DOCS / "map" / "index.html").read_text()
     assert "get('embed')==='1'" in page
     assert "body.embed .toolbar" in page and "body.embed [data-site-header]" in page
     assert 'id="embedBtn"' in page and 'id="embedOut"' in page and 'target="_top"' in page
     script = max(re.findall(r"<script>(.*?)</script>", page, re.S), key=len)
-    probe = Path(__file__).with_name("_map_probe.js")
+    probe = tmp_path / "map_probe.js"
     probe.write_text("(async function(){" + script + "})();")
-    try:
-        subprocess.run(["node", "--check", str(probe)], check=True)
-    finally:
-        probe.unlink()
+    subprocess.run(["node", "--check", str(probe)], check=True)
 
 
 def test_hand_written_text_stays_within_the_roster():

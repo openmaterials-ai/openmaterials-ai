@@ -11,7 +11,8 @@ Every page is generated, never hand edited. Inputs, all under docs/data:
 
 The page opens with the map itself, embedded with the code's coverage lit (``map/?embed=1#code=<key>``),
 then the summary, the quantities served, the releases, the references and the citation line. A social
-card (1200 x 630) is drawn as SVG and rasterized with ImageMagick when ``convert`` is on the PATH.
+card (1200 x 630) is drawn as SVG and rasterized with ImageMagick when ``convert`` is on the PATH; the
+PNGs are a release artifact whose bytes depend on the build machine's fonts, the HTML does not.
 
 Run as::
 
@@ -24,6 +25,7 @@ from __future__ import annotations
 
 import html
 import json
+import re
 import shutil
 import subprocess
 from pathlib import Path
@@ -33,7 +35,16 @@ DATA = ROOT / "docs" / "data"
 OUT = ROOT / "docs" / "codes"
 CARDS = ROOT / "docs" / "assets" / "og" / "codes"
 SITE = "https://openmaterials.ai"
-GROUP_TITLES = {"code": "The code", "methods": "Methods and inputs it builds on", "applications": "Remarkable applications"}
+GROUPS = {
+    "code": ("The code", "The papers that describe the code; cite them when you use it."),
+    "methods": ("Methods and inputs it builds on", "The methods the code implements and the inputs it relies on, as published."),
+    "applications": ("Applications", "Highly cited studies that cite the code, with a few picked by hand."),
+}
+KEY = re.compile(r"[a-z0-9][a-z0-9.-]*")
+
+
+def quantities(n: int) -> str:
+    return f"{n} quantit{'y' if n == 1 else 'ies'}"
 
 
 def esc(s: object) -> str:
@@ -75,32 +86,31 @@ def ref_line(r: dict) -> str:
 def card_svg(name: str, tagline: str, n_nodes: int) -> str:
     # 1200 x 630, the site's paper tone; long names shrink so they stay on one line
     size = 112 if len(name) <= 12 else 84 if len(name) <= 20 else 60
+    tag_size = 34 if len(tagline) <= 48 else 28 if len(tagline) <= 60 else 22
     return (
         '<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">'
         '<rect width="1200" height="630" fill="#F4F1EA"/>'
         '<text x="80" y="120" font-family="DejaVu Sans, sans-serif" font-size="28" fill="#4D4D4D">openmaterials.ai / codes</text>'
         f'<text x="80" y="330" font-family="DejaVu Serif, serif" font-size="{size}" fill="#171717">{esc(name)}</text>'
-        f'<text x="80" y="410" font-family="DejaVu Sans, sans-serif" font-size="34" fill="#4D4D4D">{esc(tagline)}</text>'
+        f'<text x="80" y="410" font-family="DejaVu Sans, sans-serif" font-size="{tag_size}" fill="#4D4D4D">{esc(tagline)}</text>'
         f'<text x="80" y="540" font-family="DejaVu Sans Mono, monospace" font-size="28" fill="#4D4D4D">'
-        f'{n_nodes} quantit{"y" if n_nodes == 1 else "ies"} on the map</text></svg>\n'
+        f'{quantities(n_nodes)} on the map</text></svg>\n'
     )
 
 
-def rasterize(svg_path: Path, png_path: Path) -> bool:
+def rasterize(svg_path: Path, png_path: Path) -> None:
     conv = shutil.which("convert")
-    if not conv:
-        return png_path.exists()
-    subprocess.run([conv, str(svg_path), "-define", "png:exclude-chunks=date,time", str(png_path)], check=True)
-    return True
+    if conv:
+        subprocess.run([conv, str(svg_path), "-define", "png:exclude-chunks=date,time", str(png_path)], check=True)
 
 
 def page(key: str, rep: dict, reg: dict, refs: dict | None, text: dict, has_card: bool) -> str:
     name = display_name(key, rep)
     nodes = sorted(rep)
-    tagline = text.get("tagline") or f"{len(nodes)} quantit{'y' if len(nodes) == 1 else 'ies'} on the OpenMaterials map."
+    tagline = text.get("tagline") or f"{quantities(len(nodes))} on the OpenMaterials map."
     summary = text.get("summary") or (
         f"{name} has a representation on the OpenMaterials map: a record of the quantities it computes, "
-        f"through which interface, with a citation and its license. It serves {len(nodes)} quantit{'y' if len(nodes) == 1 else 'ies'}, listed below."
+        f"through which interface, with a citation and its license. It serves {quantities(len(nodes))}, listed below."
     )
     groups = node_groups(rep)
     primary = next((g for g in groups if g["citation"]), None)
@@ -114,12 +124,15 @@ def page(key: str, rep: dict, reg: dict, refs: dict | None, text: dict, has_card
     og_image = f"{SITE}/assets/og/codes/{key}.png" if has_card else f"{SITE}/assets/og.png"
     description = tagline if tagline.endswith(".") else tagline + "."
 
+    def http(u: str | None) -> str:
+        return u if u and u.startswith(("https://", "http://")) else ""
+
     links = []
-    if text.get("website"):
+    if http(text.get("website")):
         links.append(f'<a href="{esc(text["website"])}" rel="noopener">Website</a>')
-    if text.get("docs"):
+    if http(text.get("docs")):
         links.append(f'<a href="{esc(text["docs"])}" rel="noopener">Documentation</a>')
-    if url and url != text.get("website"):
+    if http(url) and url != text.get("website"):
         links.append(f'<a href="{esc(url)}" rel="noopener">Repository</a>')
     links.append(f'<a href="../../map/#code={esc(key)}">On the map</a>')
     links.append('<a href="../">All codes</a>')
@@ -145,17 +158,11 @@ def page(key: str, rep: dict, reg: dict, refs: dict | None, text: dict, has_card
         )
 
     ref_sections = ""
-    if refs and any(refs.get(g) for g in GROUP_TITLES):
-        for g, title in GROUP_TITLES.items():
+    if refs and any(refs.get(g) for g in GROUPS):
+        for g, (title, lead) in GROUPS.items():
             items = refs.get(g) or []
-            if not items:
-                continue
-            lead = {
-                "code": "The papers that describe the code; cite them when you use it.",
-                "methods": "The methods the code implements and the inputs it relies on, as published.",
-                "applications": "Highly cited studies that cite the code, with a few picked by hand.",
-            }[g]
-            ref_sections += f'<h3 id="refs-{g}">{title}</h3><p>{lead}</p><ol class="refs">{"".join(ref_line(r) for r in items)}</ol>'
+            if items:
+                ref_sections += f'<h3 id="refs-{g}">{title}</h3><p>{lead}</p><ol class="refs">{"".join(ref_line(r) for r in items)}</ol>'
     else:
         ref_sections += "<p>No curated reference list yet. The citations recorded on the map representation are listed under How to cite.</p>"
 
@@ -199,7 +206,7 @@ def page(key: str, rep: dict, reg: dict, refs: dict | None, text: dict, has_card
 <meta property="og:url" content="{canonical}">
 <meta property="og:image" content="{og_image}">
 <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="{esc(name)}: {esc(description)} {len(nodes)} quantities on the OpenMaterials map.">
+<meta property="og:image:alt" content="{esc(name)}: {esc(description)} {quantities(len(nodes))} on the OpenMaterials map.">
 <meta name="twitter:card" content="summary_large_image">
 <script>try{{const t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}}catch{{}}</script>
 <link rel="preload" href="../../assets/fonts/newsreader-latin.woff2" as="font" type="font/woff2" crossorigin>
@@ -265,7 +272,7 @@ def page(key: str, rep: dict, reg: dict, refs: dict | None, text: dict, has_card
 
       <section class="gsec" id="serves">
         <h2>What it computes on the map</h2>
-        <p>{len(nodes)} quantit{"y" if len(nodes) == 1 else "ies"}, each with the interface the representation records. The link opens the quantity on the map.</p>
+        <p>{quantities(len(nodes))}, each with the interface the representation records. The link opens the quantity on the map.</p>
         <ul class="serves">{served}</ul>
       </section>
 
@@ -284,7 +291,6 @@ def page(key: str, rep: dict, reg: dict, refs: dict | None, text: dict, has_card
   </div>
 </main>
 <div data-site-footer></div>
-<script src="../../assets/sources.js"></script>
 <script src="../../assets/site.js"></script>
 </body>
 </html>
@@ -297,6 +303,8 @@ def build(write_cards: bool = True) -> list[str]:
     texts = load("code_pages.json")
     built = []
     for key in sorted(codes):
+        if not KEY.fullmatch(key):
+            raise ValueError(f"code key {key!r} is not a safe path segment")
         reg = registry.get(key) or {}
         if reg.get("visibility") == "private":
             continue
@@ -307,13 +315,16 @@ def build(write_cards: bool = True) -> list[str]:
         if write_cards:
             CARDS.mkdir(parents=True, exist_ok=True)
             svg = CARDS / f"{key}.svg"
-            svg.write_text(card_svg(display_name(key, rep), text.get("tagline") or "On the OpenMaterials map.", len(rep)), encoding="utf-8")
+            svg.write_text(card_svg(display_name(key, rep), text.get("tagline") or f"{quantities(len(rep))} on the OpenMaterials map.", len(rep)), encoding="utf-8")
             rasterize(svg, CARDS / f"{key}.png")
         has_card = (CARDS / f"{key}.png").exists()
         out = OUT / key / "index.html"
         out.parent.mkdir(parents=True, exist_ok=True)
         out.write_text(page(key, rep, reg, refs, text, has_card), encoding="utf-8")
         built.append(key)
+    for stale in OUT.iterdir():  # a key dropped from codes.json takes its page with it
+        if stale.is_dir() and stale.name not in built:
+            shutil.rmtree(stale)
     return built
 
 

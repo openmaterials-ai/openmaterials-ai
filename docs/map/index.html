@@ -141,8 +141,7 @@
   #fallback .fn .fe{color:var(--ink-2,#4D4D4D);margin-top:6px;}
   /* embed mode (?embed=1): the canvas alone, for iframes on the code pages and elsewhere; the hash still picks a code or a node */
   body.embed [data-site-header],body.embed .toolbar,body.embed .legend,body.embed .caption,body.embed #banner{display:none;}
-  body.embed .om-panel{width:300px;padding:16px;}
-  .embed-out{position:absolute;right:12px;bottom:12px;z-index:4;display:none;padding:6px 10px;border-radius:var(--radius,6px);background:var(--page,#FFFFFF);box-shadow:var(--shadow-float,0 0 0 1px #EBEBEB,0 4px 8px -4px rgb(0 0 0 / .04),0 16px 24px -8px rgb(0 0 0 / .06));font-size:12px;line-height:16px;color:var(--ink,#171717);text-decoration:none;}
+  .embed-out{position:absolute;right:12px;bottom:12px;z-index:6;display:none;padding:6px 10px;border-radius:var(--radius,6px);background:var(--page,#FFFFFF);box-shadow:var(--shadow-float,0 0 0 1px #EBEBEB,0 4px 8px -4px rgb(0 0 0 / .04),0 16px 24px -8px rgb(0 0 0 / .06));font-size:12px;line-height:16px;color:var(--ink,#171717);text-decoration:none;}
   body.embed .embed-out{display:block;}
   @media (prefers-reduced-motion: reduce){*,*::before,*::after{transition-duration:0s !important;animation-duration:0s !important;}}
 </style>
@@ -449,7 +448,8 @@ let dragging=false, moved=false, sx=0, sy=0, vbs=null;
 svg.addEventListener('mousedown', e=>{ dragging=true; moved=false; sx=e.clientX; sy=e.clientY; vbs={x:VB.x,y:VB.y}; svg.classList.add('drag'); });
 window.addEventListener('mouseup', ()=>{ dragging=false; svg.classList.remove('drag'); });
 window.addEventListener('mousemove', e=>{ if(!dragging)return; const m=svg.getScreenCTM(); if(!m)return; const dx=(e.clientX-sx)/m.a, dy=(e.clientY-sy)/m.d; if(Math.abs(e.clientX-sx)+Math.abs(e.clientY-sy)>4) moved=true; VB.x=vbs.x-dx; VB.y=vbs.y-dy; setVB(); });
-svg.addEventListener('wheel', e=>{ e.preventDefault(); const m=svg.getScreenCTM(); if(!m)return; const pt=svg.createSVGPoint(); pt.x=e.clientX; pt.y=e.clientY; const u=pt.matrixTransform(m.inverse()); const f=capOut(e.deltaY>0?1.12:0.893, VB); VB.x=u.x-(u.x-VB.x)*f; VB.y=u.y-(u.y-VB.y)*f; VB.w*=f; VB.h*=f; setVB(); }, {passive:false});
+svg.addEventListener('wheel', e=>{ if(EMBED&&!(e.ctrlKey||e.metaKey)) return;   // in an iframe the wheel scrolls the page; ctrl or cmd zooms
+  e.preventDefault(); const m=svg.getScreenCTM(); if(!m)return; const pt=svg.createSVGPoint(); pt.x=e.clientX; pt.y=e.clientY; const u=pt.matrixTransform(m.inverse()); const f=capOut(e.deltaY>0?1.12:0.893, VB); VB.x=u.x-(u.x-VB.x)*f; VB.y=u.y-(u.y-VB.y)*f; VB.w*=f; VB.h*=f; setVB(); }, {passive:false});
 document.getElementById('zoomIn').addEventListener('click', ()=> zoomBy(0.8));
 document.getElementById('zoomOut').addEventListener('click', ()=> zoomBy(1.25));
 document.getElementById('fitBtn').addEventListener('click', ()=>{ if(lastFocus) fitTo(lastFocus, lastAnchor); else fitDefault(); });

@@ -125,6 +125,7 @@
   // One code -> one card. `entries` is the { NodeName: spec } object. A code
   // can serve nodes through DIFFERENT methods (per-node credits), so the card
   // shows every distinct citation it carries, largest coverage first.
+  var privateCodes = {};
   function card(name, entries) {
     var nodes = Object.keys(entries);
     var count = nodes.length;
@@ -184,7 +185,7 @@
         ? '<a href="https://doi.org/' + esc(doi) + '" rel="noopener">doi.org/' + esc(doi) + '</a>'
         : '<span class="bib-nodoi">No DOI recorded.</span>') +
       '<a href="' + esc(mapHref) + '">Show on the map</a>' +
-      '<a href="' + esc(encodeURIComponent(name)) + '/">Code page</a>' +
+      (privateCodes[name] ? '' : '<a href="' + esc(encodeURIComponent(name)) + '/">Code page</a>') +
       '</div>';
 
     var serves = nodes.slice().sort().map(function (n) {
@@ -203,6 +204,17 @@
     .then(function (r) {
       if (!r.ok) throw new Error('HTTP ' + r.status);
       return r.json();
+    })
+    .then(function (data) {
+      // a code marked private in the registry has no landing page, so its card carries no link to one
+      return fetch('../data/registry.json')
+        .then(function (r) { return r.ok ? r.json() : {}; })
+        .catch(function () { return {}; })
+        .then(function (reg) {
+          var entries = (reg && reg.code) || {};
+          Object.keys(entries).forEach(function (k) { if (entries[k] && entries[k].visibility === 'private') privateCodes[k] = true; });
+          return data;
+        });
     })
     .then(function (data) {
       if (!data || typeof data !== 'object') { fail('The bibliography could not be loaded (unexpected shape).'); return; }
