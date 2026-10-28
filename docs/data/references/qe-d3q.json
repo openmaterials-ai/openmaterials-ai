@@ -1,0 +1,84 @@
+{
+ "key": "qe-d3q",
+ "code": [
+  {
+   "doi": "10.1103/PhysRevB.88.045430",
+   "title": "<i>Ab initio</i> variational approach for evaluating lattice thermal conductivity",
+   "authors": [
+    "G. Fugallo",
+    "M. Lazzeri",
+    "L. Paulatto",
+    "F. Mauri"
+   ],
+   "year": 2013,
+   "journal": "Physical Review B"
+  },
+  {
+   "doi": "10.1103/PhysRevB.87.214303",
+   "title": "Anharmonic properties from a generalized third-order ab initio approach: Theory and applications to graphite and graphene",
+   "authors": [
+    "L. Paulatto",
+    "F. Mauri",
+    "M. Lazzeri"
+   ],
+   "year": 2013,
+   "journal": "Physical Review B"
+  }
+ ],
+ "methods": [],
+ "applications": [
+  {
+   "doi": "10.1103/PhysRevB.89.064302",
+   "title": "Anharmonic free energies and phonon dispersions from the stochastic self-consistent harmonic approximation: Application to platinum and palladium hydrides",
+   "authors": [
+    "I. Errea",
+    "M. Calandra",
+    "F. Mauri"
+   ],
+   "year": 2014,
+   "journal": "Physical Review B"
+  },
+  {
+   "doi": "10.1103/PhysRevB.89.155426",
+   "title": "Phonon thermal transport in strained and unstrained graphene from first principles",
+   "authors": [
+    "L. Lindsay",
+    "W. Li",
+    "J. Carrete",
+    "N. Mingo",
+    "D. A. Broido",
+    "T. L. Reinecke"
+   ],
+   "year": 2014,
+   "journal": "Physical Review B"
+  },
+  {
+   "doi": "10.1021/nl502059f",
+   "title": "Thermal Conductivity of Graphene and Graphite: Collective Excitations and Mean Free Paths",
+   "authors": [
+    "G. Fugallo",
+    "A. Cepellotti",
+    "L. Paulatto",
+    "M. Lazzeri",
+    "N. Marzari",
+    "F. Mauri"
+   ],
+   "year": 2014,
+   "journal": "Nano Letters"
+  },
+  {
+   "doi": "10.1038/ncomms7400",
+   "title": "Phonon hydrodynamics in two-dimensional materials",
+   "authors": [
+    "A. Cepellotti",
+    "G. Fugallo",
+    "L. Paulatto",
+    "M. Lazzeri",
+    "F. Mauri",
+    "N. Marzari"
+   ],
+   "year": 2015,
+   "journal": "Nature Communications"
+  }
+ ]
+}

@@ -1,0 +1,76 @@
+{
+ "key": "amset",
+ "code": [
+  {
+   "doi": "10.1038/s41467-021-22440-5",
+   "title": "Efficient calculation of carrier scattering rates from first principles",
+   "authors": [
+    "A. M. Ganose",
+    "J. Park",
+    "A. Faghaninia",
+    "R. Woods-Robinson",
+    "K. A. Persson",
+    "A. Jain"
+   ],
+   "year": 2021,
+   "journal": "Nature Communications"
+  }
+ ],
+ "methods": [],
+ "applications": [
+  {
+   "doi": "10.1002/adfm.202108532",
+   "title": "Accelerated Discovery and Design of Ultralow Lattice Thermal Conductivity Materials Using Chemical Bonding Principles",
+   "authors": [
+    "J. He",
+    "Y. Xia",
+    "W. Lin",
+    "K. Pal",
+    "Y. Zhu",
+    "M. G. Kanatzidis",
+    "C. Wolverton"
+   ],
+   "year": 2022,
+   "journal": "Advanced Functional Materials"
+  },
+  {
+   "doi": "10.1038/s41524-023-01107-3",
+   "title": "Electron-phonon physics from first principles using the EPW code",
+   "authors": [
+    "H. Lee",
+    "S. Poncé",
+    "K. Bushick",
+    "S. Hajinazar",
+    "J. Lafuente-Bartolome",
+    "J. Leveillee",
+    "C. Lian",
+    "J. M. Lihm",
+    "F. Macheda",
+    "H. Mori",
+    "H. Paudyal",
+    "W. H. Sio",
+    "S. Tiwari",
+    "M. Zacharias",
+    "X. Zhang",
+    "N. Bonini",
+    "E. Kioupakis",
+    "E. R. Margine",
+    "F. Giustino"
+   ],
+   "year": 2023,
+   "journal": "npj Computational Materials"
+  },
+  {
+   "doi": "10.1103/PhysRevApplied.19.044052",
+   "title": "Strain-Induced Medium-Temperature Thermoelectric Performance of Cu 4 Ti Se 4 : The Role of Four-Phonon Scattering",
+   "authors": [
+    "X. K. Chen",
+    "E. M. Zhang",
+    "D. Wu",
+    "K. Q. Chen"
+   ],
+   "year": 2023,
+   "journal": "Physical Review Applied"
+  }
+ ]
+}

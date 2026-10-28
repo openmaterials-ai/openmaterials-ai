@@ -1,0 +1,98 @@
+{
+ "key": "mp-api",
+ "code": [
+  {
+   "doi": "10.1063/1.4812323",
+   "title": "Commentary: The Materials Project: A materials genome approach to accelerating materials innovation",
+   "authors": [
+    "A. Jain",
+    "S. P. Ong",
+    "G. Hautier",
+    "W. Chen",
+    "W. D. Richards",
+    "S. Dacek",
+    "S. Cholia",
+    "D. Gunter",
+    "D. Skinner",
+    "G. Ceder",
+    "K. A. Persson"
+   ],
+   "year": 2013,
+   "journal": "APL Materials"
+  }
+ ],
+ "methods": [],
+ "applications": [
+  {
+   "doi": "10.1103/PhysRevB.90.174107",
+   "title": "High-throughput computational screening of thermal conductivity, Debye temperature, and Grüneisen parameter using a quasiharmonic Debye model",
+   "authors": [
+    "C. Toher",
+    "J. J. Plata",
+    "O. Levy",
+    "M. De Jong",
+    "M. Asta",
+    "M. B. Nardelli",
+    "S. Curtarolo"
+   ],
+   "year": 2014,
+   "journal": "Physical Review B"
+  },
+  {
+   "doi": "10.1103/PhysRevLett.115.205901",
+   "title": "Prediction of Low-Thermal-Conductivity Compounds with First-Principles Anharmonic Lattice-Dynamics Calculations and Bayesian Optimization",
+   "authors": [
+    "A. Seko",
+    "A. Togo",
+    "H. Hayashi",
+    "K. Tsuda",
+    "L. Chaput",
+    "I. Tanaka"
+   ],
+   "year": 2015,
+   "journal": "Physical Review Letters"
+  },
+  {
+   "doi": "10.1039/C7EE03364H",
+   "title": "Tuning mobility and stability of lithium ion conductors based on lattice dynamics",
+   "authors": [
+    "S. Muy",
+    "J. C. Bachman",
+    "L. Giordano",
+    "H. H. Chang",
+    "D. L. Abernathy",
+    "D. Bansal",
+    "O. Delaire",
+    "S. Hori",
+    "R. Kanno",
+    "F. Maglia",
+    "S. Lupart",
+    "P. Lamp",
+    "Y. Shao-Horn"
+   ],
+   "year": 2018,
+   "journal": "Energy & Environmental Science"
+  },
+  {
+   "doi": "10.1038/s41524-019-0203-2",
+   "title": "Machine-learning-assisted discovery of polymers with high thermal conductivity using a molecular design algorithm",
+   "authors": [
+    "S. Wu",
+    "Y. Kondo",
+    "M. a. Kakimoto",
+    "B. Yang",
+    "H. Yamada",
+    "I. Kuwajima",
+    "G. Lambard",
+    "K. Hongo",
+    "Y. Xu",
+    "J. Shiomi",
+    "C. Schick",
+    "J. Morikawa",
+    "R. Yoshida"
+   ],
+   "year": 2019,
+   "journal": "npj Computational Materials"
+  }
+ ]
+}

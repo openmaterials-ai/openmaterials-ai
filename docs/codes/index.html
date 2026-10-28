@@ -184,6 +184,7 @@
         ? '<a href="https://doi.org/' + esc(doi) + '" rel="noopener">doi.org/' + esc(doi) + '</a>'
         : '<span class="bib-nodoi">No DOI recorded.</span>') +
       '<a href="' + esc(mapHref) + '">Show on the map</a>' +
+      '<a href="' + esc(encodeURIComponent(name)) + '/">Code page</a>' +
       '</div>';
 
     var serves = nodes.slice().sort().map(function (n) {

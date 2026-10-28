@@ -1,0 +1,87 @@
+{
+ "key": "ase",
+ "code": [
+  {
+   "doi": "10.1088/1361-648X/aa680e",
+   "title": "The atomic simulation environment: a Python library for working with atoms",
+   "authors": [
+    "A. Hjorth Larsen",
+    "J. Jørgen Mortensen",
+    "J. Blomqvist",
+    "I. E. Castelli",
+    "R. Christensen",
+    "M. Dułak",
+    "J. Friis",
+    "M. N. Groves",
+    "B. Hammer",
+    "C. Hargus",
+    "E. D. Hermes",
+    "P. C. Jennings",
+    "P. Bjerre Jensen",
+    "J. Kermode",
+    "J. R. Kitchin",
+    "E. Leonhard Kolsbjerg",
+    "J. Kubal",
+    "K. Kaasbjerg",
+    "S. Lysgaard",
+    "J. Bergmann Maronsson",
+    "T. Maxson",
+    "T. Olsen",
+    "L. Pastewka",
+    "A. Peterson",
+    "C. Rostgaard",
+    "J. Schiøtz",
+    "O. Schütt",
+    "M. Strange",
+    "K. S. Thygesen",
+    "T. Vegge",
+    "L. Vilhelmsen",
+    "M. Walter",
+    "Z. Zeng",
+    "K. W. Jacobsen"
+   ],
+   "year": 2017,
+   "journal": "Journal of Physics: Condensed Matter"
+  }
+ ],
+ "methods": [],
+ "applications": [
+  {
+   "doi": "10.1103/PhysRevMaterials.3.033601",
+   "title": "First-principles study of phonon anharmonicity and negative thermal expansion in ScF 3",
+   "authors": [
+    "Y. Oba",
+    "T. Tadano",
+    "R. Akashi",
+    "S. Tsuneyuki"
+   ],
+   "year": 2019,
+   "journal": "Physical Review Materials"
+  },
+  {
+   "doi": "10.1063/1.5064602",
+   "title": "Phonon properties and thermal conductivity from first principles, lattice dynamics, and the Boltzmann transport equation",
+   "authors": [
+    "A. J. H. McGaughey",
+    "A. Jain",
+    "H. Y. Kim"
+   ],
+   "year": 2019,
+   "journal": "Journal of Applied Physics"
+  },
+  {
+   "doi": "10.1088/1361-648X/ac066b",
+   "title": "The stochastic self-consistent harmonic approximation: calculating vibrational properties of materials with full quantum and anharmonic effects",
+   "authors": [
+    "L. Monacelli",
+    "R. Bianco",
+    "M. Cherubini",
+    "M. Calandra",
+    "I. Errea",
+    "F. Mauri"
+   ],
+   "year": 2021,
+   "journal": "Journal of Physics: Condensed Matter"
+  }
+ ]
+}

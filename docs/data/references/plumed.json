@@ -1,0 +1,131 @@
+{
+ "key": "plumed",
+ "code": [
+  {
+   "doi": "10.1016/j.cpc.2013.09.018",
+   "title": "PLUMED 2: New feathers for an old bird",
+   "authors": [
+    "G. A. Tribello",
+    "M. Bonomi",
+    "D. Branduardi",
+    "C. Camilloni",
+    "G. Bussi"
+   ],
+   "year": 2014,
+   "journal": "Computer Physics Communications"
+  },
+  {
+   "doi": "10.1038/s41592-019-0506-8",
+   "title": "Promoting transparency and reproducibility in enhanced molecular simulations",
+   "authors": [
+    "The PLUMED consortium"
+   ],
+   "year": 2019,
+   "journal": "Nature Methods"
+  }
+ ],
+ "methods": [],
+ "applications": [
+  {
+   "doi": "10.1016/j.softx.2015.06.001",
+   "title": "GROMACS: High performance molecular simulations through multi-level parallelism from laptops to supercomputers",
+   "authors": [
+    "M. J. Abraham",
+    "T. Murtola",
+    "R. Schulz",
+    "S. Páll",
+    "J. C. Smith",
+    "B. Hess",
+    "E. Lindahl"
+   ],
+   "year": 2015,
+   "journal": "SoftwareX"
+  },
+  {
+   "doi": "10.1021/acs.jctc.9b00143",
+   "title": "Exploration of Chemical Compound, Conformer, and ReactionSpace with Meta-Dynamics Simulations Based on Tight-Binding QuantumChemical Calculations",
+   "authors": [
+    "S. Grimme"
+   ],
+   "year": 2019,
+   "journal": "Journal of Chemical Theory and Computation"
+  },
+  {
+   "doi": "10.1063/1.5143190",
+   "title": "DFTB+, a software package for efficient approximate density functional theory based atomistic simulations",
+   "authors": [
+    "B. Hourahine",
+    "B. Aradi",
+    "V. Blum",
+    "F. Bonafé",
+    "A. Buccheri",
+    "C. Camacho",
+    "C. Cevallos",
+    "M. Y. Deshaye",
+    "T. Dumitrică",
+    "A. Dominguez",
+    "S. Ehlert",
+    "M. Elstner",
+    "T. Van Der Heide",
+    "J. Hermann",
+    "S. Irle",
+    "J. J. Kranz",
+    "C. Köhler",
+    "T. Kowalczyk",
+    "T. Kubař",
+    "I. S. Lee",
+    "V. Lutsker",
+    "R. J. Maurer",
+    "S. K. Min",
+    "I. Mitchell",
+    "C. Negre",
+    "T. A. Niehaus",
+    "A. M. N. Niklasson",
+    "A. J. Page",
+    "A. Pecchia",
+    "G. Penazzi",
+    "M. P. Persson",
+    "J. Řezáč",
+    "C. G. Sánchez",
+    "M. Sternberg",
+    "M. Stöhr",
+    "F. Stuckenberg",
+    "A. Tkatchenko",
+    "V. W. z. Yu",
+    "T. Frauenheim"
+   ],
+   "year": 2020,
+   "journal": "The Journal of Chemical Physics"
+  },
+  {
+   "doi": "10.1088/1361-648X/ab4007",
+   "title": "QuantumATK: an integrated platform of electronic and atomic-scale modelling tools",
+   "authors": [
+    "S. Smidstrup",
+    "T. Markussen",
+    "P. Vancraeyveld",
+    "J. Wellendorff",
+    "J. Schneider",
+    "T. Gunst",
+    "B. Verstichel",
+    "D. Stradi",
+    "P. A. Khomyakov",
+    "U. G. Vej-Hansen",
+    "M. E. Lee",
+    "S. T. Chill",
+    "F. Rasmussen",
+    "G. Penazzi",
+    "F. Corsetti",
+    "A. Ojanperä",
+    "K. Jensen",
+    "M. L. N. Palsgaard",
+    "U. Martinez",
+    "A. Blom",
+    "M. Brandbyge",
+    "K. Stokbro"
+   ],
+   "year": 2020,
+   "journal": "Journal of Physics: Condensed Matter"
+  }
+ ]
+}

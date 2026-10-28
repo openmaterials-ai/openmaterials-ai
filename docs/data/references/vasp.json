@@ -1,0 +1,99 @@
+{
+ "key": "vasp",
+ "code": [
+  {
+   "doi": "10.1016/0927-0256(96)00008-0",
+   "title": "Efficiency of ab-initio total energy calculations for metals and semiconductors using a plane-wave basis set",
+   "authors": [
+    "G. Kresse",
+    "J. Furthmüller"
+   ],
+   "year": 1996,
+   "journal": "Computational Materials Science"
+  },
+  {
+   "doi": "10.1103/PhysRevB.54.11169",
+   "title": "Efficient iterative schemes for ab initio total-energy calculations using a plane-wave basis set",
+   "authors": [
+    "G. Kresse",
+    "J. Furthmüller"
+   ],
+   "year": 1996,
+   "journal": "Physical Review B"
+  },
+  {
+   "doi": "10.1103/PhysRevB.59.1758",
+   "title": "From ultrasoft pseudopotentials to the projector augmented-wave method",
+   "authors": [
+    "G. Kresse",
+    "D. Joubert"
+   ],
+   "year": 1999,
+   "journal": "Physical Review B"
+  }
+ ],
+ "methods": [],
+ "applications": [
+  {
+   "doi": "10.1103/PhysRevB.73.155114",
+   "title": "Variational density-functional perturbation theory for dielectrics and lattice dynamics",
+   "authors": [
+    "K. Refson",
+    "P. R. Tulip",
+    "S. J. Clark"
+   ],
+   "year": 2006,
+   "journal": "Physical Review B"
+  },
+  {
+   "doi": "10.1103/PhysRevB.77.075133",
+   "title": "Electron-phonon coupling and electron heat capacity of metals under conditions of strong electron-phonon nonequilibrium",
+   "authors": [
+    "Z. Lin",
+    "L. V. Zhigilei",
+    "V. Celli"
+   ],
+   "year": 2008,
+   "journal": "Physical Review B"
+  },
+  {
+   "doi": "10.1038/nature13184",
+   "title": "Ultralow thermal conductivity and high thermoelectric figure of merit in SnSe crystals",
+   "authors": [
+    "L. D. Zhao",
+    "S. H. Lo",
+    "Y. Zhang",
+    "H. Sun",
+    "G. Tan",
+    "C. Uher",
+    "C. Wolverton",
+    "V. P. Dravid",
+    "M. G. Kanatzidis"
+   ],
+   "year": 2014,
+   "journal": "Nature"
+  },
+  {
+   "doi": "10.1126/science.aaq1479",
+   "title": "3D charge and 2D phonon transports leading to high out-of-plane ZT in n-type SnSe crystals",
+   "authors": [
+    "C. Chang",
+    "M. Wu",
+    "D. He",
+    "Y. Pei",
+    "C. F. Wu",
+    "X. Wu",
+    "H. Yu",
+    "F. Zhu",
+    "K. Wang",
+    "Y. Chen",
+    "L. Huang",
+    "J. F. Li",
+    "J. He",
+    "L. D. Zhao"
+   ],
+   "year": 2018,
+   "journal": "Science"
+  }
+ ]
+}

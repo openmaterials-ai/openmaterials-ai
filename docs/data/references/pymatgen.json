@@ -1,0 +1,94 @@
+{
+ "key": "pymatgen",
+ "code": [
+  {
+   "doi": "10.1016/j.commatsci.2012.10.028",
+   "title": "Python Materials Genomics (pymatgen): A robust, open-source python library for materials analysis",
+   "authors": [
+    "S. P. Ong",
+    "W. D. Richards",
+    "A. Jain",
+    "G. Hautier",
+    "M. Kocher",
+    "S. Cholia",
+    "D. Gunter",
+    "V. L. Chevrier",
+    "K. A. Persson",
+    "G. Ceder"
+   ],
+   "year": 2013,
+   "journal": "Computational Materials Science"
+  }
+ ],
+ "methods": [],
+ "applications": [
+  {
+   "doi": "10.1103/PhysRevB.90.174107",
+   "title": "High-throughput computational screening of thermal conductivity, Debye temperature, and Grüneisen parameter using a quasiharmonic Debye model",
+   "authors": [
+    "C. Toher",
+    "J. J. Plata",
+    "O. Levy",
+    "M. De Jong",
+    "M. Asta",
+    "M. B. Nardelli",
+    "S. Curtarolo"
+   ],
+   "year": 2014,
+   "journal": "Physical Review B"
+  },
+  {
+   "doi": "10.1103/PhysRevLett.115.205901",
+   "title": "Prediction of Low-Thermal-Conductivity Compounds with First-Principles Anharmonic Lattice-Dynamics Calculations and Bayesian Optimization",
+   "authors": [
+    "A. Seko",
+    "A. Togo",
+    "H. Hayashi",
+    "K. Tsuda",
+    "L. Chaput",
+    "I. Tanaka"
+   ],
+   "year": 2015,
+   "journal": "Physical Review Letters"
+  },
+  {
+   "doi": "10.1038/sdata.2018.65",
+   "title": "High-throughput density-functional perturbation theory phonons for inorganic materials",
+   "authors": [
+    "G. Petretto",
+    "S. Dwaraknath",
+    "H. P.C. Miranda",
+    "D. Winston",
+    "M. Giantomassi",
+    "M. J. Van Setten",
+    "X. Gonze",
+    "K. A. Persson",
+    "G. Hautier",
+    "G. M. Rignanese"
+   ],
+   "year": 2018,
+   "journal": "Scientific Data"
+  },
+  {
+   "doi": "10.1039/C7EE03364H",
+   "title": "Tuning mobility and stability of lithium ion conductors based on lattice dynamics",
+   "authors": [
+    "S. Muy",
+    "J. C. Bachman",
+    "L. Giordano",
+    "H. H. Chang",
+    "D. L. Abernathy",
+    "D. Bansal",
+    "O. Delaire",
+    "S. Hori",
+    "R. Kanno",
+    "F. Maglia",
+    "S. Lupart",
+    "P. Lamp",
+    "Y. Shao-Horn"
+   ],
+   "year": 2018,
+   "journal": "Energy & Environmental Science"
+  }
+ ]
+}
