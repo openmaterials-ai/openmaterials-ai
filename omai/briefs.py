@@ -70,6 +70,8 @@ def validate(brief: dict, references: dict | None = None) -> list[str]:
     for i, s in enumerate(brief.get("sources") or []):
         if not s.get("label") or not (s.get("doi") or s.get("url")):
             errors.append(f"sources[{i}]: label and doi or url required")
+        elif s.get("url") and not str(s["url"]).startswith("https://"):
+            errors.append(f"sources[{i}]: url must be https")
     if references is not None:
         known = {r["doi"].lower() for g in ("code", "methods", "applications") for r in references.get(g, [])}
         for s in brief.get("sources") or []:
@@ -103,7 +105,7 @@ def main() -> int:
     bad = 0
     for p in sorted(BRIEFS.glob("*.json")):
         refs_p = ROOT / "docs" / "data" / "references" / p.name
-        refs = json.loads(refs_p.read_text()) if refs_p.exists() else None
+        refs = json.loads(refs_p.read_text(encoding="utf-8")) if refs_p.exists() else None
         errs = validate(json.loads(p.read_text(encoding="utf-8")), refs)
         for e in errs:
             print(f"{p.stem}: {e}")

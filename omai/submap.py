@@ -5,8 +5,8 @@ the quantity on the interactive map. Labels are 13 px at natural size; a wide su
 sideways inside its figure instead of shrinking under the floor. A code that serves fewer than
 four quantities also shows their direct inputs and outputs on the map, hollow, as context.
 
-Plain names mirror ``nodeName`` in docs/assets/map-words.js (the word tables are read from that
-file so the two never drift). Symbols are the map's LaTeX turned into text with sub and
+Plain names mirror ``nodeName`` in docs/assets/map-words.js: WORDS and HUMAN_PROP are read from that
+file, PHRASES is a copy, and a test compares every name on the map with the JavaScript under Node. Symbols are the map's LaTeX turned into text with sub and
 superscripts; one the converter cannot read falls back to the name alone.
 """
 
@@ -199,17 +199,18 @@ def layout(graph: dict, lit: set[str]) -> dict:
     for s, t in edges:
         preds[t].append(s)
     depth: dict[str, int] = {}
-
-    def d(i: str, seen=()) -> int:
-        if i in depth:
-            return depth[i]
-        if i in seen:
-            return 0
-        depth[i] = 1 + max((d(p, seen + (i,)) for p in preds[i]), default=-1)
-        return depth[i]
-
-    for i in shown:
-        d(i)
+    order_ids = sorted(shown)
+    # longest path from a source, by relaxation over sorted ids; a cycle stops after len(shown) rounds
+    for i in order_ids:
+        depth[i] = 0
+    for _ in range(len(order_ids)):
+        changed = False
+        for s_, t_ in sorted(edges):
+            if s_ != t_ and depth[t_] < depth[s_] + 1 <= len(order_ids):
+                depth[t_] = depth[s_] + 1
+                changed = True
+        if not changed:
+            break
     columns = {t: sorted((i for i in shown if (nodes[i].get("tier") or "Other") == t), key=lambda i: (depth[i], i)) for t in tiers}
     pos: dict[str, dict] = {}
     for ci, t in enumerate(tiers):
@@ -239,12 +240,13 @@ def _edge_path(a: dict, b: dict) -> str:
     return f"M{x0:.0f} {y0:.0f} C{x0:.0f} {top:.0f} {x1:.0f} {top:.0f} {x1:.0f} {y1:.0f}"
 
 
-def svg(graph: dict, lit: set[str], map_href: str = "../../map/") -> str:
+def svg(graph: dict, lit: set[str], map_href: str = "../../map/", fit_under: int = 0) -> str:
+    """The submap; one no wider than ``fit_under`` px scales to its container instead of scrolling."""
     L = layout(graph, lit)
     nodes, pos = L["nodes"], L["pos"]
     out = [
-        f'<svg class="submap-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {L["width"]} {L["height"]}" '
-        f'width="{L["width"]}" height="{L["height"]}" role="img" aria-label="The quantities on the map, by tier, with the data flow between them">',
+        f'<svg class="submap-svg{" fit" if L["width"] <= fit_under else ""}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {L["width"]} {L["height"]}" '
+        f'width="{L["width"]}" height="{L["height"]}" role="group" aria-label="The quantities on the map, by tier, with the data flow between them">',
         '<defs><marker id="sm-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">'
         '<path d="M0 0 L10 5 L0 10 Z" class="sm-head"/></marker></defs>',
     ]

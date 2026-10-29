@@ -55,7 +55,7 @@ def test_the_infographic_comes_first_and_the_record_follows():
         html = (DOCS / "codes" / key / "index.html").read_text()
         article = html.split('<article class="prose gwrap">', 1)[1]
         assert article.lstrip().startswith('<figure class="gsec info-figure" id="infographic">'), key
-        assert '<svg class="submap-svg"' in article, key + ": the submap is drawn inline"
+        assert '<svg class="submap-svg' in article, key + ": the submap is drawn inline"
         assert f'href="../../map/#code={key}"' in article, key
         assert f"&lt;iframe src=&quot;https://openmaterials.ai/map/?embed=1#code={key}&quot;" in html, "the embed snippet is on the page"
         for anchor in ("about", "detail", "serves", "references", "cite"):
@@ -148,3 +148,53 @@ def test_hand_written_text_stays_within_the_roster():
         assert key in CODES, key
         assert entry.get("tagline") and entry.get("summary"), key
         assert chr(0x2014) not in json.dumps(entry), key
+
+
+def test_the_brief_validator_rejects_what_it_should():
+    good = briefs.load("gpumd")
+    assert briefs.validate(good) == []
+
+    def broken(change):
+        b = json.loads(json.dumps(good))
+        change(b)
+        return briefs.validate(b)
+
+    assert broken(lambda b: b["hero"].update(glyph="no-such-glyph"))
+    assert broken(lambda b: b.update(claim="x" * 181))
+    assert broken(lambda b: b.update(claim="one" + chr(0x2014) + "two"))
+    assert broken(lambda b: b["facts"][0].update(source="Nobody 1900"))
+    assert broken(lambda b: b["sources"].append({"label": "X", "url": "javascript:alert(1)"}))
+    assert broken(lambda b: b.update(features=b["features"][:2]))
+    refs = {"code": [], "methods": [], "applications": []}
+    assert any("not among the code's references" in e for e in briefs.validate(good, refs))
+
+
+def test_submap_layout_is_stable_on_a_cycle():
+    graph = {
+        "tiers": [{"name": "T", "order": 0}],
+        "nodes": [{"id": i, "tier": "T", "symbol": i, "type": "observable"} for i in "ABCDE"],
+        "links": [{"source": s, "target": t} for s, t in ("AB", "BC", "CA", "DA", "ED")],
+    }
+    first = submap.svg(graph, set("ABCDE"))
+    for _ in range(5):
+        assert submap.svg(graph, set("ABCDE")) == first
+    code = f"from omai import submap; import json; g = json.loads({json.dumps(json.dumps(graph))}); print(submap.svg(g, set('ABCDE')))"
+    outs = {
+        subprocess.run([sys.executable, "-c", code], capture_output=True, text=True, check=True, cwd=ROOT,
+                       env={"PYTHONHASHSEED": str(seed), "PYTHONPATH": str(ROOT), "PATH": "/usr/bin:/bin"}).stdout
+        for seed in range(4)
+    }
+    assert len(outs) == 1, "the submap depends on the hash seed"
+
+
+def test_submap_names_match_the_javascript(tmp_path):
+    graph = json.loads((DOCS / "data" / "graph.json").read_text())
+    ids = [n["id"] for n in graph["nodes"]]
+    probe = tmp_path / "names.js"
+    probe.write_text(
+        "const fs = require('fs'), vm = require('vm'); const ctx = {}; vm.createContext(ctx);"
+        f"vm.runInContext(fs.readFileSync({json.dumps(str(DOCS / 'assets' / 'map-words.js'))}, 'utf8'), ctx);"
+        f"const ids = {json.dumps(ids)}; console.log(JSON.stringify(ids.map(i => vm.runInContext('nodeName(' + JSON.stringify(i) + ')', ctx))));"
+    )
+    js = json.loads(subprocess.run(["node", str(probe)], capture_output=True, text=True, check=True).stdout)
+    assert [submap.node_name(i) for i in ids] == js

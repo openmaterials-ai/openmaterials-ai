@@ -32,7 +32,10 @@ def _panel(p: dict, cls: str = "info-panel") -> str:
 def _source_href(brief: dict, label: str) -> str:
     for s in brief.get("sources") or []:
         if s.get("label") == label:
-            return f"https://doi.org/{s['doi']}" if s.get("doi") else s.get("url", "")
+            if s.get("doi"):
+                return f"https://doi.org/{s['doi']}"
+            url = s.get("url") or ""
+            return url if url.startswith("https://") else ""
     return ""
 
 

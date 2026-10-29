@@ -147,7 +147,7 @@ def page(key: str, rep: dict, reg: dict, refs: dict | None, text: dict, has_card
     info_html = ""
     if brief:
         own = infographic.self_reported(brief, refs)
-        poster_links = f'<a href="infographic/">Poster page</a>' + (f'<a href="../../assets/infographics/{esc(key)}.png" download>Download the poster (PNG, 1920 x 1080)</a>' if has_poster else "")
+        poster_links = '<a href="infographic/">Poster page</a>' + (f'<a href="../../assets/infographics/{esc(key)}.png" download>Download the poster (PNG, 1920 x 1080)</a>' if has_poster else "")
         info_html = (
             f'<figure class="gsec info-figure" id="infographic">{infographic.block(brief, name, key, self_reported=own)}'
             f'<figcaption><span>What {esc(name)} is, how it works and what it is used for, from the papers listed as sources. Every number links to its paper.</span>{poster_links}</figcaption></figure>'
@@ -157,10 +157,7 @@ def page(key: str, rep: dict, reg: dict, refs: dict | None, text: dict, has_card
         detail_html = '<section class="gsec" id="detail"><h2>In more detail</h2>' + "".join(
             f'<h3>{esc(d["heading"])}</h3><p>{esc(d["text"])}</p>' for d in brief["detail"]
         ) + "</section>"
-    submap_html = submap.svg(graph, set(nodes)) if graph else ""
-    fit = ' style="width:100%;height:auto"' if graph and submap.layout(graph, set(nodes))["width"] <= 760 else ""
-    if fit and submap_html:
-        submap_html = submap_html.replace('<svg class="submap-svg"', '<svg class="submap-svg"' + fit, 1)
+    submap_html = submap.svg(graph, set(nodes), fit_under=760) if graph else ""
 
     served = "".join(
         f'<li><a href="../../map/#node={esc(n)}"><span class="bib-node">{esc(n)}</span></a>'
@@ -330,7 +327,7 @@ def page(key: str, rep: dict, reg: dict, refs: dict | None, text: dict, has_card
 """.replace("{EXTRA_CSS}", (infographic.CSS if info_html else "") + submap.CSS)
 
 
-def build(write_cards: bool = True, strict: bool = True) -> list[str]:
+def build(write_cards: bool = True) -> list[str]:
     codes = load("codes.json")
     registry = load("registry.json").get("code", {})
     texts = load("code_pages.json")
@@ -356,7 +353,7 @@ def build(write_cards: bool = True, strict: bool = True) -> list[str]:
         brief = briefs.load(key)
         if brief:
             problems = briefs.validate(brief, refs)
-            if problems and strict:
+            if problems:
                 raise ValueError(f"brief {key}: " + "; ".join(problems))
         out = OUT / key / "index.html"
         out.parent.mkdir(parents=True, exist_ok=True)

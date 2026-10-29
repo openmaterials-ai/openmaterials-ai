@@ -58,6 +58,13 @@ def render(keys: list[str], port: int) -> list[str]:
              "--virtual-time-budget=10000", f"--screenshot={poster}", f"http://127.0.0.1:{port}/codes/{key}/infographic/"],
             check=True, capture_output=True,
         )
+        dom = subprocess.run(
+            [CHROME, "--headless=new", "--no-sandbox", "--disable-gpu", "--window-size=1920,1168", "--virtual-time-budget=10000",
+             "--dump-dom", f"http://127.0.0.1:{port}/codes/{key}/infographic/"],
+            check=True, capture_output=True, text=True,
+        ).stdout
+        if 'data-overflow="1"' in dom:
+            raise SystemExit(f"{key}: the poster text overflows even at 80% scale; shorten the brief")
         with Image.open(poster) as im:
             im.convert("RGB").crop((0, 0, 1920, 1080)).save(poster, optimize=True)
         card = CARDS / f"{key}.png"
