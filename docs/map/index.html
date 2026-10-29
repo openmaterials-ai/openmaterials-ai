@@ -139,6 +139,10 @@
   #fallback .fn .fs code{font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);}
   #fallback .fn .fk{display:inline-flex;align-items:center;height:24px;padding:0 10px;margin-left:8px;border-radius:9999px;background:var(--surface-2,#F2F2F2);color:var(--ink,#171717);font-size:12px;font-weight:500;vertical-align:middle;}
   #fallback .fn .fe{color:var(--ink-2,#4D4D4D);margin-top:6px;}
+  /* embed mode (?embed=1): the canvas alone, for iframes on the code pages and elsewhere; the hash still picks a code or a node */
+  body.embed [data-site-header],body.embed .toolbar,body.embed .legend,body.embed .caption,body.embed #banner{display:none;}
+  .embed-out{position:absolute;right:12px;bottom:12px;z-index:6;display:none;padding:6px 10px;border-radius:var(--radius,6px);background:var(--page,#FFFFFF);box-shadow:var(--shadow-float,0 0 0 1px #EBEBEB,0 4px 8px -4px rgb(0 0 0 / .04),0 16px 24px -8px rgb(0 0 0 / .06));font-size:12px;line-height:16px;color:var(--ink,#171717);text-decoration:none;}
+  body.embed .embed-out{display:block;}
   @media (prefers-reduced-motion: reduce){*,*::before,*::after{transition-duration:0s !important;animation-duration:0s !important;}}
 </style>
 </head>
@@ -156,6 +160,7 @@
   <button class="btn btn--ghost btn--sm" id="zoomIn" type="button" aria-label="Zoom in">+</button>
   <button class="btn btn--secondary btn--sm" id="fitBtn" type="button">Fit</button>
   <button class="btn btn--secondary btn--sm" id="copylink" type="button" aria-label="Copy link to this view">Copy link</button>
+  <button class="btn btn--secondary btn--sm" id="embedBtn" type="button" aria-label="Copy an embed snippet for this view">Embed</button>
 </div>
 <div id="banner" class="notice"></div>
 <noscript><p class="notice" style="margin:8px 16px">This view draws the map with JavaScript. The map data is plain JSON at <a href="../data/graph.json">data/graph.json</a>.</p></noscript>
@@ -172,6 +177,7 @@
   <span><i class="sw param"></i>Parameter</span>
 </div>
 <p class="caption" id="caption">Select a quantity to see its formula, what it is built from, what it feeds, and the codes that compute it.</p>
+<a class="embed-out" id="embedOut" href="../map/" target="_top">Open the full map</a>
 <div class="om-panel" id="panel" role="complementary" aria-label="Map selection and formal references" tabindex="-1"></div>
 </div>
 <div id="fallback"></div>
@@ -211,7 +217,10 @@ const HAS_DAGRE = (typeof dagre!=='undefined');
 
 let VB={x:0,y:0,w:1000,h:1000}, GW=1000, GH=1000;
 // Node labels are LABEL_UNITS tall; no view scales them under 12 px.
-const LABEL_UNITS=22, MIN_SCALE=12/LABEL_UNITS, DEFAULT_SCALE=0.75;   // 16.5 px labels at rest
+// ?embed=1 draws the canvas alone (the code pages frame it); the hash still picks the code or node
+const EMBED=new URLSearchParams(location.search).get('embed')==='1';
+// Node labels are LABEL_UNITS tall; no view scales them under 12 px, or 7 px in an embed, where the whole lit subgraph has to fit a 480 px frame
+const LABEL_UNITS=22, MIN_SCALE=(EMBED?7:12)/LABEL_UNITS, DEFAULT_SCALE=0.75;   // 16.5 px labels at rest
 let BANDS_TOP=0, lastFocus=null, lastAnchor=null, lastHits=[];
 let leanData={nodes:{}};
 let formulaBindings={nodes:{},operators:{}};
@@ -442,7 +451,8 @@ let dragging=false, moved=false, sx=0, sy=0, vbs=null;
 svg.addEventListener('mousedown', e=>{ dragging=true; moved=false; sx=e.clientX; sy=e.clientY; vbs={x:VB.x,y:VB.y}; svg.classList.add('drag'); });
 window.addEventListener('mouseup', ()=>{ dragging=false; svg.classList.remove('drag'); });
 window.addEventListener('mousemove', e=>{ if(!dragging)return; const m=svg.getScreenCTM(); if(!m)return; const dx=(e.clientX-sx)/m.a, dy=(e.clientY-sy)/m.d; if(Math.abs(e.clientX-sx)+Math.abs(e.clientY-sy)>4) moved=true; VB.x=vbs.x-dx; VB.y=vbs.y-dy; setVB(); });
-svg.addEventListener('wheel', e=>{ e.preventDefault(); const m=svg.getScreenCTM(); if(!m)return; const pt=svg.createSVGPoint(); pt.x=e.clientX; pt.y=e.clientY; const u=pt.matrixTransform(m.inverse()); const f=capOut(e.deltaY>0?1.12:0.893, VB); VB.x=u.x-(u.x-VB.x)*f; VB.y=u.y-(u.y-VB.y)*f; VB.w*=f; VB.h*=f; setVB(); }, {passive:false});
+svg.addEventListener('wheel', e=>{ if(EMBED&&!(e.ctrlKey||e.metaKey)) return;   // in an iframe the wheel scrolls the page; ctrl or cmd zooms
+  e.preventDefault(); const m=svg.getScreenCTM(); if(!m)return; const pt=svg.createSVGPoint(); pt.x=e.clientX; pt.y=e.clientY; const u=pt.matrixTransform(m.inverse()); const f=capOut(e.deltaY>0?1.12:0.893, VB); VB.x=u.x-(u.x-VB.x)*f; VB.y=u.y-(u.y-VB.y)*f; VB.w*=f; VB.h*=f; setVB(); }, {passive:false});
 document.getElementById('zoomIn').addEventListener('click', ()=> zoomBy(0.8));
 document.getElementById('zoomOut').addEventListener('click', ()=> zoomBy(1.25));
 document.getElementById('fitBtn').addEventListener('click', ()=>{ if(lastFocus) fitTo(lastFocus, lastAnchor); else fitDefault(); });
@@ -672,6 +682,19 @@ document.getElementById('copylink').addEventListener('click', function(){
   const done=function(){ btn.textContent='Copied'; setTimeout(function(){ btn.textContent='Copy link'; },1200); };
   if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(url).then(done,function(){ window.prompt('Copy this link:',url); }); }
   else{ window.prompt('Copy this link:',url); }
+});
+
+// ---- embed mode (EMBED is read in the shared section, before the label floor is set)
+if(EMBED){ document.body.classList.add('embed'); document.getElementById('embedOut').href=location.pathname+location.hash; }
+function embedSnippet(){
+  const u=new URL(location.href); u.searchParams.set('embed','1');
+  return '<iframe src="'+u.href+'" title="OpenMaterials map" width="100%" height="480" loading="lazy" style="border:1px solid #EBEBEB;border-radius:6px"></iframe>';
+}
+document.getElementById('embedBtn').addEventListener('click', function(){
+  const btn=this, s=embedSnippet();
+  const done=function(){ btn.textContent='Copied'; setTimeout(function(){ btn.textContent='Embed'; },1200); };
+  if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(s).then(done,function(){ window.prompt('Copy this embed code:',s); }); }
+  else{ window.prompt('Copy this embed code:',s); }
 });
 
 // The view switch carries the selection: the current #node= rides along to the other view.

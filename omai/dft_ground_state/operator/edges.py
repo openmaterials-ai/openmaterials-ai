@@ -1,6 +1,6 @@
 r"""Operators (edges) of the DFT ground-state domain.
 
-Six edges, all implicit (is_executable_in_sympy_override=False): the
+Nine edges, all implicit (is_executable_in_sympy_override=False): the
 Kohn-Sham SCF solve, the two response derivatives (Hellmann-Feynman forces,
 cell stress) a DFT engine reports alongside the energy, the
 finite-displacement route from Forces to the second-order force constants
@@ -9,7 +9,9 @@ thermal-transport chain), the spin-polarized per-site magnetic moments
 (added 2026-07-09 from the pymatgen scan, the same (Structure, Potential)
 signature as the SCF solve), and the electronic band gap (added 2026-07-09
 from the atomate2/VASP scan, the same (Structure, Potential) signature: one
-more response read off a band-structure run).
+more response read off a band-structure run), and the three held-out errors
+of a fitted potential against the reference labels TotalEnergy, Forces and
+Stress (compute_potential_{energy,force,virial}_fit_error, one label each).
 
 Symbol choices are deliberately distinct from the thermal domain's globals to
 avoid collisions in the shared dimension / vocabulary registries: E_{tot} and
@@ -27,6 +29,9 @@ from omai.dft_ground_state.operator.nodes import (
     BAND_GAP,
     FORCES,
     MAGNETIC_MOMENT_STATE,
+    POTENTIAL_ENERGY_FIT_ERROR,
+    POTENTIAL_FORCE_FIT_ERROR,
+    POTENTIAL_VIRIAL_FIT_ERROR,
     STRESS,
     STRUCTURE,
     TOTAL_ENERGY,
@@ -64,6 +69,15 @@ _m_KS = sp.Function(r"m^{KS}")
 # produces it, the same (S, V) signature as the SCF solve.
 _E_gap = sp.Symbol("E_{gap}")
 _E_gap_KS = sp.Function(r"E^{gap}_{KS}")
+# Held-out RMSEs of a fitted potential (energy, force, virial) and the opaque
+# RMSE functional over the held-out set. N is the atom count (the thermal
+# domain's AtomCount symbol, a registered constant), so the per-atom energy and
+# virial edges draw the AtomCount link and the virial edge the CellVolume link.
+_eps_E = sp.Symbol(r"\epsilon_E")
+_eps_F = sp.Symbol(r"\epsilon_F")
+_eps_W = sp.Symbol(r"\epsilon_W")
+_rmse = sp.Function(r"\epsilon^{rmse}")
+_N = sp.Symbol("N", positive=True, integer=True)
 
 
 # ---------------------------------------------------------------------------
@@ -185,6 +199,66 @@ compute_band_gap = Operator(
     ),
 )
 
+_FIT_EDGE_NOTE = (
+    "stands for the family of reference labels over the held-out structures "
+    "(the family-of-values convention of compute_fc2_finite_displacement), "
+    "each value carrying its structure in its conditions; the Potential input "
+    "is the fitted model, evaluated on the same structures. Held-out means "
+    "not in the training set; the training-set error is a different "
+    "quantity and is not this edge. An "
+    "opaque functional over the held-out set, so not sympy-executable; the "
+    "dimensional gate skips it."
+)
+
+compute_potential_energy_fit_error = Operator(
+    name="compute_potential_energy_fit_error",
+    inputs=(POTENTIAL, TOTAL_ENERGY),
+    outputs=(POTENTIAL_ENERGY_FIT_ERROR,),
+    formula=sp.Eq(_eps_E, _rmse(_V_sym, _E_tot, _N)),
+    is_executable_in_sympy_override=False,
+    description=(
+        "Energy RMSE of a fitted potential on held-out labels: epsilon_E = "
+        "epsilon^{rmse}[V, E_tot, N], the root-mean-square over the held-out "
+        "structures of (E_V - E_tot)/N, with E_V the energy evaluated with "
+        "the Potential V, E_tot the reference TotalEnergy and N the atom "
+        "count. Raw RMSE: no per-atom offset is removed. TotalEnergy "
+        + _FIT_EDGE_NOTE
+    ),
+)
+
+compute_potential_force_fit_error = Operator(
+    name="compute_potential_force_fit_error",
+    inputs=(POTENTIAL, FORCES),
+    outputs=(POTENTIAL_FORCE_FIT_ERROR,),
+    formula=sp.Eq(_eps_F, _rmse(_V_sym, _F_at[_i, _alpha])),
+    is_executable_in_sympy_override=False,
+    description=(
+        "Force RMSE of a fitted potential on held-out labels: epsilon_F = "
+        "epsilon^{rmse}[V, F^{at}], the root-mean-square over every Cartesian "
+        "component of every atom of the held-out structures of the difference "
+        "between the force evaluated with the Potential V and the reference "
+        "Forces F^{at}. Raw RMSE on held-out labels. Forces " + _FIT_EDGE_NOTE
+    ),
+)
+
+compute_potential_virial_fit_error = Operator(
+    name="compute_potential_virial_fit_error",
+    inputs=(POTENTIAL, STRESS),
+    outputs=(POTENTIAL_VIRIAL_FIT_ERROR,),
+    formula=sp.Eq(_eps_W, _rmse(_V_sym, _sigma[_alpha, _beta], _V_cell, _N)),
+    is_executable_in_sympy_override=False,
+    description=(
+        "Virial RMSE of a fitted potential on held-out labels: epsilon_W = "
+        "epsilon^{rmse}[V, sigma, V_cell, N], the root-mean-square over the "
+        "six independent components of the held-out structures that carry a "
+        "reference stress of (W_V - W)/N, with W_V the virial evaluated with "
+        "the Potential V, W = V_cell sigma the reference virial from the "
+        "reference Stress sigma (pressure convention), V_cell the cell volume "
+        "and N the atom count. Raw RMSE on held-out labels. Stress "
+        + _FIT_EDGE_NOTE
+    ),
+)
+
 EDGES: tuple[Operator, ...] = (
     solve_ground_state,
     compute_forces_hf,
@@ -192,4 +266,7 @@ EDGES: tuple[Operator, ...] = (
     compute_fc2_finite_displacement,
     compute_magnetic_moments,
     compute_band_gap,
+    compute_potential_energy_fit_error,
+    compute_potential_force_fit_error,
+    compute_potential_virial_fit_error,
 )

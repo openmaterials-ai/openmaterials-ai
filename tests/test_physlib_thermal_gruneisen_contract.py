@@ -115,7 +115,7 @@ BASELINE_PAIRS = [{'module': 'OMAIPhyslibSemantics', 'name': 'OMAI.PhyslibBridge
 BASELINE_SUBJECTS = ({("operator", name) for name in BASELINE_OPERATORS}
                      | {("node", name) for name in BASELINE_NODES})
 CP_ERA_CONTRACTS = frozenset(LEGACY_CONTRACT_HASHES) | {CP_CONTRACT_NAME}
-CATALOG_ID_SHA = "21869395fbf9688ad8a3c8f042f46c8e185579789779601ad1b9fbfa8323c9ac"
+CATALOG_ID_SHA = "7f60064e1533914c046b01c7b8723281def520baae4247b452e867f578c2ce8b"
 
 # Frozen thermal Gruneisen tranche.
 GAMMA_BINDING_ID = "harmonic-static-thermal-gruneisen-identity"
@@ -179,8 +179,8 @@ GAMMA_SOURCES = sorted([
     ("Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas", "CanonicalEnsemble.meanEnergyT", "def", 409),
 ])
 EXPECTED_COVERAGE = {
-    "nodes_total": 129,
-    "operators_total": 127,
+    "nodes_total": 136,
+    "operators_total": 133,
     "operators_compiled": 15,
     "operators_mapped": 15,
     "nodes_compiled": 16,

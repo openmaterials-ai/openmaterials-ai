@@ -9,6 +9,39 @@
   <url><loc>https://openmaterials.ai/document/</loc></url>
   <url><loc>https://openmaterials.ai/openmaterials.pdf</loc></url>
   <url><loc>https://openmaterials.ai/codes/</loc></url>
+  <url><loc>https://openmaterials.ai/codes/amset/</loc></url>
+  <url><loc>https://openmaterials.ai/codes/ase/</loc></url>
+  <url><loc>https://openmaterials.ai/codes/diffcsp/</loc></url>
+  <url><loc>https://openmaterials.ai/codes/fairchem/</loc></url>
+  <url><loc>https://openmaterials.ai/codes/gpumd/</loc></url>
+  <url><loc>https://openmaterials.ai/codes/i-pi/</loc></url>
+  <url><loc>https://openmaterials.ai/codes/kaldo/</loc></url>
+  <url><loc>https://openmaterials.ai/codes/lammps/</loc></url>
+  <url><loc>https://openmaterials.ai/codes/mace/</loc></url>
+  <url><loc>https://openmaterials.ai/codes/mat-diffusion-analysis/</loc></url>
+  <url><loc>https://openmaterials.ai/codes/mat-elasticity/</loc></url>
+  <url><loc>https://openmaterials.ai/codes/mat-equation-of-state/</loc></url>
+  <url><loc>https://openmaterials.ai/codes/mat-surface-adsorption/</loc></url>
+  <url><loc>https://openmaterials.ai/codes/matgl/</loc></url>
+  <url><loc>https://openmaterials.ai/codes/mattergen/</loc></url>
+  <url><loc>https://openmaterials.ai/codes/mp-api/</loc></url>
+  <url><loc>https://openmaterials.ai/codes/ngspice/</loc></url>
+  <url><loc>https://openmaterials.ai/codes/openmaterials-ai/</loc></url>
+  <url><loc>https://openmaterials.ai/codes/openmm/</loc></url>
+  <url><loc>https://openmaterials.ai/codes/orca/</loc></url>
+  <url><loc>https://openmaterials.ai/codes/phono3py/</loc></url>
+  <url><loc>https://openmaterials.ai/codes/phonopy/</loc></url>
+  <url><loc>https://openmaterials.ai/codes/plumed/</loc></url>
+  <url><loc>https://openmaterials.ai/codes/pycalphad/</loc></url>
+  <url><loc>https://openmaterials.ai/codes/pymatgen/</loc></url>
+  <url><loc>https://openmaterials.ai/codes/pymatgen-analysis-diffusion/</loc></url>
+  <url><loc>https://openmaterials.ai/codes/qe/</loc></url>
+  <url><loc>https://openmaterials.ai/codes/qe-d3q/</loc></url>
+  <url><loc>https://openmaterials.ai/codes/rxn-network/</loc></url>
+  <url><loc>https://openmaterials.ai/codes/shengbte/</loc></url>
+  <url><loc>https://openmaterials.ai/codes/smol/</loc></url>
+  <url><loc>https://openmaterials.ai/codes/vasp/</loc></url>
+  <url><loc>https://openmaterials.ai/codes/xtb/</loc></url>
   <url><loc>https://openmaterials.ai/lean/</loc></url>
   <url><loc>https://openmaterials.ai/lean/roadmap/</loc></url>
   <url><loc>https://openmaterials.ai/lean/bridge/</loc></url>

@@ -16,6 +16,9 @@ on:
       - "tests/test_physlib_elasticity_contract.py"
       - "tests/test_physlib_composites_cure_contract.py"
       - "tests/test_physlib_phonon_contract.py"
+      - "tests/test_physlib_devices_materials_contract.py"
+      - "tests/physlib_tranches.py"
+      - "tests/test_physlib_thermochem_stability_contract.py"
       - "tests/test_physlib_atomistic_derivatives_contract.py"
       - "docs/data/formula_bindings.json"
       - "docs/data/physlib_dimensions.json"
@@ -34,6 +37,9 @@ on:
       - "tests/test_physlib_elasticity_contract.py"
       - "tests/test_physlib_composites_cure_contract.py"
       - "tests/test_physlib_phonon_contract.py"
+      - "tests/test_physlib_devices_materials_contract.py"
+      - "tests/physlib_tranches.py"
+      - "tests/test_physlib_thermochem_stability_contract.py"
       - "tests/test_physlib_atomistic_derivatives_contract.py"
       - "docs/data/formula_bindings.json"
       - "docs/data/physlib_dimensions.json"
@@ -84,4 +90,4 @@ jobs:
           PHYSLIB_BRIDGE_PATH: lean/bridge/.lake/packages/physlib
         run: |
           python -m omai.formula_bindings --check --physlib-path lean/bridge/.lake/packages/physlib --lean-package lean/bridge
-          python -m pytest tests/test_formula_bindings.py tests/test_physlib_dimensions.py tests/test_physlib_semantic_contract.py tests/test_physlib_contract_names.py tests/test_physlib_response_contract.py tests/test_physlib_thermal_gruneisen_contract.py tests/test_physlib_qha_contract.py tests/test_physlib_elasticity_contract.py tests/test_physlib_composites_cure_contract.py tests/test_physlib_phonon_contract.py tests/test_physlib_atomistic_derivatives_contract.py -q
+          python -m pytest tests/test_formula_bindings.py tests/test_physlib_dimensions.py tests/test_physlib_semantic_contract.py tests/test_physlib_contract_names.py tests/test_physlib_response_contract.py tests/test_physlib_thermal_gruneisen_contract.py tests/test_physlib_qha_contract.py tests/test_physlib_elasticity_contract.py tests/test_physlib_composites_cure_contract.py tests/test_physlib_phonon_contract.py tests/test_physlib_devices_materials_contract.py tests/test_physlib_thermochem_stability_contract.py tests/test_physlib_atomistic_derivatives_contract.py -q

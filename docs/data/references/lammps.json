@@ -1,0 +1,99 @@
+{
+ "key": "lammps",
+ "code": [
+  {
+   "doi": "10.1006/jcph.1995.1039",
+   "title": "Fast Parallel Algorithms for Short-Range Molecular Dynamics",
+   "authors": [
+    "S. Plimpton"
+   ],
+   "year": 1995,
+   "journal": "Journal of Computational Physics"
+  },
+  {
+   "doi": "10.1016/j.cpc.2021.108171",
+   "title": "LAMMPS - a flexible simulation tool for particle-based materials modeling at the atomic, meso, and continuum scales",
+   "authors": [
+    "A. P. Thompson",
+    "H. M. Aktulga",
+    "R. Berger",
+    "D. S. Bolintineanu",
+    "W. M. Brown",
+    "P. S. Crozier",
+    "P. J. in 't Veld",
+    "A. Kohlmeyer",
+    "S. G. Moore",
+    "T. D. Nguyen",
+    "R. Shan",
+    "M. J. Stevens",
+    "J. Tranchida",
+    "C. Trott",
+    "S. J. Plimpton"
+   ],
+   "year": 2022,
+   "journal": "Computer Physics Communications"
+  }
+ ],
+ "methods": [],
+ "applications": [
+  {
+   "doi": "10.1103/PhysRevLett.101.235502",
+   "title": "High Thermal Conductivity of Single Polyethylene Chains Using Molecular Dynamics Simulations",
+   "authors": [
+    "A. Henry",
+    "G. Chen"
+   ],
+   "year": 2008,
+   "journal": "Physical Review Letters"
+  },
+  {
+   "doi": "10.1088/0957-4484/22/10/105705",
+   "title": "Strain engineering of thermal conductivity in graphene sheets and nanoribbons: a demonstration of magic flexibility",
+   "authors": [
+    "N. Wei",
+    "L. Xu",
+    "H. Q. Wang",
+    "J. C. Zheng"
+   ],
+   "year": 2011,
+   "journal": "Nanotechnology"
+  },
+  {
+   "doi": "10.1038/nnano.2014.44",
+   "title": "High thermal conductivity of chain-oriented amorphous polythiophene",
+   "authors": [
+    "V. Singh",
+    "T. L. Bougher",
+    "A. Weathers",
+    "Y. Cai",
+    "K. Bi",
+    "M. T. Pettes",
+    "S. A. McMenamin",
+    "W. Lv",
+    "D. P. Resler",
+    "T. R. Gattuso",
+    "D. H. Altman",
+    "K. H. Sandhage",
+    "L. Shi",
+    "A. Henry",
+    "B. A. Cola"
+   ],
+   "year": 2014,
+   "journal": "Nature Nanotechnology"
+  },
+  {
+   "doi": "10.1016/j.nanoen.2020.105716",
+   "title": "Exceptional piezoelectricity, high thermal conductivity and stiffness and promising photocatalysis in two-dimensional MoSi2N4 family confirmed by first-principles",
+   "authors": [
+    "B. Mortazavi",
+    "B. Javvaji",
+    "F. Shojaei",
+    "T. Rabczuk",
+    "A. V. Shapeev",
+    "X. Zhuang"
+   ],
+   "year": 2021,
+   "journal": "Nano Energy"
+  }
+ ]
+}

@@ -14,11 +14,11 @@ id.
   closed-form formulas (from `Y = N/D` conclude `Y*D = N`), none of which
   certified anything about the physics. `lean/bridge` is the only package.
   Its generated `OMAIPhyslibDimensions.lean` keeps every dimension
-  definition and drops the 126 `_exponents` theorems that restated them.
+  definition and drops the 133 `_exponents` theorems that restated them.
 - `docs/data/lean.json` now lists each node's Physlib seven-base ISQ
   declarations from `lean/bridge` (`nodes[id].lean` and `nodes[id].fields`)
   with `physlib_rev` and `lean_toolchain`; the `edges` and `identities` keys
-  are gone. 124 nodes have an entry, up from 102.
+  are gone. 131 nodes have an entry, up from 102.
 - `docs/data/lean_roadmap.json` rates formulas as `definition`, `hard` or
   `na`; `easy` and `trivial` merge into `definition`. `proven` now means a
   compiled formula bridge proves a statement about the operator. The Bose-
@@ -35,21 +35,44 @@ id.
   report the rest. Payloads without local bindings validate as before; a
   payload with local bindings must carry the new counters. A cited
   declaration may live in any bridge module the evidence source imports.
-- New compiled bindings: the quasiharmonic producers (Gibbs energy,
-  C_P, expansion, isothermal modulus, Gruneisen contraction), crystal
-  lattice dynamics (dynamical matrix, dispersion, group velocity) and the
-  relaxation-time conductivity, anchored to Physlib; local bindings for the
-  elastic moduli, composite conductivity and depolarization factor, cure
-  kinetics and the participation ratio. The non-analytic correction, the
-  linearized-BTE collision matrix and the cumulative conductivity of a
-  linearized-BTE solution are recorded as catalog defects in their gap
-  reasons. No id changes.
-
+- New compiled bindings: the quasiharmonic producers (Gibbs energy, C_P, expansion, isothermal modulus, Gruneisen contraction), crystal lattice dynamics (dynamical matrix, dispersion, group velocity) and the relaxation-time conductivity, anchored to Physlib; local bindings for the elastic moduli, composite conductivity and depolarization factor, cure kinetics, the participation ratio, analog-device metrology, Arrhenius transport, the stability energy differences (hull distance, adsorption, intercalation voltage, surface and grain-boundary energies) and the CALPHAD equilibrium outputs (equilibrium Gibbs energy, enthalpy, entropy, chemical potentials, phase fractions, the unary or congruent transition temperature), and the derivatives of an atomistic or cell energy (Hellmann-Feynman force balance, force-constant sum rules and symmetry, central-difference error, cell-stress balance, hyperelastic elastic-constant symmetries and Voigt positivity, molecular normal modes at a minimum). The non-analytic correction, the linearized-BTE collision matrix, the cumulative conductivity of a linearized-BTE solution, the reaction energy (formula-unit coefficients applied to per-atom formation energies) and the mode Gruneisen formula (third-order force constants contracted over two indices with three left free) are recorded as catalog defects in their gap reasons. No id changes.
 - `docs/data/releases/openmaterials-ai.json` registers 0.4.0 (tag v0.4.0), so
   `release_check` resolves an `execution.registry` row naming
   `openmaterials-ai` 0.4.0 against the live registry. The 0.4.0 wheel's
   bundled registry predates the tag and still reports it unregistered. No id
   changes.
+- The `ngspice` representation (the ngspice circuit simulator) maps
+  `ConductanceState` and `DotProductError`, and
+  `docs/data/releases/ngspice.json` registers ngspice-47 (version `47`), so
+  a registry row naming `ngspice` 47 resolves. The representation count moves
+  from 33 to 34. No node, edge or id changes.
+- The map gains PotentialEnergyFitError, PotentialForceFitError and
+  PotentialVirialFitError (dft_ground_state) and
+  PotentialUncertaintyExceedance[method=committee_force_spread]
+  (thermal_transport), each with one producing edge: records 290-295 and
+  296-297, two contributions that supersede nothing, so no node or edge uid
+  moves. The graph version moves from `baf99346621b` to `9476086d423e` and
+  `lineage_version` from `61a981c02604` to `6f66f9c5e9c2`;
+  `format_rules_version` stays `227566bf55a0`. The packaged external-solve
+  request `omai/tools/kaldo-direct-bte-si.json` pins the new graph version,
+  so its `request_id` moves from `9c65fd692c45` to `dd544ee37fd8`. A request
+  minted against graph `baf99346621b` fails as a stale map version.
+- The analog-device-metrology domain adds `ConductanceRelaxationTime`,
+  `InterfaceTrapRelaxationTime` and benchmark-qualified
+  `ClassificationAccuracy`. `subthreshold_conductance_tangent_time` evaluates
+  the initial raw-conductance tangent under a single-mode subthreshold model.
+  `evaluate_reservoir_classification` is an external response-family contract,
+  not an executable classifier. Records 298-302 add the three nodes and two
+  edges, and record 303 clarifies the `ClassificationAccuracy` description.
+  No literature values or code coverage are added. Existing node, edge and
+  evidence ids, record-format rules and private-evidence handling are
+  unchanged. The graph version moves from `9476086d423e` to `2b27f48fbddb`,
+  and the unified lineage version from `6f66f9c5e9c2` to `45be98afae7c`. The
+  packaged kaldo external-solve fixture is re-minted against that graph,
+  moving its `request_id` from `dd544ee37fd8` to `77ba6b7ef660`. Its
+  scientific lineage and `lineage_id` are unchanged. Requests pinned to the
+  former graph fail the existing stale-version gate. New public definitions
+  take the next minor package version. This entry does not publish a release.
 
 ## 0.4.0
 

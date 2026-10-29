@@ -63,6 +63,11 @@ from omai.dft_ground_state.representation.mp_api import (
     MP_API_MAGNETIC_MOMENT,
     MP_API_STRUCTURE,
 )
+from omai.dft_ground_state.representation.gpumd import (
+    GPUMD_POTENTIAL_ENERGY_FIT_ERROR,
+    GPUMD_POTENTIAL_FORCE_FIT_ERROR,
+    GPUMD_POTENTIAL_VIRIAL_FIT_ERROR,
+)
 
 __all__ = [
     "QE_FORCES",
@@ -104,4 +109,7 @@ __all__ = [
     "MP_API_BAND_GAP",
     "MP_API_MAGNETIC_MOMENT",
     "MP_API_STRUCTURE",
+    "GPUMD_POTENTIAL_ENERGY_FIT_ERROR",
+    "GPUMD_POTENTIAL_FORCE_FIT_ERROR",
+    "GPUMD_POTENTIAL_VIRIAL_FIT_ERROR",
 ]

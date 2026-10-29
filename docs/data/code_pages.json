@@ -1,0 +1,174 @@
+{
+ "_about": "Hand-written text for the code landing pages (docs/codes/<key>/). Keys are codes.json keys. summary: two to four plain sentences a reader can check against the code's own documentation. tagline: one line under the title. website and docs: the code's own pages. A key without a summary gets a data-driven sentence from its map representation instead of prose, never an invented one.",
+ "amset": {
+  "tagline": "Carrier scattering rates and transport from first principles.",
+  "summary": "AMSET computes electronic transport in semiconductors from DFT inputs. It evaluates scattering rates for acoustic and polar optical phonons, ionized impurities and piezoelectric coupling, then solves for mobility, conductivity and Seebeck coefficient as a function of temperature and doping. On the map it serves the electronic transport quantities that depend on those rates.",
+  "website": "https://hackingmaterials.lbl.gov/amset/"
+ },
+ "ase": {
+  "tagline": "The Python environment that drives atomistic calculators.",
+  "summary": "ASE, the Atomic Simulation Environment, is a Python library for setting up, running and analysing atomistic calculations. It defines the Atoms object and a common calculator interface that many codes implement, so a workflow can swap the engine without rewriting the script. On the map it appears through the quantities it computes directly from a trajectory or a relaxed structure.",
+  "website": "https://wiki.fysik.dtu.dk/ase/"
+ },
+ "diffcsp": {
+  "tagline": "Crystal structure prediction by joint equivariant diffusion.",
+  "summary": "DiffCSP generates crystal structures with a diffusion model that denoises lattice and fractional coordinates together, keeping the periodic and rotational symmetries of the crystal. Given a composition it proposes candidate structures for later evaluation. On the map it serves the generated-structure quantity.",
+  "website": "https://github.com/jiaor17/DiffCSP"
+ },
+ "fairchem": {
+  "tagline": "Machine-learned interatomic potentials and the Open Catalyst models.",
+  "summary": "fairchem is the FAIR Chemistry library of machine-learned interatomic potentials. Its training sets include OC20 and OC22 for catalysis and OMat24 for bulk materials. It provides pretrained models and a calculator interface for energies, forces and stresses. On the map it serves the quantities those models predict.",
+  "website": "https://fair-chem.github.io/"
+ },
+ "gpumd": {
+  "tagline": "Molecular dynamics on GPUs with neuroevolution potentials.",
+  "summary": "GPUMD runs molecular dynamics on GPUs with many-body and machine-learned potentials. It trains and runs neuroevolution potentials (NEP), and computes thermal transport with the Green-Kubo, homogeneous nonequilibrium (HNEMD) and nonequilibrium (NEMD) methods. It also decomposes the heat current spectrally. On the map it serves the heat current, its autocorrelation, the thermal conductivities derived from them, the NEP fit errors, and the molecular dynamics observables listed below.",
+  "website": "https://gpumd.org",
+  "docs": "https://gpumd.org/gpumd/index.html"
+ },
+ "i-pi": {
+  "tagline": "A path-integral MD driver that separates nuclear dynamics from the force evaluation.",
+  "summary": "i-PI is a Python driver for molecular dynamics that separates the nuclear propagation from the force evaluation. It runs path-integral and ring-polymer molecular dynamics, thermostats and enhanced sampling, and talks to electronic structure and potential codes over a socket. On the map it serves the quantities obtained from its trajectories.",
+  "website": "https://ipi-code.org"
+ },
+ "kaldo": {
+  "tagline": "Anharmonic lattice dynamics for thermal transport, from crystals to glasses.",
+  "summary": "kALDo computes thermal conductivity from harmonic and anharmonic force constants. It solves the Boltzmann transport equation for crystals and applies the quasi-harmonic Green-Kubo method to disordered and amorphous systems. Both methods take the same inputs, so one code treats crystalline and glassy transport. It runs on GPUs through TensorFlow and accepts force constants from DFT and from interatomic potentials. On the map it serves phonon frequencies, lifetimes, mean free paths and the resulting conductivities.",
+  "website": "https://nanotheorygroup.github.io/kaldo/"
+ },
+ "lammps": {
+  "tagline": "The general-purpose classical molecular dynamics code.",
+  "summary": "LAMMPS is a classical molecular dynamics code for solids, liquids, polymers and soft matter. It ships a large library of interatomic potentials and runs in parallel on CPUs and GPUs. For thermal transport it provides the heat flux, Green-Kubo and nonequilibrium methods. On the map it serves trajectories, correlation functions and the transport quantities built from them.",
+  "website": "https://www.lammps.org",
+  "docs": "https://docs.lammps.org"
+ },
+ "mace": {
+  "tagline": "Equivariant message-passing interatomic potentials and the MACE-MP foundation models.",
+  "summary": "MACE is a family of machine-learned interatomic potentials built on higher-order equivariant message passing. The MACE-MP-0 foundation models, trained on Materials Project trajectories, give energies, forces and stresses across the periodic table without system-specific training. On the map it serves the quantities those models predict.",
+  "website": "https://mace-docs.readthedocs.io"
+ },
+ "matgl": {
+  "tagline": "Graph deep-learning potentials: M3GNet and CHGNet.",
+  "summary": "MatGL implements graph neural network models for materials. Two of them are the M3GNet universal interatomic potential and CHGNet, which also predicts magnetic moments. The models are pretrained on Materials Project data and run as ASE calculators. On the map it serves the quantities those models predict.",
+  "website": "https://matgl.ai"
+ },
+ "mattergen": {
+  "tagline": "A generative model for inorganic materials design.",
+  "summary": "MatterGen is a diffusion model that generates inorganic crystal structures, optionally conditioned on composition, symmetry or target properties such as band gap or bulk modulus. On the map it serves the generated-structure quantity.",
+  "website": "https://github.com/microsoft/mattergen"
+ },
+ "mp-api": {
+  "tagline": "The Materials Project API client.",
+  "summary": "mp-api is the Python client for the Materials Project, the database of computed properties for inorganic materials. It returns structures, energies above hull, band gaps, elastic tensors and other stored quantities by material id or by query. On the map it serves the quantities it retrieves. It computes none of them.",
+  "website": "https://docs.materialsproject.org"
+ },
+ "meskal": {
+  "tagline": "Differentiable anharmonic lattice dynamics in JAX.",
+  "summary": "MESKAL computes anharmonic lattice thermal transport in JAX, so every quantity is differentiable with respect to the force constants: Boltzmann transport in the relaxation-time and direct-inverse forms, quasi-harmonic Green-Kubo for disordered systems, phonon linewidths from three-phonon, isotope and boundary scattering, and modal diffusivities. A Landauer branch gives phonon transmission and thermal conductance through an interface. On the map it serves those quantities."
+ },
+ "openmaterials-ai": {
+  "tagline": "The OpenMaterials kernel evaluates the map's closed-form relations.",
+  "summary": "openmaterials-ai is this project's own kernel. It evaluates the closed-form relations the map carries and computes the quantities that have an algebraic definition from their inputs, with no external code. On the map it serves those derived quantities.",
+  "website": "https://openmaterials.ai"
+ },
+ "openmm": {
+  "tagline": "GPU molecular dynamics for biomolecules and other systems.",
+  "summary": "OpenMM is a molecular dynamics engine with a Python API and GPU kernels. Biomolecular simulation is its main use, and it also runs machine-learned potentials. It provides integrators, thermostats, barostats and custom forces. On the map it serves the quantities obtained from its trajectories.",
+  "website": "https://openmm.org"
+ },
+ "orca": {
+  "tagline": "A quantum chemistry program for molecules.",
+  "summary": "ORCA is an electronic structure package for molecules: DFT, coupled cluster, multireference and spectroscopic methods, with frequency and property calculations. It is free for academic use under its own license. On the map it serves the molecular quantities it computes.",
+  "website": "https://www.faccts.de/orca/"
+ },
+ "phono3py": {
+  "tagline": "Phonon lifetimes and lattice thermal conductivity from third-order force constants.",
+  "summary": "phono3py computes phonon-phonon interaction strengths from third-order force constants, obtained by finite displacements with an external force calculator. From them it evaluates phonon lifetimes and the lattice thermal conductivity, by the relaxation-time approximation or by solving the linearized Boltzmann equation. On the map it serves the third-order force constants, the lifetimes and the conductivities.",
+  "website": "https://phonopy.github.io/phono3py/"
+ },
+ "phonopy": {
+  "tagline": "Harmonic phonons from finite displacements.",
+  "summary": "phonopy computes harmonic phonon properties from second-order force constants obtained by finite displacements: band structures, densities of states, thermal properties and group velocities. It reads forces from many DFT codes and potentials. On the map it serves the harmonic quantities and the quantities built from them.",
+  "website": "https://phonopy.github.io/phonopy/"
+ },
+ "plumed": {
+  "tagline": "Enhanced sampling and free-energy methods, plugged into MD engines.",
+  "summary": "PLUMED is a library for enhanced sampling and analysis of molecular dynamics. It adds collective variables, metadynamics and related free-energy methods to engines such as LAMMPS, GROMACS and i-PI. On the map it serves the quantities it computes from a trajectory.",
+  "website": "https://www.plumed.org"
+ },
+ "pycalphad": {
+  "tagline": "CALPHAD thermodynamics in Python.",
+  "summary": "pycalphad reads CALPHAD thermodynamic databases and computes Gibbs energies, equilibria and phase diagrams from them. It is the computational core for several alloy design and high-throughput thermodynamics workflows. On the map it serves the thermodynamic quantities it evaluates.",
+  "website": "https://pycalphad.org"
+ },
+ "pymatgen": {
+  "tagline": "Python Materials Genomics, the structure and analysis library behind the Materials Project.",
+  "summary": "pymatgen is the Python library behind the Materials Project. It handles structures and symmetry, reads and writes the input and output formats of many codes, and provides analysis for phase diagrams, electronic structure and diffraction. On the map it serves the structural and derived quantities it computes.",
+  "website": "https://pymatgen.org"
+ },
+ "pymatgen-analysis-diffusion": {
+  "tagline": "Diffusion analysis for ionic conductors.",
+  "summary": "pymatgen-analysis-diffusion analyses molecular dynamics trajectories of ionic conductors: mean squared displacements, diffusivities, conductivities and migration pathways. On the map it serves the diffusion quantities it computes.",
+  "website": "https://github.com/materialsproject/pymatgen-analysis-diffusion"
+ },
+ "qe": {
+  "tagline": "Plane-wave DFT and density-functional perturbation theory.",
+  "summary": "Quantum ESPRESSO is a suite for electronic structure calculations with plane waves and pseudopotentials. pw.x computes total energies, forces and stresses. ph.x computes phonons by density-functional perturbation theory. Further packages cover molecular dynamics, spectroscopy and transport. On the map it serves the ground-state and harmonic quantities.",
+  "website": "https://www.quantum-espresso.org"
+ },
+ "qe-d3q": {
+  "tagline": "Third-order anharmonicity and thermal transport by DFPT.",
+  "summary": "D3Q extends Quantum ESPRESSO with the third derivative of the energy from density-functional perturbation theory, giving anharmonic force constants without finite displacements. Its thermal transport code solves the Boltzmann equation variationally and computes phonon linewidths. On the map it serves the third-order force constants, the linewidths and the conductivities.",
+  "website": "https://anharmonic.github.io/d3q/"
+ },
+ "rxn-network": {
+  "tagline": "Reaction pathways through a graph of chemical reactions.",
+  "summary": "reaction-network builds a graph of possible reactions between phases and searches it for pathways to a target material, ranking them by thermodynamic cost. It is used to plan solid-state synthesis. On the map it serves the reaction quantities it computes.",
+  "website": "https://github.com/materialsproject/reaction-network"
+ },
+ "shengbte": {
+  "tagline": "The phonon Boltzmann transport equation, solved iteratively.",
+  "summary": "ShengBTE solves the linearized phonon Boltzmann transport equation from second- and third-order force constants, by the relaxation-time approximation or by iteration. It includes isotope scattering and gives lattice thermal conductivity, phonon lifetimes and mean free paths. On the map it serves those quantities.",
+  "website": "https://www.shengbte.org"
+ },
+ "smol": {
+  "tagline": "Cluster expansions and statistical mechanics on lattices.",
+  "summary": "smol fits cluster expansions to first-principles energies of configurations on a lattice and samples them by Monte Carlo. It is used for configurational thermodynamics of alloys and ionic conductors. On the map it serves the quantities it fits and samples.",
+  "website": "https://github.com/CederGroupHub/smol"
+ },
+ "vasp": {
+  "tagline": "Plane-wave DFT with the projector augmented-wave method.",
+  "summary": "VASP is a plane-wave electronic structure code using the projector augmented-wave method. It computes total energies, forces, stresses, electronic structure and ab initio molecular dynamics, and is licensed commercially. On the map it serves the ground-state quantities it computes.",
+  "website": "https://www.vasp.at"
+ },
+ "xtb": {
+  "tagline": "Semiempirical extended tight-binding for molecules and materials.",
+  "summary": "xtb implements the GFN extended tight-binding methods, GFN2-xTB among them. They give fast energies, geometries, frequencies and properties for molecules and, with GFN0, GFN1 and GFN-FF, periodic systems. On the map it serves the quantities it computes at that level of theory.",
+  "website": "https://xtb-docs.readthedocs.io"
+ },
+ "mat-elasticity": {
+  "tagline": "An AtomisticSkills skill: elastic constants and moduli from a strained cell.",
+  "summary": "mat-elasticity is one of the AtomisticSkills, packaged calculations an agent can call. It wraps matcalc's ElasticityCalc: the cell is strained, the stresses are computed with the chosen potential (the skill loads MACE, MatGL or FAIRChem), and the elastic tensor follows. From it the skill reports the bulk, shear and Young's moduli in the Voigt-Reuss-Hill average and the Poisson ratio. On the map it serves those five quantities.",
+  "website": "https://github.com/learningmatter-mit/AtomisticSkills"
+ },
+ "mat-equation-of-state": {
+  "tagline": "An AtomisticSkills skill: the bulk modulus from an equation of state.",
+  "summary": "mat-equation-of-state is one of the AtomisticSkills, packaged calculations an agent can call. It wraps matcalc's EOSCalc: the cell is scaled over a range of volumes, the ions are relaxed at each volume with the chosen potential and the energy taken, and a Birch-Murnaghan equation of state is fitted through pymatgen. The fitted B0 is the bulk modulus the skill reports, in GPa. On the map it serves that quantity.",
+  "website": "https://github.com/learningmatter-mit/AtomisticSkills"
+ },
+ "mat-surface-adsorption": {
+  "tagline": "An AtomisticSkills skill: adsorption energies on slab sites.",
+  "summary": "mat-surface-adsorption is one of the AtomisticSkills, packaged calculations an agent can call. It wraps matcalc's AdsorptionCalc: slabs are cut from the bulk, the adsorbate is placed on each candidate site, slab and adsorbate-on-slab are relaxed with the chosen ASE calculator, and the adsorption energy is E(adslab) minus E(slab) minus E(adsorbate), per site. On the map it serves the adsorption energy.",
+  "website": "https://github.com/learningmatter-mit/AtomisticSkills"
+ },
+ "mat-diffusion-analysis": {
+  "tagline": "An AtomisticSkills skill: diffusivity and activation energy from trajectories.",
+  "summary": "mat-diffusion-analysis is one of the AtomisticSkills, packaged calculations an agent can call. It takes molecular dynamics trajectories at several temperatures, extracts the diffusivity at each from the mean squared displacement, and fits a weighted Arrhenius law through them. The slope gives the activation energy in eV. On the map it serves the diffusivity and the activation energy.",
+  "website": "https://github.com/learningmatter-mit/AtomisticSkills"
+ },
+ "ngspice": {
+  "tagline": "An open-source SPICE circuit simulator.",
+  "summary": "ngspice is the open-source circuit simulator descended from Berkeley SPICE 3f5, with XSPICE mixed-signal extensions. It solves DC, AC and transient analyses of circuits built from device models and behavioral sources, so a device characterized on the map can be placed in a circuit and simulated at the circuit level. On the map it serves the quantities read back from its operating-point (.op) analyses.",
+  "website": "https://ngspice.sourceforge.io"
+ }
+}

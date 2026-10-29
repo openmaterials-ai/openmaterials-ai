@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "scope": "Reviewed OMAI formula endpoints and exact Lean proof source for local theorems with no Physlib physics counterpart. Hash and compiled-name checks detect drift and provenance errors; they are not automatic symbolic translation or numerical validation.",
+  "source_path": "lean/bridge/OMAIMaterialsTransport.lean",
+  "source_sha256": "2aa396f9e92d7b2a52b7d8cceb05c7834dee771777c23c47094dd2b2ed82d379",
+  "operators": [
+    {
+      "id": "fit_arrhenius",
+      "uid": "1038d2249c062baff931bbc06138496d90157bb4365334cae8c5092866e9b6a4",
+      "formula_sha256": "30b75223fc1faba9136c4731d024ff4a258a6bb2ff8dcb7a170ffc25f9b633d5",
+      "formula_latex": "D{\\left(T \\right)} = D_{0} e^{- \\frac{E_{a}}{T k_{B}}}",
+      "lean_definition": "OMAI.PhyslibBridge.MaterialsTransport.arrheniusDiffusivity"
+    },
+    {
+      "id": "compute_ionic_conductivity",
+      "uid": "d4303ca638ffb5ca529f8c681909d728647149d1b79fd02ec8a18c9270afc05c",
+      "formula_sha256": "8beec3f9dffff073f2679da513e2faea9a31883e2e816ad3815c04d18cdc6af5",
+      "formula_latex": "\\sigma_{ion} = \\frac{D e_{c}^{2} n_{c} z^{2}}{T k_{B}}",
+      "lean_definition": "OMAI.PhyslibBridge.MaterialsTransport.ionicConductivity"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "ActivationEnergy",
+      "uid": "5d35f8f6975629291c51d432d3b137fb5bd92165706d37dbab71366a4714b71d"
+    },
+    {
+      "id": "ElectricalConductivity[carrier=ionic]",
+      "uid": "3f5753096d30cc6741fe9c6fd5e247e9afbb87b94f5844ec233f9243345d3712"
+    }
+  ],
+  "interpretations": [
+    "fit_arrhenius is the Arrhenius law D(T) = D_0 exp(-E_a/(T k_B)) with E_a an energy per particle in joules; the catalog's fit is the weighted least-squares line of log D against 1/T, which minimizes the weighted squared residuals and returns E_a exactly on exact Arrhenius data for any positive weights and at least two distinct temperatures.",
+    "compute_ionic_conductivity is the Nernst-Einstein relation with the tracer diffusivity (Haven ratio 1); fitting sigma instead of sigma T returns E_a - k_B T_eff with T_eff inside the data's temperature range."
+  ]
+}

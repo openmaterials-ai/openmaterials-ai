@@ -144,7 +144,7 @@ def _row_status(binding_ids: list[str], relations: dict[str, str]) -> str:
     return "local" if all(relations[i] == "local" for i in binding_ids) else "mapped"
 
 
-_LOCAL_REASON = " A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
+_LOCAL_REASON = " A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
 
 
 def _coverage(bindings: list[dict], inventory: dict) -> dict:
@@ -275,7 +275,7 @@ def _check_compiled_evidence(binding: dict, upstream: dict, root: Path) -> None:
         raise ValueError(f"missing matching successful bridge build: {binding['id']}")
     hashes = record["sources"]
     required = {
-        str(path.relative_to(root)) for path in bridge_root.rglob("*.lean")
+        str(path.relative_to(root)) for path in bridge_root.glob("*.lean")
         if ".lake" not in path.relative_to(bridge_root).parts
     } | {"lean/bridge/" + name for name in (
         "lean-toolchain", "lakefile.toml", "lake-manifest.json", "semantic-formula-contract.json",

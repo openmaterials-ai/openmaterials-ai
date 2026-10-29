@@ -29,6 +29,10 @@ public import OMAIPhyslibLatticeWitness
 public import OMAIPhyslibKappaContraction
 public import OMAIPhyslibRTAConductivity
 public import OMAIPhyslibParticipationRatio
+public import OMAIDeviceMetrology
+public import OMAIMaterialsTransport
+public import OMAIStabilityEnergies
+public import OMAICalphad
 public import OMAIAtomisticDerivatives
 public import OMAICellElasticity
 public import OMAIMolecularModes

@@ -25,5 +25,8 @@ register_symbol_dimensions({
     "E_{pulse}": ENERGY,
     "V_{set}": VOLTAGE,
     r"\tau_{ret}": TIME,
+    "tau_G": TIME,
+    "tau_it": TIME,
+    "A_cls": DIMENSIONLESS,
     "q_e": ELECTRIC_CHARGE,
 })

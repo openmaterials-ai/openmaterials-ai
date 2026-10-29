@@ -17,6 +17,9 @@ SYMBOLS: dict[str, str] = {
     "ProgrammingPulseEnergy": r"E_{pulse}",
     "SetVoltage": r"V_{set}",
     "RetentionTime": r"\tau_{ret}",
+    "ConductanceRelaxationTime": r"\tau_G",
+    "InterfaceTrapRelaxationTime": r"\tau_{it}",
+    "ClassificationAccuracy": r"A_{cls}",
 }
 
 ANALOG_DEVICE_METROLOGY = Domain(
@@ -35,7 +38,10 @@ ANALOG_DEVICE_METROLOGY = Domain(
             "a crossbar of such cells, the Schottky barrier with the work function "
             "and electron affinity that set it, the energy of a programming "
             "pulse, and the set voltage and retention time of a device switched "
-            "by a defect hop."
+            "by a defect hop. Biased conductance relaxation differs from "
+            "interface-trap occupation relaxation; benchmark-qualified "
+            "classification accuracy requires a conductance response family "
+            "and an externally evaluated readout protocol."
         ),
     ),
     representation_package=adm_rep,

@@ -80,6 +80,51 @@ TRANCHES = (
                     "OMAIPhyslibParticipationRatio"),
     },
     {
+        "name": "devices-materials",
+        "contracts": ("device-metrology-formula-contract.json", "materials-transport-formula-contract.json"),
+        "bindings": frozenset({"analog-device-metrology", "arrhenius-ionic-transport"}),
+        "subjects": frozenset({
+            ("node", "ActivationEnergy"), ("node", "ConductanceState"), ("node", "DotProductError"),
+            ("node", "ElectricalConductivity[carrier=ionic]"), ("node", "ProgrammingPulseEnergy"),
+            ("node", "RetentionTime"), ("node", "SetVoltage"),
+            ("operator", "apply_conductance_drift"), ("operator", "compute_ionic_conductivity"),
+            ("operator", "contract_device_conductance"), ("operator", "dissipate_pulse_energy"),
+            ("operator", "emit_thermionic_conductance"), ("operator", "fit_arrhenius"),
+            ("operator", "propagate_programming_error"), ("operator", "ramp_set_voltage"),
+            ("operator", "zero_bias_retention")}),
+        "pairs": tuple(
+            [{"name": "OMAI.PhyslibBridge.DeviceMetrology." + name, "module": "OMAIDeviceMetrology"}
+             for name in ("deviceConductance", "driftConductance", "programmingError", "pulseEnergy",
+                          "rampSetVoltage", "retentionTime", "thermionicConductance")]
+            + [{"name": "OMAI.PhyslibBridge.MaterialsTransport." + name, "module": "OMAIMaterialsTransport"}
+               for name in ("arrheniusDiffusivity", "ionicConductivity")]),
+        "modules": ("OMAIDeviceMetrology", "OMAIMaterialsTransport"),
+    },
+    {
+        "name": "thermochem-stability",
+        "contracts": ("stability-formula-contract.json", "thermochemistry-formula-contract.json"),
+        "bindings": frozenset({"dft-stability-energy-differences", "calphad-binary-equilibrium"}),
+        "subjects": frozenset({
+            ("node", "AdsorptionEnergy"), ("node", "EnergyAboveHull"), ("node", "GrainBoundaryEnergy"),
+            ("node", "SurfaceEnergy"), ("node", "Voltage"),
+            ("operator", "compute_adsorption_energy"), ("operator", "compute_energy_above_hull"),
+            ("operator", "compute_grain_boundary_energy"), ("operator", "compute_intercalation_voltage"),
+            ("operator", "compute_surface_energy"),
+            ("node", "CalphadMolarEntropy"), ("node", "ChemicalPotential"), ("node", "MolarEnthalpy"),
+            ("node", "MolarGibbsEnergy"), ("node", "PhaseFraction"), ("node", "TransitionTemperature"),
+            ("operator", "compute_calphad_entropy"), ("operator", "compute_chemical_potentials"),
+            ("operator", "compute_molar_enthalpy"), ("operator", "compute_phase_fractions"),
+            ("operator", "compute_transition_temperature"), ("operator", "solve_equilibrium")}),
+        "pairs": tuple(
+            [{"name": "OMAI.PhyslibBridge.Stability." + name, "module": "OMAIStabilityEnergies"}
+             for name in ("adsorptionEnergy", "energyAboveHull", "grainBoundaryEnergy",
+                          "intercalationVoltage", "surfaceEnergy")]
+            + [{"name": "OMAI.PhyslibBridge.Calphad." + name, "module": "OMAICalphad"}
+               for name in ("calphadEntropy", "chemicalPotentials", "equilibriumGibbs", "leverFractions",
+                            "molarEnthalpy", "transitionTemperature")]),
+        "modules": ("OMAIStabilityEnergies", "OMAICalphad"),
+    },
+    {
         "name": "atomistic-derivatives",
         "contracts": ("dft-derivatives-formula-contract.json", "force-constants-formula-contract.json",
                       "elastic-constants-formula-contract.json", "molecular-modes-formula-contract.json"),
@@ -106,14 +151,13 @@ TRANCHES = (
 
 # The one frozen global coverage ledger of the published bindings.
 GLOBAL_COVERAGE = {
-    "nodes_total": 129, "nodes_mapped": 33, "operators_total": 127, "operators_mapped": 24,
-    "nodes_local": 12, "operators_local": 19, "bindings_total": 42, "source_correspondences": 5,
-    "compiled_bridges": 37, "nodes_compiled": 21, "nodes_compiled_outputs": 20,
-    "nodes_compiled_interpretations": 1, "operators_compiled": 24,
-    "operators_compiled_local": 19, "nodes_compiled_local": 16, "operators_proved": 43,
-    "nodes_proved": 37, "upstream_declarations_referenced": 36,
-    "upstream_modules_referenced": 10,
-    "relations": {"exact_definition": 1, "conditional": 27, "conceptual": 4, "local": 10},
+    "nodes_total": 136, "nodes_mapped": 33, "operators_total": 133, "operators_mapped": 24,
+    "nodes_local": 30, "operators_local": 39, "bindings_total": 46, "source_correspondences": 5,
+    "compiled_bridges": 41, "nodes_compiled": 21, "nodes_compiled_outputs": 20,
+    "nodes_compiled_interpretations": 1, "operators_compiled": 24, "operators_compiled_local": 39,
+    "nodes_compiled_local": 34, "operators_proved": 63, "nodes_proved": 55,
+    "upstream_declarations_referenced": 36, "upstream_modules_referenced": 10,
+    "relations": {"exact_definition": 1, "conditional": 27, "conceptual": 4, "local": 14},
 }
 
 

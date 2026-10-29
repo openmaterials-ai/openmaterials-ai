@@ -84,8 +84,8 @@ def test_complete_inventory_uses_actual_domains_not_graph_links(payload):
     assert {name: row["uid"] for name, row in nodes.items()} == {
         row["id"]: row["uid"] for row in graph["nodes"]}
     actual = {op.name: op for domain in DOMAINS for op in domain.edges}
-    assert len(nodes) == 129
-    assert len(operators) == 127
+    assert len(nodes) == 136
+    assert len(operators) == 133
     assert set(operators) == set(actual)
     for name, op in actual.items():
         assert operators[name]["uid"] == edge_id(op, node_id)

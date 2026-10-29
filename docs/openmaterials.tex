@@ -4,9 +4,11 @@
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage{graphicx}
 \usepackage[hidelinks]{hyperref}
-% ToUnicode maps, so text extracted from the PDF keeps glyphs such as bullets.
-\input{glyphtounicode}
-\pdfgentounicode=1
+% pdfTeX needs explicit ToUnicode maps; XeLaTeX emits Unicode mappings itself.
+\ifdefined\pdfgentounicode
+  \input{glyphtounicode}
+  \pdfgentounicode=1
+\fi
 \usepackage{booktabs}
 \usepackage{enumitem}
 \setlist[itemize,2]{label=$\circ$}
@@ -254,12 +256,12 @@ shape is already here.
 \section{Where we are, and what is next}
 
 Today the framework is real and growing. It has an operator layer and a
-representation layer, 33 ingested representations (kaldo, phono3py, phonopy,
+representation layer, 34 ingested representations (kaldo, phono3py, phonopy,
 pymatgen, ShengBTE, MESKAL, Quantum ESPRESSO, D3Q, VASP, LAMMPS, GPUMD, i-PI, xtb, the
 machine-learned potentials matgl / MACE / fairchem, the database representation mp-api,
 and the CALPHAD, amset, ORCA, OpenMM, and AtomisticSkills mat-* / chem-*
-workflows, and the package's own cure-kinetics and composite evaluators,
-openmaterials-ai), and a
+workflows, the circuit simulator ngspice, and the package's own cure-kinetics
+and composite evaluators, openmaterials-ai), and a
 validation engine that executes the graph, composes
 edges symbolically, and cross-checks redundant routes. Units reconcile
 automatically from the typed dimensions, and a dimensional gate checks every
@@ -275,7 +277,7 @@ thermal conductivity with interfacial resistance), and an analog-device-metrolog
 domain (the conductance family of memristors and memtransistors and the Schottky
 contact that sets it), and a cure-kinetics domain (the degree of cure and glass
 transition of a thermoset); the unified map of
-129 quantities and 127 operators is content-addressed in the log-first store
+136 quantities and 133 operators is content-addressed in the log-first store
 (Part~\ref{part:kernel}), grown past its frozen genesis version through the
 contribution gates. Its node dimensions and its compiled formula proofs live in one Lean~4 package
 pinned to one Physlib revision and rebuilt in CI on every change to the package or its generators, its evidence carries pinned conformance
@@ -409,8 +411,8 @@ A content hash                  & \textbf{uid} & sha256; a 12-hex prefix is disp
 
 \section{The map}
 
-The map is a curated reference graph. Today it holds 129 nodes (126 observable
-and hidden quantities plus 3 promoted parameters) and 293 edges. Nodes are
+The map is a curated reference graph. Today it holds 132 nodes (129 observable
+and hidden quantities plus 3 promoted parameters) and 296 edges. Nodes are
 typed physical quantities. An edge produces one node from a list of input
 nodes, carrying the symbolic formula that relates them (parameter inputs are
 marked as inputs rather than derived through a formula).
@@ -511,7 +513,7 @@ three exists today; the other two are designed and not yet built.
   \item The code parser will import a codebase as a representation: mapping the
   code's input, output, and intermediate files and key lines onto the nodes and
   edges the code implements (structure), and letting a run of the code be recorded
-  as an instance (values). The 33 representations on today's map were authored by
+  as an instance (values). The 34 representations on today's map were authored by
   hand against this contract; the parser that automates the mapping is not yet
   built.
   \item The run parser will read a concrete run and record its inputs (from the
@@ -832,12 +834,12 @@ the reviewers decide what enters the commons.
 
 \section{Status and build order}
 
-Today's map is one hundred eighty-nine change records past v1, its frozen genesis version:
-126 typed quantities plus 3 promoted
-parameters, the symbolic formula on every relational edge, 33 representations
+Today's map is 195 change records past v1, its frozen genesis version:
+129 typed quantities plus 3 promoted
+parameters, the symbolic formula on every relational edge, 34 representations
 mapped (kaldo 34 variables, phono3py 31, phonopy 22, pymatgen 22, ShengBTE 20,
 MESKAL 18, QE 14, mp-api 13, LAMMPS 12, VASP 10, GPUMD 9, pycalphad 7, i-PI 4, and a further
-twenty codes and mat-* / chem-* skills at five or fewer each), and real instances
+twenty-one codes and mat-* / chem-* skills at five or fewer each), and real instances
 computed through the framework: cross-code silicon thermal conductivity
 (Tersoff potential, 8x8x8 mesh, 300 K: kaldo 19.46 RTA and 26.91 direct,
 phono3py 16.74 RTA and 24.30 direct, in W/m K) plus an LGPS activation energy
@@ -2085,7 +2087,7 @@ sense.}
 \subsection{Representation functors (codes)}
 
 Each adapter is a representation functor over the operator DAG. Sixteen
-adapter modules are now ingested in the thermal-transport domain alone (33
+adapter modules are now ingested in the thermal-transport domain alone (34
 representations map the whole graph), in three tiers. The four BTE / harmonic codes that consume
 force constants:
 
@@ -2463,7 +2465,7 @@ We have committed to Python for Sprint 1. The trade-offs were:
 
 The operator layer is an architectural commitment, not an implementation. The implementation
 began as a Python skeleton plus adapters for three thermal-transport codes and has since grown
-to the map of Part~\ref{part:status}, which holds 33 representations. The
+to the map of Part~\ref{part:status}, which holds 34 representations. The
 artifact that motivates the project (a paper-worthy demonstration of cross-code reconciliation
 and decomposed error bounds for lattice thermal conductivity) is downstream of the operator layer but
 is the operator layer's first proof-of-value.
@@ -2491,7 +2493,7 @@ Four longer-term directions follow naturally from the design:
         corresponds to a Lean lemma whose statement is the operation's error formula.
         The map's Lean layer is one lake package, \texttt{lean/bridge/}, pinned to
         one Physlib revision and one toolchain. It declares the dimension of each of
-        the 124 map nodes with dimensional content as a Physlib seven-base
+        the 131 map nodes with dimensional content as a Physlib seven-base
         \texttt{Dimension}; the five opaque nodes (\texttt{Structure},
         \texttt{Potential}, \texttt{AssessedDatabase} and the two autocorrelation
         kinds) have none. Its formula theorems are described below. Closed-form
@@ -2499,8 +2501,8 @@ Four longer-term directions follow naturally from the design:
         hypothesis $Y = N/D$ certifies nothing about the physics. An earlier package
         on a separate Physlib pin, which held 18 such restatements and 13 dimension
         coincidences, was retired on 2026-10-28. A public formalization roadmap rates
-        all 127 operators by what a theorem about the formula would take (36
-        closed-form definitions, 52 needing analysis, 39 external code outputs with
+        all 133 operators by what a theorem about the formula would take (36
+        closed-form definitions, 53 needing analysis, 44 external code outputs with
         nothing algebraic to prove) and marks those with a compiled proof. A
         historical hand-reviewed crosswalk links map nodes to Physlib source
         declarations at an earlier revision. Its conceptual correspondences,
@@ -2617,11 +2619,15 @@ covered below as a corollary under the quasiharmonic interpretation.
 The \href{https://openmaterials.ai/lean/bridge/\#gruneisen}{thermal Gr\"uneisen bridge}
 links the source, reviewed endpoint contract and explicit assumptions.
 
-A further batch covers the five quasiharmonic producers. The Gibbs energy is the infimum of $F(T,V) + pV$ over a volume window, with $F$ the molar Helmholtz surface of the same ensembles. The $C^1$ implicit-function theorem gives a two-parameter equilibrium family $V(T,p)$ through every stable stationary point, and on any window across which $F + pV$ is convex that family is the unique minimizer, so a volume scan certifies its own window. The envelope relations identify $(\partial G/\partial T)_p$ with $-(N_A/N_q)$ times the ensemble entropy and $(\partial G/\partial p)_T$ with $V$. $C_P = -T(\partial^2 G/\partial T^2)_p$ equals the enthalpy derivative above and $C_V + T(\partial V/\partial T)_p(\partial S/\partial V)_T$, the form of phonopy's default polyfit estimator, through the Maxwell relation $(\partial S/\partial V)_T = -F_{TV} = \alpha_V K_T$, and $C_P > C_V$ exactly when $\alpha_V \neq 0$. The modulus $V F_{VV}$ at the selected volume equals $-V/(\partial V/\partial p)_T$ read off $G$; its positivity is the stability premise. Exact witnesses realize positive, negative and zero expansion. Numerical volume scans, equation-of-state fits, minimizers and phonopy are not verified.
+A further batch covers the five quasiharmonic producers. The Gibbs energy is the infimum of $F(T,V) + pV$ over a volume window, with $F$ the molar Helmholtz surface of the same ensembles. The $C^1$ implicit-function theorem gives a two-parameter equilibrium family $V(T,p)$ through every stable stationary point, and on any window across which $F + pV$ is convex that family is the unique minimizer, so a scan that verifies the convexity of $F + pV$ across its window selects a unique minimizer. The envelope relations identify $(\partial G/\partial T)_p$ with $-(N_A/N_q)$ times the ensemble entropy and $(\partial G/\partial p)_T$ with $V$. $C_P = -T(\partial^2 G/\partial T^2)_p$ equals the enthalpy derivative above and $C_V + T(\partial V/\partial T)_p(\partial S/\partial V)_T$, the form of phonopy's default polyfit estimator, through the Maxwell relation $(\partial S/\partial V)_T = -F_{TV} = \alpha_V K_T$, and $C_P > C_V$ exactly when $\alpha_V \neq 0$. The modulus $V F_{VV}$ at the selected volume equals $-V/(\partial V/\partial p)_T$ read off $G$; its positivity is the stability premise. Exact witnesses realize positive, negative and zero expansion. Numerical volume scans, equation-of-state fits, minimizers and phonopy are not verified.
 
 The bridge also holds local proofs: theorems over Mathlib about OMAI formulas that Physlib has no model for, counted apart from the Physlib-anchored results. Any stiffness tensor with the first minor symmetry that stores positive energy for every nonzero symmetric strain has positive Voigt moduli, so the catalog's Poisson ratio lies in $(-1, 1/2)$ for every crystal symmetry; isotropic tensors give the Lam\'e values, and for a cubic crystal $\mathrm{tr}\,\sigma = 3K\,\mathrm{tr}\,e$ and the energy minimized over cell shape at fixed volume has curvature $V_0 E''(V_0) = K$. The spheroid depolarization factor equals $\int_0^1 t^2/(t^2 + p^2(1-t^2))\,dt$ on both closed-form branches; for every shape the sign of the random Nan enhancement is that of $2b_{11} + b_{33}$; the Nan and Hasselman-Johnson conductivities of spheres reduce to Maxwell-Garnett with the interface-corrected filler conductivity, the catalog's $d$ being a diameter; and the aligned conductivity lies strictly between the series and parallel mixtures. The Kamal-Sourour cure time has a local inverse near every interior time that solves the rate law there, and the DiBenedetto relation is a strictly increasing bijection of $[0, 1]$ onto $[T_{g0}, T_{g\infty}]$ in kelvin.
 
-The lattice-dynamics layer uses Physlib's crystal structure for sites and translations. Force constants with equal mixed partials, translation invariance and finite range satisfy $\Phi_{ij}(-R) = \Phi_{ji}(R)$, the catalog dynamical matrix is Hermitian, and the acoustic sum rule gives three zero modes at $\Gamma$. Folding the force constants into a Born-von K\'arm\'an supercell reproduces the catalog $D(q)$ at commensurate wavevectors, where a mechanically stable supercell makes every $\omega^2$ nonnegative; incommensurate BTE meshes are not covered. On a differentiable eigenvector path away from $\Gamma$ the catalog group velocity equals $d\omega/dq$, and with Physlib canonical heat capacities the relaxation-time conductivity is symmetric and positive semidefinite. Formalization also exposed catalog defects: the non-analytic correction is independent of $q$, the linearized-BTE collision matrix is not symmetric and has the wrong relaxation-time limit, and the cumulative conductivity of a linearized-BTE solution is not a distribution function, as an exact three-mode example with one three-phonon process and Casimir scattering shows. These operators stay gaps until the catalog formulas are corrected.
+The stability energy differences and the CALPHAD equilibrium outputs are covered by local theorems as well, since Physlib has no model of convex hulls, slabs or assessed databases; most of these producers are opaque code outputs, so each gets an interpreted definition stated in its binding. The interpreted energy above the hull of per-atom formation energies does not depend on the elemental reference energies and is unchanged by any affine function of composition applied to every entry; adsorption and intercalation energies are independent of per-element energy offsets exactly when they balance atoms; the average intercalation voltage $-(E_{\mathrm{full}} - E_{\mathrm{empty}} - n\mu)/(nq)$ is the mean of the open-circuit profile over the ion content, kinks between plateaus included; and, for slab energies affine in the thickness, surface and grain-boundary energies are independent of thickness exactly when the bulk reference equals the energy per added bulk unit, the slope. For a binary system the equilibrium molar Gibbs energy is the convex envelope of the phase Gibbs curves; when every phase's Gibbs function is concave in temperature it is concave in temperature at fixed composition, so the equilibrium entropy and enthalpy do not decrease through a phase transition and the equilibrium heat capacity, latent heats included, is nonnegative. The chemical potentials agree across a two-phase minimum, the phase fractions follow the lever rule, and a unary or congruent transition with positive entropy change has a unique transition temperature. The formation energy and $G = H - TS$ are definitions. The catalog's reaction-energy formula applies formula-unit coefficients to per-atom formation energies ($-2.06$~eV for $2\,\mathrm{Li} + \tfrac{1}{2}\mathrm{O}_2 \to \mathrm{Li_2O}$ against $-6.18$~eV) and is recorded as a defect with the correct sum $\sum_i \nu_i N_i \Delta H_{f,i}$.
+
+The catalog's forces, cell stress, force constants, finite-displacement force constants and elastic constants are derivatives of one energy, and the molecular frequencies are eigenvalues of its mass-weighted Hessian; local proofs state what that structure implies. For an energy differentiable at the configuration and invariant under rigid translations the forces sum to zero, and for a potential twice (second order) or three times (third order) continuously differentiable at the reference the force constants obey the acoustic sum rules; invariance under rotations in a plane makes the torque vanish, which holds for an isolated molecule but not for atoms rotated inside a fixed periodic lattice. The central-difference estimate of a force constant is within $M h^2/6$ of the derivative, with $M$ bounding the third derivative of the force along the displacement; phonopy's symmetry-reconstructed minus displacements keep the central form, a truly one-sided difference has an error of order $h$. Rotation invariance of a cell energy of the deformation gradient, differentiable at $F$, balances the compressive-positive stress, which is symmetric at the reference cell; at a stress-free reference the elastic constants have the major symmetry and both minor symmetries, so a stable reference has positive Voigt moduli and a Poisson ratio in $(-1, 1/2)$, while a pre-stressed reference loses the minor symmetries by residual-stress terms. At a local minimum of a molecular potential twice continuously differentiable there, the mass-weighted Hessian has no negative eigenvalue, the catalog's $n_{\mathrm{imaginary}} = 0$ diagnostic, and the mass-weighted rigid translations are zero modes. The catalog's mode Gr\"uneisen formula is recorded as a defect: it contracts the third-order force constants over two Cartesian indices only, with no eigenvectors, masses, Bloch phases or positions, and leaves three indices free. No theorem verifies a DFT, machine-learned-potential, phonopy or finite-strain implementation.
+
+The lattice-dynamics layer uses Physlib's crystal structure for sites and translations. Force constants with equal mixed partials, translation invariance and finite range satisfy $\Phi_{ij}(-R) = \Phi_{ji}(R)$, the catalog dynamical matrix is Hermitian, and the acoustic sum rule gives at least three zero modes at $\Gamma$. Folding the force constants into a Born-von K\'arm\'an supercell reproduces the catalog $D(q)$ at commensurate wavevectors, where a mechanically stable supercell makes every $\omega^2$ nonnegative; incommensurate BTE meshes are not covered. On a differentiable eigenvector path away from $\Gamma$ the catalog group velocity equals $d\omega/dq$, and with Physlib canonical heat capacities the relaxation-time conductivity is symmetric and positive semidefinite. Formalization also exposed catalog defects. By inspection of the symbolic formulas, the non-analytic correction is independent of $q$ and the linearized-BTE collision matrix is not symmetric and has the wrong relaxation-time limit; these two operators stay gaps until the formulas are corrected. A machine-checked example with three modes, one three-phonon process and Casimir scattering shows that the cumulative conductivity of a linearized-BTE solution is not monotone: the partial sum is a valid formula, but its description assumes nonnegative modal contributions, which a linearized-BTE solution does not guarantee, so it defines no median mean free path.
 
 The package audit checks all imported kernel declarations owned by its source
 modules, including private and generated helpers, together with the existing
@@ -2989,7 +2995,8 @@ windows of analog programming, the protocol riding in conditions), the drift
 exponent and the per-level coefficient of variation. It is a definitional domain,
 like the thermodynamic identities, with four nodes whose ids are unlabeled
 (protocol, read and gate bias, state and time since programming ride in
-conditions), and no code representation attaches yet. Its new
+conditions); the first code representation, ngspice on ConductanceState and
+DotProductError, attached on 2026-10-28. Its new
 physics is the two-terminal conductance $G$ (the siemens, the new
 \texttt{CONDUCTANCE} dimension), the electrical mirror of the map's
 \texttt{THERMAL\_CONDUCTANCE}-vs-\texttt{THERMAL\_CONDUCTIVITY} split, kept apart
@@ -3062,6 +3069,48 @@ and an ensemble's conductance decays with it only when the return is irreversibl
 The set-voltage law holds for a barrier linear in $V$ and without Joule heating,
 with $E_m$ the set-direction barrier; in both edges $E_m$ and $\nu_0$ are not
 separable at one temperature.
+
+Three further observables distinguish conductance relaxation, trap occupation
+and task performance. \texttt{ConductanceRelaxationTime} is a positive
+protocol-qualified time: read and gate biases, programming, temperature,
+baseline, time origin, tangent/crossing/fit criterion and decay law are instance
+conditions. It is neither zero-bias first-passage \texttt{RetentionTime} nor a
+dimensionless \texttt{ConductanceDriftExponent}. A separate
+\texttt{InterfaceTrapRelaxationTime} describes one first-order occupation
+departure $u(t)=u_0\exp(-t/\tau_{it})$ at fixed read conditions. For constant
+subthreshold transduction,
+\[
+G(t)=G_{eq}\exp\!\left[Ae^{-t/\tau_{it}}\right],\qquad
+A=\ln(G_0/G_{eq})>0,\qquad
+\tau_G=-\frac{G_0}{\dot G(0)}=\frac{\tau_{it}}{\ln(G_0/G_{eq})}.
+\]
+The executable, dimension-checked edge takes the trap time and initial
+\texttt{ConductanceState}, with $G_{eq}$ a conductance parameter at the same
+biases and temperature. It gives the initial tangent extrapolated to zero, not
+to equilibrium, and is not a global exponential fit or a $1/e$ crossing.
+Both conductances must be positive, $G_0>G_{eq}$, with a single occupation mode,
+constant transduction and transport prefactor, and no unaccounted additive
+current. A last observed point need not be equilibrium. Even one trap mode has
+a local tangent time growing as $e^{t/\tau_{it}}$; that growth alone does not
+identify a trap-time distribution. Canonical times are ps, not seconds.
+
+\texttt{ClassificationAccuracy} is the top-1 correct fraction on a named
+benchmark, with dataset/version, labels, feature normalization, encoding,
+training and evaluation construction, readout, noise and aggregation in
+conditions. Its external operator consumes the complete conductance-response
+family over devices, streams and trials, not one scalar, and defines
+\[
+X_{di}=G^{final}_{di}-G^{initial}_{di},\qquad
+\widehat y_i=\mathop{\mathrm{argmax}}_c\sigma((W\widetilde X_i)_c),\qquad
+A_{cls}=\frac{1}{N_{test}}\sum_i\mathbf{1}[\widehat y_i=y_i].
+\]
+The protocol supplies the bias feature in $\widetilde X$, training-only fitted
+weights, deterministic tie rule and test labels. This opaque operator is
+explicitly external and dimension-skipped, not a runnable classifier or a
+formula for predicting accuracy from a relaxation-time scalar. The extension
+adds definitions, not literature values, code coverage or empirical conformance
+targets. Using these nodes in a private record does not publish it: public
+evidence still requires the source, licensing and contribution checks.
 
 \paragraph{Instance uid pinning.} Instances are additive JSON that attach a value
 to a node. The uid pin lives in the regenerated projection, not the committed
@@ -3205,12 +3254,12 @@ trusted). What remains, in order:
 \label{sec:status-live}
 
 The map is at store head version
-\texttt{baf99346621bee3269400670c5044dac03c89e0bf7cd0dff673593344540852c}
-(2026-10-11, 289 records), one hundred eighty-nine change records past the frozen genesis hash
+\texttt{0c9e4a65d31f7952f0b2c9f6119a089f719fdc110d54f8e3cd1d8a5c33f098b9}
+(2026-10-18, 295 records), 195 change records past the frozen genesis hash
 \texttt{e6e8044e92039696417b53b220b0f3f10559a286b0eaabbe7ea4167ff510f6cd}
 (2026-07-07, the untouched 100-record prefix). Since the lineage became the one
 named artifact, the published stamp also carries the unified \emph{lineage
-version} (\texttt{61a981c02604\ldots}): one rolling content hash over the
+version} (\texttt{95138cc2c127\ldots}): one rolling content hash over the
 derivation graph and the instance-format rules together, appended to a chain
 whose root is the genesis, so a change to either the physics or the record
 format moves the one version the published stamp and every page cite (records
@@ -3220,8 +3269,8 @@ per-record frozen pin is designed, not yet carried on the records). The live
 numbers:
 
 \begin{itemize}[leftmargin=2em, itemsep=0.25em]
-  \item \textbf{Structure.} 129 nodes (126 observable and hidden quantities plus 3
-        promoted parameters), 293 rendered links, 127 deduplicated operators,
+  \item \textbf{Structure.} 132 nodes (129 observable and hidden quantities plus 3
+        promoted parameters), 296 rendered links, 129 deduplicated operators,
         rendered in eighteen physics tiers (Sources, Harmonic, Thermodynamics,
         Scattering, Transport, Molecular dynamics, Ground state, Mechanics,
         Stability, Thermochemistry, Quasi-harmonic, Molecular, Electronic
@@ -3236,12 +3285,12 @@ numbers:
         rendered-link count exceeds the operator count because the site graph
         draws one link per (input $\to$ output) pair while an operator with
         several inputs is a single edge in the store.
-  \item \textbf{Representations.} 33 codes mapped, with per-code variable coverage:
+  \item \textbf{Representations.} 34 codes mapped, with per-code variable coverage:
         kaldo 34, phono3py 31, phonopy 22, pymatgen 22, ShengBTE 20, MESKAL 18,
         Quantum ESPRESSO 14, mp-api 13, LAMMPS 12, VASP 10, GPUMD 9, pycalphad 7, matgl 5,
         mat-elasticity 5, amset 5, ORCA 5, pymatgen-analysis-diffusion 5, D3Q 5,
         i-PI 4, fairchem 4, MACE 4, OpenMM 4, openmaterials-ai 4, ASE 3,
-        mat-diffusion-analysis 2, plumed 2, smol 2, xtb 2,
+        mat-diffusion-analysis 2, ngspice 2, plumed 2, smol 2, xtb 2,
         mat-equation-of-state 1, mat-surface-adsorption 1, rxn-network 1,
         diffcsp 1, mattergen 1.
   \item \textbf{Instances.} 93 recorded values, 87 simulation and 6 measurement.
@@ -3271,9 +3320,9 @@ numbers:
         vendored Tersoff potential, each paired with a committed conformance
         target (eight targets total) that a re-run must reproduce within its
         stated tolerance.
-  \item \textbf{Dimensional gate.} Of the 127 operator edges the gate walks, 58
+  \item \textbf{Dimensional gate.} Of the 129 operator edges the gate walks, 59
         are ok, 1 is a documented-schematic violation
-        (\texttt{compute\_gruneisen}, kept schematic by choice), and 68 are
+        (\texttt{compute\_gruneisen}, kept schematic by choice), and 69 are
         skipped (not closed-form
         \texttt{Eq} edges the gate can check, most of them the opaque solver
         edges of the newer domains, plus the composites depolarization
@@ -3288,13 +3337,14 @@ numbers:
         effective-medium edges (the Nan random and aligned mixing formulas and
         the Hasselman-Johnson spherical cross-check), and the two phonon delta
         sums (\texttt{compute\_dos} and \texttt{compute\_phase\_space\_3phonon},
-        each a density in frequency), the ten analog-device-metrology
+        each a density in frequency), the eleven analog-device-metrology
         closed forms, the NEMD interface conductance and the two cure-kinetics
         edges.
   \item \textbf{Lean layer.} One package at one Physlib pin (Lean~4.35.0)
-        declares the dimension of 124 of the 129 nodes (the other five are
-        opaque by design) and proves conditional theorems about 36 of the 127
-        operator formulas, 24 anchored to Physlib and 12 as local proofs over
+        declares the dimension of 131 of the 136 nodes (the other five are
+        opaque by design) and proves conditional theorems about 63 of the 133
+        operator formulas (for an opaque code output, about an interpreted
+        definition of it), 24 citing Physlib declarations and 39 as local proofs over
         Mathlib; a CI gate rebuilds it on every relevant pull request
         with warnings promoted to errors. The formalization roadmap page rates
         every operator by what a theorem about its formula would take.
@@ -3331,6 +3381,7 @@ OpenMM                       & 4  & MIT (LGPL parts) \\
 openmaterials-ai             & 4  & Apache-2.0 AND CC-BY-4.0 \\
 ASE                          & 3  & LGPL-2.1-or-later \\
 mat-diffusion-analysis       & 2  & MIT \\
+ngspice                      & 2  & BSD-3-Clause (LGPL, MPL-2.0, GPL-2.0-or-later parts, and a permissive Sparse notice) \\
 plumed                       & 2  & LGPL-3.0 \\
 xtb                          & 2  & LGPL-3.0 \\
 smol                         & 2  & BSD-3-Clause \\
@@ -3349,7 +3400,10 @@ for kaldo, LAMMPS, Quantum ESPRESSO, phonopy, phono3py, ShengBTE, and the
 AtomisticSkills skills; package metadata for the pip-distributed codes; the
 project's GitHub LICENSE for GPUMD, MatterGen, DiffCSP, and OpenMM;
 MESKAL's LICENSE, pyproject.toml and CITATION.cff at tag v1.1.0 (the source
-repository is not public); the D3Q
+repository is not public); ngspice's COPYING and file headers at tag
+ngspice-47 (BSD-3-Clause; numparam and KLU LGPL, OSDI MPL-2.0, the XSPICE
+table code model GPL-2.0-or-later, the Sparse 1.3 solver an unnamed
+permissive notice); the D3Q
 repository's LICENSE and License files plus its file headers, GPL-2.0
 (thermal2: CeCILL-2.1 OR GPL-2.0-or-later; some files GPL-3.0; bundled minpack:
 Minpack); the i-PI
@@ -3367,7 +3421,7 @@ citation or a license, so no future representation can land uncredited.
 
 The principal code representations on the map are cited below (the remaining
 representations,
-i-PI, PLUMED, D3Q, and MESKAL, carry their citations in
+i-PI, PLUMED, D3Q, MESKAL, and ngspice, carry their citations in
 \texttt{omai/representation/credits.py}, the single source of truth the
 enforcement test reads). Where one code serves nodes through different
 methods, a per-node override (\texttt{PER\_NODE\_CREDITS}) carries the

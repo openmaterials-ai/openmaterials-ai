@@ -1,0 +1,62 @@
+{
+ "key": "smol",
+ "code": [
+  {
+   "doi": "10.21105/joss.04504",
+   "title": "smol: A Python package for cluster expansions and beyond",
+   "authors": [
+    "L. Barroso-Luque",
+    "J. H. Yang",
+    "F. Xie",
+    "T. Chen",
+    "R. L. Kam",
+    "Z. Jadidi",
+    "P. Zhong",
+    "G. Ceder"
+   ],
+   "year": 2022,
+   "journal": "Journal of Open Source Software"
+  }
+ ],
+ "methods": [],
+ "applications": [
+  {
+   "doi": "10.1021/acsenergylett.4c00799",
+   "title": "Effect of Cation Disorder on Lithium Transport in Halide Superionic Conductors",
+   "authors": [
+    "P. Zhong",
+    "S. Gupta",
+    "B. Deng",
+    "K. Jun",
+    "G. Ceder"
+   ],
+   "year": 2024,
+   "journal": "ACS Energy Letters"
+  },
+  {
+   "doi": "10.1002/aenm.202302960",
+   "title": "The Microscopic Mechanism of Lithiation and Delithiation in the Ag/C Buffer Layer for Anode‐Free Solid‐State Batteries",
+   "authors": [
+    "F. Xie",
+    "M. S. Diallo",
+    "H. Kim",
+    "Q. H. Tu",
+    "G. Ceder"
+   ],
+   "year": 2024,
+   "journal": "Advanced Energy Materials"
+  },
+  {
+   "doi": "10.1073/pnas.2316493121",
+   "title": "The nonexistence of a paddlewheel effect in superionic conductors",
+   "authors": [
+    "K. Jun",
+    "B. Lee",
+    "R. L. Kam",
+    "G. Ceder"
+   ],
+   "year": 2024,
+   "journal": "Proceedings of the National Academy of Sciences"
+  }
+ ]
+}

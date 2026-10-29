@@ -1,0 +1,61 @@
+{
+ "key": "phono3py",
+ "code": [
+  {
+   "doi": "10.1103/PhysRevB.91.094306",
+   "title": "Distributions of phonon lifetimes in Brillouin zones",
+   "authors": [
+    "A. Togo",
+    "L. Chaput",
+    "I. Tanaka"
+   ],
+   "year": 2015,
+   "journal": "Physical Review B"
+  },
+  {
+   "doi": "10.1088/1361-648X/acd831",
+   "title": "Implementation strategies in phonopy and phono3py",
+   "authors": [
+    "A. Togo",
+    "L. Chaput",
+    "T. Tadano",
+    "I. Tanaka"
+   ],
+   "year": 2023,
+   "journal": "Journal of Physics: Condensed Matter"
+  }
+ ],
+ "methods": [
+  {
+   "doi": "10.1103/PhysRevLett.110.265506",
+   "title": "Direct Solution to the Linearized Phonon Boltzmann Equation",
+   "authors": [
+    "L. Chaput"
+   ],
+   "year": 2013,
+   "journal": "Physical Review Letters"
+  }
+ ],
+ "applications": [
+  {
+   "doi": "10.1039/c8cp00350e",
+   "title": "Phonon transport in Janus monolayer MoSSe: a first-principles study",
+   "authors": [
+    "S. D. Guo"
+   ],
+   "year": 2018,
+   "journal": "Physical Chemistry Chemical Physics"
+  },
+  {
+   "doi": "10.1103/PhysRevX.12.041011",
+   "title": "Wigner Formulation of Thermal Transport in Solids",
+   "authors": [
+    "M. Simoncelli",
+    "N. Marzari",
+    "F. Mauri"
+   ],
+   "year": 2022,
+   "journal": "Physical Review X"
+  }
+ ]
+}

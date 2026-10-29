@@ -72,6 +72,7 @@ from omai.thermal_transport.operator.nodes import (
     HEAT_CURRENT_ACF,
     MEAN_SQUARED_DISPLACEMENT,
     POTENTIAL,
+    POTENTIAL_UNCERTAINTY_EXCEEDANCE,
     THERMAL_CONDUCTIVITY_GREEN_KUBO,
     THERMAL_CONDUCTIVITY_HNEMD,
     TRAJECTORY,
@@ -92,6 +93,31 @@ GPUMD_POTENTIAL = SpaceRepresentationSpec(
         "training run); EAM, Tersoff, SW are also supported as classical "
         "alternatives. NEP files carry the trained weights and the "
         "elemental-pair cutoffs; the file *is* the Potential."
+    ),
+)
+
+
+GPUMD_POTENTIAL_UNCERTAINTY_EXCEEDANCE = SpaceRepresentationSpec(
+    space=POTENTIAL_UNCERTAINTY_EXCEEDANCE,
+    representation_name="gpumd",
+    observable_units={"f_sigma": "dimensionless"},
+    code_api={
+        "f_sigma": "run.in: one potential line per committee member (the first drives the MD), then active <check_interval> 0 0 0 <sigma>; fraction of the active.out rows written by this run whose column 2 exceeds sigma",
+    },
+    notes=(
+        "Read at GPUMD v4.7 (src/measure/active.cu, src/measure/measure.cu, "
+        "src/force/force.cu). With several potentials in run.in, `active` "
+        "sets the observe mode: only the first potential propagates the MD, "
+        "and forces from all M potentials are evaluated on its frames. "
+        "`active` applies to the next run block only (the measured properties "
+        "are cleared after each run), so steps run before it are not checked. "
+        "Every check_interval steps one row is appended to active.out: column "
+        "1 the time in fs, column 2 the largest per-atom force spread in eV/A, "
+        "from the population variance over all M potentials (divided by M). "
+        "Frames above sigma are appended to active.xyz. Both files are opened "
+        "in append mode, so rows from an earlier run in the same directory "
+        "must be excluded. The node value is the fraction of this run's "
+        "active.out rows above sigma."
     ),
 )
 

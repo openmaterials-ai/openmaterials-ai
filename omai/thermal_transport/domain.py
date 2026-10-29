@@ -93,6 +93,7 @@ SYMBOLS = {
     "QuantumKineticEnergy": r"\langle E_{K}\rangle",
     "HeatCapacity[method=pimd]": r"C_{V}^{\mathrm{pimd}}",
     "PotentialOfMeanForce": r"F(s)",
+    "PotentialUncertaintyExceedance[method=committee_force_spread]": r"f_{\sigma}",
     "PhononTransmission": r"\mathcal{T}(\omega)",
     "ThermalConductance[transport_model=landauer]": r"\mathcal{G}_{\mathrm{L}}",
 }

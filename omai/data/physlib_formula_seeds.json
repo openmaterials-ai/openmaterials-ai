@@ -2913,6 +2913,483 @@
       }
     },
     {
+      "id": "analog-device-metrology",
+      "relation": "local",
+      "targets": [
+        {
+          "kind": "operator",
+          "id": "apply_conductance_drift",
+          "uid": "f1e70e363faaf1f396092f32ad11a3807bdc9e0a4a11c95e8479a9d069e4f2ec",
+          "formula_sha256": "4fd6bd7d557005282f8b1babd293cc0d95e6fc85b93deeb6c49956a491a8718f"
+        },
+        {
+          "kind": "operator",
+          "id": "contract_device_conductance",
+          "uid": "7f5e524af6d302713934d4a2bd5901abc64efdad9a5f8822bd19fe28b5b27cdf",
+          "formula_sha256": "a57aff2c7d45172298a807999f389328df1fbd97817154a86ab9c138a420dd19"
+        },
+        {
+          "kind": "operator",
+          "id": "dissipate_pulse_energy",
+          "uid": "3714b2588a2c9400c356080644dab2fcdf778f5224235d6389519e648f41ab8a",
+          "formula_sha256": "e9880765ed8745f0415055ed80e1770d0fcf29a8935ec292448b5594058bb8e7"
+        },
+        {
+          "kind": "operator",
+          "id": "emit_thermionic_conductance",
+          "uid": "58a959a412e7f92ec955cad34321812f5df453e9db8dcf4f8eb706f109bdf09a",
+          "formula_sha256": "ae5ff88ffc8727046fd976c9097a5bb5745bb1908718b89aceb84914d38ed3da"
+        },
+        {
+          "kind": "operator",
+          "id": "propagate_programming_error",
+          "uid": "4517674f602a29f64ecc7140384fc486ee295233ce03ca7dc6bbec7eb00a91c2",
+          "formula_sha256": "4977f8d380bdaa87a5000420f6c515cae3a2203ab4269d84301a6252b65c8917"
+        },
+        {
+          "kind": "operator",
+          "id": "ramp_set_voltage",
+          "uid": "9ab6278d7c06fcac5a8f9bcea7c65eb193c793c435822f24ca6762da34880dea",
+          "formula_sha256": "dd1bf4e3e7338f03029e6d92efb5631aed804fe383d0cf857b8fb26703ce77a9"
+        },
+        {
+          "kind": "operator",
+          "id": "zero_bias_retention",
+          "uid": "10e6c7d5ab4087efdea29cf2219771cd55f19a87c50c19ca46756620116344e8",
+          "formula_sha256": "0d49b118dcf2f3478766bb23218c8161e098df186770bcebe8779d0aa58aaf61"
+        },
+        {
+          "kind": "node",
+          "id": "ConductanceState",
+          "uid": "325f09352a8872995fe6ab0a40b9df8780a778389fa0fe00ebcbd9ef7758f4a3"
+        },
+        {
+          "kind": "node",
+          "id": "DotProductError",
+          "uid": "1e6467a5b03397510e0d7f33403fd1cb42de5ea579e1f36b074d8dbbc620da20"
+        },
+        {
+          "kind": "node",
+          "id": "ProgrammingPulseEnergy",
+          "uid": "4dc358661b8a847db69d30a786b2b1475f1a291809bb34f55612d3203975be34"
+        },
+        {
+          "kind": "node",
+          "id": "RetentionTime",
+          "uid": "4280779257128d9b63d9180e7b7b03ab80beac66ee35480b178a09fa46b289f2"
+        },
+        {
+          "kind": "node",
+          "id": "SetVoltage",
+          "uid": "5b46cb4fc1bf84f1fa97e2b52a352694f5c98c856e9b9034763243994a1c2d21"
+        }
+      ],
+      "statement": "Every continuous positive drift law G_0 phi(t_d/t_{d,0}) that does not depend on the choice of reference time is the catalog's power law for some exponent (the multiplicative Cauchy equation). Conductances that follow the two-dimensional T^(3/2) injection law, inverted with the catalog's three-dimensional T^2 law from two temperatures T_1 < T_2, return Phi_Bn - k_B T_eff/2, where T_eff = log(T_2/T_1)/(1/T_1 - 1/T_2), the reciprocal of the logarithmic mean of 1/T_1 and 1/T_2, lies strictly between T_1 and T_2; this is the catalog's shift of about k_B T/2. An ensemble of devices with two symmetric sites exchanging at the catalog's retention rate 1/tau has a programmed fraction that relaxes to one half as 1/2 + (p(0) - 1/2) exp(-2t/tau), the only solution, with time constant tau/2. Under a linear voltage ramp the expected hop count from zero bias is the leading term exp((V - V*)/b), b = k_B T/alpha_F, minus g_r k_B T/(alpha_F tau_0) with tau_0 = exp(E_m/(k_B T))/nu_0 the zero-bias lifetime of the unprogrammed state over the SET barrier; the first-hop law with survival exp(-exp((V - V*)/b)) has a density of total mass one, an integrable first moment, and mean V* - gamma b, the catalog's set voltage. The catalog's programming error exceeds c/sqrt(2 n_w) for every kernel of n_w nonzero weights and every window W > 1. For a conductance that rises or falls monotonically during a pulse, the dissipated energy lies between the catalog's pulse energies at the initial and the final conductance. For a channel of segments in series, the catalog's conductance with the length-averaged conductivity is an upper bound on the true conductance.",
+      "sources": [],
+      "conditions": [
+        "Energies Phi_Bn and E_m are in joules, T in kelvin, k_B and q_e exact SI; P_th in A/K^2 and G in siemens. An energy in eV entered as joules inside exp(-E/(k_B T)) gives an exponentially wrong result, not a constant factor.",
+        "Drift: a single device and a single programmed level with one fixed exponent nu, isothermal storage, positive times inside the time range where nu was fitted, and 0 < t_{d,0}. An array mean over devices with a spread of nu is not a power law (a Gaussian nu of mean mu and width sigma gives d ln<G>/d ln t = -mu + sigma^2 ln(t/t_0)).",
+        "Thermionic: one contact, thermionic emission over a laterally homogeneous barrier without field emission, small signal |V| much smaller than k_B T/q_e, and an ideality factor independent of temperature; the catalog's G is the zero-bias slope for ideality factor 1. Phi_Bn is the effective zero-bias barrier. The zero-bias Richardson plot of this conductance is ln(G/T) against 1/T, not ln(G/T^2). A Gaussian spread sigma of barrier heights (Werner and Guttler) makes a two-temperature inversion return Phi_mean - sigma^2 (1/T_1 + 1/T_2)/(2 k_B). The catalog stores this small-signal slope in ConductanceState, whose meaning elsewhere is the chord conductance.",
+        "Retention: one back-hop path at the Arrhenius rate nu_0 exp(-E_m/(k_B T)), or M equivalent paths. The relaxation to one half holds for symmetric sites, where the device re-sets as often as it decays. At one temperature E_m and nu_0 cannot be separated. A datasheet retention is a time to failure at a fail fraction, not this mean; a spread of barrier heights makes the survival non-exponential.",
+        "Ramp: a linear ramp with dwell g_r per volt (1/ramp rate, or t_p/dV for a staircase), alpha_F > 0, a barrier falling linearly with V, one hop switching the device, the device at temperature T. The mean set voltage uses the leading hop count and neglects hops at zero and negative bias, whose expected number g_r k_B T/(alpha_F tau_0) must be much smaller than one; tau_0 = exp(E_m,set/(k_B T))/nu_0 is the zero-bias lifetime of the unprogrammed state over the SET-direction barrier, not the catalog's RetentionTime of the programmed state, and the two agree only for symmetric sites.",
+        "Programming error: c > 0, W > 1, w_max > 0, n_w the count of nonzero weights, S_1 = sum |w_i| and S_2 = sum w_i^2. The Lean shows that the catalog's closed form equals the per-cell sum c sqrt(sum_i (w_max/(W - 1) + |w_i|)^2/2)/S_1 of the catalog description and bounds it; it does not derive that expression from the stochastic cell model. Read noise, drift, IR drop, sneak paths and correlated errors are not included.",
+        "Pulse energy: V_p is the voltage across the same two terminals between which G is defined, with no series resistor, selector or compliance in that path; G is the chord conductance I(V_p)/V_p and changes monotonically during the pulse (rising for SET, falling for RESET). A gate pulse is not covered.",
+        "Device conductance: current flows along the channel through segments of positive length and conductivity with one cross-section A; the catalog's sigma is then the length-averaged conductivity and the catalog conductance an upper bound, equal for a uniform channel."
+      ],
+      "conventions": {
+        "model_scope": "Closed-form device models: power-law drift, thermionic emission over a Schottky barrier, Arrhenius hopping for retention and ramped set, a per-cell programming-error model, Joule dissipation and series conduction. Physlib has no device model, so these are local theorems about the OMAI formulas over Mathlib reals; no Physlib declaration is identified.",
+        "component_scope": "One device, one contact or one cell array as each operator describes; scalar quantities.",
+        "normalization_basis": "Conductances per device; the programming error is relative to the ideal dot product; hop counts are expected numbers per device.",
+        "frequency_convention": "nu_0 is an attempt frequency in hops per unit time (THz in the catalog), not an angular frequency.",
+        "unit_embedding": "The catalog stores times in ps and frequencies in THz; with joules, siemens and volts this embedding is not coherent: V_p^2 G t_p in V^2 S ps is a picojoule. The theorems hold in any coherent embedding; convert to one before comparing values.",
+        "held_fixed": "Temperature during a measurement; for the two-temperature inversions the barrier and prefactor are held fixed between the two temperatures; the drift exponent within its fitted range.",
+        "admissibility": "Positive temperatures, times, attempt frequency, alpha_F, g_r and P_th; W > 1 and c > 0 for the programming error; monotone conductance during a pulse; positive segment lengths and conductivities.",
+        "reference_energy": "Barriers are measured from the state that is left: the programmed state for retention, the unprogrammed state for the ramp.",
+        "qpoint_weighting": "Not applicable."
+      },
+      "remaining_obligations": [
+        "Measured or fitted parameters (nu, P_th, Phi_Bn, E_m, nu_0, alpha_F, c) and the measurements behind them are not verified.",
+        "Drift: a spread and state dependence of nu across devices and levels, nu(T) with thermally accelerated time, non-isothermal storage and 1/f read noise are not covered.",
+        "Thermionic: field and thermionic-field emission, the image-force temperature dependence of the barrier, barrier inhomogeneity and a temperature-dependent ideality factor are not covered.",
+        "Retention: the minimum of M independent exponential exit times and failure-fraction (datasheet) retention are not proved; only the mean and the symmetric two-site relaxation are.",
+        "The Gumbel standard deviation pi k_B T/(sqrt(6) alpha_F), the N-hop generalization (k_B T/alpha_F)(psi(N) + gamma), device-to-device barrier spread, staircase discretization and Joule heating are not proved.",
+        "The programming-error model's derivation from the stochastic cell model is not proved; read noise, drift, IR drop, sneak paths, quantization and correlated errors are excluded.",
+        "Capacitive charging energy, drive-electronics energy, contact resistance and short-channel (Landauer) transport are not covered.",
+        "contract_conductance_window and contract_state_coefficient_of_variation are definitions with nothing non-obvious to prove and are not bound; schottky_mott_barrier is unbound because its validity cannot be established algebraically."
+      ],
+      "evidence": {
+        "kind": "compiled_bridge",
+        "module": "OMAIDeviceMetrology",
+        "declarations": [
+          "OMAI.PhyslibBridge.DeviceMetrology.drift_law_unique",
+          "OMAI.PhyslibBridge.DeviceMetrology.thermionic_wrongLaw_barrier",
+          "OMAI.PhyslibBridge.DeviceMetrology.retention_symmetric_relaxation",
+          "OMAI.PhyslibBridge.DeviceMetrology.ramp_expectedHops",
+          "OMAI.PhyslibBridge.DeviceMetrology.ramp_meanSetVoltage",
+          "OMAI.PhyslibBridge.DeviceMetrology.programmingError_gt",
+          "OMAI.PhyslibBridge.DeviceMetrology.pulseEnergy_bracket",
+          "OMAI.PhyslibBridge.DeviceMetrology.deviceConductance_series_le"
+        ],
+        "source_path": "lean/bridge/OMAIDeviceMetrology.lean",
+        "build_record": "lean/bridge/build-evidence.json",
+        "proved_targets": [
+          {
+            "kind": "operator",
+            "id": "apply_conductance_drift"
+          },
+          {
+            "kind": "operator",
+            "id": "contract_device_conductance"
+          },
+          {
+            "kind": "operator",
+            "id": "dissipate_pulse_energy"
+          },
+          {
+            "kind": "operator",
+            "id": "emit_thermionic_conductance"
+          },
+          {
+            "kind": "operator",
+            "id": "propagate_programming_error"
+          },
+          {
+            "kind": "operator",
+            "id": "ramp_set_voltage"
+          },
+          {
+            "kind": "operator",
+            "id": "zero_bias_retention"
+          },
+          {
+            "kind": "node",
+            "id": "ConductanceState"
+          },
+          {
+            "kind": "node",
+            "id": "DotProductError"
+          },
+          {
+            "kind": "node",
+            "id": "ProgrammingPulseEnergy"
+          },
+          {
+            "kind": "node",
+            "id": "RetentionTime"
+          },
+          {
+            "kind": "node",
+            "id": "SetVoltage"
+          }
+        ],
+        "source_sha256": "e4512fd4eda1c0bf64a059a05ed51f0493cfd3ca131c891a2a223ba837d79edd"
+      }
+    },
+    {
+      "id": "arrhenius-ionic-transport",
+      "relation": "local",
+      "targets": [
+        {
+          "kind": "operator",
+          "id": "compute_ionic_conductivity",
+          "uid": "d4303ca638ffb5ca529f8c681909d728647149d1b79fd02ec8a18c9270afc05c",
+          "formula_sha256": "8beec3f9dffff073f2679da513e2faea9a31883e2e816ad3815c04d18cdc6af5"
+        },
+        {
+          "kind": "operator",
+          "id": "fit_arrhenius",
+          "uid": "1038d2249c062baff931bbc06138496d90157bb4365334cae8c5092866e9b6a4",
+          "formula_sha256": "30b75223fc1faba9136c4731d024ff4a258a6bb2ff8dcb7a170ffc25f9b633d5"
+        },
+        {
+          "kind": "node",
+          "id": "ActivationEnergy",
+          "uid": "5d35f8f6975629291c51d432d3b137fb5bd92165706d37dbab71366a4714b71d"
+        },
+        {
+          "kind": "node",
+          "id": "ElectricalConductivity[carrier=ionic]",
+          "uid": "3f5753096d30cc6741fe9c6fd5e247e9afbb87b94f5844ec233f9243345d3712"
+        }
+      ],
+      "statement": "The catalog's weighted Arrhenius fit is the weighted least-squares line of log D against 1/T: its slope minimizes the weighted sum of squared residuals over all lines. On data that follow the catalog's Arrhenius law exactly, it returns E_a = -k_B times the slope, for every choice of positive weights and at least two distinct temperatures; this is an exact-data identity, not a statement about noisy data. Fitting the catalog's Nernst-Einstein conductivity sigma itself, rather than sigma T, in the same way returns the apparent activation energy E_a - k_B T_eff with T_eff inside the temperature range of the data, for every choice of positive weights, when the diffusivity is Arrhenius with barrier E_a and the carrier density does not depend on temperature: sigma T, not sigma, carries the diffusion barrier.",
+      "sources": [],
+      "conditions": [
+        "E_a is an energy per particle in joules, k_B exact SI, T in kelvin at every data point; D_0 > 0. The regression is of log D against 1/T with positive weights and at least two distinct temperatures.",
+        "Nernst-Einstein with the tracer diffusivity and Haven ratio H_R = 1; the carrier density n_c, the charge number z (nonzero), the elementary charge e_c and the Arrhenius parameters do not depend on temperature.",
+        "The Einstein relation behind the input diffusivity needs d to match the number of MSD components summed and the diffusive regime of the MSD."
+      ],
+      "conventions": {
+        "model_scope": "Arrhenius thermally activated diffusion and the Nernst-Einstein relation. Physlib has no solid-state diffusion model, so these are local theorems about the OMAI formulas over Mathlib reals; no Physlib declaration is identified.",
+        "component_scope": "One mobile species with a scalar diffusivity and conductivity.",
+        "normalization_basis": "Activation energies per particle; carrier density per unit volume.",
+        "frequency_convention": "Not applicable.",
+        "unit_embedding": "Coherent SI: D in m^2/s, E_a in J, k_B in J/K, T in K, n_c in 1/m^3, e_c in C, sigma in S/m.",
+        "held_fixed": "Carrier density, charge number and Arrhenius parameters across the temperature range.",
+        "admissibility": "T > 0 at every data point, positive weights, D_0 > 0, n_c > 0, z and e_c nonzero.",
+        "reference_energy": "Not applicable.",
+        "qpoint_weighting": "Not applicable."
+      },
+      "remaining_obligations": [
+        "Molecular-dynamics or experimental producers of the diffusivity and noise in fitted data are not verified; the exactness theorem covers exact Arrhenius data only.",
+        "Non-Arrhenius curvature, correlated conduction (Haven ratio different from 1) and temperature-dependent carrier densities are not covered.",
+        "contract_diffusivity (D = slope/(2d)) is a definition with nothing non-obvious to prove and is not bound; compute_carrier_density and compute_configurational_energy are external selectors with nothing algebraic to prove."
+      ],
+      "evidence": {
+        "kind": "compiled_bridge",
+        "module": "OMAIMaterialsTransport",
+        "declarations": [
+          "OMAI.PhyslibBridge.MaterialsTransport.wlsSlope_minimizes",
+          "OMAI.PhyslibBridge.MaterialsTransport.arrhenius_wls_recovers_activation",
+          "OMAI.PhyslibBridge.MaterialsTransport.ionic_wls_apparent_activation"
+        ],
+        "source_path": "lean/bridge/OMAIMaterialsTransport.lean",
+        "build_record": "lean/bridge/build-evidence.json",
+        "proved_targets": [
+          {
+            "kind": "operator",
+            "id": "compute_ionic_conductivity"
+          },
+          {
+            "kind": "operator",
+            "id": "fit_arrhenius"
+          },
+          {
+            "kind": "node",
+            "id": "ActivationEnergy"
+          },
+          {
+            "kind": "node",
+            "id": "ElectricalConductivity[carrier=ionic]"
+          }
+        ],
+        "source_sha256": "2aa396f9e92d7b2a52b7d8cceb05c7834dee771777c23c47094dd2b2ed82d379"
+      }
+    },
+    {
+      "id": "dft-stability-energy-differences",
+      "relation": "local",
+      "targets": [
+        {
+          "kind": "operator",
+          "id": "compute_energy_above_hull",
+          "uid": "4e7f15bf40f88fab20271ac052a22b491e7955ab3ebab9bb229713adf057a040",
+          "formula_sha256": "8c6556dbca3a51a285840593e5ab35fa13c898956188a1beec9febac45ae722b"
+        },
+        {
+          "kind": "operator",
+          "id": "compute_adsorption_energy",
+          "uid": "35f53c511ef6202b79b33e89856071aa1f3f8610ad7705bd3f608784d6216a1f",
+          "formula_sha256": "55f4d4ba2cc61605a32dbe38ea3b7883519a192efc4d173bca1a654bd09810f0"
+        },
+        {
+          "kind": "operator",
+          "id": "compute_intercalation_voltage",
+          "uid": "a4bc99a6b2efc1df1400041ada33cfb59e97819f189e3501a99c06f9c5e5d49f",
+          "formula_sha256": "7a3dd261cb0bf1bb623ff3a0c3a2a353a03573911235a56c05e01e021b6f4949"
+        },
+        {
+          "kind": "operator",
+          "id": "compute_surface_energy",
+          "uid": "c8b2e006408e3e2c08f6c71eb7cd4e1a07f72ab20034fe883c691c1cad278492",
+          "formula_sha256": "c99d3c4dab85511ea00104a21376fad96e0f80ce1982fddad3ac9f531454e8eb"
+        },
+        {
+          "kind": "operator",
+          "id": "compute_grain_boundary_energy",
+          "uid": "74ba9279dc65f3acd9e2be4ca13861b510212aa24a19aca4b29c65976003bf1b",
+          "formula_sha256": "f9a65c5a348516a72f064663e00f68d094e9511ed620539de392d4377397aca6"
+        },
+        {
+          "kind": "node",
+          "id": "EnergyAboveHull",
+          "uid": "910d47d67a7308728e2f7d211a08c1590239c7b802cd75128f00cd103a719b84"
+        },
+        {
+          "kind": "node",
+          "id": "AdsorptionEnergy",
+          "uid": "949582fba59372799c672b38510bd07f2e733f8bd6e63887b9728a672b1c5b25"
+        },
+        {
+          "kind": "node",
+          "id": "Voltage",
+          "uid": "26831a0aabc3508a944405ec2fd763a0637abeeac1ed3d87df64c27392d638f4"
+        },
+        {
+          "kind": "node",
+          "id": "SurfaceEnergy",
+          "uid": "306384aed4a1204fb7ca2347729de8d1816fa5fc32f4855a5d5f56a4d0fc1ddf"
+        },
+        {
+          "kind": "node",
+          "id": "GrainBoundaryEnergy",
+          "uid": "f81c9c7907dc4297e44624098da25bfd87c1654a4198853bb185891282c24528"
+        }
+      ],
+      "statement": "The interpreted hull distance of per-atom formation energies is the same for every set of elemental reference energies, and more generally does not change when every competing entry's formation energy is shifted by the same affine function of composition; a supporting affine function of composition that touches an entry certifies a zero distance. The adsorption energy and the average intercalation voltage are unchanged by every per-element energy offset exactly when the cells conserve atoms. The average intercalation voltage is the mean of the open-circuit voltage profile -(E'(x) - mu)/q over the ion content, also for a convex-hull cell energy with kinks between voltage plateaus. For slab energies affine in the number of bulk units, the catalog's surface energy, and its grain-boundary energy, which is the same function (grainBoundaryEnergy_eq_surfaceEnergy), are independent of slab thickness exactly when the bulk reference equals the slab slope, equal intercept/(2A) then, and grow without bound with thickness otherwise.",
+      "sources": [],
+      "conditions": [
+        "compute_energy_above_hull is opaque in the catalog and is interpreted as the per-atom distance of the entry's formation energy above the lower convex hull of the competing entries, the hull being the least weighted formation energy of nonnegative weights on the competing set that sum to one and reproduce the composition in atomic fractions. The entry belongs to the competing set. The distance is zero for every entry on the lower convex hull, not only for a unique ground state.",
+        "The target and its competitors share one energy model and one correction scheme; an MLIP candidate against MP2020-corrected DFT competitors is not covered. The affine invariance covers a change of the elemental reference energies and any per-atom correction c + sum_a delta_a x_a applied to every entry alike. The MP2020 scheme is not such a shift (its correction class depends on the U value and the anion type, and elemental entries are uncorrected), so the theorem applies only within one correction class.",
+        "Adding competitors can only raise the hull distance, so a value against an incomplete competing set is a lower bound of the value against a complete one, provided the entry energies do not depend on the competing set; MaterialsProjectDFTMixingScheme recomputes R2SCAN energies from the whole entry set and breaks this reading.",
+        "The adsorption energy uses three cells from one energy model and one calculator setting. The three-term catalog formula cannot express fractional gas-phase references (1/2 E_O2, E_H2O - E_H2), has no per-adsorbate normalization for a coverage theta, and needs a dipole correction for one-sided slabs.",
+        "The intercalation voltage sign follows the catalog: V = -(E_full - E_empty - n mu)/(n q), positive when inserting n ions from the metal lowers the energy, with q the charge transferred per ion. The catalog's n_ion q_e hard-codes one electron per ion, which is correct for Li, Na and K; for an ion of valence z the transferred charge is n z e, so q = z e (recorded as a catalog defect). The theorems hold for any q != 0. The mean-voltage theorem needs E(x) continuous on [0, n] and differentiable off a countable set with an integrable derivative, which admits the kinks of a convex-hull energy with several plateaus.",
+        "The surface-energy formula needs a stoichiometric slab with two equivalent, equally relaxed terminations; otherwise gamma depends on the chemical potentials of the excess species (pymatgen SlabEntry). The grain-boundary form with 2A holds only for a fully periodic bicrystal with two equivalent boundaries; with vacuum the cell holds one boundary and two free surfaces, and relax_cell=False biases gamma_GB high. Both thickness results assume slab energies affine in the number N of bulk units, which holds once the two surfaces or boundaries no longer interact.",
+        "compute_formation_energy is a per-atom definition with nothing to prove on its own and is not a proof subject; its reference set drops out of the hull distance. compute_reaction_energy is not covered: its catalog formula applies signed formula-unit coefficients to per-atom formation energies, a catalog defect recorded in its gap reason."
+      ],
+      "conventions": {
+        "model_scope": "Ground-state energy differences built from cell energies of one electronic-structure or interatomic model. Physlib has no model of convex hulls, slabs or electrodes, so these are local theorems over Mathlib reals that identify no Physlib declaration.",
+        "component_scope": "Finite competing sets and finite element sets; cells are described by their atom counts per element. Slab thickness is the number of bulk units; the in-plane area is fixed.",
+        "normalization_basis": "Formation energies and hull distances per atom; adsorption energies per adsorbate configuration; voltages per transferred charge q per ion; surface and grain-boundary energies per unit area of one surface or boundary.",
+        "frequency_convention": "Not applicable; no frequencies enter these formulas.",
+        "unit_embedding": "Energies in eV or J in one embedding throughout, areas in A^2 or m^2 (1 eV/A^2 = 16.021766 J/m^2), charge in elementary charges so that eV/e is one volt.",
+        "held_fixed": "The energy model, its settings and the elemental reference energies are common to every cell entering one difference; the competing set is fixed for one hull; the slab area is fixed across thicknesses.",
+        "admissibility": "The entry belongs to its competing set; per-atom formation energies need a nonzero atom count; the intercalation iff needs n != 0 and q != 0; the thickness criterion needs a nonzero area.",
+        "reference_energy": "Elemental reference chemical potentials enter formation energies and drop out of hull distances and of balanced reaction energies. The working-ion reservoir mu is the energy per atom of the metal in the same model.",
+        "qpoint_weighting": "Not applicable; no Brillouin-zone sums enter these formulas."
+      },
+      "remaining_obligations": [
+        "The DFT or interatomic total energies, relaxations and structure selection of compute_formation_energy's reference set, the hull_source competing set, slab and grain-boundary construction and the adsorption site are not verified, nor the MP2020 or GGA/GGA+U mixing corrections, which are not common affine shifts of every entry.",
+        "Only the sufficiency of a supporting affine function for a zero hull distance is proved; its necessity, which needs convex duality, is not.",
+        "Finite-size slab effects beyond the affine regime (surface-surface interaction in thin slabs, dipole corrections for asymmetric or polar slabs) and non-stoichiometric slabs are not covered.",
+        "Finite-temperature, vibrational, configurational and electrolyte contributions to stability, voltage and adsorption are not covered; the energies are ground-state values.",
+        "The multivalent transferred charge n z e of compute_intercalation_voltage and the reaction-energy weights nu_i N_i of compute_reaction_energy are catalog defects to fix in the catalog; the theorems here take q and the weights as stated in the conditions."
+      ],
+      "evidence": {
+        "kind": "compiled_bridge",
+        "module": "OMAIStabilityEnergies",
+        "declarations": [
+          "OMAI.PhyslibBridge.Stability.energyAboveHull_formationEnergy_reference_independent",
+          "OMAI.PhyslibBridge.Stability.energyAboveHull_affine_invariant",
+          "OMAI.PhyslibBridge.Stability.energyAboveHull_eq_zero_of_supporting",
+          "OMAI.PhyslibBridge.Stability.adsorptionEnergy_offset_invariant_iff",
+          "OMAI.PhyslibBridge.Stability.intercalationVoltage_offset_invariant_iff",
+          "OMAI.PhyslibBridge.Stability.intercalationVoltage_eq_mean_ocv",
+          "OMAI.PhyslibBridge.Stability.surfaceEnergy_thickness_independent_iff"
+        ],
+        "source_path": "lean/bridge/OMAIStabilityEnergies.lean",
+        "build_record": "lean/bridge/build-evidence.json",
+        "source_sha256": "d5da7a1eb03e27c9869c6f8f735f37c0256cc03eebaf8eba7d90a7cb221eaa34"
+      }
+    },
+    {
+      "id": "calphad-binary-equilibrium",
+      "relation": "local",
+      "targets": [
+        {
+          "kind": "operator",
+          "id": "solve_equilibrium",
+          "uid": "8e00f3c45c66888481ee6a2004e915534c06dfbc94ef59c7c761b85a1a7365a8",
+          "formula_sha256": "e462f6823acba4718605093dd6a9c2f5b65d76e52a2f0f936f34b1d30f06d951"
+        },
+        {
+          "kind": "operator",
+          "id": "compute_molar_enthalpy",
+          "uid": "901873fa2497cc75e75079357e7125527526bf2590507835f5cbeae3e5fd2868",
+          "formula_sha256": "559358c8898996d1b25239cf7891b8cad1297e6964a661b04055f8cf53e78812"
+        },
+        {
+          "kind": "operator",
+          "id": "compute_calphad_entropy",
+          "uid": "c1a786957352c7a02efab90d3815c83156bbae53976932e51dec1a9f0df62f2b",
+          "formula_sha256": "841219f58ee33183c89a9fcd83b3c4a34c426c7be1473d45431ccd81b756c7cf"
+        },
+        {
+          "kind": "operator",
+          "id": "compute_chemical_potentials",
+          "uid": "6e99a335cfb6b775c858856c9f81be42bf54bb931975aa16e4b13eedfa874b61",
+          "formula_sha256": "a95d84ace50d2262f60cc554ca21e03163140ec272d406f065bd39d9d6610fcb"
+        },
+        {
+          "kind": "operator",
+          "id": "compute_phase_fractions",
+          "uid": "d5a6a4d1c789d427aecbc40998ec2b7d32240c2850ac5d9ed226e268b6ed09f8",
+          "formula_sha256": "cdec0b486b6a7f7bbcc6f823a398f698ab01889104b0374971dd06ab7bf1397a"
+        },
+        {
+          "kind": "operator",
+          "id": "compute_transition_temperature",
+          "uid": "6f9aee9e741ba70cb9ee59098485a719edfaa20a864e0a5122ae7a225a875363",
+          "formula_sha256": "dff18b12ad9924ead14269682911a8017a719684f240433725bdcdf9b4789c80"
+        },
+        {
+          "kind": "node",
+          "id": "MolarGibbsEnergy",
+          "uid": "b048bc7569d568e2201557761eb758817674dd3a38b6f2379c5474f4cf91c66f"
+        },
+        {
+          "kind": "node",
+          "id": "MolarEnthalpy",
+          "uid": "600d0860290d3326202768db7249339c34ac675deb2ee8528a92207d3878b00c"
+        },
+        {
+          "kind": "node",
+          "id": "CalphadMolarEntropy",
+          "uid": "b11c4ec0ddbfa4483cc0a65d6a8fb2cefa9687b9a86ebd11bfb968d4253ec022"
+        },
+        {
+          "kind": "node",
+          "id": "ChemicalPotential",
+          "uid": "e707090e106994d3718f0afe5a20f2e60037f543334fa79b4a00360b7962d527"
+        },
+        {
+          "kind": "node",
+          "id": "PhaseFraction",
+          "uid": "7b55b11531084dcb2d5fd95100d62b2d68b787596e7c9712e06c011817ab5b8c"
+        },
+        {
+          "kind": "node",
+          "id": "TransitionTemperature",
+          "uid": "8b9dd2a79db11c01e15d37f64a7bd0d9c95f09ea080a67f7912d9b8aabd7b132"
+        }
+      ],
+      "statement": "For a binary system the interpreted equilibrium molar Gibbs energy, the least energy of any finite mixture of phases with the overall composition, is the convex envelope of the phase Gibbs curves on [0, 1]: it is convex, lies below every phase curve and lies above every convex function below them; the phase set need not be finite and the infimum need not be attained. If every phase's Gibbs function is concave in temperature on a temperature interval, the equilibrium Gibbs energy at any fixed composition is concave in temperature there, so on the interior of that interval the equilibrium entropy S = -dG/dT and, at nonnegative temperatures, the equilibrium enthalpy H = G - T dG/dT (right derivatives) are nondecreasing through every phase transition: the equilibrium heat capacity, latent heats included, is nonnegative. At a two-phase minimum with interior compositions both differentiable phase curves share the common tangent, so both phases have the same chemical potentials. Mass balance fixes the two phase fractions to the lever rule, both in [0, 1] exactly when the overall composition lies between the phase compositions. For a unary system or a congruent transformation, a Gibbs-energy difference that changes sign with a positive entropy difference has exactly one transition temperature, with phase alpha stable below it and phase beta above.",
+      "sources": [],
+      "conditions": [
+        "Every producer except contract_gibbs_hts is an opaque solver call in the catalog. The interpretations read molar Gibbs functions of the assessed phases per mole of atoms at fixed pressure with the SER reference, as pycalphad's GM, HM, SM, MU and NP; they are not the harmonic quantities per mole of primitive cells of the phonon bridge, and Gibbs is not Helmholtz.",
+        "The equilibrium and chemical-potential results are for a binary system, composition the mole fraction x of the second component in [0, 1], at the temperature and pressure built into the phase functions. The phase Gibbs curves are bounded below on [0, 1]; ideal-mixing terms x ln x are bounded there.",
+        "compute_molar_enthalpy and compute_calphad_entropy use the right temperature derivative of the equilibrium Gibbs energy at fixed composition, the values of the state stable just above T, equal to G - T G' and -G' wherever G is differentiable. The monotonicity results need every phase Gibbs function concave in temperature (nonnegative phase heat capacities) on the interval and hold on its interior; assessed functions extrapolated outside their valid range can have negative heat capacity. Within a two-phase field -T d2G_eq/dT2 is the apparent heat capacity, latent heat of the moving phase boundary included, not pycalphad's phase-local value.",
+        "compute_chemical_potentials returns the tangent intercepts mu_A = G - x G' and mu_B = G + (1 - x) G' of the equilibrium envelope G. The common-tangent theorem assumes a local minimum of the two-phase mixture energy in each phase composition with x1 < x < x2 and both phase curves differentiable there, which excludes line compounds; it does not establish that the global minimum is two-phase.",
+        "compute_transition_temperature is covered only for a unary system or a congruent (partitionless) transformation between two phases of one composition, bracketed in [T1, T2] by a sign change of G_beta - G_alpha with S_beta > S_alpha inside. For an alloy the temperature of equal phase Gibbs energies at one composition is the T0 temperature, not the catalog's boundary locus (liquidus, solidus or solvus, where a phase fraction reaches 0 or 1): an ideal lens at x = 0.5 has T0 = 1250.0 K, solidus 1219.5 K and liquidus 1279.1 K (T_A = 1000 K, T_B = 1500 K, equal fusion entropies of 10 J/(mol K), Delta C_p = 0), with a two-phase equilibrium across that window. Continuous transitions (order-disorder, magnetic) are excluded.",
+        "contract_gibbs_hts, G = H - T S, is a definition with nothing to prove beyond these interpretations and is not a proof subject."
+      ],
+      "conventions": {
+        "model_scope": "Equilibrium thermodynamics of assessed CALPHAD phase models. Physlib has no model of Gibbs minimization over assessed phases, so these are local theorems over Mathlib reals that identify no Physlib declaration.",
+        "component_scope": "Binary systems for the equilibrium, chemical-potential and phase-fraction results; any fixed composition for the temperature monotonicity; one composition and two phases of a unary or congruent transformation for the transition temperature.",
+        "normalization_basis": "Per mole of atoms (pycalphad v.N = 1), not per mole of formula units or primitive cells.",
+        "frequency_convention": "Not applicable; no frequencies enter these formulas.",
+        "unit_embedding": "Molar energies in J/mol, entropies in J/(mol K), temperatures in kelvin, compositions as mole fractions in [0, 1], not percentages.",
+        "held_fixed": "Pressure throughout; composition for the temperature derivatives; temperature for the composition derivatives and the equilibrium minimization.",
+        "admissibility": "Phase Gibbs curves bounded below on [0, 1] (at each temperature of the interval for the temperature results); phase Gibbs functions concave in temperature for the monotonicity results and T >= 0 for the enthalpy; x1 < x2 for the lever rule and x1 < x < x2 for the common tangent; T1 < T2 with a sign change and positive entropy difference for the transition.",
+        "reference_energy": "The SER reference of the assessed database. A reference shift linear in composition shifts G, mu_A and mu_B consistently; its effect on phase fractions and transition temperatures is not proved here (see the remaining obligations).",
+        "qpoint_weighting": "Not applicable; no Brillouin-zone sums enter these formulas."
+      },
+      "remaining_obligations": [
+        "The fidelity of the assessed database to experiment and the solver's global minimization (pycalphad's grid sampling and refinement) are not verified; the theorems hold for the interpreted definitions.",
+        "Multicomponent systems, sublattice site-fraction minimization inside a phase, magnetic and ordering contributions as separate terms, and pressure dependence are not covered.",
+        "That the global minimum is attained by at most two phases in a binary system (Caratheodory) and that a two-phase minimum exists between the common-tangent compositions are not proved.",
+        "That the tangent intercepts of the equilibrium envelope at x equal the common-tangent intercepts of the two phases is not proved; the common-tangent theorem is about the phase curves at their stationary compositions.",
+        "The catalog's boundary locus for alloys (liquidus, solidus, solvus and invariant points in composition-temperature space, extracted from a swept phase-fraction grid) is not verified; only the unary or congruent transition is.",
+        "Invariance of phase fractions and transition temperatures under a reference shift linear in composition is not proved."
+      ],
+      "evidence": {
+        "kind": "compiled_bridge",
+        "module": "OMAICalphad",
+        "declarations": [
+          "OMAI.PhyslibBridge.Calphad.equilibriumGibbs_isConvexEnvelope",
+          "OMAI.PhyslibBridge.Calphad.equilibriumGibbsT_concaveOn",
+          "OMAI.PhyslibBridge.Calphad.equilibrium_entropy_monotoneOn",
+          "OMAI.PhyslibBridge.Calphad.equilibrium_enthalpy_monotoneOn",
+          "OMAI.PhyslibBridge.Calphad.commonTangent_of_isLocalMin",
+          "OMAI.PhyslibBridge.Calphad.leverFractions_unique_and_bounds",
+          "OMAI.PhyslibBridge.Calphad.transitionTemperature_unique"
+        ],
+        "source_path": "lean/bridge/OMAICalphad.lean",
+        "build_record": "lean/bridge/build-evidence.json",
+        "source_sha256": "1864ba3c15e2bcd98fcbb932d6e3b6d450e2499d40b46f5537ac8cc9194d4852"
+      }
+    },
+    {
       "id": "hellmann-feynman-force-balance",
       "relation": "local",
       "targets": [
@@ -3314,6 +3791,14 @@
       "contract_cumulative_kappa[wrt=omega]": "Catalog defect. The cumulative operators take the linearized-BTE F (MeanFreeDisplacement[bte_solver=direct_inverse]), for which kappa_cum is a signed partial sum, so the catalog's saturating-distribution and median-mean-free-path semantics do not hold. OMAIPhyslibKappaContraction proves an exact three-mode linearized BTE (one process 1+2 <-> 3, Casimir boundary scattering, Bose-Einstein weights, symmetric positive-definite collision matrix) whose cumulative kappa_xx is not monotone in the cutoff, in both the frequency and the mean-free-path binning; monotonicity holds when every modal contribution is nonnegative, as in the relaxation-time approximation.",
       "contract_cumulative_kappa[wrt=mfp]": "Catalog defect. The cumulative operators take the linearized-BTE F (MeanFreeDisplacement[bte_solver=direct_inverse]), for which kappa_cum is a signed partial sum, so the catalog's saturating-distribution and median-mean-free-path semantics do not hold. OMAIPhyslibKappaContraction proves an exact three-mode linearized BTE (one process 1+2 <-> 3, Casimir boundary scattering, Bose-Einstein weights, symmetric positive-definite collision matrix) whose cumulative kappa_xx is not monotone in the cutoff, in both the frequency and the mean-free-path binning; monotonicity holds when every modal contribution is nonnegative, as in the relaxation-time approximation.",
       "compute_participation_ratio": "No Physlib model covers this formula.",
+      "contract_conductance_window": "A closed-form definition with nothing non-obvious to prove; no Lean theorem restates it, and it is not bound.",
+      "contract_state_coefficient_of_variation": "A closed-form definition with nothing non-obvious to prove; no Lean theorem restates it, and it is not bound.",
+      "schottky_mott_barrier": "Phi_Bn = Phi_W - chi is a difference with nothing to prove algebraically; its validity (no Fermi-level pinning and no interface dipole, while measured pinning factors are about 0.1 for Si, GaAs and MoS2) cannot be established algebraically. Catalog defect: WorkFunction does not distinguish a metal from a semiconductor, so a semiconductor's own work function can compose into a SchottkyBarrierHeight.",
+      "contract_diffusivity": "A closed-form definition with nothing non-obvious to prove; no Lean theorem restates it, and it is not bound.",
+      "compute_carrier_density": "An external selector over the structure (which species are mobile, counted over the cell volume); nothing algebraic to prove beyond its dimension.",
+      "compute_configurational_energy": "An external cluster-expansion evaluation over a fitted checkpoint; nothing algebraic to prove beyond its dimension.",
+      "compute_reaction_energy": "Catalog defect. The formula sums signed formula-unit coefficients c_rxn[i] times per-atom formation energies (FormationEnergy is in eV/atom), which is neither the reaction energy nor independent of the elemental references: for 2 Li + 1/2 O2 -> Li2O with Delta H_f(Li2O) = -2.0616 eV/atom it gives -2.0616 eV, and -1.6616 eV with mu_Li shifted by 0.3 eV, against the true -6.1848 eV. The reaction energy is Delta E_rxn = sum_i nu_i N_i Delta H_f,i with nu_i the signed formula-unit coefficients and N_i the atoms per reduced formula unit, per reaction as balanced (divide by the atoms of the reaction for eV/atom); it is independent of the elemental references exactly when the reaction is balanced (reactionEnergy_reference_independent_iff in OMAIStabilityEnergies). The ReactionEnergy node excludes the SISSO dGf(T) cousin, but its rxn-network representation computes from GibbsComputedEntry dGf(T); the edge should state which quantity it consumes.",
+      "compute_transition_temperature": "No current Physlib CALPHAD/Gibbs-assessed database correspondence identified. The local proof covers only a unary system or a congruent transformation at one composition, the equal-Gibbs-energy temperature; the alloy boundary locus of the catalog (liquidus, solidus, solvus, where a phase fraction reaches 0 or 1) is not proved.",
       "compute_gruneisen": "Catalog defect. The formula -sum_{i,j} Phi3[i,j,k,R,R'] / (6 omega_{q nu}^2) contracts the third-order force constants over two Cartesian indices only, with no eigenvectors, masses, Bloch phases or atomic positions, and leaves k, R and R' free on the right-hand side while the left-hand side depends on (q, nu). The Maradudin-Fein form is gamma_{q nu} = -(1/(6 omega_{q nu}^2)) sum_{kappa kappa' kappa''} sum_{l' l''} sum_{alpha beta gamma} Phi_{alpha beta gamma}(0 kappa, l' kappa', l'' kappa'') e*_{alpha kappa}(q nu) e_{beta kappa'}(q nu) exp(i q . R_{l'}) r_gamma(l'' kappa'') / sqrt(M_kappa M_kappa'), with r the Cartesian position of atom (l'' kappa''). Not covered until the catalog formula is corrected."
     }
   }

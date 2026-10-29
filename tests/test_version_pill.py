@@ -80,7 +80,7 @@ def test_the_header_links_and_marks_the_current_view():
     for page, current in (("map/", "Map"), ("map-3d/", "Map"), ("map-trace/", "Map"), ("play/", "Playground")):
         got = _render("https://openmaterials.ai/" + page, "app")
         nav = re.search(r'<nav class="site-nav" aria-label="Primary">(.*?)</nav>', got["header"]).group(1)
-        assert re.findall(r">([^<]+)</a>", nav) == ["Map", "Playground", "Guide", "Document"], page
+        assert re.findall(r">([^<]+)</a>", nav) == ["Map", "Codes", "Playground", "Guide", "Document"], page
         assert re.findall(r'<a href="[^"]*" aria-current="page">([^<]+)</a>', nav) == [current], page
         assert '<fieldset class="theme">' in got["header"], "the app header carries the theme toggle"
         assert 'href="https://github.com/openmaterials-ai/openmaterials-ai">GitHub</a>' in got["header"]

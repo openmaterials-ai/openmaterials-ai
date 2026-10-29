@@ -206,6 +206,19 @@ def test_gruneisen_formula_is_recorded_as_a_catalog_defect():
         assert phrase in row["reason"], phrase
 
 
+def test_registry_pins_this_tranche():
+    from physlib_tranches import TRANCHES as REGISTRY
+    entry = next(t for t in REGISTRY if t["name"] == "atomistic-derivatives")
+    payload = _packaged_bindings()
+    assert entry["bindings"] == set(BINDINGS)
+    assert set(entry["contracts"]) == {Path(p).name for p in CONTRACTS}
+    subjects = {(t["kind"], t["id"]) for binding_id in BINDINGS
+                for t in compiled_targets(_binding(binding_id), payload["inventory"])}
+    assert entry["subjects"] == subjects
+    assert {p["name"] for p in entry["pairs"]} == {name for name, _, _ in DEFINITIONS.values()}
+    assert entry["modules"] == ("OMAIAtomisticDerivatives", "OMAICellElasticity", "OMAIMolecularModes")
+
+
 def test_compiled_theorems_use_standard_axioms_only():
     package = os.environ.get("PHYSLIB_BRIDGE_PACKAGE")
     if not package:

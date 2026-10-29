@@ -120,7 +120,9 @@ def run() -> dict:
         "joint-density-formula-contract.json", "response-formula-contract.json",
         "thermal-gruneisen-formula-contract.json", "qha-formula-contract.json", "elasticity-formula-contract.json",
         "composites-formula-contract.json", "cure-kinetics-formula-contract.json",
-        "phonon-structure-formula-contract.json",
+        "phonon-structure-formula-contract.json", "device-metrology-formula-contract.json",
+        "materials-transport-formula-contract.json",
+        "stability-formula-contract.json", "thermochemistry-formula-contract.json",
         "dft-derivatives-formula-contract.json", "force-constants-formula-contract.json",
         "elastic-constants-formula-contract.json", "molecular-modes-formula-contract.json",
     }

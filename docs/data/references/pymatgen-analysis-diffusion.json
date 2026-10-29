@@ -1,0 +1,62 @@
+{
+ "key": "pymatgen-analysis-diffusion",
+ "code": [
+  {
+   "doi": "10.1021/acs.chemmater.6b02648",
+   "title": "Data-Driven First-Principles Methods for the Study and Design of Alkali Superionic Conductors",
+   "authors": [
+    "Z. Deng",
+    "Z. Zhu",
+    "I. H. Chu",
+    "S. P. Ong"
+   ],
+   "year": 2016,
+   "journal": "Chemistry of Materials"
+  }
+ ],
+ "methods": [],
+ "applications": [
+  {
+   "doi": "10.1021/acs.chemmater.5b04013",
+   "title": "Computational and Experimental Investigations of Na-Ion Conduction in Cubic Na 3 PSe 4",
+   "authors": [
+    "S. H. Bo",
+    "Y. Wang",
+    "J. C. Kim",
+    "W. D. Richards",
+    "G. Ceder"
+   ],
+   "year": 2015,
+   "journal": "Chemistry of Materials"
+  },
+  {
+   "doi": "10.1021/acs.chemmater.5b03656",
+   "title": "Role of Na + Interstitials and Dopants in Enhancing the Na + Conductivity of the Cubic Na 3 PS 4 Superionic Conductor",
+   "authors": [
+    "Z. Zhu",
+    "I. H. Chu",
+    "Z. Deng",
+    "S. P. Ong"
+   ],
+   "year": 2015,
+   "journal": "Chemistry of Materials"
+  },
+  {
+   "doi": "10.1038/ncomms11009",
+   "title": "Design and synthesis of the superionic conductor Na10SnP2S12",
+   "authors": [
+    "W. D. Richards",
+    "T. Tsujimura",
+    "L. J. Miara",
+    "Y. Wang",
+    "J. C. Kim",
+    "S. P. Ong",
+    "I. Uechi",
+    "N. Suzuki",
+    "G. Ceder"
+   ],
+   "year": 2016,
+   "journal": "Nature Communications"
+  }
+ ]
+}
