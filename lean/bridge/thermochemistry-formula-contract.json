@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "scope": "Reviewed OMAI formula endpoints and exact Lean proof source for local theorems with no Physlib physics counterpart. Hash and compiled-name checks detect drift and provenance errors; they are not automatic symbolic translation or numerical validation.",
+  "source_path": "lean/bridge/OMAICalphad.lean",
+  "source_sha256": "1864ba3c15e2bcd98fcbb932d6e3b6d450e2499d40b46f5537ac8cc9194d4852",
+  "operators": [
+    {
+      "id": "solve_equilibrium",
+      "uid": "8e00f3c45c66888481ee6a2004e915534c06dfbc94ef59c7c761b85a1a7365a8",
+      "formula_sha256": "e462f6823acba4718605093dd6a9c2f5b65d76e52a2f0f936f34b1d30f06d951",
+      "formula_latex": "G_{m} = G^{\\min}{\\left(\\mathcal{D},T \\right)}",
+      "lean_definition": "OMAI.PhyslibBridge.Calphad.equilibriumGibbs"
+    },
+    {
+      "id": "compute_molar_enthalpy",
+      "uid": "901873fa2497cc75e75079357e7125527526bf2590507835f5cbeae3e5fd2868",
+      "formula_sha256": "559358c8898996d1b25239cf7891b8cad1297e6964a661b04055f8cf53e78812",
+      "formula_latex": "H_{m} = H^{eq}{\\left(\\mathcal{D},T \\right)}",
+      "lean_definition": "OMAI.PhyslibBridge.Calphad.molarEnthalpy"
+    },
+    {
+      "id": "compute_calphad_entropy",
+      "uid": "c1a786957352c7a02efab90d3815c83156bbae53976932e51dec1a9f0df62f2b",
+      "formula_sha256": "841219f58ee33183c89a9fcd83b3c4a34c426c7be1473d45431ccd81b756c7cf",
+      "formula_latex": "S_{m} = S^{eq}{\\left(\\mathcal{D},T \\right)}",
+      "lean_definition": "OMAI.PhyslibBridge.Calphad.calphadEntropy"
+    },
+    {
+      "id": "compute_chemical_potentials",
+      "uid": "6e99a335cfb6b775c858856c9f81be42bf54bb931975aa16e4b13eedfa874b61",
+      "formula_sha256": "a95d84ace50d2262f60cc554ca21e03163140ec272d406f065bd39d9d6610fcb",
+      "formula_latex": "\\mu = \\mu^{eq}{\\left(G_{m} \\right)}",
+      "lean_definition": "OMAI.PhyslibBridge.Calphad.chemicalPotentials"
+    },
+    {
+      "id": "compute_phase_fractions",
+      "uid": "d5a6a4d1c789d427aecbc40998ec2b7d32240c2850ac5d9ed226e268b6ed09f8",
+      "formula_sha256": "cdec0b486b6a7f7bbcc6f823a398f698ab01889104b0374971dd06ab7bf1397a",
+      "formula_latex": "NP = f^{eq}{\\left(\\mathcal{D},T \\right)}",
+      "lean_definition": "OMAI.PhyslibBridge.Calphad.leverFractions"
+    },
+    {
+      "id": "compute_transition_temperature",
+      "uid": "6f9aee9e741ba70cb9ee59098485a719edfaa20a864e0a5122ae7a225a875363",
+      "formula_sha256": "dff18b12ad9924ead14269682911a8017a719684f240433725bdcdf9b4789c80",
+      "formula_latex": "T_{\\mathrm{trans}} = T^{trans}{\\left(NP,T \\right)}",
+      "lean_definition": "OMAI.PhyslibBridge.Calphad.transitionTemperature"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "MolarGibbsEnergy",
+      "uid": "b048bc7569d568e2201557761eb758817674dd3a38b6f2379c5474f4cf91c66f"
+    },
+    {
+      "id": "MolarEnthalpy",
+      "uid": "600d0860290d3326202768db7249339c34ac675deb2ee8528a92207d3878b00c"
+    },
+    {
+      "id": "CalphadMolarEntropy",
+      "uid": "b11c4ec0ddbfa4483cc0a65d6a8fb2cefa9687b9a86ebd11bfb968d4253ec022"
+    },
+    {
+      "id": "ChemicalPotential",
+      "uid": "e707090e106994d3718f0afe5a20f2e60037f543334fa79b4a00360b7962d527"
+    },
+    {
+      "id": "PhaseFraction",
+      "uid": "7b55b11531084dcb2d5fd95100d62b2d68b787596e7c9712e06c011817ab5b8c"
+    },
+    {
+      "id": "TransitionTemperature",
+      "uid": "8b9dd2a79db11c01e15d37f64a7bd0d9c95f09ea080a67f7912d9b8aabd7b132"
+    }
+  ],
+  "interpretations": [
+    "Every thermochemistry producer except contract_gibbs_hts is an opaque solver call in the catalog. The interpreted definitions read molar Gibbs functions of the assessed phases, per mole of atoms at fixed pressure and the SER reference, as pycalphad evaluates them; they are not the harmonic per-mole-of-cells quantities of the phonon bridge.",
+    "solve_equilibrium is the least molar Gibbs energy of any finite mixture of phases with the overall composition, for a binary system with composition the mole fraction x of the second component in [0, 1], at the temperature and pressure built into the phase functions.",
+    "compute_molar_enthalpy and compute_calphad_entropy are H = G - T dG/dT and S = -dG/dT of the equilibrium molar Gibbs energy G(T) at fixed composition and pressure, with the right temperature derivative: the values of the state stable just above T, equal to pycalphad's HM and SM wherever G is differentiable.",
+    "compute_chemical_potentials returns, for a binary system, the intercepts at x = 0 and x = 1 of the tangent to the equilibrium envelope G(x): mu_A = G - x G' and mu_B = G + (1 - x) G'.",
+    "compute_phase_fractions is the lever rule for two phases of compositions x1 < x2 at overall composition x. compute_transition_temperature is the lowest temperature in a bracket [T1, T2] at which phase beta is at least as stable as phase alpha, dG = G_beta - G_alpha <= 0, for a unary system or a congruent transformation; for an alloy this is the T0 temperature, not the catalog's boundary locus.",
+    "contract_gibbs_hts, G = H - T S, is a definition with nothing to prove beyond the interpretations above and is not a proof subject."
+  ]
+}

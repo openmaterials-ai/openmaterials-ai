@@ -100,18 +100,41 @@ TRANCHES = (
                for name in ("arrheniusDiffusivity", "ionicConductivity")]),
         "modules": ("OMAIDeviceMetrology", "OMAIMaterialsTransport"),
     },
+    {
+        "name": "thermochem-stability",
+        "contracts": ("stability-formula-contract.json", "thermochemistry-formula-contract.json"),
+        "bindings": frozenset({"dft-stability-energy-differences", "calphad-binary-equilibrium"}),
+        "subjects": frozenset({
+            ("node", "AdsorptionEnergy"), ("node", "EnergyAboveHull"), ("node", "GrainBoundaryEnergy"),
+            ("node", "SurfaceEnergy"), ("node", "Voltage"),
+            ("operator", "compute_adsorption_energy"), ("operator", "compute_energy_above_hull"),
+            ("operator", "compute_grain_boundary_energy"), ("operator", "compute_intercalation_voltage"),
+            ("operator", "compute_surface_energy"),
+            ("node", "CalphadMolarEntropy"), ("node", "ChemicalPotential"), ("node", "MolarEnthalpy"),
+            ("node", "MolarGibbsEnergy"), ("node", "PhaseFraction"), ("node", "TransitionTemperature"),
+            ("operator", "compute_calphad_entropy"), ("operator", "compute_chemical_potentials"),
+            ("operator", "compute_molar_enthalpy"), ("operator", "compute_phase_fractions"),
+            ("operator", "compute_transition_temperature"), ("operator", "solve_equilibrium")}),
+        "pairs": tuple(
+            [{"name": "OMAI.PhyslibBridge.Stability." + name, "module": "OMAIStabilityEnergies"}
+             for name in ("adsorptionEnergy", "energyAboveHull", "grainBoundaryEnergy",
+                          "intercalationVoltage", "surfaceEnergy")]
+            + [{"name": "OMAI.PhyslibBridge.Calphad." + name, "module": "OMAICalphad"}
+               for name in ("calphadEntropy", "chemicalPotentials", "equilibriumGibbs", "leverFractions",
+                            "molarEnthalpy", "transitionTemperature")]),
+        "modules": ("OMAIStabilityEnergies", "OMAICalphad"),
+    },
 )
 
 # The one frozen global coverage ledger of the published bindings.
 GLOBAL_COVERAGE = {
     "nodes_total": 136, "nodes_mapped": 33, "operators_total": 133, "operators_mapped": 24,
-    "nodes_local": 16, "operators_local": 21, "bindings_total": 38, "source_correspondences": 5,
-    "compiled_bridges": 33, "nodes_compiled": 21, "nodes_compiled_outputs": 20,
-    "nodes_compiled_interpretations": 1, "operators_compiled": 24,
-    "operators_compiled_local": 21, "nodes_compiled_local": 17, "operators_proved": 45,
-    "nodes_proved": 38, "upstream_declarations_referenced": 36,
-    "upstream_modules_referenced": 10,
-    "relations": {"exact_definition": 1, "conditional": 27, "conceptual": 4, "local": 6},
+    "nodes_local": 27, "operators_local": 32, "bindings_total": 40, "source_correspondences": 5,
+    "compiled_bridges": 35, "nodes_compiled": 21, "nodes_compiled_outputs": 20,
+    "nodes_compiled_interpretations": 1, "operators_compiled": 24, "operators_compiled_local": 32,
+    "nodes_compiled_local": 28, "operators_proved": 56, "nodes_proved": 49,
+    "upstream_declarations_referenced": 36, "upstream_modules_referenced": 10,
+    "relations": {"exact_definition": 1, "conditional": 27, "conceptual": 4, "local": 8},
 }
 
 

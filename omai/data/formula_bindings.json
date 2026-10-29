@@ -383,6 +383,123 @@
       }
     },
     {
+      "id": "calphad-binary-equilibrium",
+      "relation": "local",
+      "targets": [
+        {
+          "kind": "node",
+          "id": "CalphadMolarEntropy",
+          "uid": "b11c4ec0ddbfa4483cc0a65d6a8fb2cefa9687b9a86ebd11bfb968d4253ec022"
+        },
+        {
+          "kind": "node",
+          "id": "ChemicalPotential",
+          "uid": "e707090e106994d3718f0afe5a20f2e60037f543334fa79b4a00360b7962d527"
+        },
+        {
+          "kind": "node",
+          "id": "MolarEnthalpy",
+          "uid": "600d0860290d3326202768db7249339c34ac675deb2ee8528a92207d3878b00c"
+        },
+        {
+          "kind": "node",
+          "id": "MolarGibbsEnergy",
+          "uid": "b048bc7569d568e2201557761eb758817674dd3a38b6f2379c5474f4cf91c66f"
+        },
+        {
+          "kind": "node",
+          "id": "PhaseFraction",
+          "uid": "7b55b11531084dcb2d5fd95100d62b2d68b787596e7c9712e06c011817ab5b8c"
+        },
+        {
+          "kind": "node",
+          "id": "TransitionTemperature",
+          "uid": "8b9dd2a79db11c01e15d37f64a7bd0d9c95f09ea080a67f7912d9b8aabd7b132"
+        },
+        {
+          "kind": "operator",
+          "id": "compute_calphad_entropy",
+          "uid": "c1a786957352c7a02efab90d3815c83156bbae53976932e51dec1a9f0df62f2b",
+          "formula_sha256": "841219f58ee33183c89a9fcd83b3c4a34c426c7be1473d45431ccd81b756c7cf"
+        },
+        {
+          "kind": "operator",
+          "id": "compute_chemical_potentials",
+          "uid": "6e99a335cfb6b775c858856c9f81be42bf54bb931975aa16e4b13eedfa874b61",
+          "formula_sha256": "a95d84ace50d2262f60cc554ca21e03163140ec272d406f065bd39d9d6610fcb"
+        },
+        {
+          "kind": "operator",
+          "id": "compute_molar_enthalpy",
+          "uid": "901873fa2497cc75e75079357e7125527526bf2590507835f5cbeae3e5fd2868",
+          "formula_sha256": "559358c8898996d1b25239cf7891b8cad1297e6964a661b04055f8cf53e78812"
+        },
+        {
+          "kind": "operator",
+          "id": "compute_phase_fractions",
+          "uid": "d5a6a4d1c789d427aecbc40998ec2b7d32240c2850ac5d9ed226e268b6ed09f8",
+          "formula_sha256": "cdec0b486b6a7f7bbcc6f823a398f698ab01889104b0374971dd06ab7bf1397a"
+        },
+        {
+          "kind": "operator",
+          "id": "compute_transition_temperature",
+          "uid": "6f9aee9e741ba70cb9ee59098485a719edfaa20a864e0a5122ae7a225a875363",
+          "formula_sha256": "dff18b12ad9924ead14269682911a8017a719684f240433725bdcdf9b4789c80"
+        },
+        {
+          "kind": "operator",
+          "id": "solve_equilibrium",
+          "uid": "8e00f3c45c66888481ee6a2004e915534c06dfbc94ef59c7c761b85a1a7365a8",
+          "formula_sha256": "e462f6823acba4718605093dd6a9c2f5b65d76e52a2f0f936f34b1d30f06d951"
+        }
+      ],
+      "statement": "For a binary system the interpreted equilibrium molar Gibbs energy, the least energy of any finite mixture of phases with the overall composition, is the convex envelope of the phase Gibbs curves on [0, 1]: it is convex, lies below every phase curve and lies above every convex function below them; the phase set need not be finite and the infimum need not be attained. If every phase's Gibbs function is concave in temperature on a temperature interval, the equilibrium Gibbs energy at any fixed composition is concave in temperature there, so on the interior of that interval the equilibrium entropy S = -dG/dT and, at nonnegative temperatures, the equilibrium enthalpy H = G - T dG/dT (right derivatives) are nondecreasing through every phase transition: the equilibrium heat capacity, latent heats included, is nonnegative. At a two-phase minimum with interior compositions both differentiable phase curves share the common tangent, so both phases have the same chemical potentials. Mass balance fixes the two phase fractions to the lever rule, both in [0, 1] exactly when the overall composition lies between the phase compositions. For a unary system or a congruent transformation, a Gibbs-energy difference that changes sign with a positive entropy difference has exactly one transition temperature, with phase alpha stable below it and phase beta above.",
+      "sources": [],
+      "conditions": [
+        "Every producer except contract_gibbs_hts is an opaque solver call in the catalog. The interpretations read molar Gibbs functions of the assessed phases per mole of atoms at fixed pressure with the SER reference, as pycalphad's GM, HM, SM, MU and NP; they are not the harmonic quantities per mole of primitive cells of the phonon bridge, and Gibbs is not Helmholtz.",
+        "The equilibrium and chemical-potential results are for a binary system, composition the mole fraction x of the second component in [0, 1], at the temperature and pressure built into the phase functions. The phase Gibbs curves are bounded below on [0, 1]; ideal-mixing terms x ln x are bounded there.",
+        "compute_molar_enthalpy and compute_calphad_entropy use the right temperature derivative of the equilibrium Gibbs energy at fixed composition, the values of the state stable just above T, equal to G - T G' and -G' wherever G is differentiable. The monotonicity results need every phase Gibbs function concave in temperature (nonnegative phase heat capacities) on the interval and hold on its interior; assessed functions extrapolated outside their valid range can have negative heat capacity. Within a two-phase field -T d2G_eq/dT2 is the apparent heat capacity, latent heat of the moving phase boundary included, not pycalphad's phase-local value.",
+        "compute_chemical_potentials returns the tangent intercepts mu_A = G - x G' and mu_B = G + (1 - x) G' of the equilibrium envelope G. The common-tangent theorem assumes a local minimum of the two-phase mixture energy in each phase composition with x1 < x < x2 and both phase curves differentiable there, which excludes line compounds; it does not establish that the global minimum is two-phase.",
+        "compute_transition_temperature is covered only for a unary system or a congruent (partitionless) transformation between two phases of one composition, bracketed in [T1, T2] by a sign change of G_beta - G_alpha with S_beta > S_alpha inside. For an alloy the temperature of equal phase Gibbs energies at one composition is the T0 temperature, not the catalog's boundary locus (liquidus, solidus or solvus, where a phase fraction reaches 0 or 1): an ideal lens at x = 0.5 has T0 = 1250.0 K, solidus 1219.5 K and liquidus 1279.1 K (T_A = 1000 K, T_B = 1500 K, equal fusion entropies of 10 J/(mol K), Delta C_p = 0), with a two-phase equilibrium across that window. Continuous transitions (order-disorder, magnetic) are excluded.",
+        "contract_gibbs_hts, G = H - T S, is a definition with nothing to prove beyond these interpretations and is not a proof subject."
+      ],
+      "conventions": {
+        "model_scope": "Equilibrium thermodynamics of assessed CALPHAD phase models. Physlib has no model of Gibbs minimization over assessed phases, so these are local theorems over Mathlib reals that identify no Physlib declaration.",
+        "component_scope": "Binary systems for the equilibrium, chemical-potential and phase-fraction results; any fixed composition for the temperature monotonicity; one composition and two phases of a unary or congruent transformation for the transition temperature.",
+        "normalization_basis": "Per mole of atoms (pycalphad v.N = 1), not per mole of formula units or primitive cells.",
+        "frequency_convention": "Not applicable; no frequencies enter these formulas.",
+        "unit_embedding": "Molar energies in J/mol, entropies in J/(mol K), temperatures in kelvin, compositions as mole fractions in [0, 1], not percentages.",
+        "held_fixed": "Pressure throughout; composition for the temperature derivatives; temperature for the composition derivatives and the equilibrium minimization.",
+        "admissibility": "Phase Gibbs curves bounded below on [0, 1] (at each temperature of the interval for the temperature results); phase Gibbs functions concave in temperature for the monotonicity results and T >= 0 for the enthalpy; x1 < x2 for the lever rule and x1 < x < x2 for the common tangent; T1 < T2 with a sign change and positive entropy difference for the transition.",
+        "reference_energy": "The SER reference of the assessed database. A reference shift linear in composition shifts G, mu_A and mu_B consistently; its effect on phase fractions and transition temperatures is not proved here (see the remaining obligations).",
+        "qpoint_weighting": "Not applicable; no Brillouin-zone sums enter these formulas."
+      },
+      "remaining_obligations": [
+        "The fidelity of the assessed database to experiment and the solver's global minimization (pycalphad's grid sampling and refinement) are not verified; the theorems hold for the interpreted definitions.",
+        "Multicomponent systems, sublattice site-fraction minimization inside a phase, magnetic and ordering contributions as separate terms, and pressure dependence are not covered.",
+        "That the global minimum is attained by at most two phases in a binary system (Caratheodory) and that a two-phase minimum exists between the common-tangent compositions are not proved.",
+        "That the tangent intercepts of the equilibrium envelope at x equal the common-tangent intercepts of the two phases is not proved; the common-tangent theorem is about the phase curves at their stationary compositions.",
+        "The catalog's boundary locus for alloys (liquidus, solidus, solvus and invariant points in composition-temperature space, extracted from a swept phase-fraction grid) is not verified; only the unary or congruent transition is.",
+        "Invariance of phase fractions and transition temperatures under a reference shift linear in composition is not proved."
+      ],
+      "evidence": {
+        "kind": "compiled_bridge",
+        "module": "OMAICalphad",
+        "declarations": [
+          "OMAI.PhyslibBridge.Calphad.equilibriumGibbs_isConvexEnvelope",
+          "OMAI.PhyslibBridge.Calphad.equilibriumGibbsT_concaveOn",
+          "OMAI.PhyslibBridge.Calphad.equilibrium_entropy_monotoneOn",
+          "OMAI.PhyslibBridge.Calphad.equilibrium_enthalpy_monotoneOn",
+          "OMAI.PhyslibBridge.Calphad.commonTangent_of_isLocalMin",
+          "OMAI.PhyslibBridge.Calphad.leverFractions_unique_and_bounds",
+          "OMAI.PhyslibBridge.Calphad.transitionTemperature_unique"
+        ],
+        "source_path": "lean/bridge/OMAICalphad.lean",
+        "build_record": "lean/bridge/build-evidence.json",
+        "source_sha256": "1864ba3c15e2bcd98fcbb932d6e3b6d450e2499d40b46f5537ac8cc9194d4852"
+      }
+    },
+    {
       "id": "canonical-rta-thermal-conductivity",
       "relation": "conditional",
       "statement": "With the relaxation-time mean free displacement F = v/(2 Gamma) and, as c, the actual Physlib canonical heat capacity of each harmonic mode at T > 0, the OMAI contraction kappa_ab = sum_m F_b c v_a/(N_q V_cell) is symmetric and positive semidefinite for positive linewidths and N_q V_cell > 0, and positive definite exactly when the group velocities of the modes span space.",
@@ -1006,6 +1123,112 @@
           }
         ],
         "source_sha256": "70bd052d1d32afe828a3a8f7e26e406d5ec1e121b86ad0d9b08717f8c0f87f1a"
+      }
+    },
+    {
+      "id": "dft-stability-energy-differences",
+      "relation": "local",
+      "targets": [
+        {
+          "kind": "node",
+          "id": "AdsorptionEnergy",
+          "uid": "949582fba59372799c672b38510bd07f2e733f8bd6e63887b9728a672b1c5b25"
+        },
+        {
+          "kind": "node",
+          "id": "EnergyAboveHull",
+          "uid": "910d47d67a7308728e2f7d211a08c1590239c7b802cd75128f00cd103a719b84"
+        },
+        {
+          "kind": "node",
+          "id": "GrainBoundaryEnergy",
+          "uid": "f81c9c7907dc4297e44624098da25bfd87c1654a4198853bb185891282c24528"
+        },
+        {
+          "kind": "node",
+          "id": "SurfaceEnergy",
+          "uid": "306384aed4a1204fb7ca2347729de8d1816fa5fc32f4855a5d5f56a4d0fc1ddf"
+        },
+        {
+          "kind": "node",
+          "id": "Voltage",
+          "uid": "26831a0aabc3508a944405ec2fd763a0637abeeac1ed3d87df64c27392d638f4"
+        },
+        {
+          "kind": "operator",
+          "id": "compute_adsorption_energy",
+          "uid": "35f53c511ef6202b79b33e89856071aa1f3f8610ad7705bd3f608784d6216a1f",
+          "formula_sha256": "55f4d4ba2cc61605a32dbe38ea3b7883519a192efc4d173bca1a654bd09810f0"
+        },
+        {
+          "kind": "operator",
+          "id": "compute_energy_above_hull",
+          "uid": "4e7f15bf40f88fab20271ac052a22b491e7955ab3ebab9bb229713adf057a040",
+          "formula_sha256": "8c6556dbca3a51a285840593e5ab35fa13c898956188a1beec9febac45ae722b"
+        },
+        {
+          "kind": "operator",
+          "id": "compute_grain_boundary_energy",
+          "uid": "74ba9279dc65f3acd9e2be4ca13861b510212aa24a19aca4b29c65976003bf1b",
+          "formula_sha256": "f9a65c5a348516a72f064663e00f68d094e9511ed620539de392d4377397aca6"
+        },
+        {
+          "kind": "operator",
+          "id": "compute_intercalation_voltage",
+          "uid": "a4bc99a6b2efc1df1400041ada33cfb59e97819f189e3501a99c06f9c5e5d49f",
+          "formula_sha256": "7a3dd261cb0bf1bb623ff3a0c3a2a353a03573911235a56c05e01e021b6f4949"
+        },
+        {
+          "kind": "operator",
+          "id": "compute_surface_energy",
+          "uid": "c8b2e006408e3e2c08f6c71eb7cd4e1a07f72ab20034fe883c691c1cad278492",
+          "formula_sha256": "c99d3c4dab85511ea00104a21376fad96e0f80ce1982fddad3ac9f531454e8eb"
+        }
+      ],
+      "statement": "The interpreted hull distance of per-atom formation energies is the same for every set of elemental reference energies, and more generally does not change when every competing entry's formation energy is shifted by the same affine function of composition; a supporting affine function of composition that touches an entry certifies a zero distance. The adsorption energy and the average intercalation voltage are unchanged by every per-element energy offset exactly when the cells conserve atoms. The average intercalation voltage is the mean of the open-circuit voltage profile -(E'(x) - mu)/q over the ion content, also for a convex-hull cell energy with kinks between voltage plateaus. For slab energies affine in the number of bulk units, the catalog's surface energy, and its grain-boundary energy, which is the same function (grainBoundaryEnergy_eq_surfaceEnergy), are independent of slab thickness exactly when the bulk reference equals the slab slope, equal intercept/(2A) then, and grow without bound with thickness otherwise.",
+      "sources": [],
+      "conditions": [
+        "compute_energy_above_hull is opaque in the catalog and is interpreted as the per-atom distance of the entry's formation energy above the lower convex hull of the competing entries, the hull being the least weighted formation energy of nonnegative weights on the competing set that sum to one and reproduce the composition in atomic fractions. The entry belongs to the competing set. The distance is zero for every entry on the lower convex hull, not only for a unique ground state.",
+        "The target and its competitors share one energy model and one correction scheme; an MLIP candidate against MP2020-corrected DFT competitors is not covered. The affine invariance covers a change of the elemental reference energies and any per-atom correction c + sum_a delta_a x_a applied to every entry alike. The MP2020 scheme is not such a shift (its correction class depends on the U value and the anion type, and elemental entries are uncorrected), so the theorem applies only within one correction class.",
+        "Adding competitors can only raise the hull distance, so a value against an incomplete competing set is a lower bound of the value against a complete one, provided the entry energies do not depend on the competing set; MaterialsProjectDFTMixingScheme recomputes R2SCAN energies from the whole entry set and breaks this reading.",
+        "The adsorption energy uses three cells from one energy model and one calculator setting. The three-term catalog formula cannot express fractional gas-phase references (1/2 E_O2, E_H2O - E_H2), has no per-adsorbate normalization for a coverage theta, and needs a dipole correction for one-sided slabs.",
+        "The intercalation voltage sign follows the catalog: V = -(E_full - E_empty - n mu)/(n q), positive when inserting n ions from the metal lowers the energy, with q the charge transferred per ion. The catalog's n_ion q_e hard-codes one electron per ion, which is correct for Li, Na and K; for an ion of valence z the transferred charge is n z e, so q = z e (recorded as a catalog defect). The theorems hold for any q != 0. The mean-voltage theorem needs E(x) continuous on [0, n] and differentiable off a countable set with an integrable derivative, which admits the kinks of a convex-hull energy with several plateaus.",
+        "The surface-energy formula needs a stoichiometric slab with two equivalent, equally relaxed terminations; otherwise gamma depends on the chemical potentials of the excess species (pymatgen SlabEntry). The grain-boundary form with 2A holds only for a fully periodic bicrystal with two equivalent boundaries; with vacuum the cell holds one boundary and two free surfaces, and relax_cell=False biases gamma_GB high. Both thickness results assume slab energies affine in the number N of bulk units, which holds once the two surfaces or boundaries no longer interact.",
+        "compute_formation_energy is a per-atom definition with nothing to prove on its own and is not a proof subject; its reference set drops out of the hull distance. compute_reaction_energy is not covered: its catalog formula applies signed formula-unit coefficients to per-atom formation energies, a catalog defect recorded in its gap reason."
+      ],
+      "conventions": {
+        "model_scope": "Ground-state energy differences built from cell energies of one electronic-structure or interatomic model. Physlib has no model of convex hulls, slabs or electrodes, so these are local theorems over Mathlib reals that identify no Physlib declaration.",
+        "component_scope": "Finite competing sets and finite element sets; cells are described by their atom counts per element. Slab thickness is the number of bulk units; the in-plane area is fixed.",
+        "normalization_basis": "Formation energies and hull distances per atom; adsorption energies per adsorbate configuration; voltages per transferred charge q per ion; surface and grain-boundary energies per unit area of one surface or boundary.",
+        "frequency_convention": "Not applicable; no frequencies enter these formulas.",
+        "unit_embedding": "Energies in eV or J in one embedding throughout, areas in A^2 or m^2 (1 eV/A^2 = 16.021766 J/m^2), charge in elementary charges so that eV/e is one volt.",
+        "held_fixed": "The energy model, its settings and the elemental reference energies are common to every cell entering one difference; the competing set is fixed for one hull; the slab area is fixed across thicknesses.",
+        "admissibility": "The entry belongs to its competing set; per-atom formation energies need a nonzero atom count; the intercalation iff needs n != 0 and q != 0; the thickness criterion needs a nonzero area.",
+        "reference_energy": "Elemental reference chemical potentials enter formation energies and drop out of hull distances and of balanced reaction energies. The working-ion reservoir mu is the energy per atom of the metal in the same model.",
+        "qpoint_weighting": "Not applicable; no Brillouin-zone sums enter these formulas."
+      },
+      "remaining_obligations": [
+        "The DFT or interatomic total energies, relaxations and structure selection of compute_formation_energy's reference set, the hull_source competing set, slab and grain-boundary construction and the adsorption site are not verified, nor the MP2020 or GGA/GGA+U mixing corrections, which are not common affine shifts of every entry.",
+        "Only the sufficiency of a supporting affine function for a zero hull distance is proved; its necessity, which needs convex duality, is not.",
+        "Finite-size slab effects beyond the affine regime (surface-surface interaction in thin slabs, dipole corrections for asymmetric or polar slabs) and non-stoichiometric slabs are not covered.",
+        "Finite-temperature, vibrational, configurational and electrolyte contributions to stability, voltage and adsorption are not covered; the energies are ground-state values.",
+        "The multivalent transferred charge n z e of compute_intercalation_voltage and the reaction-energy weights nu_i N_i of compute_reaction_energy are catalog defects to fix in the catalog; the theorems here take q and the weights as stated in the conditions."
+      ],
+      "evidence": {
+        "kind": "compiled_bridge",
+        "module": "OMAIStabilityEnergies",
+        "declarations": [
+          "OMAI.PhyslibBridge.Stability.energyAboveHull_formationEnergy_reference_independent",
+          "OMAI.PhyslibBridge.Stability.energyAboveHull_affine_invariant",
+          "OMAI.PhyslibBridge.Stability.energyAboveHull_eq_zero_of_supporting",
+          "OMAI.PhyslibBridge.Stability.adsorptionEnergy_offset_invariant_iff",
+          "OMAI.PhyslibBridge.Stability.intercalationVoltage_offset_invariant_iff",
+          "OMAI.PhyslibBridge.Stability.intercalationVoltage_eq_mean_ocv",
+          "OMAI.PhyslibBridge.Stability.surfaceEnergy_thickness_independent_iff"
+        ],
+        "source_path": "lean/bridge/OMAIStabilityEnergies.lean",
+        "build_record": "lean/bridge/build-evidence.json",
+        "source_sha256": "d5da7a1eb03e27c9869c6f8f735f37c0256cc03eebaf8eba7d90a7cb221eaa34"
       }
     },
     {
@@ -3259,14 +3482,16 @@
           "arrhenius-ionic-transport"
         ],
         "status": "local",
-        "reason": "No matching current Physlib Einstein-MSD, Arrhenius, Nernst-Einstein, or cluster-expansion formula theorem identified. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
+        "reason": "No matching current Physlib Einstein-MSD, Arrhenius, Nernst-Einstein, or cluster-expansion formula theorem identified. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "AdsorptionEnergy",
         "uid": "949582fba59372799c672b38510bd07f2e733f8bd6e63887b9728a672b1c5b25",
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No current Physlib matching reference-state, convex-hull, surface, adsorption, reaction, or grain-boundary formula model identified."
+        "binding_ids": [
+          "dft-stability-energy-differences"
+        ],
+        "status": "local",
+        "reason": "No current Physlib matching reference-state, convex-hull, surface, adsorption, reaction, or grain-boundary formula model identified. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "AssessedDatabase",
@@ -3334,9 +3559,11 @@
       {
         "id": "CalphadMolarEntropy",
         "uid": "b11c4ec0ddbfa4483cc0a65d6a8fb2cefa9687b9a86ebd11bfb968d4253ec022",
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No current Physlib CALPHAD/Gibbs-assessed database or per-mole-atoms formula correspondence identified; Helmholtz is not Gibbs."
+        "binding_ids": [
+          "calphad-binary-equilibrium"
+        ],
+        "status": "local",
+        "reason": "No current Physlib CALPHAD/Gibbs-assessed database or per-mole-atoms formula correspondence identified; Helmholtz is not Gibbs. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "CarrierDensity",
@@ -3362,9 +3589,11 @@
       {
         "id": "ChemicalPotential",
         "uid": "e707090e106994d3718f0afe5a20f2e60037f543334fa79b4a00360b7962d527",
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No current Physlib CALPHAD/Gibbs-assessed database or per-mole-atoms formula correspondence identified; Helmholtz is not Gibbs."
+        "binding_ids": [
+          "calphad-binary-equilibrium"
+        ],
+        "status": "local",
+        "reason": "No current Physlib CALPHAD/Gibbs-assessed database or per-mole-atoms formula correspondence identified; Helmholtz is not Gibbs. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "ClassificationAccuracy",
@@ -3394,7 +3623,7 @@
           "analog-device-metrology"
         ],
         "status": "local",
-        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
+        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "ConductanceWindow",
@@ -3431,7 +3660,7 @@
           "thermoset-cure-kinetics"
         ],
         "status": "local",
-        "reason": "No matching current Physlib Kamal cure or DiBenedetto glass-transition model identified. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
+        "reason": "No matching current Physlib Kamal cure or DiBenedetto glass-transition model identified. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "DepolarizationFactor",
@@ -3440,7 +3669,7 @@
           "composite-effective-medium"
         ],
         "status": "local",
-        "reason": "No matching current Physlib Nan/Hasselman-Johnson/depolarization/interfacial NEMD formula model identified. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
+        "reason": "No matching current Physlib Nan/Hasselman-Johnson/depolarization/interfacial NEMD formula model identified. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "DielectricTensor",
@@ -3463,7 +3692,7 @@
           "analog-device-metrology"
         ],
         "status": "local",
-        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
+        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "DynamicalMatrix",
@@ -3502,7 +3731,7 @@
           "arrhenius-ionic-transport"
         ],
         "status": "local",
-        "reason": "No matching current Physlib Einstein-MSD, Arrhenius, Nernst-Einstein, or cluster-expansion formula theorem identified. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
+        "reason": "No matching current Physlib Einstein-MSD, Arrhenius, Nernst-Einstein, or cluster-expansion formula theorem identified. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "ElectronAffinity",
@@ -3530,9 +3759,11 @@
       {
         "id": "EnergyAboveHull",
         "uid": "910d47d67a7308728e2f7d211a08c1590239c7b802cd75128f00cd103a719b84",
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No current Physlib matching reference-state, convex-hull, surface, adsorption, reaction, or grain-boundary formula model identified."
+        "binding_ids": [
+          "dft-stability-energy-differences"
+        ],
+        "status": "local",
+        "reason": "No current Physlib matching reference-state, convex-hull, surface, adsorption, reaction, or grain-boundary formula model identified. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "Entropy",
@@ -3596,14 +3827,16 @@
           "thermoset-cure-kinetics"
         ],
         "status": "local",
-        "reason": "No matching current Physlib Kamal cure or DiBenedetto glass-transition model identified. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
+        "reason": "No matching current Physlib Kamal cure or DiBenedetto glass-transition model identified. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "GrainBoundaryEnergy",
         "uid": "f81c9c7907dc4297e44624098da25bfd87c1654a4198853bb185891282c24528",
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No current Physlib matching reference-state, convex-hull, surface, adsorption, reaction, or grain-boundary formula model identified."
+        "binding_ids": [
+          "dft-stability-energy-differences"
+        ],
+        "status": "local",
+        "reason": "No current Physlib matching reference-state, convex-hull, surface, adsorption, reaction, or grain-boundary formula model identified. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "GroupVelocity",
@@ -3794,9 +4027,11 @@
       {
         "id": "MolarEnthalpy",
         "uid": "600d0860290d3326202768db7249339c34ac675deb2ee8528a92207d3878b00c",
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No current Physlib CALPHAD/Gibbs-assessed database or per-mole-atoms formula correspondence identified; Helmholtz is not Gibbs."
+        "binding_ids": [
+          "calphad-binary-equilibrium"
+        ],
+        "status": "local",
+        "reason": "No current Physlib CALPHAD/Gibbs-assessed database or per-mole-atoms formula correspondence identified; Helmholtz is not Gibbs. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "MolarEntropy",
@@ -3811,9 +4046,11 @@
       {
         "id": "MolarGibbsEnergy",
         "uid": "b048bc7569d568e2201557761eb758817674dd3a38b6f2379c5474f4cf91c66f",
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No current Physlib CALPHAD/Gibbs-assessed database or per-mole-atoms formula correspondence identified; Helmholtz is not Gibbs."
+        "binding_ids": [
+          "calphad-binary-equilibrium"
+        ],
+        "status": "local",
+        "reason": "No current Physlib CALPHAD/Gibbs-assessed database or per-mole-atoms formula correspondence identified; Helmholtz is not Gibbs. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "MolarHeatCapacity",
@@ -3871,14 +4108,16 @@
           "participation-ratio-bounds"
         ],
         "status": "local",
-        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "PhaseFraction",
         "uid": "7b55b11531084dcb2d5fd95100d62b2d68b787596e7c9712e06c011817ab5b8c",
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No current Physlib CALPHAD/Gibbs-assessed database or per-mole-atoms formula correspondence identified; Helmholtz is not Gibbs."
+        "binding_ids": [
+          "calphad-binary-equilibrium"
+        ],
+        "status": "local",
+        "reason": "No current Physlib CALPHAD/Gibbs-assessed database or per-mole-atoms formula correspondence identified; Helmholtz is not Gibbs. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "PhaseSpace3Phonon",
@@ -3908,7 +4147,7 @@
           "linear-elasticity-voigt-moduli"
         ],
         "status": "local",
-        "reason": "No current Physlib solid-elasticity/Voigt/EOS formula identification found. The bridge proves the signed inviscid stress/pressure contraction under its sign and unit conditions; identification with thermodynamic free-energy pressure remains unproved. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
+        "reason": "No current Physlib solid-elasticity/Voigt/EOS formula identification found. The bridge proves the signed inviscid stress/pressure contraction under its sign and unit conditions; identification with thermodynamic free-energy pressure remains unproved. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "Potential",
@@ -3980,7 +4219,7 @@
           "analog-device-metrology"
         ],
         "status": "local",
-        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
+        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "QHAGibbsEnergy",
@@ -4021,7 +4260,7 @@
           "analog-device-metrology"
         ],
         "status": "local",
-        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
+        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "SchottkyBarrierHeight[band_carrier=electron]",
@@ -4046,7 +4285,7 @@
           "analog-device-metrology"
         ],
         "status": "local",
-        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
+        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "ShearModulus",
@@ -4055,7 +4294,7 @@
           "linear-elasticity-voigt-moduli"
         ],
         "status": "local",
-        "reason": "No current Physlib solid-elasticity/Voigt/EOS formula identification found. The bridge proves the signed inviscid stress/pressure contraction under its sign and unit conditions; identification with thermodynamic free-energy pressure remains unproved. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
+        "reason": "No current Physlib solid-elasticity/Voigt/EOS formula identification found. The bridge proves the signed inviscid stress/pressure contraction under its sign and unit conditions; identification with thermodynamic free-energy pressure remains unproved. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "StateCoefficientOfVariation",
@@ -4092,9 +4331,11 @@
       {
         "id": "SurfaceEnergy",
         "uid": "306384aed4a1204fb7ca2347729de8d1816fa5fc32f4855a5d5f56a4d0fc1ddf",
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No current Physlib matching reference-state, convex-hull, surface, adsorption, reaction, or grain-boundary formula model identified."
+        "binding_ids": [
+          "dft-stability-energy-differences"
+        ],
+        "status": "local",
+        "reason": "No current Physlib matching reference-state, convex-hull, surface, adsorption, reaction, or grain-boundary formula model identified. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "Temperature",
@@ -4154,7 +4395,7 @@
           "composite-effective-medium"
         ],
         "status": "local",
-        "reason": "No matching current Physlib Nan/Hasselman-Johnson/depolarization/interfacial NEMD formula model identified. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
+        "reason": "No matching current Physlib Nan/Hasselman-Johnson/depolarization/interfacial NEMD formula model identified. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "ThermalConductivity[effective_medium=nan,orientation=random]",
@@ -4163,7 +4404,7 @@
           "composite-effective-medium"
         ],
         "status": "local",
-        "reason": "No matching current Physlib Nan/Hasselman-Johnson/depolarization/interfacial NEMD formula model identified. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
+        "reason": "No matching current Physlib Nan/Hasselman-Johnson/depolarization/interfacial NEMD formula model identified. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "ThermalConductivity[role=filler]",
@@ -4266,9 +4507,11 @@
       {
         "id": "TransitionTemperature",
         "uid": "8b9dd2a79db11c01e15d37f64a7bd0d9c95f09ea080a67f7912d9b8aabd7b132",
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No current Physlib CALPHAD/Gibbs-assessed database or per-mole-atoms formula correspondence identified; Helmholtz is not Gibbs."
+        "binding_ids": [
+          "calphad-binary-equilibrium"
+        ],
+        "status": "local",
+        "reason": "No current Physlib CALPHAD/Gibbs-assessed database or per-mole-atoms formula correspondence identified; Helmholtz is not Gibbs. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "VelocityAutocorrelation",
@@ -4280,9 +4523,11 @@
       {
         "id": "Voltage",
         "uid": "26831a0aabc3508a944405ec2fd763a0637abeeac1ed3d87df64c27392d638f4",
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No current Physlib matching reference-state, convex-hull, surface, adsorption, reaction, or grain-boundary formula model identified."
+        "binding_ids": [
+          "dft-stability-energy-differences"
+        ],
+        "status": "local",
+        "reason": "No current Physlib matching reference-state, convex-hull, surface, adsorption, reaction, or grain-boundary formula model identified. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "VolumetricHeatCapacity",
@@ -4309,7 +4554,7 @@
           "linear-elasticity-voigt-moduli"
         ],
         "status": "local",
-        "reason": "No current Physlib solid-elasticity/Voigt/EOS formula identification found. The bridge proves the signed inviscid stress/pressure contraction under its sign and unit conditions; identification with thermodynamic free-energy pressure remains unproved. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
+        "reason": "No current Physlib solid-elasticity/Voigt/EOS formula identification found. The bridge proves the signed inviscid stress/pressure contraction under its sign and unit conditions; identification with thermodynamic free-energy pressure remains unproved. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "ZT",
@@ -4338,7 +4583,7 @@
           "analog-device-metrology"
         ],
         "status": "local",
-        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
+        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "apply_nac_correction",
@@ -4404,9 +4649,11 @@
         "outputs": [
           "AdsorptionEnergy"
         ],
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No current Physlib matching reference-state, convex-hull, surface, adsorption, reaction, or grain-boundary formula model identified."
+        "binding_ids": [
+          "dft-stability-energy-differences"
+        ],
+        "status": "local",
+        "reason": "No current Physlib matching reference-state, convex-hull, surface, adsorption, reaction, or grain-boundary formula model identified. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "compute_band_gap",
@@ -4476,7 +4723,7 @@
           "linear-elasticity-voigt-moduli"
         ],
         "status": "local",
-        "reason": "No current Physlib solid-elasticity/Voigt/EOS formula identification found. The bridge proves the signed inviscid stress/pressure contraction under its sign and unit conditions; identification with thermodynamic free-energy pressure remains unproved. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
+        "reason": "No current Physlib solid-elasticity/Voigt/EOS formula identification found. The bridge proves the signed inviscid stress/pressure contraction under its sign and unit conditions; identification with thermodynamic free-energy pressure remains unproved. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "compute_bulk_modulus_qha",
@@ -4511,9 +4758,11 @@
         "outputs": [
           "CalphadMolarEntropy"
         ],
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No current Physlib CALPHAD/Gibbs-assessed database or per-mole-atoms formula correspondence identified; Helmholtz is not Gibbs."
+        "binding_ids": [
+          "calphad-binary-equilibrium"
+        ],
+        "status": "local",
+        "reason": "No current Physlib CALPHAD/Gibbs-assessed database or per-mole-atoms formula correspondence identified; Helmholtz is not Gibbs. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "compute_carrier_density",
@@ -4562,9 +4811,11 @@
         "outputs": [
           "ChemicalPotential"
         ],
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No current Physlib CALPHAD/Gibbs-assessed database or per-mole-atoms formula correspondence identified; Helmholtz is not Gibbs."
+        "binding_ids": [
+          "calphad-binary-equilibrium"
+        ],
+        "status": "local",
+        "reason": "No current Physlib CALPHAD/Gibbs-assessed database or per-mole-atoms formula correspondence identified; Helmholtz is not Gibbs. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "compute_conductance[transport_model=landauer]",
@@ -4739,9 +4990,11 @@
         "outputs": [
           "EnergyAboveHull"
         ],
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No current Physlib matching reference-state, convex-hull, surface, adsorption, reaction, or grain-boundary formula model identified."
+        "binding_ids": [
+          "dft-stability-energy-differences"
+        ],
+        "status": "local",
+        "reason": "No current Physlib matching reference-state, convex-hull, surface, adsorption, reaction, or grain-boundary formula model identified. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "compute_entropy",
@@ -4877,9 +5130,11 @@
         "outputs": [
           "GrainBoundaryEnergy"
         ],
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No current Physlib matching reference-state, convex-hull, surface, adsorption, reaction, or grain-boundary formula model identified."
+        "binding_ids": [
+          "dft-stability-energy-differences"
+        ],
+        "status": "local",
+        "reason": "No current Physlib matching reference-state, convex-hull, surface, adsorption, reaction, or grain-boundary formula model identified. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "compute_group_velocity",
@@ -5003,9 +5258,11 @@
         "outputs": [
           "Voltage"
         ],
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No current Physlib matching reference-state, convex-hull, surface, adsorption, reaction, or grain-boundary formula model identified."
+        "binding_ids": [
+          "dft-stability-energy-differences"
+        ],
+        "status": "local",
+        "reason": "No current Physlib matching reference-state, convex-hull, surface, adsorption, reaction, or grain-boundary formula model identified. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "compute_internal_energy",
@@ -5044,7 +5301,7 @@
           "arrhenius-ionic-transport"
         ],
         "status": "local",
-        "reason": "No matching current Physlib Einstein-MSD, Arrhenius, Nernst-Einstein, or cluster-expansion formula theorem identified. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
+        "reason": "No matching current Physlib Einstein-MSD, Arrhenius, Nernst-Einstein, or cluster-expansion formula theorem identified. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "compute_isotope_scattering",
@@ -5188,9 +5445,11 @@
         "outputs": [
           "MolarEnthalpy"
         ],
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No current Physlib CALPHAD/Gibbs-assessed database or per-mole-atoms formula correspondence identified; Helmholtz is not Gibbs."
+        "binding_ids": [
+          "calphad-binary-equilibrium"
+        ],
+        "status": "local",
+        "reason": "No current Physlib CALPHAD/Gibbs-assessed database or per-mole-atoms formula correspondence identified; Helmholtz is not Gibbs. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "compute_molecular_frequencies",
@@ -5241,7 +5500,7 @@
           "participation-ratio-bounds"
         ],
         "status": "local",
-        "reason": "No Physlib model covers this formula. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
+        "reason": "No Physlib model covers this formula. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "compute_phase_fractions",
@@ -5256,9 +5515,11 @@
         "outputs": [
           "PhaseFraction"
         ],
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No current Physlib CALPHAD/Gibbs-assessed database or per-mole-atoms formula correspondence identified; Helmholtz is not Gibbs."
+        "binding_ids": [
+          "calphad-binary-equilibrium"
+        ],
+        "status": "local",
+        "reason": "No current Physlib CALPHAD/Gibbs-assessed database or per-mole-atoms formula correspondence identified; Helmholtz is not Gibbs. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "compute_phase_space_3phonon",
@@ -5395,7 +5656,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "No current Physlib matching reference-state, convex-hull, surface, adsorption, reaction, or grain-boundary formula model identified."
+        "reason": "Catalog defect. The formula sums signed formula-unit coefficients c_rxn[i] times per-atom formation energies (FormationEnergy is in eV/atom), which is neither the reaction energy nor independent of the elemental references: for 2 Li + 1/2 O2 -> Li2O with Delta H_f(Li2O) = -2.0616 eV/atom it gives -2.0616 eV, and -1.6616 eV with mu_Li shifted by 0.3 eV, against the true -6.1848 eV. The reaction energy is Delta E_rxn = sum_i nu_i N_i Delta H_f,i with nu_i the signed formula-unit coefficients and N_i the atoms per reduced formula unit, per reaction as balanced (divide by the atoms of the reaction for eV/atom); it is independent of the elemental references exactly when the reaction is balanced (reactionEnergy_reference_independent_iff in OMAIStabilityEnergies). The ReactionEnergy node excludes the SISSO dGf(T) cousin, but its rxn-network representation computes from GibbsComputedEntry dGf(T); the edge should state which quantity it consumes."
       },
       {
         "id": "compute_seebeck",
@@ -5464,9 +5725,11 @@
         "outputs": [
           "SurfaceEnergy"
         ],
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No current Physlib matching reference-state, convex-hull, surface, adsorption, reaction, or grain-boundary formula model identified."
+        "binding_ids": [
+          "dft-stability-energy-differences"
+        ],
+        "status": "local",
+        "reason": "No current Physlib matching reference-state, convex-hull, surface, adsorption, reaction, or grain-boundary formula model identified. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "compute_thermal_expansion",
@@ -5499,9 +5762,11 @@
         "outputs": [
           "TransitionTemperature"
         ],
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No current Physlib CALPHAD/Gibbs-assessed database or per-mole-atoms formula correspondence identified; Helmholtz is not Gibbs."
+        "binding_ids": [
+          "calphad-binary-equilibrium"
+        ],
+        "status": "local",
+        "reason": "No current Physlib CALPHAD/Gibbs-assessed database correspondence identified. The local proof covers only a unary system or a congruent transformation at one composition, the equal-Gibbs-energy temperature; the alloy boundary locus of the catalog (liquidus, solidus, solvus, where a phase fraction reaches 0 or 1) is not proved. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "compute_velocity_autocorrelation",
@@ -5535,7 +5800,7 @@
           "linear-elasticity-voigt-moduli"
         ],
         "status": "local",
-        "reason": "No current Physlib solid-elasticity/Voigt/EOS formula identification found. The bridge proves the signed inviscid stress/pressure contraction under its sign and unit conditions; identification with thermodynamic free-energy pressure remains unproved. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
+        "reason": "No current Physlib solid-elasticity/Voigt/EOS formula identification found. The bridge proves the signed inviscid stress/pressure contraction under its sign and unit conditions; identification with thermodynamic free-energy pressure remains unproved. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "contract_conductance_window",
@@ -5622,7 +5887,7 @@
           "analog-device-metrology"
         ],
         "status": "local",
-        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
+        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "contract_diffusivity",
@@ -5893,7 +6158,7 @@
           "linear-elasticity-voigt-moduli"
         ],
         "status": "local",
-        "reason": "No current Physlib solid-elasticity/Voigt/EOS formula identification found. The bridge proves the signed inviscid stress/pressure contraction under its sign and unit conditions; identification with thermodynamic free-energy pressure remains unproved. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
+        "reason": "No current Physlib solid-elasticity/Voigt/EOS formula identification found. The bridge proves the signed inviscid stress/pressure contraction under its sign and unit conditions; identification with thermodynamic free-energy pressure remains unproved. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "contract_power_factor",
@@ -5948,7 +6213,7 @@
           "linear-elasticity-voigt-moduli"
         ],
         "status": "local",
-        "reason": "No current Physlib solid-elasticity/Voigt/EOS formula identification found. The bridge proves the signed inviscid stress/pressure contraction under its sign and unit conditions; identification with thermodynamic free-energy pressure remains unproved. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
+        "reason": "No current Physlib solid-elasticity/Voigt/EOS formula identification found. The bridge proves the signed inviscid stress/pressure contraction under its sign and unit conditions; identification with thermodynamic free-energy pressure remains unproved. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "contract_state_coefficient_of_variation",
@@ -6041,7 +6306,7 @@
           "linear-elasticity-voigt-moduli"
         ],
         "status": "local",
-        "reason": "No current Physlib solid-elasticity/Voigt/EOS formula identification found. The bridge proves the signed inviscid stress/pressure contraction under its sign and unit conditions; identification with thermodynamic free-energy pressure remains unproved. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
+        "reason": "No current Physlib solid-elasticity/Voigt/EOS formula identification found. The bridge proves the signed inviscid stress/pressure contraction under its sign and unit conditions; identification with thermodynamic free-energy pressure remains unproved. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "contract_zt",
@@ -6077,7 +6342,7 @@
           "composite-effective-medium"
         ],
         "status": "local",
-        "reason": "No matching current Physlib Nan/Hasselman-Johnson/depolarization/interfacial NEMD formula model identified. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
+        "reason": "No matching current Physlib Nan/Hasselman-Johnson/depolarization/interfacial NEMD formula model identified. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "dibenedetto_glass_transition",
@@ -6095,7 +6360,7 @@
           "thermoset-cure-kinetics"
         ],
         "status": "local",
-        "reason": "No matching current Physlib Kamal cure or DiBenedetto glass-transition model identified. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
+        "reason": "No matching current Physlib Kamal cure or DiBenedetto glass-transition model identified. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "dissipate_pulse_energy",
@@ -6113,7 +6378,7 @@
           "analog-device-metrology"
         ],
         "status": "local",
-        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
+        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "emit_thermionic_conductance",
@@ -6132,7 +6397,7 @@
           "analog-device-metrology"
         ],
         "status": "local",
-        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
+        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "evaluate_reservoir_classification",
@@ -6167,7 +6432,7 @@
           "arrhenius-ionic-transport"
         ],
         "status": "local",
-        "reason": "No matching current Physlib Einstein-MSD, Arrhenius, Nernst-Einstein, or cluster-expansion formula theorem identified. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
+        "reason": "No matching current Physlib Einstein-MSD, Arrhenius, Nernst-Einstein, or cluster-expansion formula theorem identified. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "fourier_to_dos",
@@ -6204,7 +6469,7 @@
           "composite-effective-medium"
         ],
         "status": "local",
-        "reason": "No matching current Physlib Nan/Hasselman-Johnson/depolarization/interfacial NEMD formula model identified. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
+        "reason": "No matching current Physlib Nan/Hasselman-Johnson/depolarization/interfacial NEMD formula model identified. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "identity_dm",
@@ -6238,7 +6503,7 @@
           "thermoset-cure-kinetics"
         ],
         "status": "local",
-        "reason": "No matching current Physlib Kamal cure or DiBenedetto glass-transition model identified. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
+        "reason": "No matching current Physlib Kamal cure or DiBenedetto glass-transition model identified. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "nan_effective_kappa",
@@ -6260,7 +6525,7 @@
           "composite-effective-medium"
         ],
         "status": "local",
-        "reason": "No matching current Physlib Nan/Hasselman-Johnson/depolarization/interfacial NEMD formula model identified. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
+        "reason": "No matching current Physlib Nan/Hasselman-Johnson/depolarization/interfacial NEMD formula model identified. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "nan_effective_kappa_aligned",
@@ -6282,7 +6547,7 @@
           "composite-effective-medium"
         ],
         "status": "local",
-        "reason": "No matching current Physlib Nan/Hasselman-Johnson/depolarization/interfacial NEMD formula model identified. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
+        "reason": "No matching current Physlib Nan/Hasselman-Johnson/depolarization/interfacial NEMD formula model identified. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "propagate_programming_error",
@@ -6301,7 +6566,7 @@
           "analog-device-metrology"
         ],
         "status": "local",
-        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
+        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "provide_born_charges",
@@ -6404,7 +6669,7 @@
           "analog-device-metrology"
         ],
         "status": "local",
-        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
+        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "resolve_effective_conductivity",
@@ -6575,9 +6840,11 @@
         "outputs": [
           "MolarGibbsEnergy"
         ],
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No current Physlib CALPHAD/Gibbs-assessed database or per-mole-atoms formula correspondence identified; Helmholtz is not Gibbs."
+        "binding_ids": [
+          "calphad-binary-equilibrium"
+        ],
+        "status": "local",
+        "reason": "No current Physlib CALPHAD/Gibbs-assessed database or per-mole-atoms formula correspondence identified; Helmholtz is not Gibbs. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "solve_ground_state",
@@ -6667,7 +6934,7 @@
           "analog-device-metrology"
         ],
         "status": "local",
-        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention. A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
+        "reason": "No matching current Physlib model was identified for the reviewed device-metrology formulas: conductance, drift, programming error, thermionic and Schottky emission, ramp, and retention. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       }
     ]
   },
@@ -6676,26 +6943,26 @@
     "nodes_mapped": 33,
     "operators_total": 133,
     "operators_mapped": 24,
-    "nodes_local": 16,
-    "operators_local": 21,
-    "bindings_total": 38,
+    "nodes_local": 27,
+    "operators_local": 32,
+    "bindings_total": 40,
     "source_correspondences": 5,
-    "compiled_bridges": 33,
+    "compiled_bridges": 35,
     "nodes_compiled": 21,
     "nodes_compiled_outputs": 20,
     "nodes_compiled_interpretations": 1,
     "operators_compiled": 24,
-    "operators_compiled_local": 21,
-    "nodes_compiled_local": 17,
-    "operators_proved": 45,
-    "nodes_proved": 38,
+    "operators_compiled_local": 32,
+    "nodes_compiled_local": 28,
+    "operators_proved": 56,
+    "nodes_proved": 49,
     "upstream_declarations_referenced": 36,
     "upstream_modules_referenced": 10,
     "relations": {
       "exact_definition": 1,
       "conditional": 27,
       "conceptual": 4,
-      "local": 6
+      "local": 8
     }
   }
 }

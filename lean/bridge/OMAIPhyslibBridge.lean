@@ -31,3 +31,5 @@ public import OMAIPhyslibRTAConductivity
 public import OMAIPhyslibParticipationRatio
 public import OMAIDeviceMetrology
 public import OMAIMaterialsTransport
+public import OMAIStabilityEnergies
+public import OMAICalphad
