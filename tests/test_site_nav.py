@@ -12,7 +12,7 @@ from pathlib import Path
 DOCS = Path(__file__).resolve().parents[1] / "docs"
 SITE_JS = (DOCS / "assets/site.js").read_text()
 
-CANONICAL = ["Map", "Playground", "Guide", "Document"]
+CANONICAL = ["Map", "Codes", "Playground", "Guide", "Document"]
 GITHUB = "https://github.com/openmaterials-ai/openmaterials-ai"
 
 # Pages whose header is injected by site.js (mount point + script include).
