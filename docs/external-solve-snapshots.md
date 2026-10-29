@@ -4,9 +4,7 @@
 version 1, request/lineage hashing, ordered node identities, and execution
 metadata's exclusion from identity are unchanged.
 
-The published OMAI 0.4.0 wheel does not include this API, although the source
-package version remains 0.4.0. Use the exact reviewed source revision required
-by your consumer until a compatible release is published.
+This API ships from openmaterials-ai 0.5.0. The 0.4.0 wheel does not include it.
 
 `build_request` and `parse_request` still return mutable dictionaries;
 `validate_request` still returns its report. Builders now detach caller-owned
@@ -28,8 +26,8 @@ assert validated.request_id == received.request_id
 wire_copy = validated.to_dict()
 ```
 
-The shape/hash check also works from an installed wheel built from a source
-revision that includes this API; it does not require a source map.
+The shape/hash check also works from an installed 0.5.0 or later wheel; it
+does not require a source map.
 
 `ExternalSolveRequestSnapshot` stores only immutable JSON. Each `to_dict()`
 returns independent nested data, including execution metadata. Its constructor
