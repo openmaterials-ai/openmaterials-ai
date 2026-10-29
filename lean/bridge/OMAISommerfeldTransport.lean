@@ -227,9 +227,10 @@ theorem sommerfeld_moments (Sigma0 mu : ℝ) {kT : ℝ} (hkT : 0 < kT) :
 /-- The Wiedemann-Franz law is exact for an energy-independent transport distribution: with
 `sigma = e^2 K_0`, `S = -(K_1 / K_0) / (e T)` and `kappa_e = (K_2 - K_1^2 / K_0) / T`, the
 thermopower vanishes and `kappa_e = (pi^2 / 3) (k_B / e)^2 sigma T`, the Sommerfeld Lorenz
-number. -/
-theorem wiedemannFranz_constantTransport {Sigma0 e kB T : ℝ} (mu : ℝ) (hS : Sigma0 ≠ 0)
-    (he : e ≠ 0) (hkB : 0 < kB) (hT : 0 < T) :
+number. No hypothesis on `Sigma0` is needed: `K_1 = 0`, so the Peltier correction `K_1^2 / K_0`
+vanishes for every `Sigma0`, and at `Sigma0 = 0` both sides are zero. -/
+theorem wiedemannFranz_constantTransport {Sigma0 e kB T : ℝ} (mu : ℝ) (he : e ≠ 0)
+    (hkB : 0 < kB) (hT : 0 < T) :
     -(kineticIntegral Sigma0 mu (kB * T) 1 / kineticIntegral Sigma0 mu (kB * T) 0) / (e * T) = 0 ∧
       (kineticIntegral Sigma0 mu (kB * T) 2 -
           kineticIntegral Sigma0 mu (kB * T) 1 ^ 2 / kineticIntegral Sigma0 mu (kB * T) 0) / T =
@@ -237,7 +238,7 @@ theorem wiedemannFranz_constantTransport {Sigma0 e kB T : ℝ} (mu : ℝ) (hS : 
   obtain ⟨h0, h1, h2⟩ := sommerfeld_moments Sigma0 mu (mul_pos hkB hT)
   rw [h0, h1, h2]
   refine ⟨by simp, ?_⟩
+  rw [zero_pow two_ne_zero, zero_div, sub_zero]
   field_simp
-  ring
 
 end OMAI.PhyslibBridge.Sommerfeld

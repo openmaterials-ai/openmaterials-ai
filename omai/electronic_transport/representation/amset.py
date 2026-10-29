@@ -199,8 +199,11 @@ AMSET_COMPUTE_STATIC_DIELECTRIC = OperatorRepresentationSpec(
     notes=(
         "Realized by VaspAmsetMaker's static+dielectric step: the static "
         "dielectric eps_0 is the high-frequency eps_inf plus the ionic "
-        "(lattice-polarization) contribution built from the Born charges and "
-        "phonon modes. The method scheme is ionic_contribution."
+        "(lattice-polarization) contribution: VASP's DFPT epsilon_ionic, the "
+        "mode-strength sum over the Born charges and the Gamma-point modes, "
+        "added to epsilon_static by atomate2 (vasp/flows/amset.py); the Born "
+        "charges and normal modes also feed the POP frequency. The method "
+        "scheme is ionic_contribution."
     ),
 )
 
@@ -209,8 +212,12 @@ _TRANSPORT_OP_NOTE = (
     "DAG): the dense uniform band structure interpolated by BoltzTraP2 "
     "(fite / sphere, bandstructure.py:10,53), then the Onsager transport "
     "tensors (transport.py:36-39) with momentum-relaxation-time scattering "
-    "(scattering_type: auto picks ADP + IMP + PIE + POP) via an iterative BTE. "
-    "The schemes are method=bte_ibte (iterative BTE), scattering=adp_imp_pop, "
+    "(scattering_type: auto picks ADP + IMP + PIE + POP): the momentum "
+    "relaxation time approximation for the elastic rates (ADP, IMP, PIE) and "
+    "the plain out-scattering rate for POP enter the Onsager integrals "
+    "directly, with no iterative solution of the linearized equation. The "
+    "schemes are method=bte_mrta (the BTE in "
+    "the momentum relaxation time approximation), scattering=adp_imp_pop, "
     "interpolation=boltztrap2."
 )
 

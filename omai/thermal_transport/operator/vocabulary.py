@@ -81,7 +81,10 @@ register_space_symbols({
     "Potential": {r"\{u\}", r"V_{\mathrm{provided}}"},
     "Temperature": {"T", r"T_{\mathrm{provided}}"},
     "ForceConstants[order=2]": {r"\Phi^{(2)}"},
-    "ForceConstants[order=3]": {r"\Phi^{(3)}"},
+    # The third-order force constants come with the cell they are defined on:
+    # the Maradudin-Fein Gruneisen formula reads its atomic masses m_i and
+    # Cartesian positions r_k(R) from that cell.
+    "ForceConstants[order=3]": {r"\Phi^{(3)}", "m", "r"},
     "BornCharges": {r"Z^*", r"Z^*_{provided}"},
     "DielectricTensor": {r"\varepsilon_\infty", r"\varepsilon_{\infty,provided}"},
     "BareDynamicalMatrix": {r"D^{bare}", "M"},
@@ -139,7 +142,7 @@ register_space_symbols({
     # Potential that drove the MD; per-atom energies are decomposable
     # from the same potential energy surface) — listed here so the
     # Irving-Kirkwood / Velocity-Verlet formulas can reference them.
-    "Trajectory": {"r", "v", "E", r"F^{md}"},
+    "Trajectory": {"r", "v", "E", r"F^{md}", "W"},
     "HeatCurrent": {"J"},
     "HeatCurrentACF": {"Jcorr"},
     "VelocityAutocorrelation": {"Cv"},

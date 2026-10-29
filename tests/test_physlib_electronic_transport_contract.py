@@ -110,7 +110,7 @@ SOMMERFELD = {
     ],
     "key_theorems": {
         "sommerfeld_moments": " (Sigma0 mu : ℝ) {kT : ℝ} (hkT : 0 < kT) :\n    kineticIntegral Sigma0 mu kT 0 = Sigma0 ∧ kineticIntegral Sigma0 mu kT 1 = 0 ∧\n      kineticIntegral Sigma0 mu kT 2 = Sigma0 * kT ^ 2 * (π ^ 2 / 3)",
-        "wiedemannFranz_constantTransport": " {Sigma0 e kB T : ℝ} (mu : ℝ) (hS : Sigma0 ≠ 0)\n    (he : e ≠ 0) (hkB : 0 < kB) (hT : 0 < T) :\n    -(kineticIntegral Sigma0 mu (kB * T) 1 / kineticIntegral Sigma0 mu (kB * T) 0) / (e * T) = 0 ∧\n      (kineticIntegral Sigma0 mu (kB * T) 2 -\n          kineticIntegral Sigma0 mu (kB * T) 1 ^ 2 / kineticIntegral Sigma0 mu (kB * T) 0) / T =\n        π ^ 2 / 3 * (kB / e) ^ 2 * (e ^ 2 * kineticIntegral Sigma0 mu (kB * T) 0) * T",
+        "wiedemannFranz_constantTransport": " {Sigma0 e kB T : ℝ} (mu : ℝ) (he : e ≠ 0)\n    (hkB : 0 < kB) (hT : 0 < T) :\n    -(kineticIntegral Sigma0 mu (kB * T) 1 / kineticIntegral Sigma0 mu (kB * T) 0) / (e * T) = 0 ∧\n      (kineticIntegral Sigma0 mu (kB * T) 2 -\n          kineticIntegral Sigma0 mu (kB * T) 1 ^ 2 / kineticIntegral Sigma0 mu (kB * T) 0) / T =\n        π ^ 2 / 3 * (kB / e) ^ 2 * (e ^ 2 * kineticIntegral Sigma0 mu (kB * T) 0) * T",
     },
     "not_cited": {"fermiWindow_neg", "integral_fermiWindow", "integral_mul_fermiWindow",
                   "integral_sq_mul_fermiWindow", "kineticIntegral_eq"},
@@ -157,7 +157,7 @@ def test_lean_definitions_are_the_reviewed_transcriptions(binding_id):
         assert text in source, text
     for name, statement in spec["key_theorems"].items():
         assert re.search(r"theorem " + name + r"\b", source), name
-        assert statement in source, name
+        assert "theorem " + name + statement + " :=" in source, name
     for word in ("sorry", "admit", "axiom", "native_decide", "unsafe", "set_option"):
         assert not re.search(r"\b" + word + r"\b", source), word
 
@@ -180,7 +180,7 @@ def test_sommerfeld_support_module_is_cited_without_a_contract():
         assert text in source, text
     for name, statement in SOMMERFELD["key_theorems"].items():
         assert re.search(r"theorem " + name + r"\b", source), name
-        assert statement in source, name
+        assert "theorem " + name + statement + " :=" in source, name
     for word in ("sorry", "admit", "axiom", "native_decide", "unsafe", "set_option"):
         assert not re.search(r"\b" + word + r"\b", source), word
     contracts = {path.name for path in (ROOT / "lean/bridge").glob("*-formula-contract.json")}
@@ -264,7 +264,7 @@ def test_conventions_a_user_could_get_wrong_are_stated():
                    "0 < N < sum_b g_b", "uniqueness fails there", "1 cm^2/(V s) = 1e-4 m^2/(V s)"):
         assert phrase in statistics, phrase
     dielectric = " ".join(_binding("static-dielectric-ionic-response")["conditions"])
-    for phrase in ("frequencies and eigenvectors together", "3N - 3 optical coordinates",
+    for phrase in ("frequencies and eigenvectors the catalog lists as inputs", "3N - 3 optical coordinates",
                    "sum_kappa Z*_kappa = 0", "e^2/(eps_0 Omega)", "not individual LO-TO pairs",
                    "no imaginary Gamma mode"):
         assert phrase in dielectric, phrase

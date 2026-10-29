@@ -99,6 +99,8 @@ _N_q = sp.Symbol("N_q", positive=True, integer=True)
 _N_modes = 3 * _N_atoms
 
 _M = sp.IndexedBase("M")
+_m_atom = sp.IndexedBase("m")
+_r_pos = sp.IndexedBase("r")
 _Phi2 = sp.IndexedBase(r"\Phi^{(2)}")
 _Phi3 = sp.IndexedBase(r"\Phi^{(3)}")
 _D = sp.IndexedBase("D")
@@ -1183,13 +1185,23 @@ _DOS_FORMULA = sp.Eq(
     ) / _N_q,
 )
 
-# γ_qν = −(1 / (6 ω_qν² M)) Σ_{ij,Δ} Φ³_{ijk,R,R'} · r_k^Δ · e*_iqν e_jqν
-# (Maradudin-Fein, schematic): not fully expanded — references the
-# standard derivative of ω wrt volume.
+# Maradudin-Fein mode Gruneisen parameter: the third-order force constants
+# contracted with the mode eigenvector on the first two (mass-weighted)
+# coordinates, the Bloch phase of the second cell and the Cartesian position
+# of the third atom. i, j, k run over the 3N (atom, Cartesian) coordinates of
+# the cell, R and R' over the lattice vectors of the second and third atoms;
+# m_i is the mass of the atom carrying coordinate i and r_k(R') the position
+# component of the atom carrying coordinate k in cell R'.
 _GRUNEISEN_FORMULA = sp.Eq(
     _gammaG[_q, _nu],
-    -sp.Sum(_Phi3[_i, _j, _k, _R, _Rp], (_i, 1, _N_modes), (_j, 1, _N_modes)) /
-    (6 * _omega[_q, _nu] ** 2),
+    -sp.Sum(
+        _Phi3[_i, _j, _k, _R, _Rp]
+        * sp.conjugate(_e[_i, _q, _nu]) * _e[_j, _q, _nu]
+        * sp.exp(sp.I * _q * _R) * _r_pos[_k, _Rp]
+        / sp.sqrt(_m_atom[_i] * _m_atom[_j]),
+        (_i, 1, _N_modes), (_j, 1, _N_modes), (_k, 1, _N_modes),
+        (_R, -sp.oo, sp.oo), (_Rp, -sp.oo, sp.oo),
+    ) / (6 * _omega[_q, _nu] ** 2),
 )
 
 # P3_qν = (1/N) Σ_{q'ν'ν''} [δ(ω − ω' − ω'') + 2 δ(ω + ω' − ω'')]
@@ -1227,13 +1239,22 @@ compute_gruneisen = Operator(
     schemes={"gruneisen_method": "maradudin_fein"},
     formula=_GRUNEISEN_FORMULA,
     description=(
-        "Mode Grüneisen parameter from FC2, FC3 and the harmonic eigensystem "
-        "(Maradudin-Fein closed form). The alternative is finite-difference: "
-        "rerun the harmonic problem at slightly deformed cells and finite-"
-        "difference ω(V). Both converge but the two estimators have different "
-        "noise / convergence behaviour at small q-mesh, so gruneisen_method "
-        "records which one a code emits. Per-mode γ is gauge-invariant: it "
-        "depends on ω_qν, not on the eigenvector phase."
+        "Mode Gruneisen parameter from the third-order force constants and the "
+        "harmonic eigensystem in the Maradudin-Fein form: gamma_qnu = "
+        "-(1/(6 omega_qnu^2)) sum_{ijk} sum_{R R'} Phi3_{ijk}(R, R') e*_{i,qnu} "
+        "e_{j,qnu} exp(i q.R) r_k(R') / sqrt(m_i m_j), with i, j, k the (atom, "
+        "Cartesian) coordinates of the primitive cell, e the eigenvector of "
+        "mode (q, nu), m_i the mass of the atom carrying coordinate i and "
+        "r_k(R') the Cartesian position of the atom carrying coordinate k in "
+        "cell R', both read from the cell the force constants are defined on. The "
+        "alternative is finite differences: rerun the harmonic problem at "
+        "slightly deformed cells and difference omega(V). Both converge but "
+        "with different noise and convergence at small q mesh, so "
+        "gruneisen_method records which one a code emits. Per-mode gamma is "
+        "invariant under the eigenvector phase because e enters as e* e. "
+        "SUPERSEDES the schematic form -sum_{ij} Phi3_{ijk}(R, R')/(6 "
+        "omega_qnu^2), which contracted Phi3 over two indices with no "
+        "eigenvectors, masses, phases or positions and left k, R and R' free."
     ),
 )
 
@@ -1276,6 +1297,7 @@ _r_traj = sp.IndexedBase("r")
 _v_traj = sp.IndexedBase("v")
 _F_md = sp.IndexedBase("F^{md}")
 _E_per_atom = sp.IndexedBase("E")
+_W_virial = sp.IndexedBase("W")
 _J_heat = sp.IndexedBase("J")
 _Jcorr = sp.IndexedBase("Jcorr")
 _Cv_corr = sp.IndexedBase("Cv")
@@ -1292,11 +1314,13 @@ _RUN_MD_FORMULA = sp.Eq(
     + _F_md[_i, _alpha, _t_idx] * _dt**2 / 2,
 )
 
-# compute_heat_current: Irving-Kirkwood form (condensed).
-# J_α(t) = (1/V) [ Σ_i E_i(t) v_{iα}(t) + (1/2) Σ_i r_{iα}(t) F_{iα}(t) v_{iα}(t) ]
-# The pair-sum form is the textbook IK; this single-atom condensation is
-# the schematic the validator can check against the output field's (α,t)
-# index signature.
+# compute_heat_current: convective term plus the per-atom virial term,
+# J_α(t) = (1/V) [ Σ_i E_i(t) v_{iα}(t) + Σ_i Σ_β W_{iαβ}(t) v_{iβ}(t) ],
+# with W_{iαβ} the per-atom virial: (1/2) Σ_{j≠i} r_{ij,α} F_{ij,β} for a pair
+# potential, the Fan et al. (2015) form for many-body potentials. The per-atom
+# virial is declared, not expanded, so the formula is origin independent and
+# well defined under periodic boundaries, and it keeps the (α, t) signature
+# the validator checks against the output field.
 _HEAT_CURRENT_FORMULA = sp.Eq(
     _J_heat[_alpha, _t_idx],
     (
@@ -1305,11 +1329,10 @@ _HEAT_CURRENT_FORMULA = sp.Eq(
             (_i, 1, _n_atoms_md),
         )
         + sp.Sum(
-            _r_traj[_i, _alpha, _t_idx]
-            * _F_md[_i, _alpha, _t_idx]
-            * _v_traj[_i, _alpha, _t_idx],
+            _W_virial[_i, _alpha, _beta, _t_idx] * _v_traj[_i, _beta, _t_idx],
             (_i, 1, _n_atoms_md),
-        ) / 2
+            (_beta, 1, 3),
+        )
     ) / _V_cell,
 )
 
@@ -1352,13 +1375,15 @@ _COMPUTE_MSD_FORMULA = sp.Eq(
     ) / (_n_atoms_md * _n_lag),
 )
 
-# fourier_to_dos: g(ω) = (1/π) ∫₀^∞ Cv(τ) cos(ωτ) dτ (Wiener-Khinchin).
+# fourier_to_dos: g(ω) = (6 / (π Cv(0))) ∫₀^∞ Cv(τ) cos(ωτ) dτ, the vibrational
+# density of states per atom, normalized to the three degrees of freedom of
+# one atom on ω > 0 (Wiener-Khinchin).
 _FOURIER_TO_DOS_FORMULA = sp.Eq(
     _g_DOS_md[_omega_bin_md],
-    sp.Integral(
+    6 * sp.Integral(
         _Cv_corr[_tau] * sp.cos(_omega_bin_md * _tau),
         (_tau, 0, sp.oo),
-    ) / sp.pi,
+    ) / (sp.pi * _Cv_corr[0]),
 )
 
 
@@ -1395,14 +1420,27 @@ compute_heat_current = Operator(
     schemes={"definition": "irving_kirkwood"},
     formula=_HEAT_CURRENT_FORMULA,
     description=(
-        "Per-timestep heat current J_α(t) from the MD trajectory. The "
-        "canonical decomposition is Irving-Kirkwood: convective term "
-        "Σ_i E_i v_{i,α} plus the pair virial contribution (1/2) Σ_{i≠j} "
-        "r_{ij,α} (F_{ij}·v_i). Alternatives ('hardy', 'virial') differ in "
-        "how the per-atom energy E_i is decomposed for many-body "
-        "potentials; the scheme `definition` records the "
-        "choice. Stays a HiddenSpace per-element (MD noise); the "
-        "gauge-invariant content is the time correlation."
+        "Per-timestep heat current J_alpha(t) from the MD trajectory: the "
+        "convective term sum_i E_i v_{i,alpha} plus the virial term sum_i "
+        "sum_beta W_{i,alpha beta} v_{i,beta}, over the cell volume, with E_i "
+        "the per-atom energy and W_{i,alpha beta} the per-atom virial: (1/2) "
+        "sum_{j != i} r_{ij,alpha} F_{ij,beta} for a pair potential (r_ij = "
+        "r_i - r_j under the minimum image, F_ij the force on i from j) and "
+        "the Fan et al. form (Phys. Rev. B 92, 094301, 2015) for many-body "
+        "potentials, which GPUMD evaluates in its force kernels (compute_hac "
+        "correlates it); LAMMPS compute heat/flux gives the pair form with "
+        "compute stress/atom and needs compute centroid/stress/atom for "
+        "many-body potentials. Written with the per-atom virial the current is "
+        "independent "
+        "of the origin and well defined under periodic boundaries. "
+        "Alternatives ('hardy', 'virial') differ in how E_i and W_i are "
+        "decomposed for many-body potentials; the scheme `definition` records "
+        "the choice. SUPERSEDES the condensed form (1/2) sum_i r_{i,alpha} "
+        "F_{i,alpha} v_{i,alpha}, which multiplied each atom's total force by "
+        "its own absolute position (origin dependent, ill defined under "
+        "periodic images, off-diagonal stress dropped). Stays a HiddenSpace "
+        "per-element (MD noise); the gauge-invariant content is the time "
+        "correlation."
     ),
 )
 
@@ -1412,12 +1450,14 @@ autocorrelate_heat_current = Operator(
     outputs=(HEAT_CURRENT_ACF,),
     formula=_AUTOCORRELATE_HEAT_CURRENT_FORMULA,
     description=(
-        "Time-correlation tensor ⟨J_α(0) J_β(τ)⟩ from a stationary segment "
-        "of the heat-current trajectory. Implementations are numerically "
-        "equivalent under the periodic-padding assumption — direct O(n_lag "
-        "· n_origins) double sum or O(n log n) FFT via the Wiener-Khinchin "
-        "theorem; both produce the same Green-Kubo κ integrand. The output "
-        "is the Green-Kubo κ integrand."
+        "Time-correlation tensor <J_alpha(0) J_beta(tau)> from a stationary "
+        "segment of the heat-current trajectory, the Green-Kubo kappa "
+        "integrand. The direct O(n_lag n_origins) double sum over origins is "
+        "the linear correlation; an O(n log n) FFT via the Wiener-Khinchin "
+        "theorem reproduces it when the record is zero-padded to twice its "
+        "length, while an unpadded FFT gives the circular correlation of one "
+        "period, which differs by the wrap-around terms at every nonzero lag. Both "
+        "routes feed the same Green-Kubo integrand."
     ),
 )
 
@@ -1428,8 +1468,9 @@ compute_velocity_autocorrelation = Operator(
     formula=_COMPUTE_VELOCITY_AUTOCORRELATION_FORMULA,
     description=(
         "Velocity autocorrelation function ⟨v(0)·v(τ)⟩ averaged over atoms "
-        "and time origins. The FT of Cv(τ) yields the phonon DOS — see the "
-        "`fourier_to_dos` edge."
+        "and time origins, summed over the three Cartesian components, per "
+        "atom. The cosine transform of Cv(tau) yields the vibrational density "
+        "of states; see the `fourier_to_dos` edge."
     ),
 )
 
@@ -1456,12 +1497,20 @@ fourier_to_dos = Operator(
     schemes={"dos_broadening": "gaussian"},
     formula=_FOURIER_TO_DOS_FORMULA,
     description=(
-        "Classical-MD route to the phonon DOS via the Wiener-Khinchin "
-        "theorem: g(ω) = (1/π) ∫₀^∞ Cv(τ) cos(ωτ) dτ. Pattern-C "
+        "Classical-MD route to the vibrational density of states via the "
+        "Wiener-Khinchin theorem: g(omega) = (6/(pi Cv(0))) int_0^inf Cv(tau) "
+        "cos(omega tau) dtau, with Cv the per-atom velocity autocorrelation "
+        "summed over the three Cartesian components, so that g integrates to "
+        "3 per atom on omega > 0 (Cv(0) = 3 k_B T/m in classical equipartition "
+        "for one mass; uniform mode weights need one atomic mass or a "
+        "mass-weighted Cv). Pattern-C "
         "alternative producer of PhononDOS alongside the harmonic-tier "
-        "compute_dos edge; both target the same PhononDOS state, but the "
-        "MD route is anharmonic-inclusive (broadened by lifetime effects) "
-        "while compute_dos is the harmonic δ-sum."
+        "compute_dos edge, which is normalized per primitive cell (3 N "
+        "states); which normalization an instance carries is a condition, as "
+        "for ReactionEnergy. The MD route includes anharmonic lifetime "
+        "broadening while compute_dos is the harmonic delta sum. SUPERSEDES "
+        "the (1/pi) int Cv cos form, which had units of velocity squared times "
+        "time and integrated to Cv(0)/2 over omega > 0, not to a count of states."
     ),
 )
 

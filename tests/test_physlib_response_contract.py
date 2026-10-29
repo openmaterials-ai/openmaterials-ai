@@ -63,7 +63,7 @@ OUTPUT = "HeatCapacityConstantP"
 OPERATOR_UID = "79a11e58595c8b262c104330dcfc622f13a787da6bae856cf4f40b57a6a93639"
 FORMULA_SHA = "97ed2e0d3a11efad01a3ab0017d21be3da3009446b0b9364673fad4b8fdcb0f1"
 OUTPUT_UID = "08057e4554a3420c933329b3821de9295e2b5950191e23cafe310b0a15adc7b6"
-CATALOG_ID_SHA = "7f60064e1533914c046b01c7b8723281def520baae4247b452e867f578c2ce8b"
+CATALOG_ID_SHA = "bdb1c8a87a616ce86c1ceb160967b5ab33ec875cd0ec234e7949563c21d718fb"
 CP_SUBJECTS = frozenset({("operator", OPERATOR), ("node", OUTPUT)})
 BASELINE_OPERATORS = frozenset({
     "compute_entropy", "compute_free_energy", "compute_heat_capacity",
@@ -142,8 +142,8 @@ BASELINE_PAIRS = [{'module': 'OMAIPhyslibSemantics', 'name': 'OMAI.PhyslibBridge
  {'module': 'OMAIPhyslibSemantics', 'name': 'OMAI.PhyslibBridge.totalThermalConductivity'}]
 # Scientific protocol, golden vectors, historical package and seven retained proofs.
 PRESERVED_HASHES = {
-    "map/log.jsonl": "4f60989d5eb19697494898f98e10069cd8ab88726036a072bd1f406f89f4dd88",
-    "docs/data/version.json": "dc549d19669a28d7bc523ae303c0179a30addf700e48585dd210546990dc3711",
+    "map/log.jsonl": "f46a9fb8b35b0582324276c634c3cd753c54f59a2ea0cd0c9c72a1703de88afd",
+    "docs/data/version.json": "9bed9e316b082fb44068fee0a4a242437a16e1884ae7642ff0f762a059f15218",
     "omai/operator/identity.py": "e8be3c3b86521e19c9ed1a855f33d2b187bbc2fb9158f269ae219855295ef9f0",
     "omai/lineages.py": "3266c424e4920d11bd54a1e8f0fad0fc8aeeb8a2dcfb4c2dbb3da66a61a5c552",
     "omai/schema.py": "69ee90c2eebf6f891abcc9cc31351b885d23a6f3a6d37e46b810959474bd2f36",

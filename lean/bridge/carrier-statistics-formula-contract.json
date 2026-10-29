@@ -6,7 +6,7 @@
   "operators": [
     {
       "id": "compute_carrier_mobility",
-      "uid": "c168368c90fa77e7b76a5668757de7f74d5fbb02b07c73544307cd48aa42d8e9",
+      "uid": "8de71440c5216dc390d9e5595d6e7dcc50a672fbc2c7c36400c04602cd1d2048",
       "formula_sha256": "21573bfd16d2a71a3fe127fb2685490564e562befd3119c79c02853ff268a121",
       "formula_latex": "\\mu_{e} = \\mu^{bte}{\\left(\\mathcal{S},\\varepsilon_{0},C,\\omega \\right)}",
       "lean_definition": "OMAI.PhyslibBridge.ElectronicStatistics.boltzmannMobility"

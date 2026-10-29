@@ -109,7 +109,8 @@ TRANCHES = (
             ("node", "SurfaceEnergy"), ("node", "Voltage"),
             ("operator", "compute_adsorption_energy"), ("operator", "compute_energy_above_hull"),
             ("operator", "compute_grain_boundary_energy"), ("operator", "compute_intercalation_voltage"),
-            ("operator", "compute_surface_energy"),
+            ("operator", "compute_surface_energy"), ("operator", "compute_reaction_energy"),
+            ("node", "ReactionEnergy"),
             ("node", "CalphadMolarEntropy"), ("node", "ChemicalPotential"), ("node", "MolarEnthalpy"),
             ("node", "MolarGibbsEnergy"), ("node", "PhaseFraction"), ("node", "TransitionTemperature"),
             ("operator", "compute_calphad_entropy"), ("operator", "compute_chemical_potentials"),
@@ -117,8 +118,8 @@ TRANCHES = (
             ("operator", "compute_transition_temperature"), ("operator", "solve_equilibrium")}),
         "pairs": tuple(
             [{"name": "OMAI.PhyslibBridge.Stability." + name, "module": "OMAIStabilityEnergies"}
-             for name in ("adsorptionEnergy", "energyAboveHull", "grainBoundaryEnergy",
-                          "intercalationVoltage", "surfaceEnergy")]
+             for name in ("adsorptionEnergy", "catalogReactionEnergy", "energyAboveHull",
+                          "grainBoundaryEnergy", "intercalationVoltage", "surfaceEnergy")]
             + [{"name": "OMAI.PhyslibBridge.Calphad." + name, "module": "OMAICalphad"}
                for name in ("calphadEntropy", "chemicalPotentials", "equilibriumGibbs", "leverFractions",
                             "molarEnthalpy", "transitionTemperature")]),
@@ -196,10 +197,10 @@ TRANCHES = (
 # The one frozen global coverage ledger of the published bindings.
 GLOBAL_COVERAGE = {
     "nodes_total": 136, "nodes_mapped": 35, "operators_total": 133, "operators_mapped": 29,
-    "nodes_local": 37, "operators_local": 47, "bindings_total": 52, "source_correspondences": 5,
+    "nodes_local": 38, "operators_local": 48, "bindings_total": 52, "source_correspondences": 5,
     "compiled_bridges": 47, "nodes_compiled": 26, "nodes_compiled_outputs": 25,
-    "nodes_compiled_interpretations": 1, "operators_compiled": 29, "operators_compiled_local": 47,
-    "nodes_compiled_local": 41, "operators_proved": 76, "nodes_proved": 67,
+    "nodes_compiled_interpretations": 1, "operators_compiled": 29, "operators_compiled_local": 48,
+    "nodes_compiled_local": 42, "operators_proved": 77, "nodes_proved": 68,
     "upstream_declarations_referenced": 36, "upstream_modules_referenced": 10,
     "relations": {"exact_definition": 1, "conditional": 29, "conceptual": 4, "local": 18},
 }

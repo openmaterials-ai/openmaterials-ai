@@ -2,7 +2,7 @@
   "schema_version": 1,
   "scope": "Reviewed OMAI formula endpoints and exact Lean proof source for local theorems about derivatives of an atomistic or cell energy, with no Physlib physics counterpart. Hash and compiled-name checks detect drift and provenance errors; they are not automatic symbolic translation or numerical validation.",
   "source_path": "lean/bridge/OMAICellElasticity.lean",
-  "source_sha256": "7c2e02a8b5ac516416570f85ca49695d33e013a4a8cec4999d4cc7da2561c31a",
+  "source_sha256": "c0663d570244e4c53317c1c7cbb193d5acd2429766316cc79685474bc7989e3d",
   "operators": [
     {
       "id": "compute_elastic_constants",

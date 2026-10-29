@@ -115,7 +115,7 @@ BASELINE_PAIRS = [{'module': 'OMAIPhyslibSemantics', 'name': 'OMAI.PhyslibBridge
 BASELINE_SUBJECTS = ({("operator", name) for name in BASELINE_OPERATORS}
                      | {("node", name) for name in BASELINE_NODES})
 CP_ERA_CONTRACTS = frozenset(LEGACY_CONTRACT_HASHES) | {CP_CONTRACT_NAME}
-CATALOG_ID_SHA = "7f60064e1533914c046b01c7b8723281def520baae4247b452e867f578c2ce8b"
+CATALOG_ID_SHA = "bdb1c8a87a616ce86c1ceb160967b5ab33ec875cd0ec234e7949563c21d718fb"
 
 # Frozen thermal Gruneisen tranche.
 GAMMA_BINDING_ID = "harmonic-static-thermal-gruneisen-identity"

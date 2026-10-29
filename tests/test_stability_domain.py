@@ -193,11 +193,13 @@ def test_stability_edges_are_not_sympy_executable():
     assert compute_reaction_energy.is_executable_in_sympy
 
 
-def test_reaction_energy_is_the_closed_form_v2_supersede():
+def test_reaction_energy_is_the_closed_form_v3_supersede():
     """The whole-map physics review (B1) superseded the opaque v1 reaction-energy
-    edge with the closed-form stoichiometric sum dE_rxn = Sum_i c_rxn_i H_f_i, now
-    executable and dimensionally proven. The store log records the supersede:
-    the v1 uid is marked superseded_by the v2 uid, the v2 edge is live."""
+    edge with the closed-form stoichiometric sum dE_rxn = Sum_i c_rxn_i H_f_i, and
+    the 2026-10-29 tranche review (issue 192) superseded that v2 with
+    dE_rxn = Sum_i c_rxn_i N^fu_i H_f_i, the formula-unit coefficients now
+    multiplying the formation energy of the formula unit. The store log records
+    both supersedes: v1 is superseded_by v2, v2 superseded_by v3, v3 is live."""
     import sympy as sp
     from pathlib import Path
     from omai.operator.dimcheck import dimension_of
@@ -210,21 +212,27 @@ def test_reaction_energy_is_the_closed_form_v2_supersede():
     # The formula is a closed-form Sum, not an opaque applied function.
     assert isinstance(op.formula, sp.Eq)
     assert op.formula.rhs.has(sp.Sum)
+    assert "N^{fu}" in sp.srepr(op.formula)
     # The dimensional gate proves both sides are ENERGY.
     assert dimension_of(op.formula.lhs) == ENERGY
     assert dimension_of(op.formula.rhs) == ENERGY
 
     OLD_V1_UID = ("fd5d0e69fde548b23498f3ef5908ae15c2b32e7140cbdd9f0773175fa0"
                   "cc82e8")
-    v2_uid = edge_id(op, node_id)
-    assert v2_uid != OLD_V1_UID
+    OLD_V2_UID = ("2f0b118bbe3ef2e43e0d70c9b5d5316cc28dc4d0019ad8e7d0fc463cc6"
+                  "938a9c")
+    v3_uid = edge_id(op, node_id)
+    assert v3_uid not in (OLD_V1_UID, OLD_V2_UID)
     m = Store(Path(__file__).resolve().parents[1] / "map").read()
-    # v1 is superseded by v2; v2 is live.
-    assert m["edges"][OLD_V1_UID]["superseded_by"] == [v2_uid]
-    assert v2_uid in m["edges"]
-    # The output node (ReactionEnergy) is unchanged: same uid on both edges.
+    # v1 is superseded by v2, v2 by v3; v3 is live.
+    assert m["edges"][OLD_V1_UID]["superseded_by"] == [OLD_V2_UID]
+    assert m["edges"][OLD_V2_UID]["superseded_by"] == [v3_uid]
+    assert v3_uid in m["edges"]
+    assert "superseded_by" not in m["edges"][v3_uid]
+    # The output node (ReactionEnergy) is unchanged: same uid on all three edges.
     assert m["edges"][OLD_V1_UID]["identity"]["output"] == \
-        m["edges"][v2_uid]["identity"]["output"]
+        m["edges"][OLD_V2_UID]["identity"]["output"] == \
+        m["edges"][v3_uid]["identity"]["output"]
 
 
 def test_edge_wiring_and_schemes():

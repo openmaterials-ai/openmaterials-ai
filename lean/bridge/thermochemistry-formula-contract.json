@@ -2,7 +2,7 @@
   "schema_version": 1,
   "scope": "Reviewed OMAI formula endpoints and exact Lean proof source for local theorems with no Physlib physics counterpart. Hash and compiled-name checks detect drift and provenance errors; they are not automatic symbolic translation or numerical validation.",
   "source_path": "lean/bridge/OMAICalphad.lean",
-  "source_sha256": "1864ba3c15e2bcd98fcbb932d6e3b6d450e2499d40b46f5537ac8cc9194d4852",
+  "source_sha256": "6b8c4f275d905a5279e4203d3b0d872211344482103810c0134cc04e92f74b8e",
   "operators": [
     {
       "id": "solve_equilibrium",

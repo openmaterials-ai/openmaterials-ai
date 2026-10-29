@@ -2,7 +2,7 @@
   "schema_version": 1,
   "scope": "Reviewed OMAI formula endpoints and exact Lean proof source for local theorems about derivatives of an atomistic or cell energy, with no Physlib physics counterpart. Hash and compiled-name checks detect drift and provenance errors; they are not automatic symbolic translation or numerical validation.",
   "source_path": "lean/bridge/OMAIMolecularModes.lean",
-  "source_sha256": "17ee78d8a15e7db57d0a416d4ba2dc9f40ad8e3089fb79ded98c7bc9a03a950b",
+  "source_sha256": "eea0883585af4e1ca7d8bc19613dcbfb014bff335ec4d3c0ffc75acdbc5214ad",
   "operators": [
     {
       "id": "compute_molecular_frequencies",

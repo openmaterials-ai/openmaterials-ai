@@ -13,7 +13,7 @@
   var REPO = 'https://github.com/openmaterials-ai/openmaterials-ai';
   var BLOB = REPO + '/blob/main/';
   // Static fallback, shown until data/version.json answers (or if it cannot be read).
-  var VERSION = 'f5a7cb57594f';
+  var VERSION = 'cb4f6b4d2adb';
 
   var NAV = [['Map', 'map/'], ['Codes', 'codes/'], ['Playground', 'play/'], ['Guide', 'guide/'], ['Document', 'document/']];
   // The nav item each section marks with aria-current: Map covers the three map views.

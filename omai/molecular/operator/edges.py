@@ -145,9 +145,12 @@ compute_molecular_frequencies = Operator(
     is_executable_in_sympy_override=False,
     description=(
         "Molecular normal-mode frequencies nu_mol,m = nu^{H}[Structure, "
-        "Potential]: the 3N-6 (or 3N-5) discrete vibrational frequencies from "
-        "diagonalizing the mass-weighted Hessian of the molecular potential at "
-        "a stationary structure, cm^-1 native. nu^{H} is opaque over the "
+        "Potential]: the 3N eigenfrequencies of the mass-weighted Hessian of the "
+        "molecular potential at a stationary structure, cm^-1 native; six of "
+        "them (five for a linear molecule) belong to the rigid translations "
+        "and rotations and vanish at a stationary point up to numerical "
+        "noise, and the 3N-6 (or 3N-5) internal modes codes report are the "
+        "subset left after projecting those out. nu^{H} is opaque over the "
         "molecular Structure and the chosen functional / basis (the "
         "Potential-provenance analog; the Hessian is the second derivative of "
         "that energy surface); the method scheme records the "

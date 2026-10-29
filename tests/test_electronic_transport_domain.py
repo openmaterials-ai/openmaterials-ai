@@ -201,11 +201,11 @@ def test_electronic_transport_edges_wiring_and_schemes():
     transport_inputs = [
         "Structure", "StaticDielectricTensor", "ElasticConstants", "Frequency"]
     transport_schemes = {
-        "method": "bte_ibte", "scattering": "adp_imp_pop",
+        "method": "bte_mrta", "scattering": "adp_imp_pop",
         "interpolation": "boltztrap2"}
     wiring = {
         compute_static_dielectric: (
-            ["DielectricTensor", "BornCharges", "Frequency"],
+            ["DielectricTensor", "BornCharges", "Frequency", "Eigenvectors"],
             ["StaticDielectricTensor"],
             {"method": "ionic_contribution"}),
         compute_electronic_conductivity: (
@@ -264,7 +264,7 @@ def test_contribution_is_connected_through_pre_existing_and_chained_nodes():
     transport edges share StaticDielectricTensor (produced here) and touch the
     pre-existing Structure / ElasticConstants / Frequency, while
     compute_static_dielectric chains in through DielectricTensor / BornCharges /
-    Frequency."""
+    Frequency / Eigenvectors."""
     from omai.gates import validate_contribution
     from omai.operator.identity import (
         edge_id as _eid,
@@ -291,6 +291,7 @@ def test_contribution_is_connected_through_pre_existing_and_chained_nodes():
     from omai.thermal_transport.operator.nodes import (
         BORN_CHARGES,
         DIELECTRIC_TENSOR,
+        EIGENVECTORS,
         FREQUENCY_STATE,
     )
 
@@ -313,8 +314,8 @@ def test_contribution_is_connected_through_pre_existing_and_chained_nodes():
                         "meta": {"name": op.name, "schemes": op.schemes}},
         })
     current = {"nodes": {}, "edges": {}}
-    for s in (DIELECTRIC_TENSOR, BORN_CHARGES, FREQUENCY_STATE, STRUCTURE,
-              ELASTIC_CONSTANTS):
+    for s in (DIELECTRIC_TENSOR, BORN_CHARGES, FREQUENCY_STATE, EIGENVECTORS,
+              STRUCTURE, ELASTIC_CONSTANTS):
         current["nodes"][_nid(s)] = {
             "uid": _nid(s), "identity": node_identity(s), "meta": {}}
     assert validate_contribution(records, current) == []
@@ -390,7 +391,9 @@ def test_electronic_transport_is_records_154_to_163():
     """The frozen log positions: records 154-163 are the five nodes then the
     five edges (add_node * 5 + add_edge * 5). Positions are history and never
     move; records 148-153 (the config-thermo contribution) stay untouched
-    above."""
+    above. The five edges were re-minted on 2026-10-29 (Eigenvectors joined
+    the static-dielectric inputs; the transport scheme became bte_mrta), so
+    the records hold the uids whose supersede points at the live edges."""
     import json
     from pathlib import Path
 
@@ -408,6 +411,7 @@ def test_electronic_transport_is_records_154_to_163():
         SEEBECK_COEFFICIENT,
         STATIC_DIELECTRIC_TENSOR,
     )
+    from omai.store import Store
 
     lines = (Path(__file__).resolve().parents[1] / "map" / "log.jsonl") \
         .read_text().splitlines()
@@ -427,8 +431,12 @@ def test_electronic_transport_is_records_154_to_163():
         edge_id(compute_electronic_thermal_conductivity, node_id),
         edge_id(compute_carrier_mobility, node_id),
     ]
+    store = Store(Path(__file__).resolve().parents[1] / "map").read()
+    first_minted = {new: old for old, entry in store["edges"].items()
+                    for new in (entry.get("superseded_by") or [])}
     recs = [json.loads(line) for line in lines[153:163]]
-    assert [r["payload"]["uid"] for r in recs] == node_uids + edge_uids
+    assert [r["payload"]["uid"] for r in recs] == \
+        node_uids + [first_minted[uid] for uid in edge_uids]
     assert [r["op"] for r in recs] == ["add_node"] * 5 + ["add_edge"] * 5
     for r in recs:
         assert r["author"] == "gbarbalinardo"

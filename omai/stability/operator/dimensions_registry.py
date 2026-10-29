@@ -51,6 +51,10 @@ register_symbol_dimensions({
     # matching \Delta E_{rxn}.
     r"c_{rxn}": DIMENSIONLESS,
     r"N_{rxn}": DIMENSIONLESS,
+    # Atoms per reduced formula unit (2026-10-29 supersede): the coefficient
+    # times the atom count turns the per-atom formation energy into the
+    # formation energy of the formula units that react.
+    r"N^{fu}": DIMENSIONLESS,
     # Grain-boundary energy: ENERGY_PER_LENGTH_SQUARED (M T^-2), the same
     # dimension as the surface energy it is a sibling of, kept apart by tag.
     r"\gamma_{GB}": ENERGY_PER_LENGTH_SQUARED,
