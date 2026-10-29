@@ -16,7 +16,9 @@ from collections.abc import Iterable
 from pathlib import Path, PurePosixPath
 
 _IDENTIFIER = r"(?:[^\W\d]|_)[\w']*(?:\.(?:[^\W\d]|_)[\w']*)*"
-_TIMEOUT_SECONDS = 120
+# Seconds each compiler probe may take. Loading the environment alone can exceed two minutes on
+# a loaded host; OMAI_LEAN_PROBE_TIMEOUT raises the limit there without touching the audit.
+_TIMEOUT_SECONDS = int(os.environ.get("OMAI_LEAN_PROBE_TIMEOUT", "120"))
 
 
 def _identifier(value: object, label: str) -> str:
@@ -88,7 +90,8 @@ def verify_compiled_contract_names(
     Each operator must name a definition; optional names on node endpoints are
     also checked. ``definition_source_path`` overrides contract ``source_path``.
     No build or evidence update is performed. Run after the caller's successful
-    umbrella build. The compiler probe has a 120-second limit and two threads.
+    umbrella build. The compiler probe has a 120-second limit by default (OMAI_LEAN_PROBE_TIMEOUT
+    overrides it, in seconds) and two threads.
     """
     package = Path(lean_package).resolve()
     imports, source_roots = _library_configuration(package)

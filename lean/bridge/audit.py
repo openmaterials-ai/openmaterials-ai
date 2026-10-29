@@ -14,6 +14,10 @@ import re
 import subprocess
 from pathlib import Path
 
+# Seconds the axiom-audit compiler probe may take (120 by default; OMAI_LEAN_PROBE_TIMEOUT
+# raises it on a loaded host, where loading the environment alone can exceed two minutes).
+PROBE_TIMEOUT = int(os.environ.get("OMAI_LEAN_PROBE_TIMEOUT", "120"))
+
 ROOT = Path(__file__).resolve().parent
 REPO = ROOT.parents[1]
 ALLOWED_AXIOMS = {"propext", "Classical.choice", "Quot.sound"}
@@ -150,7 +154,7 @@ def run() -> dict:
     environment.update(LEAN_NUM_THREADS="2", MATHLIB_NO_CACHE_ON_UPDATE="1")
     result = subprocess.run(
         ["lake", "--no-build", "env", "lean", "-j2", "-DwarningAsError=true", str(probe)],
-        cwd=ROOT, check=True, text=True, capture_output=True, env=environment, timeout=120)
+        cwd=ROOT, check=True, text=True, capture_output=True, env=environment, timeout=PROBE_TIMEOUT)
     audit = parse_axiom_output(result.stdout + result.stderr, source_modules=source_modules)
     if any(digest(REPO / path) != sha for path, sha in hashes.items()):
         raise ValueError("bridge inputs changed during axiom audit")
