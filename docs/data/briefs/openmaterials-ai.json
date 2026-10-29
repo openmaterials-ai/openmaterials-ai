@@ -1,0 +1,120 @@
+{
+  "key": "openmaterials-ai",
+  "headline": "openmaterials-ai: the kernel that evaluates the map's closed-form relations",
+  "claim": "The Python kernel of the OpenMaterials map: typed quantities, executable sympy formulas and per-code representations, computing algebraically defined quantities from their inputs.",
+  "hero": {
+    "glyph": "network",
+    "title": "A map whose edges execute",
+    "text": "Quantities are typed nodes and formulas are operators the kernel runs on numerical arrays. Four map variables, two composite conductivities and two cure values, come from the kernel (OpenMaterials document)."
+  },
+  "features": [
+    {
+      "glyph": "fit-curve",
+      "title": "Nan effective medium",
+      "text": "Composite conductivity for random and aligned fillers with Kapitza resistance, kc = k / (1 + 2 R k / d), in the Nan mixing formulas of the map (omai.composites module)."
+    },
+    {
+      "glyph": "clock",
+      "title": "Cure kinetics",
+      "text": "The degree of cure after an isothermal hold under Kamal-Sourour kinetics, and the glass transition temperature it sets by DiBenedetto (omai.cure_kinetics module)."
+    },
+    {
+      "glyph": "database",
+      "title": "Representations",
+      "text": "A representation maps an external code's outputs onto the shared nodes with units and conventions, and carries its citation and license (openmaterials-ai README)."
+    },
+    {
+      "glyph": "search",
+      "title": "Resolver",
+      "text": "omai.semantics maps a method name as a paper writes it, such as 'quasi-harmonic approximation', to content-addressed node ids and formulas (openmaterials-ai README)."
+    },
+    {
+      "glyph": "code",
+      "title": "Lineage identity",
+      "text": "omai.lineages.lineage_id is the sha256 of a canonical lineage. Vectors in the wheel pin 32 lineages and 35 records so all consumers agree (openmaterials-ai README)."
+    }
+  ],
+  "facts": [
+    {
+      "value": "136",
+      "label": "typed quantities at map version 45be98afae7c",
+      "source": "openmaterials-ai README"
+    },
+    {
+      "value": "1.2452",
+      "label": "W/(m K), DGEBA epoxy + 5 vol% GNP, closed form",
+      "source": "OpenMaterials document"
+    },
+    {
+      "value": "4",
+      "label": "map variables the kernel itself produces",
+      "source": "OpenMaterials document"
+    }
+  ],
+  "workflow": [
+    {
+      "title": "Install",
+      "text": "pip install openmaterials-ai==0.4.0 on Python 3.11 or later."
+    },
+    {
+      "title": "Build the DAG",
+      "text": "python examples/quickstart.py builds the operator DAG and derives Cp from frequencies."
+    },
+    {
+      "title": "Evaluate a closed form",
+      "text": "omai.composites.evaluate.nan_kappa_random(params) from km, k11, k33, d1, d3, G and f."
+    },
+    {
+      "title": "Render a record",
+      "text": "omai.render.render_composite_kappa turns the result into an Instance with its provenance."
+    },
+    {
+      "title": "Validate",
+      "text": "omai.schema.validate_record lists every schema violation. An empty list means valid."
+    }
+  ],
+  "applications": [
+    {
+      "glyph": "layers",
+      "title": "DGEBA epoxy with graphene nanoplatelets",
+      "text": "In the OpenMaterials document, the reference draft at 5 vol% filler gives kappa_c = 1.2452 W/(m K) from the map's own closed-form edges (OpenMaterials document).",
+      "source": "OpenMaterials document"
+    }
+  ],
+  "sources": [
+    {
+      "label": "openmaterials-ai README",
+      "url": "https://github.com/openmaterials-ai/openmaterials-ai"
+    },
+    {
+      "label": "OpenMaterials document",
+      "url": "https://openmaterials.ai/document/"
+    },
+    {
+      "label": "omai.composites module",
+      "url": "https://github.com/openmaterials-ai/openmaterials-ai/tree/v0.4.0/omai/composites"
+    },
+    {
+      "label": "omai.cure_kinetics module",
+      "url": "https://github.com/openmaterials-ai/openmaterials-ai/tree/v0.4.0/omai/cure_kinetics"
+    }
+  ],
+  "detail": [
+    {
+      "heading": "What the kernel holds",
+      "text": "At map version 45be98afae7c the map has 136 typed quantities (122 observable, 11 hidden, 3 parameter), 307 links (265 formula, 42 parameter) and 133 operators in 18 tiers, with representations for 34 codes and 93 committed values, 87 from simulations and 6 from measurements (openmaterials-ai README). The database is plain files. map/ is an append-only log of content-addressed records, and docs/data/ holds the generated graph.json, catalog.json, codes.json, the instances, configurations, models and releases (openmaterials-ai README). The kernel is Apache 2.0 and the map data CC BY 4.0 (openmaterials-ai README)."
+    },
+    {
+      "heading": "Closed forms and the dimensional gate",
+      "text": "A dimensional gate checks every closed-form edge mechanically. Of the 129 operator edges it walks, 59 are ok, 1 is a documented schematic violation and 69 are skipped as opaque solver edges or non-Eq forms (OpenMaterials document). The proven edges include the Nan random and aligned mixing formulas with the Hasselman-Johnson spherical cross-check, the two cure-kinetics edges, the six thermodynamic identities and the eleven analog-device-metrology closed forms (OpenMaterials document). The cure integral is taken in s = ln(alpha / (1 - alpha)) by 20-point Gauss-Legendre on panels of width 1/2, with the root found by safeguarded Newton (omai.cure_kinetics module)."
+    },
+    {
+      "heading": "Interfaces",
+      "text": "mapengine and the MaterialsCodeGraph pipeline import the package for record identity, shape and rendering, and the TypeScript worker asserts its own copy against the shipped vectors (openmaterials-ai README). A lineage gzips into a #x= link fragment that opens the playground datasheet with no server, and a committed value has the permalink /l/<id> (openmaterials-ai README). The paper parser turns a PDF into a gated evidence proposal with verbatim quotes, and omai.mermaid exports any sub-map as a Mermaid flowchart (openmaterials-ai README)."
+    },
+    {
+      "heading": "Verified layer",
+      "text": "105 nodes and 12 edge theorems compile against physlib on Lean 4.31.0, and a generated seven-base extension lifts dimensional coverage to 124 of 132 nodes. 18 identity theorems check against Mathlib, and CI recompiles them on every relevant pull request (OpenMaterials document). These proofs cover dimensions and rational identities, not numerical implementations (openmaterials-ai README)."
+    }
+  ]
+}

@@ -1,0 +1,126 @@
+{
+  "key": "phonopy",
+  "headline": "phonopy: harmonic phonons and thermal properties from displaced supercells",
+  "claim": "The finite-displacement supercell code behind most first-principles phonon work: symmetry-reduced displacements, force constants fitted to DFT forces, bands, DOS and free energies.",
+  "hero": {
+    "glyph": "bands",
+    "title": "Force constants from forces",
+    "text": "phonopy displaces atoms in a supercell by 0.01 A, a DFT code returns the forces, and crystal symmetry recovers the full second-order force constants. The Al example is a 3x3x3 conventional cell of 108 atoms (Togo 2015)."
+  },
+  "features": [
+    {
+      "glyph": "crystal",
+      "title": "Symmetry reduction",
+      "text": "The cell is standardized to a crystallographic convention. Site symmetry picks the atoms to displace, and the space group recovers the other force constants (Togo 2023)."
+    },
+    {
+      "glyph": "bands",
+      "title": "Bands, DOS and thermodynamics",
+      "text": "Dynamical matrix at any q, band structure, total and projected DOS, irreducible representations, group velocities, Cv, free energy and entropy versus T (Togo 2015)."
+    },
+    {
+      "glyph": "pressure",
+      "title": "Quasi-harmonic approximation",
+      "text": "Free energies at several volumes give G(T,p), equilibrium volume, thermal expansion, Cp and mode Gruneisen parameters. The Al Cp agrees with experiment (Togo 2015)."
+    },
+    {
+      "glyph": "wave",
+      "title": "Non-analytical term correction",
+      "text": "Born effective charges and the dielectric tensor add the long-range Coulomb part to the force constants, which the supercell approach cannot hold (Togo 2023)."
+    },
+    {
+      "glyph": "ensemble",
+      "title": "Finite temperature displacements",
+      "text": "phonopy builds supercells with random displacements drawn from harmonic oscillators at T and averages the properties computed on each to mimic temperature (Togo 2023)."
+    }
+  ],
+  "facts": [
+    {
+      "value": "0.01 A",
+      "label": "displacement distance in the Al example",
+      "source": "Togo 2015"
+    },
+    {
+      "value": "108",
+      "label": "atoms in the 3x3x3 Al supercell",
+      "source": "Togo 2015"
+    },
+    {
+      "value": "50,000",
+      "label": "random 512-atom NaCl supercells at 300 K",
+      "source": "Togo 2023"
+    }
+  ],
+  "workflow": [
+    {
+      "title": "Standardize and relax",
+      "text": "Bring the unit cell to the crystallographic convention and relax it until forces vanish."
+    },
+    {
+      "title": "Displace supercells",
+      "text": "Create supercells with symmetry-reduced finite displacements."
+    },
+    {
+      "title": "Compute forces",
+      "text": "Run the DFT code on each supercell and collect the forces (FORCE_SETS)."
+    },
+    {
+      "title": "Fit force constants",
+      "text": "Phonopy.force_constants from displacements and forces, Phonopy.nac_params if polar."
+    },
+    {
+      "title": "Phonon properties",
+      "text": "Phonopy.run_thermal_properties, run_total_dos, band paths, PhonopyQHA over volumes."
+    }
+  ],
+  "applications": [
+    {
+      "glyph": "layers",
+      "title": "Monolayer boron nitride, kappa and expansion",
+      "text": "Suspended monolayer hBN measured 751 W/m/K near room temperature and an experimental TEC of -3.58e-6/K. Phonopy gave the computed TECs of 1 to 3 layers for comparison (Cai 2019).",
+      "source": "Cai 2019"
+    },
+    {
+      "glyph": "crystal",
+      "title": "MAPbI3 perovskite in three phases",
+      "text": "PHONOPY on DFT force constants gives the phonons of the phases that change at 165 and 327 K. The cubic phase has soft zone-boundary modes from PbI6 octahedral tilting (Brivio 2015).",
+      "source": "Brivio 2015"
+    }
+  ],
+  "sources": [
+    {
+      "label": "Togo 2015",
+      "doi": "10.1016/j.scriptamat.2015.07.021"
+    },
+    {
+      "label": "Togo 2023",
+      "doi": "10.7566/JPSJ.92.012001"
+    },
+    {
+      "label": "Cai 2019",
+      "doi": "10.1126/sciadv.aav0129"
+    },
+    {
+      "label": "Brivio 2015",
+      "doi": "10.1103/PhysRevB.92.144308"
+    }
+  ],
+  "detail": [
+    {
+      "heading": "The supercell approach",
+      "text": "Second-order force constants are the negative derivative of the force on one atom with respect to the displacement of another. phonopy displaces atoms in a supercell by a small distance, reads the forces computed by an external first-principles code, and uses crystal symmetry both to reduce the number of displaced supercells and to improve the numerical accuracy of the fit (Togo 2015). The force constants are exact only at wave vectors commensurate with the supercell and are Fourier interpolated elsewhere, so a supercell of a few hundred atoms is usual. For polar crystals the non-analytical term correction from Born charges and the dielectric tensor restores the LO-TO splitting (Togo 2023)."
+    },
+    {
+      "heading": "Phonon and thermal properties",
+      "text": "From the dynamical matrix phonopy returns frequencies and eigenvectors on paths and meshes, total and projected densities of states, irreducible representations, group velocities and mean square displacements. The frequencies give the constant-volume thermal properties Cv, Helmholtz free energy and entropy. In the quasi-harmonic approximation a fit of the free energy at several volumes gives the Gibbs energy, the equilibrium volume, the volumetric thermal expansion and Cp. For Al the computed Cp agrees with experiment, and the gap between Cp and Cv is not negligible at high temperature (Togo 2015). Mode Gruneisen parameters come from the volume derivative of the dynamical matrix."
+    },
+    {
+      "heading": "Instabilities and finite temperature",
+      "text": "Imaginary modes mark dynamical instabilities. Following their eigenvectors maps phase transition pathways. For simple cubic Cu the M and X point modes lead to P4/nmm, Pmma and Cmcm structures and on to BCT, SH, FCC, BCC and HCP (Togo 2015). For strongly anharmonic crystals phonopy generates supercells with random displacements sampled from harmonic oscillators at a given temperature, valid only when all modes at commensurate q points are stable. For NaCl, 50,000 randomly displaced 512-atom supercells built from renormalized force constants give displacement distributions similar to those of an MD run on the same supercell (Togo 2023)."
+    },
+    {
+      "heading": "Force codes and automation",
+      "text": "Forces come from the user's first-principles code. The 2023 review lists Quantum ESPRESSO, Abinit and ELK for DFPT and VASP for both approaches. It also lists the AiiDA plugins for phonopy and phono3py, which run the six-step workflow (standardize the cell, relax, displace, compute forces, fit and analyse) as an acyclic directed graph (Togo 2023). ALM and hiPhive are separate codes built for force-constant fitting (Togo 2023). Cai 2019 uses phonopy for computed thermal expansion, and Brivio 2015 for the dynamical matrix of DFT force constants."
+    }
+  ]
+}

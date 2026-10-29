@@ -1,0 +1,140 @@
+{
+  "key": "gpumd",
+  "headline": "GPUMD: trains neuroevolution potentials and runs molecular dynamics on one GPU",
+  "claim": "A molecular dynamics code written in CUDA for GPUs from the start, with its own machine-learned potential (NEP) trained and run in the package, and heat transport on the fly.",
+  "hero": {
+    "glyph": "neural",
+    "title": "The neuroevolution potential",
+    "text": "A one-hidden-layer network on a Chebyshev radial and angular descriptor, trained by the SNES evolutionary algorithm in the nep executable. It runs at about 1e7 atom steps per second on one V100 GPU (Fan 2022)."
+  },
+  "features": [
+    {
+      "glyph": "gpu",
+      "title": "Forces without write conflicts",
+      "text": "One thread per atom sums force, virial and heat current from a pairwise force expression, with no write conflicts. One K40 GPU matched LAMMPS on 100 cores (Fan 2017)."
+    },
+    {
+      "glyph": "heat-flow",
+      "title": "Heat transport on the fly",
+      "text": "Green-Kubo (compute_hac), HNEMD (compute_hnemd) and NEMD with Langevin heat baths, plus spectral (compute_shc) and modal (compute_hnema) decompositions (Xu 2025)."
+    },
+    {
+      "glyph": "thermometer",
+      "title": "Ensembles and integrators",
+      "text": "NVE, NVT and NPT with Berendsen, Nose-Hoover chain, Bussi-Donadio-Parrinello and Langevin thermostats, MTTK barostats, MSST shock, path-integral MD (Xu 2025)."
+    },
+    {
+      "glyph": "code",
+      "title": "Two executables, four files",
+      "text": "nep trains from nep.in and train.xyz. gpumd runs from run.in and model.xyz, both extended XYZ. Also Tersoff, Stillinger-Weber, EAM and hiphive force constants (Xu 2025)."
+    },
+    {
+      "glyph": "network",
+      "title": "Python tools",
+      "text": "calorine and PyNEP expose NEP as ASE calculators. gpyumd writes inputs and parses outputs. NEP_CPU runs NEP models on CPUs and provides the LAMMPS interface (Xu 2025)."
+    }
+  ],
+  "facts": [
+    {
+      "value": "1.5e7",
+      "label": "NEP3 atom steps per second on one A100 GPU",
+      "source": "Fan 2022"
+    },
+    {
+      "value": "about 100",
+      "label": "CPU cores of LAMMPS matched by one K40, Tersoff",
+      "source": "Fan 2017"
+    },
+    {
+      "value": "63 meV/A",
+      "label": "NEP3 force RMSE on the MgAlCu alloy data set",
+      "source": "Fan 2022"
+    }
+  ],
+  "workflow": [
+    {
+      "title": "Collect reference data",
+      "text": "Convert DFT outputs to extended XYZ train.xyz with vasp2xyz, cp2k2xyz or similar tools."
+    },
+    {
+      "title": "Train the NEP",
+      "text": "Set cutoffs, descriptor sizes, loss weights and generations in nep.in. Run nep: nep.txt."
+    },
+    {
+      "title": "Build the model",
+      "text": "Write model.xyz in extended XYZ with calorine or gpyumd, or by hand."
+    },
+    {
+      "title": "Run the MD",
+      "text": "In run.in: potential nep.txt, velocity, ensemble, time_step, compute_hnemd or compute_hac."
+    },
+    {
+      "title": "Analyse the outputs",
+      "text": "Read thermo.out, hac.out and the compute files into Python with calorine or gpyumd."
+    }
+  ],
+  "applications": [
+    {
+      "glyph": "layers",
+      "title": "Rotated MoS2 films, through-plane heat",
+      "text": "Measured through-plane conductivity 57 mW/m/K and anisotropy ratio near 900. HNEMD in GPUMD showed kappa dropping from 3.7 to 0.16 W/m/K from bulk to rotated MoS2 at 300 K (Kim 2021).",
+      "source": "Kim 2021"
+    },
+    {
+      "glyph": "molecule",
+      "title": "Heat conductivity of liquid water",
+      "text": "A NEP fitted to SCAN DFT data, with an HNEMD spectral quantum correction, gives 0.60 W/m/K at 300 K against 0.89 classical, in agreement with NIST data from 275 K to 500 K (Xu 2023).",
+      "source": "Xu 2023"
+    },
+    {
+      "glyph": "thermometer",
+      "title": "Source-sink conductance in graphene NEMD",
+      "text": "NEMD in GPUMD matches the ballistic AGF conductance of graphene, 12.2 GW/m2/K classical, when Delta T is taken between source and sink. Langevin baths beat Nose-Hoover chains (Li 2019).",
+      "source": "Li 2019"
+    }
+  ],
+  "sources": [
+    {
+      "label": "Fan 2017",
+      "doi": "10.1016/j.cpc.2017.05.003"
+    },
+    {
+      "label": "Fan 2022",
+      "doi": "10.1063/5.0106617"
+    },
+    {
+      "label": "Xu 2025",
+      "doi": "10.1002/mgea.70028"
+    },
+    {
+      "label": "Kim 2021",
+      "doi": "10.1038/s41586-021-03867-8"
+    },
+    {
+      "label": "Xu 2023",
+      "doi": "10.1063/5.0147039"
+    },
+    {
+      "label": "Li 2019",
+      "doi": "10.1063/1.5132543"
+    }
+  ],
+  "detail": [
+    {
+      "heading": "Many-body forces, virial and heat current on the GPU",
+      "text": "GPUMD evaluates many-body potentials through an explicit pairwise force expression. Each atom is one CUDA thread, which accumulates its own force, virial and heat current in a single loop, so no atomic operations are needed (Fan 2017). In the 2017 benchmark on silicon with up to 2,744,000 atoms the speed saturates above 1e5 atoms. Single-precision Stillinger-Weber reached 25 ns per day for 1e6 atoms with a 2 fs step on a Tesla K40, and the double-precision Tersoff speed equalled LAMMPS on about 100 Xeon X5670 cores (Fan 2017). The 2025 release holds about 85,000 lines of CUDA C++ and has been adapted to HIP (Xu 2025)."
+    },
+    {
+      "heading": "The neuroevolution potential",
+      "text": "NEP is a feed-forward network with one hidden layer on a descriptor whose radial functions are linear combinations of Chebyshev basis functions and whose angular terms add four- and five-body contributions as in the atomic cluster expansion (Fan 2022). The separable natural evolution strategy (SNES) fits the parameters to a loss of energy, force and virial RMSEs with L1 and L2 penalties. On the carbon test set, NEP (4.2 A) reaches 42 meV/atom, 690 meV/A and 160 meV/atom for energy, force and virial at 3,600 atom steps per ms on one V100, against 290 for DP (se2) and 280 for REANN (3 A) (Fan 2022). NEP89, a foundation model for nearly the whole periodic table, ships with GPUMD 4.0 (Xu 2025)."
+    },
+    {
+      "heading": "Heat transport methods",
+      "text": "GPUMD has three built-in routes. Equilibrium MD uses the Green-Kubo relation on the heat current autocorrelation (compute_hac), HNEMD applies a homogeneous driving force (compute_hnemd), and NEMD uses heat source and sink thermostats (ensemble heat_lan and others). Conductivity and conductance decompose spectrally (compute_shc) and by mode (compute_hnema) (Xu 2025). In the 2022 example, five HNEMD runs of 2 ns each gave 5.1 +/- 0.1 W/(m K) for amorphous carbon at 3.0 g/cm3 and 300 K (Fan 2022). Li 2019 used GPUMD to show that NEMD should report the conductance from the source-sink temperature difference and should use Langevin thermostats (Li 2019)."
+    },
+    {
+      "heading": "Files and Python tools",
+      "text": "Compilation produces two executables, nep and gpumd (Xu 2025). nep reads nep.in and train.xyz and writes the potential file nep.txt and the loss history in loss.out. gpumd reads run.in and model.xyz and writes thermo.out, hac.out and the other compute outputs (Fan 2022). calorine offers ASE calculators, input and output functions for GPUMD files, and relaxation, phonon and elastic calculations. gpyumd prepares inputs and parses outputs. PyNEP adds descriptor analysis and farthest-point sampling for training sets. NEP_CPU runs the same models on CPUs and inside LAMMPS. The nep-data repository collects published training sets (Xu 2025)."
+    }
+  ]
+}

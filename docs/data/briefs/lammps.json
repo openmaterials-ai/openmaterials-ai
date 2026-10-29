@@ -1,0 +1,132 @@
+{
+  "key": "lammps",
+  "headline": "LAMMPS: parallel classical molecular dynamics for short-range forces",
+  "claim": "A classical molecular dynamics code for short-range forces. Its reference paper, Plimpton 1995, sets out atom, force and spatial decompositions tested up to 10^8 atoms.",
+  "hero": {
+    "glyph": "grid",
+    "title": "Spatial decomposition",
+    "text": "Each processor owns a region of the box and its atoms, swaps boundary atoms with six neighbours and hands atoms over as they cross. Cost scales as N/P, with 90 percent parallel efficiency on big systems (Plimpton 1995)."
+  },
+  "features": [
+    {
+      "glyph": "layers",
+      "title": "Three decompositions",
+      "text": "Atom decomposition is simplest and load balances itself. Force decomposition scales as N over the square root of P. Spatial decomposition reaches N/P (Plimpton 1995)."
+    },
+    {
+      "glyph": "search",
+      "title": "Neighbor lists and bins",
+      "text": "Verlet lists hold neighbors within rc plus a skin and are reused for several steps. Binning in cells of side rc limits the search to 27 bins (Plimpton 1995)."
+    },
+    {
+      "glyph": "spring",
+      "title": "Potentials in the application papers",
+      "text": "Henry 2008 and Wei 2011 ran AIREBO for polyethylene and carbon. Mortazavi 2021 ran trained moment tensor potentials for MoSi2N4 sheets."
+    },
+    {
+      "glyph": "heat-flow",
+      "title": "Equilibrium and nonequilibrium transport",
+      "text": "Henry 2008 integrates the heat flux autocorrelation of a 10 ns NVE run. Wei 2011 swaps hot and cold atom velocities every 25 fs and fits the gradient."
+    },
+    {
+      "glyph": "network",
+      "title": "Message passing on any parallel machine",
+      "text": "The algorithms need only distributed memory and message passing. Plimpton 1995 ran them on the nCUBE 2, Intel iPSC/860 and Paragon and Cray T3D."
+    }
+  ],
+  "facts": [
+    {
+      "value": "10^8",
+      "label": "atoms, LJ benchmark on a 1904-processor Paragon",
+      "source": "Plimpton 1995"
+    },
+    {
+      "value": "165x",
+      "label": "faster than a Cray C90 processor, 1840 nodes",
+      "source": "Plimpton 1995"
+    },
+    {
+      "value": "90%",
+      "label": "parallel efficiency of spatial decomposition",
+      "source": "Plimpton 1995"
+    }
+  ],
+  "workflow": [
+    {
+      "title": "Build the structure",
+      "text": "Minimum-energy positions, or strained and twisted cells relaxed by conjugate gradient."
+    },
+    {
+      "title": "Choose the potential",
+      "text": "AIREBO for carbon and polyethylene, trained moment tensor potentials for MoSi2N4."
+    },
+    {
+      "title": "Equilibrate",
+      "text": "Nose-Hoover at 300 K for 200 ps, or 100 ps before a microcanonical run."
+    },
+    {
+      "title": "Measure",
+      "text": "Record the heat flux at equilibrium, or swap hot and cold velocities and bin temperatures."
+    },
+    {
+      "title": "Post-process",
+      "text": "Integrate the flux autocorrelation, or divide the flux by the fitted gradient, for kappa."
+    }
+  ],
+  "applications": [
+    {
+      "glyph": "chart-up",
+      "title": "Single polyethylene chains",
+      "text": "LAMMPS runs use a 0.25 fs step for 10 ns. Green-Kubo integrals diverge for domains longer than 40 unit cells. Modal analysis shows that chains longer than 40 nm can exceed 100 W/m/K.",
+      "source": "Henry 2008"
+    },
+    {
+      "glyph": "layers",
+      "title": "Graphene and nanoribbons under strain",
+      "text": "Reverse nonequilibrium dynamics with AIREBO give 77.3 W/m/K for 10-ZGNR and 74.7 W/m/K for 19-AGNR. A square sheet drops from 102.07 to 54.45 W/m/K under 0.10 tensile strain.",
+      "source": "Wei 2011"
+    },
+    {
+      "glyph": "crystal",
+      "title": "Piezoelectric MoSi2N4 monolayers",
+      "text": "LAMMPS relaxes strained 80 by 80 Angstrom sheets with moment tensor potentials. A charge-dipole model gives a piezoelectric coefficient of 2.293 nC/m for MoSi2N4 and 0.890 nC/m for MoSi2P4.",
+      "source": "Mortazavi 2021"
+    }
+  ],
+  "sources": [
+    {
+      "label": "Plimpton 1995",
+      "doi": "10.1006/jcph.1995.1039"
+    },
+    {
+      "label": "Henry 2008",
+      "doi": "10.1103/PhysRevLett.101.235502"
+    },
+    {
+      "label": "Wei 2011",
+      "doi": "10.1088/0957-4484/22/10/105705"
+    },
+    {
+      "label": "Mortazavi 2021",
+      "doi": "10.1016/j.nanoen.2020.105716"
+    }
+  ],
+  "detail": [
+    {
+      "heading": "Algorithms",
+      "text": "Classical molecular dynamics integrates Newton's equations for N point masses. For short-range models the forces come from pairs and triplets within a cutoff rc, so the work per step scales as N (Plimpton 1995). The code finds neighbors with Verlet lists built inside an extended radius rs = rc + delta and reused for several steps, or by binning atoms into cells of side rc and checking 27 bins. The fastest serial codes combine both and count each pair once through Newton's third law. Plimpton's three parallel algorithms assign each processor a fixed set of atoms, a fixed block of the force matrix, or a fixed spatial region, and the spatial algorithm scales optimally for large systems."
+    },
+    {
+      "heading": "Numerics and scale",
+      "text": "The benchmark is a Lennard-Jones liquid at reduced density 0.8442 and temperature 0.72 with cutoff 2.5 sigma, 55 neighbors per atom, neighbor lists rebuilt every 20 steps and a leapfrog step of 0.00462 reduced units (Plimpton 1995). Systems from 500 to 100,000,000 atoms ran on the nCUBE 2, Intel iPSC/860 and Paragon and Cray T3D. The 100 million atom case nearly filled the 30 GB of a 1904-processor Paragon and ran at 6.97 Gflops. On 1840 dual-processor Paragon nodes the assembler-optimized spatial code was 415 times faster than one Cray Y-MP processor and 165 times faster than one C90 processor. The largest runs on the nCUBE 2, Paragon and T3D were about 90 percent parallel efficient."
+    },
+    {
+      "heading": "Runs in the application papers",
+      "text": "Henry 2008 runs single polyethylene chains with AIREBO under periodic boundaries, with a 0.25 fs step for 10 ns in the microcanonical ensemble after 100 ps of equilibration. The conductivity is the Green-Kubo integral of the heat flux autocorrelation along the backbone, with the volume set by an 18 square Angstrom cross section. Wei 2011 holds ribbons at 300 K with a Nose-Hoover thermostat for 200 ps, then exchanges the velocities of the hottest and coldest atoms every 25 fs under NVE with a 0.5 fs step. Mortazavi 2021 relaxes strained 80 by 80 Angstrom sheets under NVT with moment tensor potentials."
+    },
+    {
+      "heading": "Validation",
+      "text": "The application papers carry their own checks. Wei 2011 reproduces the conductivity of a 49.26 nm (10,10) carbon nanotube at 302.29 W/m/K against 301.47 W/m/K from an earlier study under the same conditions. In Henry 2008 the fitted modal limit of a polyethylene chain approaches 350 W/m/K and agrees with the convergent Green-Kubo runs. It exceeds the 55 W/m/K inferred from an earlier nonequilibrium study whose boundary scattering would have hidden nonattenuating modes. Plimpton 1995 compares its parallel timings to the fastest reported vectorized Cray Y-MP and C90 code on the same benchmark."
+    }
+  ]
+}

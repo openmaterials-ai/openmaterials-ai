@@ -1,0 +1,122 @@
+{
+  "key": "shengbte",
+  "headline": "ShengBTE: the phonon Boltzmann equation solved by iteration",
+  "claim": "A Fortran and MPI solver that takes second- and third-order force constants and iterates the linearized phonon BTE to convergence with adaptive broadening and no free parameters.",
+  "hero": {
+    "glyph": "arrow-cycle",
+    "title": "Full iterative solution",
+    "text": "Starting from the relaxation time approximation, each iteration feeds the deviation of every mode back into the scattering sum until the conductivity converges. Si needs 5 steps and gains about 4% over RTA (Li 2014)."
+  },
+  "features": [
+    {
+      "glyph": "spectrum",
+      "title": "Adaptive Gaussian broadening",
+      "text": "Energy deltas become Gaussians whose width is set per process from group velocities and grid spacing, scaled by scalebroad. The default 1.0 needs no tuning (Li 2014)."
+    },
+    {
+      "glyph": "code",
+      "title": "Three input files",
+      "text": "CONTROL (namelists &allocations, &crystal, &parameters, &flags), FORCE_CONSTANTS_2ND from Phonopy or espresso.ifc2, and FORCE_CONSTANTS_3RD from thirdorder.py (Li 2014)."
+    },
+    {
+      "glyph": "cube",
+      "title": "thirdorder.py",
+      "text": "A Python script that builds the minimal set of displaced supercells for the anharmonic constants from point group and permutation symmetry, within a cutoff (Li 2014)."
+    },
+    {
+      "glyph": "atoms",
+      "title": "Isotopes, polar bonds, nanowires",
+      "text": "Isotope scattering from natural abundances, non-analytical correction from Born charges and dielectric tensor, and nanowires with diffusive boundaries (Li 2014)."
+    },
+    {
+      "glyph": "bars",
+      "title": "Per-mode outputs",
+      "text": "BTE.omega, BTE.v, BTE.cv, BTE.w_anharmonic, BTE.w_isotopic, BTE.P3, BTE.kappa_tensor and BTE.cumulative_kappa_* against mean free path (Li 2014)."
+    }
+  ],
+  "facts": [
+    {
+      "value": "172",
+      "label": "W/(m K), isotopically pure Si at 300 K, exp. 156",
+      "source": "Li 2014"
+    },
+    {
+      "value": "20%",
+      "label": "RTA underestimate of kappa in lonsdaleite",
+      "source": "Li 2014"
+    },
+    {
+      "value": "5",
+      "label": "iterations to converge the BTE for Si",
+      "source": "Li 2014"
+    }
+  ],
+  "workflow": [
+    {
+      "title": "Harmonic constants",
+      "text": "Phonopy gives FORCE_CONSTANTS_2ND (or Quantum ESPRESSO espresso.ifc2), with Born charges."
+    },
+    {
+      "title": "Anharmonic constants",
+      "text": "thirdorder.py turns DFT forces on displaced supercells into FORCE_CONSTANTS_3RD."
+    },
+    {
+      "title": "Write CONTROL",
+      "text": "Set natoms, ngrid, lattvec, positions, scell, T and flags such as isotopes or nanowires."
+    },
+    {
+      "title": "Run ShengBTE",
+      "text": "Launch under MPI in the directory with the three files. No command-line arguments."
+    },
+    {
+      "title": "Read the BTE.* files",
+      "text": "BTE.KappaTensorVsT_CONV, scattering rates, BTE.cumulative_kappa_tensor."
+    }
+  ],
+  "applications": [
+    {
+      "glyph": "scattering",
+      "title": "Giant anharmonicity in SnSe",
+      "text": "Inelastic neutron scattering plus ShengBTE on 3x5x5 supercells of 600 atoms show kappa converges only when third-order constants past 6 A include the anharmonic Sn-Se-Se triplets (Li 2015).",
+      "source": "Li 2015"
+    },
+    {
+      "glyph": "layers",
+      "title": "MoSi2N4 monolayers",
+      "text": "ShengBTE, on force constants from moment tensor potentials, gives iterative lattice conductivities of 440 W/m/K for MoSi2N4 and 500 W/m/K for WSi2N4 monolayers (Mortazavi 2021).",
+      "source": "Mortazavi 2021"
+    }
+  ],
+  "sources": [
+    {
+      "label": "Li 2014",
+      "doi": "10.1016/j.cpc.2014.02.015"
+    },
+    {
+      "label": "Li 2015",
+      "doi": "10.1038/nphys3492"
+    },
+    {
+      "label": "Mortazavi 2021",
+      "doi": "10.1016/j.nanoen.2020.105716"
+    }
+  ],
+  "detail": [
+    {
+      "heading": "The iterative Boltzmann solver",
+      "text": "ShengBTE writes the linearized BTE for the deviation F of each mode as F = tau0 (v + Delta), where tau0 is the relaxation time and Delta measures the departure from RTA. The zeroth iteration is the RTA, and successive iterations add the repopulation from three-phonon absorption and emission processes and isotope scattering until kappa converges (Li 2014). In Si, where Umklapp scattering dominates, convergence takes 5 steps and adds about 4% to the RTA value. In high conductivity materials with strong normal scattering the RTA treats momentum-conserving processes as resistive and fails. In lonsdaleite the RTA underestimates the diagonal elements by 20% (Li 2014)."
+    },
+    {
+      "heading": "Numerics",
+      "text": "ShengBTE replaces the Dirac deltas of energy conservation by Gaussians whose width it estimates per scattering process from the group velocity differences and the q grid spacing, times the scalebroad constant. The default is 1.0. For Si the conductivity reaches 90% of its converged value on a 15x15x15 grid at scalebroad 1.0 and on 11x11x11 at 0.1, and fitting kappa(N) to 1 minus exp(-N/A) extrapolates to the dense limit (Li 2014). Point group symmetry reduces the q points. A constrained least squares compensation enforces the sum rules on the anharmonic constants. The lonsdaleite run took about one hour on 32 processors. The code is Fortran 90 with MPI, LAPACK and spglib, GPL-3.0."
+    },
+    {
+      "heading": "Inputs from other codes",
+      "text": "ShengBTE computes no force constants. Harmonic constants come from Phonopy (FORCE_CONSTANTS_2ND) or from Quantum ESPRESSO (espresso.ifc2). The companion thirdorder.py generates the minimal set of displaced supercells for the third-order constants by a real-space finite difference scheme and reconstructs the full set from point group, translational and permutation symmetry. Its DFT back end in 2014 was VASP. The number of anharmonic constants is 27 n^3 N^2 for n atoms per cell and N cells, cut by a radius. For many zinc-blende crystals third nearest neighbours suffice (Li 2014). Both sets must use the same functional, or LDA second order with GGA third order overestimates kappa."
+    },
+    {
+      "heading": "Validation",
+      "text": "For isotopically pure 28Si the extrapolated conductivity is 172 W/(m K) at room temperature, about 10% above the measured 156 W/(m K), and between the 150 and 165 W/(m K) of an independent calculation. For natural InAs the curve follows experiments over the measured temperature range with scalebroad 0.1, and 0.5 refines it at three times the CPU cost. For lonsdaleite the prediction is 1500 W/(m K) in plane and 1270 W/(m K) along c at 300 K, lower than diamond and graphite in plane (Li 2014). The authors report agreement with experiment better than 10% in the available cases."
+    }
+  ]
+}

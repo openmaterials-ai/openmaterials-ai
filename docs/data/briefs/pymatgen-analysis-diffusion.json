@@ -1,0 +1,114 @@
+{
+  "key": "pymatgen-analysis-diffusion",
+  "headline": "pymatgen-analysis-diffusion: diffusion analysis of ionic conductor trajectories",
+  "claim": "A pymatgen add-on for MD of ionic conductors: probability densities and van Hove functions, beside the MSD, Arrhenius and Nernst-Einstein analysis in pymatgen.",
+  "hero": {
+    "glyph": "diffusion",
+    "title": "From trajectory to conductivity",
+    "text": "D = <[dr(t)]^2> / (2dt) from the mean squared displacement, an Arrhenius plot across temperatures, then sigma = rho z^2 F^2 D / (RT) at 300 K. Li-excess Li6.25PS5.25Cl0.75 gave 14 mS/cm and 211 meV (Deng 2016)."
+  },
+  "features": [
+    {
+      "glyph": "fit-curve",
+      "title": "Diffusivity and Arrhenius fit",
+      "text": "A linear fit of the MSD against 2dt gives D at each temperature. log D against 1/T gives the activation energy Ea and the extrapolated D at 300 K (Deng 2016)."
+    },
+    {
+      "glyph": "chart-up",
+      "title": "Conductivity",
+      "text": "The Nernst-Einstein relation converts D300K to sigma300K with the molar density of mobile ions and their charge, z = +1, at T = 300 K (Deng 2016)."
+    },
+    {
+      "glyph": "density",
+      "title": "Probability density",
+      "text": "P(r) on a 3D grid counts alkali ions per grid point over the run, normalized over the cell. Isosurfaces show the low-energy sites and the paths between them (Deng 2016)."
+    },
+    {
+      "glyph": "wave",
+      "title": "van Hove correlation",
+      "text": "The self part Gs(r,t) tracks how far an ion moves in time t. The distinct part Gd(r,t) shows when a vacated site is refilled, a sign of correlated motion (Deng 2016)."
+    },
+    {
+      "glyph": "workflow",
+      "title": "Automated AIMD",
+      "text": "A FireWorks workflow relaxes, builds the supercell, runs NVT AIMD at several temperatures under a WallTimeHandler and stores snapshots in MongoDB (Deng 2016)."
+    }
+  ],
+  "facts": [
+    {
+      "value": "14 mS/cm",
+      "label": "predicted sigma at 300 K, Li6.25PS5.25Cl0.75",
+      "source": "Deng 2016"
+    },
+    {
+      "value": "524 meV",
+      "label": "Ea, stoichiometric Li6PS5Cl (211 with Li excess)",
+      "source": "Deng 2016"
+    },
+    {
+      "value": "0.94 mS/cm",
+      "label": "Na10SnP2S12 at 300 K, measured 0.4 mS/cm",
+      "source": "Richards 2016"
+    }
+  ],
+  "workflow": [
+    {
+      "title": "Order the structure",
+      "text": "Enumerate orderings of the disordered cell with enumlib via pymatgen, relax the lowest."
+    },
+    {
+      "title": "Run AIMD",
+      "text": "NVT Nose-Hoover runs at several temperatures, 2 fs steps, cells of at least 10 A."
+    },
+    {
+      "title": "Fit diffusivity",
+      "text": "Fit the MSD against 2dt per temperature, then an Arrhenius plot for Ea and D at 300 K."
+    },
+    {
+      "title": "Convert and inspect",
+      "text": "Nernst-Einstein conductivity, probability density isosurfaces, van Hove functions."
+    }
+  ],
+  "applications": [
+    {
+      "glyph": "diffusion",
+      "title": "Na+ interstitials and dopants in c-Na3PS4",
+      "text": "AIMD at 800 to 1400 K analyzed with pymatgen: pristine c-Na3PS4 gives 1.1e-4 mS/cm and 537 meV, one Na+ interstitial 1.06 mS/cm and 256 meV, 6.25% Sn doping 10.7 mS/cm and 171 meV.",
+      "source": "Zhu 2015"
+    },
+    {
+      "glyph": "crystal",
+      "title": "Design and synthesis of Na10SnP2S12",
+      "text": "AIMD between 600 and 1300 K, with diffusivities fitted by pymatgen tools, predicted 0.94 mS/cm and 317 meV at room temperature. The synthesized compound measured 0.4 mS/cm and 356 meV.",
+      "source": "Richards 2016"
+    }
+  ],
+  "sources": [
+    {
+      "label": "Deng 2016",
+      "doi": "10.1021/acs.chemmater.6b02648"
+    },
+    {
+      "label": "Zhu 2015",
+      "doi": "10.1021/acs.chemmater.5b03656"
+    },
+    {
+      "label": "Richards 2016",
+      "doi": "10.1038/ncomms11009"
+    }
+  ],
+  "detail": [
+    {
+      "heading": "Diffusivity, conductivity and correlation functions",
+      "text": "The diffusivity is D = <[dr(t)]^2> / (2dt), from a linear fit of the mean squared displacement against 2dt. Runs at several temperatures give an Arrhenius plot whose slope is the activation energy and whose extrapolation gives D at 300 K, which the Nernst-Einstein equation converts to a conductivity. The probability density P(r), defined on a uniform 3D grid and normalized over the cell, locates sites and migration paths. The van Hove function splits into a self part Gs and a distinct part Gd that reduces to the pair distribution function at t = 0. The probability density and van Hove analyses were implemented in the open-source pymatgen-diffusion add-on (Deng 2016)."
+    },
+    {
+      "heading": "Practical settings and automation",
+      "text": "AIMD for superionic conductors runs in the NVT ensemble with a Nose-Hoover thermostat at fixed 0 K or experimental cell parameters, non-spin-polarized with a reduced cutoff. A 2 fs time step suffices, and cells of at least 10 A per side limit artificial correlated diffusion from periodic images. Runs take weeks, so a FireWorks workflow adds AIMD jobs per temperature and a custodian WallTimeHandler stops each job before the queue limit. Continuations resubmit until a maximum step count, a required MSD or a required R-squared of the MSD fit is reached. Snapshots and analyses go to MongoDB. With this setup more than 200 compositions were assessed in two years (Deng 2016)."
+    },
+    {
+      "heading": "Validation against measured conductors",
+      "text": "For argyrodite Li6PS5Cl the stoichiometric cell gives about 2e-3 mS/cm and 524 meV. A Li-excess Li6.25PS5.25Cl0.75 cell gives 14 mS/cm (12 to 18 from the fit uncertainty) and 211 meV, about an order of magnitude above the measured total conductivity of 1.1 mS/cm. The authors list fit uncertainty, grain boundaries in the measured total conductivity and the single conventional cell as causes (Deng 2016). For Na10SnP2S12 the predicted 0.94 mS/cm and 317 meV compare with 0.4 mS/cm and 356 meV measured on the synthesized compound (Richards 2016). For Si-doped Na3PS4 the predicted 1.66 mS/cm compares with 0.74 mS/cm measured for 0.94Na3PS4-0.06Na4SiS4 (Zhu 2015)."
+    }
+  ]
+}

@@ -1,0 +1,112 @@
+{
+  "key": "mat-elasticity",
+  "headline": "mat-elasticity: the elastic tensor of a crystal from strained cells",
+  "claim": "An AtomisticSkills skill that strains a cell, reads the stress from a machine-learned potential and fits the 21 elastic constants by least squares through matcalc.",
+  "hero": {
+    "glyph": "lattice",
+    "title": "Stress response to small strains",
+    "text": "The skill applies normal strains of 0.5% and 1% and shear strains of 3% and 6%, each with both signs, to the relaxed cell. The potential gives each deformed cell's stress and ElasticityCalc fits the Voigt tensor C_ij."
+  },
+  "features": [
+    {
+      "glyph": "neural",
+      "title": "Potentials with stress labels",
+      "text": "The skill loads MACE, MatGL or FAIRChem wrappers. It asks for models trained with stress labels on OMAT or MatPES, such as MACE-OMAT-0-small, since the fit uses stresses."
+    },
+    {
+      "glyph": "atoms",
+      "title": "Relaxed-ion or clamped-ion",
+      "text": "By default ions relax in each deformed cell at fixed shape, giving the relaxed-ion constants experiment measures. --no-relax_deformed gives stiffer clamped-ion ones."
+    },
+    {
+      "glyph": "bars",
+      "title": "Moduli and derived properties",
+      "text": "Bulk and shear moduli as Voigt, Reuss and Hill averages, Young's modulus and Poisson ratio from the VRH pair, the anisotropy index, Debye temperature and Born stability."
+    },
+    {
+      "glyph": "code",
+      "title": "Inputs and outputs",
+      "text": "Input is a CIF or POSCAR and a model name. Output is elasticity_results.json with the 6x6 tensor in GPa, the moduli, the fit residual and directional Young's moduli."
+    },
+    {
+      "glyph": "pressure",
+      "title": "Moduli under load",
+      "text": "--pressure relaxes cell and ions against a hydrostatic load in GPa, then reports stress-strain coefficients about that loaded reference, not the zero-pressure cell."
+    }
+  ],
+  "facts": [
+    {
+      "value": "21",
+      "label": "independent C_ij fitted when symmetry is off",
+      "source": "mat-elasticity SKILL.md"
+    },
+    {
+      "value": "7.5%",
+      "label": "clamped minus relaxed shear modulus, Pnma CaMgSi",
+      "source": "mat-elasticity SKILL.md"
+    },
+    {
+      "value": "130-145",
+      "label": "Cu bulk modulus in GPa, MACE-OMAT-0-small",
+      "source": "Cu example README"
+    }
+  ],
+  "workflow": [
+    {
+      "title": "Relax the cell",
+      "text": "calculate_elasticity.py reads a CIF or POSCAR and relaxes it to a stress-free reference."
+    },
+    {
+      "title": "Apply strains",
+      "text": "Normal strains of 0.5% and 1% and shear strains of 3% and 6%, both signs, by default."
+    },
+    {
+      "title": "Compute stresses",
+      "text": "The potential evaluates each deformed cell, ions re-minimised at fixed cell by default."
+    },
+    {
+      "title": "Fit and report",
+      "text": "Least squares gives C_ij. elasticity_results.json holds tensor, VRH moduli and residual."
+    }
+  ],
+  "applications": [
+    {
+      "glyph": "crystal",
+      "title": "fcc Cu with MACE-OMAT-0-small",
+      "text": "The worked example expects a bulk modulus of 130 to 145 GPa, a shear modulus of 45 to 55 GPa and a Poisson ratio of 0.33 to 0.36, against measured 137 GPa, 48 GPa and 0.34.",
+      "source": "Cu example README"
+    }
+  ],
+  "sources": [
+    {
+      "label": "AtomisticSkills README",
+      "url": "https://github.com/learningmatter-mit/AtomisticSkills"
+    },
+    {
+      "label": "mat-elasticity SKILL.md",
+      "url": "https://github.com/learningmatter-mit/AtomisticSkills/blob/main/skills/mat-elasticity/SKILL.md"
+    },
+    {
+      "label": "Cu example README",
+      "url": "https://github.com/learningmatter-mit/AtomisticSkills/blob/main/skills/mat-elasticity/examples/Cu/README.md"
+    },
+    {
+      "label": "calculate_elasticity.py",
+      "url": "https://github.com/learningmatter-mit/AtomisticSkills/blob/main/skills/mat-elasticity/scripts/calculate_elasticity.py"
+    }
+  ],
+  "detail": [
+    {
+      "heading": "Stress-strain fit about a relaxed reference",
+      "text": "The skill relaxes the input cell first, since elastic constants are defined about zero stress. matcalc's ElasticityCalc then builds deformed cells with pymatgen's DeformedStructureSet, at normal strains of plus or minus 0.5% and 1% and shear strains of plus or minus 3% and 6% by default. The potential returns a stress per cell and a least-squares regression gives the tensor. With symmetry off, all 21 independent components are fitted. The skill re-minimises the ions in each deformed cell at fixed shape, the relaxed-ion constants the Materials Project and atomate2 compute. matcalc alone defaults to clamped-ion, stiffer by 1.4% on the bulk and 7.5% on the shear modulus of Pnma CaMgSi."
+    },
+    {
+      "heading": "Derived quantities and where hand calculations go wrong",
+      "text": "Beyond the VRH averages the script reports the universal anisotropy index A^U = 5 G_V/G_R + B_V/B_R - 6, which needs the Voigt and Reuss bounds kept separate. Directional Young's moduli come from the compliance tensor along [100], [010] and [001] and over all directions, since for CaMgSi the stiffest direction lies about 40 degrees off a in the a-c plane and is 13% stiffer than the stiffest axis. Sound velocities and the Debye temperature follow the Anderson relation with a harmonic-cube mean over the three acoustic branches. Christoffel eigenvalues give the branch velocities along a chosen direction, and the eigenvalues of C_ij give Born stability."
+    },
+    {
+      "heading": "Interfaces and environment",
+      "text": "The skill runs through the project's venv/run launcher, in the mlip environment for MACE and MatGL models and in fairchem for FairChem or UMA models. matcalc returns bulk and shear moduli in eV/A^3 and the script converts to GPa with 160.2176634 GPa per eV/A^3. The script computes Young's modulus E = 9BG/(3B+G) and Poisson ratio nu = (3B-2G)/(6B+2G) from the VRH moduli. fmax defaults to 0.1 eV/A. matcalc accepts one threshold for both relaxation stages, so on the relaxed-ion path the script hands it the smaller of --fmax and --deformed_fmax, 1e-4 eV/A by default. Residual forces in a deformed cell would contaminate the fitted stress."
+    }
+  ]
+}

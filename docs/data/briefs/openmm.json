@@ -1,0 +1,136 @@
+{
+  "key": "openmm",
+  "headline": "OpenMM: GPU molecular dynamics with a Python API and custom forces",
+  "claim": "A molecular dynamics library whose custom forces and integrators take a mathematical expression and run on CPUs and GPUs with little or no speed loss, now with PyTorch potentials.",
+  "hero": {
+    "glyph": "code",
+    "title": "Forces from an expression",
+    "text": "CustomAngleForce('k*(theta-theta0)^2') is a complete new interaction. OpenMM compiles the expression for the CPU or GPU it runs on, often with little or no speed difference from a hand-written force (Eastman 2017)."
+  },
+  "features": [
+    {
+      "glyph": "gpu",
+      "title": "CPU and GPU platforms",
+      "text": "CUDA, OpenCL, HIP and CPU backends, ARM and PowerPC. DHFR with 23,558 atoms runs at 367 ns/day on a Titan X (Eastman 2017) and 1031 ns/day on an AMD V620 (Eastman 2023)."
+    },
+    {
+      "glyph": "neural",
+      "title": "Machine-learned potentials",
+      "text": "TorchForce embeds any TorchScript model. MLPotential('ani2x') builds a pure or mixed ML/MM system. NNPOps runs ANI-2x 5.7 times faster than TorchANI (Eastman 2023)."
+    },
+    {
+      "glyph": "workflow",
+      "title": "Input pipelines",
+      "text": "A PDB file with a ForceField XML, or Amber prmtop, CHARMM, Gromacs and Desmond files. Forces and energies checked against Amber 16, Gromacs and CHARMM (Eastman 2017)."
+    },
+    {
+      "glyph": "orbital",
+      "title": "Polarizable force fields",
+      "text": "AMOEBA with multipoles to quadrupoles and induced dipoles. DHFR runs at 20.90 ns/day on a Titan X with extrapolated polarization, 10.09 mutual (Eastman 2017)."
+    },
+    {
+      "glyph": "ensemble",
+      "title": "Sampling and scale",
+      "text": "Metadynamics natively or via PLUMED, collective variables from any energy term. A 1,067,095-atom virus runs at 32.3 to 70.9 ns/day on one to four A100s (Eastman 2023)."
+    }
+  ],
+  "facts": [
+    {
+      "value": "367",
+      "label": "ns/day, DHFR 23,558 atoms, 2 fs step, Titan X",
+      "source": "Eastman 2017"
+    },
+    {
+      "value": "5.7x",
+      "label": "NNPOps speedup over TorchANI for ANI-2x",
+      "source": "Eastman 2023"
+    },
+    {
+      "value": "1.557",
+      "label": "kJ/mol/ps energy drift, single precision, DHFR",
+      "source": "Eastman 2017"
+    }
+  ],
+  "workflow": [
+    {
+      "title": "Load a structure",
+      "text": "PDBFile with ForceField('amber99sbildn.xml', 'tip3p.xml'), or AmberPrmtopFile."
+    },
+    {
+      "title": "Create the System",
+      "text": "createSystem with PME, a 1 nm cutoff and HBonds constraints (Eastman 2017)."
+    },
+    {
+      "title": "Pick the dynamics",
+      "text": "A Langevin integrator at 300 K (Eastman 2017), MonteCarloBarostat for pressure."
+    },
+    {
+      "title": "Run and report",
+      "text": "StateDataReporter for temperature and energy, DCDReporter for the trajectory."
+    },
+    {
+      "title": "Extend",
+      "text": "Custom forces and integrators, TorchForce models or MLPotential mixed systems."
+    }
+  ],
+  "applications": [
+    {
+      "glyph": "molecule",
+      "title": "AlphaFold structure relaxation",
+      "text": "Predicted structures relax by gradient descent in Amber99sb with OpenMM 7.3.1. This removes stereochemical violations without loss of accuracy. The CASP14 median is 0.96 Angstrom r.m.s.d.95.",
+      "source": "Jumper 2021"
+    },
+    {
+      "glyph": "workflow",
+      "title": "ColabFold on a single GPU",
+      "text": "The AlphaFold2_mmseqs2 notebook relaxes predictions with Amber force fields, citing OpenMM 7. MMseqs2 search is 40 to 60 times faster. One GPU predicts close to 1000 structures a day.",
+      "source": "Mirdita 2022"
+    },
+    {
+      "glyph": "database",
+      "title": "SWISS-MODEL homology models",
+      "text": "The ProMod3 engine removes clashes and distortions by energy minimization with the OpenMM library and the CHARMM27 force field. The repository holds 1,067,355 SWISS-MODEL models.",
+      "source": "Waterhouse 2018"
+    }
+  ],
+  "sources": [
+    {
+      "label": "Eastman 2017",
+      "doi": "10.1371/journal.pcbi.1005659"
+    },
+    {
+      "label": "Eastman 2023",
+      "doi": "10.1021/acs.jpcb.3c06662"
+    },
+    {
+      "label": "Jumper 2021",
+      "doi": "10.1038/s41586-021-03819-2"
+    },
+    {
+      "label": "Mirdita 2022",
+      "doi": "10.1038/s41592-022-01488-1"
+    },
+    {
+      "label": "Waterhouse 2018",
+      "doi": "10.1093/nar/gky427"
+    }
+  ],
+  "detail": [
+    {
+      "heading": "Architecture and forces",
+      "text": "OpenMM is a layered library. Python classes sit on top, custom forces and integrators in the middle, and computational kernels loaded as plugins at the bottom, so one script runs on a CPU or a GPU (Eastman 2017). Standard forces include Lennard-Jones, PME and generalized Born solvent. Ten custom force classes, from CustomBondForce to CustomManyParticleForce, accept an algebraic expression, and CustomIntegrator writes an integration algorithm the same way. AMOEBA uses spherical harmonics in a quasi-internal frame with DIIS or extrapolated polarization for the induced dipoles, and Drude particles offer a second polarizable model. OpenMM 8 adds TorchForce and OpenMM-ML (Eastman 2023)."
+    },
+    {
+      "heading": "Numerics and scale",
+      "text": "With AMBER99SB-ILDN, TIP3P and PME, DHFR (23,558 atoms) runs at 367 ns/day on a Titan X Pascal and 13.0 ns/day on four Core i7 cores at a 2 fs step, and 706 ns/day at 5 fs with hydrogen mass repartitioning (Eastman 2017). Both GPUs of one K80 run a simulation 22 to 62 percent faster than one GPU. Single and mixed precision run at similar speed while double precision drops to 18.1 ns/day on the Titan X. In OpenMM 8 the HIP backend reaches 1031 ns/day for DHFR on an AMD V620, four NVLink A100 GPUs run the 1,067,095-atom satellite tobacco mosaic virus at 70.9 ns/day, and NNPOps lifts ANI-2x on a 53-atom inhibitor from 9.8 to 56 ns/day, against 281 ns/day for OpenFF 2.0.0 (Eastman 2023)."
+    },
+    {
+      "heading": "Interfaces and related packages",
+      "text": "Systems arrive from PDB files with XML force fields or from Amber, CHARMM, Gromacs and Desmond input files, so users keep their tools (Eastman 2017). The code is developed on GitHub under the openmm organization and available from openmm.org. OpenMM-Torch bridges to PyTorch, OpenMM-ML wraps ANI-1ccx and ANI-2x, and the SPICE dataset of omega-B97M-D3BJ/def2-TZVPPD energies and forces over 15 elements is meant to train further potentials (Eastman 2023). OpenFF and GAFF handle small molecules. On the map, run_md.py reads potential energy through getPotentialEnergy(), temperature through StateDataReporter, the pressure setpoint from MonteCarloBarostat and the trajectory through DCDReporter."
+    },
+    {
+      "heading": "Validation",
+      "text": "In 1 ns constant-energy runs of DHFR repeated ten times, the energy drift is 1.557 kJ/mol/ps in single precision, -0.0047 in mixed and -0.0062 in double. Mixed precision gives a very large benefit at low cost (Eastman 2017). Forces and energies for DHFR and the 2KOC RNA hairpin loaded through each input pipeline were compared with Amber 16, Gromacs 4.6.5 and CHARMM-LITE c40b1. Production pipelines use the code. AlphaFold relaxes its predictions in Amber99sb with OpenMM 7.3.1 (Jumper 2021), ColabFold relaxes in Amber force fields and cites OpenMM 7 (Mirdita 2022), and ProMod3 in SWISS-MODEL ends with an energy minimization in OpenMM with CHARMM27 (Waterhouse 2018)."
+    }
+  ]
+}

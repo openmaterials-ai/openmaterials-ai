@@ -1,0 +1,115 @@
+{
+  "key": "mattergen",
+  "headline": "MatterGen: a diffusion model that generates stable inorganic crystals",
+  "claim": "A diffusion model denoising atom types, coordinates and lattice together, pretrained on stable crystals and fine-tuned with adapters toward a chemistry, symmetry or property.",
+  "hero": {
+    "glyph": "crystal",
+    "title": "Noise to crystal in one process",
+    "text": "The forward process masks atom types, spreads coordinates to a uniform wrapped distribution and pulls the lattice toward a cubic cell at the training-set density. An equivariant score network reverses all three at once."
+  },
+  "features": [
+    {
+      "glyph": "neural",
+      "title": "Adapter fine-tuning",
+      "text": "Adapter modules injected into every layer take an encoded property label. Classifier-free guidance then steers sampling to a chemistry, space group or scalar target."
+    },
+    {
+      "glyph": "database",
+      "title": "Training data",
+      "text": "Alex-MP-20 has 607,683 structures of up to 20 atoms from the Materials Project and Alexandria. Stability is judged on the 850,384-structure Alex-MP-ICSD hull (Zeni 2025)."
+    },
+    {
+      "glyph": "cube",
+      "title": "Outputs and filters",
+      "text": "MatterGen writes unit cells as CIF files. MatterSim pre-relaxes and filters them before DFT, and a structure matcher checks uniqueness and novelty."
+    },
+    {
+      "glyph": "magnet",
+      "title": "Property targets",
+      "text": "Fine-tuned on 605,000 magnetic density labels, 42,000 band gaps and 5,000 bulk moduli, then sampled at targets of 0.20 A^-3, 3.0 eV and 400 GPa (Zeni 2025)."
+    }
+  ],
+  "facts": [
+    {
+      "value": "78%",
+      "label": "samples within 0.1 eV/atom of the MP hull",
+      "source": "Zeni 2025"
+    },
+    {
+      "value": "0.076 A",
+      "label": "RMSD to the DFT minimum for 95% of structures",
+      "source": "Zeni 2025"
+    },
+    {
+      "value": ">2,000",
+      "label": "ICSD structures rediscovered, unseen in training",
+      "source": "Zeni 2025"
+    }
+  ],
+  "workflow": [
+    {
+      "title": "Choose a model",
+      "text": "The base model for open sampling, or one fine-tuned for a chemistry, symmetry or property."
+    },
+    {
+      "title": "Set the target",
+      "text": "A chemical system such as Li-Co-O, a space group, or a value such as 400 GPa bulk modulus."
+    },
+    {
+      "title": "Sample structures",
+      "text": "Generate batches of unit cells by reverse diffusion and write them as CIF files."
+    },
+    {
+      "title": "Pre-relax and filter",
+      "text": "Relax with MatterSim, drop unstable candidates, then compute energy above hull with DFT."
+    },
+    {
+      "title": "Match against databases",
+      "text": "Keep structures that are unique among samples and new against Alex-MP-ICSD."
+    }
+  ],
+  "applications": [
+    {
+      "glyph": "pressure",
+      "title": "TaCr2O6 synthesised to a bulk modulus target",
+      "text": "In the MatterGen paper, sampling at a 200 GPa target gave TaCr2O6, 222 GPa by DFT. The synthesised, disordered sample measured up to 169 GPa, within 20% of the target.",
+      "source": "Zeni 2025"
+    },
+    {
+      "glyph": "phase-diagram",
+      "title": "New phases on the V-Sr-O hull",
+      "text": "In the MatterGen paper, the model found three new structures, four overall, on the combined V-Sr-O hull, where substitution found three and random structure search one.",
+      "source": "Zeni 2025"
+    },
+    {
+      "glyph": "magnet",
+      "title": "Low supply-chain-risk magnets",
+      "text": "In the MatterGen paper, a model tuned to magnetic density 0.2 A^-3 and HHI 1,250 generated SUN structures near both targets and nearly removed Co and Gd from its proposals.",
+      "source": "Zeni 2025"
+    }
+  ],
+  "sources": [
+    {
+      "label": "Zeni 2025",
+      "doi": "10.1038/s41586-025-08628-5"
+    }
+  ],
+  "detail": [
+    {
+      "heading": "A diffusion process built for crystals",
+      "text": "A crystal is a unit cell with atom types A, fractional coordinates X and lattice L. Each has its own corruption process. Coordinates diffuse under a wrapped normal that respects periodicity and tends to uniform, with the noise scaled by cell size. The lattice diffuses in a symmetric form toward a cubic cell at the average atomic density of the training data. Atom types diffuse in categorical space toward a masked state. The score network outputs invariant scores for types and equivariant scores for coordinates and lattice, so the symmetries are not learned from data. Fine-tuning adds adapter modules in every layer and uses classifier-free guidance at sampling time (Zeni 2025)."
+    },
+    {
+      "heading": "Numerics and scale",
+      "text": "Of 1,024 generated structures relaxed with DFT, 78% lie within 0.1 eV/atom of the Materials Project hull and 75% within 0.1 eV/atom of the Alex-MP-ICSD hull. For 95% of structures the RMSD to the DFT-relaxed geometry is below 0.076 A. Uniqueness is 100% at 1,000 samples and 52% at 10 million, and 61% of samples are new. Trained on MP-20 only, MatterGen-MP yields 60% more SUN structures than CDVAE and DiffCSP with 50% lower RMSD. Scaling the training set to Alex-MP-20 adds another 70% in SUN rate and cuts RMSD five times. In quinary systems it reached the hull with 10,240 samples against about 70,000 for substitution and 600,000 for random structure search (Zeni 2025)."
+    },
+    {
+      "heading": "Data and code",
+      "text": "Training structures come from the Materials Project v2022.10.28 and Alexandria, both CC BY 4.0, and the test reference adds ICSD release 2023.1. The MatterSim force field pre-relaxes the generated candidates and screens them for phonon stability before DFT. The microsoft/mattergen repository holds the source code, the Alex-MP datasets and the CIF files of the paper. On the map MatterGen serves the generated-structure quantity, batches of unit cells written to CIF (Zeni 2025)."
+    },
+    {
+      "heading": "Validation",
+      "text": "The bulk modulus models were sampled at 50, 100, 150 and 200 GPa, 8,192 candidates each. Among them 101 matched experimentally verified ICSD structures absent from training, and DFT moduli for 95 of these agree with the targets to an MAE of 23 GPa and an RMSE of 32 GPa. One of four synthesis candidates, TaCr2O6, formed with 98% phase purity by Rietveld refinement. With a budget of 180 DFT property calculations the model found 18 SUN structures above 0.2 A^-3 magnetic density and 106 above 400 GPa bulk modulus, against 40 for screening. The jointly fine-tuned magnet model rediscovered 67 synthesised disordered ICSD structures (Zeni 2025)."
+    }
+  ]
+}

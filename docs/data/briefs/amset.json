@@ -1,0 +1,132 @@
+{
+  "key": "amset",
+  "headline": "AMSET: carrier scattering rates and transport from first principles",
+  "claim": "Scattering rates for anisotropic semiconductors from materials parameters alone, with no DFPT electron-phonon step, at about 1/500th the cost of DFPT plus Wannier (Ganose 2021).",
+  "hero": {
+    "glyph": "scattering",
+    "title": "Four mechanisms, one transport equation",
+    "text": "Acoustic deformation potential, piezoelectric, ionized impurity and polar optical phonon matrix elements, each extended to the full elastic, piezoelectric and dielectric tensors, feed the Boltzmann transport equation."
+  },
+  "features": [
+    {
+      "glyph": "spring",
+      "title": "Matrix elements from tensors",
+      "text": "Acoustic strain comes from the Christoffel equation with the full elastic tensor, so the longitudinal and both transverse modes enter one matrix element."
+    },
+    {
+      "glyph": "database",
+      "title": "Inputs",
+      "text": "PBE bands on a uniform k mesh, wave functions, elastic, dielectric and piezoelectric tensors, deformation potentials and a polar phonon frequency."
+    },
+    {
+      "glyph": "grid",
+      "title": "Brillouin zone integration",
+      "text": "A modified linear tetrahedron scheme puts hundreds of points on each cross section's energy-conserving surface and handles the 1/q^4 impurity singularity (Ganose 2021)."
+    },
+    {
+      "glyph": "chart-up",
+      "title": "Outputs",
+      "text": "Band- and k-resolved lifetimes, mobility in cm^2/(V s), conductivity in S/m, Seebeck coefficient in muV/K and electronic thermal conductivity in W/(m K)."
+    },
+    {
+      "glyph": "clock",
+      "title": "Cost",
+      "text": "The mobility of NbFeSb and Ba2BiAu took 29 core hours against 8350 for DFPT plus Wannier. The transport step alone runs in under an hour on a laptop (Ganose 2021)."
+    }
+  ],
+  "facts": [
+    {
+      "value": "0.93",
+      "label": "Spearman rank of calculated vs measured mobility",
+      "source": "Ganose 2021"
+    },
+    {
+      "value": "1/500",
+      "label": "cost relative to DFPT plus Wannier",
+      "source": "Ganose 2021"
+    },
+    {
+      "value": "48",
+      "label": "atoms in CH3NH3PbI3, the largest cell tested",
+      "source": "Ganose 2021"
+    }
+  ],
+  "workflow": [
+    {
+      "title": "Run DFT in VASP",
+      "text": "Relax, then a uniform non-self-consistent run at 1000 k-points/A^3 for bands and states."
+    },
+    {
+      "title": "Collect parameters",
+      "text": "Elastic, dielectric and piezoelectric tensors, deformation potentials, phonon frequency."
+    },
+    {
+      "title": "Set conditions",
+      "text": "Temperatures and carrier concentrations, and a scissor to the HSE06 gap if wanted."
+    },
+    {
+      "title": "Compute scattering rates",
+      "text": "Interpolate with BoltzTraP2, integrate each mechanism over q with the tetrahedron scheme."
+    },
+    {
+      "title": "Read transport",
+      "text": "Mobility, conductivity, Seebeck and electronic thermal conductivity at each T and doping."
+    }
+  ],
+  "applications": [
+    {
+      "glyph": "chart-up",
+      "title": "Thermoelectric Cs3Cu2I5",
+      "text": "AMSET gives a room temperature electron mobility of 18.2 cm^2/(V s) at 4e18 cm^-3, limited by polar optical phonons. With kappa_L below 0.1 W/(m K), ZT reaches 2.57 at 600 K.",
+      "source": "Jung 2021"
+    },
+    {
+      "glyph": "layers",
+      "title": "Band transport in Sb2S3 and Sb2Se3",
+      "text": "At 300 K AMSET mobilities average about 40 cm^2/(V s) for electrons and 15 for holes, limited by polar optical phonons, consistent with large polarons rather than self-trapping.",
+      "source": "Wang 2022"
+    },
+    {
+      "glyph": "thermometer",
+      "title": "Pb-based ZrCuSiAs-type thermoelectrics",
+      "text": "PbCuSeF, PbAgSeF and PbAgTeF lie within 25 meV/atom of the hull with kappa_L below 1 W/(m K). AMSET gives them higher power factors than their Ba analogs.",
+      "source": "He 2021"
+    }
+  ],
+  "sources": [
+    {
+      "label": "Ganose 2021",
+      "doi": "10.1038/s41467-021-22440-5"
+    },
+    {
+      "label": "He 2021",
+      "doi": "10.1002/adfm.202108532"
+    },
+    {
+      "label": "Jung 2021",
+      "doi": "10.1038/s41524-021-00521-9"
+    },
+    {
+      "label": "Wang 2022",
+      "doi": "10.1021/acsenergylett.2c01464"
+    }
+  ],
+  "detail": [
+    {
+      "heading": "Scattering without DFPT",
+      "text": "AMSET writes each mechanism as a Born-approximation matrix element. Acoustic deformation potential scattering joins the Bardeen-Shockley form to the Khan-Allen deformation potential tensor, with each mode's strain from the Christoffel equation and amplitude from kB T over rho c^2. Piezoelectric scattering uses the full piezoelectric stress tensor and all three modes. Polar optical scattering extends the Frohlich model with overlaps, an anisotropic permittivity and one dipole-weighted phonon frequency. Ionized impurities are Coulomb potentials screened by the full dielectric tensor. Elastic rates use the momentum relaxation time approximation, polar rates the self-energy one (Ganose 2021)."
+    },
+    {
+      "heading": "Numerics and scale",
+      "text": "Eigenvalues and group velocities are Fourier interpolated onto dense grids with BoltzTraP2, and AMSET evaluates scattering only at the most important k-points. A modified linear tetrahedron integration resamples cross sections with hundreds of points that satisfy the delta function exactly and reproduces the Brooks-Herring mobility for parabolic bands. Matrix element cost does not depend on the number of atoms. For NbFeSb and Ba2BiAu the full mobility took 29 core hours against 8350 for DFPT plus Wannier, and ten temperatures for Ba2BiAu under 35 core hours against about 32,000. The transport step for each material ran in under an hour on a laptop (Ganose 2021)."
+    },
+    {
+      "heading": "Inputs and interfaces",
+      "text": "In the paper the first-principles inputs come from VASP with PBE, managed by atomate. The runs use a 520 eV cutoff, 64 k-points/A^3 for relaxation and 1000 k-points/A^3 for the uniform run. DFPT gives the dielectric and piezoelectric tensors, and stress-strain fits give the elastic constants. A scissor shifts band gaps to HSE06. The Materials Project already holds over 3300 piezoelectric tensors, 7100 dielectric constants and 13,000 elastic tensors. AMSET is a Python package with command-line tools (Ganose 2021). On the map it serves carrier mobility, electrical conductivity, electronic thermal conductivity, Seebeck coefficient and the static dielectric tensor assembled from the DFPT inputs."
+    },
+    {
+      "heading": "Validation",
+      "text": "Mode-resolved rates for n-Si and n-GaAs at 300 K match EPW and PERTURBO, including the onset of polar optical emission in GaAs. Across 21 semiconductors from 2 to 48 atoms per cell, calculated mobilities at 300 K span ZnO at 180 cm^2/(V s) to n-GaAs at 2.1e4 cm^2/(V s) with a Spearman rank of 0.93 against experiment, where a 10 fs constant lifetime gives 0.52. The mean squared error of the temperature dependence is 0.20 against 0.19 for DFPT plus Wannier and 3.2 for a constant lifetime. CH3NH3PbI3 agrees with EPW within 5% at all temperatures. AMSET overestimates n-ZnS about 4 times because PBE gives an effective mass of 0.16 against 0.22 measured. HSE06 fixes it (Ganose 2021)."
+    }
+  ]
+}

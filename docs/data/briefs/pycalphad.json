@@ -1,0 +1,114 @@
+{
+  "key": "pycalphad",
+  "headline": "pycalphad: CALPHAD Gibbs energy models and equilibria in Python",
+  "claim": "A Python library that builds symbolic Gibbs energy models per phase from a TDB database and minimizes the multicomponent, multiphase Gibbs energy, with models swapped at run time.",
+  "hero": {
+    "glyph": "phase-diagram",
+    "title": "Symbolic phase models",
+    "text": "Each phase's molar Gibbs energy is a SymPy expression built from database parameters and decoupled from the solver. A custom Model subclass replaces it without touching the equilibrium code (Otis 2017)."
+  },
+  "features": [
+    {
+      "glyph": "database",
+      "title": "Database",
+      "text": "Database('example.tdb') parses the TDB format into phases, sublattice models and parameters, searchable with search() and written back with to_file() (Otis 2017)."
+    },
+    {
+      "glyph": "code",
+      "title": "Model",
+      "text": "The library Model carries the compound energy formalism, Redlich-Kister polynomials with the Muggianu extension and the Inden-Hillert-Jarl magnetic model (Otis 2017)."
+    },
+    {
+      "glyph": "grid",
+      "title": "calculate() and equilibrium()",
+      "text": "calculate() gives a property at set T, P and site fractions. equilibrium() minimizes the Gibbs energy for conditions like {v.X('AL'): (0, 1, 0.01), v.T: 600} (Otis 2017)."
+    },
+    {
+      "glyph": "cube",
+      "title": "xarray results",
+      "text": "Results are xarray Datasets with dimensions for conditions, tie-simplex vertex and internal degrees of freedom. eq.MU.sel(component='AL', T=600) picks one (Otis 2017)."
+    },
+    {
+      "glyph": "clock",
+      "title": "Compiled derivatives",
+      "text": "SymPy code generation compiles each model and its exact first and second derivatives to machine code on demand (Otis 2017)."
+    }
+  ],
+  "facts": [
+    {
+      "value": "3000",
+      "label": "lines of Python, roughly, at version 0.4.2",
+      "source": "Otis 2017"
+    },
+    {
+      "value": "80%",
+      "label": "of the code, by lines, covered by the CI tests",
+      "source": "Otis 2017"
+    },
+    {
+      "value": "170 x 100",
+      "label": "temperatures x compositions in a 2-D mapping",
+      "source": "Otis 2017"
+    }
+  ],
+  "workflow": [
+    {
+      "title": "Load a TDB",
+      "text": "dbf = Database('alfe.tdb'), then list(dbf.phases.keys()) for the phase names."
+    },
+    {
+      "title": "Pick components, phases",
+      "text": "Choose comps and phases, and optionally a custom Model for all phases or one of them."
+    },
+    {
+      "title": "Set conditions",
+      "text": "conditions = {v.X('AL'): (0, 1, 0.01), v.T: 600}, with T in K and P in Pa."
+    },
+    {
+      "title": "Compute",
+      "text": "eq = equilibrium(dbf, comps, phases, conditions, output='HM'), or calculate() per phase."
+    },
+    {
+      "title": "Read and plot",
+      "text": "Slice eq.MU, eq.NP and eq.Phase with xarray, or map the phase diagram and plot it."
+    }
+  ],
+  "applications": [
+    {
+      "glyph": "fit-curve",
+      "title": "Cu-Mg database fitted with ESPEI",
+      "text": "ESPEI fits Cu-Mg with pycalphad as engine. 15 degrees of freedom for five phases go through 500 MCMC iterations. The largest liquid Gibbs energy uncertainty is ~1 kJ/mol (Bocklund 2019).",
+      "source": "Bocklund 2019"
+    },
+    {
+      "glyph": "phase-diagram",
+      "title": "Al-Fe phase diagram from COST 507",
+      "text": "In the pycalphad paper, the COST 507 Al-Fe diagram, with lines of constant B2 ordering and the Curie temperature, shows a second-order bcc ordering transition (Otis 2017).",
+      "source": "Otis 2017"
+    }
+  ],
+  "sources": [
+    {
+      "label": "Otis 2017",
+      "doi": "10.5334/jors.140"
+    },
+    {
+      "label": "Bocklund 2019",
+      "doi": "10.1557/mrc.2019.59"
+    }
+  ],
+  "detail": [
+    {
+      "heading": "Models",
+      "text": "pycalphad implements the compound energy formalism with sublattices. The default Model exposes GM, SM, HM, CPM, the mixing quantities MIX_GM, MIX_SM, MIX_HM and MIX_CPM, the Curie temperature TC and the degree of ordering DOO as SymPy expressions (Otis 2017). Contributions are declared as a list of (name, method) tuples on the class, so a subclass adds or replaces a term, for example a penalty on the squared deviation from equimolar composition, and is passed as model= to calculate() or equilibrium(), for all phases or per phase as {'FCC_A1': CustomModel} (Otis 2017). Parameter queries run against the Database with tinydb where clauses, and redlich_kister_sum() builds the sums (Otis 2017)."
+    },
+    {
+      "heading": "Numerics",
+      "text": "calculate() takes T and P as scalars or 1-D arrays and a points array of shape (P, T, y) of site fractions ordered by sublattice and then alphabetically (Otis 2017). equilibrium() always returns GM and MU because the solver needs them, with Phase and NP per vertex of the tie simplex and NaN padding where a phase has fewer internal degrees of freedom (Otis 2017). The authors chose Gibbs energy minimization over the Quickhull approach of the Gibbs package because general convex hull algorithms scale poorly in high dimension and only the lower hull is needed (Otis 2017). Interpolation between computed conditions is not implemented (Otis 2017)."
+    },
+    {
+      "heading": "Dependencies and validation",
+      "text": "pycalphad depends on numpy, scipy, sympy, xarray, matplotlib, pyparsing, tinydb, autograd, dask and dill, runs on Python 2.7+ or 3.4+ with 2 GB of RAM recommended, and is MIT licensed, with the code on GitHub and version 0.4.2 archived on Figshare (Otis 2017). CI runs tests on every push. They cover property values for several known systems, the equilibrium solver, TDB reading and writing and model construction, and each fixed bug gains a minimal test. About 80% of the code by lines is tested (Otis 2017). Al-Fe was chosen because COST 507 is public and exercises single-sublattice solutions, multi-sublattice ordered phases, magnetic ordering and stoichiometric compounds at once (Otis 2017)."
+    }
+  ]
+}

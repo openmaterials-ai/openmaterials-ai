@@ -1,0 +1,113 @@
+{
+  "key": "ngspice",
+  "headline": "ngspice: SPICE circuit simulation with mixed-signal and device-level extensions",
+  "claim": "The open-source successor of Berkeley Spice3f5, merged with the XSPICE code models and the CIDER device simulator, that solves DC, AC and transient analyses of a netlist.",
+  "hero": {
+    "glyph": "circuit",
+    "title": "Kirchhoff's laws, solved per time step",
+    "text": "ngspice solves analog nodes iteratively from Kirchhoff's laws with a sparse matrix at each time point. Digital nodes propagate events in the same executable, a native mixed-mode simulator (ngspice manual 47)."
+  },
+  "features": [
+    {
+      "glyph": "bars",
+      "title": "Seven analyses",
+      "text": "DC operating point and sweep (.op, .dc), AC small-signal (.ac), transient (.tran), pole-zero, small-signal distortion, sensitivity and noise (ngspice manual 47)."
+    },
+    {
+      "glyph": "layers",
+      "title": "Device models",
+      "text": "Gummel-Poon bipolar models including VBIC, diodes, JFET and JFET2, the six original MOSFET levels, BSIM3, BSIM4, BSIMSOI, plus Verilog-A via OpenVAF (ngspice manual 47)."
+    },
+    {
+      "glyph": "code",
+      "title": "XSPICE code models",
+      "text": "Code model instances start with A and take a .MODEL card (ngspice manual 47). Over 60 functional blocks and a 12-state digital type (ngspice XSPICE page)."
+    },
+    {
+      "glyph": "grid",
+      "title": "Two matrix solvers",
+      "text": "Sparse 1.3 is the default and is required for noise and CIDER. option klu selects KLU for large MOS circuits with thousands of transistors (ngspice manual 47)."
+    },
+    {
+      "glyph": "network",
+      "title": "Shared library",
+      "text": "Built as .so or .dll, ngspice takes a netlist from a host program, runs in its own thread and calls back at each time point. KiCad uses it (ngspice shared page)."
+    }
+  ],
+  "facts": [
+    {
+      "value": ">60",
+      "label": "functional blocks in the XSPICE model library",
+      "source": "ngspice XSPICE page"
+    },
+    {
+      "value": "32.4 s",
+      "label": "8 threads vs 65.4 s at 1, 627 BSIM4.7 inverters",
+      "source": "ngspice manual 47"
+    },
+    {
+      "value": ">20",
+      "label": "public Verilog-A compact models usable via OSDI",
+      "source": "ngspice manual 47"
+    }
+  ],
+  "workflow": [
+    {
+      "title": "Write the netlist",
+      "text": "Title line, element cards (R, C, M, X), .model cards, analysis lines such as .op or .tran."
+    },
+    {
+      "title": "Load extra models",
+      "text": "osdi model.osdi for OpenVAF-compiled Verilog-A. spinit loads the .cm code model libraries."
+    },
+    {
+      "title": "Run",
+      "text": "ngspice netlist.cir, or with -b for batch mode, or from a host via the shared library."
+    },
+    {
+      "title": "Read results",
+      "text": "print, plot and wrdata write the vectors. option numdgt sets the significant digits."
+    }
+  ],
+  "applications": [],
+  "sources": [
+    {
+      "label": "ngspice manual 47",
+      "url": "https://ngspice.sourceforge.io/docs/ngspice-47-manual.pdf"
+    },
+    {
+      "label": "ngspice README",
+      "url": "https://sourceforge.net/p/ngspice/ngspice/ci/master/tree/README"
+    },
+    {
+      "label": "ngspice home page",
+      "url": "https://ngspice.sourceforge.io/"
+    },
+    {
+      "label": "ngspice XSPICE page",
+      "url": "https://ngspice.sourceforge.io/xspice.html"
+    },
+    {
+      "label": "ngspice shared page",
+      "url": "https://ngspice.sourceforge.io/shared.html"
+    }
+  ],
+  "detail": [
+    {
+      "heading": "Lineage and scope",
+      "text": "ngspice merges Spice3f5, Cider1b1, which couples the circuit solver to a device simulator, and Xspice, which adds code modeling and event-driven digital simulation (ngspice README). Spice3f5 is the last Berkeley release of Spice3, and XSPICE came from Georgia Tech (ngspice manual 47). Most of the work since has been bug fixing and refactoring (ngspice manual 47). The project aims at compatibility. PSPICE and LTSPICE model parameters and netlists run, and ngspice reads HSPICE device libraries from foundry PDKs for integrated circuits (ngspice home page). Input is a netlist file or the command line, output is plots or data files, and there is no schematic entry (ngspice home page)."
+    },
+    {
+      "heading": "Analyses and numerics",
+      "text": "Analog simulation solves Kirchhoff's laws as a matrix of simultaneous equations at time steps chosen for convergence and integration accuracy, with gmin stepping and source stepping as convergence aids for the DC solution (ngspice manual 47). Since version 42 ngspice has two solvers. Sparse 1.3, which has served all simulation tasks and suits behavioral models, sits next to KLU for large transistor circuits (ngspice manual 47). OpenMP parallelizes the device evaluation inside BSIM3 3.3.0 and 3.2.4, BSIM4 4.5, 4.6.5, 4.7 and 4.8, B4SOI 4.4 and OSDI models, where about two thirds of the CPU time goes for transistor-heavy circuits. The matrix solution stays serial (ngspice manual 47)."
+    },
+    {
+      "heading": "Device models and extensions",
+      "text": "Compact models come from the built-in set and from Verilog-A. OSDI is a simulator-independent model interface, in ngspice since release 39, and OpenVAF compiles Verilog-AMS LRM 2.x models such as BSIMBULK, BSIMCMG, PSP, HiSIM and HICUM into .osdi shared libraries loaded with the osdi command on Linux and Windows (ngspice manual 47). CIDER solves Poisson's equation and the electron and hole continuity equations in one or two dimensions for the critical devices, with PISCES-like structure input and temperature dependence from -50 to 150 degC (ngspice manual 47). XSPICE adds User-Defined Node types that carry arbitrary data. The digital state with strength is one of them (ngspice manual 47)."
+    },
+    {
+      "heading": "Interfaces",
+      "text": "Input files may carry scripts in the control language, and wrdata writes scale and value vector pairs as ASCII with numdgt significant digits (ngspice manual 47). As a shared library ngspice exports control functions and callbacks, so a host can start a run in a separate thread, read each time point, alter device or model parameters and resume. EXTERNAL sources let the host set node values during the run (ngspice manual 47). Bindings exist for C++ (KiCad), Python (PySpice), Ruby, Octave, Fortran, Rust and Go (ngspice shared page). Digital Verilog modules compiled with Verilator or Icarus Verilog can be attached, and C processes can be reached through pipes (ngspice manual 47)."
+    }
+  ]
+}

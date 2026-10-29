@@ -1,0 +1,124 @@
+{
+  "key": "mace",
+  "headline": "MACE: equivariant many-body message passing force fields",
+  "claim": "A machine-learned interatomic potential whose messages carry four-body information, so two message-passing layers reach the accuracy that two-body models need five or six for.",
+  "hero": {
+    "glyph": "neural",
+    "title": "Four-body messages in two layers",
+    "text": "Each layer forms equivariant features of body order four by a symmetric tensor product on the nodes, not the edges. The receptive field stays at two cutoffs of 4 to 5 A, so the model parallelises across GPUs."
+  },
+  "features": [
+    {
+      "glyph": "network",
+      "title": "Architecture",
+      "text": "Atomic cluster expansion features inside equivariant message passing: Bessel radial basis, spherical harmonics, Clebsch-Gordan coupling, linear readouts but the last."
+    },
+    {
+      "glyph": "atoms",
+      "title": "Inputs and outputs",
+      "text": "Positions and elements in, site energies out. Forces and stresses are analytic derivatives of the total energy with respect to positions and strain."
+    },
+    {
+      "glyph": "gpu",
+      "title": "Speed on a GPU",
+      "text": "Force latency of 10.5 ms (L=0) to 24.3 ms (L=2) per structure on an A100, 4 to 10 times faster than NequIP and BOTNet at matched accuracy (Batatia 2022)."
+    },
+    {
+      "glyph": "database",
+      "title": "MACE-MP-0 foundation model",
+      "text": "Trained on MPtrj, about 1.5 million Materials Project configurations at the PBE level, it runs stable MD out of the box and fine-tunes on about 100 frames (Batatia 2025)."
+    },
+    {
+      "glyph": "workflow",
+      "title": "Interfaces",
+      "text": "Trained models run through ASE, LAMMPS, OpenMM and JAX-MD. An additive DFT-D3 dispersion correction can be switched on for MACE-MP-0 (Kovács 2023, Batatia 2025)."
+    }
+  ],
+  "facts": [
+    {
+      "value": "2",
+      "label": "layers to converge on 3BPA, versus 5 for 2-body",
+      "source": "Batatia 2022"
+    },
+    {
+      "value": "8.8 meV/A",
+      "label": "force RMSE on 3BPA at 300 K, MACE L=2",
+      "source": "Batatia 2022"
+    },
+    {
+      "value": "1.5M",
+      "label": "MPtrj configurations behind MACE-MP-0",
+      "source": "Batatia 2025"
+    }
+  ],
+  "workflow": [
+    {
+      "title": "Collect reference data",
+      "text": "DFT energies, forces and stresses for your system, or start from the MACE-MP-0 weights."
+    },
+    {
+      "title": "Train or fine-tune",
+      "text": "Fit a weighted Huber loss on energy, forces and stress. Fine-tune on about 100 frames."
+    },
+    {
+      "title": "Load as a calculator",
+      "text": "The model becomes an ASE calculator or a LAMMPS, OpenMM or JAX-MD potential."
+    },
+    {
+      "title": "Run and evaluate",
+      "text": "Energies in eV, forces in eV/A and stresses in eV/A^3 drive relaxation, MD and phonons."
+    }
+  ],
+  "applications": [
+    {
+      "glyph": "molecule",
+      "title": "COMP6 organic molecule benchmark",
+      "text": "Trained on a coupled-cluster subset of ANI-1x, the 192-2 model reached 0.48 kcal/mol energy and 0.52 kcal/mol/A force MAE on COMP6, against 1.93 and 3.09 for ANI-1x.",
+      "source": "Kovács 2023"
+    },
+    {
+      "glyph": "diffusion",
+      "title": "Liquid water from 1593 configurations",
+      "text": "Fit to 1593 revPBE0-D3 water frames of 64 molecules, the model gave a density maximum near 270 K and a diffusion coefficient of 2.14e-9 m2/s from 200 ps NVT runs.",
+      "source": "Kovács 2023"
+    },
+    {
+      "glyph": "lattice",
+      "title": "Metal-organic frameworks, untrained",
+      "text": "MACE-MP-0b3, trained on no MOF data, matched PBE energies of 13,912 QMOF structures to 0.040 eV/atom and placed CO2 at 2.27 A from Mg in Mg-MOF-74, the experimental distance.",
+      "source": "Batatia 2025"
+    }
+  ],
+  "sources": [
+    {
+      "label": "Batatia 2022",
+      "doi": "10.48550/ARXIV.2206.07697"
+    },
+    {
+      "label": "Batatia 2025",
+      "doi": "10.1063/5.0297006"
+    },
+    {
+      "label": "Kovács 2023",
+      "doi": "10.1063/5.0155322"
+    }
+  ],
+  "detail": [
+    {
+      "heading": "Many-body equivariant message passing",
+      "text": "MACE writes each message as a body-order expansion, Eq. 7 of Batatia 2022, and builds the many-body terms from a tensor product of two-body atomic basis features on each node, Eq. 10. The generalised Clebsch-Gordan coefficients that symmetrise the product are sparse and precomputed. The message is a linear combination of these features with element-dependent weights, the update is linear with a residual term, and only the last readout is a one-layer MLP. With correlation order 3 the messages are four-body, and the accuracy on 3BPA stops improving after two layers. The species dimension is left out of the tensor product, so cost does not grow with the number of elements."
+    },
+    {
+      "heading": "Numerics and scale",
+      "text": "MACE evaluates the expensive equivariant tensor product on edges once, in the second layer. On an A100 the force latency per structure is 10.5 ms for the invariant model and 24.3 ms for L=2, against 101 to 104 ms for NequIP and BOTNet in the same code. The 3BPA model reaches a converged BOTNet accuracy after about 30 minutes of training (Batatia 2022). MACE-MP-0 was trained for 100 epochs on 40 to 80 H100 GPUs, about 2,600 GPU hours, and reaches 18 meV/atom energy and 39 meV/A force MAE on MPtrj. One A100 runs several nanoseconds per day for 1000 atoms, and domain decomposition scales at 0.1 ns/day up to 32,000 atoms on 64 GPUs (Batatia 2025)."
+    },
+    {
+      "heading": "Interfaces and training data",
+      "text": "ASE, OpenMM and LAMMPS evaluate trained models, and a JAX version runs inside JAX-MD at 2 to 50 million MD steps per day depending on model size (Kovács 2023). MACE-MP-0 is trained on MPtrj, the dataset compiled for CHGNet from Materials Project relaxations, with PBE and Hubbard U on some transition metal oxides and no dispersion. An additive DFT-D3 term with Becke-Johnson damping restores dispersion for water, layered solids and frameworks. Fine-tuning uses multi-head replay, which keeps a subset of MPtrj in the loss so the model does not forget the foundation data (Batatia 2025)."
+    },
+    {
+      "heading": "Validation",
+      "text": "On rMD17 the model is at or below the best published errors, for example 6.6 meV/A force MAE on aspirin. On 3BPA at 1200 K it improves on NequIP and Allegro by about 30% (Batatia 2022). On the M3GNet 89-element dataset MACE 128-2 reaches 34.1 meV/atom and 60.1 meV/A against 34.7 and 71.7 for M3GNet, and on HME21 it improves on NequIP and TeaNet by more than 30% (Kovács 2023). MACE-MP-0b3 reproduces the relative energies of 12 ice polymorphs to about 5 meV against PBE-D3, and fine-tuning on five single-point DFT energies per reaction profile brings nudged elastic band barriers on Cu and In2O3 into agreement with DFT (Batatia 2025)."
+    }
+  ]
+}
