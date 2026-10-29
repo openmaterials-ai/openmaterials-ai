@@ -55,6 +55,7 @@ def test_probe_uses_configured_library_and_forces_bounded_compiler(
     contract["nodes"] = [{"id": "associated_input"}]
     monkeypatch.setenv("LEAN_NUM_THREADS", "900")
     monkeypatch.setenv("MATHLIB_NO_CACHE_ON_UPDATE", "0")
+    monkeypatch.delenv("OMAI_LEAN_PROBE_TIMEOUT", raising=False)
     probes = []
 
     def compiler(command, **kwargs):
@@ -77,6 +78,36 @@ def test_probe_uses_configured_library_and_forces_bounded_compiler(
         {"name": "Actual.endpoint", "module": "Nested.Endpoint"},
     ]
     assert len(probes) == 1 and not probes[0].exists()
+
+
+def test_probe_timeout_override_reaches_the_compiler(tmp_path, monkeypatch, package_and_contract):
+    package, contract = package_and_contract
+    monkeypatch.setenv("OMAI_LEAN_PROBE_TIMEOUT", " 600 ")
+    seen = []
+
+    def compiler(command, **kwargs):
+        seen.append(kwargs["timeout"])
+        return subprocess.CompletedProcess(command, 0, "OMAI_CONTRACT_NAMES_OK|1\n", "")
+
+    monkeypatch.setattr(_VERIFY.subprocess, "run", compiler)
+    _VERIFY.verify_compiled_contract_names([_write_contract(tmp_path, contract)], package)
+    assert seen == [600]
+    monkeypatch.delenv("OMAI_LEAN_PROBE_TIMEOUT")
+    assert _VERIFY._probe_timeout() == 120
+
+
+@pytest.mark.parametrize("value", ["", "0", "-5", "300.5", "soon"])
+def test_probe_timeout_rejects_non_positive_or_non_integer_values(
+    value, tmp_path, monkeypatch, package_and_contract,
+):
+    package, contract = package_and_contract
+    monkeypatch.setenv("OMAI_LEAN_PROBE_TIMEOUT", value)
+    monkeypatch.setattr(_VERIFY.subprocess, "run", lambda *args, **kwargs: pytest.fail("compiled"))
+    if value.strip() == "":
+        assert _VERIFY._probe_timeout() == 120
+        return
+    with pytest.raises(ValueError, match="OMAI_LEAN_PROBE_TIMEOUT must be a positive integer"):
+        _VERIFY.verify_compiled_contract_names([_write_contract(tmp_path, contract)], package)
 
 
 @pytest.mark.parametrize("name", [

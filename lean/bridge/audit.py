@@ -150,7 +150,8 @@ def run() -> dict:
     environment.update(LEAN_NUM_THREADS="2", MATHLIB_NO_CACHE_ON_UPDATE="1")
     result = subprocess.run(
         ["lake", "--no-build", "env", "lean", "-j2", "-DwarningAsError=true", str(probe)],
-        cwd=ROOT, check=True, text=True, capture_output=True, env=environment, timeout=120)
+        cwd=ROOT, check=True, text=True, capture_output=True, env=environment,
+        timeout=verifier._probe_timeout())
     audit = parse_axiom_output(result.stdout + result.stderr, source_modules=source_modules)
     if any(digest(REPO / path) != sha for path, sha in hashes.items()):
         raise ValueError("bridge inputs changed during axiom audit")
