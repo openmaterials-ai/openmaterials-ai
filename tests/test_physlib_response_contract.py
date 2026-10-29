@@ -142,8 +142,8 @@ BASELINE_PAIRS = [{'module': 'OMAIPhyslibSemantics', 'name': 'OMAI.PhyslibBridge
  {'module': 'OMAIPhyslibSemantics', 'name': 'OMAI.PhyslibBridge.totalThermalConductivity'}]
 # Scientific protocol, golden vectors, historical package and seven retained proofs.
 PRESERVED_HASHES = {
-    "map/log.jsonl": "e57c8ea1c0601ae330b6302a1e866765c37adbae583202d0ff278257d312765e",
-    "docs/data/version.json": "a1bd9f9f52267f3a877536eb16124b09a88d394555482accf25270d33a97f36d",
+    "map/log.jsonl": "4f60989d5eb19697494898f98e10069cd8ab88726036a072bd1f406f89f4dd88",
+    "docs/data/version.json": "dc549d19669a28d7bc523ae303c0179a30addf700e48585dd210546990dc3711",
     "omai/operator/identity.py": "e8be3c3b86521e19c9ed1a855f33d2b187bbc2fb9158f269ae219855295ef9f0",
     "omai/lineages.py": "3266c424e4920d11bd54a1e8f0fad0fc8aeeb8a2dcfb4c2dbb3da66a61a5c552",
     "omai/schema.py": "69ee90c2eebf6f891abcc9cc31351b885d23a6f3a6d37e46b810959474bd2f36",

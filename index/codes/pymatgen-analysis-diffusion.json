@@ -1,7 +1,7 @@
 {
  "representation": "pymatgen-analysis-diffusion",
- "lineage_version": "f99d3395022a5076089f844bdf413301aaf08b28362f8b85fc673f36d9154023",
- "map_version": "0e140d4a86202a7e315ef1ef3e11b083106866cc41545ec97003ecae562712cc",
+ "lineage_version": "f5a7cb57594ff353ac31b226ac5c47ffb2a08960cfe922281055d0ef8912af1e",
+ "map_version": "02b3fc768e6697b01ff55226b52d957589cffb3fa52eafd8caddf4d7ef8020e3",
  "covers": [
   {
    "node": "ActivationEnergy",

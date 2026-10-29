@@ -977,7 +977,7 @@ provide_transmission = Operator(
     outputs=(PHONON_TRANSMISSION,),
     formula=sp.Eq(_T_trans[_omega], _T_trans_provided),
     description=(
-        "Source: the per-frequency phonon transmission T(nu) of a lead/junction "
+        "Source: the per-frequency phonon transmission T(omega) of a lead/junction "
         "system, emitted directly by a coherent-transport code from its "
         "mode-matching S-matrix. The coherent-transport analogue of the "
         "provided Linewidth / force constants the BTE chain reads."
@@ -1018,7 +1018,8 @@ compute_conductance_landauer = Operator(
         "Bose-Einstein occupation n. The coherent-transport terminal observable, "
         "the Landauer sibling of the BTE / Wigner / QHGK / MD κ routes. Frequency "
         "(Ω) enters both as the transmission's spectral argument and as the "
-        "integration variable; the temperature dependence lives in ∂n/∂T."
+        "integration variable. The temperature dependence lives in ∂n/∂T. The "
+        "transmission T(Ω) is dimensionless. G is in W/K."
     ),
 )
 

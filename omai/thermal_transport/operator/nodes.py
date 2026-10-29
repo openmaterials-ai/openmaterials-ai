@@ -622,8 +622,8 @@ MODAL_DIFFUSIVITY = ObservableSpace(
 # Coherent phonon transport (Landauer). PhononTransmission is the observable
 # every coherent-transport method shares (a per-frequency transmission function
 # of a lead/junction system), and the Landauer conductance G(T) integrates it
-# against the Bose-Einstein energy window. Both live in the Transport tier alongside the BTE / Wigner / QHGK
-# routes to the same heat-transport story.
+# against the Bose-Einstein energy window. Both live in the Transport tier
+# alongside the BTE / Wigner / QHGK routes to the same heat-transport story.
 # ---------------------------------------------------------------------------
 
 PHONON_TRANSMISSION = ObservableSpace(
