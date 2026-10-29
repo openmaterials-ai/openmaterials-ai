@@ -224,29 +224,23 @@ def test_gpumd_nemd_notes_name_the_two_reservoir_ensembles():
 
 
 # ---------------------------------------------------------------------------
-# Coherent transport (Landauer): MESKAL serves PhononTransmission and the
-# Landauer ThermalConductance. MESCAL is MESKAL's former name, an alias.
+# Coherent transport (Landauer): PhononTransmission and the Landauer
+# ThermalConductance.
 # ---------------------------------------------------------------------------
 
 
-def test_meskal_maps_the_coherent_transport_nodes_and_mescal_is_its_alias():
-    from omai.map_data import build_codes, build_graph_dict
+def test_coherent_transport_nodes_are_on_the_map():
+    from omai.map_data import build_graph_dict
     from omai.thermal_transport.domain import THERMAL_TRANSPORT
 
-    codes = build_codes((THERMAL_TRANSPORT,))
-    assert "mescal" not in codes
     landauer = "ThermalConductance[transport_model=landauer]"
-    meskal = codes["meskal"]
-    assert {"PhononTransmission", landauer} <= set(meskal)
-    assert all(e["aliases"] == ["mescal"] for e in meskal.values())
-    # The mapped variables are real nodes on the map.
     ids = {n["id"] for n in build_graph_dict((THERMAL_TRANSPORT,))["nodes"]}
     assert "PhononTransmission" in ids and landauer in ids
 
 
 def test_thermal_conductance_unit_tokens_resolve():
-    """W/K is the canonical thermal-conductance unit (si_scale 1); nW/K is
-    MESKAL's serving unit and carries to_operator 1e-9 to it."""
+    """W/K is the canonical thermal-conductance unit (si_scale 1); nW/K
+    carries to_operator 1e-9 to it."""
     from omai.operator.dimensions import THERMAL_CONDUCTANCE
     from omai.representation.units import UNITS, conversion_factor
 
@@ -256,60 +250,3 @@ def test_thermal_conductance_unit_tokens_resolve():
     assert w.to_operator == 1.0 and w.si_scale == 1.0
     assert nw.to_operator == 1e-9
     assert conversion_factor("nW_per_K", "W_per_K") == 1e-9
-
-
-def test_mescal_bulk_si_golden_evidence_lands_on_phonon_transmission():
-    """The bulk-Si golden values from the frozen MESCAL artifact
-    reference/fixtures/level2_bulk_si_n8.npz: the ballistic transmission peak
-    and the acoustic staircase anchor. Both instances pin the live
-    PhononTransmission uid, state the method and the PRB 84, 115423 (2011)
-    validation anchor in detail, carry the lead spec, the precision path and
-    the frozen eskm commit in conditions, and stay clear of the duplicate gate
-    (two distinct values on the same node/material)."""
-    from omai.map_data import build_instances, build_graph_dict, DOMAINS
-    from omai.paper_parser import validate
-
-    insts = build_instances()
-    bulk = [it for it in insts if it["source"]["ref"] == "mescal-bulk-si-n8"]
-    assert len(bulk) == 2
-    by_value = {it["value"]: it for it in bulk}
-    assert set(by_value) == {278.983249, 2.99992757}
-
-    name_to_uid = {n["id"]: n["uid"]
-                   for n in build_graph_dict(DOMAINS)["nodes"]}
-    for it in bulk:
-        # name_to_uid resolves and the bundler pinned the live uid.
-        assert it["variable"] == "PhononTransmission"
-        assert it["node_uid"] == name_to_uid["PhononTransmission"]
-        assert it["units"] == "dimensionless"
-        assert it["material"] == "Si"
-        assert it["source"]["kind"] == "simulation"
-        # detail is one plain method sentence: the code, the overlay on the
-        # paper's Fig. 4, and the PRB validation anchor with its DOI.
-        detail = it["source"]["detail"]
-        assert "MESCAL mode matching" in detail
-        assert "mean absolute deviation 0.013 per atom" in detail
-        assert "Phys. Rev. B 84, 115423 (2011), Fig. 4" in detail
-        assert "doi:10.1103/PhysRevB.84.115423" in detail
-        # conditions carry the lead spec and the precision path.
-        cond = it["conditions"]
-        assert "8x8 conventional cells" in cond["lead"]
-        assert "Tersoff" in cond["lead"]
-        assert "complex128" in cond["precision"]
-        assert "complex64" in cond["precision"]
-        assert "eskm commit cc5a5fc1" in cond["precision"]
-        assert cond["nu"].endswith("THz")
-
-    # The peak opens 279 lead channels; the staircase sits on the three
-    # acoustic branches (integer-staircase invariant).
-    assert by_value[278.983249]["conditions"]["n_channels"] == 279
-    assert by_value[2.99992757]["conditions"]["n_channels"] == 3
-
-    # Duplicate gate: the two records are distinct beyond the dedup tolerance
-    # (rel_tol 1e-3), so each resolves to itself and not to the other.
-    index = validate.load_instance_index()
-    uid = name_to_uid["PhononTransmission"]
-    hit_peak = validate.is_duplicate(uid, "Si", 278.983249, index)
-    hit_stair = validate.is_duplicate(uid, "Si", 2.99992757, index)
-    assert hit_peak["file"] == "si-phonontransmission-mescal-bulk-si-n8-ballistic-peak.json"
-    assert hit_stair["file"] == "si-phonontransmission-mescal-bulk-si-n8-acoustic-staircase.json"

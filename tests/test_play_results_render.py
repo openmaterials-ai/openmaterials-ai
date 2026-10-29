@@ -24,13 +24,13 @@ _RECORD = {
     "id": "e292099ad3e4",
     "lineage": {"node": "ThermalConductivity[bte_solver=rta]", "node_uid": "d79d88d5",
                 "material": {"name": "Si"}, "conditions": {"temperature_K": 300}, "params": {}},
-    "execution": {"code": "meskal_rta"},
+    "execution": {"code": "kaldo_rta"},
     "artifacts": [], "mirrors": {},
     "results": [{
         "variable": "ThermalConductivity[bte_solver=rta]", "material": "Si",
-        "conditions": {"temperature_K": 300, "method": "bte_rta", "code": "MESKAL"},
+        "conditions": {"temperature_K": 300, "method": "bte_rta", "code": "kALDo"},
         "value": 20.16, "units": "W/(m K)", "uncertainty": 0.5,
-        "source": {"kind": "simulation", "ref": "materialscodegraph", "detail": "MESKAL BTE-RTA"},
+        "source": {"kind": "simulation", "ref": "materialscodegraph", "detail": "kALDo BTE-RTA"},
     }, {"variable": "Bogus", "value": "not a number", "units": "x"}],
 }
 
@@ -65,7 +65,7 @@ def test_results_render_as_a_values_table():
     assert "ThermalConductivity[bte_solver=rta]" in out
     assert "20.16 ± 0.5" in out
     assert "W/(m K)" in out
-    assert "temperature_K = 300" in out and "code = MESKAL" in out
+    assert "temperature_K = 300" in out and "code = kALDo" in out
     assert "Bogus" in out and "not a number" in out, "a stated value renders even when not numeric"
     assert "excluded from its lineage id" in out
 

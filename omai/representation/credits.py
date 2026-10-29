@@ -58,19 +58,6 @@ CODE_CREDITS: dict[str, dict] = {
         "license_source": "kaldo/LICENSE (vendored clone)",
         "url": "https://github.com/nanotheorygroup/kaldo",
     },
-    "meskal": {
-        "name": "MESKAL",
-        "citation": "G. Barbalinardo and the MESKAL contributors, MESKAL: "
-        "Mesoscopic Scattering Kernel for Anharmonic Lattices, differentiable "
-        "lattice thermal transport in JAX, version 1.1.0 (software, 2026)",
-        # CITATION.cff cites the software itself; no paper or DOI yet.
-        "doi": None,
-        "license": "BSD-3-Clause",
-        "license_source": "tag v1.1.0, read 2026-10-04: LICENSE (BSD 3-Clause "
-        "License), pyproject.toml and CITATION.cff (BSD-3-Clause); the source "
-        "repository is not public",
-        "url": None,
-    },
     "shengbte": {
         "name": "ShengBTE",
         "citation": "W. Li, J. Carrete, N. A. Katcho, N. Mingo, ShengBTE: A "

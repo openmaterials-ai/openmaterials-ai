@@ -71,7 +71,7 @@ def test_write_index_emits_one_file_per_representation(tmp_path):
     # suffixing, because '-' < '.').
     assert set(files) == {f"{r}.json" for r in reps}
     assert len(files) == len(reps)
-    assert len(files) == 34  # ngspice (2026-10-28) is the 34th
+    assert len(files) == 33  # 34 with ngspice (2026-10-28), 33 after one removal (2026-10-29)
 
 
 def test_each_index_entry_uid_matches_live_node_id(tmp_path):

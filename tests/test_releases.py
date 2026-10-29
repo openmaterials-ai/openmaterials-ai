@@ -49,7 +49,7 @@ def test_releases_resolve_alike_from_the_source_tree_and_the_registry():
     tree, shipped = code_releases([_DATA_DIR]), code_releases([REGISTRY])
     assert tree == shipped
     assert set(tree) == set(json.loads((_DATA_DIR / "codes.json").read_text()))
-    assert set(release_files(_DATA_DIR)) == {"gpumd", "kaldo", "lammps", "meskal", "ngspice",
+    assert set(release_files(_DATA_DIR)) == {"gpumd", "kaldo", "lammps", "ngspice",
                                              "openmaterials-ai", "phono3py", "qe", "qe-d3q"}
     assert tree["qe"]["aliases"] == ["quantum-espresso"]
     assert tree["xtb"] == {"aliases": [], "releases": []}
