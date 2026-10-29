@@ -124,17 +124,40 @@ TRANCHES = (
                             "molarEnthalpy", "transitionTemperature")]),
         "modules": ("OMAIStabilityEnergies", "OMAICalphad"),
     },
+    {
+        "name": "atomistic-derivatives",
+        "contracts": ("dft-derivatives-formula-contract.json", "force-constants-formula-contract.json",
+                      "elastic-constants-formula-contract.json", "molecular-modes-formula-contract.json"),
+        "bindings": frozenset({
+            "cell-stress-rotation-balance", "finite-displacement-force-constants",
+            "force-constant-sum-rules", "hellmann-feynman-force-balance",
+            "hyperelastic-elastic-constants", "molecular-normal-modes"}),
+        "subjects": frozenset({
+            ("node", "ElasticConstants"), ("node", "ForceConstants[order=2]"),
+            ("node", "ForceConstants[order=3]"), ("node", "Forces"), ("node", "MolecularFrequency"),
+            ("node", "Stress"), ("operator", "compute_elastic_constants"),
+            ("operator", "compute_fc2_finite_displacement"), ("operator", "compute_force_constants[order=2]"),
+            ("operator", "compute_force_constants[order=3]"), ("operator", "compute_forces_hf"),
+            ("operator", "compute_molecular_frequencies"), ("operator", "compute_stress_cell")}),
+        "pairs": tuple(
+            [{"name": "OMAI.PhyslibBridge.Atomistic." + name, "module": "OMAIAtomisticDerivatives"}
+             for name in ("fdForceConstant", "forceConstant2", "forceConstant3", "hfForce")]
+            + [{"name": "OMAI.PhyslibBridge.CellElasticity." + name, "module": "OMAICellElasticity"}
+               for name in ("cellStress", "elasticConstants")]
+            + [{"name": "OMAI.PhyslibBridge.MolecularModes.molecularFrequencies", "module": "OMAIMolecularModes"}]),
+        "modules": ("OMAIAtomisticDerivatives", "OMAICellElasticity", "OMAIMolecularModes"),
+    },
 )
 
 # The one frozen global coverage ledger of the published bindings.
 GLOBAL_COVERAGE = {
     "nodes_total": 136, "nodes_mapped": 33, "operators_total": 133, "operators_mapped": 24,
-    "nodes_local": 27, "operators_local": 32, "bindings_total": 40, "source_correspondences": 5,
-    "compiled_bridges": 35, "nodes_compiled": 21, "nodes_compiled_outputs": 20,
-    "nodes_compiled_interpretations": 1, "operators_compiled": 24, "operators_compiled_local": 32,
-    "nodes_compiled_local": 28, "operators_proved": 56, "nodes_proved": 49,
+    "nodes_local": 30, "operators_local": 39, "bindings_total": 46, "source_correspondences": 5,
+    "compiled_bridges": 41, "nodes_compiled": 21, "nodes_compiled_outputs": 20,
+    "nodes_compiled_interpretations": 1, "operators_compiled": 24, "operators_compiled_local": 39,
+    "nodes_compiled_local": 34, "operators_proved": 63, "nodes_proved": 55,
     "upstream_declarations_referenced": 36, "upstream_modules_referenced": 10,
-    "relations": {"exact_definition": 1, "conditional": 27, "conceptual": 4, "local": 8},
+    "relations": {"exact_definition": 1, "conditional": 27, "conceptual": 4, "local": 14},
 }
 
 

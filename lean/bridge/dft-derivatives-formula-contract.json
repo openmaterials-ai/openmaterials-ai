@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "scope": "Reviewed OMAI formula endpoints and exact Lean proof source for local theorems about derivatives of an atomistic or cell energy, with no Physlib physics counterpart. Hash and compiled-name checks detect drift and provenance errors; they are not automatic symbolic translation or numerical validation.",
+  "source_path": "lean/bridge/OMAIAtomisticDerivatives.lean",
+  "source_sha256": "a2f8655c395d34f6ca60e63c36f8e0831bf5ba3d3e1ffc355f057e5b0ea2b814",
+  "operators": [
+    {
+      "id": "compute_forces_hf",
+      "uid": "59ae54527b2e735e5408e66eadb81c9f1fa29720ea39207564e388a44cd1b04c",
+      "formula_sha256": "198daf948e48b420f367655f4ab063d3da5f54dd475468ce249711afdef38d0b",
+      "formula_latex": "{F^{at}}_{i,\\alpha} = - \\frac{d}{d {R^{at}}_{i,\\alpha}} E_{tot}",
+      "lean_definition": "OMAI.PhyslibBridge.Atomistic.hfForce"
+    },
+    {
+      "id": "compute_stress_cell",
+      "uid": "88f8474bfda3d73e220f1db0ddfb8f00546007f1172ec663f4d4406568b3c5f2",
+      "formula_sha256": "6dd196c0b221e9aed1dae7019b053498c5d5d96177025dc088250bca9555842f",
+      "formula_latex": "{\\sigma}_{\\alpha,\\beta} = - \\frac{\\frac{d}{d {\\varepsilon^{str}}_{\\alpha,\\beta}} E_{tot}}{V_{cell}}",
+      "lean_definition": "OMAI.PhyslibBridge.CellElasticity.cellStress",
+      "definition_source_path": "lean/bridge/OMAICellElasticity.lean"
+    },
+    {
+      "id": "compute_fc2_finite_displacement",
+      "uid": "8c4e324d9fb31b0cde5f98b83effdc03f0fe77d04b9caf332ceecff6fc16ece1",
+      "formula_sha256": "ffda0ae6e61fea11db6294a25665260253cdb5d1af6e47e27ef07cd1bfba64e9",
+      "formula_latex": "{\\Phi^{(2)}}_{i,j,\\mathbf{R}} = - \\frac{d}{d u_{i(0)}} F_{j(R)}",
+      "lean_definition": "OMAI.PhyslibBridge.Atomistic.fdForceConstant"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "Forces",
+      "uid": "9c5a2fdedab6b668ccf5f2043fb4c29a982bcde5063fd6ac8633ee2c7858ecbf"
+    },
+    {
+      "id": "Stress",
+      "uid": "183e66d4e443326d2c346a0327cdb125026bd8f6a91a9bb97b61265fcade7e85"
+    },
+    {
+      "id": "ForceConstants[order=2]",
+      "uid": "78d005a949ff56a526a1911f0b24e766daecad0a7f5ce9c1cc15222f2ed73551"
+    }
+  ],
+  "interpretations": [
+    "E_tot is the total energy of the configuration as a differentiable function of all atomic Cartesian coordinates R_{i,alpha}; the catalog force F_{i,alpha} = -dE/dR_{i,alpha} is its exact partial derivative, the corrected total that codes report rather than the bare Hellmann-Feynman term.",
+    "Rigid translations shift every atom by the same vector. Invariance under them holds for an isolated system and for a periodic cell whose lattice translates with the atoms; real-space grids that break it (the egg-box effect) make the computed forces fail to sum to zero.",
+    "Rotations in a coordinate plane rotate every atom about the origin. Invariance under them holds for an isolated molecule or cluster, not for atoms rotated inside a fixed periodic lattice; the torque result applies only where it holds.",
+    "The cell energy is a function of the deformation gradient F = 1 + eps of the homogeneously strained cell, differentiable at F; V is the reference cell volume and sigma = -(1/V) dE/d eps is compressive positive, as the catalog states for QE. Invariance under rigid rotations of the deformed cell is objectivity of the energy.",
+    "compute_fc2_finite_displacement is the exact derivative -dF_j/du_i; the finite_displacement scheme estimates it by central differences (F(u - h e_i) - F(u + h e_i))/(2h). When a site symmetry maps the plus displacement onto the minus one, phonopy reconstructs the minus forces by symmetry and the estimate stays the central difference; a truly one-sided difference has an error of order h. Neither case is covered."
+  ]
+}
