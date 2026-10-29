@@ -9,22 +9,27 @@ public import OMAIElasticity
 The catalog reads the cell stress as `sigma_ab = -(1/V) dE/d eps_ab` (compressive positive) and
 the elastic constants as `C_abcd = -d sigma_ab / d eps_cd`, with `eps` the homogeneous strain of
 the cell. Here `E` is the energy of the homogeneously deformed cell as a function of its
-deformation gradient `F = 1 + eps`, so derivatives with respect to `eps` and `F` agree, and `V`
-is the reference cell volume. Physlib has no elastic-solid model, so these are local results.
+deformation gradient `F`, and `V` is the reference cell volume. At `F = 1 + eps` with `eps`
+infinitesimal the derivatives with respect to `eps` and `F` agree; at a finite deformation
+`-(1/V) dE/dF` is the first Piola-Kirchhoff stress, not the Cauchy stress. Physlib has no
+elastic-solid model, so these are local results.
 
-Invariance of `E` under rotations of the deformed cell (objectivity) balances the stress:
-`sum_b sigma_ab F_cb` is symmetric in `a` and `c`, and at the reference cell the stress itself is
-symmetric. For an energy twice continuously differentiable at a stress-free reference, the
-elastic constants have the major symmetry `C_abcd = C_cdab` and both minor symmetries, so the
-Voigt positivity theorem of `OMAIElasticity` applies to the catalog's elastic constants: a
-stable reference has positive Voigt bulk and shear moduli and a Poisson ratio in `(-1, 1/2)`.
+Invariance of `E` under rotations of the deformed cell (objectivity), with `E` differentiable
+at `F`, balances the stress: `sum_b sigma_ab F_cb` is symmetric in `a` and `c`, so the
+catalog stress is symmetric at `F = 1`. The elastic constants `(1/V) d^2E/dF dF` of an energy
+twice continuously differentiable at the reference have the major symmetry `C_abcd = C_cdab`.
+If the energy is also invariant under every rotation and the reference is stress-free, they
+have both minor symmetries as well, and the Voigt positivity theorem of `OMAIElasticity`
+applies to them. The St Venant-Kirchhoff energy satisfies every one of these hypotheses: its
+elastic constants at the reference are the isotropic tensor of its Lame parameters.
 -/
 
 @[expose] public section
 
 noncomputable section
 
-open Finset OMAI.PhyslibBridge.Atomistic
+open Finset OMAI.PhyslibBridge.Atomistic Filter
+open scoped Topology
 
 namespace OMAI.PhyslibBridge.CellElasticity
 
@@ -89,15 +94,15 @@ private theorem rotateCell_hasDerivAt (α β : Fin 3) (F : Cell) :
       rw [e]
       simpa [ha, hb] using hasDerivAt_const (0 : ℝ) (F k)
 
-/-- Rotation invariance of the cell energy in the `(α, β)` plane balances the catalog stress:
-`sum_b sigma_{alpha b} F_{beta b} = sum_b sigma_{beta b} F_{alpha b}`. At the reference cell this
-is the symmetry of the stress. -/
+/-- Rotation invariance of a cell energy differentiable at `F`, in the `(α, β)` plane, balances
+the catalog stress: `sum_b sigma_{alpha b} F_{beta b} = sum_b sigma_{beta b} F_{alpha b}`. At the
+reference cell this is the symmetry of the stress. -/
 theorem cellStress_rotation_balance (E : Cell → ℝ) (V : ℝ) (F : Cell) (α β : Fin 3)
-    (hE : ∀ s, E (rotateCell α β s F) = E F) :
+    (hd : DifferentiableAt ℝ E F) (hE : ∀ s, E (rotateCell α β s F) = E F) :
     ∑ b, cellStress E V F α b * F (β, b) = ∑ b, cellStress E V F β b * F (α, b) := by
   by_cases hαβ : α = β
   · subst hαβ; rfl
-  have h0 := fderiv_apply_eq_zero_of_invariant_curve E (fun s => rotateCell α β s F) F _
+  have h0 := fderiv_apply_eq_zero_of_invariant_curve E (fun s => rotateCell α β s F) F _ hd
     (rotateCell_zero α β F) (rotateCell_hasDerivAt α β F) hE
   rw [clm_apply_eq_sum, Fintype.sum_prod_type] at h0
   simp only [cellStress, partialAt]
@@ -142,11 +147,11 @@ private theorem stress_line_hasDerivAt (E : Cell → ℝ) (V : ℝ) (hE : ContDi
   convert h2 using 1
   simp [elasticConstants, partialAt]
 
-/-- At a stress-free reference cell, an energy that is invariant under rotations and twice
-continuously differentiable at the reference gives catalog elastic constants with the major
-symmetry and both minor symmetries, `C_abcd = C_cdab = C_bacd = C_abdc`. -/
+/-- At a stress-free reference cell, an energy that is invariant under rotations in every
+coordinate plane and twice continuously differentiable at the reference gives catalog elastic
+constants with the major symmetry and both minor symmetries, `C_abcd = C_cdab = C_bacd = C_abdc`. -/
 theorem elasticConstants_symmetries (E : Cell → ℝ) (V : ℝ)
-    (hrot : ∀ α β s G, E (rotateCell α β s G) = E G)
+    (hrot : ∀ α β, α ≠ β → ∀ s G, E (rotateCell α β s G) = E G)
     (hE : ContDiffAt ℝ 2 E referenceCell)
     (hfree : ∀ a b, cellStress E V referenceCell a b = 0) (a b c d : Fin 3) :
     elasticConstants E V referenceCell a b c d = elasticConstants E V referenceCell c d a b ∧
@@ -156,10 +161,21 @@ theorem elasticConstants_symmetries (E : Cell → ℝ) (V : ℝ)
   -- the first minor symmetry from differentiating the rotation balance along a strain line
   have minor : ∀ α β γ δ, C α β γ δ = C β α γ δ := by
     intro α β γ δ
+    by_cases hαβ : α = β
+    · rw [hαβ]
     set line : ℝ → Cell := fun t => referenceCell + t • Pi.single (γ, δ) 1
-    have hB : ∀ t, (∑ b, cellStress E V (line t) α b * line t (β, b)) -
-        (∑ b, cellStress E V (line t) β b * line t (α, b)) = 0 := fun t => by
-      rw [cellStress_rotation_balance E V (line t) α β (fun s => hrot α β s (line t)), sub_self]
+    -- the energy is differentiable along the strain line near the reference
+    have hnear : ∀ᶠ t in 𝓝 (0 : ℝ), DifferentiableAt ℝ E (line t) := by
+      have hcont : Tendsto line (𝓝 0) (𝓝 referenceCell) := by
+        have : Continuous line := by fun_prop
+        simpa [line] using this.tendsto 0
+      exact hcont.eventually ((hE.eventually (by simp)).mono fun G hG =>
+        hG.differentiableAt (by norm_num))
+    have hB : (fun t => (∑ b, cellStress E V (line t) α b * line t (β, b)) -
+        (∑ b, cellStress E V (line t) β b * line t (α, b))) =ᶠ[𝓝 0] fun _ => 0 := by
+      filter_upwards [hnear] with t ht
+      rw [cellStress_rotation_balance E V (line t) α β ht (fun s => hrot α β hαβ s (line t)),
+        sub_self]
     have hlin : ∀ (p q : Fin 3), HasDerivAt (fun t => line t (p, q))
         (if (p, q) = (γ, δ) then 1 else 0) 0 := by
       intro p q
@@ -182,10 +198,8 @@ theorem elasticConstants_symmetries (E : Cell → ℝ) (V : ℝ)
         intro b _
         exact (stress_line_hasDerivAt E V hE β b γ δ).mul (hlin α b)
     have hzero : HasDerivAt (fun t => (∑ b, cellStress E V (line t) α b * line t (β, b)) -
-        (∑ b, cellStress E V (line t) β b * line t (α, b))) 0 0 := by
-      have : (fun t => (∑ b, cellStress E V (line t) α b * line t (β, b)) -
-          (∑ b, cellStress E V (line t) β b * line t (α, b))) = fun _ => 0 := funext hB
-      rw [this]; exact hasDerivAt_const _ _
+        (∑ b, cellStress E V (line t) β b * line t (α, b))) 0 0 :=
+      (hasDerivAt_const (0 : ℝ) (0 : ℝ)).congr_of_eventuallyEq hB
     have heq := hderiv.unique hzero
     have hl0 : line 0 = referenceCell := by simp [line]
     simp only [hl0, hfree, zero_mul, add_zero] at heq
@@ -196,12 +210,12 @@ theorem elasticConstants_symmetries (E : Cell → ℝ) (V : ℝ)
   refine ⟨major a b c d, minor a b c d, ?_⟩
   rw [major a b c d, minor c d a b, major d c a b]
 
-/-- For a rotation-invariant cell energy, twice continuously differentiable at a stress-free
-reference of positive volume, whose catalog elastic constants store positive energy for every
-nonzero symmetric strain, the catalog's Voigt bulk and shear moduli are positive and its Poisson
-ratio lies strictly between `-1` and `1/2`. -/
+/-- For a cell energy invariant under rotations in every coordinate plane and twice
+continuously differentiable at a stress-free reference, whose catalog elastic constants store
+positive energy for every nonzero symmetric strain, the catalog's Voigt bulk and shear moduli
+are positive and its Poisson ratio lies strictly between `-1` and `1/2`. -/
 theorem voigt_pos_of_stable_reference (E : Cell → ℝ) (V : ℝ)
-    (hrot : ∀ α β s G, E (rotateCell α β s G) = E G)
+    (hrot : ∀ α β, α ≠ β → ∀ s G, E (rotateCell α β s G) = E G)
     (hE : ContDiffAt ℝ 2 E referenceCell)
     (hfree : ∀ a b, cellStress E V referenceCell a b = 0)
     (hstable : Elasticity.PosDef (fun a b c d => elasticConstants E V referenceCell a b c d)) :
