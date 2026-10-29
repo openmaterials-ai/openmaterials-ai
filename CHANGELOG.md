@@ -5,6 +5,10 @@ mints, for consumers. Versioning follows README.md ("Versioning"): before 1.0
 an identity change takes the minor version, and this file lists every re-keyed
 id.
 
+## Unreleased
+
+- `docs/data/releases/openmaterials-ai.json` registers 0.5.0 (tag v0.5.0, commit 1aac5df), so `release_check` resolves an `execution.registry` row naming `openmaterials-ai` 0.5.0 against the live registry. The 0.5.0 wheel's bundled registry predates the tag and still reports it unregistered. No id changes.
+
 ## 0.5.0
 
 Every consumer pins `openmaterials-ai==0.5.0`. The minor version follows README "Versioning": public names are removed (`omai.lean_identities`, `omai.lean_units`, twelve `KALDO_*` specs, four names of `omai.physlean_export`, one `omai.thermal_transport.representation` module and one `CODE_CREDITS` key) and added (the external-solve snapshot API, `omai.formula_bindings`, `omai.physlib_dimensions`, the code-page generators), and the `ngspice` representation is added. The map moves from graph_version `baf99346621b` to `02b3fc768e66` and the lineage version from `61a981c02604` to `f5a7cb57594f` through append-only contributions: no node, edge or evidence uid is re-keyed. The packaged kaldo external-solve request is re-minted, so its `request_id` moves from `9c65fd692c45` to `1a88760844bd` (three steps, below); its `lineage_id` is unchanged.
