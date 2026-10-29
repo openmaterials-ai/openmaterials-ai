@@ -147,17 +147,61 @@ TRANCHES = (
             + [{"name": "OMAI.PhyslibBridge.MolecularModes.molecularFrequencies", "module": "OMAIMolecularModes"}]),
         "modules": ("OMAIAtomisticDerivatives", "OMAICellElasticity", "OMAIMolecularModes"),
     },
+    {
+        "name": "electronic-transport",
+        "contracts": ("electronic-transport-formula-contract.json", "carrier-statistics-formula-contract.json",
+                      "static-dielectric-formula-contract.json"),
+        "bindings": frozenset({"boltzmann-electronic-transport", "electronic-carrier-statistics",
+                               "static-dielectric-ionic-response"}),
+        "subjects": frozenset({
+            ("node", "CarrierMobility"), ("node", "ElectricalConductivity[carrier=electronic]"),
+            ("node", "ElectronicDOS"), ("node", "ElectronicThermalConductivity"), ("node", "SeebeckCoefficient"),
+            ("node", "StaticDielectricTensor"),
+            ("operator", "compute_carrier_mobility"), ("operator", "compute_electronic_conductivity"),
+            ("operator", "compute_electronic_dos"), ("operator", "compute_electronic_thermal_conductivity"),
+            ("operator", "compute_seebeck"), ("operator", "compute_static_dielectric")}),
+        "pairs": tuple(
+            [{"name": "OMAI.PhyslibBridge.ElectronicTransport." + name, "module": "OMAIPhyslibElectronicTransport"}
+             for name in ("boltzmannConductivity", "boltzmannKappaE", "boltzmannSeebeck")]
+            + [{"name": "OMAI.PhyslibBridge.ElectronicStatistics." + name, "module": "OMAIElectronicStatistics"}
+               for name in ("boltzmannMobility", "electronicDOS")]
+            + [{"name": "OMAI.PhyslibBridge.StaticDielectric.staticDielectric", "module": "OMAIStaticDielectric"}]),
+        "modules": ("OMAISommerfeldTransport", "OMAIPhyslibElectronicTransport", "OMAIElectronicStatistics",
+                    "OMAIStaticDielectric"),
+    },
+    {
+        "name": "md-phonon-spectrum",
+        "contracts": ("md-correlations-formula-contract.json", "vacf-spectrum-formula-contract.json",
+                      "phonon-spectrum-formula-contract.json"),
+        "bindings": frozenset({"md-correlation-estimators", "vacf-spectrum-lorentzian-limit",
+                               "crystal-dos-landauer-conductance"}),
+        "subjects": frozenset({
+            ("node", "HeatCurrentACF"), ("node", "MeanSquaredDisplacement"), ("node", "PhononDOS"),
+            ("node", "ThermalConductance[transport_model=landauer]"),
+            ("node", "ThermalConductivity[transport_model=green_kubo]"), ("node", "VelocityAutocorrelation"),
+            ("operator", "autocorrelate_heat_current"), ("operator", "compute_conductance[transport_model=landauer]"),
+            ("operator", "compute_dos"), ("operator", "compute_msd"),
+            ("operator", "compute_velocity_autocorrelation"),
+            ("operator", "contract_kappa[transport_model=green_kubo]"), ("operator", "fourier_to_dos")}),
+        "pairs": tuple(
+            [{"name": "OMAI.PhyslibBridge.MDCorrelations." + name, "module": "OMAIMDCorrelations"}
+             for name in ("catalogHeatACF", "catalogMSD", "catalogVACF", "greenKubo")]
+            + [{"name": "OMAI.PhyslibBridge.VACFSpectrum.catalogFourierDOS", "module": "OMAIVACFSpectrum"}]
+            + [{"name": "OMAI.PhyslibBridge.PhononSpectrum." + name, "module": "OMAIPhyslibPhononSpectrum"}
+               for name in ("catalogDOS", "catalogLandauer")]),
+        "modules": ("OMAIMDCorrelations", "OMAIVACFSpectrum", "OMAIPhyslibPhononSpectrum"),
+    },
 )
 
 # The one frozen global coverage ledger of the published bindings.
 GLOBAL_COVERAGE = {
-    "nodes_total": 136, "nodes_mapped": 33, "operators_total": 133, "operators_mapped": 24,
-    "nodes_local": 30, "operators_local": 39, "bindings_total": 46, "source_correspondences": 5,
-    "compiled_bridges": 41, "nodes_compiled": 21, "nodes_compiled_outputs": 20,
-    "nodes_compiled_interpretations": 1, "operators_compiled": 24, "operators_compiled_local": 39,
-    "nodes_compiled_local": 34, "operators_proved": 63, "nodes_proved": 55,
+    "nodes_total": 136, "nodes_mapped": 35, "operators_total": 133, "operators_mapped": 29,
+    "nodes_local": 37, "operators_local": 47, "bindings_total": 52, "source_correspondences": 5,
+    "compiled_bridges": 47, "nodes_compiled": 26, "nodes_compiled_outputs": 25,
+    "nodes_compiled_interpretations": 1, "operators_compiled": 29, "operators_compiled_local": 47,
+    "nodes_compiled_local": 41, "operators_proved": 76, "nodes_proved": 67,
     "upstream_declarations_referenced": 36, "upstream_modules_referenced": 10,
-    "relations": {"exact_definition": 1, "conditional": 27, "conceptual": 4, "local": 14},
+    "relations": {"exact_definition": 1, "conditional": 29, "conceptual": 4, "local": 18},
 }
 
 

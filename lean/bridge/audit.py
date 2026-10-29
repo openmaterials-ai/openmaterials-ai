@@ -125,6 +125,9 @@ def run() -> dict:
         "stability-formula-contract.json", "thermochemistry-formula-contract.json",
         "dft-derivatives-formula-contract.json", "force-constants-formula-contract.json",
         "elastic-constants-formula-contract.json", "molecular-modes-formula-contract.json",
+        "electronic-transport-formula-contract.json", "carrier-statistics-formula-contract.json",
+        "static-dielectric-formula-contract.json", "md-correlations-formula-contract.json",
+        "vacf-spectrum-formula-contract.json", "phonon-spectrum-formula-contract.json",
     }
     missing = required_contracts - {path.name for path in contracts}
     if missing:

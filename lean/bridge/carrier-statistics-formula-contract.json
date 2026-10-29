@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "scope": "Reviewed OMAI formula endpoints and exact Lean proof source for local theorems with no Physlib physics counterpart. Hash and compiled-name checks detect drift and provenance errors; they are not automatic symbolic translation or numerical validation.",
+  "source_path": "lean/bridge/OMAIElectronicStatistics.lean",
+  "source_sha256": "42647fea45250902515d99acdf1e8d2bf9d809ce1e15ff7ad0890fe59d05bfde",
+  "operators": [
+    {
+      "id": "compute_carrier_mobility",
+      "uid": "c168368c90fa77e7b76a5668757de7f74d5fbb02b07c73544307cd48aa42d8e9",
+      "formula_sha256": "21573bfd16d2a71a3fe127fb2685490564e562befd3119c79c02853ff268a121",
+      "formula_latex": "\\mu_{e} = \\mu^{bte}{\\left(\\mathcal{S},\\varepsilon_{0},C,\\omega \\right)}",
+      "lean_definition": "OMAI.PhyslibBridge.ElectronicStatistics.boltzmannMobility"
+    },
+    {
+      "id": "compute_electronic_dos",
+      "uid": "ca35c6e4d21df105dfe83087ea98e03a5bad951006ada4fe722eea0a06a1cf7f",
+      "formula_sha256": "b399aaa658591d443481b4cb89cc5eb171dee83c7744a60637547caacec53411",
+      "formula_latex": "g_{E} = g_{el}{\\left(E,\\mathcal{S},V \\right)}",
+      "lean_definition": "OMAI.PhyslibBridge.ElectronicStatistics.electronicDOS"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "CarrierMobility",
+      "uid": "3303dee51d36b5a42bf80aa0ab62bdecd0db34cc77782c5203192ecf3512a91d"
+    },
+    {
+      "id": "ElectronicDOS",
+      "uid": "a32e08f3d5a147643986f961b701aea560791721df573f09188a557da369fb4f"
+    }
+  ],
+  "interpretations": [
+    "compute_carrier_mobility is an opaque amset output in the catalog. The interpreted definition is the Boltzmann mobility mu = c sum_k w_k tau_k of one diagonal component for one carrier type, with c = e/n > 0, w_k >= 0 the Fermi-window and squared-velocity weights of the states k, and the state relaxation time tau_k = (sum_i 1/tau_{k,i})^-1 obtained by adding the mechanism rates in every state; mu_i = c sum_k w_k tau_{k,i} is the mobility of mechanism i alone, which amset reports with separate_mobility.",
+    "With c > 0, w_k >= 0 and every tau_{k,i} > 0, mu <= (sum_i 1/mu_i)^-1: Matthiessen's rule on the mechanism-resolved mobilities never underestimates the mobility. Equality and the size of the gap are not characterized.",
+    "compute_electronic_dos is an opaque Kohn-Sham output in the catalog. The interpreted definition is the density of states sum_b g_b delta(E - E_b) of a finite set of levels E_b with degeneracies g_b > 0 (spin and k-point weights), read as its integral sum_b g_b phi(E_b) against a test function phi; the smeared or tetrahedron histogram of the codes is not covered.",
+    "At k_B T > 0 the electron count N(mu) = sum_b g_b/(1 + exp((E_b - mu)/(k_B T))), the density of states integrated against the Fermi function, is continuous and strictly increasing in mu from 0 to sum_b g_b, so every count strictly between those limits fixes exactly one chemical potential. At T = 0 the Fermi level of a gapped level set is not unique."
+  ]
+}

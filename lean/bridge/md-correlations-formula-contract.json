@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "scope": "Reviewed OMAI formula endpoints and exact Lean proof source for local theorems with no Physlib physics counterpart. Hash and compiled-name checks detect drift and provenance errors; they are not automatic symbolic translation or numerical validation.",
+  "source_path": "lean/bridge/OMAIMDCorrelations.lean",
+  "source_sha256": "5ad1d4f7c88f8483525123b63bf7b73a15ea0ed01363b14360a009e0189fc8cc",
+  "operators": [
+    {
+      "id": "compute_velocity_autocorrelation",
+      "uid": "9c182752f0970df148341ff0e66df8e5be8c74744e79d9626847399355dab7a2",
+      "formula_sha256": "f3c1b5e43f2f5fc7b9ee7b7b2f2202e3b9b282fec518c74a87f993d3ddb3c758",
+      "formula_latex": "{Cv}_{\\tau} = \\frac{\\sum_{\\substack{1 \\leq \\alpha \\leq 3\\\\1 \\leq i \\leq N_{atoms}\\\\1 \\leq t \\leq n_{lag}}} {v}_{i,\\alpha,\\tau + t} {v}_{i,\\alpha,t}}{N_{atoms} n_{lag}}",
+      "lean_definition": "OMAI.PhyslibBridge.MDCorrelations.catalogVACF"
+    },
+    {
+      "id": "compute_msd",
+      "uid": "ce9b639e5b88ed7e27cd2e0c879c620c582b0435d01365ea1dc35eb3fafdeeaa",
+      "formula_sha256": "b4f9b442a0af59ae09e92327dd9753d2a819fddaa612827d64c5dfb7d03a7146",
+      "formula_latex": "{M}_{\\tau} = \\frac{\\sum_{\\substack{1 \\leq \\alpha \\leq 3\\\\1 \\leq i \\leq N_{atoms}\\\\1 \\leq t \\leq n_{lag}}} \\left({r}_{i,\\alpha,\\tau + t} - {r}_{i,\\alpha,t}\\right)^{2}}{N_{atoms} n_{lag}}",
+      "lean_definition": "OMAI.PhyslibBridge.MDCorrelations.catalogMSD"
+    },
+    {
+      "id": "autocorrelate_heat_current",
+      "uid": "70b3a24785d80cd8cd1e3940c64032d39cad772ff92e73cd458f8b617ef40b1e",
+      "formula_sha256": "44d85341be03b3ba6fccd6399e75dc62c09a61b36f4f3a2798f5d09b6d515a0e",
+      "formula_latex": "{Jcorr}_{\\alpha,\\beta,\\tau} = \\frac{\\sum_{t=1}^{n_{lag}} {J}_{\\alpha,t} {J}_{\\beta,\\tau + t}}{n_{lag}}",
+      "lean_definition": "OMAI.PhyslibBridge.MDCorrelations.catalogHeatACF"
+    },
+    {
+      "id": "contract_kappa[transport_model=green_kubo]",
+      "uid": "89d2d05c87fbf2327a442b230ebc1349fbcc1ec158fb59ea5ab22f7727d915f7",
+      "formula_sha256": "e2bb1307e05a6ec0ade5c2361ced5a02baf17d92a07791dad85ed9215e77ea16",
+      "formula_latex": "{\\kappa^{MD}}_{\\alpha,\\beta} = \\frac{V_{cell} \\int\\limits_{0}^{\\tau_{max}} {Jcorr}_{\\alpha,\\beta,\\tau}\\, d\\tau}{T^{2} k_{B}}",
+      "lean_definition": "OMAI.PhyslibBridge.MDCorrelations.greenKubo"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "VelocityAutocorrelation",
+      "uid": "f8b092359048e5130d56697ca9504bb4740b875aca685a8f760316bfb5e9a661"
+    },
+    {
+      "id": "MeanSquaredDisplacement",
+      "uid": "28ebe96bc049a92e4318fd5242778f30e5647531d0a2b39c5891546329c8bca0"
+    },
+    {
+      "id": "HeatCurrentACF",
+      "uid": "d8f44a4cce5e3dfea1ec9329189d49ac70e33d69cab222e2679f7791a30613ac"
+    },
+    {
+      "id": "ThermalConductivity[transport_model=green_kubo]",
+      "uid": "25dc9f7af8aec52efb6be16b7b7c76f8334b03056f8838c3ff432fdad8482fb6"
+    }
+  ],
+  "interpretations": [
+    "The four definitions transcribe the catalog formulas: origin sums over t = 1, ..., n_lag divided by N_atoms n_lag (velocity autocorrelation and mean squared displacement, summed over the three Cartesian components) or by n_lag (heat-current autocorrelation), and kappa_ab = V int_0^tau_max Jcorr_ab(tau) dtau/(k_B T^2). Records are functions of the integer sample index; the time step dt enters only through the position and Helfand-moment increments and the interpolant.",
+    "The theorems assume records periodic over the origin window, v(t + n_lag) = v(t) and J(t + n_lag) = J(t) (circular correlation, the periodic-padding assumption of FFT correlators), and integrated records advanced by dt times the sampled rate, r(t + 1) = r(t) + dt v(t) and G(t + 1) = G(t) + dt J(t). No statement is made about ensemble averages, ergodicity, finite-trajectory bias or convergence in the trajectory length.",
+    "Under these hypotheses the catalog's mean squared displacement is dt^2 [tau Cv(0) + 2 sum_{k=1}^{tau-1} (tau - k) Cv(k)] with Cv the catalog's velocity autocorrelation, so the Einstein and Green-Kubo diffusion estimators are one function of the trajectory.",
+    "The symmetrized Green-Kubo conductivity (kappa_ab + kappa_ba)/2 at tau_max = m dt, m >= 1, with the integral of the sampled autocorrelation taken as the integral of its piecewise-linear interpolant (the trapezoid rule on the samples 0, ..., m), equals the central-difference Einstein-Helfand estimator V (Lambda_ab(m + 1) - Lambda_ab(m - 1))/(4 k_B T^2 dt) with Lambda_ab(tau) = sum_t (G_a(t + tau) - G_a(t))(G_b(t + tau) - G_b(t))/n_lag. For a = b no symmetrization is needed.",
+    "The direct origin-averaged autocorrelation equals the inverse discrete Fourier transform of the cross spectrum conj(F J_a) F J_b/n_lag of one period, with F the unnormalized transform sum_j x_j exp(-2 pi i j k/n_lag) on Z/n_lag and F^-1 carrying the factor 1/n_lag: the FFT route of the catalog description.",
+    "compute_heat_current is not a proof subject: its catalog formula is recorded as a defect in its gap reason."
+  ]
+}
