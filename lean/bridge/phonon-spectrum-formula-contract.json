@@ -2,7 +2,7 @@
   "schema_version": 1,
   "scope": "Reviewed OMAI formula endpoints and exact Lean proof source for the phonon density of states on a Physlib crystal and the Landauer conductance with the Physlib oscillator heat capacity. Hash and compiled-name checks detect drift and provenance errors; they are not automatic symbolic translation or numerical validation.",
   "source_path": "lean/bridge/OMAIPhyslibPhononSpectrum.lean",
-  "source_sha256": "45133a66accf8fa1e98f2b212ce134570cb5cbfc29e4c716969f5ea4d402ebe6",
+  "source_sha256": "ccc6127cddcc1efcf6c24516648dfff1dd801d9b099000c9a0f1ce55305fde3b",
   "operators": [
     {
       "id": "compute_dos",

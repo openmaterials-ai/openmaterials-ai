@@ -13,8 +13,9 @@ The catalog's `compute_static_dielectric` adds the ionic (lattice-polarization) 
 the high-frequency electronic tensor `eps_inf`. With `D` the Gamma-point dynamical matrix on
 the optical coordinates (positive definite, the acoustic translations projected out), `Z` the
 mass-weighted Born-charge matrix on those coordinates and `c = 4 pi e^2 / Omega` (Gaussian;
-`e^2 / (eps_0 Omega)` in SI), the static tensor is `eps_0 = eps_inf + c Z^T D^-1 Z`. In the
-eigenbasis of `D` this is the mode-oscillator-strength sum `sum_m Ztilde_m Ztilde_m^T / omega_m^2`.
+`e^2 / (epsilon_vac Omega)` in SI, `epsilon_vac` the vacuum permittivity), the static tensor is
+`eps_0 = eps_inf + c Z^T D^-1 Z`. In the eigenbasis of `D` this is the mode-oscillator-strength
+sum `sum_m Ztilde_m Ztilde_m^T / omega_m^2`.
 
 The ionic term never lowers the response: `eps_0 - eps_inf` is positive semidefinite, and it
 vanishes along a direction `u` exactly when no polar mode couples to `u` (`Z u = 0`). Along any

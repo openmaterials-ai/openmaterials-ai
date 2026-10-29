@@ -13,8 +13,8 @@ heat-current autocorrelation from a sampled trajectory by averaging over time or
 off the Green-Kubo integral of the current autocorrelation. Physlib has no model of a molecular
 dynamics trajectory, so these are local theorems over Mathlib.
 
-For a sampled record that is periodic over the origin window (the periodic-padding assumption
-of FFT correlators) and whose integrated quantity advances by `dt` times the sampled rate
+For a sampled record that is periodic over the origin window (the circular, unpadded FFT
+correlator; a zero-padded FFT gives the linear correlator instead) and whose integrated quantity advances by `dt` times the sampled rate
 (positions by `dt` times the stored velocity, the Helfand moment by `dt` times the current):
 
 * the catalog's MSD is `dt^2 [tau Cv(0) + 2 sum_{k=1}^{tau-1} (tau - k) Cv(k)]` in terms of the

@@ -2,7 +2,7 @@
   "schema_version": 1,
   "scope": "Reviewed OMAI formula endpoints and exact Lean proof source for local theorems with no Physlib physics counterpart. Hash and compiled-name checks detect drift and provenance errors; they are not automatic symbolic translation or numerical validation.",
   "source_path": "lean/bridge/OMAIVACFSpectrum.lean",
-  "source_sha256": "29afe5cc67721583ea4d4822c7f16da22d4a2f1da277ec4d18013c8199d96c14",
+  "source_sha256": "d5f50026897ff1ecc38ad0b59b26deb457b461ba3d40fb29047a938dbc3bbe67",
   "operators": [
     {
       "id": "fourier_to_dos",

@@ -5,9 +5,278 @@
       "Quot.sound",
       "propext"
     ],
-    "declaration_count": 1877,
+    "declaration_count": 1999,
     "declarations": {
       "CanonicalEnsemble.heatCapacity.eq_1": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Atomistic.bentConfig": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Atomistic.bentConfig.eq_1": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Atomistic.bond_partialAt": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Atomistic.centralDifference": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Atomistic.centralDifference._proof_1": [
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Atomistic.centralDifference.eq_1": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Atomistic.centralDifference_error": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Atomistic.central_difference_bound": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Atomistic.clm_apply_eq_sum": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Atomistic.contDiffAt_partialAt": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Atomistic.cubicBond": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Atomistic.cubicBond.eq_1": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Atomistic.cubicBond_contDiff": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Atomistic.cubicBond_forceConstant3": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Atomistic.cubicBond_translate": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Atomistic.fdForceConstant": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Atomistic.fdForceConstant.eq_1": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Atomistic.fderiv_apply_eq_zero_of_invariant_curve": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Atomistic.forceConstant2": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Atomistic.forceConstant2.congr_simp": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Atomistic.forceConstant2.eq_1": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Atomistic.forceConstant2_sum_eq_zero": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Atomistic.forceConstant3": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Atomistic.forceConstant3_sum_eq_zero": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Atomistic.forceConstant3_symm": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Atomistic.hfForce": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Atomistic.hfForce.congr_simp": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Atomistic.hfForce.eq_1": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Atomistic.hfForce_sum_eq_zero": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Atomistic.hfForce_torque_eq_zero": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Atomistic.pairConfig": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Atomistic.pairConfig.eq_1": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Atomistic.pairEnergy": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Atomistic.pairEnergy._proof_1": [
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Atomistic.pairEnergy._proof_2": [
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Atomistic.pairEnergy.eq_1": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Atomistic.pairEnergy_contDiff": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Atomistic.pairEnergy_force": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Atomistic.pairEnergy_forceConstant2": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Atomistic.pairEnergy_partialAt": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Atomistic.pairEnergy_rotatePlane": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Atomistic.pairEnergy_torque_term": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Atomistic.pairEnergy_translate": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Atomistic.partialAt": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Atomistic.partialAt.congr_simp": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Atomistic.partialAt.eq_1": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Atomistic.partialAt_eq_of_hasDerivAt": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Atomistic.partialAt_partialAt": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Atomistic.partialAt_symm": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Atomistic.partialAt_translate": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Atomistic.rotatePlane": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Atomistic.rotatePlane.eq_1": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Atomistic.sum_partialAt_eq_zero_of_translate": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Atomistic.translate": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.Atomistic.translate.eq_1": [
         "Classical.choice",
         "Quot.sound",
         "propext"
@@ -143,6 +412,71 @@
         "propext"
       ],
       "OMAI.PhyslibBridge.Calphad.twoPhaseEnergy": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.CellElasticity.Cell": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.CellElasticity.cellStress": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.CellElasticity.cellStress.eq_1": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.CellElasticity.cellStress_rotation_balance": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.CellElasticity.elasticConstants": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.CellElasticity.elasticConstants.eq_1": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.CellElasticity.elasticConstants_major": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.CellElasticity.elasticConstants_symmetries": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.CellElasticity.referenceCell": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.CellElasticity.referenceCell.eq_1": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.CellElasticity.rotateCell": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.CellElasticity.rotateCell.eq_1": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.CellElasticity.voigt_pos_of_stable_reference": [
         "Classical.choice",
         "Quot.sound",
         "propext"
@@ -3738,6 +4072,46 @@
         "Quot.sound",
         "propext"
       ],
+      "OMAI.PhyslibBridge.MolecularModes.massWeightedHessian": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.MolecularModes.massWeightedHessian.congr_simp": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.MolecularModes.massWeightedHessian.eq_1": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.MolecularModes.massWeightedHessian_isHermitian": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.MolecularModes.massWeightedHessian_posSemidef": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.MolecularModes.massWeightedHessian_translation": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.MolecularModes.molecularFrequencies": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.MolecularModes.molecularFrequencies_of_isLocalMin": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
       "OMAI.PhyslibBridge.PhononSpectrum.boseKernel": [
         "Classical.choice",
         "Quot.sound",
@@ -6384,6 +6758,78 @@
         "Quot.sound",
         "propext"
       ],
+      "_private.OMAIAtomisticDerivatives.0.OMAI.PhyslibBridge.Atomistic.abs_le_of_deriv_abs_le": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "_private.OMAIAtomisticDerivatives.0.OMAI.PhyslibBridge.Atomistic.abs_le_of_deriv_abs_le._simp_1_1": [
+        "propext"
+      ],
+      "_private.OMAIAtomisticDerivatives.0.OMAI.PhyslibBridge.Atomistic.abs_le_of_deriv_abs_le._simp_1_2": [
+        "propext"
+      ],
+      "_private.OMAIAtomisticDerivatives.0.OMAI.PhyslibBridge.Atomistic.abs_le_of_deriv_abs_le._simp_1_3": [
+        "propext"
+      ],
+      "_private.OMAIAtomisticDerivatives.0.OMAI.PhyslibBridge.Atomistic.abs_le_of_deriv_abs_le._simp_1_4": [
+        "propext"
+      ],
+      "_private.OMAIAtomisticDerivatives.0.OMAI.PhyslibBridge.Atomistic.abs_le_of_deriv_abs_le._simp_1_5": [
+        "propext"
+      ],
+      "_private.OMAIAtomisticDerivatives.0.OMAI.PhyslibBridge.Atomistic.abs_le_of_deriv_abs_le._simp_1_6": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "_private.OMAIAtomisticDerivatives.0.OMAI.PhyslibBridge.Atomistic.abs_le_of_deriv_abs_le._simp_1_7": [
+        "propext"
+      ],
+      "_private.OMAIAtomisticDerivatives.0.OMAI.PhyslibBridge.Atomistic.centralDifference_error._simp_1_2": [],
+      "_private.OMAIAtomisticDerivatives.0.OMAI.PhyslibBridge.Atomistic.central_difference_bound._simp_1_1": [
+        "propext"
+      ],
+      "_private.OMAIAtomisticDerivatives.0.OMAI.PhyslibBridge.Atomistic.central_difference_bound._simp_1_2": [
+        "propext"
+      ],
+      "_private.OMAIAtomisticDerivatives.0.OMAI.PhyslibBridge.Atomistic.central_difference_bound._simp_1_3": [
+        "propext"
+      ],
+      "_private.OMAIAtomisticDerivatives.0.OMAI.PhyslibBridge.Atomistic.central_difference_bound._simp_1_4": [
+        "propext"
+      ],
+      "_private.OMAIAtomisticDerivatives.0.OMAI.PhyslibBridge.Atomistic.central_difference_bound._simp_1_5": [
+        "propext"
+      ],
+      "_private.OMAIAtomisticDerivatives.0.OMAI.PhyslibBridge.Atomistic.central_difference_bound._simp_1_6": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "_private.OMAIAtomisticDerivatives.0.OMAI.PhyslibBridge.Atomistic.central_difference_bound._simp_1_7": [
+        "propext"
+      ],
+      "_private.OMAIAtomisticDerivatives.0.OMAI.PhyslibBridge.Atomistic.clm_apply_eq_sum._simp_1_1": [
+        "propext"
+      ],
+      "_private.OMAIAtomisticDerivatives.0.OMAI.PhyslibBridge.Atomistic.hfForce_sum_eq_zero._simp_1_2": [
+        "propext"
+      ],
+      "_private.OMAIAtomisticDerivatives.0.OMAI.PhyslibBridge.Atomistic.hfForce_torque_eq_zero._simp_1_4": [
+        "propext"
+      ],
+      "_private.OMAIAtomisticDerivatives.0.OMAI.PhyslibBridge.Atomistic.rotatePlane_hasDerivAt": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "_private.OMAIAtomisticDerivatives.0.OMAI.PhyslibBridge.Atomistic.rotatePlane_zero": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "_private.OMAIAtomisticDerivatives.0.OMAI.PhyslibBridge.Atomistic.rotatePlane_zero.match_1_1": [],
       "_private.OMAICalphad.0.OMAI.PhyslibBridge.Calphad.equilibriumGibbs_convexOn._simp_1_2": [
         "propext"
       ],
@@ -6428,6 +6874,32 @@
         "propext"
       ],
       "_private.OMAICalphad.0.OMAI.PhyslibBridge.Calphad.transitionTemperature_unique._simp_1_1": [
+        "propext"
+      ],
+      "_private.OMAICellElasticity.0.OMAI.PhyslibBridge.CellElasticity.elasticConstants_symmetries._simp_1_2": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "_private.OMAICellElasticity.0.OMAI.PhyslibBridge.CellElasticity.partialAt_stress": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "_private.OMAICellElasticity.0.OMAI.PhyslibBridge.CellElasticity.rotateCell_hasDerivAt": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "_private.OMAICellElasticity.0.OMAI.PhyslibBridge.CellElasticity.rotateCell_zero": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "_private.OMAICellElasticity.0.OMAI.PhyslibBridge.CellElasticity.rotateCell_zero.match_1_1": [],
+      "_private.OMAICellElasticity.0.OMAI.PhyslibBridge.CellElasticity.stress_line_hasDerivAt": [
+        "Classical.choice",
+        "Quot.sound",
         "propext"
       ],
       "_private.OMAICompositeConductivity.0.OMAI.PhyslibBridge.Composites.ae_mem_Ioo": [
@@ -7205,6 +7677,72 @@
       ],
       "_private.OMAIMaterialsTransport.0.OMAI.PhyslibBridge.MaterialsTransport.wlsSlope_minimizes._simp_1_9": [
         "Quot.sound",
+        "propext"
+      ],
+      "_private.OMAIMolecularModes.0.OMAI.PhyslibBridge.MolecularModes.deriv2_nonneg_of_isLocalMin": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "_private.OMAIMolecularModes.0.OMAI.PhyslibBridge.MolecularModes.hessian_quadratic": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "_private.OMAIMolecularModes.0.OMAI.PhyslibBridge.MolecularModes.line_deriv2": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "_private.OMAIMolecularModes.0.OMAI.PhyslibBridge.MolecularModes.massWeightedHessian_posSemidef._simp_1_3": [
+        "propext"
+      ],
+      "_private.OMAIMolecularModes.0.OMAI.PhyslibBridge.MolecularModes.massWeightedHessian_posSemidef._simp_1_4": [
+        "propext"
+      ],
+      "_private.OMAIMolecularModes.0.OMAI.PhyslibBridge.MolecularModes.massWeightedHessian_posSemidef._simp_1_5": [
+        "propext"
+      ],
+      "_private.OMAIMolecularModes.0.OMAI.PhyslibBridge.MolecularModes.massWeightedHessian_posSemidef._simp_1_6": [
+        "propext"
+      ],
+      "_private.OMAIMolecularModes.0.OMAI.PhyslibBridge.MolecularModes.massWeightedHessian_posSemidef._simp_1_7": [
+        "propext"
+      ],
+      "_private.OMAIMolecularModes.0.OMAI.PhyslibBridge.MolecularModes.massWeightedHessian_posSemidef._simp_1_8": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "_private.OMAIMolecularModes.0.OMAI.PhyslibBridge.MolecularModes.massWeightedHessian_posSemidef._simp_1_9": [
+        "propext"
+      ],
+      "_private.OMAIMolecularModes.0.OMAI.PhyslibBridge.MolecularModes.massWeightedHessian_translation._simp_1_10": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "_private.OMAIMolecularModes.0.OMAI.PhyslibBridge.MolecularModes.massWeightedHessian_translation._simp_1_3": [
+        "propext"
+      ],
+      "_private.OMAIMolecularModes.0.OMAI.PhyslibBridge.MolecularModes.massWeightedHessian_translation._simp_1_4": [
+        "propext"
+      ],
+      "_private.OMAIMolecularModes.0.OMAI.PhyslibBridge.MolecularModes.massWeightedHessian_translation._simp_1_5": [
+        "propext"
+      ],
+      "_private.OMAIMolecularModes.0.OMAI.PhyslibBridge.MolecularModes.massWeightedHessian_translation._simp_1_6": [
+        "propext"
+      ],
+      "_private.OMAIMolecularModes.0.OMAI.PhyslibBridge.MolecularModes.massWeightedHessian_translation._simp_1_7": [
+        "propext"
+      ],
+      "_private.OMAIMolecularModes.0.OMAI.PhyslibBridge.MolecularModes.massWeightedHessian_translation._simp_1_8": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "_private.OMAIMolecularModes.0.OMAI.PhyslibBridge.MolecularModes.massWeightedHessian_translation._simp_1_9": [
         "propext"
       ],
       "_private.OMAIPhyslibElectronicTransport.0.OMAI.PhyslibBridge.ElectronicTransport.boltzmannKappaE_nonneg_and_eq_zero_iff._simp_1_1": [
@@ -8479,7 +9017,9 @@
     "namespace_prefix": "OMAI.PhyslibBridge",
     "scope": "source_modules_union_namespace_v1",
     "source_modules": [
+      "OMAIAtomisticDerivatives",
       "OMAICalphad",
+      "OMAICellElasticity",
       "OMAICompositeConductivity",
       "OMAICureKinetics",
       "OMAIDeviceMetrology",
@@ -8487,6 +9027,7 @@
       "OMAIElectronicStatistics",
       "OMAIMDCorrelations",
       "OMAIMaterialsTransport",
+      "OMAIMolecularModes",
       "OMAIPhyslibBridge",
       "OMAIPhyslibContinuum",
       "OMAIPhyslibDimensions",
@@ -8523,12 +9064,28 @@
       "OMAIVACFSpectrum"
     ],
     "status": "passed",
-    "theorem_count": 1403
+    "theorem_count": 1504
   },
   "command": "lake build --wfail",
   "contract_name_audit": {
-    "pair_count": 69,
+    "pair_count": 76,
     "pairs": [
+      {
+        "module": "OMAIAtomisticDerivatives",
+        "name": "OMAI.PhyslibBridge.Atomistic.fdForceConstant"
+      },
+      {
+        "module": "OMAIAtomisticDerivatives",
+        "name": "OMAI.PhyslibBridge.Atomistic.forceConstant2"
+      },
+      {
+        "module": "OMAIAtomisticDerivatives",
+        "name": "OMAI.PhyslibBridge.Atomistic.forceConstant3"
+      },
+      {
+        "module": "OMAIAtomisticDerivatives",
+        "name": "OMAI.PhyslibBridge.Atomistic.hfForce"
+      },
       {
         "module": "OMAICalphad",
         "name": "OMAI.PhyslibBridge.Calphad.calphadEntropy"
@@ -8552,6 +9109,14 @@
       {
         "module": "OMAICalphad",
         "name": "OMAI.PhyslibBridge.Calphad.transitionTemperature"
+      },
+      {
+        "module": "OMAICellElasticity",
+        "name": "OMAI.PhyslibBridge.CellElasticity.cellStress"
+      },
+      {
+        "module": "OMAICellElasticity",
+        "name": "OMAI.PhyslibBridge.CellElasticity.elasticConstants"
       },
       {
         "module": "OMAICompositeConductivity",
@@ -8690,6 +9255,10 @@
         "name": "OMAI.PhyslibBridge.MaterialsTransport.ionicConductivity"
       },
       {
+        "module": "OMAIMolecularModes",
+        "name": "OMAI.PhyslibBridge.MolecularModes.molecularFrequencies"
+      },
+      {
         "module": "OMAIPhyslibPhononSpectrum",
         "name": "OMAI.PhyslibBridge.PhononSpectrum.catalogDOS"
       },
@@ -8825,15 +9394,18 @@
   "schema_version": 1,
   "scope": "ISQ dimension encodings and explicitly stated bridge theorems; not numerical-code validation",
   "sources": {
+    "lean/bridge/OMAIAtomisticDerivatives.lean": "a2f8655c395d34f6ca60e63c36f8e0831bf5ba3d3e1ffc355f057e5b0ea2b814",
     "lean/bridge/OMAICalphad.lean": "1864ba3c15e2bcd98fcbb932d6e3b6d450e2499d40b46f5537ac8cc9194d4852",
+    "lean/bridge/OMAICellElasticity.lean": "7c2e02a8b5ac516416570f85ca49695d33e013a4a8cec4999d4cc7da2561c31a",
     "lean/bridge/OMAICompositeConductivity.lean": "e08799415b1e5345ed0cc6af0b192685f6d0f93606d3f8c0a0f91c3ed178096c",
     "lean/bridge/OMAICureKinetics.lean": "7575810b36eb5f97bdd12ef4d26e9c9b65e42f2a5e3913609e615e0d90980a2a",
     "lean/bridge/OMAIDeviceMetrology.lean": "e4512fd4eda1c0bf64a059a05ed51f0493cfd3ca131c891a2a223ba837d79edd",
     "lean/bridge/OMAIElasticity.lean": "dbc0efc3f35bcc223d28cd60d70fa591ab5f4cf9d285fe97360be6dca0602844",
     "lean/bridge/OMAIElectronicStatistics.lean": "42647fea45250902515d99acdf1e8d2bf9d809ce1e15ff7ad0890fe59d05bfde",
-    "lean/bridge/OMAIMDCorrelations.lean": "917518ed3091e35f1048b4284cbb3e55722d7d317d61aee29116cc6ca0a5b22e",
+    "lean/bridge/OMAIMDCorrelations.lean": "5ad1d4f7c88f8483525123b63bf7b73a15ea0ed01363b14360a009e0189fc8cc",
     "lean/bridge/OMAIMaterialsTransport.lean": "2aa396f9e92d7b2a52b7d8cceb05c7834dee771777c23c47094dd2b2ed82d379",
-    "lean/bridge/OMAIPhyslibBridge.lean": "6ca1112fa156f7b2a42d7ed1e1795d1ae04ea9d4f3a8b505cdd407cdcfe93e82",
+    "lean/bridge/OMAIMolecularModes.lean": "17ee78d8a15e7db57d0a416d4ba2dc9f40ad8e3089fb79ded98c7bc9a03a950b",
+    "lean/bridge/OMAIPhyslibBridge.lean": "a2fb57d247e334cfc8cfcfaf9c469f92a37d9270c4206c412a724d759d69b1d7",
     "lean/bridge/OMAIPhyslibContinuum.lean": "e8bff3cb5d44cd78885d8c5f200d8761e8c568cd0d101fc0c2110f521bdca7ff",
     "lean/bridge/OMAIPhyslibDimensions.lean": "19081539b9e0b1499f407b54fdc174c0ff85bff56976771de11cb386c52a461e",
     "lean/bridge/OMAIPhyslibElectronicTransport.lean": "2609b6b410cb84b120f782adf88b7204e13bcef14ddee5adbce92f5c89805f45",
@@ -8853,7 +9425,7 @@
     "lean/bridge/OMAIPhyslibModeGruneisen.lean": "0ea8fbbed0fe6920dd0c712a0f2d55768c4cca218f5193a1dce1ffd29f7046b5",
     "lean/bridge/OMAIPhyslibParticipationRatio.lean": "2306537ae007125fc41ba3654b265cb1fd19cca3ab33769cf1590bad269203fa",
     "lean/bridge/OMAIPhyslibPhononDispersion.lean": "70bd052d1d32afe828a3a8f7e26e406d5ec1e121b86ad0d9b08717f8c0f87f1a",
-    "lean/bridge/OMAIPhyslibPhononSpectrum.lean": "45133a66accf8fa1e98f2b212ce134570cb5cbfc29e4c716969f5ea4d402ebe6",
+    "lean/bridge/OMAIPhyslibPhononSpectrum.lean": "ccc6127cddcc1efcf6c24516648dfff1dd801d9b099000c9a0f1ce55305fde3b",
     "lean/bridge/OMAIPhyslibQHA.lean": "2347e44452e37e3a05131ad636dd20f6ad7ea74dcc60c97fb8a2134f63f68f96",
     "lean/bridge/OMAIPhyslibQHAWitness.lean": "44e893abf1aebd6cf833d75389e61b64b055e2fca6bf7c31192721081bc525ae",
     "lean/bridge/OMAIPhyslibRTAConductivity.lean": "13267fa6d967df842f39251b23a0c2b70cd230f2553a444964f4bdc2229e34a8",
@@ -8865,36 +9437,40 @@
     "lean/bridge/OMAIPhyslibThermalGruneisen.lean": "6669b924a8682f135cee4daeda9d2d76b5418aa1ee30117dd7975dc86dddece9",
     "lean/bridge/OMAISommerfeldTransport.lean": "c303015e23f3b7c5632ac2d151386da80b0be03afd4c6ae6c5d2860b559b4905",
     "lean/bridge/OMAIStabilityEnergies.lean": "d5da7a1eb03e27c9869c6f8f735f37c0256cc03eebaf8eba7d90a7cb221eaa34",
-    "lean/bridge/OMAIStaticDielectric.lean": "2b899fb132527638b2b75870b52b3a757eecd409506b576a3dc73edf0272fe88",
-    "lean/bridge/OMAIVACFSpectrum.lean": "29afe5cc67721583ea4d4822c7f16da22d4a2f1da277ec4d18013c8199d96c14",
-    "lean/bridge/audit.py": "7d4c3246f728270d04531e08da0a613aaa6893ff579ed42f1d05775975626443",
+    "lean/bridge/OMAIStaticDielectric.lean": "e1fd2cce2adacf6a3c23ad21332c9f1ee1f0f7f8217e39f0222eedb71aa0b277",
+    "lean/bridge/OMAIVACFSpectrum.lean": "d5f50026897ff1ecc38ad0b59b26deb457b461ba3d40fb29047a938dbc3bbe67",
+    "lean/bridge/audit.py": "ac78ac98ebd1d92f5726f41f6ccfc51d496c5491763923d9ad5f0b1477374156",
     "lean/bridge/carrier-statistics-formula-contract.json": "a7446bb199398508637ed277e55cfcca45349226288af374d12dae3d4d323a87",
     "lean/bridge/composites-formula-contract.json": "734b687bf6b86e9137262d777abe60958f8452ff53f6ec6532c482d9098cba32",
     "lean/bridge/continuum-formula-contract.json": "b5fb4368abccaac9fcde8b6ccb6dfd55402f14f1a9537e898645484ba69b2e8f",
     "lean/bridge/cure-kinetics-formula-contract.json": "90ad4ee7bb1337e2281de04495f29dca50c3add88381f11f617a83c18bd9295a",
     "lean/bridge/device-metrology-formula-contract.json": "23f6bdb8dc8466241404ce85874e677268ab3d637226c647f10de1071debec7d",
+    "lean/bridge/dft-derivatives-formula-contract.json": "ec3fa04630dbde8f85526dcedde212a3a87ed9f1de94e1c0ae0cd4d96994f53f",
+    "lean/bridge/elastic-constants-formula-contract.json": "227c14f58eef72f5a51ad1f140aa32e3c8496c0b00ab689261fa2b026c87101d",
     "lean/bridge/elasticity-formula-contract.json": "4d9b230d6b4a62e45383dd03c48e34d1834d7d70e5bd1c38b191866128c000f8",
     "lean/bridge/electronic-transport-formula-contract.json": "a68c4081cca641d2c2241c8a3497a45ea715408f906496b6279e4c43b7a560e3",
+    "lean/bridge/force-constants-formula-contract.json": "f11bdc5d06dfb823dbae325dd71721e0442ee76fe3c9103d98df2736a4762202",
     "lean/bridge/harmonic-density-formula-contract.json": "b3f5f43df5ae50417ec309a996dcdbbef311fcac9bd4bb72957f45da28533ba8",
     "lean/bridge/harmonic-ensemble-formula-contract.json": "787bff6c81de388b2631c77b044b394a03c8562c744493931f09db60e8f663ab",
     "lean/bridge/harmonic-product-formula-contract.json": "adffdaa7139f3d919eb1ea058130fb502ad0d6e2e375bf2465ce47abf472d995",
     "lean/bridge/harmonic-sums-formula-contract.json": "c897e8de5d7c1b7211f95e0cd599479c87a738de946be683bd5ab3ae78be1699",
     "lean/bridge/joint-density-formula-contract.json": "f5a5bb01044f479cf9770573121442a84117af1a84a6976d5ede0765256dfd04",
     "lean/bridge/lake-manifest.json": "d4f51a8aa0ee98c0c8a34a7f9cc00accf43ee3a67571f571c0e35318d0956e53",
-    "lean/bridge/lakefile.toml": "9ec6396a4c6c2127bc2ae4301cb80f2122070126023d6c7d02be2a8f7f73eb17",
+    "lean/bridge/lakefile.toml": "fafd5494f52847f96b3948f0152c0514981babfe9112370828f4c7bec327c680",
     "lean/bridge/lean-toolchain": "ca5f1f601d34c49079e38d7e7041eb0f2a9c227fbc1df0f404820069a052330c",
     "lean/bridge/materials-transport-formula-contract.json": "4e345358c5fa3f5c81fdfffe451736c573d12aeed7555f6e8aa82be9d1c53c2d",
-    "lean/bridge/md-correlations-formula-contract.json": "4a10e034d4823fe30d53b6e1a05720e3b1a05ebe832237305ca98c0f7983131c",
-    "lean/bridge/phonon-spectrum-formula-contract.json": "054c3e987ae33afb6f303bbd7253aaf1f8b01461e780fc1783e0e93dc70f18b1",
+    "lean/bridge/md-correlations-formula-contract.json": "f5b371d9c1f4cca80226260e03890c737f39b8c686769eef65e0ce4256289066",
+    "lean/bridge/molecular-modes-formula-contract.json": "e35e0cd0d877afb67c0a6c5e90d252089a47cda6d81a03105db60dff27b4f5a1",
+    "lean/bridge/phonon-spectrum-formula-contract.json": "6fa08f784708ceab8519f9645fa85ece878700ababe443c9bc5630b95a5aade6",
     "lean/bridge/phonon-structure-formula-contract.json": "9d9772031ec689a7e206609f91eb38e9161f27f1dedc81c63c313066789a6e97",
     "lean/bridge/qha-formula-contract.json": "60876d432d5819f8ed568770ec7df5ed7ad64fdc1e00c2c2fd03bd061b9f83c1",
     "lean/bridge/response-formula-contract.json": "f4f446f1967c45ccf508f42232e070d468121b0967459f93fc0c496210adf353",
     "lean/bridge/semantic-formula-contract.json": "21002241bb9dae2d674df0ede26cf7f0804823591675bcb4099142e7a5d1b123",
     "lean/bridge/stability-formula-contract.json": "50e12a50ec2da999d1baec8e0c9af7ca36576eef49bc4a7c6955a81998228e42",
-    "lean/bridge/static-dielectric-formula-contract.json": "8ba154e6b078c128c80a0f6425ad6c93472ecb006812bd4c7b0cc70d55c6dc17",
+    "lean/bridge/static-dielectric-formula-contract.json": "6205b83cd78f108f8134fd36054d8fa47dda699486097c9259f8a1f7b2550e3e",
     "lean/bridge/thermal-gruneisen-formula-contract.json": "61759afd04057fdd607005bf49ae8ad84e2d3d916f7c331b45886a66620acdca",
     "lean/bridge/thermochemistry-formula-contract.json": "4afff8e935bfe1756e68e4d985c048232b6a31d487c86582f26d64780e99513d",
-    "lean/bridge/vacf-spectrum-formula-contract.json": "c01a234d6704883dde033e682ec882859a1078e474b35bd3d870b57c40d106df",
+    "lean/bridge/vacf-spectrum-formula-contract.json": "ff35b3d1176ce0ce02197dd6ecf526eb7ae3b681fcda5051b13b35db71e2e575",
     "lean/bridge/verify_contracts.py": "57225331e3e602ec50c4cb707f6b0b8c4f9cc7b7476e978cfa8a94ccd7708ffc"
   },
   "status": "passed",

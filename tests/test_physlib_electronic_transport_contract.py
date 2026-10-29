@@ -42,9 +42,9 @@ TRANCHES = {
         "helpers": ["def kinetic (w E : ι → ℝ) (mu : ℝ) (k : ℕ) : ℝ := ∑ b, w b * (E b - mu) ^ k"],
         "outputs": {"ElectricalConductivity[carrier=electronic]", "SeebeckCoefficient", "ElectronicThermalConductivity"},
         "key_theorems": {
-            "boltzmannKappaE_nonneg_and_eq_zero_iff": "(boltzmannKappaE w E mu T = 0 ↔ ∃ E0, ∀ b, w b ≠ 0 → E b = E0)",
-            "exists_boltzmann_thermoelectricMaterial": "∃ M : ThermoelectricMaterial, M.S = boltzmannSeebeck w E mu e T ∧",
-            "figureOfMerit_lt_mahanSofo": "kinetic w E mu 1 ^ 2 / (kinetic w E mu 0 * kinetic w E mu 2 - kinetic w E mu 1 ^ 2)) ∧",
+            "boltzmannKappaE_nonneg_and_eq_zero_iff": " {w : ι → ℝ} (hw : ∀ b, 0 ≤ w b) (E : ι → ℝ)\n    (mu : ℝ) {T : ℝ} (hT : 0 < T) :\n    0 ≤ boltzmannKappaE w E mu T ∧\n      (boltzmannKappaE w E mu T = 0 ↔ ∃ E0, ∀ b, w b ≠ 0 → E b = E0)",
+            "exists_boltzmann_thermoelectricMaterial": " {w : ι → ℝ} (hw : ∀ b, 0 ≤ w b) (E : ι → ℝ)\n    {mu e T kappaL : ℝ} (hL0 : 0 < kinetic w E mu 0) (he : e ≠ 0) (hT : 0 < T)\n    (hkl : 0 < kappaL) :\n    ∃ M : ThermoelectricMaterial, M.S = boltzmannSeebeck w E mu e T ∧\n      M.σ = boltzmannConductivity w E mu e ∧ M.κl = kappaL ∧ M.κe = boltzmannKappaE w E mu T",
+            "figureOfMerit_lt_mahanSofo": " {w : ι → ℝ} (hw : ∀ b, 0 ≤ w b) (E : ι → ℝ)\n    {mu e T : ℝ} (hL0 : 0 < kinetic w E mu 0) (he : e ≠ 0) (hT : 0 < T)\n    (hvar : 0 < kinetic w E mu 0 * kinetic w E mu 2 - kinetic w E mu 1 ^ 2)\n    (hL1 : kinetic w E mu 1 ≠ 0) :\n    (∀ M : ThermoelectricMaterial, M.S = boltzmannSeebeck w E mu e T →\n      M.σ = boltzmannConductivity w E mu e → M.κe = boltzmannKappaE w E mu T →\n        M.figureOfMerit T <\n          kinetic w E mu 1 ^ 2 / (kinetic w E mu 0 * kinetic w E mu 2 - kinetic w E mu 1 ^ 2)) ∧\n      ∀ eps > 0, ∃ M : ThermoelectricMaterial, M.S = boltzmannSeebeck w E mu e T ∧\n        M.σ = boltzmannConductivity w E mu e ∧ M.κe = boltzmannKappaE w E mu T ∧\n        kinetic w E mu 1 ^ 2 / (kinetic w E mu 0 * kinetic w E mu 2 - kinetic w E mu 1 ^ 2) - eps <\n          M.figureOfMerit T",
         },
         # Support lemmas of the Onsager algebra, kept out of the citations.
         "not_cited": {"lagrange", "kinetic_zero_nonneg", "kinetic_two_nonneg", "variance_nonneg",
@@ -74,8 +74,8 @@ TRANCHES = {
         ],
         "outputs": {"CarrierMobility", "ElectronicDOS"},
         "key_theorems": {
-            "boltzmannMobility_le_matthiessen": "boltzmannMobility c w tau ≤ 1 / ∑ i, 1 / mechanismMobility c w tau i",
-            "exists_unique_fermiLevel": "∃! mu, electronicDOS g E (fun e => 1 / (1 + exp ((e - mu) / kT))) = N",
+            "boltzmannMobility_le_matthiessen": " {c : ℝ} (hc : 0 < c) {w : κ → ℝ} (hw : ∀ k, 0 ≤ w k)\n    {tau : κ → ι → ℝ} (htau : ∀ k i, 0 < tau k i) :\n    boltzmannMobility c w tau ≤ 1 / ∑ i, 1 / mechanismMobility c w tau i",
+            "exists_unique_fermiLevel": " [Nonempty ι] {g : ι → ℝ} (hg : ∀ b, 0 < g b) (E : ι → ℝ)\n    {kT : ℝ} (hkT : 0 < kT) {N : ℝ} (hN0 : 0 < N) (hN : N < ∑ b, g b) :\n    ∃! mu, electronicDOS g E (fun e => 1 / (1 + exp ((e - mu) / kT))) = N",
         },
         "not_cited": {"combinedTime_le", "electronCount_eq_dos"},
         "support_declarations": set(),
@@ -94,8 +94,8 @@ TRANCHES = {
         "helpers": ["(c / (u ⬝ᵥ epsInf *ᵥ u)) • vecMulVec (Z *ᵥ u) (Z *ᵥ u)"],
         "outputs": {"StaticDielectricTensor"},
         "key_theorems": {
-            "staticDielectric_sub_posSemidef": "∀ u : Fin 3 → ℝ, u ⬝ᵥ (staticDielectric epsInf D Z c - epsInf) *ᵥ u = 0 ↔ Z *ᵥ u = 0",
-            "lyddaneSachsTeller": "(∏ i, hLO.eigenvalues i) / (∏ i, hD.isHermitian.eigenvalues i) =",
+            "staticDielectric_sub_posSemidef": " {epsInf : Matrix (Fin 3) (Fin 3) ℝ} {D : Matrix n n ℝ}\n    (hD : D.PosDef) (Z : Matrix n (Fin 3) ℝ) {c : ℝ} (hc : 0 < c) :\n    (staticDielectric epsInf D Z c - epsInf).PosSemidef ∧\n      ∀ u : Fin 3 → ℝ, u ⬝ᵥ (staticDielectric epsInf D Z c - epsInf) *ᵥ u = 0 ↔ Z *ᵥ u = 0",
+            "lyddaneSachsTeller": " {epsInf : Matrix (Fin 3) (Fin 3) ℝ} {D : Matrix n n ℝ}\n    (hD : D.PosDef) (Z : Matrix n (Fin 3) ℝ) (c : ℝ) {u : Fin 3 → ℝ}\n    (hu : 0 < u ⬝ᵥ epsInf *ᵥ u) :\n    ∃ hLO : (D + nonAnalytic epsInf Z c u).IsHermitian,\n      (∏ i, hLO.eigenvalues i) / (∏ i, hD.isHermitian.eigenvalues i) =\n        (u ⬝ᵥ staticDielectric epsInf D Z c *ᵥ u) / (u ⬝ᵥ epsInf *ᵥ u)",
         },
         "not_cited": {"row_mul_col", "quad_ionic"},
         "support_declarations": set(),
@@ -109,8 +109,8 @@ SOMMERFELD = {
         "def kineticIntegral (Sigma0 mu kT : ℝ) (k : ℕ) : ℝ :=\n  ∫ E, Sigma0 * (E - mu) ^ k * (fermiWindow ((E - mu) / kT) / kT)",
     ],
     "key_theorems": {
-        "sommerfeld_moments": "kineticIntegral Sigma0 mu kT 2 = Sigma0 * kT ^ 2 * (π ^ 2 / 3)",
-        "wiedemannFranz_constantTransport": "π ^ 2 / 3 * (kB / e) ^ 2 * (e ^ 2 * kineticIntegral Sigma0 mu (kB * T) 0) * T",
+        "sommerfeld_moments": " (Sigma0 mu : ℝ) {kT : ℝ} (hkT : 0 < kT) :\n    kineticIntegral Sigma0 mu kT 0 = Sigma0 ∧ kineticIntegral Sigma0 mu kT 1 = 0 ∧\n      kineticIntegral Sigma0 mu kT 2 = Sigma0 * kT ^ 2 * (π ^ 2 / 3)",
+        "wiedemannFranz_constantTransport": " {Sigma0 e kB T : ℝ} (mu : ℝ) (hS : Sigma0 ≠ 0)\n    (he : e ≠ 0) (hkB : 0 < kB) (hT : 0 < T) :\n    -(kineticIntegral Sigma0 mu (kB * T) 1 / kineticIntegral Sigma0 mu (kB * T) 0) / (e * T) = 0 ∧\n      (kineticIntegral Sigma0 mu (kB * T) 2 -\n          kineticIntegral Sigma0 mu (kB * T) 1 ^ 2 / kineticIntegral Sigma0 mu (kB * T) 0) / T =\n        π ^ 2 / 3 * (kB / e) ^ 2 * (e ^ 2 * kineticIntegral Sigma0 mu (kB * T) 0) * T",
     },
     "not_cited": {"fermiWindow_neg", "integral_fermiWindow", "integral_mul_fermiWindow",
                   "integral_sq_mul_fermiWindow", "kineticIntegral_eq"},

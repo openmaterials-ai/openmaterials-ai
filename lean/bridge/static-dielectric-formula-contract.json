@@ -2,7 +2,7 @@
   "schema_version": 1,
   "scope": "Reviewed OMAI formula endpoints and exact Lean proof source for local theorems with no Physlib physics counterpart. Hash and compiled-name checks detect drift and provenance errors; they are not automatic symbolic translation or numerical validation.",
   "source_path": "lean/bridge/OMAIStaticDielectric.lean",
-  "source_sha256": "2b899fb132527638b2b75870b52b3a757eecd409506b576a3dc73edf0272fe88",
+  "source_sha256": "e1fd2cce2adacf6a3c23ad21332c9f1ee1f0f7f8217e39f0222eedb71aa0b277",
   "operators": [
     {
       "id": "compute_static_dielectric",
@@ -19,7 +19,7 @@
     }
   ],
   "interpretations": [
-    "compute_static_dielectric is an opaque output in the catalog. The interpreted definition is eps_0 = eps_inf + c Z^T D^-1 Z, with D the Gamma-point dynamical matrix on the optical coordinates (the acoustic translations projected out, so D is positive definite for a stable crystal), Z the mass-weighted Born-charge matrix Z*_{kappa,alpha beta}/sqrt(M_kappa) on those coordinates, and c = 4 pi e^2/Omega in Gaussian units (e^2/(eps_0 Omega) in SI). In the eigenbasis of D this is the mode-oscillator-strength sum sum_m Z~_m Z~_m^T/omega_m^2 over the polar modes that the catalog describes; it needs the Gamma eigenvectors through D, not only the frequencies the catalog lists as input.",
+    "compute_static_dielectric is an opaque output in the catalog. The interpreted definition is eps_0 = eps_inf + c Z^T D^-1 Z, with D the Gamma-point dynamical matrix on the optical coordinates (the acoustic translations projected out, so D is positive definite for a stable crystal), Z the mass-weighted Born-charge matrix Z*_{kappa,alpha beta}/sqrt(M_kappa) on those coordinates, and c = 4 pi e^2/Omega in Gaussian units (e^2/(epsilon_vac Omega) in SI, epsilon_vac the vacuum permittivity). In the eigenbasis of D this is the mode-oscillator-strength sum sum_m Z~_m Z~_m^T/omega_m^2 over the polar modes that the catalog describes; it needs the Gamma eigenvectors through D, not only the frequencies the catalog lists as input.",
     "With D positive definite and c > 0, eps_0 - eps_inf is positive semidefinite and u (eps_0 - eps_inf) u = 0 exactly when Z u = 0: the ionic term never lowers the response and vanishes along a direction exactly when no polar mode couples to it.",
     "Along a direction u with u eps_inf u > 0, adding the Gonze-Lee long-wavelength correction c (Z u)(Z u)^T/(u eps_inf u) to D gives a Hermitian matrix whose eigenvalues are the longitudinal squared frequencies along u, and the product of these over the product of the eigenvalues of D equals (u eps_0 u)/(u eps_inf u): the generalized Lyddane-Sachs-Teller relation. The correction is not the catalog's apply_nac_correction, whose q dependence cancels and which stays a recorded defect."
   ]

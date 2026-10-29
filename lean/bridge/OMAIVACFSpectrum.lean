@@ -9,8 +9,9 @@ public import Mathlib.Tactic
 /-!
 # Vibrational density of states from the velocity autocorrelation
 
-The catalog's `fourier_to_dos` reads the vibrational density of states off the velocity
-autocorrelation by the cosine transform `g(omega) = (1/pi) int_0^infinity cos(omega tau) Cv(tau)
+The catalog's `fourier_to_dos` reads a quantity proportional to the vibrational density of
+states (`Cv(0)/2`-normalized on `omega > 0`) off the velocity autocorrelation by the cosine
+transform `g(omega) = (1/pi) int_0^infinity cos(omega tau) Cv(tau)
 d tau`. Physlib has no model of a molecular dynamics trajectory, so these are local theorems over
 Mathlib.
 

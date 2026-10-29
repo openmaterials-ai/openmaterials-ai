@@ -1,10 +1,3 @@
-/- Phonon density of states and Landauer conductance over Physlib crystals and oscillators.
-On a finite Born-von Karman crystal of Physlib sites, the catalog density of states taken over
-every character of the translations has total weight 3 per unit-cell site and second moment
-`sum_i Phi_ii(0) / M_i` when the harmonic energy is never negative. The catalog's Landauer
-weight `hbar omega dn_BE/dT` is the derivative-defined heat capacity of a Physlib quantum
-harmonic oscillator, and with unit transmission the catalog conductance is the thermal
-conductance quantum `pi^2 k_B^2 T / (3 h)`. -/
 module
 
 public import OMAIPhyslibPhononDispersion
@@ -14,6 +7,17 @@ public import Mathlib.NumberTheory.ZetaValues
 public import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
 public import Mathlib.MeasureTheory.Integral.DominatedConvergence
 public import Mathlib.MeasureTheory.Integral.IntegralEqImproper
+
+/-!
+# Phonon density of states and Landauer conductance over Physlib crystals and oscillators
+
+On a finite Born-von Karman crystal of Physlib sites, the catalog density of states taken over
+every character of the translations has total weight 3 per unit-cell site and second moment
+`sum_i Phi_ii(0) / M_i` when the harmonic energy is never negative. The catalog's Landauer
+weight `hbar omega dn_BE/dT` is the derivative-defined heat capacity of a Physlib quantum
+harmonic oscillator, and with unit transmission the catalog conductance is the thermal
+conductance quantum `pi^2 k_B^2 T / (3 h)`.
+-/
 
 @[expose] public section
 

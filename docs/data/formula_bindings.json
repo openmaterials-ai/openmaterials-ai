@@ -445,11 +445,11 @@
         }
       ],
       "conditions": [
-        "compute_electronic_conductivity, compute_seebeck and compute_electronic_thermal_conductivity are opaque Boltzmann-transport outputs in the catalog. The interpreted definitions are BoltzTraP2's Onsager coefficients evaluated on a finite energy grid, L_k = sum_b w_b (E_b - mu)^k with w_b = Sigma(E_b) (-df/dE)(E_b) Delta E >= 0 and Sigma the diagonal transport distribution sum_k v_k^2 tau_k delta(E - E_k)/(N_k V). The relaxation time enters only through w, so amset's mode-resolved rates and a constant relaxation time are both admitted; one diagonal Cartesian component (or one principal axis) at a time, since off-diagonal weights v_a v_b are not sign definite.",
+        "compute_electronic_conductivity, compute_seebeck and compute_electronic_thermal_conductivity are opaque Boltzmann-transport outputs in the catalog. The interpreted definitions are BoltzTraP2's Onsager coefficients evaluated on a finite energy grid, L_k = sum_b w_b (E_b - mu)^k with w_b = Sigma(E_b) (-df/dE)(E_b) Delta E >= 0 and Sigma the diagonal transport distribution sum_k v_k^2 tau_k delta(E - E_k)/(N_k V). The relaxation time enters only through w, so amset's state-resolved (band and k-point) rates and a constant relaxation time are both admitted; one diagonal Cartesian component (or one principal axis) at a time, since off-diagonal weights v_a v_b are not sign definite. The catalog's bte_ibte scheme is read as amset's momentum-relaxation-time solution, whose state weights v_k^2 tau_k are nonnegative; a self-consistent iterative BTE solution has no state-resolved nonnegative weights and is outside these hypotheses.",
         "e > 0 is the elementary charge, so S = -(L_1/L_0)/(e T) is negative when the transport window lies above mu (n-type). A code that writes S = (L_1/L_0)/(q T) with the signed carrier charge q = -e gives the same number. kappa_e is the zero-current electronic thermal conductivity, with -L_1^2/L_0 the Peltier correction; the zero-field L_2/T is a different quantity.",
         "The Physlib material needs L_0 > 0 (some state with nonzero weight), e != 0 and T > 0 for sigma > 0, and an independently supplied lattice conductivity kappa_l > 0; kappa_e >= 0 is proved, not assumed. The figure of merit is Physlib's zT = sigma S^2 T/(kappa_l + kappa_e).",
         "The Mahan-Sofo bound needs L_0 L_2 - L_1^2 > 0, which for L_0 > 0 means that the states with nonzero weight do not all share one energy, and L_1 != 0; it is strict for every kappa_l > 0 and sharp as kappa_l -> 0. It bounds the figure of merit by the shape of the transport window alone and says nothing about which window is attainable.",
-        "The Sommerfeld statements are about the continuum kinetic integrals of an energy-independent transport distribution Sigma_0 != 0 at k_B T > 0 (the degenerate limit with a flat Sigma), not about the finite-grid definitions; the Lorenz number (pi^2/3)(k_B/e)^2 is the Sommerfeld value 2.44e-8 W Ohm/K^2 in SI.",
+        "The Sommerfeld statements are about the continuum kinetic integrals of an energy-independent transport distribution Sigma_0 at k_B T > 0 (Sigma_0 != 0 for the Lorenz-number quotient) (the degenerate limit with a flat Sigma), not about the finite-grid definitions; the Lorenz number (pi^2/3)(k_B/e)^2 is the Sommerfeld value 2.44e-8 W Ohm/K^2 in SI.",
         "Energies in joules, T in kelvin, e in coulombs; sigma in S/m, S in V/K and kappa_e in W/(m K) when w carries S/(m C^2). BoltzTraP2's hartree energies and amset's unit choices (the catalog description flags its kappa unit as unconfirmed) are conversions outside the theorems."
       ],
       "conventions": {
@@ -459,7 +459,7 @@
         "frequency_convention": "Not applicable; no phonon frequency enters these statements. The phonon-frequency input of the catalog producers acts only through the scattering rates inside w.",
         "unit_embedding": "Coherent SI: energies and mu in J, T in K, e in C, sigma in S/m, S in V/K, kappa_e in W/(m K). Exact-real statements; floating-point evaluation is not certified.",
         "held_fixed": "Chemical potential, temperature, the transport window w and the lattice conductivity are fixed inputs; the Mahan-Sofo limit varies kappa_l alone.",
-        "admissibility": "w_b >= 0 for every grid point; T > 0; L_0 > 0 and e != 0 for the Physlib material; L_0 L_2 - L_1^2 > 0 and L_1 != 0 for the bound; Sigma_0 != 0 and k_B T > 0 for the Sommerfeld moments.",
+        "admissibility": "w_b >= 0 for every grid point; T > 0; L_0 > 0 and e != 0 for the Physlib material; L_0 L_2 - L_1^2 > 0 and L_1 != 0 for the bound; k_B T > 0 for the Sommerfeld moments and Sigma_0 != 0 for the Lorenz-number quotient.",
         "reference_energy": "Energies are measured from the chemical potential mu inside L_k; a common shift of E_b and mu leaves every coefficient unchanged.",
         "qpoint_weighting": "The k-point sum and its weights are inside the transport distribution Sigma(E); the theorems see only the resulting energy-grid weights w_b."
       },
@@ -675,6 +675,65 @@
           }
         ],
         "source_sha256": "13267fa6d967df842f39251b23a0c2b70cd230f2553a444964f4bdc2229e34a8"
+      }
+    },
+    {
+      "id": "cell-stress-rotation-balance",
+      "relation": "local",
+      "targets": [
+        {
+          "kind": "node",
+          "id": "Stress",
+          "uid": "183e66d4e443326d2c346a0327cdb125026bd8f6a91a9bb97b61265fcade7e85"
+        },
+        {
+          "kind": "operator",
+          "id": "compute_stress_cell",
+          "uid": "88f8474bfda3d73e220f1db0ddfb8f00546007f1172ec663f4d4406568b3c5f2",
+          "formula_sha256": "6dd196c0b221e9aed1dae7019b053498c5d5d96177025dc088250bca9555842f"
+        }
+      ],
+      "statement": "For a cell energy E(F) of the homogeneously deformed cell, differentiable at F and invariant under rigid rotations of the deformed cell, the catalog stress sigma_ab = -(1/V) dE/d eps_ab satisfies sum_b sigma_{alpha b} F_{beta b} = sum_b sigma_{beta b} F_{alpha b} for every deformation gradient F; at the reference cell F = 1 the stress is symmetric, a corollary of the balance rather than a separate theorem.",
+      "sources": [],
+      "conditions": [
+        "The cell energy is a function of the deformation gradient F = 1 + eps, so derivatives with respect to the strain and to F agree, and V is the reference cell volume.",
+        "The catalog stress is compressive positive, sigma = -(1/V) dE/d eps, the negative of the tension-positive Cauchy stress, as QE prints it in kbar.",
+        "Rotation invariance of the deformed cell (objectivity) holds for any energy of the physical configuration; it is stated per rotation plane."
+      ],
+      "conventions": {
+        "model_scope": "Exact derivative of one cell energy with respect to homogeneous strain; a local theorem over Mathlib with no Physlib model.",
+        "component_scope": "Full 3x3 stress; the balance holds for each pair of Cartesian directions.",
+        "normalization_basis": "Stress per unit reference volume.",
+        "frequency_convention": "Not applicable; no frequencies enter these derivatives.",
+        "unit_embedding": "Coherent SI: energy in J, volume in m^3, stress in Pa; 1 kbar = 1e8 Pa.",
+        "held_fixed": "Internal atomic coordinates follow whatever the cell energy prescribes (clamped or relaxed); temperature is not involved.",
+        "admissibility": "E differentiable at F; Invariance of the cell energy under rotations in the stated plane.",
+        "reference_energy": "An additive constant in E changes no stress.",
+        "qpoint_weighting": "Not applicable; no Brillouin-zone sums enter these derivatives."
+      },
+      "remaining_obligations": [
+        "Pulay stress from a fixed plane-wave cutoff, k-point and smearing convergence, and the symmetrization codes apply to the computed tensor are not verified.",
+        "The theorem concerns the exact strain derivative; finite-strain differences and Voigt-notation storage are not covered."
+      ],
+      "evidence": {
+        "kind": "compiled_bridge",
+        "module": "OMAICellElasticity",
+        "declarations": [
+          "OMAI.PhyslibBridge.CellElasticity.cellStress_rotation_balance"
+        ],
+        "source_path": "lean/bridge/OMAICellElasticity.lean",
+        "build_record": "lean/bridge/build-evidence.json",
+        "proved_targets": [
+          {
+            "kind": "operator",
+            "id": "compute_stress_cell"
+          },
+          {
+            "kind": "node",
+            "id": "Stress"
+          }
+        ],
+        "source_sha256": "7c2e02a8b5ac516416570f85ca49695d33e013a4a8cec4999d4cc7da2561c31a"
       }
     },
     {
@@ -1088,7 +1147,7 @@
         ],
         "source_path": "lean/bridge/OMAIPhyslibPhononSpectrum.lean",
         "build_record": "lean/bridge/build-evidence.json",
-        "source_sha256": "45133a66accf8fa1e98f2b212ce134570cb5cbfc29e4c716969f5ea4d402ebe6"
+        "source_sha256": "ccc6127cddcc1efcf6c24516648dfff1dd801d9b099000c9a0f1ce55305fde3b"
       }
     },
     {
@@ -1490,6 +1549,139 @@
         "source_path": "lean/bridge/OMAIElectronicStatistics.lean",
         "build_record": "lean/bridge/build-evidence.json",
         "source_sha256": "42647fea45250902515d99acdf1e8d2bf9d809ce1e15ff7ad0890fe59d05bfde"
+      }
+    },
+    {
+      "id": "finite-displacement-force-constants",
+      "relation": "local",
+      "targets": [
+        {
+          "kind": "operator",
+          "id": "compute_fc2_finite_displacement",
+          "uid": "8c4e324d9fb31b0cde5f98b83effdc03f0fe77d04b9caf332ceecff6fc16ece1",
+          "formula_sha256": "ffda0ae6e61fea11db6294a25665260253cdb5d1af6e47e27ef07cd1bfba64e9"
+        }
+      ],
+      "statement": "The central-difference estimate (F_j(u - h e_i) - F_j(u + h e_i))/(2h) of the catalog force constant -dF_j/du_i differs from it by at most M h^2 / 6, where M bounds the third derivative of F_j along the displacement on [-h, h]. The force must be differentiable at u and three times continuously differentiable along the displacement line, which holds for a four times continuously differentiable potential with F = -grad V.",
+      "sources": [],
+      "conditions": [
+        "The bound needs the third derivative of the force, the fourth derivative of the potential; a three times differentiable potential is not enough for an h^2 error.",
+        "Central (plus-minus) displacements are assumed. When a site symmetry maps the plus displacement onto the minus one, phonopy omits the minus run and reconstructs its forces by symmetry, so the estimate is still the central difference. A truly one-sided difference (phonopy is_plusminus=False at a site without that symmetry) has an error of order h. Neither the symmetry argument nor the one-sided case is covered.",
+        "The displacement step h > 0 is the same for the plus and minus configurations."
+      ],
+      "conventions": {
+        "model_scope": "Finite-difference error of one force field along one displacement; a local theorem over Mathlib with no Physlib model.",
+        "component_scope": "One displaced coordinate i and one force component j at a time.",
+        "normalization_basis": "Force constants per pair of coordinates, not mass weighted.",
+        "frequency_convention": "Not applicable; no frequencies enter these derivatives.",
+        "unit_embedding": "Coherent SI: forces in N, displacements in m, force constants in N/m; phonopy's default step is 0.01 A (1e-12 m) in its VASP interface and 0.02 bohr (0.0106 A) in its QE interface.",
+        "held_fixed": "All other coordinates stay at the reference configuration.",
+        "admissibility": "h > 0, the force differentiable at u, and C^3 along the displacement with |d^3 F_j / du_i^3| <= M on [-h, h].",
+        "reference_energy": "Not applicable; only forces enter.",
+        "qpoint_weighting": "Not applicable; no Brillouin-zone sums enter these derivatives."
+      },
+      "remaining_obligations": [
+        "Noise in the computed forces (SCF tolerance, k-point and smearing errors) adds an error of order (force noise)/h that the bound does not include.",
+        "Supercell size and the folding of force constants of finite range are not verified."
+      ],
+      "evidence": {
+        "kind": "compiled_bridge",
+        "module": "OMAIAtomisticDerivatives",
+        "declarations": [
+          "OMAI.PhyslibBridge.Atomistic.centralDifference_error"
+        ],
+        "source_path": "lean/bridge/OMAIAtomisticDerivatives.lean",
+        "build_record": "lean/bridge/build-evidence.json",
+        "proved_targets": [
+          {
+            "kind": "operator",
+            "id": "compute_fc2_finite_displacement"
+          }
+        ],
+        "source_sha256": "a2f8655c395d34f6ca60e63c36f8e0831bf5ba3d3e1ffc355f057e5b0ea2b814"
+      }
+    },
+    {
+      "id": "force-constant-sum-rules",
+      "relation": "local",
+      "targets": [
+        {
+          "kind": "node",
+          "id": "ForceConstants[order=2]",
+          "uid": "78d005a949ff56a526a1911f0b24e766daecad0a7f5ce9c1cc15222f2ed73551"
+        },
+        {
+          "kind": "node",
+          "id": "ForceConstants[order=3]",
+          "uid": "73372380af126dde147e403f69339b87ee2f938a896dd5b56e9100c055dc8f93"
+        },
+        {
+          "kind": "operator",
+          "id": "compute_force_constants[order=2]",
+          "uid": "8ad53af4eefce437872dd08ee834962e6db76f7803ab50771b4985c0782c64d4",
+          "formula_sha256": "2f30cf2ccf4f3b65e69e78385ddc551525d63f6f92ab6929cf5dfc387fc20dd9"
+        },
+        {
+          "kind": "operator",
+          "id": "compute_force_constants[order=3]",
+          "uid": "979756d34934118442ec22671b68e036b5e9751c95ed110d3a508ba2dee95288",
+          "formula_sha256": "aa562fd454620e74d58b4d9cdb0abd8076dc039e13714849f5af3d972d25e7f8"
+        }
+      ],
+      "statement": "For a potential of a finite set of sites invariant under rigid translations, twice continuously differentiable at the reference for Phi2 and three times for Phi3, the catalog force constants satisfy the acoustic sum rules sum_s Phi2_{k,(s,beta)} = 0 and sum_s Phi3_{k,l,(s,gamma)} = 0 for every coordinate pair and direction. For a potential three times continuously differentiable at the reference, Phi3 is symmetric under every permutation of its three indices. A compiled two-atom potential has a nonzero Phi2, so the sum rule balances nonzero terms.",
+      "sources": [],
+      "conditions": [
+        "Sites form a finite set with every image explicit (a supercell or a cluster); the catalog's lattice labels R, R' become site labels. For an infinite crystal the statement applies to a supercell large enough that no interaction wraps onto itself.",
+        "The second-order sum rule needs translation invariance and the potential twice continuously differentiable at the reference configuration, the third-order rule three times; the permutation symmetry needs three times. Without these Mathlib's derivative is zero and the statements would hold only through that zero value."
+      ],
+      "conventions": {
+        "model_scope": "Exact second and third derivatives of one potential of a finite set of sites; a local theorem over Mathlib with no Physlib model.",
+        "component_scope": "All sites and Cartesian components; the sum is over the sites of one index at fixed Cartesian direction.",
+        "normalization_basis": "Force constants per pair or triple of coordinates, not mass weighted.",
+        "frequency_convention": "Not applicable; no frequencies enter these derivatives.",
+        "unit_embedding": "Coherent SI: Phi2 in N/m (J/m^2), Phi3 in J/m^3; 1 eV/A^2 = 16.02176634 J/m^2.",
+        "held_fixed": "The reference configuration u; no strain or temperature enters.",
+        "admissibility": "Translation invariance at every configuration; the potential twice continuously differentiable at the reference for the second-order rule, three times for the third-order rule and the permutation symmetry.",
+        "reference_energy": "An additive constant in V changes no force constant.",
+        "qpoint_weighting": "Not applicable; no Brillouin-zone sums enter these derivatives."
+      },
+      "remaining_obligations": [
+        "Numerical force constants violate the sum rules through finite differences, truncation and symmetrization; the corrections codes apply are not verified.",
+        "Rotational (Born-Huang) invariance conditions, needed for the quadratic flexural branch of two-dimensional materials, are not covered.",
+        "compute_gruneisen, which consumes Phi3, is a catalog defect and is not covered."
+      ],
+      "evidence": {
+        "kind": "compiled_bridge",
+        "module": "OMAIAtomisticDerivatives",
+        "declarations": [
+          "OMAI.PhyslibBridge.Atomistic.forceConstant2_sum_eq_zero",
+          "OMAI.PhyslibBridge.Atomistic.forceConstant3_sum_eq_zero",
+          "OMAI.PhyslibBridge.Atomistic.forceConstant3_symm",
+          "OMAI.PhyslibBridge.Atomistic.pairEnergy_forceConstant2",
+          "OMAI.PhyslibBridge.Atomistic.pairEnergy_translate",
+          "OMAI.PhyslibBridge.Atomistic.pairEnergy_contDiff"
+        ],
+        "source_path": "lean/bridge/OMAIAtomisticDerivatives.lean",
+        "build_record": "lean/bridge/build-evidence.json",
+        "proved_targets": [
+          {
+            "kind": "operator",
+            "id": "compute_force_constants[order=2]"
+          },
+          {
+            "kind": "operator",
+            "id": "compute_force_constants[order=3]"
+          },
+          {
+            "kind": "node",
+            "id": "ForceConstants[order=2]"
+          },
+          {
+            "kind": "node",
+            "id": "ForceConstants[order=3]"
+          }
+        ],
+        "source_sha256": "a2f8655c395d34f6ca60e63c36f8e0831bf5ba3d3e1ffc355f057e5b0ea2b814"
       }
     },
     {
@@ -3139,6 +3331,131 @@
       }
     },
     {
+      "id": "hellmann-feynman-force-balance",
+      "relation": "local",
+      "targets": [
+        {
+          "kind": "node",
+          "id": "Forces",
+          "uid": "9c5a2fdedab6b668ccf5f2043fb4c29a982bcde5063fd6ac8633ee2c7858ecbf"
+        },
+        {
+          "kind": "operator",
+          "id": "compute_forces_hf",
+          "uid": "59ae54527b2e735e5408e66eadb81c9f1fa29720ea39207564e388a44cd1b04c",
+          "formula_sha256": "198daf948e48b420f367655f4ab063d3da5f54dd475468ce249711afdef38d0b"
+        }
+      ],
+      "statement": "For a total energy differentiable at the configuration and invariant under rigid translations of all atoms, the catalog forces F_{i,alpha} = -dE/dR_{i,alpha} sum to zero over the atoms in every Cartesian direction. For an energy invariant under rotations in the (alpha, beta) plane, the total torque in that plane vanishes: sum_i (R_{i alpha} F_{i beta} - R_{i beta} F_{i alpha}) = 0. A compiled two-atom energy |R_1 - R_0|^2 satisfies both invariances with a nonzero force, so neither statement is vacuous.",
+      "sources": [],
+      "conditions": [
+        "E is the total energy as a function of all atomic Cartesian coordinates of a finite set of atoms, and the force is its exact partial derivative, the Pulay- and nonlocal-corrected total that codes report, not the bare Hellmann-Feynman term.",
+        "Translation invariance holds for an isolated system and for a periodic cell, where every atom and every image shifts by the same vector and the lattice vectors are unchanged. A real-space grid that breaks it (the egg-box effect) gives a nonzero force sum; the theorem then says the residual measures that breaking.",
+        "Rotation invariance about the origin holds for an isolated molecule or cluster. It does not hold for atoms rotated inside a fixed periodic lattice, so the torque result does not apply to periodic cells.",
+        "The energy is differentiable at the configuration, so the forces are its actual partial derivatives; without that hypothesis Mathlib's derivative is zero and the statements would hold only through that zero value."
+      ],
+      "conventions": {
+        "model_scope": "Exact derivatives of one energy surface of a finite set of atoms; a local theorem over Mathlib with no Physlib model.",
+        "component_scope": "All atoms and all three Cartesian components; the rotation statement is per coordinate plane.",
+        "normalization_basis": "Forces per atom; the energy is the total energy of the configuration, not per atom.",
+        "frequency_convention": "Not applicable; no frequencies enter these derivatives.",
+        "unit_embedding": "Coherent SI: energy in J, positions in m, forces in N; eV/A forces convert with 1 eV/A = 1.602176634e-9 N.",
+        "held_fixed": "The lattice vectors of a periodic cell are unchanged by a rigid translation of the atoms; nothing else is held fixed.",
+        "admissibility": "The energy differentiable at the configuration; translation invariance at the configuration for the force sum; invariance under rotations in the stated plane for the torque.",
+        "reference_energy": "An additive constant in E changes no force.",
+        "qpoint_weighting": "Not applicable; no Brillouin-zone sums enter these derivatives."
+      },
+      "remaining_obligations": [
+        "SCF convergence, smearing (forces are then derivatives of the free energy), basis incompleteness and Pulay corrections, and real-space-grid egg-box errors in DFT producers are not verified.",
+        "No statement is made about the accuracy of the energy surface itself or about forces from machine-learned potentials."
+      ],
+      "evidence": {
+        "kind": "compiled_bridge",
+        "module": "OMAIAtomisticDerivatives",
+        "declarations": [
+          "OMAI.PhyslibBridge.Atomistic.hfForce_sum_eq_zero",
+          "OMAI.PhyslibBridge.Atomistic.hfForce_torque_eq_zero",
+          "OMAI.PhyslibBridge.Atomistic.pairEnergy_force",
+          "OMAI.PhyslibBridge.Atomistic.pairEnergy_translate",
+          "OMAI.PhyslibBridge.Atomistic.pairEnergy_rotatePlane"
+        ],
+        "source_path": "lean/bridge/OMAIAtomisticDerivatives.lean",
+        "build_record": "lean/bridge/build-evidence.json",
+        "proved_targets": [
+          {
+            "kind": "operator",
+            "id": "compute_forces_hf"
+          },
+          {
+            "kind": "node",
+            "id": "Forces"
+          }
+        ],
+        "source_sha256": "a2f8655c395d34f6ca60e63c36f8e0831bf5ba3d3e1ffc355f057e5b0ea2b814"
+      }
+    },
+    {
+      "id": "hyperelastic-elastic-constants",
+      "relation": "local",
+      "targets": [
+        {
+          "kind": "node",
+          "id": "ElasticConstants",
+          "uid": "01043ab212fd87e4ba9493caf709ab9a7ccc86ec7a0047a0512af12eca1c391e"
+        },
+        {
+          "kind": "operator",
+          "id": "compute_elastic_constants",
+          "uid": "3e995930ac921247acde0b3724b91c698f5c8e93c991635155d50a9c8039fe85",
+          "formula_sha256": "266bfe9ac04cee4e494fb4002abaffafab63319c53a23218ce1196c566832d6c"
+        }
+      ],
+      "statement": "For a cell energy twice continuously differentiable at a stress-free reference cell and invariant under rigid rotations, the catalog elastic constants C_abcd = -d sigma_ab / d eps_cd have the major symmetry C_abcd = C_cdab and both minor symmetries C_abcd = C_bacd = C_abdc. If they also store positive energy for every nonzero symmetric strain, the catalog's Voigt bulk and shear moduli are positive and its Poisson ratio lies strictly between -1 and 1/2.",
+      "sources": [],
+      "conditions": [
+        "The elastic constants derive from the compressive-positive catalog stress of one cell energy E(F), F = 1 + eps, so C = (1/V) d^2E / d eps d eps at the reference cell.",
+        "The minor symmetries need a stress-free reference. At a pre-stressed reference the minor symmetries fail by residual-stress terms, and the stress-strain coefficients a code fits there lose the major symmetry as well; only the energy second derivative keeps it.",
+        "For relaxed-ion constants E(F) must already be minimized over the internal coordinates at each strain."
+      ],
+      "conventions": {
+        "model_scope": "Second derivatives of one rotation-invariant cell energy at a stress-free reference; a local theorem over Mathlib with no Physlib model.",
+        "component_scope": "Full fourth-rank tensor on Cartesian indices; Voigt 6x6 storage must be expanded with the minor symmetries.",
+        "normalization_basis": "Per unit reference volume.",
+        "frequency_convention": "Not applicable; no frequencies enter these derivatives.",
+        "unit_embedding": "Coherent SI: elastic constants in Pa; 1 GPa = 1e9 Pa.",
+        "held_fixed": "Temperature is not involved; internal coordinates as prescribed by the cell energy.",
+        "admissibility": "E twice continuously differentiable at the reference, invariant under rotations, with zero stress there; positive strain energy for the Voigt bounds.",
+        "reference_energy": "An additive constant in E changes no elastic constant.",
+        "qpoint_weighting": "Not applicable; no Brillouin-zone sums enter these derivatives."
+      },
+      "remaining_obligations": [
+        "Finite-strain fits of stress differences (LAMMPS ELASTIC, DFT stress-strain) estimate the derivative and are not verified, nor are the strain magnitudes and symmetrization they use.",
+        "No compiled witness exhibits a specific hyperelastic energy (for example St Venant-Kirchhoff) meeting all the hypotheses.",
+        "A relaxed DFT cell is stress-free only to its pressure threshold (QE press_conv_thr default 0.5 kbar) plus the Pulay stress of a fixed cutoff, and a cell at the experimental lattice constant carries residual stress of order GPa; the minor-symmetry violation is then of order the residual stress over C."
+      ],
+      "evidence": {
+        "kind": "compiled_bridge",
+        "module": "OMAICellElasticity",
+        "declarations": [
+          "OMAI.PhyslibBridge.CellElasticity.elasticConstants_symmetries",
+          "OMAI.PhyslibBridge.CellElasticity.voigt_pos_of_stable_reference"
+        ],
+        "source_path": "lean/bridge/OMAICellElasticity.lean",
+        "build_record": "lean/bridge/build-evidence.json",
+        "proved_targets": [
+          {
+            "kind": "operator",
+            "id": "compute_elastic_constants"
+          },
+          {
+            "kind": "node",
+            "id": "ElasticConstants"
+          }
+        ],
+        "source_sha256": "7c2e02a8b5ac516416570f85ca49695d33e013a4a8cec4999d4cc7da2561c31a"
+      }
+    },
+    {
       "id": "linear-elasticity-voigt-moduli",
       "relation": "local",
       "targets": [
@@ -3365,7 +3682,67 @@
         ],
         "source_path": "lean/bridge/OMAIMDCorrelations.lean",
         "build_record": "lean/bridge/build-evidence.json",
-        "source_sha256": "917518ed3091e35f1048b4284cbb3e55722d7d317d61aee29116cc6ca0a5b22e"
+        "source_sha256": "5ad1d4f7c88f8483525123b63bf7b73a15ea0ed01363b14360a009e0189fc8cc"
+      }
+    },
+    {
+      "id": "molecular-normal-modes",
+      "relation": "local",
+      "targets": [
+        {
+          "kind": "node",
+          "id": "MolecularFrequency",
+          "uid": "e1270ea9a293c9107226bf831f60985f5525a0c386dca70841743bdc5d082c26"
+        },
+        {
+          "kind": "operator",
+          "id": "compute_molecular_frequencies",
+          "uid": "e8e86bed52c1e09311b9baada0501b7668b72cf8de3797735bc4c7bb60090f3f",
+          "formula_sha256": "1b2f3949e74ab2b2db0136deee0dd84f2f576b76d18134a7624ebba18964fce0"
+        }
+      ],
+      "statement": "Interpreting the opaque catalog frequencies as the eigenvalues of the mass-weighted Hessian of the potential at the structure, signed so that an imaginary mode is negative: at a local minimum of a potential twice continuously differentiable there, with positive masses, every eigenvalue is nonnegative, so no frequency is serialized negative (n_imaginary = 0) and each squared frequency is its eigenvalue. For a translation-invariant potential twice continuously differentiable at the structure the three mass-weighted rigid translations are zero modes. The catalog's projected list of 3N-6 or 3N-5 frequencies is a subset of these 3N values, so the sign result covers it.",
+      "sources": [],
+      "conditions": [
+        "The interpretation fixes the opaque producer as the harmonic normal-mode analysis of the potential at the given structure, with frequencies in coherent angular units; the catalog's cm^-1 wavenumbers are omega / (2 pi c).",
+        "No negative eigenvalue at a local minimum; the converse fails, and the transition-state diagnostic n_imaginary = 1 is not covered.",
+        "Masses are positive and the potential is twice continuously differentiable at the structure."
+      ],
+      "conventions": {
+        "model_scope": "Harmonic normal modes of one molecular potential energy surface at a structure; a local theorem over Mathlib with no Physlib model.",
+        "component_scope": "All 3N Cartesian coordinates, before any projection of translations or rotations.",
+        "normalization_basis": "Mass-weighted coordinates sqrt(m) u.",
+        "frequency_convention": "Angular frequency omega with omega^2 the Hessian eigenvalue; catalog wavenumbers are omega / (2 pi c) in cm^-1, and imaginary modes are serialized negative.",
+        "unit_embedding": "Coherent SI: Hessian in J/m^2, masses in kg, omega in rad/s.",
+        "held_fixed": "The structure; no temperature or environment enters.",
+        "admissibility": "Local minimum of the potential, twice continuously differentiable there, positive masses; translation invariance for the zero modes.",
+        "reference_energy": "An additive constant in the potential changes no mode.",
+        "qpoint_weighting": "Not applicable; molecules have no Brillouin zone."
+      },
+      "remaining_obligations": [
+        "Rotational zero modes at a stationary point, the 3N-6 or 3N-5 count of vibrations and the projection of translations and rotations that quantum-chemistry codes apply are not covered.",
+        "Numerical Hessians (finite differences, analytic derivatives with incomplete convergence), anharmonicity and frequency scaling factors are not verified."
+      ],
+      "evidence": {
+        "kind": "compiled_bridge",
+        "module": "OMAIMolecularModes",
+        "declarations": [
+          "OMAI.PhyslibBridge.MolecularModes.molecularFrequencies_of_isLocalMin",
+          "OMAI.PhyslibBridge.MolecularModes.massWeightedHessian_translation"
+        ],
+        "source_path": "lean/bridge/OMAIMolecularModes.lean",
+        "build_record": "lean/bridge/build-evidence.json",
+        "proved_targets": [
+          {
+            "kind": "operator",
+            "id": "compute_molecular_frequencies"
+          },
+          {
+            "kind": "node",
+            "id": "MolecularFrequency"
+          }
+        ],
+        "source_sha256": "17ee78d8a15e7db57d0a416d4ba2dc9f40ad8e3089fb79ded98c7bc9a03a950b"
       }
     },
     {
@@ -3445,7 +3822,7 @@
         }
       ],
       "relation": "local",
-      "statement": "compute_static_dielectric is interpreted as eps_0 = eps_inf + c Z^T D^-1 Z, with D the Gamma-point dynamical matrix on the optical coordinates (positive definite once the acoustic translations are projected out of a stable crystal), Z the mass-weighted Born-charge matrix on those coordinates and c = 4 pi e^2/Omega (Gaussian; e^2/(eps_0 Omega) in SI), which in the eigenbasis of D is the mode-oscillator-strength sum sum_m Z~_m Z~_m^T/omega_m^2. With D positive definite and c > 0, eps_0 - eps_inf is positive semidefinite and u (eps_0 - eps_inf) u = 0 exactly when Z u = 0, no polar mode couples to u. Along any direction u with u eps_inf u > 0, adding the Gonze-Lee long-wavelength correction c (Z u)(Z u)^T/(u eps_inf u) to D gives a Hermitian matrix whose product of eigenvalues (the longitudinal squared frequencies along u) divided by the product of the eigenvalues of D (the transverse squared frequencies) equals (u eps_0 u)/(u eps_inf u): the generalized Lyddane-Sachs-Teller relation.",
+      "statement": "compute_static_dielectric is interpreted as eps_0 = eps_inf + c Z^T D^-1 Z, with D the Gamma-point dynamical matrix on the optical coordinates (positive definite once the acoustic translations are projected out of a stable crystal), Z the mass-weighted Born-charge matrix on those coordinates and c = 4 pi e^2/Omega (Gaussian; e^2/(epsilon_vac Omega) in SI, epsilon_vac the vacuum permittivity), which in the eigenbasis of D is the mode-oscillator-strength sum sum_m Z~_m Z~_m^T/omega_m^2. With D positive definite and c > 0, eps_0 - eps_inf is positive semidefinite and u (eps_0 - eps_inf) u = 0 exactly when Z u = 0, no polar mode couples to u. Along any direction u with u eps_inf u > 0, adding the Gonze-Lee long-wavelength correction c (Z u)(Z u)^T/(u eps_inf u) to D gives a Hermitian matrix whose product of eigenvalues (the longitudinal squared frequencies along u) divided by the product of the eigenvalues of D (the transverse squared frequencies) equals (u eps_0 u)/(u eps_inf u): the generalized Lyddane-Sachs-Teller relation.",
       "sources": [],
       "conditions": [
         "compute_static_dielectric is an opaque output in the catalog, assembled by atomate2 from eps_inf, the Born charges and the Gamma-point phonons. The interpretation needs the Gamma-point dynamical matrix D (frequencies and eigenvectors together), not only the frequencies the catalog lists as input: eps_0 - eps_inf = c Z^T D^-1 Z equals the mode sum sum_m Z~_m Z~_m^T/omega_m^2 with Z~_m = Z^T e_m the mode-oscillator strength of the eigenvector e_m.",
@@ -3458,7 +3835,7 @@
         "component_scope": "The full 3x3 tensor eps_0 for positivity; one direction u at a time for the Lyddane-Sachs-Teller product.",
         "normalization_basis": "Per primitive cell: Omega is the cell volume and the Born charges and masses are per site of the cell.",
         "frequency_convention": "Angular squared frequencies omega^2 as the eigenvalues of D in s^-2; a dynamical matrix in linear THz^2 needs the factor (2 pi 10^12)^2 before use with SI c.",
-        "unit_embedding": "eps_inf and eps_0 as relative permittivities, Z* in units of e, masses in kg, Omega in m^3, D in s^-2 and c = e^2/(eps_0 Omega) in SI, or c = 4 pi e^2/Omega with Gaussian charges. Exact-real statements; floating-point evaluation is not certified.",
+        "unit_embedding": "eps_inf and eps_0 as relative permittivities, Z* in units of e, masses in kg, Omega in m^3, D in s^-2 and c = e^2/(epsilon_vac Omega) in SI, epsilon_vac the vacuum permittivity, or c = 4 pi e^2/Omega with Gaussian charges. Exact-real statements; floating-point evaluation is not certified.",
         "held_fixed": "eps_inf, the Born charges, the masses, the cell volume and the force constants are fixed inputs; temperature does not enter.",
         "admissibility": "D positive definite (optical coordinates of a stable crystal) and c > 0 for positivity; u eps_inf u > 0 for the Lyddane-Sachs-Teller direction.",
         "reference_energy": "Not applicable; no energy reference enters a dielectric tensor.",
@@ -3478,7 +3855,7 @@
         ],
         "source_path": "lean/bridge/OMAIStaticDielectric.lean",
         "build_record": "lean/bridge/build-evidence.json",
-        "source_sha256": "2b899fb132527638b2b75870b52b3a757eecd409506b576a3dc73edf0272fe88"
+        "source_sha256": "e1fd2cce2adacf6a3c23ad21332c9f1ee1f0f7f8217e39f0222eedb71aa0b277"
       }
     },
     {
@@ -3923,7 +4300,7 @@
         ],
         "source_path": "lean/bridge/OMAIVACFSpectrum.lean",
         "build_record": "lean/bridge/build-evidence.json",
-        "source_sha256": "29afe5cc67721583ea4d4822c7f16da22d4a2f1da277ec4d18013c8199d96c14"
+        "source_sha256": "d5f50026897ff1ecc38ad0b59b26deb457b461ba3d40fb29047a938dbc3bbe67"
       }
     }
   ],
@@ -3996,7 +4373,7 @@
         "uid": "438f0314dee5f9e98d88e4a7ba4425ef0edd207605338b318340da27bf28b2a4",
         "binding_ids": [],
         "status": "gap",
-        "reason": "Physlib's scalar thermoelectric coefficients do not prove OMAI's amset scattering, carrier-mobility, electronic-DOS or dielectric producers; the Boltzmann transport coefficients are interpreted as Onsager moments of a transport window and anchored to Physlib's ThermoelectricMaterial. The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
+        "reason": "Physlib has no electronic scattering, density-of-states or dielectric model; the Boltzmann coefficients are anchored to Physlib's ThermoelectricMaterial for the coefficient axioms and the figure of merit, and the mobility, electronic DOS and static dielectric tensor carry local proofs. The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "BulkModulus",
@@ -4033,7 +4410,7 @@
           "electronic-carrier-statistics"
         ],
         "status": "local",
-        "reason": "Physlib's scalar thermoelectric coefficients do not prove OMAI's amset scattering, carrier-mobility, electronic-DOS or dielectric producers; the Boltzmann transport coefficients are interpreted as Onsager moments of a transport window and anchored to Physlib's ThermoelectricMaterial. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
+        "reason": "Physlib has no electronic scattering, density-of-states or dielectric model; the Boltzmann coefficients are anchored to Physlib's ThermoelectricMaterial for the coefficient axioms and the figure of merit, and the mobility, electronic DOS and static dielectric tensor carry local proofs. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "CellVolume",
@@ -4132,7 +4509,7 @@
         "uid": "a84077d8f12cf490f370b5cd0b98a47e3e31b7ec75fc8763699763f8b2313db4",
         "binding_ids": [],
         "status": "gap",
-        "reason": "Physlib's scalar thermoelectric coefficients do not prove OMAI's amset scattering, carrier-mobility, electronic-DOS or dielectric producers; the Boltzmann transport coefficients are interpreted as Onsager moments of a transport window and anchored to Physlib's ThermoelectricMaterial. The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
+        "reason": "Physlib has no electronic scattering, density-of-states or dielectric model; the Boltzmann coefficients are anchored to Physlib's ThermoelectricMaterial for the coefficient axioms and the figure of merit, and the mobility, electronic DOS and static dielectric tensor carry local proofs. The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "Diffusivity",
@@ -4167,9 +4544,11 @@
       {
         "id": "ElasticConstants",
         "uid": "01043ab212fd87e4ba9493caf709ab9a7ccc86ec7a0047a0512af12eca1c391e",
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "Physlib's scalar thermoelectric coefficients do not prove OMAI's amset scattering, carrier-mobility, electronic-DOS or dielectric producers; the Boltzmann transport coefficients are interpreted as Onsager moments of a transport window and anchored to Physlib's ThermoelectricMaterial. No current Physlib solid-elasticity/Voigt/EOS formula identification found. The bridge proves the signed inviscid stress/pressure contraction under its sign and unit conditions; identification with thermodynamic free-energy pressure remains unproved."
+        "binding_ids": [
+          "hyperelastic-elastic-constants"
+        ],
+        "status": "local",
+        "reason": "Physlib has no electronic scattering, density-of-states or dielectric model; the Boltzmann coefficients are anchored to Physlib's ThermoelectricMaterial for the coefficient axioms and the figure of merit, and the mobility, electronic DOS and static dielectric tensor carry local proofs. No current Physlib solid-elasticity/Voigt/EOS formula identification found. The bridge proves the signed inviscid stress/pressure contraction under its sign and unit conditions; identification with thermodynamic free-energy pressure remains unproved. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "ElectricalConductivity[carrier=electronic]",
@@ -4204,7 +4583,7 @@
           "electronic-carrier-statistics"
         ],
         "status": "local",
-        "reason": "Physlib's scalar thermoelectric coefficients do not prove OMAI's amset scattering, carrier-mobility, electronic-DOS or dielectric producers; the Boltzmann transport coefficients are interpreted as Onsager moments of a transport window and anchored to Physlib's ThermoelectricMaterial. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
+        "reason": "Physlib has no electronic scattering, density-of-states or dielectric model; the Boltzmann coefficients are anchored to Physlib's ThermoelectricMaterial for the coefficient axioms and the figure of merit, and the mobility, electronic DOS and static dielectric tensor carry local proofs. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "ElectronicThermalConductivity",
@@ -4244,22 +4623,27 @@
       {
         "id": "ForceConstants[order=2]",
         "uid": "78d005a949ff56a526a1911f0b24e766daecad0a7f5ce9c1cc15222f2ed73551",
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No current Physlib Kohn-Sham, DFT, atomistic derivative, or ground-state producer formula identification found in the audited source. The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
+        "binding_ids": [
+          "force-constant-sum-rules"
+        ],
+        "status": "local",
+        "reason": "No current Physlib Kohn-Sham, DFT, atomistic derivative, or ground-state producer formula identification found in the audited source. The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "ForceConstants[order=3]",
         "uid": "73372380af126dde147e403f69339b87ee2f938a896dd5b56e9100c055dc8f93",
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
+        "binding_ids": [
+          "force-constant-sum-rules"
+        ],
+        "status": "local",
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "Forces",
         "uid": "9c5a2fdedab6b668ccf5f2043fb4c29a982bcde5063fd6ac8633ee2c7858ecbf",
         "binding_ids": [
-          "classical-harmonic-potential-force"
+          "classical-harmonic-potential-force",
+          "hellmann-feynman-force-balance"
         ],
         "status": "mapped",
         "reason": "See the conditions and evidence for each mapping."
@@ -4560,7 +4944,8 @@
         "id": "MolecularFrequency",
         "uid": "e1270ea9a293c9107226bf831f60985f5525a0c386dca70841743bdc5d082c26",
         "binding_ids": [
-          "classical-harmonic-frequency"
+          "classical-harmonic-frequency",
+          "molecular-normal-modes"
         ],
         "status": "mapped",
         "reason": "See the conditions and evidence for each mapping."
@@ -4778,12 +5163,13 @@
           "static-dielectric-ionic-response"
         ],
         "status": "local",
-        "reason": "Physlib's scalar thermoelectric coefficients do not prove OMAI's amset scattering, carrier-mobility, electronic-DOS or dielectric producers; the Boltzmann transport coefficients are interpreted as Onsager moments of a transport window and anchored to Physlib's ThermoelectricMaterial. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
+        "reason": "Physlib has no electronic scattering, density-of-states or dielectric model; the Boltzmann coefficients are anchored to Physlib's ThermoelectricMaterial for the coefficient axioms and the figure of merit, and the mobility, electronic DOS and static dielectric tensor carry local proofs. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "Stress",
         "uid": "183e66d4e443326d2c346a0327cdb125026bd8f6a91a9bb97b61265fcade7e85",
         "binding_ids": [
+          "cell-stress-rotation-balance",
           "continuum-stress-sign"
         ],
         "status": "mapped",
@@ -5277,7 +5663,7 @@
           "electronic-carrier-statistics"
         ],
         "status": "local",
-        "reason": "Physlib's scalar thermoelectric coefficients do not prove OMAI's amset scattering, carrier-mobility, electronic-DOS or dielectric producers; the Boltzmann transport coefficients are interpreted as Onsager moments of a transport window and anchored to Physlib's ThermoelectricMaterial. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
+        "reason": "Physlib has no electronic scattering, density-of-states or dielectric model; the Boltzmann coefficients are anchored to Physlib's ThermoelectricMaterial for the coefficient axioms and the figure of merit, and the mobility, electronic DOS and static dielectric tensor carry local proofs. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "compute_chemical_potentials",
@@ -5402,9 +5788,11 @@
         "outputs": [
           "ElasticConstants"
         ],
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No current Physlib solid-elasticity/Voigt/EOS formula identification found. The bridge proves the signed inviscid stress/pressure contraction under its sign and unit conditions; identification with thermodynamic free-energy pressure remains unproved."
+        "binding_ids": [
+          "hyperelastic-elastic-constants"
+        ],
+        "status": "local",
+        "reason": "No current Physlib solid-elasticity/Voigt/EOS formula identification found. The bridge proves the signed inviscid stress/pressure contraction under its sign and unit conditions; identification with thermodynamic free-energy pressure remains unproved. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "compute_electronic_conductivity",
@@ -5444,7 +5832,7 @@
           "electronic-carrier-statistics"
         ],
         "status": "local",
-        "reason": "Physlib's scalar thermoelectric coefficients do not prove OMAI's amset scattering, carrier-mobility, electronic-DOS or dielectric producers; the Boltzmann transport coefficients are interpreted as Onsager moments of a transport window and anchored to Physlib's ThermoelectricMaterial. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
+        "reason": "Physlib has no electronic scattering, density-of-states or dielectric model; the Boltzmann coefficients are anchored to Physlib's ThermoelectricMaterial for the coefficient axioms and the figure of merit, and the mobility, electronic DOS and static dielectric tensor carry local proofs. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "compute_electronic_thermal_conductivity",
@@ -5518,9 +5906,11 @@
         "outputs": [
           "ForceConstants[order=2]"
         ],
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No current Physlib Kohn-Sham, DFT, atomistic derivative, or ground-state producer formula identification found in the audited source."
+        "binding_ids": [
+          "finite-displacement-force-constants"
+        ],
+        "status": "local",
+        "reason": "No current Physlib Kohn-Sham, DFT, atomistic derivative, or ground-state producer formula identification found in the audited source. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "compute_force_constants[order=2]",
@@ -5534,9 +5924,11 @@
         "outputs": [
           "ForceConstants[order=2]"
         ],
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
+        "binding_ids": [
+          "force-constant-sum-rules"
+        ],
+        "status": "local",
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "compute_force_constants[order=3]",
@@ -5550,9 +5942,11 @@
         "outputs": [
           "ForceConstants[order=3]"
         ],
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
+        "binding_ids": [
+          "force-constant-sum-rules"
+        ],
+        "status": "local",
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "compute_forces_hf",
@@ -5567,9 +5961,11 @@
         "outputs": [
           "Forces"
         ],
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No current Physlib Kohn-Sham, DFT, atomistic derivative, or ground-state producer formula identification found in the audited source."
+        "binding_ids": [
+          "hellmann-feynman-force-balance"
+        ],
+        "status": "local",
+        "reason": "No current Physlib Kohn-Sham, DFT, atomistic derivative, or ground-state producer formula identification found in the audited source. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "compute_formation_energy",
@@ -5663,7 +6059,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
+        "reason": "Catalog defect. The formula -sum_{i,j} Phi3[i,j,k,R,R'] / (6 omega_{q nu}^2) contracts the third-order force constants over two Cartesian indices only, with no eigenvectors, masses, Bloch phases or atomic positions, and leaves k, R and R' free on the right-hand side while the left-hand side depends on (q, nu). The Maradudin-Fein form is gamma_{q nu} = -(1/(6 omega_{q nu}^2)) sum_{kappa kappa' kappa''} sum_{l' l''} sum_{alpha beta gamma} Phi_{alpha beta gamma}(0 kappa, l' kappa', l'' kappa'') e*_{alpha kappa}(q nu) e_{beta kappa'}(q nu) exp(i q . R_{l'}) r_gamma(l'' kappa'') / sqrt(M_kappa M_kappa'), with r the Cartesian position of atom (l'' kappa''). Not covered until the catalog formula is corrected."
       },
       {
         "id": "compute_heat_capacity",
@@ -5954,9 +6350,11 @@
         "outputs": [
           "MolecularFrequency"
         ],
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No current Physlib molecular Hessian, electronic gap, NEB, or bond-dissociation formula identification; harmonic oscillator analogies remain conceptual."
+        "binding_ids": [
+          "molecular-normal-modes"
+        ],
+        "status": "local",
+        "reason": "No current Physlib molecular Hessian, electronic gap, NEB, or bond-dissociation formula identification; harmonic oscillator analogies remain conceptual. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "compute_msd",
@@ -6189,7 +6587,7 @@
           "static-dielectric-ionic-response"
         ],
         "status": "local",
-        "reason": "Physlib's scalar thermoelectric coefficients do not prove OMAI's amset scattering, carrier-mobility, electronic-DOS or dielectric producers; the Boltzmann transport coefficients are interpreted as Onsager moments of a transport window and anchored to Physlib's ThermoelectricMaterial. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
+        "reason": "Physlib has no electronic scattering, density-of-states or dielectric model; the Boltzmann coefficients are anchored to Physlib's ThermoelectricMaterial for the coefficient axioms and the figure of merit, and the mobility, electronic DOS and static dielectric tensor carry local proofs. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "compute_stress_cell",
@@ -6204,9 +6602,11 @@
         "outputs": [
           "Stress"
         ],
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No current Physlib Kohn-Sham, DFT, atomistic derivative, or ground-state producer formula identification found in the audited source."
+        "binding_ids": [
+          "cell-stress-rotation-balance"
+        ],
+        "status": "local",
+        "reason": "No current Physlib Kohn-Sham, DFT, atomistic derivative, or ground-state producer formula identification found in the audited source. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "compute_surface_energy",
@@ -7445,26 +7845,26 @@
     "nodes_mapped": 35,
     "operators_total": 133,
     "operators_mapped": 29,
-    "nodes_local": 34,
-    "operators_local": 40,
-    "bindings_total": 46,
+    "nodes_local": 37,
+    "operators_local": 47,
+    "bindings_total": 52,
     "source_correspondences": 5,
-    "compiled_bridges": 41,
+    "compiled_bridges": 47,
     "nodes_compiled": 26,
     "nodes_compiled_outputs": 25,
     "nodes_compiled_interpretations": 1,
     "operators_compiled": 29,
-    "operators_compiled_local": 40,
-    "nodes_compiled_local": 35,
-    "operators_proved": 69,
-    "nodes_proved": 61,
+    "operators_compiled_local": 47,
+    "nodes_compiled_local": 41,
+    "operators_proved": 76,
+    "nodes_proved": 67,
     "upstream_declarations_referenced": 36,
     "upstream_modules_referenced": 10,
     "relations": {
       "exact_definition": 1,
       "conditional": 29,
       "conceptual": 4,
-      "local": 12
+      "local": 18
     }
   }
 }

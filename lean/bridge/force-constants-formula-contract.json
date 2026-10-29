@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "scope": "Reviewed OMAI formula endpoints and exact Lean proof source for local theorems about derivatives of an atomistic or cell energy, with no Physlib physics counterpart. Hash and compiled-name checks detect drift and provenance errors; they are not automatic symbolic translation or numerical validation.",
+  "source_path": "lean/bridge/OMAIAtomisticDerivatives.lean",
+  "source_sha256": "a2f8655c395d34f6ca60e63c36f8e0831bf5ba3d3e1ffc355f057e5b0ea2b814",
+  "operators": [
+    {
+      "id": "compute_force_constants[order=2]",
+      "uid": "8ad53af4eefce437872dd08ee834962e6db76f7803ab50771b4985c0782c64d4",
+      "formula_sha256": "2f30cf2ccf4f3b65e69e78385ddc551525d63f6f92ab6929cf5dfc387fc20dd9",
+      "formula_latex": "{\\Phi^{(2)}}_{i,j,\\mathbf{R}} = \\frac{d^{2}}{d u_{j(R)}d u_{i(0)}} V{\\left(\\{u\\} \\right)}",
+      "lean_definition": "OMAI.PhyslibBridge.Atomistic.forceConstant2"
+    },
+    {
+      "id": "compute_force_constants[order=3]",
+      "uid": "979756d34934118442ec22671b68e036b5e9751c95ed110d3a508ba2dee95288",
+      "formula_sha256": "aa562fd454620e74d58b4d9cdb0abd8076dc039e13714849f5af3d972d25e7f8",
+      "formula_latex": "{\\Phi^{(3)}}_{i,j,k,\\mathbf{R},\\mathbf{R'}} = \\frac{d^{3}}{d u_{k(R')}d u_{j(R)}d u_{i(0)}} V{\\left(\\{u\\} \\right)}",
+      "lean_definition": "OMAI.PhyslibBridge.Atomistic.forceConstant3"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "ForceConstants[order=2]",
+      "uid": "78d005a949ff56a526a1911f0b24e766daecad0a7f5ce9c1cc15222f2ed73551"
+    },
+    {
+      "id": "ForceConstants[order=3]",
+      "uid": "73372380af126dde147e403f69339b87ee2f938a896dd5b56e9100c055dc8f93"
+    }
+  ],
+  "interpretations": [
+    "The potential V is a function of the displacements of a finite set of sites (a supercell with every image explicit, or a cluster), each with three Cartesian coordinates; Phi2 and Phi3 are its exact second and third partial derivatives at the reference configuration u.",
+    "The catalog's lattice-vector labels R, R' become explicit site labels of the finite set. For an infinite crystal with finite-range force constants the lattice sum rule sum_{j,R} Phi_ij(R) = 0 is the statement for a supercell large enough that no interaction wraps onto itself.",
+    "The acoustic sum rules follow from invariance of V under rigid translations for a potential twice continuously differentiable at u (Phi2) or three times (Phi3); the permutation symmetry of Phi3 needs V three times continuously differentiable at u. Rotational (Born-Huang) sum rules are not covered."
+  ]
+}

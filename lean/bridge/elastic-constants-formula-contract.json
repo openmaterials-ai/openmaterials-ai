@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "scope": "Reviewed OMAI formula endpoints and exact Lean proof source for local theorems about derivatives of an atomistic or cell energy, with no Physlib physics counterpart. Hash and compiled-name checks detect drift and provenance errors; they are not automatic symbolic translation or numerical validation.",
+  "source_path": "lean/bridge/OMAICellElasticity.lean",
+  "source_sha256": "7c2e02a8b5ac516416570f85ca49695d33e013a4a8cec4999d4cc7da2561c31a",
+  "operators": [
+    {
+      "id": "compute_elastic_constants",
+      "uid": "3e995930ac921247acde0b3724b91c698f5c8e93c991635155d50a9c8039fe85",
+      "formula_sha256": "266bfe9ac04cee4e494fb4002abaffafab63319c53a23218ce1196c566832d6c",
+      "formula_latex": "{C}_{\\alpha,\\beta,\\gamma,\\delta} = - \\frac{\\partial}{\\partial {\\varepsilon^{str}}_{\\gamma,\\delta}} {\\sigma}_{\\alpha,\\beta}",
+      "lean_definition": "OMAI.PhyslibBridge.CellElasticity.elasticConstants"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "ElasticConstants",
+      "uid": "01043ab212fd87e4ba9493caf709ab9a7ccc86ec7a0047a0512af12eca1c391e"
+    }
+  ],
+  "interpretations": [
+    "The elastic constants are C_abcd = -d sigma_ab / d eps_cd of the compressive-positive catalog stress sigma = -(1/V) dE/d eps of one cell energy E(F), F = 1 + eps, so C = (1/V) d^2E / d eps_ab d eps_cd at the reference cell.",
+    "The major symmetry needs E twice continuously differentiable at the reference; both minor symmetries also need E invariant under rigid rotations and a stress-free reference. At a pre-stressed reference the minor symmetries fail by terms in the residual stress, and the stress-strain coefficients a code fits there lose the major symmetry as well; only the energy second derivative keeps it.",
+    "For relaxed-ion constants E(F) must already be minimized over the internal coordinates at each F. Finite-strain fits of stress differences are estimators of the derivative and are not verified."
+  ]
+}

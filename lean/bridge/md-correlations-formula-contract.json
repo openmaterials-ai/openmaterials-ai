@@ -2,7 +2,7 @@
   "schema_version": 1,
   "scope": "Reviewed OMAI formula endpoints and exact Lean proof source for local theorems with no Physlib physics counterpart. Hash and compiled-name checks detect drift and provenance errors; they are not automatic symbolic translation or numerical validation.",
   "source_path": "lean/bridge/OMAIMDCorrelations.lean",
-  "source_sha256": "917518ed3091e35f1048b4284cbb3e55722d7d317d61aee29116cc6ca0a5b22e",
+  "source_sha256": "5ad1d4f7c88f8483525123b63bf7b73a15ea0ed01363b14360a009e0189fc8cc",
   "operators": [
     {
       "id": "compute_velocity_autocorrelation",

@@ -57,6 +57,8 @@ All statements are over exact reals; none certifies a floating-point adapter. Th
 
 The `md-phonon-spectrum` batch of the same day takes the totals to 69 operators (29 anchored, 40 local) and 61 nodes.
 
+These counts are at the branch base 8cc4874, before the merge with main. The merged ledger reads 76 of 133 operator formulas proved, 29 citing Physlib declarations and 47 local, 52 bindings.
+
 ## Review notes on the Lean sources
 
 Nothing in the four files looked overstated. Two places deserve a reader's attention. `OMAIPhyslibElectronicTransport.lean` lines 14 to 15 describe `w_b` as "the transport distribution times the Fermi window"; the nonnegativity hypothesis makes this the diagonal component, which the binding states. `OMAIStaticDielectric.lean` lines 13 to 14 call `D` the dynamical matrix "on the optical coordinates (positive definite, the acoustic translations projected out)"; the file does not say that `Z u` must be orthogonal to the translations for the restriction to be consistent, which holds under charge neutrality of the Born charges and is stated in the binding's conditions.

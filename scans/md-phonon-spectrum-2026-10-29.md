@@ -60,6 +60,8 @@ The molecular-dynamics identities assume records periodic with period `n_lag` (t
 
 Against `8cc4874` (origin/main before both batches, with the thermochem tranche of PR 189): 56 operators (24 anchored, 32 local) and 49 nodes.
 
+These counts are at the branch base 8cc4874, before the merge with main. The merged ledger reads 76 of 133 operator formulas proved, 29 citing Physlib declarations and 47 local, 52 bindings.
+
 ## Review notes on the Lean sources
 
 `OMAIMDCorrelations.lean` lines 16 to 17 call the periodic-record hypothesis "the periodic-padding assumption of FFT correlators"; FFT correlators that zero-pad are not circular, so the hypothesis is the circular (unpadded) estimator, which the binding says. `OMAIVACFSpectrum.lean` lines 9 to 12 present the catalog transform as "the vibrational density of states"; the theorems show it is `Cv(0)/2`-normalized on the positive half-line, so it is proportional to one, which the binding states. `OMAIPhyslibPhononSpectrum.lean` line 3 says "total weight 3 per unit-cell site": the theorem gives `3 * card C.UnitCell`, three per unit-cell site as stated. Nothing looked overstated.

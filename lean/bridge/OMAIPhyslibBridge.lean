@@ -33,6 +33,9 @@ public import OMAIDeviceMetrology
 public import OMAIMaterialsTransport
 public import OMAIStabilityEnergies
 public import OMAICalphad
+public import OMAIAtomisticDerivatives
+public import OMAICellElasticity
+public import OMAIMolecularModes
 public import OMAISommerfeldTransport
 public import OMAIPhyslibElectronicTransport
 public import OMAIElectronicStatistics
