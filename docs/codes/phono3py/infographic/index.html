@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1920">
+<meta name="robots" content="noindex">
+<title>phono3py poster | OpenMaterials</title>
+<link rel="canonical" href="https://openmaterials.ai/codes/phono3py/">
+<link rel="stylesheet" href="../../../assets/site.css">
+<style>
+  html, body { margin: 0; background: #FBFAF6; }
+  body { width: 1920px; overflow: hidden; }
+
+  .info { --info-pad: 20px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); overflow: hidden; }
+  .info-head { padding: var(--info-pad) var(--info-pad) 12px; border-bottom: 1px solid var(--line); }
+  .info-eyebrow { margin: 0 0 6px; font: 500 11px/16px var(--font-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-2); }
+  .info-title { margin: 0; font: 450 26px/30px var(--font-serif); letter-spacing: -0.014em; max-width: none; }
+  .info-claim { margin: 8px 0 0; font-size: 16px; line-height: 23px; color: var(--ink-2); max-width: none; }
+  .info-zones { display: grid; grid-template-columns: 1fr; }
+  .info-zone { padding: var(--info-pad); }
+  .info-zone-b { background: color-mix(in srgb, var(--accent) 8%, var(--surface)); border-top: 1px solid var(--line); }
+  .info-zone h3, .info-flow h3 { margin: 0 0 12px; font: 500 11.5px/16px var(--font-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-2); }
+  .info-panels { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
+  .info-panel { display: flex; gap: 12px; align-items: flex-start; min-width: 0; }
+  .info-panel .glyph { flex: none; width: 44px; height: 44px; color: var(--ink-2); }
+  .info-panel .glyph .a { stroke: var(--accent); }
+  .info-panel .glyph rect.a, .info-panel .glyph circle.a, .info-panel .glyph path.f, .info-panel .glyph rect.f, .info-panel .glyph circle.f, .info-panel .glyph ellipse.f { fill: color-mix(in srgb, var(--accent) 14%, transparent); }
+  .info-panel .glyph circle.a, .info-panel .glyph rect.a { fill: color-mix(in srgb, var(--accent) 35%, transparent); }
+  .info-panel h4 { margin: 0 0 2px; font: 500 15px/20px var(--font-serif); }
+  .info-panel p { margin: 0; font-size: 13.5px; line-height: 19px; max-width: none; }
+  .info-hero { margin-bottom: 18px; padding-bottom: 18px; border-bottom: 1px solid var(--line); }
+  .info-hero .glyph { width: 88px; height: 88px; }
+  .info-hero h4 { font-size: 19px; line-height: 24px; }
+  .info-hero p { font-size: 15px; line-height: 21px; }
+  .info-facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin: 0 0 16px; padding: 0; list-style: none; }
+  .info-facts li { display: flex; flex-direction: column; max-width: none; }
+  .info-value { font: 400 30px/34px var(--font-mono); color: var(--accent); letter-spacing: -0.02em; }
+  .info-label { font-size: 13px; line-height: 18px; }
+  .info-src { font: 400 11px/16px var(--font-mono); color: var(--ink-2); text-decoration: none; }
+  a.info-src:hover { color: var(--ink); text-decoration: underline; }
+  .info-flow { padding: var(--info-pad); border-top: 1px solid var(--line); }
+  .info-flow ol { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin: 0; padding: 0; list-style: none; counter-reset: step; }
+  .info-flow li { position: relative; max-width: none; padding-top: 24px; counter-increment: step; }
+  .info-flow li::before { content: counter(step, decimal-leading-zero); position: absolute; top: 0; left: 0; font: 500 11px/16px var(--font-mono); color: var(--accent); }
+  .info-flow li::after { content: ""; position: absolute; top: 7px; left: 26px; right: 0; border-top: 1px solid var(--line); }
+  .info-flow h4 { margin: 0 0 2px; font: 500 14px/20px var(--font-serif); }
+  .info-flow p { margin: 0; font-size: 12.5px; line-height: 17px; color: var(--ink-2); max-width: none; }
+  .info-foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 16px; padding: 12px var(--info-pad); border-top: 1px solid var(--line); font-size: 12px; line-height: 18px; color: var(--ink-2); }
+  .info-url { font-family: var(--font-mono); }
+  @media (min-width: 700px) { .info-zones { grid-template-columns: 3fr 2fr; } .info-zone-b { border-top: 0; border-left: 1px solid var(--line); } }
+
+  /* the poster: a fixed 1920 x 1080 canvas, always light */
+  .info.poster { --info-pad: 36px; position: relative; width: 1920px; height: 1080px; border: 0; border-radius: 0; color-scheme: light; background: #FBFAF6; color: #1C1A17; display: grid; grid-template-rows: auto 1fr auto auto; }
+  .info.poster .info-head { padding: 40px 56px 22px; }
+  .info.poster .info-eyebrow { font-size: 16px; line-height: 22px; margin-bottom: 10px; }
+  .info.poster .info-title { font-size: 54px; line-height: 60px; }
+  .info.poster .info-claim { font-size: 25px; line-height: 34px; margin-top: 12px; }
+  .info.poster .info-zones { grid-template-columns: 3fr 2fr; min-height: 0; }
+  .info.poster .info-zone { padding: 24px 56px; overflow: hidden; }
+  .info.poster .info-zone-b { border-top: 0; border-left: 1px solid var(--line); }
+  .info.poster .info-zone h3, .info.poster .info-flow h3 { font-size: 15px; line-height: 20px; margin-bottom: 18px; }
+  .info.poster .info-panels { grid-template-columns: repeat(2, 1fr); gap: 18px 32px; }
+  .info.poster.n5 .info-zone-a .info-panels { grid-template-columns: repeat(3, 1fr); gap: 18px 28px; }
+  .info.poster .info-zone-b .info-panels { grid-template-columns: 1fr; gap: 18px; }
+  .info.poster .info-panel .glyph { width: 60px; height: 60px; }
+  .info.poster .info-panel h4 { font-size: 22px; line-height: 27px; margin-bottom: 4px; }
+  .info.poster .info-panel p { font-size: 17.5px; line-height: 24px; }
+  .info.poster.n5 .info-zone-a .info-panel p { font-size: 16.5px; line-height: 22px; }
+  .info.poster .info-hero { margin-bottom: 20px; padding-bottom: 20px; }
+  .info.poster .info-hero .glyph { width: 140px; height: 140px; }
+  .info.poster .info-hero h4 { font-size: 30px; line-height: 36px; }
+  .info.poster .info-hero p { font-size: 21px; line-height: 29px; }
+  .info.poster .info-facts { grid-template-columns: repeat(3, 1fr); gap: 18px; margin-bottom: 22px; }
+  .info.poster .info-value { font-size: 36px; line-height: 42px; white-space: nowrap; }
+  .info.poster .info-label { font-size: 17px; line-height: 23px; }
+  .info.poster .info-src { font-size: 14px; line-height: 20px; }
+  .info.poster .info-flow { padding: 20px 56px 24px; overflow: hidden; }
+  .info.poster .info-flow ol { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 24px; }
+  .info.poster .info-flow li { padding-top: 30px; }
+  .info.poster .info-flow li::before { font-size: 15px; line-height: 20px; }
+  .info.poster .info-flow li::after { top: 9px; left: 36px; }
+  .info.poster .info-flow h4 { font-size: 21px; line-height: 27px; }
+  .info.poster .info-flow p { font-size: 17px; line-height: 23px; }
+  .info.poster .info-foot { padding: 18px 56px 26px; font-size: 17px; line-height: 24px; }
+
+  /* the social card: a fixed 1200 x 630 canvas, always light */
+  .info.card { --info-pad: 28px; width: 1200px; height: 630px; border: 0; border-radius: 0; color-scheme: light; background: #FBFAF6; color: #1C1A17; display: grid; grid-template-rows: auto 1fr auto; }
+  .info.card .info-head { padding: 36px 48px 20px; }
+  .info.card .info-eyebrow { font-size: 14px; line-height: 20px; margin-bottom: 10px; }
+  .info.card .info-title { font-size: 44px; line-height: 50px; }
+  .info.card .info-claim { font-size: 21px; line-height: 29px; margin-top: 10px; }
+  .info.card .info-zones { grid-template-columns: 3fr 2fr; min-height: 0; }
+  .info.card .info-zone { padding: 24px 48px; overflow: hidden; }
+  .info.card .info-zone-b { border-top: 0; border-left: 1px solid var(--line); }
+  .info.card .info-hero { margin: 0; padding: 0; border: 0; }
+  .info.card .info-hero .glyph { width: 120px; height: 120px; }
+  .info.card .info-hero h4 { font-size: 27px; line-height: 33px; }
+  .info.card .info-hero p { font-size: 18px; line-height: 25px; }
+  .info.card .info-facts { grid-template-columns: 1fr; gap: 10px; margin: 0; }
+  .info.card .info-facts li { flex-direction: row; align-items: baseline; gap: 12px; }
+  .info.card .info-value { font-size: 30px; line-height: 36px; white-space: nowrap; min-width: 150px; }
+  .info.card .info-label { font-size: 15px; line-height: 20px; }
+  .info.card .info-src { display: none; }
+  .info.card .info-foot { padding: 14px 48px 20px; font-size: 15px; line-height: 22px; }
+</style>
+</head>
+<body>
+<div class="info poster n5" data-code="phono3py"><header class="info-head"><p class="info-eyebrow">openmaterials.ai / codes / phono3py</p><h2 class="info-title">phono3py: phonon lifetimes and thermal conductivity from third-order force constants</h2><p class="info-claim">A supercell code that fits third-order force constants to DFT forces, computes three-phonon linewidths on symmetry-reduced grids and solves the linearized Boltzmann equation.</p></header><div class="info-zones"><section class="info-zone info-zone-a"><h3>What it is and how it works</h3><div class="info-panel info-hero"><svg class="glyph" viewBox="0 0 64 64" width="64" height="64" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 18 C18 24 26 28 32 32 M10 46 C18 40 26 36 32 32"/><path class="a" d="M32 32 L54 32"/><path class="a" d="M48 27 L54 32 L48 37"/><circle cx="32" cy="32" r="3.5" class="a"/></svg><div><h4>Linewidths across the Brillouin zone</h4><p>The imaginary part of the phonon self energy, from the three-phonon interaction strength and the tetrahedron method, is mapped over the zone for nine zincblende compounds among the 33 studied (Togo 2015).</p></div></div><div class="info-panels"><div class="info-panel"><svg class="glyph" viewBox="0 0 64 64" width="64" height="64" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 24 L36 24 L36 46 L14 46 Z" class="f"/><path d="M14 24 L26 14 L48 14 L36 24 Z" class="f"/><path d="M36 24 L48 14 L48 36 L36 46 Z" class="a"/></svg><div><h4>Supercell finite displacements</h4><p>Single and pair displacements of 0.03 A in supercells, reduced by site symmetry, recovered by crystal symmetry. Forces come from an external code like VASP (Togo 2015).</p></div></div><div class="info-panel"><svg class="glyph" viewBox="0 0 64 64" width="64" height="64" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 12 V52"/><path d="M22 12 V52"/><path d="M32 12 V52"/><path d="M42 12 V52"/><path d="M52 12 V52"/><path d="M12 12 H52"/><path d="M12 22 H52"/><path d="M12 32 H52"/><path d="M12 42 H52"/><path d="M12 52 H52"/><rect x="22" y="22" width="10" height="10" class="a"/></svg><div><h4>Symmetry-reduced q grids</h4><p>Gamma-centred regular grids, point group, time reversal and permutation symmetry cut the q, q&#x27; pairs. Lifetimes at irreducible points spread over many nodes (Togo 2023).</p></div></div><div class="info-panel"><svg class="glyph" viewBox="0 0 64 64" width="64" height="64" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 50 H56"/><path class="a" d="M10 50 C16 50 18 30 22 30 S26 50 30 50 S34 14 38 14 S42 50 46 50 S50 36 56 36"/></svg><div><h4>Linear tetrahedron method</h4><p>Energy conservation in the self energy and joint density of states is integrated analytically over 24 tetrahedra per grid point by a module returning weights (Togo 2023).</p></div></div><div class="info-panel"><svg class="glyph" viewBox="0 0 64 64" width="64" height="64" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="12" y="20" width="40" height="24" rx="2" class="f"/><path class="a" d="M6 32 H26 M20 26 L26 32 L20 38"/><path d="M38 32 H58 M52 26 L58 32 L52 38"/><path d="M18 14 c2 -3 4 -3 6 0 M30 14 c2 -3 4 -3 6 0"/></svg><div><h4>RTA or direct LBTE solution</h4><p>Kappa from mode heat capacity, group velocity and lifetime in single-mode RTA, or from the direct solution of the linearized Boltzmann equation, and isotopes (Togo 2015).</p></div></div><div class="info-panel"><svg class="glyph" viewBox="0 0 64 64" width="64" height="64" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path class="a" d="M6 32 C12 16 18 16 24 32 S36 48 42 32 S54 16 60 32"/><path d="M6 44 H58" stroke-dasharray="3 3"/></svg><div><h4>Finite temperature displacements</h4><p>Random supercell displacements drawn from harmonic oscillators at a given temperature, valid when all commensurate modes are stable, for averaged properties (Togo 2023).</p></div></div></div></section><section class="info-zone info-zone-b"><h3>What people do with it</h3><ul class="info-facts"><li><span class="info-value">33</span><span class="info-label">zincblende and wurtzite compounds, RTA and LBTE</span><a class="info-src" href="https://doi.org/10.1103/PhysRevB.91.094306" rel="noopener">Togo 2015</a></li><li><span class="info-value">0.03 A</span><span class="info-label">atomic displacement for second and third order</span><a class="info-src" href="https://doi.org/10.1103/PhysRevB.91.094306" rel="noopener">Togo 2015</a></li><li><span class="info-value">7.26e2</span><span class="info-label">W/m/K, cubic BN at 300 K with isotopes, LBTE</span><a class="info-src" href="https://doi.org/10.1103/PhysRevB.91.094306" rel="noopener">Togo 2015</a></li></ul><div class="info-panels"><div class="info-panel info-app"><svg class="glyph" viewBox="0 0 64 64" width="64" height="64" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path class="a" d="M6 32 C12 16 18 16 24 32 S36 48 42 32 S54 16 60 32"/><path d="M6 44 H58" stroke-dasharray="3 3"/></svg><div><h4>CsPbBr3, particle and wave heat flow</h4><p>The Wigner conductivity, run in phono3py, gives at 300 K about 1/3 of kappa_xx from populations and 2/3 from coherences, closer to experiment. At 50 K populations give 3/4 (Simoncelli 2022). <a class="info-src" href="https://doi.org/10.1103/PhysRevX.12.041011" rel="noopener">Simoncelli 2022</a></p></div></div><div class="info-panel info-app"><svg class="glyph" viewBox="0 0 64 64" width="64" height="64" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 24 L32 14 L54 24 L32 34 Z" class="f"/><path d="M10 32 L32 42 L54 32"/><path class="a" d="M10 40 L32 50 L54 40"/></svg><div><h4>Janus MoSSe monolayer</h4><p>Phono3py with VASP in the RTA gives a room temperature kappa of 13.90 W/m/K for MoSSe, between 23.15 for MoS2 and 11.54 for MoSe2, at one thickness of 24.64 A (Guo 2018). <a class="info-src" href="https://doi.org/10.1039/c8cp00350e" rel="noopener">Guo 2018</a></p></div></div></div></section></div><section class="info-flow"><h3>How it is used</h3><ol><li><h4>Displace supercells</h4><p>Generate symmetry-reduced displacements of 0.03 A in supercells for fc2 and fc3.</p></li><li><h4>Compute forces</h4><p>Run the DFT code on every displaced supercell and collect the forces.</p></li><li><h4>Fit force constants</h4><p>Build fc2 and fc3 from the forces. Add the non-analytical correction from Born charges.</p></li><li><h4>Linewidths on a mesh</h4><p>Interaction strengths and imaginary self energies on a q mesh with the tetrahedron method.</p></li><li><h4>Conductivity</h4><p>Kappa by RTA or LBTE, mode lifetimes and cumulative kappa from kappa-mXXXXXX.hdf5.</p></li></ol></section><footer class="info-foot"><span>Sources: <a class="info-src" href="https://doi.org/10.1103/PhysRevB.91.094306" rel="noopener">Togo 2015</a>, <a class="info-src" href="https://doi.org/10.1088/1361-648X/acd831" rel="noopener">Togo 2023</a>, <a class="info-src" href="https://doi.org/10.1103/PhysRevX.12.041011" rel="noopener">Simoncelli 2022</a>, <a class="info-src" href="https://doi.org/10.1039/c8cp00350e" rel="noopener">Guo 2018</a>.</span><span class="info-url">https://openmaterials.ai/codes/phono3py/</span></footer></div>
+<script>
+  // a zone whose text runs past its box is scaled down in 2% steps, never below 80%
+  addEventListener("load", function () {
+    document.querySelectorAll(".info-zone, .info-flow").forEach(function (zone) {
+      var kids = Array.prototype.slice.call(zone.children), z = 1;
+      while (zone.scrollHeight > zone.clientHeight + 1 && z > 0.8) {
+        z -= 0.02;
+        kids.forEach(function (k) { k.style.zoom = z; });
+      }
+      if (zone.scrollHeight > zone.clientHeight + 1) document.body.setAttribute("data-overflow", "1");
+    });
+  });
+</script>
+</body>
+</html>
