@@ -6,9 +6,9 @@
   "operators": [
     {
       "id": "compute_static_dielectric",
-      "uid": "ea3c7c5ef2138ad5bc519a723cdd29bf4a098583fdff8f8100a4548904f64863",
-      "formula_sha256": "985333154976a88fddaf8ecdd97fb1f39e705283653ab01dd43eb8870514b326",
-      "formula_latex": "\\varepsilon_{0} = \\varepsilon_0^{stat}{\\left(\\varepsilon_{\\infty},Z^{*},\\omega \\right)}",
+      "uid": "f658f73a798370ff39c363aef9b0d2219dd68d76251a561ee42d3b41e2d84a4a",
+      "formula_sha256": "1aeb264ede74c9b48a916c554fbae4dfba2344232049591cd7231a254307fddd",
+      "formula_latex": "\\varepsilon_{0} = \\varepsilon_0^{stat}{\\left(\\varepsilon_{\\infty},Z^{*},\\omega,e \\right)}",
       "lean_definition": "OMAI.PhyslibBridge.StaticDielectric.staticDielectric"
     }
   ],

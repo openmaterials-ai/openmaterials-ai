@@ -174,6 +174,8 @@ theorem massWeightedHessian_translation (V : (A × Fin 3 → ℝ) → ℝ)
   simp only [hrow]
   rw [Fintype.sum_prod_type]
   simp only [Finset.sum_ite_eq', Finset.mem_univ, ite_true]
-  rw [← Finset.sum_div, forceConstant2_sum_eq_zero V hV u hV2 k β, zero_div]
+  have hk : DifferentiableAt ℝ (fun x => partialAt V k x) u :=
+    (contDiffAt_partialAt (n := 1) (hV2.of_le (by norm_num)) k).differentiableAt (by norm_num)
+  rw [← Finset.sum_div, forceConstant2_sum_eq_zero V hV u k hk β, zero_div]
 
 end OMAI.PhyslibBridge.MolecularModes

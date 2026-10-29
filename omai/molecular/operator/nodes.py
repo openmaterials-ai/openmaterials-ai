@@ -176,8 +176,10 @@ MOLECULAR_FREQUENCY = ObservableSpace(
     tier="Molecular",
     description=(
         "Molecular normal-mode vibrational frequencies of a finite molecule: "
-        "the 3N-6 (or 3N-5 for a linear molecule) discrete modes obtained by "
-        "diagonalizing the mass-weighted Hessian, indexed by mode number m "
+        "the discrete modes obtained by diagonalizing the mass-weighted "
+        "Hessian, the 3N-6 (or 3N-5 for a linear molecule) internal modes "
+        "once the rigid translations and rotations are projected out of the "
+        "3N eigenvalues, indexed by mode number m "
         "(the registered `mode` index kind). Dimension FREQUENCY "
         "(0,0,-1,0,0,0,0), served in wavenumbers cm^-1 native (the ORCA / "
         "quantum-chemistry convention). IMAGINARY modes are serialized as "

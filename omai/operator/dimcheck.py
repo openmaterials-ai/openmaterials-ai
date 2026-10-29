@@ -54,11 +54,6 @@ __all__ = [
 # wrote deliberately, not a typo; they are surfaced here for resolution in
 # kernel P2 (when dimensions enter node identity), not silently swallowed.
 KNOWN_VIOLATIONS: list[str] = [
-    # Gruneisen: the formula's own comment says "(Maradudin-Fein, schematic):
-    # not fully expanded". The eigenvector contraction, position factor r_k,
-    # and mass normalization that make gamma dimensionless are omitted, so the
-    # bare Phi3/omega^2 leaves a residual M L^-1.
-    "compute_gruneisen: lhs 1 != rhs M^1 L^-1",
 ]
 
 

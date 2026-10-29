@@ -38,7 +38,7 @@ register_space_symbols({
     # FormationEnergy input symbol, so derivable from the input; declared here for
     # locality), c_{rxn} the signed stoichiometric coefficient, N_{rxn} the species
     # count.
-    "ReactionEnergy": {r"\Delta E_{rxn}", r"\Delta H_f", r"c_{rxn}", r"N_{rxn}"},
+    "ReactionEnergy": {r"\Delta E_{rxn}", r"\Delta H_f", r"c_{rxn}", r"N^{fu}", r"N_{rxn}"},
     # Grain-boundary energy with the CSL slab-difference bookkeeping: the
     # atom count and the boundary area (the E^{GB} / E^{bulk}_{GB} selectors
     # are applied functions, invisible to the free-symbol check), mirroring

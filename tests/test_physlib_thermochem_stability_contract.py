@@ -31,19 +31,22 @@ TRANCHES = {
             "compute_intercalation_voltage": ("intercalationVoltage", "def intercalationVoltage (Efull Eempty n mu q : ℝ) : ℝ := (mu * n + Eempty - Efull) / (n * q)"),
             "compute_surface_energy": ("surfaceEnergy", "def surfaceEnergy (Eslab Ebulk N A : ℝ) : ℝ := (-N * Ebulk + Eslab) / (2 * A)"),
             "compute_grain_boundary_energy": ("grainBoundaryEnergy", "def grainBoundaryEnergy (EGB Ebulk N A : ℝ) : ℝ := (-N * Ebulk + EGB) / (2 * A)"),
+            "compute_reaction_energy": ("catalogReactionEnergy", "def catalogReactionEnergy {ι : Type*} [Fintype ι] (c N h : ι → ℝ) : ℝ := ∑ i, c i * N i * h i"),
         },
         "helpers": [
             "def hullEnergy (S : Set ι) (x : ι → κ → ℝ) (h : ι → ℝ) (y : κ → ℝ) : ℝ :=\n  sInf (decompositionEnergies S x h y)",
             "(∀ j, 0 ≤ w j) ∧ (∀ j, j ∉ S → w j = 0) ∧ ∑ j, w j = 1 ∧ ∀ a, ∑ j, w j * x j a = y a",
         ],
-        "outputs": {"EnergyAboveHull", "AdsorptionEnergy", "Voltage", "SurfaceEnergy", "GrainBoundaryEnergy"},
+        "outputs": {"EnergyAboveHull", "AdsorptionEnergy", "Voltage", "SurfaceEnergy", "GrainBoundaryEnergy",
+                    "ReactionEnergy"},
         "key_theorems": {
-            "energyAboveHull_affine_invariant": "energyAboveHull S x (fun j => h j + (c + ∑ a, δ a * x j a)) i = energyAboveHull S x h i",
-            "energyAboveHull_formationEnergy_reference_independent": "energyAboveHull S (fun j a => n j a / ∑ b, n j b) (fun j => formationEnergy (Ecell j) (n j) μ') i =",
-            "adsorptionEnergy_offset_invariant_iff": "nAdslab = nSlab + nAdsorbate",
-            "intercalationVoltage_offset_invariant_iff": "nFull = nEmpty + n • Pi.single ion 1",
-            "intercalationVoltage_eq_mean_ocv": "(hderiv : ∀ x ∈ Set.Ioo (min 0 n) (max 0 n) \\ s, HasDerivAt Ecell (E' x) x)",
-            "surfaceEnergy_thickness_independent_iff": "Tendsto (fun N : ℝ => |surfaceEnergy (N * e + c) Ebulk N A|) atTop atTop",
+            "energyAboveHull_affine_invariant": " {S : Set ι} (x : ι → κ → ℝ) (h : ι → ℝ) (c : ℝ)\n    (δ : κ → ℝ) {i : ι} (hi : i ∈ S) :\n    energyAboveHull S x (fun j => h j + (c + ∑ a, δ a * x j a)) i = energyAboveHull S x h i",
+            "energyAboveHull_formationEnergy_reference_independent": " (S : Set ι) (Ecell : ι → ℝ)\n    (n : ι → κ → ℝ) (hN : ∀ j ∈ S, ∑ a, n j a ≠ 0) {i : ι} (hi : i ∈ S) (μ μ' : κ → ℝ) :\n    energyAboveHull S (fun j a => n j a / ∑ b, n j b) (fun j => formationEnergy (Ecell j) (n j) μ') i =\n      energyAboveHull S (fun j a => n j a / ∑ b, n j b) (fun j => formationEnergy (Ecell j) (n j) μ) i",
+            "adsorptionEnergy_offset_invariant_iff": " {E : Type*} [Fintype E] [DecidableEq E]\n    (Eadslab Eslab Eadsorbate : ℝ) (nAdslab nSlab nAdsorbate : E → ℝ) :\n    (∀ δ : E → ℝ, adsorptionEnergy (Eadslab + ∑ a, nAdslab a * δ a) (Eslab + ∑ a, nSlab a * δ a)\n        (Eadsorbate + ∑ a, nAdsorbate a * δ a) = adsorptionEnergy Eadslab Eslab Eadsorbate) ↔\n      nAdslab = nSlab + nAdsorbate",
+            "intercalationVoltage_offset_invariant_iff": " {E : Type*} [Fintype E] [DecidableEq E]\n    (Efull Eempty n mu q : ℝ) (hn : n ≠ 0) (hq : q ≠ 0) (ion : E) (nFull nEmpty : E → ℝ) :\n    (∀ δ : E → ℝ, intercalationVoltage (Efull + ∑ a, nFull a * δ a)\n        (Eempty + ∑ a, nEmpty a * δ a) n (mu + δ ion) q = intercalationVoltage Efull Eempty n mu q) ↔\n      nFull = nEmpty + n • Pi.single ion 1",
+            "intercalationVoltage_eq_mean_ocv": " {Ecell E' : ℝ → ℝ} {n mu q : ℝ} {s : Set ℝ}\n    (hs : s.Countable) (hc : ContinuousOn Ecell (Set.uIcc 0 n))\n    (hderiv : ∀ x ∈ Set.Ioo (min 0 n) (max 0 n) \\ s, HasDerivAt Ecell (E' x) x)\n    (hint : IntervalIntegrable E' MeasureTheory.volume 0 n) :\n    intercalationVoltage (Ecell n) (Ecell 0) n mu q =\n      (∫ x in (0 : ℝ)..n, (mu - E' x) / q) / n",
+            "surfaceEnergy_thickness_independent_iff": " {e c Ebulk A : ℝ} (hA : A ≠ 0) :\n    (∀ N M : ℝ, N ≠ M →\n        (surfaceEnergy (N * e + c) Ebulk N A = surfaceEnergy (M * e + c) Ebulk M A ↔ Ebulk = e)) ∧\n      (Ebulk = e → ∀ N, surfaceEnergy (N * e + c) Ebulk N A = c / (2 * A)) ∧\n      (Ebulk ≠ e → Tendsto (fun N : ℝ => |surfaceEnergy (N * e + c) Ebulk N A|) atTop atTop)",
+            "catalogReactionEnergy_reference_independent_iff": " {σ E : Type*} [Fintype σ] [Fintype E]\n    [DecidableEq E] (c Ecell : σ → ℝ) (n : σ → E → ℝ) (hN : ∀ s, ∑ a, n s a ≠ 0) :\n    (∀ μ : E → ℝ, catalogReactionEnergy c (fun s => ∑ a, n s a)\n        (fun s => formationEnergy (Ecell s) (n s) μ) = ∑ s, c s * Ecell s) ↔\n      ∀ a, ∑ s, c s * n s a = 0",
         },
     },
     "calphad-binary-equilibrium": {
@@ -63,12 +66,14 @@ TRANCHES = {
         "outputs": {"MolarGibbsEnergy", "MolarEnthalpy", "CalphadMolarEntropy", "ChemicalPotential",
                     "PhaseFraction", "TransitionTemperature"},
         "key_theorems": {
-            "equilibriumGibbs_isConvexEnvelope": "(∀ p y, y ∈ Icc (0 : ℝ) 1 → equilibriumGibbs g y ≤ g p y) ∧",
-            "equilibriumGibbsT_concaveOn": "ConcaveOn ℝ I (equilibriumGibbsT gT x)",
-            "equilibrium_entropy_monotoneOn": "MonotoneOn (calphadEntropy (equilibriumGibbsT gT x)) (interior I)",
-            "equilibrium_enthalpy_monotoneOn": "MonotoneOn (molarEnthalpy (equilibriumGibbsT gT x)) (interior I)",
-            "commonTangent_of_isLocalMin": "chemicalPotentials g1 x1 = chemicalPotentials g2 x2",
-            "transitionTemperature_unique": "(∀ T ∈ Icc T1 T2, dG T = 0 → T = transitionTemperature dG T1 T2)",
+            "equilibriumGibbs_isConvexEnvelope": " [Nonempty P] {B : ℝ}\n    (hB : ∀ p y, y ∈ Icc (0 : ℝ) 1 → B ≤ g p y) :\n    ConvexOn ℝ (Icc 0 1) (equilibriumGibbs g) ∧\n      (∀ p y, y ∈ Icc (0 : ℝ) 1 → equilibriumGibbs g y ≤ g p y) ∧\n      ∀ φ : ℝ → ℝ, ConvexOn ℝ (Icc 0 1) φ → (∀ p y, y ∈ Icc (0 : ℝ) 1 → φ y ≤ g p y) →\n        ∀ x ∈ Icc (0 : ℝ) 1, φ x ≤ equilibriumGibbs g x",
+            "equilibriumGibbsT_concaveOn": " {gT : ℝ → P → ℝ → ℝ} {I : Set ℝ} (hI : Convex ℝ I)\n    {B : ℝ → ℝ} (hB : ∀ T ∈ I, ∀ p y, y ∈ Icc (0 : ℝ) 1 → B T ≤ gT T p y)\n    (hconc : ∀ p y, y ∈ Icc (0 : ℝ) 1 → ConcaveOn ℝ I (fun T => gT T p y)) (x : ℝ) :\n    ConcaveOn ℝ I (equilibriumGibbsT gT x)",
+            "equilibrium_entropy_monotoneOn": " {P : Type*} {gT : ℝ → P → ℝ → ℝ} {I : Set ℝ}\n    (hI : Convex ℝ I) {B : ℝ → ℝ} (hB : ∀ T ∈ I, ∀ p y, y ∈ Icc (0 : ℝ) 1 → B T ≤ gT T p y)\n    (hconc : ∀ p y, y ∈ Icc (0 : ℝ) 1 → ConcaveOn ℝ I (fun T => gT T p y)) (x : ℝ) :\n    MonotoneOn (calphadEntropy (equilibriumGibbsT gT x)) (interior I)",
+            "equilibrium_enthalpy_monotoneOn": " {P : Type*} {gT : ℝ → P → ℝ → ℝ} {I : Set ℝ}\n    (hI : Convex ℝ I) {B : ℝ → ℝ} (hB : ∀ T ∈ I, ∀ p y, y ∈ Icc (0 : ℝ) 1 → B T ≤ gT T p y)\n    (hconc : ∀ p y, y ∈ Icc (0 : ℝ) 1 → ConcaveOn ℝ I (fun T => gT T p y))\n    (hpos : ∀ T ∈ interior I, 0 ≤ T) (x : ℝ) :\n    MonotoneOn (molarEnthalpy (equilibriumGibbsT gT x)) (interior I)",
+            "commonTangent_of_isLocalExtr": " {g1 g2 : ℝ → ℝ} {x x1 x2 : ℝ} (h1 : x1 < x) (h2 : x < x2)\n    (hd1 : DifferentiableAt ℝ g1 x1) (hd2 : DifferentiableAt ℝ g2 x2)\n    (hext1 : IsLocalExtr (fun y => twoPhaseEnergy g1 g2 x y x2) x1)\n    (hext2 : IsLocalExtr (fun y => twoPhaseEnergy g1 g2 x x1 y) x2) :\n    deriv g1 x1 = (g2 x2 - g1 x1) / (x2 - x1) ∧ deriv g2 x2 = (g2 x2 - g1 x1) / (x2 - x1) ∧\n      chemicalPotentials g1 x1 = chemicalPotentials g2 x2",
+            "deriv_equilibriumGibbs_of_twoPhaseChord": " {P : Type*} {g : P → ℝ → ℝ} {g1 g2 : ℝ → ℝ}\n    {x x1 x2 : ℝ} (henv : equilibriumGibbs g =ᶠ[𝓝 x] fun y => twoPhaseEnergy g1 g2 y x1 x2) :\n    deriv (equilibriumGibbs g) x = (g2 x2 - g1 x1) / (x2 - x1)",
+            "chemicalPotentials_equilibriumGibbs_of_twoPhaseChord": " {P : Type*} {g : P → ℝ → ℝ}\n    {g1 g2 : ℝ → ℝ} {x x1 x2 : ℝ} (h12 : x1 < x2)\n    (henv : equilibriumGibbs g =ᶠ[𝓝 x] fun y => twoPhaseEnergy g1 g2 y x1 x2)\n    (hd1 : deriv g1 x1 = (g2 x2 - g1 x1) / (x2 - x1))\n    (hd2 : deriv g2 x2 = (g2 x2 - g1 x1) / (x2 - x1)) :\n    chemicalPotentials (equilibriumGibbs g) x = chemicalPotentials g1 x1 ∧\n      chemicalPotentials (equilibriumGibbs g) x = chemicalPotentials g2 x2",
+            "transitionTemperature_unique": " {dG dS : ℝ → ℝ} {T1 T2 : ℝ} (h12 : T1 < T2)\n    (hcont : ContinuousOn dG (Icc T1 T2))\n    (hderiv : ∀ T ∈ Ioo T1 T2, HasDerivAt dG (-dS T) T) (hS : ∀ T ∈ Ioo T1 T2, 0 < dS T)\n    (hstart : 0 < dG T1) (hend : dG T2 < 0) :\n    transitionTemperature dG T1 T2 ∈ Ioo T1 T2 ∧ dG (transitionTemperature dG T1 T2) = 0 ∧\n      (∀ T ∈ Icc T1 T2, dG T = 0 → T = transitionTemperature dG T1 T2) ∧\n      (∀ T ∈ Ico T1 (transitionTemperature dG T1 T2), 0 < dG T) ∧\n      (∀ T ∈ Ioc (transitionTemperature dG T1 T2) T2, dG T < 0)",
         },
     },
 }
@@ -76,7 +81,9 @@ TRANCHES = {
 NOT_CITED = {
     "OMAI.PhyslibBridge.Stability.energyAboveHull_nonneg",
     "OMAI.PhyslibBridge.Stability.energyAboveHull_mono_competitors",
+    "OMAI.PhyslibBridge.Stability.energyAboveHull_congr",
     "OMAI.PhyslibBridge.Stability.combination_offset_invariant_iff",
+    "OMAI.PhyslibBridge.Stability.catalogReactionEnergy_eq_reactionEnergy",
     "OMAI.PhyslibBridge.Stability.reactionEnergy_reference_independent_iff",
     "OMAI.PhyslibBridge.Stability.grainBoundaryEnergy_eq_surfaceEnergy",
     "OMAI.PhyslibBridge.Calphad.equilibriumGibbs_convexOn",
@@ -125,7 +132,7 @@ def test_lean_definitions_are_the_reviewed_transcriptions(binding_id):
         assert text in source, text
     for name, statement in spec["key_theorems"].items():
         assert re.search(r"theorem " + name + r"\b", source), name
-        assert statement in source, name
+        assert "theorem " + name + statement + " :=" in source, name
 
 
 @pytest.mark.parametrize("binding_id", sorted(TRANCHES))
@@ -178,12 +185,21 @@ def test_closed_form_definitions_are_not_proof_subjects():
     assert not proven & DEFINITIONS_ONLY
 
 
-def test_reaction_energy_is_a_recorded_catalog_defect():
+def test_reaction_energy_is_bound_after_the_weight_correction():
+    """The 2026-10-29 catalog correction multiplies each formula-unit coefficient by the atoms of
+    its formula unit; the corrected sum is transcribed and its reference independence is a subject."""
+    import sympy as sp
+    from omai.stability.operator.edges import compute_reaction_energy
+    assert "N^{fu}" in sp.srepr(compute_reaction_energy.formula)
     rows = {row["id"]: row for row in _packaged_bindings()["inventory"]["operators"]}
     row = rows["compute_reaction_energy"]
-    assert row["status"] == "gap" and row["binding_ids"] == []
-    for phrase in ("Catalog defect", "-2.0616 eV", "-6.1848 eV", "nu_i N_i", "reactionEnergy_reference_independent_iff"):
-        assert phrase in row["reason"], phrase
+    assert row["status"] == "local" and row["binding_ids"] == ["dft-stability-energy-differences"]
+    binding = next(b for b in _packaged_bindings()["bindings"] if b["id"] == "dft-stability-energy-differences")
+    text = " ".join(binding["conditions"])
+    for phrase in ("catalogReactionEnergy", "N^fu[i] the atoms of the formula unit",
+                   "exactly when the reaction is balanced", "catalogReactionEnergy_reference_independent_iff"):
+        assert phrase in text, phrase
+    assert "compute_reaction_energy" not in _packaged_bindings().get("gap_reasons", {}).get("operators", {})
 
 
 def test_obvious_calculus_identities_are_gone():
@@ -220,6 +236,23 @@ def test_registry_pins_this_tranche():
     assert entry["subjects"] == subjects
     assert {p["name"] for p in entry["pairs"]} == {
         spec["ns"] + name for spec in TRANCHES.values() for name, _ in spec["definitions"].values()}
+
+
+def test_build_record_covers_these_sources_with_standard_axioms():
+    record = json.loads((ROOT / "lean/bridge/build-evidence.json").read_text())
+    tracked = {spec[key] for spec in TRANCHES.values() for key in ("source", "contract")}
+    assert {path: record["sources"][path] for path in tracked} == {
+        path: hashlib.sha256((ROOT / path).read_bytes()).hexdigest() for path in tracked}
+    audit = record["axiom_audit"]
+    assert audit["status"] == "passed"
+    assert {spec["module"] for spec in TRANCHES.values()} <= set(audit["source_modules"])
+    declarations = audit["declarations"]
+    names = {name for binding_id in sorted(TRANCHES) for name in _binding(binding_id)["evidence"]["declarations"]}
+    names |= {spec["ns"] + name for spec in TRANCHES.values() for name in spec["key_theorems"]}
+    names |= NOT_CITED
+    for name in sorted(names):
+        assert name in declarations, name
+        assert set(declarations[name]) <= {"propext", "Classical.choice", "Quot.sound"}, name
 
 
 def test_compiled_theorems_use_standard_axioms_only():

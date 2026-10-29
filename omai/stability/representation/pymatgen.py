@@ -116,7 +116,7 @@ PYMATGEN_VOLTAGE = SpaceRepresentationSpec(
     representation_name="pymatgen",
     observable_units={"V_avg": "volt"},
     code_api={
-        "V_avg": "in-skill V = -(E_full - E_empty - n mu_metal)/n over pymatgen Structure.remove_species cells, volts",
+        "V_avg": "in-skill V = -(E_full - E_empty - n mu_metal)/n over pymatgen Structure.remove_species cells (monovalent working ion), volts",
     },
     notes=(
         "Average intercalation voltage in volts: pymatgen's role is the "
@@ -254,8 +254,9 @@ PYMATGEN_COMPUTE_GRAIN_BOUNDARY_ENERGY = OperatorRepresentationSpec(
     discretization_choices={
         "gb_geometry": (
             "GrainBoundaryGenerator Sigma / rotation axis / GB plane and the "
-            "min-slab / vacuum sizes (the committed Cu example: rotation axis "
-            "[001], vacuum 0.0, min-slab-size 10 A); convergence of gamma_GB "
+            "min-slab size, with vacuum 0.0 as the two-boundary 2A form of the "
+            "operator requires (the committed Cu example: rotation axis "
+            "[001], min-slab-size 10 A); convergence of gamma_GB "
             "with slab thickness is the estimator's discretization"
         ),
         "relaxation": (

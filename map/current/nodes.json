@@ -513,7 +513,7 @@
    "quantity": "voltage"
   },
   "meta": {
-   "description": "Average intercalation (open-circuit) voltage V_avg of an electrode against the working-ion metal: the Nernst energy difference of the intercalated and de-intercalated cells (minus the metal reservoir) over the transferred charge, V = -(E_full - E_empty - n mu_metal)/(n e). The map's first current-axis quantity (volts, M L^2 T^-3 I^-1); since the energies are eV and the charge is n elementary charges, eV/e = 1 V exactly and no Faraday factor appears. The working ion (Li in the committed example) is the producing edge's scheme.",
+   "description": "Average intercalation (open-circuit) voltage V_avg of an electrode against the working-ion metal: the Nernst energy difference of the intercalated and de-intercalated cells (minus the metal reservoir) over the transferred charge, V = -(E_full - E_empty - n mu_metal)/(n e). The map's first current-axis quantity (volts, M L^2 T^-3 I^-1); since the energies are eV and the charge is n elementary charges for a monovalent working ion (n z for valence z), eV/e = 1 V exactly and no Faraday factor appears. The working ion (Li in the committed example) is the producing edge's scheme.",
    "name": "Voltage",
    "symbol": "V_{avg}",
    "tier": "Stability"
@@ -1233,7 +1233,7 @@
    "quantity": "molar_enthalpy"
   },
   "meta": {
-   "description": "Assessed molar enthalpy H_m = G - T dG/dT of a phase, pycalphad's HM, derived from the Gibbs energy by the Legendre relation. PER MOLE OF ATOMS, at CONSTANT PRESSURE, SER reference; J/mol, ENERGY_PER_MOLE. The enthalpy of formation (H_m referenced to SER) is the CALPHAD analog of the DFT FormationEnergy, but referenced to SER not DFT elements and in J/mol-atoms not eV/atom (factor 96485.33212331). Same basis notes as MolarGibbsEnergy; a distinct quantity from the phonon-side molar energies (the guardrail: this is a Gibbs-side enthalpy per mole of atoms, not a per-cell phonon internal energy).",
+   "description": "Assessed molar enthalpy H_m = G - T dG/dT of a phase (or of the equilibrium assemblage), pycalphad's HM, derived from the Gibbs energy by the Legendre relation. PER MOLE OF ATOMS, at CONSTANT PRESSURE, SER reference; J/mol, ENERGY_PER_MOLE. The enthalpy of formation (H_m referenced to SER) is the CALPHAD analog of the DFT FormationEnergy, but referenced to SER not DFT elements and in J/mol-atoms not eV/atom (factor 96485.33212331). Same basis notes as MolarGibbsEnergy; a distinct quantity from the phonon-side molar energies (the guardrail: this is a Gibbs-side enthalpy per mole of atoms, not a per-cell phonon internal energy).",
    "name": "MolarEnthalpy",
    "symbol": "H_{\\mathrm{m}}",
    "tier": "Thermochemistry"
@@ -1695,7 +1695,7 @@
    "quantity": "energy_above_hull"
   },
   "meta": {
-   "description": "Energy above the convex hull E_hull: the per-atom distance of a composition's formation energy above the hull of all competing phases in its chemical system. INTENSIVE, in eV/atom (reported meV/atom by mat-stability, a factor 1000); exactly zero for the thermodynamic ground state, positive for metastable phases. Its provenance is a SET of competing-phase energies (the hull), recorded by the producing edge's hull_source scheme; the single most-used output across the stability skills.",
+   "description": "Energy above the convex hull E_hull: the per-atom distance of a composition's formation energy above the hull of all competing phases in its chemical system. INTENSIVE, in eV/atom (reported meV/atom by mat-stability, a factor 1000); zero for every phase on the lower convex hull (the stable phases, the ground state at its composition among them), positive for metastable phases. Its provenance is a SET of competing-phase energies (the hull), recorded by the producing edge's hull_source scheme; the single most-used output across the stability skills.",
    "name": "EnergyAboveHull",
    "symbol": "E_{hull}",
    "tier": "Stability"
@@ -1955,7 +1955,7 @@
    "quantity": "reaction_energy"
   },
   "meta": {
-   "description": "Reaction energy dE_rxn of a balanced solid-state reaction: the stoichiometric combination of the per-atom formation energies of the products minus the reactants, weighted by the balancing coefficients, the thermodynamic driving force a reaction network scores. Plain ENERGY (M L^2 T^-2), served either per reaction-atom (eV/atom = energy / num_atoms, the skills' printed dG) or total eV (coefficient-dependent, as-balanced); which normalization an instance uses is a condition, not the dimension, exactly like the per-cell / per-atom split on the other energy-difference nodes. A DISTINCT quantity from a single-compound FormationEnergy (a difference of differences over a balanced reaction), kept apart by the reaction_energy tag. It is EMPHATICALLY NOT the finite-T SISSO Gibbs formation energy dGf(T) rxn_network builds reactions from (the GibbsComputedEntry descriptor, 300-2000 K, ~50 meV/atom MAD, MP-derived): that is a finite-temperature COUSIN of FormationEnergy, never naively equated to the 0 K / 298 K DFT FormationEnergy the producing edge consumes here. The reactants / products set, the balancing, and the MP energy provenance ride in the producing edge's scheme and the instance conditions.",
+   "description": "Reaction energy dE_rxn of a balanced solid-state reaction: the stoichiometric combination of the per-atom formation energies of the products minus the reactants, each weighted by its balancing coefficient times its atoms per formula unit, the thermodynamic driving force a reaction network scores. Plain ENERGY (M L^2 T^-2), served either per reaction-atom (eV/atom = energy / num_atoms, the skills' printed dG) or total eV (coefficient-dependent, as-balanced); which normalization an instance uses is a condition, not the dimension, exactly like the per-cell / per-atom split on the other energy-difference nodes. A DISTINCT quantity from a single-compound FormationEnergy (a difference of differences over a balanced reaction), kept apart by the reaction_energy tag. It is EMPHATICALLY NOT the finite-T SISSO Gibbs formation energy dGf(T) rxn_network builds reactions from (the GibbsComputedEntry descriptor, 300-2000 K, ~50 meV/atom MAD, MP-derived): that is a finite-temperature COUSIN of FormationEnergy, never naively equated to the 0 K / 298 K DFT FormationEnergy the producing edge is defined on; an rxn-network instance that combined dGf(T) entries carries its temperature as a condition. The reactants / products set, the balancing, and the MP energy provenance ride in the producing edge's scheme and the instance conditions.",
    "name": "ReactionEnergy",
    "symbol": "\\Delta E_{rxn}",
    "tier": "Stability"
@@ -2090,7 +2090,7 @@
    "quantity": "heat_current"
   },
   "meta": {
-   "description": "Instantaneous heat-current vector J(t) computed from a Trajectory via the Irving-Kirkwood (or Hardy, or virial) decomposition. Per-element J_\u03b1(t) is a stochastic MD snapshot \u2014 gauge-dependent. The cross-code observable is the time-correlation HeatCurrentACF, which is what enters Green-Kubo \u03ba.",
+   "description": "Instantaneous heat-current vector J(t) computed from a Trajectory via the Irving-Kirkwood (or Hardy, or virial) decomposition. Per-element J_\u03b1(t) is a stochastic MD snapshot, gauge-dependent. The cross-code observable is the time-correlation HeatCurrentACF, which is what enters Green-Kubo \u03ba.",
    "name": "HeatCurrent",
    "symbol": "\\mathbf{J}",
    "tier": "Molecular dynamics"
@@ -2634,7 +2634,7 @@
    "quantity": "molecular_frequency"
   },
   "meta": {
-   "description": "Molecular normal-mode vibrational frequencies of a finite molecule: the 3N-6 (or 3N-5 for a linear molecule) discrete modes obtained by diagonalizing the mass-weighted Hessian, indexed by mode number m (the registered `mode` index kind). Dimension FREQUENCY (0,0,-1,0,0,0,0), served in wavenumbers cm^-1 native (the ORCA / quantum-chemistry convention). IMAGINARY modes are serialized as NEGATIVE frequencies (a mode whose Hessian eigenvalue is negative, an unstable direction); n_imaginary, the count of imaginary modes, is the SADDLE-ORDER diagnostic (a minimum has 0, a first-order transition state exactly 1). EXPLICITLY NOT the periodic phonon Frequency node (the (q, nu) = (qpoint, branch) dispersion omega_qnu over the Brillouin zone): a molecule has NO q and NO phonon branch (no periodicity, only the discrete mode index m), so the two never alias, kept apart by the molecular_frequency tag and the mode-index signature vs the phonon (qpoint, branch). CONVENTION CAVEAT: cm^-1 is a linear wavenumber (1 cm^-1 = c . 100 m^-1 = 0.0299792458 linear THz), NOT an angular frequency; the angular-vs-wavenumber factor 2 pi c is a representation-layer convention, recorded on the representation. The molecular thermochemistry (RRHO) bundle that consumes these modes for the partition function is the next named hook, now unblocked.",
+   "description": "Molecular normal-mode vibrational frequencies of a finite molecule: the discrete modes obtained by diagonalizing the mass-weighted Hessian, the 3N-6 (or 3N-5 for a linear molecule) internal modes once the rigid translations and rotations are projected out of the 3N eigenvalues, indexed by mode number m (the registered `mode` index kind). Dimension FREQUENCY (0,0,-1,0,0,0,0), served in wavenumbers cm^-1 native (the ORCA / quantum-chemistry convention). IMAGINARY modes are serialized as NEGATIVE frequencies (a mode whose Hessian eigenvalue is negative, an unstable direction); n_imaginary, the count of imaginary modes, is the SADDLE-ORDER diagnostic (a minimum has 0, a first-order transition state exactly 1). EXPLICITLY NOT the periodic phonon Frequency node (the (q, nu) = (qpoint, branch) dispersion omega_qnu over the Brillouin zone): a molecule has NO q and NO phonon branch (no periodicity, only the discrete mode index m), so the two never alias, kept apart by the molecular_frequency tag and the mode-index signature vs the phonon (qpoint, branch). CONVENTION CAVEAT: cm^-1 is a linear wavenumber (1 cm^-1 = c . 100 m^-1 = 0.0299792458 linear THz), NOT an angular frequency; the angular-vs-wavenumber factor 2 pi c is a representation-layer convention, recorded on the representation. The molecular thermochemistry (RRHO) bundle that consumes these modes for the partition function is the next named hook, now unblocked.",
    "name": "MolecularFrequency",
    "symbol": "\\nu_{\\mathrm{mol}}",
    "tier": "Molecular"
@@ -2656,7 +2656,7 @@
    "quantity": "phonon_dos"
   },
   "meta": {
-   "description": "Density of states g(\u03c9) = (1/N_q) \u03a3_q\u03bd \u03b4(\u03c9 \u2212 \u03c9_q\u03bd). A 1-D array binned in \u03c9, states per unit frequency (dimension 1/frequency, the \u03b4's). Gauge-invariant: \u03c9_q\u03bd are basis-independent and the sum over (q, \u03bd) is uniformly weighted.",
+   "description": "Density of states g(\u03c9) = (1/N_q) \u03a3_q\u03bd \u03b4(\u03c9 \u2212 \u03c9_q\u03bd). A 1-D array binned in \u03c9, states per unit frequency (dimension 1/frequency, the \u03b4's). The normalization is an instance condition, not part of the dimension: compute_dos integrates to the 3 N modes of the primitive cell and fourier_to_dos to 3 states per atom. Gauge-invariant: \u03c9_q\u03bd are basis-independent and the sum over (q, \u03bd) is uniformly weighted.",
    "name": "PhononDOS",
    "symbol": "g(\\omega)",
    "tier": "Harmonic"

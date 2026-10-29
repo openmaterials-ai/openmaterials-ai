@@ -243,8 +243,9 @@ GPUMD_AUTOCORRELATE_HEAT_CURRENT = OperatorRepresentationSpec(
     notes=(
         "`compute_hac` uses the direct-sum form (no FFT pathway in "
         "GPUMD for HAC). The correlation depth Nc is set in the same "
-        "keyword. Direct-sum and FFT are numerically equivalent under "
-        "periodic padding — the operator layer no longer declares a "
+        "keyword. The direct sum is the linear correlation, which a zero-padded "
+        "FFT reproduces; an unpadded FFT gives the circular correlation of "
+        "one period instead. The operator layer no longer declares a "
         "`correlation_method` scheme."
     ),
 )
@@ -281,7 +282,9 @@ GPUMD_FOURIER_TO_DOS = OperatorRepresentationSpec(
         "g(ω) directly from the mass-weighted VAF on a Nw × max_omega "
         "frequency grid and writes `dos.out`. From the operator's "
         "perspective this is one edge invocation, even though GPUMD "
-        "performs VAF + FFT in a single internal step."
+        "performs VAF + FFT in a single internal step. dos.out integrates to "
+        "3N over the group (the GPUMD manual's normalization); divide by N for "
+        "the catalog's per-atom g, and mvac.out is the mass-weighted VAF."
     ),
 )
 

@@ -1914,7 +1914,7 @@
 "compute gruneisen",
 "compute_gruneisen"
 ],
-"uid": "997206477b90fdde2f7bb2874568ac8509cb3f4b5c382c757a028e94be46fc4f"
+"uid": "990caec662f730a5b2a416aa96173e6d21c5fac35b8ad6b0f12d96ea614e4a49"
 },
 {
 "curated": [],
@@ -1964,7 +1964,7 @@
 "compute heat current",
 "compute_heat_current"
 ],
-"uid": "c0093343fed48c5cc30a81368be68ddd6000b7ecab4d816c2a1601a01f35163e"
+"uid": "02678de87aa09f341bbac81cbc6b0504afe2c8f889e4eab5d0700c3fe09f7dd0"
 },
 {
 "curated": [],
@@ -2004,7 +2004,7 @@
 "fourier to dos",
 "fourier_to_dos"
 ],
-"uid": "d6b71066f0cef4182e1d522d30c31326ecc2504428f3c8e6b42f5189b410a6f3"
+"uid": "c142a31f3e5f89612d68319b4c2186372bf15592f88b09a1f2cc1356564428c0"
 },
 {
 "curated": [
@@ -2350,7 +2350,7 @@
 "compute reaction energy",
 "compute_reaction_energy"
 ],
-"uid": "2f0b118bbe3ef2e43e0d70c9b5d5316cc28dc4d0019ad8e7d0fc463cc6938a9c"
+"uid": "2204ada808d0fae7706fe31723755bcc9614f2901bff9230e163f47a7e95cdf7"
 },
 {
 "curated": [],
@@ -2536,7 +2536,7 @@
 "compute static dielectric",
 "compute_static_dielectric"
 ],
-"uid": "ea3c7c5ef2138ad5bc519a723cdd29bf4a098583fdff8f8100a4548904f64863"
+"uid": "f658f73a798370ff39c363aef9b0d2219dd68d76251a561ee42d3b41e2d84a4a"
 },
 {
 "curated": [
@@ -2558,7 +2558,7 @@
 "compute electronic conductivity",
 "compute_electronic_conductivity"
 ],
-"uid": "9fc03548d4ca70a6634ed22f93f7efb198f00c48c8c8b0bd94b2b37d7f73c456"
+"uid": "9b20bb39ed27457a9f0c5655ab1001b0abdcf86c4ab4883c87e8a54847e0ab72"
 },
 {
 "curated": [],
@@ -2568,7 +2568,7 @@
 "compute seebeck",
 "compute_seebeck"
 ],
-"uid": "8514fb3e8586db31ec55ec353254d206a41722760541644b2b5c08f770716a81"
+"uid": "f34ee134bfed051ae79dfece5f9ff45df4c2c202e784ccf6c3bf50035709d208"
 },
 {
 "curated": [],
@@ -2578,7 +2578,7 @@
 "compute electronic thermal conductivity",
 "compute_electronic_thermal_conductivity"
 ],
-"uid": "fe7f863a4325b44bf1f15e1b1f2521d7ec03c5c3bd0efa796998b12b6975f1e3"
+"uid": "b24757dc6349ac2bcf8429ab264385f76d6895fc52baea4eb380f7d7e063ca11"
 },
 {
 "curated": [],
@@ -2588,7 +2588,7 @@
 "compute carrier mobility",
 "compute_carrier_mobility"
 ],
-"uid": "c168368c90fa77e7b76a5668757de7f74d5fbb02b07c73544307cd48aa42d8e9"
+"uid": "8de71440c5216dc390d9e5595d6e7dcc50a672fbc2c7c36400c04602cd1d2048"
 },
 {
 "curated": [

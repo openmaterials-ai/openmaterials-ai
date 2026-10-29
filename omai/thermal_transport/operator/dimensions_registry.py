@@ -124,6 +124,8 @@ register_symbol_dimensions({
     r"\tau": TIME,
     r"\tau_{max}": TIME,
     r"\tau_{min}": TIME,
+    # Per-atom virial W_{i,alpha beta} (position times force): energy.
+    "W": ENERGY,
     # Heat current density (energy x velocity per volume, spelled energy x
     # length / time on the dimension).
     "J": ENERGY_TIMES_LENGTH_PER_TIME,

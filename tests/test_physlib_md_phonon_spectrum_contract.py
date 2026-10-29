@@ -61,7 +61,7 @@ TRANCHES = {
         "sources": set(),
         "imports": None,
         "definitions": {
-            "fourier_to_dos": ("catalogFourierDOS", "def catalogFourierDOS (Cv : ℝ → ℝ) (omega : ℝ) : ℝ :=\n  (∫ tau in Ioi 0, cos (omega * tau) * Cv tau) / π"),
+            "fourier_to_dos": ("catalogFourierDOS", "def catalogFourierDOS (Cv : ℝ → ℝ) (omega : ℝ) : ℝ :=\n  6 / (π * Cv 0) * ∫ tau in Ioi 0, cos (omega * tau) * Cv tau"),
         },
         "helpers": [
             "def dampedVACF {M : ℕ} (A Gamma w : Fin M → ℝ) (tau : ℝ) : ℝ :=\n  ∑ m, A m * exp (-Gamma m * tau) * cos (w m * tau)",
@@ -69,11 +69,14 @@ TRANCHES = {
         ],
         "outputs": {"PhononDOS"},
         "key_theorems": {
-            "catalogFourierDOS_damped": " {M : ℕ} (A Gamma w : Fin M → ℝ) (hG : ∀ m, 0 < Gamma m)\n    (omega : ℝ) :\n    catalogFourierDOS (dampedVACF A Gamma w) omega =\n      ∑ m, A m / 2 * (lorentzian (Gamma m) (omega - w m) + lorentzian (Gamma m) (omega + w m))",
-            "integral_catalogFourierDOS_damped": " {M : ℕ} (A Gamma w : Fin M → ℝ)\n    (hG : ∀ m, 0 < Gamma m) :\n    ∫ omega, catalogFourierDOS (dampedVACF A Gamma w) omega = dampedVACF A Gamma w 0",
-            "tendsto_catalogFourierDOS_zero_linewidth": " {M : ℕ} (A gamma w : Fin M → ℝ)\n    (hg : ∀ m, 0 < gamma m) {phi : ℝ → ℝ} (hphi : Integrable phi)\n    (hc : ∀ m, ContinuousAt phi (w m) ∧ ContinuousAt phi (-w m)) :\n    Tendsto (fun s : ℝ => ∫ omega, catalogFourierDOS (dampedVACF A (s • gamma) w) omega * phi omega)\n      (𝓝[>] 0) (𝓝 (∑ m, A m / 2 * (phi (w m) + phi (-w m))))",
+            "catalogFourierDOS_damped": " {M : ℕ} (A Gamma w : Fin M → ℝ) (hG : ∀ m, 0 < Gamma m)\n    (omega : ℝ) :\n    catalogFourierDOS (dampedVACF A Gamma w) omega =\n      ∑ m, 3 * A m / (∑ n, A n) *\n        (lorentzian (Gamma m) (omega - w m) + lorentzian (Gamma m) (omega + w m))",
+            "integral_catalogFourierDOS_damped": " {M : ℕ} (A Gamma w : Fin M → ℝ)\n    (hG : ∀ m, 0 < Gamma m) (hA : ∑ m, A m ≠ 0) :\n    ∫ omega, catalogFourierDOS (dampedVACF A Gamma w) omega = 6",
+            "integral_Ioi_catalogFourierDOS_damped": " {M : ℕ} (A Gamma w : Fin M → ℝ)\n    (hG : ∀ m, 0 < Gamma m) (hA : ∑ m, A m ≠ 0) :\n    ∫ omega in Ioi 0, catalogFourierDOS (dampedVACF A Gamma w) omega = 3",
+            "tendsto_catalogFourierDOS_zero_linewidth": " {M : ℕ} (A gamma w : Fin M → ℝ)\n    (hg : ∀ m, 0 < gamma m) {phi : ℝ → ℝ} (hphi : Integrable phi)\n    (hc : ∀ m, ContinuousAt phi (w m) ∧ ContinuousAt phi (-w m)) :\n    Tendsto (fun s : ℝ => ∫ omega, catalogFourierDOS (dampedVACF A (s • gamma) w) omega * phi omega)\n      (𝓝[>] 0) (𝓝 (∑ m, 3 * A m / (∑ n, A n) * (phi (w m) + phi (-w m))))",
         },
-        "not_cited": {"integrableOn_exp_neg_mul_cos", "integral_exp_neg_mul_cos", "cos_mul_dampedVACF",
+        # Support lemmas: evenness, Cv(0) and the Lorentzian calculus.
+        "not_cited": {"catalogFourierDOS_neg", "dampedVACF_zero",
+                      "integrableOn_exp_neg_mul_cos", "integral_exp_neg_mul_cos", "cos_mul_dampedVACF",
                       "integral_lorentzian", "integrable_lorentzian", "lorentzian_eq_scaled", "unitLorentzian_peak"},
     },
     "crystal-dos-landauer-conductance": {
@@ -115,8 +118,8 @@ TRANCHES = {
                       "landauerWeight_eq_boseKernel", "catalogLandauer_unit_transmission_physlib"},
     },
 }
-# The heat-current producer: a recorded catalog defect, never a proof subject.
-DEFECT = "compute_heat_current"
+# The heat-current producer: corrected in the catalog on 2026-10-29, still not a proof subject.
+UNBOUND = "compute_heat_current"
 NOTHING_TO_PROVE = {"contract_diffusivity"}
 
 
@@ -159,7 +162,7 @@ def test_lean_definitions_are_the_reviewed_transcriptions(binding_id):
         assert text in source, text
     for name, statement in spec["key_theorems"].items():
         assert re.search(r"theorem " + name + r"\b", source), name
-        assert statement in source, name
+        assert "theorem " + name + statement + " :=" in source, name
     for word in ("sorry", "admit", "axiom", "native_decide", "unsafe", "set_option"):
         assert not re.search(r"\b" + word + r"\b", source), word
 
@@ -220,36 +223,40 @@ def test_phonon_dos_has_both_a_physlib_anchored_and_a_local_producer_proof():
     assert set(node["binding_ids"]) == {"crystal-dos-landauer-conductance", "vacf-spectrum-lorentzian-limit"}
 
 
-def test_heat_current_is_a_recorded_catalog_defect_and_definitions_stay_unbound():
+def test_heat_current_stays_unbound_and_definitions_stay_unbound():
+    import sympy as sp
+    from omai.thermal_transport.operator.edges import compute_heat_current
+    assert "IndexedBase(Symbol('W'))" in sp.srepr(compute_heat_current.formula)
     rows = {row["id"]: row for row in _packaged_bindings()["inventory"]["operators"]}
-    row = rows[DEFECT]
+    row = rows[UNBOUND]
     assert row["status"] == "gap" and row["binding_ids"] == []
-    for phrase in ("Catalog defect.", "absolute position", "choice of origin", "off-diagonal stress",
-                   "r_ij = r_i - r_j", "W_{i,alpha beta} = (1/2) sum_{j != i} r_{ij,alpha} F_{ij,beta}",
-                   "Phys. Rev. B 92, 094301 (2015)"):
+    for phrase in ("Not covered.", "per-atom virial", "r_ij = r_i - r_j",
+                   "(1/2) sum_{j != i} r_{ij,alpha} F_{ij,beta}", "Phys. Rev. B 92, 094301 (2015)",
+                   "OMAIMDCorrelations proves nothing"):
         assert phrase in row["reason"], phrase
     for op in NOTHING_TO_PROVE:
         assert rows[op]["status"] == "gap"
         assert "nothing non-obvious to prove" in rows[op]["reason"]
     roadmap = json.loads((ROOT / "docs/data/lean_roadmap.json").read_text())
     proven = {r["op"] for r in roadmap["rows"] if r["proven"]}
-    assert DEFECT not in proven and not proven & NOTHING_TO_PROVE
+    assert UNBOUND not in proven and not proven & NOTHING_TO_PROVE
     for spec in TRANCHES.values():
         assert set(spec["definitions"]) <= proven
 
 
 def test_conventions_a_user_could_get_wrong_are_stated():
     md = " ".join(_binding("md-correlation-estimators")["conditions"])
-    for phrase in ("circular-correlation hypothesis", "periodic-padding assumption", "not periodic",
+    for phrase in ("circular-correlation hypothesis", "unpadded FFT of one period", "not periodic",
                    "finite-difference velocity of unwrapped positions", "dt^2 F/(2 m)",
                    "energy moment per unit volume (Helfand)", "Jcorr(0)/2", "antisymmetric part",
                    "for a = b no symmetrization is needed", "not hypotheses of the theorem",
-                   "exp(-2 pi i j k/n_lag)", "recorded as a defect"):
+                   "exp(-2 pi i j k/n_lag)", "compute_heat_current is not covered"):
         assert phrase in md, phrase
     assert "trapezoid rule" in _binding("md-correlation-estimators")["statement"]
     vacf = " ".join(_binding("vacf-spectrum-lorentzian-limit")["conditions"])
-    for phrase in ("every linewidth must be positive", "Cv(0)/2 over omega > 0", "factor 2/Cv(0)",
-                   "Equal mode weights A_m are not implied", "weak convergence", "omega = 2 pi 10^12 nu"):
+    for phrase in ("every linewidth must be positive", "3 states per atom", "6 over the whole real line",
+                   "differs by the factor 3", "Cv(0) = sum_m A_m != 0", "Equal mode weights A_m are not implied",
+                   "weak convergence", "omega = 2 pi 10^12 nu"):
         assert phrase in vacf, phrase
     phonon = " ".join(_binding("crystal-dos-landauer-conductance")["conditions"])
     for phrase in ("sum of point masses", "N_q = |G|", "Zero modes count at omega = 0",
