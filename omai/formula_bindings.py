@@ -275,7 +275,7 @@ def _check_compiled_evidence(binding: dict, upstream: dict, root: Path) -> None:
         raise ValueError(f"missing matching successful bridge build: {binding['id']}")
     hashes = record["sources"]
     required = {
-        str(path.relative_to(root)) for path in bridge_root.rglob("*.lean")
+        str(path.relative_to(root)) for path in bridge_root.glob("*.lean")
         if ".lake" not in path.relative_to(bridge_root).parts
     } | {"lean/bridge/" + name for name in (
         "lean-toolchain", "lakefile.toml", "lake-manifest.json", "semantic-formula-contract.json",

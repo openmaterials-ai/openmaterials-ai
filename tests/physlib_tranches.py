@@ -104,7 +104,7 @@ TRANCHES = (
 
 # The one frozen global coverage ledger of the published bindings.
 GLOBAL_COVERAGE = {
-    "nodes_total": 129, "nodes_mapped": 33, "operators_total": 127, "operators_mapped": 24,
+    "nodes_total": 136, "nodes_mapped": 33, "operators_total": 133, "operators_mapped": 24,
     "nodes_local": 16, "operators_local": 21, "bindings_total": 38, "source_correspondences": 5,
     "compiled_bridges": 33, "nodes_compiled": 21, "nodes_compiled_outputs": 20,
     "nodes_compiled_interpretations": 1, "operators_compiled": 24,

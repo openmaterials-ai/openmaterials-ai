@@ -2,7 +2,7 @@
 
 # openmaterials-ai
 
-[![OpenMaterials map version](https://openmaterials.ai/badge/61a981c02604.svg)](https://openmaterials.ai/)
+[![OpenMaterials map version](https://openmaterials.ai/badge/45be98afae7c.svg)](https://openmaterials.ai/)
 
 
 OpenMaterials is a versioned, content-addressed map of physics. Physical
@@ -20,9 +20,9 @@ Lean dimension and any compiled formula proof, the codes that produce it with th
 citations, and the values attached to it with their provenance. OpenMaterials is
 stewarded by OpenMaterials-AI, a foundation in formation.
 
-At map version 61a981c02604 the map has 129 typed quantities (115 observable, 11
-hidden, 3 parameter), 293 links (254 formula, 39 parameter), and 127 operators
-in 18 tiers. It holds representations for 33 codes and 93 committed values (87
+At map version 45be98afae7c the map has 136 typed quantities (122 observable, 11
+hidden, 3 parameter), 307 links (265 formula, 42 parameter), and 133 operators
+in 18 tiers. It holds representations for 34 codes and 93 committed values (87
 from simulations, 6 from measurements). The [codes
 bibliography](https://openmaterials.ai/codes/) lists each code with its
 interface, citation, and license. Browse it in 2D at
@@ -225,9 +225,9 @@ negative expansion and a zero control are compiled; FC3 and finite-difference
 mode-Gruneisen producers and phonopy's fitted thermal-Gruneisen quotient remain
 unverified. Each result retains its model and unit conditions.
 
-The same volume family defines the five quasiharmonic producers from the Gibbs surface `G(T, p) = inf_V [F + pV]`: on any volume window across which `F + pV` is convex the equilibrium family is the unique minimizer, `C_P = -T G_TT` equals both the enthalpy derivative and phonopy's polyfit form `C_V + T (dV/dT)_p (dS/dV)_T`, and the expansion, isothermal modulus and Gruneisen contraction read off G satisfy the identities above. The lattice-dynamics layer uses Physlib's crystal structure for sites and translations: the catalog dynamical matrix is Hermitian, has three zero modes at Gamma under the acoustic sum rule, folds onto a Born-von Karman supercell whose stability makes `omega^2 >= 0` at commensurate wavevectors, and gives the group velocity `d omega/dq` on a differentiable eigenvector path away from Gamma; the relaxation-time conductivity is positive semidefinite.
+The same volume family defines the five quasiharmonic producers from the Gibbs surface `G(T, p) = inf_V [F + pV]`: on any volume window across which `F + pV` is convex the equilibrium family is the unique minimizer, `C_P = -T G_TT` equals both the enthalpy derivative and the expression `C_V + T (dV/dT)_p (dS/dV)_T` that phonopy's polyfit estimator approximates, and the expansion, isothermal modulus and Gruneisen contraction read off G satisfy the identities above. The lattice-dynamics layer uses Physlib's crystal structure for sites and translations: the catalog dynamical matrix is Hermitian, has at least three zero modes at Gamma under the acoustic sum rule, folds onto a Born-von Karman supercell whose stability makes `omega^2 >= 0` at commensurate wavevectors, and gives the group velocity `d omega/dq` on a differentiable eigenvector path away from Gamma; the relaxation-time conductivity is positive semidefinite.
 
-Formulas that Physlib has no model for carry local proofs over Mathlib, counted apart from the Physlib-anchored results: the Voigt elastic moduli (positive for every stable stiffness, exact bulk modulus and shape-relaxed equation-of-state curvature for cubic crystals), the Nan, Maxwell-Garnett and Hasselman-Johnson effective conductivities and the spheroid depolarization factor, the participation ratio, and the Kamal and DiBenedetto cure relations. The [Lean page](https://openmaterials.ai/lean/) gives the current counts. Formalization also exposed catalog defects that block proofs until the formulas are corrected: the non-analytic correction is independent of q, the linearized-BTE collision matrix is not symmetric and has the wrong relaxation-time limit, and the cumulative conductivity of a linearized-BTE solution is not a distribution function.
+Formulas that Physlib has no model for carry local proofs over Mathlib, counted apart from the Physlib-anchored results: the Voigt elastic moduli (positive for every stable stiffness, exact bulk modulus and shape-relaxed equation-of-state curvature for cubic crystals), the Nan and Hasselman-Johnson effective conductivities (shown to reduce to Maxwell-Garnett for spheres) and the spheroid depolarization factor, the participation ratio, the Kamal and DiBenedetto cure relations, and the analog-device and transport formulas (drift-law uniqueness, thermionic barrier bias, retention relaxation, ramp set voltage, programming-error floor, pulse energy, series conductance, the weighted Arrhenius fit and Nernst-Einstein conduction). The [Lean page](https://openmaterials.ai/lean/) gives the current counts. Formalization also exposed catalog defects. By inspection of the symbolic formulas, the non-analytic correction is independent of q and the linearized-BTE collision matrix is not symmetric and has the wrong relaxation-time limit; these two operators stay gaps until the formulas are corrected. A machine-checked three-mode example shows that the cumulative conductivity of a linearized-BTE solution is not monotone: the partial sum is a valid formula, but its description assumes nonnegative modal contributions, which a linearized-BTE solution does not guarantee, so it defines no median mean free path.
 
 The [map's PhysLean / Physlib navigator](https://openmaterials.ai/map/) connects
 quantities and operators to upstream declarations and back. The Python APIs
@@ -360,6 +360,11 @@ licence of that release; `license` in `codes.json` is the representation's
 credit.
 `validate_light` reports unresolved rows under `unresolved_registry_rows`; no
 writer refuses them. The registry ships the releases under `code`.
+
+External graph-frontier consumers can use the
+[stable external-solve snapshot API](docs/external-solve-snapshots.md) to carry
+one detached, validated request through capability binding and planning.
+Existing dictionary APIs and wire identities remain unchanged.
 
 **The vectors.** `omai/vectors/*.json` ship inside the wheel.
 

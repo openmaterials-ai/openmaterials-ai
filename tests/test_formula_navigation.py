@@ -16,7 +16,8 @@ def test_formal_reference_navigation():
     if node is None:
         pytest.skip("node not available")
     result = subprocess.run(
-        [node, "--test", "docs/lean/bridge/lib.test.js", "docs/map/formal-navigation.test.js"],
+        [node, "--test", "docs/lean/lib.test.js", "docs/lean/roadmap/lib.test.js",
+         "docs/lean/bridge/lib.test.js", "docs/map/formal-navigation.test.js"],
         cwd=ROOT, capture_output=True, text=True, timeout=30,
     )
     assert result.returncode == 0, result.stdout + result.stderr

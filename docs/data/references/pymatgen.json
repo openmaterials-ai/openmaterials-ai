@@ -1,0 +1,73 @@
+{
+ "key": "pymatgen",
+ "code": [
+  {
+   "doi": "10.1016/j.commatsci.2012.10.028",
+   "title": "Python Materials Genomics (pymatgen): A robust, open-source python library for materials analysis",
+   "authors": [
+    "S. P. Ong",
+    "W. D. Richards",
+    "A. Jain",
+    "G. Hautier",
+    "M. Kocher",
+    "S. Cholia",
+    "D. Gunter",
+    "V. L. Chevrier",
+    "K. A. Persson",
+    "G. Ceder"
+   ],
+   "year": 2013,
+   "journal": "Computational Materials Science"
+  }
+ ],
+ "methods": [],
+ "applications": [
+  {
+   "doi": "10.1126/sciadv.1600225",
+   "title": "The thermodynamic scale of inorganic crystalline metastability",
+   "authors": [
+    "W. Sun",
+    "S. T. Dacek",
+    "S. P. Ong",
+    "G. Hautier",
+    "A. Jain",
+    "W. D. Richards",
+    "A. C. Gamst",
+    "K. A. Persson",
+    "G. Ceder"
+   ],
+   "year": 2016,
+   "journal": "Science Advances"
+  },
+  {
+   "doi": "10.1038/sdata.2018.65",
+   "title": "High-throughput density-functional perturbation theory phonons for inorganic materials",
+   "authors": [
+    "G. Petretto",
+    "S. Dwaraknath",
+    "H. P.C. Miranda",
+    "D. Winston",
+    "M. Giantomassi",
+    "M. J. van Setten",
+    "X. Gonze",
+    "K. A. Persson",
+    "G. Hautier",
+    "G. M. Rignanese"
+   ],
+   "year": 2018,
+   "journal": "Scientific Data"
+  },
+  {
+   "doi": "10.1126/sciadv.aaq0148",
+   "title": "Thermodynamic limit for synthesis of metastable inorganic materials",
+   "authors": [
+    "M. Aykol",
+    "S. S. Dwaraknath",
+    "W. Sun",
+    "K. A. Persson"
+   ],
+   "year": 2018,
+   "journal": "Science Advances"
+  }
+ ]
+}

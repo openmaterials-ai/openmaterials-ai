@@ -5,7 +5,7 @@
       "Quot.sound",
       "propext"
     ],
-    "declaration_count": 1584,
+    "declaration_count": 1591,
     "declarations": {
       "CanonicalEnsemble.heatCapacity.eq_1": [
         "Classical.choice",
@@ -1874,7 +1874,17 @@
         "Quot.sound",
         "propext"
       ],
+      "OMAI.PhyslibBridge.ISQ.dimension_ClassificationAccuracy_field_A_cls": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
       "OMAI.PhyslibBridge.ISQ.dimension_ConductanceDriftExponent_field_nu_drift": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.ISQ.dimension_ConductanceRelaxationTime_field_tau_G": [
         "Classical.choice",
         "Quot.sound",
         "propext"
@@ -2074,6 +2084,11 @@
         "Quot.sound",
         "propext"
       ],
+      "OMAI.PhyslibBridge.ISQ.dimension_InterfaceTrapRelaxationTime_field_tau_it": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
       "OMAI.PhyslibBridge.ISQ.dimension_InternalEnergy_field_e": [
         "Classical.choice",
         "Quot.sound",
@@ -2209,7 +2224,27 @@
         "Quot.sound",
         "propext"
       ],
+      "OMAI.PhyslibBridge.ISQ.dimension_PotentialEnergyFitError_field_rmse_E": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.ISQ.dimension_PotentialForceFitError_field_rmse_F": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
       "OMAI.PhyslibBridge.ISQ.dimension_PotentialOfMeanForce_field_F": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.ISQ.dimension_PotentialUncertaintyExceedance_method_committee_force_spread_field_f_sigma": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.ISQ.dimension_PotentialVirialFitError_field_rmse_W": [
         "Classical.choice",
         "Quot.sound",
         "propext"
@@ -7439,7 +7474,7 @@
     "lean/bridge/OMAIMaterialsTransport.lean": "2aa396f9e92d7b2a52b7d8cceb05c7834dee771777c23c47094dd2b2ed82d379",
     "lean/bridge/OMAIPhyslibBridge.lean": "34dbe63c3e158e508168fd7978a708047a7aee6bce7ec4ac9d5790e839a5b22c",
     "lean/bridge/OMAIPhyslibContinuum.lean": "e8bff3cb5d44cd78885d8c5f200d8761e8c568cd0d101fc0c2110f521bdca7ff",
-    "lean/bridge/OMAIPhyslibDimensions.lean": "70ffbb67e2bc50c736e9529e55836756cdb9912f2c60024a4de0ffec1d8b35ad",
+    "lean/bridge/OMAIPhyslibDimensions.lean": "19081539b9e0b1499f407b54fdc174c0ff85bff56976771de11cb386c52a461e",
     "lean/bridge/OMAIPhyslibGibbsBranch.lean": "187fcc3093e54b76aa40fb12d866cffadc01adef119f31d3bd48eaadfc1367be",
     "lean/bridge/OMAIPhyslibGroupVelocity.lean": "3171ae35f6773c00402dbd3a2de60310a20f230858f1477e503137c483ac5c96",
     "lean/bridge/OMAIPhyslibGruneisenWitness.lean": "99c4b6ffb4d42f0513d1139b303d953264bae41926b1d5ce3363ceb56b2cbaf9",

@@ -1,0 +1,98 @@
+{
+ "key": "mattergen",
+ "code": [
+  {
+   "doi": "10.1038/s41586-025-08628-5",
+   "title": "A generative model for inorganic materials design",
+   "authors": [
+    "C. Zeni",
+    "R. Pinsler",
+    "D. Zügner",
+    "A. Fowler",
+    "M. Horton",
+    "X. Fu",
+    "Z. Wang",
+    "A. Shysheya",
+    "J. Crabbé",
+    "S. Ueda",
+    "R. Sordillo",
+    "L. Sun",
+    "J. Smith",
+    "B. Nguyen",
+    "H. Schulz",
+    "S. Lewis",
+    "C. W. Huang",
+    "Z. Lu",
+    "Y. Zhou",
+    "H. Yang",
+    "H. Hao",
+    "J. Li",
+    "C. Yang",
+    "W. Li",
+    "R. Tomioka",
+    "T. Xie"
+   ],
+   "year": 2025,
+   "journal": "Nature"
+  }
+ ],
+ "methods": [],
+ "applications": [
+  {
+   "doi": "10.1039/d5mh00010f",
+   "title": "Establishing baselines for generative discovery of inorganic crystals",
+   "authors": [
+    "N. J. Szymanski",
+    "C. J. Bartel"
+   ],
+   "year": 2025,
+   "journal": "Materials Horizons"
+  },
+  {
+   "doi": "10.1002/batt.202500309",
+   "title": "Mining Chemical Space with Generative Models for Battery Materials",
+   "authors": [
+    "C. Parida",
+    "D. Roy",
+    "J. M. G. Lastra",
+    "A. Bhowmik"
+   ],
+   "year": 2025,
+   "journal": "Batteries &amp; Supercaps"
+  },
+  {
+   "doi": "10.1021/acs.jpclett.6c01568",
+   "title": "A Machine-Learning-Accelerated Approach for Room-Temperature Phase Diagram Predictions",
+   "authors": [
+    "C. Su",
+    "J. Lu",
+    "Y. Fu",
+    "Y. Huang",
+    "Z. Yu",
+    "Y. Zhang",
+    "C. Hu",
+    "G. Lu",
+    "Z. Yu",
+    "H. Zhu",
+    "L. Chen"
+   ],
+   "year": 2026,
+   "journal": "The Journal of Physical\nChemistry Letters"
+  },
+  {
+   "doi": "10.1016/j.jpowsour.2026.240034",
+   "title": "Garnets Li7La3M2O13 (M = Ta, Nb): Stable phases and superior ionic conductors?",
+   "authors": [
+    "H. A. Cortés",
+    "B. K. Das",
+    "H. Früchtl",
+    "T. van Mourik",
+    "V. Thangadurai",
+    "E. Akhmatskaya",
+    "M. R. Bonilla"
+   ],
+   "year": 2026,
+   "journal": "Journal of Power Sources"
+  }
+ ]
+}

@@ -1,0 +1,70 @@
+{
+ "key": "mp-api",
+ "code": [
+  {
+   "doi": "10.1063/1.4812323",
+   "title": "Commentary: The Materials Project: A materials genome approach to accelerating materials innovation",
+   "authors": [
+    "A. Jain",
+    "S. P. Ong",
+    "G. Hautier",
+    "W. Chen",
+    "W. D. Richards",
+    "S. Dacek",
+    "S. Cholia",
+    "D. Gunter",
+    "D. Skinner",
+    "G. Ceder",
+    "K. A. Persson"
+   ],
+   "year": 2013,
+   "journal": "APL Materials"
+  }
+ ],
+ "methods": [],
+ "applications": [
+  {
+   "doi": "10.1126/sciadv.1600225",
+   "title": "The thermodynamic scale of inorganic crystalline metastability",
+   "authors": [
+    "W. Sun",
+    "S. T. Dacek",
+    "S. P. Ong",
+    "G. Hautier",
+    "A. Jain",
+    "W. D. Richards",
+    "A. C. Gamst",
+    "K. A. Persson",
+    "G. Ceder"
+   ],
+   "year": 2016,
+   "journal": "Science Advances"
+  },
+  {
+   "doi": "10.1126/sciadv.aaq0148",
+   "title": "Thermodynamic limit for synthesis of metastable inorganic materials",
+   "authors": [
+    "M. Aykol",
+    "S. S. Dwaraknath",
+    "W. Sun",
+    "K. A. Persson"
+   ],
+   "year": 2018,
+   "journal": "Science Advances"
+  },
+  {
+   "doi": "10.1038/s41524-020-00362-y",
+   "title": "A critical examination of compound stability predictions from machine-learned formation energies",
+   "authors": [
+    "C. J. Bartel",
+    "A. Trewartha",
+    "Q. Wang",
+    "A. Dunn",
+    "A. Jain",
+    "G. Ceder"
+   ],
+   "year": 2020,
+   "journal": "npj Computational Materials"
+  }
+ ]
+}

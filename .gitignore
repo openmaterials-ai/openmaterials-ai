@@ -82,3 +82,6 @@ physlean/.lake/
 
 # wrangler local dev state (miniflare KV/cache/sqlite), never committed
 infra/site/.wrangler/
+
+# the code landing pages are generated under docs/codes/<key>/ for every key, including the names ignored above as vendored checkouts
+!docs/codes/*/

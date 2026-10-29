@@ -1,0 +1,85 @@
+{
+ "key": "diffcsp",
+ "code": [
+  {
+   "doi": "10.52202/075280-0767",
+   "title": "Crystal Structure Prediction by Joint Equivariant Diffusion",
+   "authors": [
+    "R. Jiao",
+    "W. Huang",
+    "P. Lin",
+    "J. Han",
+    "P. Chen",
+    "Y. Lu",
+    "Y. Liu"
+   ],
+   "year": 2023,
+   "journal": "Advances in Neural Information Processing Systems 36"
+  }
+ ],
+ "methods": [],
+ "applications": [
+  {
+   "doi": "10.1038/s41563-025-02355-y",
+   "title": "Structural constraint integration in a generative model for the discovery of quantum materials",
+   "authors": [
+    "R. Okabe",
+    "M. Cheng",
+    "A. Chotrattanapituk",
+    "M. Mandal",
+    "K. Mak",
+    "D. Córdova Carrizales",
+    "N. T. Hung",
+    "X. Fu",
+    "B. Han",
+    "Y. Wang",
+    "W. Xie",
+    "R. J. Cava",
+    "T. S. Jaakkola",
+    "Y. Cheng",
+    "M. Li"
+   ],
+   "year": 2025,
+   "journal": "Nature Materials"
+  },
+  {
+   "doi": "10.1016/j.patter.2026.101537",
+   "title": "Are diffusion models ready for materials discovery in unexplored chemical space?",
+   "authors": [
+    "S. Kim",
+    "G. Jeon",
+    "S. Hwang",
+    "J. Lee",
+    "J. Jung",
+    "S. Han",
+    "S. Kang"
+   ],
+   "year": 2026,
+   "journal": "Patterns"
+  },
+  {
+   "doi": "10.1038/s41524-026-02117-7",
+   "title": "Guided diffusion for the discovery of new superconductors",
+   "authors": [
+    "P. Prakash",
+    "J. B. Gibson",
+    "Z. Li",
+    "G. D. Gianluca",
+    "J. Esquivel",
+    "E. Fuemmeler",
+    "B. Geisler",
+    "J. S. Kim",
+    "A. Roitberg",
+    "E. B. Tadmor",
+    "M. Liu",
+    "S. Martiniani",
+    "G. R. Stewart",
+    "J. J. Hamlin",
+    "P. J. Hirschfeld",
+    "R. G. Hennig"
+   ],
+   "year": 2026,
+   "journal": "npj Computational Materials"
+  }
+ ]
+}

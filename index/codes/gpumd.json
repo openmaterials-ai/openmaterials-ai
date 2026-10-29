@@ -1,7 +1,7 @@
 {
  "representation": "gpumd",
- "lineage_version": "61a981c02604f2165e2a138be7d62ee33f3d52dc96d5b458f80188cc60dff233",
- "map_version": "baf99346621bee3269400670c5044dac03c89e0bf7cd0dff673593344540852c",
+ "lineage_version": "45be98afae7c2813f40dabc9996ac11c7ab4257172bd72f31c69a52a62798e1a",
+ "map_version": "2b27f48fbddbf744f9098d169ed290cf034274d63b732bdb6420ee8963bf3bce",
  "covers": [
   {
    "node": "HeatCurrent",
@@ -32,6 +32,30 @@
    "uid": "80a4273845e09207860e06db18d1f1ee5670a9b9c8b1020a99928c872878f901",
    "api": "nep.txt (default) | EAM/Tersoff/SW potential file referenced from run.in",
    "unit": null
+  },
+  {
+   "node": "PotentialEnergyFitError",
+   "uid": "d3f969394ab79173ea4afe796f00bc4b941141aa5f781e90fb3217e945f70755",
+   "api": "nep, prediction 1 added to the training nep.in, held-out set as train.xyz: energy_train.out, RMSE of column 1 (predicted) vs column 2 (reference), eV/atom",
+   "unit": "ev_per_atom"
+  },
+  {
+   "node": "PotentialForceFitError",
+   "uid": "833c3db3fbd145b45ed051cd6eaf782d7555518a0634f524b9ceee7fe49245e0",
+   "api": "nep, prediction 1 added to the training nep.in, held-out set as train.xyz: force_train.out, RMSE over the 3 pairs (columns 1-3 predicted vs 4-6 reference) of every row, eV/A",
+   "unit": "eV_per_A"
+  },
+  {
+   "node": "PotentialUncertaintyExceedance[method=committee_force_spread]",
+   "uid": "e382fb86bf6c620d5af35954c8f189650ee0ca02dc3c389ed13cb533be8b76d9",
+   "api": "run.in: one potential line per committee member (the first drives the MD), then active <check_interval> 0 0 0 <sigma>; fraction of the active.out rows written by this run whose column 2 exceeds sigma",
+   "unit": "dimensionless"
+  },
+  {
+   "node": "PotentialVirialFitError",
+   "uid": "8d85a09e82115bdd601be2ded9450446a9cdbdf0364bc88f421215019d00677a",
+   "api": "nep, prediction 1 added to the training nep.in, held-out set as train.xyz: virial_train.out, RMSE over the 6 pairs (columns 1-6 predicted vs 7-12 reference), skipping rows whose reference is -1e6 (structure without a virial or stress label), eV/atom",
+   "unit": "ev_per_atom"
   },
   {
    "node": "ThermalConductivity[transport_model=green_kubo]",

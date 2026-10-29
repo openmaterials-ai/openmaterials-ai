@@ -622,6 +622,20 @@
 },
 {
 "curated": [
+"model-deviation",
+"query-by-committee"
+],
+"id": "PotentialUncertaintyExceedance[method=committee_force_spread]",
+"kind": "node",
+"labels": [
+"PotentialUncertaintyExceedance[method=committee_force_spread]",
+"f_{\\sigma}",
+"potential uncertainty exceedance method committee force spread"
+],
+"uid": "e382fb86bf6c620d5af35954c8f189650ee0ca02dc3c389ed13cb533be8b76d9"
+},
+{
+"curated": [
 "structure-relaxation"
 ],
 "id": "Structure",
@@ -689,6 +703,51 @@
 "band gap"
 ],
 "uid": "7164425d1695208e46171b5030c938c3545c180b57018d51748d0507f9f08135"
+},
+{
+"curated": [
+"holdout-error",
+"test-set-rmse",
+"validation-rmse"
+],
+"id": "PotentialEnergyFitError",
+"kind": "node",
+"labels": [
+"PotentialEnergyFitError",
+"\\epsilon_E",
+"potential energy fit error"
+],
+"uid": "d3f969394ab79173ea4afe796f00bc4b941141aa5f781e90fb3217e945f70755"
+},
+{
+"curated": [
+"holdout-error",
+"test-set-rmse",
+"validation-rmse"
+],
+"id": "PotentialForceFitError",
+"kind": "node",
+"labels": [
+"PotentialForceFitError",
+"\\epsilon_F",
+"potential force fit error"
+],
+"uid": "833c3db3fbd145b45ed051cd6eaf782d7555518a0634f524b9ceee7fe49245e0"
+},
+{
+"curated": [
+"holdout-error",
+"test-set-rmse",
+"validation-rmse"
+],
+"id": "PotentialVirialFitError",
+"kind": "node",
+"labels": [
+"PotentialVirialFitError",
+"\\epsilon_W",
+"potential virial fit error"
+],
+"uid": "8d85a09e82115bdd601be2ded9450446a9cdbdf0364bc88f421215019d00677a"
 },
 {
 "curated": [
@@ -1442,6 +1501,47 @@
 },
 {
 "curated": [
+"conductance-relaxation-time",
+"conductance-tangent-time"
+],
+"id": "ConductanceRelaxationTime",
+"kind": "node",
+"labels": [
+"ConductanceRelaxationTime",
+"\\tau_G",
+"conductance relaxation time"
+],
+"uid": "72bddad977642e53ed5cc05d9eec037d77a96a2c3232db16f5f4b4eaaff0b971"
+},
+{
+"curated": [
+"interface-trap-relaxation-time"
+],
+"id": "InterfaceTrapRelaxationTime",
+"kind": "node",
+"labels": [
+"InterfaceTrapRelaxationTime",
+"\\tau_{it}",
+"interface trap relaxation time"
+],
+"uid": "d9e8d6ad94a3bd0629bc56fd2fbc5a6555e2866c3ff667aefd714ad75a27a491"
+},
+{
+"curated": [
+"classification-accuracy",
+"reservoir-classification"
+],
+"id": "ClassificationAccuracy",
+"kind": "node",
+"labels": [
+"A_{cls}",
+"ClassificationAccuracy",
+"classification accuracy"
+],
+"uid": "0e10474b38987a0d5d3c77580649f461281a6a587093401a60781aab4bdf219d"
+},
+{
+"curated": [
 "cure-kinetics",
 "degree-of-cure",
 "extent-of-cure"
@@ -2006,6 +2106,19 @@
 },
 {
 "curated": [
+"model-deviation",
+"query-by-committee"
+],
+"id": "compute_potential_uncertainty_exceedance",
+"kind": "edge",
+"labels": [
+"compute potential uncertainty exceedance",
+"compute_potential_uncertainty_exceedance"
+],
+"uid": "cdd7b5cc99b5cc279c21df1c1e6b179a7eafb368b4b5f1d154fbd30d64fa8aef"
+},
+{
+"curated": [
 "periodic-dft-electronic-structure-calculation",
 "structure-relaxation"
 ],
@@ -2066,6 +2179,36 @@
 "compute_band_gap"
 ],
 "uid": "25e07a60a3f641abc12987675165b1195ea8ed9d7adff7217736c7bdfd824b1a"
+},
+{
+"curated": [],
+"id": "compute_potential_energy_fit_error",
+"kind": "edge",
+"labels": [
+"compute potential energy fit error",
+"compute_potential_energy_fit_error"
+],
+"uid": "259d51fed7bf820b6edf9878f31f419e8921e05334f10c22e85a2bacc55ee514"
+},
+{
+"curated": [],
+"id": "compute_potential_force_fit_error",
+"kind": "edge",
+"labels": [
+"compute potential force fit error",
+"compute_potential_force_fit_error"
+],
+"uid": "617fa87d7443a62e99db43b88cbad44bb7179b37481c2711969dacbf744cf712"
+},
+{
+"curated": [],
+"id": "compute_potential_virial_fit_error",
+"kind": "edge",
+"labels": [
+"compute potential virial fit error",
+"compute_potential_virial_fit_error"
+],
+"uid": "37e91b493c5bf8ebdb8c33f69f86fd14175ec025d32a8f087e3cdaa052809ad4"
 },
 {
 "curated": [
@@ -2716,6 +2859,32 @@
 "zero_bias_retention"
 ],
 "uid": "10e6c7d5ab4087efdea29cf2219771cd55f19a87c50c19ca46756620116344e8"
+},
+{
+"curated": [
+"conductance-relaxation-time",
+"interface-trap-relaxation-time"
+],
+"id": "subthreshold_conductance_tangent_time",
+"kind": "edge",
+"labels": [
+"subthreshold conductance tangent time",
+"subthreshold_conductance_tangent_time"
+],
+"uid": "f98ab6a713f029111d0c63c1017b87934ee2d50296f1e0a49289217cb20495eb"
+},
+{
+"curated": [
+"classification-accuracy",
+"reservoir-classification"
+],
+"id": "evaluate_reservoir_classification",
+"kind": "edge",
+"labels": [
+"evaluate reservoir classification",
+"evaluate_reservoir_classification"
+],
+"uid": "557f968b85bdc45e519be10b1f5648d2d50005c4b18092f0435a0c74768a797a"
 },
 {
 "curated": [

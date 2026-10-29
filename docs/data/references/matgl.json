@@ -1,0 +1,50 @@
+{
+ "key": "matgl",
+ "code": [
+  {
+   "doi": "10.1038/s43588-022-00349-3",
+   "title": "A universal graph deep learning interatomic potential for the periodic table",
+   "authors": [
+    "C. Chen",
+    "S. P. Ong"
+   ],
+   "year": 2022,
+   "journal": "Nature Computational Science"
+  },
+  {
+   "doi": "10.1038/s42256-023-00716-3",
+   "title": "CHGNet as a pretrained universal neural network potential for charge-informed atomistic modelling",
+   "authors": [
+    "B. Deng",
+    "P. Zhong",
+    "K. Jun",
+    "J. Riebesell",
+    "K. Han",
+    "C. J. Bartel",
+    "G. Ceder"
+   ],
+   "year": 2023,
+   "journal": "Nature Machine Intelligence"
+  }
+ ],
+ "methods": [],
+ "applications": [
+  {
+   "doi": "10.1038/s41524-024-01500-6",
+   "title": "Systematic softening in universal machine learning interatomic potentials",
+   "authors": [
+    "B. Deng",
+    "Y. Choi",
+    "P. Zhong",
+    "J. Riebesell",
+    "S. Anand",
+    "Z. Li",
+    "K. Jun",
+    "K. A. Persson",
+    "G. Ceder"
+   ],
+   "year": 2025,
+   "journal": "npj Computational Materials"
+  }
+ ]
+}

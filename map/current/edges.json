@@ -427,6 +427,28 @@
   },
   "uid": "2444a4dc420004700fd7fe2e6b0f76ad69ac8799c7d8eb3ce2186e6ea138045b"
  },
+ "259d51fed7bf820b6edf9878f31f419e8921e05334f10c22e85a2bacc55ee514": {
+  "identity": {
+   "formula": "Equality(Symbol('\\\\epsilon_E'), Function('\\\\epsilon^{rmse}')(Symbol('V'), Symbol('E_{tot}'), Symbol('N', positive=True, integer=True)))",
+   "inputs": [
+    "80a4273845e09207860e06db18d1f1ee5670a9b9c8b1020a99928c872878f901",
+    "cf5a36298543de2027b173b757d38d80b38b66a85d2d3a56f55097e3da0e9a5e"
+   ],
+   "output": "d3f969394ab79173ea4afe796f00bc4b941141aa5f781e90fb3217e945f70755",
+   "outputs": [
+    "d3f969394ab79173ea4afe796f00bc4b941141aa5f781e90fb3217e945f70755"
+   ],
+   "schemes": {}
+  },
+  "meta": {
+   "description": "Energy RMSE of a fitted potential on held-out labels: epsilon_E = epsilon^{rmse}[V, E_tot, N], the root-mean-square over the held-out structures of (E_V - E_tot)/N, with E_V the energy evaluated with the Potential V, E_tot the reference TotalEnergy and N the atom count. Raw RMSE: no per-atom offset is removed. TotalEnergy stands for the family of reference labels over the held-out structures (the family-of-values convention of compute_fc2_finite_displacement), each value carrying its structure in its conditions; the Potential input is the fitted model, evaluated on the same structures. Held-out means not in the training set; the training-set error is a different quantity and is not this edge. An opaque functional over the held-out set, so not sympy-executable; the dimensional gate skips it.",
+   "formula_latex": "\\epsilon_{E} = \\epsilon^{rmse}{\\left(V,E_{tot},N \\right)}",
+   "formula_srepr": "Equality(Symbol('\\\\epsilon_E'), Function('\\\\epsilon^{rmse}')(Symbol('V'), Symbol('E_{tot}'), Symbol('N', positive=True, integer=True)))",
+   "name": "compute_potential_energy_fit_error",
+   "schemes": {}
+  },
+  "uid": "259d51fed7bf820b6edf9878f31f419e8921e05334f10c22e85a2bacc55ee514"
+ },
  "25e07a60a3f641abc12987675165b1195ea8ed9d7adff7217736c7bdfd824b1a": {
   "identity": {
    "formula": "Equality(Symbol('E_{gap}'), Function('E^{gap}_{KS}')(Symbol('\\\\mathcal{S}'), Symbol('V')))",
@@ -696,6 +718,28 @@
    "schemes": {}
   },
   "uid": "3714b2588a2c9400c356080644dab2fcdf778f5224235d6389519e648f41ab8a"
+ },
+ "37e91b493c5bf8ebdb8c33f69f86fd14175ec025d32a8f087e3cdaa052809ad4": {
+  "identity": {
+   "formula": "Equality(Symbol('\\\\epsilon_W'), Function('\\\\epsilon^{rmse}')(Symbol('V'), Indexed(IndexedBase(Symbol('\\\\sigma')), Symbol('\\\\alpha', integer=True), Symbol('\\\\beta', integer=True)), Symbol('V_{cell}', positive=True), Symbol('N', positive=True, integer=True)))",
+   "inputs": [
+    "183e66d4e443326d2c346a0327cdb125026bd8f6a91a9bb97b61265fcade7e85",
+    "80a4273845e09207860e06db18d1f1ee5670a9b9c8b1020a99928c872878f901"
+   ],
+   "output": "8d85a09e82115bdd601be2ded9450446a9cdbdf0364bc88f421215019d00677a",
+   "outputs": [
+    "8d85a09e82115bdd601be2ded9450446a9cdbdf0364bc88f421215019d00677a"
+   ],
+   "schemes": {}
+  },
+  "meta": {
+   "description": "Virial RMSE of a fitted potential on held-out labels: epsilon_W = epsilon^{rmse}[V, sigma, V_cell, N], the root-mean-square over the six independent components of the held-out structures that carry a reference stress of (W_V - W)/N, with W_V the virial evaluated with the Potential V, W = V_cell sigma the reference virial from the reference Stress sigma (pressure convention), V_cell the cell volume and N the atom count. Raw RMSE on held-out labels. Stress stands for the family of reference labels over the held-out structures (the family-of-values convention of compute_fc2_finite_displacement), each value carrying its structure in its conditions; the Potential input is the fitted model, evaluated on the same structures. Held-out means not in the training set; the training-set error is a different quantity and is not this edge. An opaque functional over the held-out set, so not sympy-executable; the dimensional gate skips it.",
+   "formula_latex": "\\epsilon_{W} = \\epsilon^{rmse}{\\left(V,{\\sigma}_{\\alpha,\\beta},V_{cell},N \\right)}",
+   "formula_srepr": "Equality(Symbol('\\\\epsilon_W'), Function('\\\\epsilon^{rmse}')(Symbol('V'), Indexed(IndexedBase(Symbol('\\\\sigma')), Symbol('\\\\alpha', integer=True), Symbol('\\\\beta', integer=True)), Symbol('V_{cell}', positive=True), Symbol('N', positive=True, integer=True)))",
+   "name": "compute_potential_virial_fit_error",
+   "schemes": {}
+  },
+  "uid": "37e91b493c5bf8ebdb8c33f69f86fd14175ec025d32a8f087e3cdaa052809ad4"
  },
  "37f84c36a5360843374288b336337844eb07c6ca843d1ede38645404f0dde768": {
   "identity": {
@@ -1050,6 +1094,31 @@
   },
   "uid": "5495d20eea478bf7e68e39211a5881ed9e1ba5bb0d8bda8d0b943c03e69a9a6c"
  },
+ "557f968b85bdc45e519be10b1f5648d2d50005c4b18092f0435a0c74768a797a": {
+  "identity": {
+   "formula": "Equality(Symbol('A_cls'), Function('F_RC')(Symbol('G_c')))",
+   "inputs": [
+    "325f09352a8872995fe6ab0a40b9df8780a778389fa0fe00ebcbd9ef7758f4a3"
+   ],
+   "output": "0e10474b38987a0d5d3c77580649f461281a6a587093401a60781aab4bdf219d",
+   "outputs": [
+    "0e10474b38987a0d5d3c77580649f461281a6a587093401a60781aab4bdf219d"
+   ],
+   "schemes": {
+    "method": "reservoir_linear_readout"
+   }
+  },
+  "meta": {
+   "description": "External evaluation of a reservoir's linear-readout classification accuracy, A_cls=F_RC({G}). The ConductanceState input denotes the complete protocol-conditioned family of initial and final conductances across devices, input streams and trials, NOT one scalar. Features X are final-minus-initial conductance changes; Xtilde includes the declared bias feature. Fit W on the declared training data only, then predict held-out labels by the largest sigmoid output with a declared deterministic tie rule and average the correct-label indicator over test examples. The frozen protocol must supply dataset/version, labels, splits, pulse/read/reset encoding, feature units/normalization, bias construction, sigmoid scaling, training algorithm, noise, random draws and aggregation. For inverse-sigmoid/pseudoinverse training, W=S Xtilde^+ with S=sigmoid_inverse(Y); target levels must be finite and strictly inside (0,1), not assumed to be literal binary endpoints. Missing protocol or raw-response provenance prevents a replication claim. This is a formal external-operator contract: the opaque function is dimension-skipped and apply_edge requires an external solve. No simulation implementation, dataset or runnable representation is registered by this edge. A conductance relaxation scalar alone cannot produce this metric.",
+   "formula_latex": "A_{cls} = F_{RC}{\\left(G_{c} \\right)}",
+   "formula_srepr": "Equality(Symbol('A_cls'), Function('F_RC')(Symbol('G_c')))",
+   "name": "evaluate_reservoir_classification",
+   "schemes": {
+    "method": "reservoir_linear_readout"
+   }
+  },
+  "uid": "557f968b85bdc45e519be10b1f5648d2d50005c4b18092f0435a0c74768a797a"
+ },
  "58a959a412e7f92ec955cad34321812f5df453e9db8dcf4f8eb706f109bdf09a": {
   "identity": {
    "formula": "Equality(Symbol('G_c'), Mul(Symbol('P_th'), Symbol('T'), Pow(Symbol('k_B'), Integer(-1)), Symbol('q_e'), exp(Mul(Integer(-1), Pow(Symbol('T'), Integer(-1)), Symbol('\\\\Phi_{Bn}'), Pow(Symbol('k_B'), Integer(-1))))))",
@@ -1093,6 +1162,28 @@
    "schemes": {}
   },
   "uid": "59ae54527b2e735e5408e66eadb81c9f1fa29720ea39207564e388a44cd1b04c"
+ },
+ "617fa87d7443a62e99db43b88cbad44bb7179b37481c2711969dacbf744cf712": {
+  "identity": {
+   "formula": "Equality(Symbol('\\\\epsilon_F'), Function('\\\\epsilon^{rmse}')(Symbol('V'), Indexed(IndexedBase(Symbol('F^{at}')), Symbol('i', integer=True), Symbol('\\\\alpha', integer=True))))",
+   "inputs": [
+    "80a4273845e09207860e06db18d1f1ee5670a9b9c8b1020a99928c872878f901",
+    "9c5a2fdedab6b668ccf5f2043fb4c29a982bcde5063fd6ac8633ee2c7858ecbf"
+   ],
+   "output": "833c3db3fbd145b45ed051cd6eaf782d7555518a0634f524b9ceee7fe49245e0",
+   "outputs": [
+    "833c3db3fbd145b45ed051cd6eaf782d7555518a0634f524b9ceee7fe49245e0"
+   ],
+   "schemes": {}
+  },
+  "meta": {
+   "description": "Force RMSE of a fitted potential on held-out labels: epsilon_F = epsilon^{rmse}[V, F^{at}], the root-mean-square over every Cartesian component of every atom of the held-out structures of the difference between the force evaluated with the Potential V and the reference Forces F^{at}. Raw RMSE on held-out labels. Forces stands for the family of reference labels over the held-out structures (the family-of-values convention of compute_fc2_finite_displacement), each value carrying its structure in its conditions; the Potential input is the fitted model, evaluated on the same structures. Held-out means not in the training set; the training-set error is a different quantity and is not this edge. An opaque functional over the held-out set, so not sympy-executable; the dimensional gate skips it.",
+   "formula_latex": "\\epsilon_{F} = \\epsilon^{rmse}{\\left(V,{F^{at}}_{i,\\alpha} \\right)}",
+   "formula_srepr": "Equality(Symbol('\\\\epsilon_F'), Function('\\\\epsilon^{rmse}')(Symbol('V'), Indexed(IndexedBase(Symbol('F^{at}')), Symbol('i', integer=True), Symbol('\\\\alpha', integer=True))))",
+   "name": "compute_potential_force_fit_error",
+   "schemes": {}
+  },
+  "uid": "617fa87d7443a62e99db43b88cbad44bb7179b37481c2711969dacbf744cf712"
  },
  "646fa795ffeed1fc8935994dd17159062c596fc0952ebb2a3159b3a1a74946fa": {
   "identity": {
@@ -2500,6 +2591,28 @@
   },
   "uid": "ccd6d5886ed78dc12e752ceb9d573aba2e79cdb99b147ee186abdbf16f4d11a2"
  },
+ "cdd7b5cc99b5cc279c21df1c1e6b179a7eafb368b4b5f1d154fbd30d64fa8aef": {
+  "identity": {
+   "formula": "Equality(Symbol('f_{\\\\sigma}'), Function('f^{exc}')(Function('V')(Symbol('\\\\{u\\\\}')), Symbol('r')))",
+   "inputs": [
+    "12cde23e9a333fdd03313c4cdbd82d51033f9bb3bd505466a8db5360faf166b4",
+    "80a4273845e09207860e06db18d1f1ee5670a9b9c8b1020a99928c872878f901"
+   ],
+   "output": "e382fb86bf6c620d5af35954c8f189650ee0ca02dc3c389ed13cb533be8b76d9",
+   "outputs": [
+    "e382fb86bf6c620d5af35954c8f189650ee0ca02dc3c389ed13cb533be8b76d9"
+   ],
+   "schemes": {}
+  },
+  "meta": {
+   "description": "Fraction of one MD run's uncertainty checks at which the committee force spread exceeds a threshold sigma: f_sigma = f^{exc}[V, r(t)]. The Potential input stands for the committee of M members (the family-of-values convention: M and each member's sha256 ride in the value's conditions). The Trajectory is propagated by one member, the driving member (a condition); forces from every member are evaluated on its frames at each check. At each check the largest over atoms of the per-atom spread sqrt(sum over x, y, z of the committee variance of the force component), the population variance (divided by M) over all M members, is compared with sigma (eV/A); f_sigma is the fraction of checks above it. As a maximum over atoms the value grows with the atom count at a fixed per-atom error distribution; the starting structure (configuration uid, or the cell, composition and positions), the ensemble and time step, the random seed (initial velocities, thermostat noise), the steps run before the checked run, sigma, the check interval and the MD steps are conditions too. Opaque as a closed form, so not sympy-executable; the dimensional gate skips it (the output is DIMENSIONLESS, in [0, 1]).",
+   "formula_latex": "f_{\\sigma} = f^{exc}{\\left(V{\\left(\\{u\\} \\right)},r \\right)}",
+   "formula_srepr": "Equality(Symbol('f_{\\\\sigma}'), Function('f^{exc}')(Function('V')(Symbol('\\\\{u\\\\}')), Symbol('r')))",
+   "name": "compute_potential_uncertainty_exceedance",
+   "schemes": {}
+  },
+  "uid": "cdd7b5cc99b5cc279c21df1c1e6b179a7eafb368b4b5f1d154fbd30d64fa8aef"
+ },
  "ce45fb09bf9c3f8076a2064b90853e163f80b20a3f5c7506af913c560accbc53": {
   "identity": {
    "formula": "Equality(Indexed(IndexedBase(Symbol('e')), Symbol('\\\\mathbf{q}'), Symbol('\\\\nu', integer=True)), Mul(Symbol('\\\\hbar', positive=True), Add(Function('n_{BE}')(Mul(Pow(Symbol('T', positive=True), Integer(-1)), Symbol('\\\\hbar', positive=True), Pow(Symbol('k_B', positive=True), Integer(-1)), Indexed(IndexedBase(Symbol('\\\\omega')), Symbol('\\\\mathbf{q}'), Symbol('\\\\nu', integer=True)))), Rational(1, 2)), Indexed(IndexedBase(Symbol('\\\\omega')), Symbol('\\\\mathbf{q}'), Symbol('\\\\nu', integer=True))))",
@@ -3137,6 +3250,34 @@
    "schemes": {}
   },
   "uid": "f4a8562c1bf037775616e93ace8d78be9cda7338810339c51a41a2662c756079"
+ },
+ "f98ab6a713f029111d0c63c1017b87934ee2d50296f1e0a49289217cb20495eb": {
+  "identity": {
+   "formula": "Equality(Symbol('tau_G'), Mul(Symbol('tau_it'), Pow(log(Mul(Symbol('G_c'), Pow(Symbol('G_eq'), Integer(-1)))), Integer(-1))))",
+   "inputs": [
+    "325f09352a8872995fe6ab0a40b9df8780a778389fa0fe00ebcbd9ef7758f4a3",
+    "d9e8d6ad94a3bd0629bc56fd2fbc5a6555e2866c3ff667aefd714ad75a27a491"
+   ],
+   "output": "72bddad977642e53ed5cc05d9eec037d77a96a2c3232db16f5f4b4eaaff0b971",
+   "outputs": [
+    "72bddad977642e53ed5cc05d9eec037d77a96a2c3232db16f5f4b4eaaff0b971"
+   ],
+   "schemes": {
+    "criterion": "tangent_to_zero",
+    "regime": "subthreshold_single_mode"
+   }
+  },
+  "meta": {
+   "description": "Initial tangent time of raw conductance extrapolated to zero: tau_G = -G_c/Gdot(0) = tau_it/ln(G_c/G_eq). For one trap-occupation departure u(t)=u(0) exp(-t/tau_it) and constant exponential subthreshold transduction, G(t)=G_eq exp[A exp(-t/tau_it)], A=ln(G_c/G_eq). G_c is the conductance immediately after programming transients; G_eq is the fully equilibrated conductance at the SAME fixed read biases and temperature. Valid only for finite tau_it>0 and G_c>G_eq>0, a single first-order occupation mode, constant transduction and transport prefactor, and no unaccounted additive current. Both conductances must use the same unit (canonical siemens); both times use canonical ps (1 s is 1e12). A pre-pulse baseline or a last observed point need not be equilibrium. This is NOT a global exponential fit of G, a 1/e crossing, a tangent to G_eq, or a defect-migration relation. The tangent to G_eq would have the extra factor (1-G_eq/G_c). Even one occupation mode gives a local raw-G tangent time growing as exp(t/tau_it), so slowing conductance decay alone does not prove distributed trap times. A trap-time distribution or an arbitrary fitted effective time is outside this edge's regime. These physical validity restrictions are documented, not runtime-enforced by apply_edge.",
+   "formula_latex": "\\tau_{G} = \\frac{\\tau_{it}}{\\log{\\left(\\frac{G_{c}}{G_{eq}} \\right)}}",
+   "formula_srepr": "Equality(Symbol('tau_G'), Mul(Symbol('tau_it'), Pow(log(Mul(Symbol('G_c'), Pow(Symbol('G_eq'), Integer(-1)))), Integer(-1))))",
+   "name": "subthreshold_conductance_tangent_time",
+   "schemes": {
+    "criterion": "tangent_to_zero",
+    "regime": "subthreshold_single_mode"
+   }
+  },
+  "uid": "f98ab6a713f029111d0c63c1017b87934ee2d50296f1e0a49289217cb20495eb"
  },
  "fd0c5bbfc433db7ed55562ae46c06b3880389135fa84225a10c0687269251352": {
   "identity": {

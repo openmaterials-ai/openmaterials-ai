@@ -12,6 +12,9 @@ SYMBOLS: dict[str, str] = {
     "Stress": r"\sigma",
     "MagneticMoment": r"m^{spin}",
     "BandGap": r"E_{gap}",
+    "PotentialEnergyFitError": r"\epsilon_E",
+    "PotentialForceFitError": r"\epsilon_F",
+    "PotentialVirialFitError": r"\epsilon_W",
 }
 
 DFT_GROUND_STATE = Domain(
@@ -25,7 +28,8 @@ DFT_GROUND_STATE = Domain(
             "Ground state",
             "First-principles ground state: the total energy, forces, and "
             "stress a DFT engine computes for a structure under a chosen "
-            "potential.",
+            "potential, and the error of a fitted potential against those "
+            "labels.",
         ),
     ),
     representation_package=dft_rep,

@@ -63,7 +63,7 @@ OUTPUT = "HeatCapacityConstantP"
 OPERATOR_UID = "79a11e58595c8b262c104330dcfc622f13a787da6bae856cf4f40b57a6a93639"
 FORMULA_SHA = "97ed2e0d3a11efad01a3ab0017d21be3da3009446b0b9364673fad4b8fdcb0f1"
 OUTPUT_UID = "08057e4554a3420c933329b3821de9295e2b5950191e23cafe310b0a15adc7b6"
-CATALOG_ID_SHA = "21869395fbf9688ad8a3c8f042f46c8e185579789779601ad1b9fbfa8323c9ac"
+CATALOG_ID_SHA = "7f60064e1533914c046b01c7b8723281def520baae4247b452e867f578c2ce8b"
 CP_SUBJECTS = frozenset({("operator", OPERATOR), ("node", OUTPUT)})
 BASELINE_OPERATORS = frozenset({
     "compute_entropy", "compute_free_energy", "compute_heat_capacity",
@@ -142,10 +142,10 @@ BASELINE_PAIRS = [{'module': 'OMAIPhyslibSemantics', 'name': 'OMAI.PhyslibBridge
  {'module': 'OMAIPhyslibSemantics', 'name': 'OMAI.PhyslibBridge.totalThermalConductivity'}]
 # Scientific protocol, golden vectors, historical package and seven retained proofs.
 PRESERVED_HASHES = {
-    "map/log.jsonl": "d99b6838c8de9498f29c25538b3b1ce5f290e2d90eea37d7c5b4fdf4df649c93",
-    "docs/data/version.json": "2ddd8ae629d09a6a0060e9a1cd56b4f142abe6f39196aa8b09775eb725d72509",
+    "map/log.jsonl": "ec56c9b7511eb46f7635c1f4628f640c57adc046ca1d36619d0ca271a33e5900",
+    "docs/data/version.json": "a697596ba27a5f537c2ec90ee7722b4834964935ccc446f0d8909d21c5692934",
     "omai/operator/identity.py": "e8be3c3b86521e19c9ed1a855f33d2b187bbc2fb9158f269ae219855295ef9f0",
-    "omai/lineages.py": "ca7e3e429a39e1713082511f12b03f567e20c4934eefae4c4b3bcd5135c3184c",
+    "omai/lineages.py": "3266c424e4920d11bd54a1e8f0fad0fc8aeeb8a2dcfb4c2dbb3da66a61a5c552",
     "omai/schema.py": "69ee90c2eebf6f891abcc9cc31351b885d23a6f3a6d37e46b810959474bd2f36",
     "omai/vectors/configurations.json": "920e393a2646cb260eca44adf36a494180d5ab0f283dc4f234778c19ee4d9fed",
     "omai/vectors/lineage_ids.json": "cfc3fabec94b6f6316151338de57e6cd520c69ae671cc0e3eb546f3bd7047b35",
@@ -205,7 +205,7 @@ def _assert_selected_scope(payload):
     assert _subjects(payload) == BASELINE_SUBJECTS | CP_SUBJECTS, "unique proof subjects changed"
     assert {row["id"] for row in payload["bindings"]} == BASELINE_BINDINGS | {BINDING_ID}
     expected = {
-        "nodes_total": 129, "operators_total": 127,
+        "nodes_total": 136, "operators_total": 133,
         "operators_compiled": 14, "nodes_compiled": 15,
         "nodes_compiled_outputs": 14, "nodes_compiled_interpretations": 1,
         "bindings_total": 22, "compiled_bridges": 17, "source_correspondences": 5,
@@ -368,7 +368,7 @@ def evidence_copy(tmp_path):
 
 def test_response_unit_catalog_identity_projection_and_cp_pins():
     inventory = catalog_inventory()
-    assert (len(inventory["nodes"]), len(inventory["operators"])) == (129, 127)
+    assert (len(inventory["nodes"]), len(inventory["operators"])) == (136, 133)
     projection = {
         "nodes": [{key: row[key] for key in ("id", "uid")} for row in inventory["nodes"]],
         "operators": [{key: row[key] for key in ("id", "uid", "formula_sha256")}
@@ -673,7 +673,7 @@ def test_response_integration_current_record_covers_all_sources(response_payload
     }
     source_modules = sorted(
         ".".join(path.relative_to(PACKAGE).with_suffix("").parts)
-        for path in PACKAGE.rglob("*.lean") if ".lake" not in path.relative_to(PACKAGE).parts
+        for path in PACKAGE.glob("*.lean")
     )
     assert record["axiom_audit"]["scope"] == "source_modules_union_namespace_v1"
     assert record["axiom_audit"]["source_modules"] == source_modules

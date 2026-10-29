@@ -17,6 +17,11 @@ Node table:
   MagneticMoment magnetic_moment  MAGNETIC_MOMENT (L^2 I)    (i,)           per-site, mu_B
   BandGap        band_gap         ENERGY                     ()             KS eigenvalue gap, eV
 
+PotentialEnergyFitError (ENERGY, eV/atom), PotentialForceFitError (FORCE, eV/A)
+and PotentialVirialFitError (ENERGY, eV/atom), each its own quantity tag and
+scalar: the held-out RMSE of a fitted Potential against TotalEnergy, Forces and
+Stress respectively.
+
 Deferred v1 candidates (from the QE scan's seven new-node set), each with why:
 
   * ChargeDensity: an observable in principle (Hohenberg-Kohn), but needs a
@@ -150,6 +155,66 @@ BAND_GAP = ObservableSpace(
     ),
 )
 
+# Held-out errors of a fitted potential against the three reference labels
+# above, one node per label (one dimension and one value per node).
+_FIT_SCOPE = (
+    "It is the error on the held-out labels' distribution: how close the "
+    "potential's values are to the reference method's on held-out "
+    "structures from the same dataset, not a measure of accuracy on "
+    "configurations or properties outside that distribution. Conditions: "
+    "the model form and sha256, the base model it was fine-tuned from (if "
+    "any), the training-set and held-out-set sha256, and the reference "
+    "method's settings hash."
+)
+
+POTENTIAL_ENERGY_FIT_ERROR = ObservableSpace(
+    name="PotentialEnergyFitError",
+    fields=(Field("rmse_E", ENERGY, indices=()),),
+    tier="Ground state",
+    description=(
+        "Energy error of a fitted interatomic potential on held-out "
+        "reference labels: the root-mean-square over the held-out structures "
+        "of (E_V - E_tot)/N in eV/atom, the per-atom difference between the "
+        "energy evaluated with the Potential V and the reference TotalEnergy. "
+        "Raw RMSE: no per-atom offset is removed, so a constant shift between "
+        "the model and the labels counts as error (GPUMD's test-set "
+        "convention; its training-set energy RMSE removes the mean offset and "
+        "is not this node). "
+        + _FIT_SCOPE
+    ),
+)
+
+POTENTIAL_FORCE_FIT_ERROR = ObservableSpace(
+    name="PotentialForceFitError",
+    fields=(Field("rmse_F", FORCE, indices=()),),
+    tier="Ground state",
+    description=(
+        "Force error of a fitted interatomic potential on held-out reference "
+        "labels: the root-mean-square over every Cartesian component of every "
+        "atom of the held-out structures of F_V - F in eV/A, the difference "
+        "between the force evaluated with the Potential V and the reference "
+        "Forces. Raw RMSE on held-out labels. "
+        + _FIT_SCOPE
+    ),
+)
+
+POTENTIAL_VIRIAL_FIT_ERROR = ObservableSpace(
+    name="PotentialVirialFitError",
+    fields=(Field("rmse_W", ENERGY, indices=()),),
+    tier="Ground state",
+    description=(
+        "Virial error of a fitted interatomic potential on held-out reference "
+        "labels: the root-mean-square over the six independent components of "
+        "each held-out structure that carries a reference stress of "
+        "(W_V - W)/N in eV/atom, the per-atom difference between the virial "
+        "evaluated with the Potential V and the reference virial "
+        "W = V_cell sigma, with sigma the reference Stress in its pressure "
+        "convention. Structures without a reference stress are left out. Raw "
+        "RMSE on held-out labels. "
+        + _FIT_SCOPE
+    ),
+)
+
 NODES: tuple[Space, ...] = (
     STRUCTURE,
     TOTAL_ENERGY,
@@ -157,4 +222,7 @@ NODES: tuple[Space, ...] = (
     STRESS,
     MAGNETIC_MOMENT_STATE,
     BAND_GAP,
+    POTENTIAL_ENERGY_FIT_ERROR,
+    POTENTIAL_FORCE_FIT_ERROR,
+    POTENTIAL_VIRIAL_FIT_ERROR,
 )

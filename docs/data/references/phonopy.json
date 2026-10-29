@@ -1,0 +1,136 @@
+{
+ "key": "phonopy",
+ "code": [
+  {
+   "doi": "10.1016/j.scriptamat.2015.07.021",
+   "title": "First principles phonon calculations in materials science",
+   "authors": [
+    "A. Togo",
+    "I. Tanaka"
+   ],
+   "year": 2015,
+   "journal": "Scripta Materialia"
+  },
+  {
+   "doi": "10.7566/JPSJ.92.012001",
+   "title": "First-principles Phonon Calculations with Phonopy and Phono3py",
+   "authors": [
+    "A. Togo"
+   ],
+   "year": 2023,
+   "journal": "Journal of the Physical Society of Japan"
+  }
+ ],
+ "methods": [],
+ "applications": [
+  {
+   "doi": "10.1103/PhysRevB.92.144308",
+   "title": "Lattice dynamics and vibrational spectra of the orthorhombic, tetragonal, and cubic phases of methylammonium lead iodide",
+   "authors": [
+    "F. Brivio",
+    "J. M. Frost",
+    "J. M. Skelton",
+    "A. J. Jackson",
+    "O. J. Weber",
+    "M. T. Weller",
+    "A. R. Goñi",
+    "A. M. A. Leguy",
+    "P. R. F. Barnes",
+    "A. Walsh"
+   ],
+   "year": 2015,
+   "journal": "Physical Review B"
+  },
+  {
+   "doi": "10.1039/c6cp03474h",
+   "title": "Dynamic disorder, phonon lifetimes, and the assignment of modes to the vibrational spectra of methylammonium lead halide perovskites",
+   "authors": [
+    "A. M. A. Leguy",
+    "A. R. Goñi",
+    "J. M. Frost",
+    "J. Skelton",
+    "F. Brivio",
+    "X. Rodríguez-Martínez",
+    "O. J. Weber",
+    "A. Pallipurath",
+    "M. I. Alonso",
+    "M. Campoy-Quiles",
+    "M. T. Weller",
+    "J. Nelson",
+    "A. Walsh",
+    "P. R. F. Barnes"
+   ],
+   "year": 2016,
+   "journal": "Physical Chemistry Chemical Physics"
+  },
+  {
+   "doi": "10.1126/science.aag0410",
+   "title": "Anomalously low electronic thermal conductivity in metallic vanadium dioxide",
+   "authors": [
+    "S. Lee",
+    "K. Hippalgaonkar",
+    "F. Yang",
+    "J. Hong",
+    "C. Ko",
+    "J. Suh",
+    "K. Liu",
+    "K. Wang",
+    "J. J. Urban",
+    "X. Zhang",
+    "C. Dames",
+    "S. A. Hartnoll",
+    "O. Delaire",
+    "J. Wu"
+   ],
+   "year": 2017,
+   "journal": "Science"
+  },
+  {
+   "doi": "10.1103/PhysRevLett.120.016401",
+   "title": "Double-Weyl Phonons in Transition-Metal Monosilicides",
+   "authors": [
+    "T. Zhang",
+    "Z. Song",
+    "A. Alexandradinata",
+    "H. Weng",
+    "C. Fang",
+    "L. Lu",
+    "Z. Fang"
+   ],
+   "year": 2018,
+   "journal": "Physical Review Letters"
+  },
+  {
+   "doi": "10.1126/sciadv.aav0129",
+   "title": "High thermal conductivity of high-quality monolayer boron nitride and its thermal expansion",
+   "authors": [
+    "Q. Cai",
+    "D. Scullion",
+    "W. Gan",
+    "A. Falin",
+    "S. Zhang",
+    "K. Watanabe",
+    "T. Taniguchi",
+    "Y. Chen",
+    "E. J. G. Santos",
+    "L. H. Li"
+   ],
+   "year": 2019,
+   "journal": "Science Advances"
+  },
+  {
+   "doi": "10.1016/j.nanoen.2020.105716",
+   "title": "Exceptional piezoelectricity, high thermal conductivity and stiffness and promising photocatalysis in two-dimensional MoSi2N4 family confirmed by first-principles",
+   "authors": [
+    "B. Mortazavi",
+    "B. Javvaji",
+    "F. Shojaei",
+    "T. Rabczuk",
+    "A. V. Shapeev",
+    "X. Zhuang"
+   ],
+   "year": 2021,
+   "journal": "Nano Energy"
+  }
+ ]
+}

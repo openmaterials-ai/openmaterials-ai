@@ -1,0 +1,58 @@
+{
+ "key": "rxn-network",
+ "code": [
+  {
+   "doi": "10.1038/s41467-021-23339-x",
+   "title": "A graph-based network for predicting chemical reaction pathways in solid-state materials synthesis",
+   "authors": [
+    "M. J. McDermott",
+    "S. S. Dwaraknath",
+    "K. A. Persson"
+   ],
+   "year": 2021,
+   "journal": "Nature Communications"
+  }
+ ],
+ "methods": [],
+ "applications": [
+  {
+   "doi": "10.1021/jacs.1c06229",
+   "title": "Selectivity in Yttrium Manganese Oxide Synthesis via Local Chemical Potentials in Hyperdimensional Phase Space",
+   "authors": [
+    "P. K. Todd",
+    "M. J. McDermott",
+    "C. L. Rom",
+    "A. A. Corrao",
+    "J. J. Denney",
+    "S. S. Dwaraknath",
+    "P. G. Khalifah",
+    "K. A. Persson",
+    "J. R. Neilson"
+   ],
+   "year": 2021,
+   "journal": "Journal of the American Chemical Society"
+  },
+  {
+   "doi": "10.1021/acscentsci.3c01051",
+   "title": "Assessing Thermodynamic Selectivity of Solid-State Reactions for the Predictive Synthesis of Inorganic Materials",
+   "authors": [
+    "M. J. McDermott",
+    "B. C. McBride",
+    "C. E. Regier",
+    "G. T. Tran",
+    "Y. Chen",
+    "A. A. Corrao",
+    "M. C. Gallant",
+    "G. E. Kamm",
+    "C. J. Bartel",
+    "K. W. Chapman",
+    "P. G. Khalifah",
+    "G. Ceder",
+    "J. R. Neilson",
+    "K. A. Persson"
+   ],
+   "year": 2023,
+   "journal": "ACS Central Science"
+  }
+ ]
+}

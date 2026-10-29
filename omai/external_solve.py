@@ -69,7 +69,9 @@ from __future__ import annotations
 
 import hashlib
 import json
+import math
 import re
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
@@ -88,10 +90,13 @@ from omai.store import Store
 __all__ = [
     "REQUEST_VERSION",
     "ExternalSolveRequestError",
+    "ExternalSolveRequestSnapshot",
     "build_request",
     "parse_request",
     "request_id",
+    "snapshot_request",
     "validate_request",
+    "validate_request_snapshot",
 ]
 
 REQUEST_VERSION = 1
@@ -113,6 +118,73 @@ _OUTSIDE_IDENTITY_KEYS = ("request_id", "lineage_id", "execution")
 class ExternalSolveRequestError(Exception):
     """An external-solve request is malformed, tampered, or does not bind
     to the current live map. Raised before any dispatch concept exists."""
+
+
+def _copy_json(value: Any, *, where: str) -> Any:
+    """Detach supported JSON without coercing keys, tuples, or number types."""
+    if type(value) is dict:
+        if not all(type(key) is str for key in value):
+            raise _fail(where, "JSON object keys must be strings")
+        return {key: _copy_json(item, where=where) for key, item in value.items()}
+    if type(value) is list:
+        return [_copy_json(item, where=where) for item in value]
+    if value is None or type(value) in (str, bool, int):
+        return value
+    if type(value) is float and math.isfinite(value):
+        return value
+    raise _fail(where, "request values must be finite JSON values")
+
+
+@dataclass(frozen=True, slots=True, init=False)
+class ExternalSolveRequestSnapshot:
+    """An immutable, shape/hash-checked envelope, NOT a live-map permit.
+
+    Construction detaches all caller state before checking it. The only stored
+    value is immutable JSON; every export is independent, including execution
+    metadata outside identity. Values retain their int/float types and original
+    precision: storage is not identity canonicalization. Use
+    :func:`validate_request_snapshot` for the separate current-map check, and
+    repeat that check when freshness matters at a later handoff.
+    """
+
+    _json: str
+
+    def __init__(self, request: dict[str, Any], *, where: str = "<request>") -> None:
+        try:
+            detached = _copy_json(request, where=where)
+        except RecursionError as exc:
+            raise _fail(where, "request is cyclic or nested too deeply") from exc
+        _check_shape(detached, where=where)
+        _check_hashes(detached, where=where)
+        object.__setattr__(self, "_json", json.dumps(detached, allow_nan=False))
+
+    def to_dict(self) -> dict[str, Any]:
+        """Export fresh mutable wire data, never a view of internal state."""
+        return json.loads(self._json)  # type: ignore[no-any-return]
+
+    @property
+    def request_id(self) -> str:
+        return str(self.to_dict()["request_id"])
+
+    @property
+    def lineage_id(self) -> str:
+        return str(self.to_dict()["lineage_id"])
+
+    @property
+    def map_version(self) -> str:
+        return str(self.to_dict()["map_version"])
+
+
+def snapshot_request(request: dict[str, Any] | ExternalSolveRequestSnapshot, *,
+                     where: str = "<request>") -> ExternalSolveRequestSnapshot:
+    """Receive one detached shape/hash-checked value without needing a map.
+
+    A snapshot does not bypass live-map or consumer capability authorization.
+    This API is usable from installed wheels, which need not ship a map store.
+    """
+    if isinstance(request, ExternalSolveRequestSnapshot):
+        return request
+    return ExternalSolveRequestSnapshot(request, where=where)
 
 
 # --------------------------------------------------------------------------
@@ -170,12 +242,12 @@ def build_request(*, operator: Operator, target: Space, scheme: str,
         "target": {"name": target.name, "uid": node_id(target)},
         "representation": {"scheme": scheme,
                            "discretization": dict(discretization)},
-        "lineage": lineage,
+        "lineage": _copy_json(lineage, where="<request>"),
     }
     request["request_id"] = request_id(request)
-    request["lineage_id"] = lineage_id(lineage)
+    request["lineage_id"] = lineage_id(request["lineage"])
     if execution is not None:
-        request["execution"] = execution
+        request["execution"] = _copy_json(execution, where="<request>")
     _check_shape(request)
     return request
 
@@ -300,10 +372,7 @@ def parse_request(text: str | bytes, *,
         parsed: Any = json.loads(text)
     except json.JSONDecodeError as exc:
         raise _fail(where, f"not valid JSON: {exc}") from exc
-    _check_shape(parsed, where=where)
-    request: dict[str, Any] = parsed
-    _check_hashes(request, where=where)
-    return request
+    return snapshot_request(parsed, where=where).to_dict()
 
 
 # --------------------------------------------------------------------------
@@ -344,7 +413,7 @@ def _downstream_of(edges: dict[str, Any], seeds: list[str]) -> set[str]:
     return reach
 
 
-def validate_request(request: dict[str, Any], *,
+def validate_request(request: dict[str, Any] | ExternalSolveRequestSnapshot, *,
                      store_root: Path | None = None,
                      where: str = "<request>") -> dict[str, Any]:
     """Validate a request against the current live map, fail-closed.
@@ -361,8 +430,30 @@ def validate_request(request: dict[str, Any], *,
     that names a node names the target. Returns a small report; raises
     :class:`ExternalSolveRequestError` on the first failure.
     """
-    _check_shape(request, where=where)
-    _check_hashes(request, where=where)
+    snapshot = validate_request_snapshot(request, store_root=store_root, where=where)
+    value = snapshot.to_dict()
+    return {
+        "request_id": snapshot.request_id,
+        "lineage_id": snapshot.lineage_id,
+        "map_version": snapshot.map_version,
+        "operator_uid": value["operator"]["uid"],
+        "target_uid": value["target"]["uid"],
+    }
+
+
+def validate_request_snapshot(
+    request: dict[str, Any] | ExternalSolveRequestSnapshot, *,
+    store_root: Path | None = None,
+    where: str = "<request>",
+) -> ExternalSolveRequestSnapshot:
+    """Check one stable envelope against the current map and return it.
+
+    Passing a previously checked snapshot still repeats live-map validation;
+    immutable request data does not make a map-version pin perpetually live.
+    The map view is read at exactly the head compared against the request.
+    """
+    snapshot = snapshot_request(request, where=where)
+    request = snapshot.to_dict()
 
     store = Store(store_root or _MAP_ROOT)
     head = store.head
@@ -376,7 +467,7 @@ def validate_request(request: dict[str, Any], *,
         raise _fail(where, f"stale map version {version[:12]}: the live head "
                            f"is {head[:12]}; re-mint the request against it")
 
-    current = store.read()
+    current = store.read(head)
     nodes: dict[str, Any] = current["nodes"]
     edges: dict[str, Any] = current["edges"]
 
@@ -434,10 +525,6 @@ def validate_request(request: dict[str, Any], *,
                                f"not match the target uid "
                                f"{target['uid'][:12]}")
 
-    return {
-        "request_id": request["request_id"],
-        "lineage_id": request["lineage_id"],
-        "map_version": head,
-        "operator_uid": operator["uid"],
-        "target_uid": target["uid"],
-    }
+    if store.head != head:
+        raise _fail(where, "map changed during validation; retry against the live head")
+    return snapshot

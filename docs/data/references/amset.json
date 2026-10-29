@@ -1,0 +1,73 @@
+{
+ "key": "amset",
+ "code": [
+  {
+   "doi": "10.1038/s41467-021-22440-5",
+   "title": "Efficient calculation of carrier scattering rates from first principles",
+   "authors": [
+    "A. M. Ganose",
+    "J. Park",
+    "A. Faghaninia",
+    "R. Woods-Robinson",
+    "K. A. Persson",
+    "A. Jain"
+   ],
+   "year": 2021,
+   "journal": "Nature Communications"
+  }
+ ],
+ "methods": [],
+ "applications": [
+  {
+   "doi": "10.1002/adfm.202108532",
+   "title": "Accelerated Discovery and Design of Ultralow Lattice Thermal Conductivity Materials Using Chemical Bonding Principles",
+   "authors": [
+    "J. He",
+    "Y. Xia",
+    "W. Lin",
+    "K. Pal",
+    "Y. Zhu",
+    "M. G. Kanatzidis",
+    "C. Wolverton"
+   ],
+   "year": 2021,
+   "journal": "Advanced Functional Materials"
+  },
+  {
+   "doi": "10.1038/s41524-021-00521-9",
+   "title": "Prediction of high thermoelectric performance in the low-dimensional metal halide Cs3Cu2I5",
+   "authors": [
+    "Y. K. Jung",
+    "I. T. Han",
+    "Y. C. Kim",
+    "A. Walsh"
+   ],
+   "year": 2021,
+   "journal": "npj Computational Materials"
+  },
+  {
+   "doi": "10.1021/acsenergylett.2c01464",
+   "title": "Band versus Polaron: Charge Transport in Antimony Chalcogenides",
+   "authors": [
+    "X. Wang",
+    "A. M. Ganose",
+    "S. R. Kavanagh",
+    "A. Walsh"
+   ],
+   "year": 2022,
+   "journal": "ACS Energy Letters"
+  },
+  {
+   "doi": "10.1103/PhysRevApplied.19.044052",
+   "title": "Strain-Induced Medium-Temperature Thermoelectric Performance of Cu 4 Ti Se 4 : The Role of Four-Phonon Scattering",
+   "authors": [
+    "X. K. Chen",
+    "E. M. Zhang",
+    "D. Wu",
+    "K. Q. Chen"
+   ],
+   "year": 2023,
+   "journal": "Physical Review Applied"
+  }
+ ]
+}

@@ -370,8 +370,12 @@ def test_map_has_one_hundred_nodes_and_fifteen_tiers():
     # nodes and the Diffusion tier's MigrationBarrier (2026-10-05). +1 for
     # InterfaceConductance[transport_model=nemd] (Molecular dynamics, no new tier).
     # +2 for the cure-kinetics domain's nodes in the new Cure kinetics tier, the
-    # 18th tier.
-    assert len(g["nodes"]) == 129
+    # 18th tier. +3 for the potential fit errors (Ground state, no new tier).
+    # +1 for PotentialUncertaintyExceedance[method=committee_force_spread]
+    # (Molecular dynamics, no new tier). +3 for ConductanceRelaxationTime,
+    # InterfaceTrapRelaxationTime and ClassificationAccuracy (Analog device
+    # metrology, no new tier).
+    assert len(g["nodes"]) == 136
     assert len(g["tiers"]) == 18
 
 
@@ -420,7 +424,7 @@ def test_pycalphad_is_a_representation_and_the_config_thermo_scan_added_three_re
     from omai.map_data import build_codes
 
     codes = build_codes(DOMAINS)
-    assert len(codes) == 33
+    assert len(codes) == 34  # ngspice (2026-10-28) is the 34th
     assert "materialscodegraph" not in codes
     assert "xtb" in codes
     assert "mescal" not in codes

@@ -1,0 +1,92 @@
+{
+ "key": "fairchem",
+ "code": [
+  {
+   "doi": "10.1021/acscatal.0c04525",
+   "title": "Open Catalyst 2020 (OC20) Dataset and Community Challenges",
+   "authors": [
+    "L. Chanussot",
+    "A. Das",
+    "S. Goyal",
+    "T. Lavril",
+    "M. Shuaibi",
+    "M. Riviere",
+    "K. Tran",
+    "J. Heras-Domingo",
+    "C. Ho",
+    "W. Hu",
+    "A. Palizhati",
+    "A. Sriram",
+    "B. Wood",
+    "J. Yoon",
+    "D. Parikh",
+    "C. L. Zitnick",
+    "Z. Ulissi"
+   ],
+   "year": 2021,
+   "journal": "ACS Catalysis"
+  },
+  {
+   "doi": "10.1021/acscatal.2c05426",
+   "title": "The Open Catalyst 2022 (OC22) Dataset and Challenges for Oxide Electrocatalysts",
+   "authors": [
+    "R. Tran",
+    "J. Lan",
+    "M. Shuaibi",
+    "B. M. Wood",
+    "S. Goyal",
+    "A. Das",
+    "J. Heras-Domingo",
+    "A. Kolluru",
+    "A. Rizvi",
+    "N. Shoghi",
+    "A. Sriram",
+    "F. Therrien",
+    "J. Abed",
+    "O. Voznyy",
+    "E. H. Sargent",
+    "Z. Ulissi",
+    "C. L. Zitnick"
+   ],
+   "year": 2023,
+   "journal": "ACS Catalysis"
+  },
+  {
+   "doi": "10.48550/arXiv.2410.12771",
+   "title": "Open Materials 2024 (OMat24) Inorganic Materials Dataset and Models",
+   "authors": [
+    "L. Barroso-Luque",
+    "M. Shuaibi",
+    "X. Fu",
+    "B. M. Wood",
+    "M. Dzamba",
+    "M. Gao",
+    "A. Rizvi",
+    "C. L. Zitnick",
+    "Z. W. Ulissi"
+   ],
+   "year": 2024,
+   "journal": "arXiv"
+  }
+ ],
+ "methods": [],
+ "applications": [
+  {
+   "doi": "10.1038/s41524-023-01121-5",
+   "title": "AdsorbML: a leap in efficiency for adsorption energy calculations using generalizable machine learning potentials",
+   "authors": [
+    "J. Lan",
+    "A. Palizhati",
+    "M. Shuaibi",
+    "B. M. Wood",
+    "B. Wander",
+    "A. Das",
+    "M. Uyttendaele",
+    "C. L. Zitnick",
+    "Z. W. Ulissi"
+   ],
+   "year": 2023,
+   "journal": "npj Computational Materials"
+  }
+ ]
+}

@@ -13,9 +13,9 @@
   var REPO = 'https://github.com/openmaterials-ai/openmaterials-ai';
   var BLOB = REPO + '/blob/main/';
   // Static fallback, shown until data/version.json answers (or if it cannot be read).
-  var VERSION = '61a981c02604';
+  var VERSION = '45be98afae7c';
 
-  var NAV = [['Map', 'map/'], ['Playground', 'play/'], ['Guide', 'guide/'], ['Document', 'document/']];
+  var NAV = [['Map', 'map/'], ['Codes', 'codes/'], ['Playground', 'play/'], ['Guide', 'guide/'], ['Document', 'document/']];
   // The nav item each section marks with aria-current: Map covers the three map views.
   var ACTIVE = { 'map/': 'map/', 'map-3d/': 'map/', 'map-trace/': 'map/', 'play/': 'play/', 'guide/': 'guide/', 'document/': 'document/' };
   var FOOTER = [

@@ -1,0 +1,44 @@
+{
+ "key": "xtb",
+ "code": [
+  {
+   "doi": "10.1021/acs.jctc.8b01176",
+   "title": "GFN2-xTB─An Accurate and Broadly Parametrized Self-Consistent Tight-Binding Quantum Chemical Method with Multipole Electrostatics and Density-Dependent Dispersion Contributions",
+   "authors": [
+    "C. Bannwarth",
+    "S. Ehlert",
+    "S. Grimme"
+   ],
+   "year": 2019,
+   "journal": "Journal of Chemical Theory and Computation"
+  },
+  {
+   "doi": "10.1002/wcms.1493",
+   "title": "Extended tight‐binding quantum chemistry methods",
+   "authors": [
+    "C. Bannwarth",
+    "E. Caldeweyher",
+    "S. Ehlert",
+    "A. Hansen",
+    "P. Pracht",
+    "J. Seibert",
+    "S. Spicher",
+    "S. Grimme"
+   ],
+   "year": 2020,
+   "journal": "WIREs Computational Molecular Science"
+  }
+ ],
+ "methods": [
+  {
+   "doi": "10.1021/acs.jctc.9b00143",
+   "title": "Exploration of Chemical Compound, Conformer, and Reaction Space with Meta-Dynamics Simulations Based on Tight-Binding Quantum Chemical Calculations",
+   "authors": [
+    "S. Grimme"
+   ],
+   "year": 2019,
+   "journal": "Journal of Chemical Theory and Computation"
+  }
+ ],
+ "applications": []
+}

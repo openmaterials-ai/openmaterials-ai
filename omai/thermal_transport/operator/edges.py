@@ -74,6 +74,8 @@ from omai.thermal_transport.operator.nodes import (
     HEAT_CAPACITY_PIMD,
     # Enhanced-sampling free energy (Cookbook Slice 2, PLUMED, record 216)
     POTENTIAL_OF_MEAN_FORCE,
+    # Committee force-spread exceedance (NEP active learning)
+    POTENTIAL_UNCERTAINTY_EXCEEDANCE,
 )
 
 
@@ -1792,6 +1794,46 @@ sample_pmf = Operator(
 )
 
 
+# ---------------------------------------------------------------------------
+# Committee force-spread exceedance (NEP active learning). One producing edge
+# from the Potential (the committee is a set of Potentials) and the MD
+# Trajectory it is evaluated on. An opaque functional of the committee and the
+# sampled positions, so not sympy-executable; the dimensional gate skips it,
+# as it does sample_pmf.
+# ---------------------------------------------------------------------------
+
+_f_sigma = sp.Symbol(r"f_{\sigma}")
+_f_exc_fn = sp.Function("f^{exc}")
+
+compute_potential_uncertainty_exceedance = Operator(
+    name="compute_potential_uncertainty_exceedance",
+    inputs=(POTENTIAL, TRAJECTORY),
+    outputs=(POTENTIAL_UNCERTAINTY_EXCEEDANCE,),
+    formula=sp.Eq(_f_sigma, _f_exc_fn(_V_pot(_u_set), _r_traj_arg)),
+    is_executable_in_sympy_override=False,
+    description=(
+        "Fraction of one MD run's uncertainty checks at which the committee "
+        "force spread exceeds a threshold sigma: f_sigma = f^{exc}[V, r(t)]. "
+        "The Potential input stands for the committee of M members (the "
+        "family-of-values convention: M and each member's sha256 ride in the "
+        "value's conditions). The Trajectory is propagated by one member, the "
+        "driving member (a condition); forces from every member are evaluated "
+        "on its frames at each check. At each check the largest over atoms of "
+        "the per-atom spread sqrt(sum over x, y, z of the committee variance "
+        "of the force component), the population variance (divided by M) over "
+        "all M members, is compared with sigma (eV/A); f_sigma is the "
+        "fraction of checks above it. As a maximum over atoms the value grows "
+        "with the atom count at a fixed per-atom error distribution; the "
+        "starting structure (configuration uid, or the cell, composition and "
+        "positions), the ensemble and time step, the random seed (initial "
+        "velocities, thermostat noise), the steps run before the checked run, "
+        "sigma, the check interval and the MD steps are conditions too. "
+        "Opaque as a closed form, so not sympy-executable; the dimensional "
+        "gate skips it (the output is DIMENSIONLESS, in [0, 1])."
+    ),
+)
+
+
 EDGES: tuple[Operator, ...] = (
     provide_potential,
     provide_temperature,
@@ -1854,4 +1896,6 @@ EDGES: tuple[Operator, ...] = (
     sample_quantum_heat_capacity,
     # Enhanced-sampling free energy (Cookbook Slice 2, PLUMED, record 217)
     sample_pmf,
+    # Committee force-spread exceedance (NEP active learning)
+    compute_potential_uncertainty_exceedance,
 )
