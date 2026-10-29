@@ -383,6 +383,108 @@
       }
     },
     {
+      "id": "boltzmann-electronic-transport",
+      "targets": [
+        {
+          "kind": "node",
+          "id": "ElectricalConductivity[carrier=electronic]",
+          "uid": "c4a81f649b3964aed4d4b3c48dfec4f252958c9560332286e2105b175794144b"
+        },
+        {
+          "kind": "node",
+          "id": "ElectronicThermalConductivity",
+          "uid": "960b38ae04ecc9fbaacb02d9ae832f15e84b8cac0563e7f6a62ddf32c61d725c"
+        },
+        {
+          "kind": "node",
+          "id": "SeebeckCoefficient",
+          "uid": "80778c5d6cb9f0d1dd23d5c6cd6059acea161892532ce7c581c7477257debf02"
+        },
+        {
+          "kind": "operator",
+          "id": "compute_electronic_conductivity",
+          "uid": "9fc03548d4ca70a6634ed22f93f7efb198f00c48c8c8b0bd94b2b37d7f73c456",
+          "formula_sha256": "2de7ab9fcfdde2fac6c5e3ab0e88316483e11a22ae90687e08aa8897908580e0"
+        },
+        {
+          "kind": "operator",
+          "id": "compute_electronic_thermal_conductivity",
+          "uid": "fe7f863a4325b44bf1f15e1b1f2521d7ec03c5c3bd0efa796998b12b6975f1e3",
+          "formula_sha256": "7ffb8ea9b51164875b7f3eaa724d017c8c846b3fd22f4da0befa6169596c9586"
+        },
+        {
+          "kind": "operator",
+          "id": "compute_seebeck",
+          "uid": "8514fb3e8586db31ec55ec353254d206a41722760541644b2b5c08f770716a81",
+          "formula_sha256": "75307432c842b2c58ffc978745dd0992e89936a44fab7dc40bb06a24a887b939"
+        }
+      ],
+      "relation": "conditional",
+      "statement": "The producers are interpreted as BoltzTraP2's Onsager coefficients on a finite energy grid: with weights w_b >= 0 (the diagonal transport distribution times the Fermi window -df/dE times the bin width), energies E_b and L_k = sum_b w_b (E_b - mu)^k, sigma = e^2 L_0, S = -(L_1/L_0)/(e T) and kappa_e = (L_2 - L_1^2/L_0)/T. At T > 0 the electronic thermal conductivity is nonnegative and vanishes exactly when every state with nonzero weight has one energy. For a window with L_0 > 0, e != 0, T > 0 and any lattice conductivity kappa_l > 0, these coefficients are the S, sigma, kappa_l and kappa_e fields of a Physlib ThermoelectricMaterial. When L_0 L_2 - L_1^2 > 0 and L_1 != 0, every Physlib material carrying these S, sigma and kappa_e has figure of merit zT = sigma S^2 T/(kappa_l + kappa_e) strictly below L_1^2/(L_0 L_2 - L_1^2), the squared mean over the variance of E - mu in the transport window (the Mahan-Sofo bound), and materials with small enough kappa_l come within any eps > 0 of it. For the continuum kinetic integrals K_k = int Sigma_0 (E - mu)^k (-df/dE) dE of an energy-independent transport distribution Sigma_0 at k_B T > 0, the Fermi-window moments give K_0 = Sigma_0, K_1 = 0 and K_2 = Sigma_0 (k_B T)^2 pi^2/3, so the same three formulas give S = 0 and kappa_e = (pi^2/3)(k_B/e)^2 sigma T, the Sommerfeld Lorenz number.",
+      "sources": [
+        {
+          "module": "Physlib.CondensedMatter.Thermoelectric.Basic",
+          "name": "CondensedMatter.ThermoelectricMaterial",
+          "kind": "structure",
+          "line": 102,
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L102"
+        },
+        {
+          "module": "Physlib.CondensedMatter.Thermoelectric.Basic",
+          "name": "CondensedMatter.ThermoelectricMaterial.figureOfMerit",
+          "kind": "def",
+          "line": 158,
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L158"
+        },
+        {
+          "module": "Physlib.CondensedMatter.Thermoelectric.Basic",
+          "name": "CondensedMatter.ThermoelectricMaterial.figureOfMerit_eq",
+          "kind": "lemma",
+          "line": 169,
+          "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L169"
+        }
+      ],
+      "conditions": [
+        "compute_electronic_conductivity, compute_seebeck and compute_electronic_thermal_conductivity are opaque Boltzmann-transport outputs in the catalog. The interpreted definitions are BoltzTraP2's Onsager coefficients evaluated on a finite energy grid, L_k = sum_b w_b (E_b - mu)^k with w_b = Sigma(E_b) (-df/dE)(E_b) Delta E >= 0 and Sigma the diagonal transport distribution sum_k v_k^2 tau_k delta(E - E_k)/(N_k V). The relaxation time enters only through w, so amset's mode-resolved rates and a constant relaxation time are both admitted; one diagonal Cartesian component (or one principal axis) at a time, since off-diagonal weights v_a v_b are not sign definite.",
+        "e > 0 is the elementary charge, so S = -(L_1/L_0)/(e T) is negative when the transport window lies above mu (n-type). A code that writes S = (L_1/L_0)/(q T) with the signed carrier charge q = -e gives the same number. kappa_e is the zero-current electronic thermal conductivity, with -L_1^2/L_0 the Peltier correction; the zero-field L_2/T is a different quantity.",
+        "The Physlib material needs L_0 > 0 (some state with nonzero weight), e != 0 and T > 0 for sigma > 0, and an independently supplied lattice conductivity kappa_l > 0; kappa_e >= 0 is proved, not assumed. The figure of merit is Physlib's zT = sigma S^2 T/(kappa_l + kappa_e).",
+        "The Mahan-Sofo bound needs L_0 L_2 - L_1^2 > 0, which for L_0 > 0 means that the states with nonzero weight do not all share one energy, and L_1 != 0; it is strict for every kappa_l > 0 and sharp as kappa_l -> 0. It bounds the figure of merit by the shape of the transport window alone and says nothing about which window is attainable.",
+        "The Sommerfeld statements are about the continuum kinetic integrals of an energy-independent transport distribution Sigma_0 != 0 at k_B T > 0 (the degenerate limit with a flat Sigma), not about the finite-grid definitions; the Lorenz number (pi^2/3)(k_B/e)^2 is the Sommerfeld value 2.44e-8 W Ohm/K^2 in SI.",
+        "Energies in joules, T in kelvin, e in coulombs; sigma in S/m, S in V/K and kappa_e in W/(m K) when w carries S/(m C^2). BoltzTraP2's hartree energies and amset's unit choices (the catalog description flags its kappa unit as unconfirmed) are conversions outside the theorems."
+      ],
+      "conventions": {
+        "model_scope": "Linearized Boltzmann transport in the relaxation-time form of BoltzTraP2 and amset, interpreted as Onsager moments of a nonnegative transport window on a finite energy grid; anchored to Physlib's ThermoelectricMaterial for the coefficient axioms and the figure of merit.",
+        "component_scope": "One diagonal Cartesian component of sigma, S and kappa_e at a time (nonnegative weights); the full tensors and their off-diagonal components are not covered.",
+        "normalization_basis": "Weights per energy bin, transport distribution per unit volume and per k-point count as BoltzTraP2 defines it; L_0 carries the e^-2 of sigma.",
+        "frequency_convention": "Not applicable; no phonon frequency enters these statements. The phonon-frequency input of the catalog producers acts only through the scattering rates inside w.",
+        "unit_embedding": "Coherent SI: energies and mu in J, T in K, e in C, sigma in S/m, S in V/K, kappa_e in W/(m K). Exact-real statements; floating-point evaluation is not certified.",
+        "held_fixed": "Chemical potential, temperature, the transport window w and the lattice conductivity are fixed inputs; the Mahan-Sofo limit varies kappa_l alone.",
+        "admissibility": "w_b >= 0 for every grid point; T > 0; L_0 > 0 and e != 0 for the Physlib material; L_0 L_2 - L_1^2 > 0 and L_1 != 0 for the bound; Sigma_0 != 0 and k_B T > 0 for the Sommerfeld moments.",
+        "reference_energy": "Energies are measured from the chemical potential mu inside L_k; a common shift of E_b and mu leaves every coefficient unchanged.",
+        "qpoint_weighting": "The k-point sum and its weights are inside the transport distribution Sigma(E); the theorems see only the resulting energy-grid weights w_b."
+      },
+      "remaining_obligations": [
+        "The band structure, its BoltzTraP2 interpolation, the energy grid, the Fermi-window discretization and amset's scattering rates (ADP, IMP, PIE, POP) that build w are not verified.",
+        "Off-diagonal tensor components, Hall and magnetic-field coefficients, bipolar transport with two carrier types and the iterative (beyond relaxation-time) BTE solution are not covered.",
+        "The Sommerfeld moments are proved for a flat transport distribution; the Sommerfeld expansion of a smooth Sigma(E) and its corrections are not.",
+        "Whether the Mahan-Sofo bound is approached by any real band structure is not addressed; the sharpness statement varies the lattice conductivity only."
+      ],
+      "evidence": {
+        "kind": "compiled_bridge",
+        "module": "OMAIPhyslibElectronicTransport",
+        "declarations": [
+          "OMAI.PhyslibBridge.ElectronicTransport.boltzmannKappaE_nonneg_and_eq_zero_iff",
+          "OMAI.PhyslibBridge.ElectronicTransport.exists_boltzmann_thermoelectricMaterial",
+          "OMAI.PhyslibBridge.ElectronicTransport.figureOfMerit_lt_mahanSofo",
+          "OMAI.PhyslibBridge.Sommerfeld.sommerfeld_moments",
+          "OMAI.PhyslibBridge.Sommerfeld.wiedemannFranz_constantTransport"
+        ],
+        "source_path": "lean/bridge/OMAIPhyslibElectronicTransport.lean",
+        "build_record": "lean/bridge/build-evidence.json",
+        "source_sha256": "2609b6b410cb84b120f782adf88b7204e13bcef14ddee5adbce92f5c89805f45"
+      }
+    },
+    {
       "id": "calphad-binary-equilibrium",
       "relation": "local",
       "targets": [
@@ -1229,6 +1331,70 @@
         "source_path": "lean/bridge/OMAIStabilityEnergies.lean",
         "build_record": "lean/bridge/build-evidence.json",
         "source_sha256": "d5da7a1eb03e27c9869c6f8f735f37c0256cc03eebaf8eba7d90a7cb221eaa34"
+      }
+    },
+    {
+      "id": "electronic-carrier-statistics",
+      "targets": [
+        {
+          "kind": "node",
+          "id": "CarrierMobility",
+          "uid": "3303dee51d36b5a42bf80aa0ab62bdecd0db34cc77782c5203192ecf3512a91d"
+        },
+        {
+          "kind": "node",
+          "id": "ElectronicDOS",
+          "uid": "a32e08f3d5a147643986f961b701aea560791721df573f09188a557da369fb4f"
+        },
+        {
+          "kind": "operator",
+          "id": "compute_carrier_mobility",
+          "uid": "c168368c90fa77e7b76a5668757de7f74d5fbb02b07c73544307cd48aa42d8e9",
+          "formula_sha256": "21573bfd16d2a71a3fe127fb2685490564e562befd3119c79c02853ff268a121"
+        },
+        {
+          "kind": "operator",
+          "id": "compute_electronic_dos",
+          "uid": "ca35c6e4d21df105dfe83087ea98e03a5bad951006ada4fe722eea0a06a1cf7f",
+          "formula_sha256": "b399aaa658591d443481b4cb89cc5eb171dee83c7744a60637547caacec53411"
+        }
+      ],
+      "relation": "local",
+      "statement": "compute_carrier_mobility is interpreted as amset's Boltzmann mobility mu = c sum_k w_k tau_k of one diagonal component, with c = e/n > 0, w_k >= 0 the Fermi-window and squared-velocity weights of the states k and tau_k = (sum_i 1/tau_{k,i})^-1 the state relaxation time of mechanism rates that add; mu_i = c sum_k w_k tau_{k,i} is the mobility with mechanism i alone. With every tau_{k,i} > 0, mu <= (sum_i 1/mu_i)^-1: Matthiessen's rule on the mechanism-resolved mobilities never underestimates the mobility. compute_electronic_dos is interpreted as the density of states sum_b g_b delta(E - E_b) of a finite set of levels with degeneracies g_b > 0, read against a test function. At k_B T > 0 the electron count N(mu) = sum_b g_b/(1 + exp((E_b - mu)/(k_B T))), the density of states integrated against the Fermi function, takes every value strictly between 0 and sum_b g_b at exactly one chemical potential.",
+      "sources": [],
+      "conditions": [
+        "compute_carrier_mobility is an opaque amset output in the catalog; amset computes mu = sigma/(n e) from the BoltzTraP2 transport integrals with its own mode-resolved rates. The interpretation covers one diagonal Cartesian component for one carrier type with nonnegative weights w_k (Fermi window times squared velocity times k-point weight, divided by n); off-diagonal components are not sign definite and are not covered.",
+        "amset adds scattering rates in every state, 1/tau_k = sum_i 1/tau_{k,i}, and its separate_mobility output evaluates each mechanism's mobility with that mechanism's rates alone, which is mu_i here. The bound says that the overall mobility amset reports is at most the Matthiessen combination of its per-mechanism mobilities; the gap is not characterized, and equality is not claimed.",
+        "compute_electronic_dos is an opaque Kohn-Sham output in the catalog. The interpretation is the delta sum of a finite set of levels E_b (the Kohn-Sham eigenvalues on a finite k mesh) with degeneracies g_b > 0 (spin times k-point weight), read against a test function; the Gaussian-smeared or tetrahedron histogram that the codes bin is not covered.",
+        "The Fermi-level theorem needs k_B T > 0, at least one level and a count N with 0 < N < sum_b g_b (the number of states); at T = 0 every mu inside a gap gives the same count, so uniqueness fails there. The count of the delta-sum density of states, not of a smeared one, is what is inverted.",
+        "Energies E_b, mu and k_B T in one unit (J, or eV with k_B in eV/K); tau in s; mu in m^2/(V s) with c = e/n in coherent SI (1 cm^2/(V s) = 1e-4 m^2/(V s)). The inequality and the count are unit-free beyond that."
+      ],
+      "conventions": {
+        "model_scope": "Boltzmann mobility with state-by-state additive scattering rates, and Fermi-Dirac occupation of a finite level set. Physlib has no electronic scattering or density-of-states model, so these are local theorems over Mathlib reals that identify no Physlib declaration.",
+        "component_scope": "One diagonal mobility component for one carrier type; one density of states of a finite level set.",
+        "normalization_basis": "Mobility per carrier (sigma divided by n e); degeneracies g_b count states, so the electron count is per cell when the g_b are per cell.",
+        "frequency_convention": "Not applicable; the catalog's phonon-frequency input to the mobility acts only through the scattering rates.",
+        "unit_embedding": "Coherent SI for mu (m^2/(V s)) with c = e/n; energies, mu and k_B T in one unit for the count. Exact-real statements; floating-point evaluation is not certified.",
+        "held_fixed": "The weights w_k, the mechanism relaxation times and c for the mobility; the levels, degeneracies and temperature for the count.",
+        "admissibility": "c > 0, w_k >= 0 and every tau_{k,i} > 0 for the mobility bound; g_b > 0, k_B T > 0 and 0 < N < sum_b g_b for the Fermi level.",
+        "reference_energy": "Levels and chemical potential share one energy origin; a common shift leaves the count unchanged.",
+        "qpoint_weighting": "k-point weights are inside w_k and g_b; symmetry reduction and tetrahedron weights are not represented beyond that."
+      },
+      "remaining_obligations": [
+        "The scattering-rate models (acoustic deformation potential, ionized impurity, piezoelectric, polar optical), amset's band interpolation and its carrier concentration n are not verified; the theorems hold for the interpreted sums.",
+        "The size of the gap between the mobility and its Matthiessen combination, and the conditions for equality, are not characterized.",
+        "The smeared density of states, k-point convergence, spin-orbit degeneracies and the carrier concentration as the count above the valence band are not covered."
+      ],
+      "evidence": {
+        "kind": "compiled_bridge",
+        "module": "OMAIElectronicStatistics",
+        "declarations": [
+          "OMAI.PhyslibBridge.ElectronicStatistics.boltzmannMobility_le_matthiessen",
+          "OMAI.PhyslibBridge.ElectronicStatistics.exists_unique_fermiLevel"
+        ],
+        "source_path": "lean/bridge/OMAIElectronicStatistics.lean",
+        "build_record": "lean/bridge/build-evidence.json",
+        "source_sha256": "42647fea45250902515d99acdf1e8d2bf9d809ce1e15ff7ad0890fe59d05bfde"
       }
     },
     {
@@ -3081,6 +3247,58 @@
       }
     },
     {
+      "id": "static-dielectric-ionic-response",
+      "targets": [
+        {
+          "kind": "node",
+          "id": "StaticDielectricTensor",
+          "uid": "41f6c971e70bc42117a79b8ec51039f498280fdd9b77ef433bb602f90f966d93"
+        },
+        {
+          "kind": "operator",
+          "id": "compute_static_dielectric",
+          "uid": "ea3c7c5ef2138ad5bc519a723cdd29bf4a098583fdff8f8100a4548904f64863",
+          "formula_sha256": "985333154976a88fddaf8ecdd97fb1f39e705283653ab01dd43eb8870514b326"
+        }
+      ],
+      "relation": "local",
+      "statement": "compute_static_dielectric is interpreted as eps_0 = eps_inf + c Z^T D^-1 Z, with D the Gamma-point dynamical matrix on the optical coordinates (positive definite once the acoustic translations are projected out of a stable crystal), Z the mass-weighted Born-charge matrix on those coordinates and c = 4 pi e^2/Omega (Gaussian; e^2/(eps_0 Omega) in SI), which in the eigenbasis of D is the mode-oscillator-strength sum sum_m Z~_m Z~_m^T/omega_m^2. With D positive definite and c > 0, eps_0 - eps_inf is positive semidefinite and u (eps_0 - eps_inf) u = 0 exactly when Z u = 0, no polar mode couples to u. Along any direction u with u eps_inf u > 0, adding the Gonze-Lee long-wavelength correction c (Z u)(Z u)^T/(u eps_inf u) to D gives a Hermitian matrix whose product of eigenvalues (the longitudinal squared frequencies along u) divided by the product of the eigenvalues of D (the transverse squared frequencies) equals (u eps_0 u)/(u eps_inf u): the generalized Lyddane-Sachs-Teller relation.",
+      "sources": [],
+      "conditions": [
+        "compute_static_dielectric is an opaque output in the catalog, assembled by atomate2 from eps_inf, the Born charges and the Gamma-point phonons. The interpretation needs the Gamma-point dynamical matrix D (frequencies and eigenvectors together), not only the frequencies the catalog lists as input: eps_0 - eps_inf = c Z^T D^-1 Z equals the mode sum sum_m Z~_m Z~_m^T/omega_m^2 with Z~_m = Z^T e_m the mode-oscillator strength of the eigenvector e_m.",
+        "D is the mass-weighted force-constant matrix at Gamma restricted to the 3N - 3 optical coordinates: the three rigid translations, whose omega^2 = 0 would make D singular, are projected out, and every optical omega^2 must be positive (a stable crystal with no imaginary Gamma mode). Z u has no component along the translations when the Born charges satisfy charge neutrality, sum_kappa Z*_kappa = 0; phonopy enforces this sum rule and the acoustic sum rule on the force constants, and both are assumed.",
+        "Z_{kappa alpha, beta} = Z*_{kappa, alpha beta}/sqrt(M_kappa) with Z* in units of e, and c carries e^2 and 1/Omega with Omega the primitive-cell volume, so c Z^T D^-1 Z is dimensionless: with D in s^-2, M in kg, Omega in m^3 and eps as a relative permittivity it is e^2/(eps_0 Omega) Z^T D^-1 Z.",
+        "The Lyddane-Sachs-Teller statement uses the Gonze-Lee q -> 0 correction along u, D + c (Z u)(Z u)^T/(u eps_inf u), whose eigenvalues are the longitudinal squared frequencies along u; it holds for any c and any u with u eps_inf u > 0 and compares the products of all 3N - 3 optical squared frequencies, not individual LO-TO pairs. It is not the catalog's apply_nac_correction, whose q dependence cancels and which stays a recorded defect."
+      ],
+      "conventions": {
+        "model_scope": "Static lattice dielectric response of a harmonic insulator at Gamma, with the ionic term as the inverse of the optical dynamical matrix. Physlib has no dielectric or Born-charge model, so these are local theorems over Mathlib matrices that identify no Physlib declaration.",
+        "component_scope": "The full 3x3 tensor eps_0 for positivity; one direction u at a time for the Lyddane-Sachs-Teller product.",
+        "normalization_basis": "Per primitive cell: Omega is the cell volume and the Born charges and masses are per site of the cell.",
+        "frequency_convention": "Angular squared frequencies omega^2 as the eigenvalues of D in s^-2; a dynamical matrix in linear THz^2 needs the factor (2 pi 10^12)^2 before use with SI c.",
+        "unit_embedding": "eps_inf and eps_0 as relative permittivities, Z* in units of e, masses in kg, Omega in m^3, D in s^-2 and c = e^2/(eps_0 Omega) in SI, or c = 4 pi e^2/Omega with Gaussian charges. Exact-real statements; floating-point evaluation is not certified.",
+        "held_fixed": "eps_inf, the Born charges, the masses, the cell volume and the force constants are fixed inputs; temperature does not enter.",
+        "admissibility": "D positive definite (optical coordinates of a stable crystal) and c > 0 for positivity; u eps_inf u > 0 for the Lyddane-Sachs-Teller direction.",
+        "reference_energy": "Not applicable; no energy reference enters a dielectric tensor.",
+        "qpoint_weighting": "Gamma only; no Brillouin-zone sum enters."
+      },
+      "remaining_obligations": [
+        "The DFPT or finite-difference producers of eps_inf, Z* and the Gamma force constants, the enforcement of the charge-neutrality and acoustic sum rules and the projection of the acoustic modes are not verified.",
+        "Finite-q non-analytic corrections (Gonze-Lee Ewald sums), the correction of individual LO frequencies and the frequency-dependent Lorentz-oscillator dielectric function are not covered; the catalog's apply_nac_correction stays a recorded defect.",
+        "Metals, free carriers and electronic screening beyond eps_inf, and anharmonic or temperature-dependent corrections to the static response are not covered."
+      ],
+      "evidence": {
+        "kind": "compiled_bridge",
+        "module": "OMAIStaticDielectric",
+        "declarations": [
+          "OMAI.PhyslibBridge.StaticDielectric.staticDielectric_sub_posSemidef",
+          "OMAI.PhyslibBridge.StaticDielectric.lyddaneSachsTeller"
+        ],
+        "source_path": "lean/bridge/OMAIStaticDielectric.lean",
+        "build_record": "lean/bridge/build-evidence.json",
+        "source_sha256": "2b899fb132527638b2b75870b52b3a757eecd409506b576a3dc73edf0272fe88"
+      }
+    },
+    {
       "id": "thermodynamic-pressure",
       "targets": [
         {
@@ -3542,7 +3760,7 @@
         "uid": "438f0314dee5f9e98d88e4a7ba4425ef0edd207605338b318340da27bf28b2a4",
         "binding_ids": [],
         "status": "gap",
-        "reason": "Physlib scalar thermoelectric coefficients do not prove OMAI ab-initio BTE/scattering/electronic-DOS producers. The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
+        "reason": "Physlib's scalar thermoelectric coefficients do not prove OMAI's amset scattering, carrier-mobility, electronic-DOS or dielectric producers; the Boltzmann transport coefficients are interpreted as Onsager moments of a transport window and anchored to Physlib's ThermoelectricMaterial. The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "BulkModulus",
@@ -3575,9 +3793,11 @@
       {
         "id": "CarrierMobility",
         "uid": "3303dee51d36b5a42bf80aa0ab62bdecd0db34cc77782c5203192ecf3512a91d",
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "Physlib scalar thermoelectric coefficients do not prove OMAI ab-initio BTE/scattering/electronic-DOS producers."
+        "binding_ids": [
+          "electronic-carrier-statistics"
+        ],
+        "status": "local",
+        "reason": "Physlib's scalar thermoelectric coefficients do not prove OMAI's amset scattering, carrier-mobility, electronic-DOS or dielectric producers; the Boltzmann transport coefficients are interpreted as Onsager moments of a transport window and anchored to Physlib's ThermoelectricMaterial. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "CellVolume",
@@ -3676,7 +3896,7 @@
         "uid": "a84077d8f12cf490f370b5cd0b98a47e3e31b7ec75fc8763699763f8b2313db4",
         "binding_ids": [],
         "status": "gap",
-        "reason": "Physlib scalar thermoelectric coefficients do not prove OMAI ab-initio BTE/scattering/electronic-DOS producers. The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
+        "reason": "Physlib's scalar thermoelectric coefficients do not prove OMAI's amset scattering, carrier-mobility, electronic-DOS or dielectric producers; the Boltzmann transport coefficients are interpreted as Onsager moments of a transport window and anchored to Physlib's ThermoelectricMaterial. The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "Diffusivity",
@@ -3713,12 +3933,13 @@
         "uid": "01043ab212fd87e4ba9493caf709ab9a7ccc86ec7a0047a0512af12eca1c391e",
         "binding_ids": [],
         "status": "gap",
-        "reason": "Physlib scalar thermoelectric coefficients do not prove OMAI ab-initio BTE/scattering/electronic-DOS producers. No current Physlib solid-elasticity/Voigt/EOS formula identification found. The bridge proves the signed inviscid stress/pressure contraction under its sign and unit conditions; identification with thermodynamic free-energy pressure remains unproved."
+        "reason": "Physlib's scalar thermoelectric coefficients do not prove OMAI's amset scattering, carrier-mobility, electronic-DOS or dielectric producers; the Boltzmann transport coefficients are interpreted as Onsager moments of a transport window and anchored to Physlib's ThermoelectricMaterial. No current Physlib solid-elasticity/Voigt/EOS formula identification found. The bridge proves the signed inviscid stress/pressure contraction under its sign and unit conditions; identification with thermodynamic free-energy pressure remains unproved."
       },
       {
         "id": "ElectricalConductivity[carrier=electronic]",
         "uid": "c4a81f649b3964aed4d4b3c48dfec4f252958c9560332286e2105b175794144b",
         "binding_ids": [
+          "boltzmann-electronic-transport",
           "thermoelectric-input-coefficients"
         ],
         "status": "mapped",
@@ -3743,14 +3964,17 @@
       {
         "id": "ElectronicDOS",
         "uid": "a32e08f3d5a147643986f961b701aea560791721df573f09188a557da369fb4f",
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "Physlib scalar thermoelectric coefficients do not prove OMAI ab-initio BTE/scattering/electronic-DOS producers."
+        "binding_ids": [
+          "electronic-carrier-statistics"
+        ],
+        "status": "local",
+        "reason": "Physlib's scalar thermoelectric coefficients do not prove OMAI's amset scattering, carrier-mobility, electronic-DOS or dielectric producers; the Boltzmann transport coefficients are interpreted as Onsager moments of a transport window and anchored to Physlib's ThermoelectricMaterial. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "ElectronicThermalConductivity",
         "uid": "960b38ae04ecc9fbaacb02d9ae832f15e84b8cac0563e7f6a62ddf32c61d725c",
         "binding_ids": [
+          "boltzmann-electronic-transport",
           "thermoelectric-input-coefficients"
         ],
         "status": "mapped",
@@ -4273,6 +4497,7 @@
         "id": "SeebeckCoefficient",
         "uid": "80778c5d6cb9f0d1dd23d5c6cd6059acea161892532ce7c581c7477257debf02",
         "binding_ids": [
+          "boltzmann-electronic-transport",
           "thermoelectric-input-coefficients"
         ],
         "status": "mapped",
@@ -4306,9 +4531,11 @@
       {
         "id": "StaticDielectricTensor",
         "uid": "41f6c971e70bc42117a79b8ec51039f498280fdd9b77ef433bb602f90f966d93",
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "Physlib scalar thermoelectric coefficients do not prove OMAI ab-initio BTE/scattering/electronic-DOS producers."
+        "binding_ids": [
+          "static-dielectric-ionic-response"
+        ],
+        "status": "local",
+        "reason": "Physlib's scalar thermoelectric coefficients do not prove OMAI's amset scattering, carrier-mobility, electronic-DOS or dielectric producers; the Boltzmann transport coefficients are interpreted as Onsager moments of a transport window and anchored to Physlib's ThermoelectricMaterial. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "Stress",
@@ -4795,9 +5022,11 @@
         "outputs": [
           "CarrierMobility"
         ],
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "Physlib scalar thermoelectric coefficients do not prove OMAI ab-initio BTE/scattering/electronic-DOS producers."
+        "binding_ids": [
+          "electronic-carrier-statistics"
+        ],
+        "status": "local",
+        "reason": "Physlib's scalar thermoelectric coefficients do not prove OMAI's amset scattering, carrier-mobility, electronic-DOS or dielectric producers; the Boltzmann transport coefficients are interpreted as Onsager moments of a transport window and anchored to Physlib's ThermoelectricMaterial. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "compute_chemical_potentials",
@@ -4937,9 +5166,11 @@
         "outputs": [
           "ElectricalConductivity[carrier=electronic]"
         ],
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "Physlib scalar thermoelectric coefficients do not prove OMAI ab-initio BTE/scattering/electronic-DOS producers."
+        "binding_ids": [
+          "boltzmann-electronic-transport"
+        ],
+        "status": "mapped",
+        "reason": "See the conditions and evidence for each mapping."
       },
       {
         "id": "compute_electronic_dos",
@@ -4954,9 +5185,11 @@
         "outputs": [
           "ElectronicDOS"
         ],
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "Physlib scalar thermoelectric coefficients do not prove OMAI ab-initio BTE/scattering/electronic-DOS producers."
+        "binding_ids": [
+          "electronic-carrier-statistics"
+        ],
+        "status": "local",
+        "reason": "Physlib's scalar thermoelectric coefficients do not prove OMAI's amset scattering, carrier-mobility, electronic-DOS or dielectric producers; the Boltzmann transport coefficients are interpreted as Onsager moments of a transport window and anchored to Physlib's ThermoelectricMaterial. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "compute_electronic_thermal_conductivity",
@@ -4973,9 +5206,11 @@
         "outputs": [
           "ElectronicThermalConductivity"
         ],
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "Physlib scalar thermoelectric coefficients do not prove OMAI ab-initio BTE/scattering/electronic-DOS producers."
+        "binding_ids": [
+          "boltzmann-electronic-transport"
+        ],
+        "status": "mapped",
+        "reason": "See the conditions and evidence for each mapping."
       },
       {
         "id": "compute_energy_above_hull",
@@ -5673,9 +5908,11 @@
         "outputs": [
           "SeebeckCoefficient"
         ],
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "Physlib scalar thermoelectric coefficients do not prove OMAI ab-initio BTE/scattering/electronic-DOS producers."
+        "binding_ids": [
+          "boltzmann-electronic-transport"
+        ],
+        "status": "mapped",
+        "reason": "See the conditions and evidence for each mapping."
       },
       {
         "id": "compute_static_dielectric",
@@ -5691,9 +5928,11 @@
         "outputs": [
           "StaticDielectricTensor"
         ],
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "Physlib scalar thermoelectric coefficients do not prove OMAI ab-initio BTE/scattering/electronic-DOS producers."
+        "binding_ids": [
+          "static-dielectric-ionic-response"
+        ],
+        "status": "local",
+        "reason": "Physlib's scalar thermoelectric coefficients do not prove OMAI's amset scattering, carrier-mobility, electronic-DOS or dielectric producers; the Boltzmann transport coefficients are interpreted as Onsager moments of a transport window and anchored to Physlib's ThermoelectricMaterial. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "compute_stress_cell",
@@ -6942,27 +7181,27 @@
     "nodes_total": 136,
     "nodes_mapped": 33,
     "operators_total": 133,
-    "operators_mapped": 24,
-    "nodes_local": 27,
-    "operators_local": 32,
-    "bindings_total": 40,
+    "operators_mapped": 27,
+    "nodes_local": 30,
+    "operators_local": 35,
+    "bindings_total": 43,
     "source_correspondences": 5,
-    "compiled_bridges": 35,
-    "nodes_compiled": 21,
-    "nodes_compiled_outputs": 20,
+    "compiled_bridges": 38,
+    "nodes_compiled": 24,
+    "nodes_compiled_outputs": 23,
     "nodes_compiled_interpretations": 1,
-    "operators_compiled": 24,
-    "operators_compiled_local": 32,
-    "nodes_compiled_local": 28,
-    "operators_proved": 56,
-    "nodes_proved": 49,
+    "operators_compiled": 27,
+    "operators_compiled_local": 35,
+    "nodes_compiled_local": 31,
+    "operators_proved": 62,
+    "nodes_proved": 55,
     "upstream_declarations_referenced": 36,
     "upstream_modules_referenced": 10,
     "relations": {
       "exact_definition": 1,
-      "conditional": 27,
+      "conditional": 28,
       "conceptual": 4,
-      "local": 8
+      "local": 10
     }
   }
 }

@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "scope": "Reviewed OMAI formula endpoints and exact Lean proof source for the Boltzmann electronic transport coefficients anchored to Physlib's thermoelectric material. Hash and compiled-name checks detect drift and provenance errors; they are not automatic symbolic translation or numerical validation.",
+  "source_path": "lean/bridge/OMAIPhyslibElectronicTransport.lean",
+  "source_sha256": "2609b6b410cb84b120f782adf88b7204e13bcef14ddee5adbce92f5c89805f45",
+  "operators": [
+    {
+      "id": "compute_electronic_conductivity",
+      "uid": "9fc03548d4ca70a6634ed22f93f7efb198f00c48c8c8b0bd94b2b37d7f73c456",
+      "formula_sha256": "2de7ab9fcfdde2fac6c5e3ab0e88316483e11a22ae90687e08aa8897908580e0",
+      "formula_latex": "\\sigma_{el} = \\sigma^{bte}{\\left(\\mathcal{S},\\varepsilon_{0},C,\\omega \\right)}",
+      "lean_definition": "OMAI.PhyslibBridge.ElectronicTransport.boltzmannConductivity"
+    },
+    {
+      "id": "compute_seebeck",
+      "uid": "8514fb3e8586db31ec55ec353254d206a41722760541644b2b5c08f770716a81",
+      "formula_sha256": "75307432c842b2c58ffc978745dd0992e89936a44fab7dc40bb06a24a887b939",
+      "formula_latex": "S = S^{bte}{\\left(\\mathcal{S},\\varepsilon_{0},C,\\omega \\right)}",
+      "lean_definition": "OMAI.PhyslibBridge.ElectronicTransport.boltzmannSeebeck"
+    },
+    {
+      "id": "compute_electronic_thermal_conductivity",
+      "uid": "fe7f863a4325b44bf1f15e1b1f2521d7ec03c5c3bd0efa796998b12b6975f1e3",
+      "formula_sha256": "7ffb8ea9b51164875b7f3eaa724d017c8c846b3fd22f4da0befa6169596c9586",
+      "formula_latex": "\\kappa_{e} = \\kappa_e^{bte}{\\left(\\mathcal{S},\\varepsilon_{0},C,\\omega \\right)}",
+      "lean_definition": "OMAI.PhyslibBridge.ElectronicTransport.boltzmannKappaE"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "ElectricalConductivity[carrier=electronic]",
+      "uid": "c4a81f649b3964aed4d4b3c48dfec4f252958c9560332286e2105b175794144b"
+    },
+    {
+      "id": "SeebeckCoefficient",
+      "uid": "80778c5d6cb9f0d1dd23d5c6cd6059acea161892532ce7c581c7477257debf02"
+    },
+    {
+      "id": "ElectronicThermalConductivity",
+      "uid": "960b38ae04ecc9fbaacb02d9ae832f15e84b8cac0563e7f6a62ddf32c61d725c"
+    }
+  ],
+  "interpretations": [
+    "All three producers are opaque Boltzmann-transport outputs in the catalog. The interpreted definitions are BoltzTraP2's Onsager coefficients on a finite energy grid: with weights w_b >= 0 (the diagonal transport distribution times the Fermi window -df/dE times the bin width) and grid energies E_b, L_k = sum_b w_b (E_b - mu)^k, sigma = e^2 L_0, S = -(L_1/L_0)/(e T) and kappa_e = (L_2 - L_1^2/L_0)/T. The scattering model enters only through w, so any relaxation-time model is admitted.",
+    "e > 0 is the elementary charge, so electrons above mu give a negative Seebeck coefficient. kappa_e is the zero-current electronic thermal conductivity; -L_1^2/L_0 is the Peltier correction to the zero-field L_2/T.",
+    "At T > 0, kappa_e >= 0, with equality exactly when every state with nonzero weight has one energy (a delta-function transport distribution). For L_0 > 0, e != 0, T > 0 and any kappa_l > 0 the coefficients are the fields of a Physlib ThermoelectricMaterial, and when L_0 L_2 - L_1^2 > 0 and L_1 != 0 every such material has figure of merit strictly below L_1^2/(L_0 L_2 - L_1^2), a bound approached as kappa_l -> 0 (Mahan-Sofo).",
+    "OMAISommerfeldTransport.lean, imported by the proof source, holds the continuum moments: for the kinetic integrals K_k = int Sigma_0 (E - mu)^k (-df/dE) dE of an energy-independent transport distribution, K_0 = Sigma_0, K_1 = 0 and K_2 = Sigma_0 (k_B T)^2 pi^2/3, so the same three formulas give S = 0 and kappa_e = (pi^2/3)(k_B/e)^2 sigma T. It defines no catalog endpoint."
+  ]
+}

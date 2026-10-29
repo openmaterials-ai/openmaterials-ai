@@ -124,17 +124,39 @@ TRANCHES = (
                             "molarEnthalpy", "transitionTemperature")]),
         "modules": ("OMAIStabilityEnergies", "OMAICalphad"),
     },
+    {
+        "name": "electronic-transport",
+        "contracts": ("electronic-transport-formula-contract.json", "carrier-statistics-formula-contract.json",
+                      "static-dielectric-formula-contract.json"),
+        "bindings": frozenset({"boltzmann-electronic-transport", "electronic-carrier-statistics",
+                               "static-dielectric-ionic-response"}),
+        "subjects": frozenset({
+            ("node", "CarrierMobility"), ("node", "ElectricalConductivity[carrier=electronic]"),
+            ("node", "ElectronicDOS"), ("node", "ElectronicThermalConductivity"), ("node", "SeebeckCoefficient"),
+            ("node", "StaticDielectricTensor"),
+            ("operator", "compute_carrier_mobility"), ("operator", "compute_electronic_conductivity"),
+            ("operator", "compute_electronic_dos"), ("operator", "compute_electronic_thermal_conductivity"),
+            ("operator", "compute_seebeck"), ("operator", "compute_static_dielectric")}),
+        "pairs": tuple(
+            [{"name": "OMAI.PhyslibBridge.ElectronicTransport." + name, "module": "OMAIPhyslibElectronicTransport"}
+             for name in ("boltzmannConductivity", "boltzmannKappaE", "boltzmannSeebeck")]
+            + [{"name": "OMAI.PhyslibBridge.ElectronicStatistics." + name, "module": "OMAIElectronicStatistics"}
+               for name in ("boltzmannMobility", "electronicDOS")]
+            + [{"name": "OMAI.PhyslibBridge.StaticDielectric.staticDielectric", "module": "OMAIStaticDielectric"}]),
+        "modules": ("OMAISommerfeldTransport", "OMAIPhyslibElectronicTransport", "OMAIElectronicStatistics",
+                    "OMAIStaticDielectric"),
+    },
 )
 
 # The one frozen global coverage ledger of the published bindings.
 GLOBAL_COVERAGE = {
-    "nodes_total": 136, "nodes_mapped": 33, "operators_total": 133, "operators_mapped": 24,
-    "nodes_local": 27, "operators_local": 32, "bindings_total": 40, "source_correspondences": 5,
-    "compiled_bridges": 35, "nodes_compiled": 21, "nodes_compiled_outputs": 20,
-    "nodes_compiled_interpretations": 1, "operators_compiled": 24, "operators_compiled_local": 32,
-    "nodes_compiled_local": 28, "operators_proved": 56, "nodes_proved": 49,
+    "nodes_total": 136, "nodes_mapped": 33, "operators_total": 133, "operators_mapped": 27,
+    "nodes_local": 30, "operators_local": 35, "bindings_total": 43, "source_correspondences": 5,
+    "compiled_bridges": 38, "nodes_compiled": 24, "nodes_compiled_outputs": 23,
+    "nodes_compiled_interpretations": 1, "operators_compiled": 27, "operators_compiled_local": 35,
+    "nodes_compiled_local": 31, "operators_proved": 62, "nodes_proved": 55,
     "upstream_declarations_referenced": 36, "upstream_modules_referenced": 10,
-    "relations": {"exact_definition": 1, "conditional": 27, "conceptual": 4, "local": 8},
+    "relations": {"exact_definition": 1, "conditional": 28, "conceptual": 4, "local": 10},
 }
 
 
