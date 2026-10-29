@@ -144,7 +144,7 @@ def _row_status(binding_ids: list[str], relations: dict[str, str]) -> str:
     return "local" if all(relations[i] == "local" for i in binding_ids) else "mapped"
 
 
-_LOCAL_REASON = " A local Lean proof over Mathlib covers it; see that binding's conditions and evidence."
+_LOCAL_REASON = " A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
 
 
 def _coverage(bindings: list[dict], inventory: dict) -> dict:
