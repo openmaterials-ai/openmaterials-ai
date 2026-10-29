@@ -5,8 +5,13 @@ mints, for consumers. Versioning follows README.md ("Versioning"): before 1.0
 an identity change takes the minor version, and this file lists every re-keyed
 id.
 
-## Unreleased
+## 0.5.0
 
+Every consumer pins `openmaterials-ai==0.5.0`. The minor version follows README "Versioning": public names are removed (`omai.lean_identities`, `omai.lean_units`) and added (the external-solve snapshot API, `omai.formula_bindings`, `omai.physlib_dimensions`, the code-page generators), and the `ngspice` representation is added. The map moves from graph_version `baf99346621b` to `2b27f48fbddb` and the lineage version from `61a981c02604` to `45be98afae7c` through append-only contributions: no node, edge or evidence uid is re-keyed. The packaged kaldo external-solve request is re-minted, so its `request_id` moves from `9c65fd692c45` to `77ba6b7ef660` (two steps, below); its `lineage_id` is unchanged.
+
+- `omai.external_solve` receives a request as an immutable snapshot: `snapshot_request` checks shape and hashes without a map and returns an `ExternalSolveRequestSnapshot`, `validate_request_snapshot` authorizes it against the current store on every call, and `validate_request` accepts either form. Builders detach caller-owned lineage and execution values. Envelope version 1, request and lineage hashing and the executor's `ExternalSolveRequired` behavior are unchanged. docs/external-solve-snapshots.md describes the handoff. No id changes.
+- `record_to_fragment` and `envelope_to_fragment` write gzip with a fixed header (MTIME 0, OS byte 255), so a record or envelope encodes to the same fragment on every clock, platform and supported Python. Fragments minted before decode as before. No id changes.
+- `omai.code_pages`, `omai.code_cards` and `omai.refs_export` generate the per-code pages under docs/codes/ from the registry and the map. No id changes.
 - One Lean package. The Lean 4.31 package in `lean/` (pinned to Physlib
   a74414af) is removed, with its generators `omai.lean_identities` and
   `omai.lean_units` and the `lean.yml` workflow. It held five-base node
@@ -72,8 +77,7 @@ id.
   packaged kaldo external-solve fixture is re-minted against that graph,
   moving its `request_id` from `dd544ee37fd8` to `77ba6b7ef660`. Its
   scientific lineage and `lineage_id` are unchanged. Requests pinned to the
-  former graph fail the existing stale-version gate. New public definitions
-  take the next minor package version. This entry does not publish a release.
+  former graph fail the existing stale-version gate.
 
 ## 0.4.0
 
