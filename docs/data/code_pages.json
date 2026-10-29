@@ -62,10 +62,6 @@
   "summary": "mp-api is the Python client for the Materials Project, the database of computed properties for inorganic materials. It returns structures, energies above hull, band gaps, elastic tensors and other stored quantities by material id or by query. On the map it serves the quantities it retrieves. It computes none of them.",
   "website": "https://docs.materialsproject.org"
  },
- "meskal": {
-  "tagline": "Differentiable anharmonic lattice dynamics in JAX.",
-  "summary": "MESKAL computes anharmonic lattice thermal transport in JAX, so every quantity is differentiable with respect to the force constants: Boltzmann transport in the relaxation-time and direct-inverse forms, quasi-harmonic Green-Kubo for disordered systems, phonon linewidths from three-phonon, isotope and boundary scattering, and modal diffusivities. A Landauer branch gives phonon transmission and thermal conductance through an interface. On the map it serves those quantities."
- },
  "openmaterials-ai": {
   "tagline": "The OpenMaterials kernel evaluates the map's closed-form relations.",
   "summary": "openmaterials-ai is this project's own kernel. It evaluates the closed-form relations the map carries and computes the quantities that have an algebraic definition from their inputs, with no external code. On the map it serves those derived quantities.",

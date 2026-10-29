@@ -28,7 +28,7 @@ var Sources = (function () {
   }
 
   // A codes.json key for k: k itself, else the code that lists k among its release aliases
-  // (mescal names meskal); '' when neither.
+  // (quantum-espresso names qe); '' when neither.
   function codeKey(k, codes) {
     if (!codes || !k) return '';
     if (codes[k]) return k;

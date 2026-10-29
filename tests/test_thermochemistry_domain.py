@@ -360,7 +360,7 @@ def test_map_has_one_hundred_nodes_and_fifteen_tiers():
     # 102 nodes (still 15 tiers) with the Atomistic Cookbook audit's
     # nuclear-quantum-effects layer (i-PI slice, 2026-07-11): QuantumKineticEnergy
     # and HeatCapacity[method=pimd], both thermal_transport, each joining the
-    # existing Molecular dynamics tier, no new tier. +2 for the MESCAL
+    # existing Molecular dynamics tier, no new tier. +2 for the
     # coherent-transport nodes PhononTransmission and
     # ThermalConductance[transport_model=landauer], both in the Transport tier
     # (2026-07-13, no new tier). +7 for the composites domain's nodes in the new
@@ -424,10 +424,9 @@ def test_pycalphad_is_a_representation_and_the_config_thermo_scan_added_three_re
     from omai.map_data import build_codes
 
     codes = build_codes(DOMAINS)
-    assert len(codes) == 34  # ngspice (2026-10-28) is the 34th
+    assert len(codes) == 33  # 34 with ngspice (2026-10-28), 33 after one removal (2026-10-29)
     assert "materialscodegraph" not in codes
     assert "xtb" in codes
-    assert "mescal" not in codes
     assert "pycalphad" in codes
     assert "mat-equation-of-state" in codes
     assert "mat-surface-adsorption" in codes

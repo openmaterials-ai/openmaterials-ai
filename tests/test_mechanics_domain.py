@@ -148,7 +148,7 @@ def test_no_node_uid_collisions_at_105_nodes():
     # the Transport tier, both thermal_transport, 2026-07-11); 102 with the
     # Atomistic Cookbook audit's nuclear-quantum-effects layer (i-PI slice):
     # QuantumKineticEnergy and HeatCapacity[method=pimd], both in the
-    # thermal_transport Molecular dynamics tier (2026-07-11). +2 for the MESCAL
+    # thermal_transport Molecular dynamics tier (2026-07-11). +2 for the
     # coherent-transport nodes PhononTransmission and
     # ThermalConductance[transport_model=landauer] (2026-07-13). 114 with the
     # composites domain's seven nodes in the new Composite tier (2026-07-13):

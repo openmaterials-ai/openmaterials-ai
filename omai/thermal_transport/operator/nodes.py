@@ -619,12 +619,11 @@ MODAL_DIFFUSIVITY = ObservableSpace(
 
 
 # ---------------------------------------------------------------------------
-# Coherent phonon transport (Landauer). MESKAL joins here the way kaldo enters
-# for QHGK: PhononTransmission is the observable every coherent-transport method
-# shares (a per-frequency transmission function of a lead/junction system), and
-# the Landauer conductance G(T) integrates it against the Bose-Einstein energy
-# window. Both live in the Transport tier alongside the BTE / Wigner / QHGK
-# routes to the same heat-transport story.
+# Coherent phonon transport (Landauer). PhononTransmission is the observable
+# every coherent-transport method shares (a per-frequency transmission function
+# of a lead/junction system), and the Landauer conductance G(T) integrates it
+# against the Bose-Einstein energy window. Both live in the Transport tier
+# alongside the BTE / Wigner / QHGK routes to the same heat-transport story.
 # ---------------------------------------------------------------------------
 
 PHONON_TRANSMISSION = ObservableSpace(
@@ -1005,8 +1004,7 @@ NODES: tuple[Space, ...] = (
     # Amorphous / localization diagnostics (kaldo delta scan, records 208-211)
     PARTICIPATION_RATIO,
     MODAL_DIFFUSIVITY,
-    # Coherent phonon transport (Landauer). MESKAL joins for coherent transport
-    # the way kaldo enters for QHGK.
+    # Coherent phonon transport (Landauer).
     PHONON_TRANSMISSION,
     THERMAL_CONDUCTANCE_LANDAUER,
     # Nuclear-quantum-effects layer (Cookbook Slice 1, i-PI, records 212-215)
