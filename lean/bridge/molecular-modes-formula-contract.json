@@ -2,7 +2,7 @@
   "schema_version": 1,
   "scope": "Reviewed OMAI formula endpoints and exact Lean proof source for local theorems about derivatives of an atomistic or cell energy, with no Physlib physics counterpart. Hash and compiled-name checks detect drift and provenance errors; they are not automatic symbolic translation or numerical validation.",
   "source_path": "lean/bridge/OMAIMolecularModes.lean",
-  "source_sha256": "f2eec170c8cb2ad6496298982f7cef5414fb126dce3f61677651d0cbeb4e33bc",
+  "source_sha256": "17ee78d8a15e7db57d0a416d4ba2dc9f40ad8e3089fb79ded98c7bc9a03a950b",
   "operators": [
     {
       "id": "compute_molecular_frequencies",
@@ -21,6 +21,6 @@
   "interpretations": [
     "The opaque nu^H(S, V) is interpreted as the eigenvalues lambda of the mass-weighted Hessian H_kl = Phi2_kl / sqrt(m_k m_l) of the potential at the structure: sqrt(lambda) for lambda >= 0 and -sqrt(-lambda) for an imaginary mode, in coherent angular units. The catalog stores wavenumbers in cm^-1, nu~ = omega / (2 pi c).",
     "A local minimum of a potential twice continuously differentiable there, with positive masses, gives no negative eigenvalue (n_imaginary = 0). The converse does not hold, and the transition-state diagnostic n_imaginary = 1 is not covered.",
-    "For a translation-invariant potential the three mass-weighted rigid translations are zero modes. Rotational zero modes, the 3N-6 or 3N-5 count, and the projection of translations and rotations that quantum-chemistry codes apply are not covered."
+    "For a translation-invariant potential twice continuously differentiable at the structure the three mass-weighted rigid translations are zero modes. Rotational zero modes, the 3N-6 or 3N-5 count, and the projection of translations and rotations that quantum-chemistry codes apply are not covered."
   ]
 }

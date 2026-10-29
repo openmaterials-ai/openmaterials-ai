@@ -20,8 +20,8 @@ catalog stress is symmetric at `F = 1`. The elastic constants `(1/V) d^2E/dF dF`
 twice continuously differentiable at the reference have the major symmetry `C_abcd = C_cdab`.
 If the energy is also invariant under every rotation and the reference is stress-free, they
 have both minor symmetries as well, and the Voigt positivity theorem of `OMAIElasticity`
-applies to them. The St Venant-Kirchhoff energy satisfies every one of these hypotheses: its
-elastic constants at the reference are the isotropic tensor of its Lame parameters.
+applies to them. A St Venant-Kirchhoff energy would meet these hypotheses; no compiled witness
+is included.
 -/
 
 @[expose] public section

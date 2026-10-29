@@ -152,11 +152,12 @@ theorem molecularFrequencies_of_isLocalMin (V : (A × Fin 3 → ℝ) → ℝ) (u
   simp only [h0, ↓reduceIte]
   exact ⟨Real.sqrt_nonneg _, Real.sq_sqrt h0⟩
 
-/-- For a potential invariant under rigid translations and positive masses, each mass-weighted
-rigid translation `sqrt(m_i) e_beta` is a zero mode of the mass-weighted Hessian. -/
+/-- For a potential invariant under rigid translations and twice continuously differentiable at
+`u`, with positive masses, each mass-weighted rigid translation `sqrt(m_i) e_beta` is a zero mode
+of the mass-weighted Hessian. -/
 theorem massWeightedHessian_translation (V : (A × Fin 3 → ℝ) → ℝ)
-    (hV : ∀ x t, V (translate t x) = V x) (u : A × Fin 3 → ℝ) (m : A → ℝ) (hm : ∀ i, 0 < m i)
-    (β : Fin 3) :
+    (hV : ∀ x t, V (translate t x) = V x) (u : A × Fin 3 → ℝ) (hV2 : ContDiffAt ℝ 2 V u)
+    (m : A → ℝ) (hm : ∀ i, 0 < m i) (β : Fin 3) :
     massWeightedHessian V u m *ᵥ (fun k => if k.2 = β then Real.sqrt (m k.1) else 0) = 0 := by
   funext k
   simp only [Matrix.mulVec, dotProduct, massWeightedHessian, Pi.zero_apply]
@@ -173,6 +174,6 @@ theorem massWeightedHessian_translation (V : (A × Fin 3 → ℝ) → ℝ)
   simp only [hrow]
   rw [Fintype.sum_prod_type]
   simp only [Finset.sum_ite_eq', Finset.mem_univ, ite_true]
-  rw [← Finset.sum_div, forceConstant2_sum_eq_zero V hV u k β, zero_div]
+  rw [← Finset.sum_div, forceConstant2_sum_eq_zero V hV u hV2 k β, zero_div]
 
 end OMAI.PhyslibBridge.MolecularModes

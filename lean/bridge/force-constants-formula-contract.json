@@ -2,7 +2,7 @@
   "schema_version": 1,
   "scope": "Reviewed OMAI formula endpoints and exact Lean proof source for local theorems about derivatives of an atomistic or cell energy, with no Physlib physics counterpart. Hash and compiled-name checks detect drift and provenance errors; they are not automatic symbolic translation or numerical validation.",
   "source_path": "lean/bridge/OMAIAtomisticDerivatives.lean",
-  "source_sha256": "bd2e3c10cc8a6b587c2710888535920a47b30875746a4fb13faab1d8e39187af",
+  "source_sha256": "a2f8655c395d34f6ca60e63c36f8e0831bf5ba3d3e1ffc355f057e5b0ea2b814",
   "operators": [
     {
       "id": "compute_force_constants[order=2]",
@@ -32,6 +32,6 @@
   "interpretations": [
     "The potential V is a function of the displacements of a finite set of sites (a supercell with every image explicit, or a cluster), each with three Cartesian coordinates; Phi2 and Phi3 are its exact second and third partial derivatives at the reference configuration u.",
     "The catalog's lattice-vector labels R, R' become explicit site labels of the finite set. For an infinite crystal with finite-range force constants the lattice sum rule sum_{j,R} Phi_ij(R) = 0 is the statement for a supercell large enough that no interaction wraps onto itself.",
-    "The acoustic sum rules follow from invariance of V under rigid translations alone, with no smoothness hypothesis; the permutation symmetry of Phi3 needs V three times continuously differentiable at u. Rotational (Born-Huang) sum rules are not covered."
+    "The acoustic sum rules follow from invariance of V under rigid translations for a potential twice continuously differentiable at u (Phi2) or three times (Phi3); the permutation symmetry of Phi3 needs V three times continuously differentiable at u. Rotational (Born-Huang) sum rules are not covered."
   ]
 }

@@ -82,10 +82,10 @@ BINDINGS = {
 }
 KEY_THEOREMS = {
     AD: {
-        "hfForce_sum_eq_zero": "(hE : ∀ t, E (translate t R) = E R) (α : Fin 3) : ∑ i, hfForce E R i α = 0",
+        "hfForce_sum_eq_zero": "(hd : DifferentiableAt ℝ E R) (hE : ∀ t, E (translate t R) = E R) (α : Fin 3) :\n    ∑ i, hfForce E R i α = 0",
         "hfForce_torque_eq_zero": "∑ i, (R (i, α) * hfForce E R i β - R (i, β) * hfForce E R i α) = 0",
-        "forceConstant2_sum_eq_zero": "∑ s, forceConstant2 V u k (s, β) = 0",
-        "forceConstant3_sum_eq_zero": "∑ s, forceConstant3 V u k l (s, γ) = 0",
+        "forceConstant2_sum_eq_zero": "(hV2 : ContDiffAt ℝ 2 V u) (k : A × Fin 3) (β : Fin 3) :\n    ∑ s, forceConstant2 V u k (s, β) = 0",
+        "forceConstant3_sum_eq_zero": "(hV3 : ContDiffAt ℝ 3 V u) (k l : A × Fin 3) (γ : Fin 3) :\n    ∑ s, forceConstant3 V u k l (s, γ) = 0",
         "centralDifference_error": "|centralDifference F u i j h - fdForceConstant F u i j| ≤ M * h ^ 2 / 6",
         "pairEnergy_force": "hfForce pairEnergy pairConfig 0 0 = 2",
     },
@@ -98,13 +98,15 @@ KEY_THEOREMS = {
     MM: {
         "molecularFrequencies_of_isLocalMin": "(hm : ∀ i, 0 < m i) (hV : ContDiffAt ℝ 2 V u) (hmin : IsLocalMin V u)",
         "massWeightedHessian_translation":
-            "massWeightedHessian V u m *ᵥ (fun k => if k.2 = β then Real.sqrt (m k.1) else 0) = 0",
+            "(hV2 : ContDiffAt ℝ 2 V u)\n    (m : A → ℝ) (hm : ∀ i, 0 < m i) (β : Fin 3) :\n    massWeightedHessian V u m *ᵥ (fun k => if k.2 = β then Real.sqrt (m k.1) else 0) = 0",
     },
 }
-# Mathlib restatements and specializations kept out of the citations.
+# Support lemmas kept out of the citations: the general invariance lemmas, the Mathlib
+# specializations and the positive-semidefinite Hessian step.
 NOT_CITED = {NA + "fderiv_apply_eq_zero_of_invariant_curve", NA + "partialAt_symm",
              NA + "sum_partialAt_eq_zero_of_translate", NA + "central_difference_bound",
-             NC + "elasticConstants_major", NM + "massWeightedHessian_isHermitian"}
+             NC + "elasticConstants_major", NM + "massWeightedHessian_isHermitian",
+             NM + "massWeightedHessian_posSemidef"}
 
 
 def _binding(binding_id):
@@ -187,7 +189,7 @@ def test_conventions_a_user_could_get_wrong_are_stated():
     stress = " ".join(_binding("cell-stress-rotation-balance")["conditions"])
     assert "compressive positive" in stress and "reference cell volume" in stress
     fd = " ".join(_binding("finite-displacement-force-constants")["conditions"])
-    assert "fourth derivative of the potential" in fd and "One-sided differences" in fd
+    assert "fourth derivative of the potential" in fd and "one-sided difference" in fd
     elastic = " ".join(_binding("hyperelastic-elastic-constants")["conditions"])
     assert "stress-free reference" in elastic and "pre-stressed" in elastic
     modes = _binding("molecular-normal-modes")

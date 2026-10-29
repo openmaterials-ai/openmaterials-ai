@@ -220,7 +220,7 @@
           "formula_sha256": "6dd196c0b221e9aed1dae7019b053498c5d5d96177025dc088250bca9555842f"
         }
       ],
-      "statement": "For a cell energy E(F) of the homogeneously deformed cell that is invariant under rigid rotations of the deformed cell, the catalog stress sigma_ab = -(1/V) dE/d eps_ab satisfies sum_b sigma_{alpha b} F_{beta b} = sum_b sigma_{beta b} F_{alpha b} for every deformation gradient F; at the reference cell F = 1 the stress is symmetric.",
+      "statement": "For a cell energy E(F) of the homogeneously deformed cell, differentiable at F and invariant under rigid rotations of the deformed cell, the catalog stress sigma_ab = -(1/V) dE/d eps_ab satisfies sum_b sigma_{alpha b} F_{beta b} = sum_b sigma_{beta b} F_{alpha b} for every deformation gradient F; at the reference cell F = 1 the stress is symmetric, a corollary of the balance rather than a separate theorem.",
       "sources": [],
       "conditions": [
         "The cell energy is a function of the deformation gradient F = 1 + eps, so derivatives with respect to the strain and to F agree, and V is the reference cell volume.",
@@ -234,7 +234,7 @@
         "frequency_convention": "Not applicable; no frequencies enter these derivatives.",
         "unit_embedding": "Coherent SI: energy in J, volume in m^3, stress in Pa; 1 kbar = 1e8 Pa.",
         "held_fixed": "Internal atomic coordinates follow whatever the cell energy prescribes (clamped or relaxed); temperature is not involved.",
-        "admissibility": "Invariance of the cell energy under rotations in the stated plane.",
+        "admissibility": "E differentiable at F; Invariance of the cell energy under rotations in the stated plane.",
         "reference_energy": "An additive constant in E changes no stress.",
         "qpoint_weighting": "Not applicable; no Brillouin-zone sums enter these derivatives."
       },
@@ -260,7 +260,7 @@
             "id": "Stress"
           }
         ],
-        "source_sha256": "c01083b39062c8aa76c40b00e51cfbfc885a0ed8ee7f27c69ba82db9a4cabe9d"
+        "source_sha256": "7c2e02a8b5ac516416570f85ca49695d33e013a4a8cec4999d4cc7da2561c31a"
       }
     },
     {
@@ -828,7 +828,7 @@
       "sources": [],
       "conditions": [
         "The bound needs the third derivative of the force, the fourth derivative of the potential; a three times differentiable potential is not enough for an h^2 error.",
-        "Central (plus-minus) displacements are assumed. One-sided differences, which codes use when symmetry relates the minus displacement to a plus one, have an error of order h and are not covered.",
+        "Central (plus-minus) displacements are assumed. When a site symmetry maps the plus displacement onto the minus one, phonopy omits the minus run and reconstructs its forces by symmetry, so the estimate is still the central difference. A truly one-sided difference (phonopy is_plusminus=False at a site without that symmetry) has an error of order h. Neither the symmetry argument nor the one-sided case is covered.",
         "The displacement step h > 0 is the same for the plus and minus configurations."
       ],
       "conventions": {
@@ -836,7 +836,7 @@
         "component_scope": "One displaced coordinate i and one force component j at a time.",
         "normalization_basis": "Force constants per pair of coordinates, not mass weighted.",
         "frequency_convention": "Not applicable; no frequencies enter these derivatives.",
-        "unit_embedding": "Coherent SI: forces in N, displacements in m, force constants in N/m; phonopy's default step 0.01 A is 1e-12 m.",
+        "unit_embedding": "Coherent SI: forces in N, displacements in m, force constants in N/m; phonopy's default step is 0.01 A (1e-12 m) in its VASP interface and 0.02 bohr (0.0106 A) in its QE interface.",
         "held_fixed": "All other coordinates stay at the reference configuration.",
         "admissibility": "h > 0, the force differentiable at u, and C^3 along the displacement with |d^3 F_j / du_i^3| <= M on [-h, h].",
         "reference_energy": "Not applicable; only forces enter.",
@@ -860,7 +860,7 @@
             "id": "compute_fc2_finite_displacement"
           }
         ],
-        "source_sha256": "bd2e3c10cc8a6b587c2710888535920a47b30875746a4fb13faab1d8e39187af"
+        "source_sha256": "a2f8655c395d34f6ca60e63c36f8e0831bf5ba3d3e1ffc355f057e5b0ea2b814"
       }
     },
     {
@@ -890,11 +890,11 @@
           "formula_sha256": "aa562fd454620e74d58b4d9cdb0abd8076dc039e13714849f5af3d972d25e7f8"
         }
       ],
-      "statement": "For a potential of a finite set of sites invariant under rigid translations, the catalog force constants satisfy the acoustic sum rules sum_s Phi2_{k,(s,beta)} = 0 and sum_s Phi3_{k,l,(s,gamma)} = 0 for every coordinate pair and direction. For a potential three times continuously differentiable at the reference, Phi3 is symmetric under every permutation of its three indices. A compiled two-atom potential has a nonzero Phi2, so the sum rule balances nonzero terms.",
+      "statement": "For a potential of a finite set of sites invariant under rigid translations, twice continuously differentiable at the reference for Phi2 and three times for Phi3, the catalog force constants satisfy the acoustic sum rules sum_s Phi2_{k,(s,beta)} = 0 and sum_s Phi3_{k,l,(s,gamma)} = 0 for every coordinate pair and direction. For a potential three times continuously differentiable at the reference, Phi3 is symmetric under every permutation of its three indices. A compiled two-atom potential has a nonzero Phi2, so the sum rule balances nonzero terms.",
       "sources": [],
       "conditions": [
         "Sites form a finite set with every image explicit (a supercell or a cluster); the catalog's lattice labels R, R' become site labels. For an infinite crystal the statement applies to a supercell large enough that no interaction wraps onto itself.",
-        "The sum rules need only translation invariance of the potential; the permutation symmetry needs the potential three times continuously differentiable at the reference configuration."
+        "The second-order sum rule needs translation invariance and the potential twice continuously differentiable at the reference configuration, the third-order rule three times; the permutation symmetry needs three times. Without these Mathlib's derivative is zero and the statements would hold only through that zero value."
       ],
       "conventions": {
         "model_scope": "Exact second and third derivatives of one potential of a finite set of sites; a local theorem over Mathlib with no Physlib model.",
@@ -903,7 +903,7 @@
         "frequency_convention": "Not applicable; no frequencies enter these derivatives.",
         "unit_embedding": "Coherent SI: Phi2 in N/m (J/m^2), Phi3 in J/m^3; 1 eV/A^2 = 16.02176634 J/m^2.",
         "held_fixed": "The reference configuration u; no strain or temperature enters.",
-        "admissibility": "Translation invariance of the potential for the sum rules; C^3 at u for the symmetry.",
+        "admissibility": "Translation invariance at every configuration; the potential twice continuously differentiable at the reference for the second-order rule, three times for the third-order rule and the permutation symmetry.",
         "reference_energy": "An additive constant in V changes no force constant.",
         "qpoint_weighting": "Not applicable; no Brillouin-zone sums enter these derivatives."
       },
@@ -919,7 +919,9 @@
           "OMAI.PhyslibBridge.Atomistic.forceConstant2_sum_eq_zero",
           "OMAI.PhyslibBridge.Atomistic.forceConstant3_sum_eq_zero",
           "OMAI.PhyslibBridge.Atomistic.forceConstant3_symm",
-          "OMAI.PhyslibBridge.Atomistic.pairEnergy_forceConstant2"
+          "OMAI.PhyslibBridge.Atomistic.pairEnergy_forceConstant2",
+          "OMAI.PhyslibBridge.Atomistic.pairEnergy_translate",
+          "OMAI.PhyslibBridge.Atomistic.pairEnergy_contDiff"
         ],
         "source_path": "lean/bridge/OMAIAtomisticDerivatives.lean",
         "build_record": "lean/bridge/build-evidence.json",
@@ -941,7 +943,7 @@
             "id": "ForceConstants[order=3]"
           }
         ],
-        "source_sha256": "bd2e3c10cc8a6b587c2710888535920a47b30875746a4fb13faab1d8e39187af"
+        "source_sha256": "a2f8655c395d34f6ca60e63c36f8e0831bf5ba3d3e1ffc355f057e5b0ea2b814"
       }
     },
     {
@@ -2606,13 +2608,13 @@
           "formula_sha256": "198daf948e48b420f367655f4ab063d3da5f54dd475468ce249711afdef38d0b"
         }
       ],
-      "statement": "For a total energy invariant under rigid translations of all atoms, the catalog forces F_{i,alpha} = -dE/dR_{i,alpha} sum to zero over the atoms in every Cartesian direction. For an energy invariant under rotations in the (alpha, beta) plane, the total torque in that plane vanishes: sum_i (R_{i alpha} F_{i beta} - R_{i beta} F_{i alpha}) = 0. A compiled two-atom energy |R_1 - R_0|^2 satisfies both invariances with a nonzero force, so neither statement is vacuous.",
+      "statement": "For a total energy differentiable at the configuration and invariant under rigid translations of all atoms, the catalog forces F_{i,alpha} = -dE/dR_{i,alpha} sum to zero over the atoms in every Cartesian direction. For an energy invariant under rotations in the (alpha, beta) plane, the total torque in that plane vanishes: sum_i (R_{i alpha} F_{i beta} - R_{i beta} F_{i alpha}) = 0. A compiled two-atom energy |R_1 - R_0|^2 satisfies both invariances with a nonzero force, so neither statement is vacuous.",
       "sources": [],
       "conditions": [
         "E is the total energy as a function of all atomic Cartesian coordinates of a finite set of atoms, and the force is its exact partial derivative, the Pulay- and nonlocal-corrected total that codes report, not the bare Hellmann-Feynman term.",
-        "Translation invariance holds for an isolated system and for a periodic cell whose lattice moves with the atoms. A real-space grid that breaks it (the egg-box effect) gives a nonzero force sum; the theorem then says the residual measures that breaking.",
+        "Translation invariance holds for an isolated system and for a periodic cell, where every atom and every image shifts by the same vector and the lattice vectors are unchanged. A real-space grid that breaks it (the egg-box effect) gives a nonzero force sum; the theorem then says the residual measures that breaking.",
         "Rotation invariance about the origin holds for an isolated molecule or cluster. It does not hold for atoms rotated inside a fixed periodic lattice, so the torque result does not apply to periodic cells.",
-        "No smoothness hypothesis is needed: where the energy is not differentiable Mathlib's derivative is zero and both statements hold trivially."
+        "The energy is differentiable at the configuration, so the forces are its actual partial derivatives; without that hypothesis Mathlib's derivative is zero and the statements would hold only through that zero value."
       ],
       "conventions": {
         "model_scope": "Exact derivatives of one energy surface of a finite set of atoms; a local theorem over Mathlib with no Physlib model.",
@@ -2620,8 +2622,8 @@
         "normalization_basis": "Forces per atom; the energy is the total energy of the configuration, not per atom.",
         "frequency_convention": "Not applicable; no frequencies enter these derivatives.",
         "unit_embedding": "Coherent SI: energy in J, positions in m, forces in N; eV/A forces convert with 1 eV/A = 1.602176634e-9 N.",
-        "held_fixed": "The lattice vectors of a periodic cell move with a rigid translation; nothing else is held fixed.",
-        "admissibility": "Translation invariance at the configuration for the force sum; invariance under rotations in the stated plane for the torque.",
+        "held_fixed": "The lattice vectors of a periodic cell are unchanged by a rigid translation of the atoms; nothing else is held fixed.",
+        "admissibility": "The energy differentiable at the configuration; translation invariance at the configuration for the force sum; invariance under rotations in the stated plane for the torque.",
         "reference_energy": "An additive constant in E changes no force.",
         "qpoint_weighting": "Not applicable; no Brillouin-zone sums enter these derivatives."
       },
@@ -2635,7 +2637,9 @@
         "declarations": [
           "OMAI.PhyslibBridge.Atomistic.hfForce_sum_eq_zero",
           "OMAI.PhyslibBridge.Atomistic.hfForce_torque_eq_zero",
-          "OMAI.PhyslibBridge.Atomistic.pairEnergy_force"
+          "OMAI.PhyslibBridge.Atomistic.pairEnergy_force",
+          "OMAI.PhyslibBridge.Atomistic.pairEnergy_translate",
+          "OMAI.PhyslibBridge.Atomistic.pairEnergy_rotatePlane"
         ],
         "source_path": "lean/bridge/OMAIAtomisticDerivatives.lean",
         "build_record": "lean/bridge/build-evidence.json",
@@ -2649,7 +2653,7 @@
             "id": "Forces"
           }
         ],
-        "source_sha256": "bd2e3c10cc8a6b587c2710888535920a47b30875746a4fb13faab1d8e39187af"
+        "source_sha256": "a2f8655c395d34f6ca60e63c36f8e0831bf5ba3d3e1ffc355f057e5b0ea2b814"
       }
     },
     {
@@ -2668,11 +2672,11 @@
           "formula_sha256": "266bfe9ac04cee4e494fb4002abaffafab63319c53a23218ce1196c566832d6c"
         }
       ],
-      "statement": "For a cell energy twice continuously differentiable at a stress-free reference cell and invariant under rigid rotations, the catalog elastic constants C_abcd = -d sigma_ab / d eps_cd have the major symmetry C_abcd = C_cdab and both minor symmetries C_abcd = C_bacd = C_abdc. If they also store positive energy for every nonzero symmetric strain and the reference volume is positive, the catalog's Voigt bulk and shear moduli are positive and its Poisson ratio lies strictly between -1 and 1/2.",
+      "statement": "For a cell energy twice continuously differentiable at a stress-free reference cell and invariant under rigid rotations, the catalog elastic constants C_abcd = -d sigma_ab / d eps_cd have the major symmetry C_abcd = C_cdab and both minor symmetries C_abcd = C_bacd = C_abdc. If they also store positive energy for every nonzero symmetric strain, the catalog's Voigt bulk and shear moduli are positive and its Poisson ratio lies strictly between -1 and 1/2.",
       "sources": [],
       "conditions": [
         "The elastic constants derive from the compressive-positive catalog stress of one cell energy E(F), F = 1 + eps, so C = (1/V) d^2E / d eps d eps at the reference cell.",
-        "The minor symmetries need a stress-free reference; at a pre-stressed reference they fail by terms in the residual stress, and the major symmetry alone remains.",
+        "The minor symmetries need a stress-free reference. At a pre-stressed reference the minor symmetries fail by residual-stress terms, and the stress-strain coefficients a code fits there lose the major symmetry as well; only the energy second derivative keeps it.",
         "For relaxed-ion constants E(F) must already be minimized over the internal coordinates at each strain."
       ],
       "conventions": {
@@ -2688,7 +2692,8 @@
       },
       "remaining_obligations": [
         "Finite-strain fits of stress differences (LAMMPS ELASTIC, DFT stress-strain) estimate the derivative and are not verified, nor are the strain magnitudes and symmetrization they use.",
-        "No compiled witness exhibits a specific hyperelastic energy (for example St Venant-Kirchhoff) meeting all the hypotheses."
+        "No compiled witness exhibits a specific hyperelastic energy (for example St Venant-Kirchhoff) meeting all the hypotheses.",
+        "A relaxed DFT cell is stress-free only to its pressure threshold (QE press_conv_thr default 0.5 kbar) plus the Pulay stress of a fixed cutoff, and a cell at the experimental lattice constant carries residual stress of order GPa; the minor-symmetry violation is then of order the residual stress over C."
       ],
       "evidence": {
         "kind": "compiled_bridge",
@@ -2709,7 +2714,7 @@
             "id": "ElasticConstants"
           }
         ],
-        "source_sha256": "c01083b39062c8aa76c40b00e51cfbfc885a0ed8ee7f27c69ba82db9a4cabe9d"
+        "source_sha256": "7c2e02a8b5ac516416570f85ca49695d33e013a4a8cec4999d4cc7da2561c31a"
       }
     },
     {
@@ -2870,7 +2875,7 @@
           "formula_sha256": "1b2f3949e74ab2b2db0136deee0dd84f2f576b76d18134a7624ebba18964fce0"
         }
       ],
-      "statement": "Interpreting the opaque catalog frequencies as the eigenvalues of the mass-weighted Hessian of the potential at the structure, signed so that an imaginary mode is negative: at a local minimum of a potential twice continuously differentiable there, with positive masses, every eigenvalue is nonnegative, so no frequency is serialized negative (n_imaginary = 0) and each squared frequency is its eigenvalue. For a translation-invariant potential the three mass-weighted rigid translations are zero modes.",
+      "statement": "Interpreting the opaque catalog frequencies as the eigenvalues of the mass-weighted Hessian of the potential at the structure, signed so that an imaginary mode is negative: at a local minimum of a potential twice continuously differentiable there, with positive masses, every eigenvalue is nonnegative, so no frequency is serialized negative (n_imaginary = 0) and each squared frequency is its eigenvalue. For a translation-invariant potential twice continuously differentiable at the structure the three mass-weighted rigid translations are zero modes. The catalog's projected list of 3N-6 or 3N-5 frequencies is a subset of these 3N values, so the sign result covers it.",
       "sources": [],
       "conditions": [
         "The interpretation fixes the opaque producer as the harmonic normal-mode analysis of the potential at the given structure, with frequencies in coherent angular units; the catalog's cm^-1 wavenumbers are omega / (2 pi c).",
@@ -2911,7 +2916,7 @@
             "id": "MolecularFrequency"
           }
         ],
-        "source_sha256": "f2eec170c8cb2ad6496298982f7cef5414fb126dce3f61677651d0cbeb4e33bc"
+        "source_sha256": "17ee78d8a15e7db57d0a416d4ba2dc9f40ad8e3089fb79ded98c7bc9a03a950b"
       }
     },
     {
