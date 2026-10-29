@@ -7,6 +7,43 @@ id.
 
 ## Unreleased
 
+- One Lean package. The Lean 4.31 package in `lean/` (pinned to Physlib
+  a74414af) is removed, with its generators `omai.lean_identities` and
+  `omai.lean_units` and the `lean.yml` workflow. It held five-base node
+  dimensions, 13 edge-dimension equalities and 18 theorems that restated
+  closed-form formulas (from `Y = N/D` conclude `Y*D = N`), none of which
+  certified anything about the physics. `lean/bridge` is the only package.
+  Its generated `OMAIPhyslibDimensions.lean` keeps every dimension
+  definition and drops the 133 `_exponents` theorems that restated them.
+- `docs/data/lean.json` now lists each node's Physlib seven-base ISQ
+  declarations from `lean/bridge` (`nodes[id].lean` and `nodes[id].fields`)
+  with `physlib_rev` and `lean_toolchain`; the `edges` and `identities` keys
+  are gone. 131 nodes have an entry, up from 102.
+- `docs/data/lean_roadmap.json` rates formulas as `definition`, `hard` or
+  `na`; `easy` and `trivial` merge into `definition`. `proven` now means a
+  compiled formula bridge proves a statement about the operator. The Bose-
+  Einstein occupation, Dirac delta and Heaviside step count as special
+  functions, not code outputs. No id changes.
+- `formula_bindings.json` gains the relation `local`: a compiled theorem
+  about an OMAI formula that Physlib has no model for. A local binding
+  cites no Physlib source, must be compiled and must state conditions and
+  remaining obligations. Inventory rows covered only by local bindings have
+  status `local` and keep their Physlib gap reason. `operators_compiled` and
+  `nodes_compiled` keep their meaning (Physlib-anchored subjects only); new
+  counters `operators_compiled_local`, `nodes_compiled_local`,
+  `operators_proved`, `nodes_proved`, `operators_local` and `nodes_local`
+  report the rest. Payloads without local bindings validate as before; a
+  payload with local bindings must carry the new counters. A cited
+  declaration may live in any bridge module the evidence source imports.
+- New compiled bindings: the quasiharmonic producers (Gibbs energy,
+  C_P, expansion, isothermal modulus, Gruneisen contraction), crystal
+  lattice dynamics (dynamical matrix, dispersion, group velocity) and the
+  relaxation-time conductivity, anchored to Physlib; local bindings for the
+  elastic moduli, composite conductivity and depolarization factor, cure
+  kinetics and the participation ratio. The non-analytic correction, the
+  linearized-BTE collision matrix and the cumulative conductivity of a
+  linearized-BTE solution are recorded as catalog defects in their gap
+  reasons. No id changes.
 - `docs/data/releases/openmaterials-ai.json` registers 0.4.0 (tag v0.4.0), so
   `release_check` resolves an `execution.registry` row naming
   `openmaterials-ai` 0.4.0 against the live registry. The 0.4.0 wheel's

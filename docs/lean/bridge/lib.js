@@ -126,7 +126,8 @@
     var formula = row.formula_latex ? '<h3>Operator formula</h3><pre class="formula-source">' + esc(row.formula_latex) + '</pre>' : '';
     var params = {}; params[row.kind] = row.id;
     var link = '<p><a href="../../map/' + esc(fragment(params)) + '">Open ' + (row.kind === 'node' ? 'quantity' : 'operator') + ' on the map</a></p>';
-    var status = row.status === 'gap' ? 'Gap' : row.compiled ? 'Compiled subject' : 'Referenced; not a compiled subject';
+    var status = row.status === 'gap' ? 'Gap' : row.status === 'local' ? (row.compiled ? 'Local proof subject' : 'Local proof input') :
+      row.compiled ? 'Compiled subject' : 'Referenced; not a compiled subject';
     var scope = !row.compiled && row.bindings.some(function (b) { return b.evidence.kind === 'compiled_bridge'; }) ?
       '<p class="notice gnote">This quantity participates in a compiled bridge, but its producing formula is not proved by that bridge.</p>' : '';
     return '<details class="inventory-row"><summary><span class="row-kind">' + (row.kind === 'node' ? 'Quantity' : 'Operator') + '</span> <strong>' + esc(row.id) +

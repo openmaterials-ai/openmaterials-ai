@@ -1,5 +1,5 @@
 {
-  "physlib_rev": "d70acc20677320d37b38e602e331e900466b704d",
+  "physlib_rev": "9b583cb6ef6e9cc537c4d4b786b508de1abbcf42",
   "lean_toolchain": "leanprover/lean4:v4.35.0",
   "catalog_nodes": 136,
   "fields": 138,

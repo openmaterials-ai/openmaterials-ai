@@ -1,9 +1,10 @@
-"""Current, additive seven-base ISQ dimension encoding for the Physlib bridge.
+"""Seven-base ISQ dimension encoding of every map node for the Physlib bridge.
 
-This module deliberately does not change ``physlean_export`` or the historical
-Lean 4.31 package. Every catalog field is accounted for, including promoted
-parameters and multi-field nodes. Opaque dimensions are gaps, never unitless.
-The generated witnesses check dimensions only, not units or physical models.
+Every catalog field is accounted for, including promoted parameters and
+multi-field nodes. Opaque dimensions are gaps, never unitless. Each encoded
+field is a Physlib ``Dimension ISQDimensionBase`` definition; the Python tests
+check the base order, so no Lean theorem restates the exponents just written.
+The declarations carry dimensions only, not units or physical models.
 """
 from __future__ import annotations
 
@@ -14,7 +15,7 @@ from pathlib import Path
 from omai.map_data import DOMAINS, build_graph_dict
 from omai.operator import dimensions
 
-PHYSLIB_REV = "d70acc20677320d37b38e602e331e900466b704d"
+PHYSLIB_REV = "9b583cb6ef6e9cc537c4d4b786b508de1abbcf42"
 LEAN_TOOLCHAIN = "leanprover/lean4:v4.35.0"
 ISQ_BASES = ("mass", "length", "time", "temperature", "amount", "current", "luminousIntensity")
 _ROOT = Path(__file__).resolve().parents[1]
@@ -51,6 +52,14 @@ def dimension_records() -> list[dict]:
     return records
 
 
+def declaration_source(record: dict) -> str:
+    """The Lean definition of one encoded field, as it appears in the bridge."""
+    ident = record["declaration"].rsplit(".", 1)[1]
+    return "\n".join([f"def {ident} : Dimension ISQDimensionBase := ofFunction fun",
+                      *(f"  | .{base} => {power}"
+                        for base, power in zip(ISQ_BASES, record["exponents"]))])
+
+
 def build_dimensions_export() -> tuple[str, dict]:
     records = dimension_records()
     lines = [
@@ -73,16 +82,8 @@ def build_dimensions_export() -> tuple[str, dict]:
         if r["status"] == "opaque":
             lines.append(f"-- Opaque dimension omitted: {r['node']} / {r['field']}.")
             continue
-        ident = r["declaration"].rsplit(".", 1)[1]
-        lines.extend([f"-- {r['node']} / {r['field']}; uid {r['node_uid']}",
-                      f"def {ident} : Dimension ISQDimensionBase := ofFunction fun"])
-        lines.extend(f"  | .{base} => {power}" for base, power in zip(ISQ_BASES, r["exponents"]))
-        # All seven projections are checked against the original OMAI tuple;
-        # this is an encoding witness, not an operator/model theorem.
-        propositions = [f"{ident}.exponent .{base} = {power}"
-                        for base, power in zip(ISQ_BASES, r["exponents"])]
-        lines.append(f"theorem {ident}_exponents :")
-        lines.append("    " + " ∧\n    ".join(propositions) + " := by decide")
+        lines.append(f"-- {r['node']} / {r['field']}; uid {r['node_uid']}")
+        lines.append(declaration_source(r))
         lines.append("")
     lines.extend(["end OMAI.PhyslibBridge.ISQ", ""])
     stats = {"physlib_rev": PHYSLIB_REV, "lean_toolchain": LEAN_TOOLCHAIN,

@@ -4,8 +4,8 @@ defaultTargets = ["OMAIPhyslibBridge"]
 [[require]]
 name = "physlib"
 git = "https://github.com/leanprover-community/physlib.git"
-rev = "d70acc20677320d37b38e602e331e900466b704d"
+rev = "9b583cb6ef6e9cc537c4d4b786b508de1abbcf42"
 
 [[lean_lib]]
 name = "OMAIPhyslibBridge"
-globs = ["OMAIPhyslibBridge", "OMAIPhyslibDimensions", "OMAIPhyslibSemantics", "OMAIPhyslibContinuum", "OMAIPhyslibHarmonicEnsemble", "OMAIPhyslibHarmonicSums", "OMAIPhyslibHarmonicProduct", "OMAIPhyslibHarmonicDensity", "OMAIPhyslibJointDensity", "OMAIPhyslibStaticEnsemble", "OMAIPhyslibResponseUnits", "OMAIPhyslibResponseCalculus", "OMAIPhyslibHarmonicVolume", "OMAIPhyslibResponseWitness", "OMAIPhyslibHarmonicResponse"]
+globs = ["OMAIPhyslibBridge", "OMAIPhyslibDimensions", "OMAIPhyslibSemantics", "OMAIPhyslibContinuum", "OMAIPhyslibHarmonicEnsemble", "OMAIPhyslibHarmonicSums", "OMAIPhyslibHarmonicProduct", "OMAIPhyslibHarmonicDensity", "OMAIPhyslibJointDensity", "OMAIPhyslibStaticEnsemble", "OMAIPhyslibResponseUnits", "OMAIPhyslibResponseCalculus", "OMAIPhyslibHarmonicVolume", "OMAIPhyslibResponseWitness", "OMAIPhyslibHarmonicResponse", "OMAIPhyslibModeGruneisen", "OMAIPhyslibThermalGruneisen", "OMAIPhyslibGruneisenWitness", "OMAIPhyslibGibbsBranch", "OMAIPhyslibQHA", "OMAIPhyslibQHAWitness", "OMAIElasticity", "OMAICompositeConductivity", "OMAICureKinetics", "OMAIPhyslibLatticeDynamics", "OMAIPhyslibPhononDispersion", "OMAIPhyslibGroupVelocity", "OMAIPhyslibLatticeWitness", "OMAIPhyslibKappaContraction", "OMAIPhyslibRTAConductivity", "OMAIPhyslibParticipationRatio", "OMAIDeviceMetrology", "OMAIMaterialsTransport"]

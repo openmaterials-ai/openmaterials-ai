@@ -43,12 +43,12 @@
   <div class="page-body">
     <nav class="toc gtoc" aria-label="Contents">
       <a href="#coverage">Coverage</a><a href="#inventory">OMAI inventory</a><a href="#upstream-inventory">Physlib declarations</a>
-      <a href="#analytic">Harmonic ensemble proofs</a><a href="#response">Cp response</a><a href="#scope">Evidence and scope</a><a href="#reproduce">Reproduce</a>
-      <a href="../">Historical verified layer</a>
+      <a href="#analytic">Harmonic ensemble proofs</a><a href="#response">Cp response</a><a href="#gruneisen">Thermal Gr&uuml;neisen</a><a href="#qha">Quasiharmonic producers</a><a href="#elasticity">Elasticity</a><a href="#composites-cure">Composites and cure</a><a href="#lattice">Lattice dynamics</a><a href="#devices-materials">Devices and materials</a><a href="#scope">Evidence and scope</a><a href="#reproduce">Reproduce</a>
+      <a href="../">Lean overview</a>
     </nav>
     <article class="prose gwrap">
-      <p><a href="https://physlib.io/">Physlib</a> combines the former PhysLean and Lean-QuantumInfo libraries. This bridge uses Physlib <a id="upstream" href="https://github.com/leanprover-community/physlib/tree/d70acc20677320d37b38e602e331e900466b704d"><code>d70acc2067732</code></a>, on Lean 4.35.0.
-        Its dependency pin is separate from the <a href="../">historical Lean 4.31.0 package</a>.
+      <p><a href="https://physlib.io/">Physlib</a> combines the former PhysLean and Lean-QuantumInfo libraries. This bridge uses Physlib <a id="upstream" href="https://github.com/leanprover-community/physlib/tree/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42"><code>9b583cb6ef6e9</code></a>, on Lean 4.35.0.
+        It is the map's only Lean package; the <a href="../">Lean overview</a> lists its node dimensions.
         The source inventory includes every OMAI quantity and operator, including operators without input links.</p>
       <p class="notice gnote">Mapped does not mean proved. Exact-definition, conditional, and conceptual correspondences describe the relation to upstream;
         source correspondence versus compiled bridge describes the evidence. A general Physlib theorem is not automatically a theorem about an OMAI model.</p>
@@ -66,7 +66,7 @@
         <div class="filters">
           <label>Search<input id="search" type="search" placeholder="Quantity, formula, model, or condition"></label>
           <label>Kind<select id="kind"><option value="">All</option><option value="node">Quantity</option><option value="operator">Operator</option></select></label>
-          <label>Correspondence<select id="status"><option value="">All</option><option value="mapped">Referenced</option><option value="gap">Gap</option></select></label>
+          <label>Correspondence<select id="status"><option value="">All</option><option value="mapped">Referenced</option><option value="local">Local proof only</option><option value="gap">Gap</option></select></label>
           <label>Proof scope<select id="evidence"><option value="">All</option><option value="compiled">Compiled subjects</option><option value="source">Referenced, not compiled subjects</option></select></label>
         </div>
         <p id="shown" role="status" aria-live="polite"></p>
@@ -139,12 +139,82 @@
           <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/27f71197ccfac0bbfed535a4376e941113bb567b/lean/bridge/response-formula-contract.json">reviewed endpoint contract</a>,
           and <a href="#operator=contract_heat_capacity_p_identity">mapping conditions and sources</a>.</p>
       </section>
+      <section class="gsec" id="gruneisen">
+        <h2>Thermal Gr&uuml;neisen parameter</h2>
+        <p>The same static-plus-harmonic volume family proves
+          <code>Gamma = alpha_V*K_T/C_V_vol</code> on a local stable constant-pressure branch.
+          Gamma is defined independently as the heat-capacity-weighted mean of mode Gr&uuml;neisen parameters
+          <code>gamma_i = -v*omega_i'/omega_i</code>, weighted by actual canonical mode heat capacities at the branch volume.
+          Expansion is <code>V_m'(T)/V_m(T)</code> along the branch, the isothermal bulk modulus is <code>V_m*F_VV</code>, and the volumetric heat capacity is
+          <code>sum(c)/(N_q*v)</code>, all for the same free energy, temperature and primitive cell.</p>
+        <p>A supporting result holds at fixed volume without a branch: <code>(dP/dT)_V = Gamma*C_V_vol</code>.
+          The heat-capacity weights use angular SI frequency; mode parameters are logarithmic derivatives and do not depend on a constant frequency scale.
+          Every mode must have positive frequency, so zero acoustic modes need separate treatment. Gamma, the mode parameters and the expansion may be negative,
+          and no statement is made at zero temperature. An adiabatic modulus paired with <code>C_V_vol</code> gives <code>Gamma*(1+alpha_V*Gamma*T)</code>, not Gamma.</p>
+        <p>Exact model examples set the heat-capacity arguments <code>hbar*omega/(kB*T)</code> to 1, 2 and 3 with mode parameters 1, 2 and 3.
+          Gamma then lies strictly between 1 and the arithmetic mean 2: every weight is positive, and the higher-frequency modes, which carry the larger mode parameters, have smaller heat-capacity weights.
+          A negative-rate branch has negative Gamma and negative expansion, and a constant-frequency control with one q point has both equal to zero.
+          These are exact model examples, not material fits. The result adds compiled coverage only for the identity operator and its output;
+          it does not verify FC3 or finite-difference mode-Gr&uuml;neisen producers, phonopy's fitted thermal-Gr&uuml;neisen quotient, numerical QHA
+          or input producers. The opaque <code>contract_thermal_gruneisen</code> contraction is covered below, as a corollary of this identity under the quasiharmonic interpretation.</p>
+        <p>Inspect the
+          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/27f71197ccfac0bbfed535a4376e941113bb567b/lean/bridge/OMAIPhyslibThermalGruneisen.lean">catalog endpoint</a>,
+          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/27f71197ccfac0bbfed535a4376e941113bb567b/lean/bridge/OMAIPhyslibModeGruneisen.lean">mode parameters and weights</a>,
+          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/27f71197ccfac0bbfed535a4376e941113bb567b/lean/bridge/OMAIPhyslibGruneisenWitness.lean">model examples</a>,
+          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/27f71197ccfac0bbfed535a4376e941113bb567b/lean/bridge/OMAIPhyslibHarmonicVolume.lean">actual volume family</a>,
+          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/27f71197ccfac0bbfed535a4376e941113bb567b/lean/bridge/thermal-gruneisen-formula-contract.json">reviewed endpoint contract</a>,
+          and <a href="#operator=contract_thermal_gruneisen_identity">mapping conditions and sources</a>.</p>
+      </section>
+      <section class="gsec" id="qha">
+        <h2>Quasiharmonic producers</h2>
+        <p>The five quasiharmonic producers are defined from the Gibbs surface of the same static-plus-harmonic ensembles. The Gibbs energy is <code>G(T, p) = inf_V [F(T, V) + p V]</code> over a volume window, the heat capacity is <code>C_P = -T (d2G/dT2)_p</code>, the expansion is <code>alpha_V = (dV/dT)_p / V</code> with <code>V = (dG/dp)_T</code>, the modulus is <code>V (d2F/dV2)_T</code> at that volume, and the thermal Gr&uuml;neisen contraction is the heat-capacity-weighted mean of the mode parameters.</p>
+        <p>The C1 implicit-function theorem gives a two-parameter equilibrium family <code>V(T, p)</code> through every stable stationary point. On any volume window across which <code>F + p V</code> is convex, that family is the unique minimizer, so a scan that verifies the convexity of <code>F + p V</code> across its window selects a unique minimizer; the selected volume must lie strictly inside the scanned range, and extrapolation of a fitted equation of state is not covered. The envelope relations give <code>(dG/dT)_p</code> as <code>-(N_A/N_q)</code> times the Physlib ensemble entropy and <code>(dG/dp)_T = V</code>.</p>
+        <p><code>C_P</code> equals the enthalpy derivative of the Cp identity above and also <code>C_V + T (dV/dT)_p (dS/dV)_T</code>, the form of phonopy's default polyfit estimator, through the Maxwell relation <code>(dS/dV)_T = -F_TV = alpha_V K_T</code>; <code>C_P &gt; C_V</code> exactly when <code>alpha_V</code> is nonzero. The expansion read off G is <code>-F_TV/(V F_VV)</code>, and the modulus at the selected volume equals <code>-V/(dV/dp)_T</code>; its positivity is the stability premise, not a result. It is the modulus along the model's hydrostatic volume coordinate, not the Voigt average that the BulkModulus node defines. The Gr&uuml;neisen contraction equals <code>alpha_V K_T / C_V_vol</code> with both read off G. Exact witnesses realize positive, negative and zero expansion.</p>
+        <p>The theorems hold for any <code>T &gt; 0</code> with <code>F_VV &gt; 0</code>, including temperatures where the quasiharmonic approximation is physically unreliable. Numerical volume scans, equation-of-state fits, minimizers, FC3 and finite-difference Gr&uuml;neisen producers and phonopy are not verified; producers must reject imaginary modes at every scanned volume and use one cell for the static energy and the phonons. Inspect <code>OMAIPhyslibGibbsBranch.lean</code>, <code>OMAIPhyslibQHA.lean</code> and <code>OMAIPhyslibQHAWitness.lean</code>, and the conditions for <a href="#operator=compute_qha_gibbs">compute_qha_gibbs</a>, <a href="#operator=compute_heat_capacity_p">compute_heat_capacity_p</a>, <a href="#operator=compute_thermal_expansion">compute_thermal_expansion</a>, <a href="#operator=compute_bulk_modulus_qha">compute_bulk_modulus_qha</a> and <a href="#operator=contract_thermal_gruneisen">contract_thermal_gruneisen</a>.</p>
+      </section>
+      <section class="gsec" id="elasticity">
+        <h2>Linear elasticity (local proofs)</h2>
+        <p>Physlib has no elastic-solid model, so these are local theorems over Mathlib about the catalog's Voigt contractions <code>K = sum C_aabb / 9</code> and <code>G = -sum C_aabb / 30 + sum C_abab / 10</code>, its Young's modulus and Poisson ratio, and its equation-of-state modulus <code>V0 E''(V0)</code>. The stress <code>C : e</code> is tensile-positive, the negative of the catalog's compressive-positive Stress node.</p>
+        <p>Any stiffness tensor with the first minor symmetry that stores positive energy for every nonzero symmetric strain has positive Voigt moduli, through an orthogonal basis of deviatoric strains, so the catalog's Poisson ratio lies in (-1, 1/2) for every crystal symmetry. For an anisotropic crystal, E and nu computed from the Voigt moduli are Voigt-polycrystal estimates. An isotropic tensor gives the Lame values <code>K = lam + 2 mu / 3</code> and <code>G = mu</code>, is stable exactly when both are positive, and gives the Lame expressions for E and nu.</p>
+        <p>For a cubic crystal the contractions give <code>(C11 + 2 C12)/3</code> and <code>(C11 - C12 + 3 C44)/5</code>. The trace of the stress depends on the strain only through its trace, <code>tr sigma = 3 K tr e</code>, so the Voigt bulk modulus is the stress-controlled one; the Voigt shear modulus is exact only at Zener ratio 1. With <code>C12 &lt;= C11</code> and <code>C44 &gt;= 0</code>, the energy minimized over cell shape at fixed volume has curvature <code>V0 E''(V0) = K</code>, which relates the equation-of-state modulus to the tensor contraction. Uniform scaling without shape relaxation gives the Voigt K for every tensor. Inspect <code>OMAIElasticity.lean</code> and the conditions for <a href="#operator=contract_bulk_modulus">contract_bulk_modulus</a>.</p>
+      </section>
+      <section class="gsec" id="composites-cure">
+        <h2>Composites and cure kinetics (local proofs)</h2>
+        <p>Physlib has no effective-medium or polymer-cure model, so these results are local theorems over Mathlib about the catalog's own formulas. They cite no Physlib declaration and are counted apart from the Physlib-anchored proofs.</p>
+        <p>Both closed-form branches of the spheroid depolarization factor and its sphere value equal <code>L33(p) = int_0^1 t^2/(t^2 + p^2 (1 - t^2)) dt</code>. So <code>L33</code> lies in (0, 1), decreases strictly with the aspect ratio <code>p = d3/d1</code>, is continuous through the sphere <code>p = 1</code> where it equals 1/3, and tends to 0 for needles and to 1 for disks.</p>
+        <p>For every spheroid shape the random Nan conductivity exceeds the matrix value by <code>k_m f (2 b11 + b33)/(3 - f (2 L11 b11 + L33 b33))</code> with a positive denominator, so filler whose interface-corrected conductivities both exceed the matrix raises it. For spheres both Nan formulas reduce to Maxwell-Garnett with the corrected filler conductivity <code>k/(1 + 2k/(G d))</code>, which tends to <code>k</code> as the interface conductance grows. Along the alignment axis the aligned conductivity lies strictly between the series and parallel mixtures and, at fixed <code>d3</code>, rises strictly with the aspect ratio.</p>
+        <p>The catalog's <code>d</code> is a full particle dimension, a sphere's diameter, while Hasselman-Johnson's <code>a_rad</code> is its radius. The Hasselman-Johnson formula is Maxwell-Garnett at <code>d = 2 a_rad</code>, so putting the radius into <code>d</code> doubles the interface penalty. It exceeds the matrix conductivity exactly above the critical radius <code>(k_m/G) k/(k - k_m)</code>. Away from spheres the per-direction interface correction is a slab approximation of unvalidated accuracy.</p>
+        <p>The Kamal-Sourour cure time increases strictly with conversion below full cure and its derivative is the reciprocal rate. Near every interior time there is an inverse <code>alpha(t)</code> that solves <code>d alpha/dt = (k1 + k2 alpha^m)(1 - alpha)^n</code> throughout a neighbourhood; no global solution is claimed. The DiBenedetto relation, in kelvin, maps conversions <code>[0, 1]</code> one to one onto <code>[T_g0, T_ginf]</code> and lies strictly below the linear interpolation inside the interval for <code>lambda &lt; 1</code>.</p>
+        <p>Inspect <code>OMAICompositeConductivity.lean</code> and <code>OMAICureKinetics.lean</code> in <code>lean/bridge</code>, and the conditions for
+          <a href="#operator=depolarization_factors">depolarization_factors</a>, <a href="#operator=nan_effective_kappa">nan_effective_kappa</a>,
+          <a href="#operator=nan_effective_kappa_aligned">nan_effective_kappa_aligned</a>, <a href="#operator=hasselman_johnson">hasselman_johnson</a>,
+          <a href="#operator=kamal_cure_conversion">kamal_cure_conversion</a> and <a href="#operator=dibenedetto_glass_transition">dibenedetto_glass_transition</a>.</p>
+      </section>
+      <section class="gsec" id="lattice">
+        <h2>Lattice dynamics</h2>
+        <p>Physlib's crystal structure supplies the sites and the translation action; the lattice-dynamics content is OMAI-local. Second-order force constants on crystal sites with equal mixed partials, translation invariance and finite range satisfy the index-permutation symmetry <code>Phi_ij(-R) = Phi_ji(R)</code>, and the catalog dynamical matrix <code>D_ij(q) = sum_R e^{i q.R} Phi_ij(R)/sqrt(M_i M_j)</code> is Hermitian at every wavevector. With the acoustic sum rule the Gamma-point matrix has at least three independent zero modes, the mass-weighted rigid translations. The catalog uses the cell-vector phase; phonopy's atom-position phase leaves <code>omega^2</code> and nondegenerate velocities unchanged but changes the eigenvectors by <code>e^{-i q.tau}</code>, so phonopy eigenvectors must not be fed into the catalog's <code>dD/dq</code>.</p>
+        <p>Real frequencies need mechanical stability. Folding the force constants into a finite Born-von Karman supercell, <code>Phi_BvK(R) = sum_L Phi(R + L)</code>, reproduces the catalog <code>D(q)</code> exactly at every wavevector commensurate with the supercell, and a Bloch-wave argument shows that a stable supercell makes <code>D(q)</code> positive semidefinite there, so <code>omega^2 &gt;= 0</code>. Incommensurate wavevectors are the normal case for BTE (a 4x4x4 force-constant supercell with a 19x19x19 mesh), and Fourier interpolation is exact only at commensurate points; nothing is stated at the others.</p>
+        <p>On a differentiable eigenvector path, away from Gamma, the catalog group velocity <code>e^dagger (dD/dq) e / (2 omega)</code> is real and equals <code>d omega/dq</code> by the Hellmann-Feynman theorem, with <code>dD/dq</code> the exact derivative of the catalog matrix. Symmetry-enforced degeneracies, such as transverse pairs along Gamma-X and Gamma-L, are generic, and the eigenvector a code returns there is not on such a path. A compiled monatomic chain gives <code>omega^2 = (2K/M)(1 - cos(q a))</code> and velocity <code>a sqrt(K/M) cos(q a / 2)</code>.</p>
+        <p>With the actual Physlib canonical mode heat capacities at <code>T &gt; 0</code> and positive half-widths <code>Gamma = Im Sigma</code> (so <code>1/tau = 2 Gamma</code>), the relaxation-time conductivity is symmetric and positive semidefinite, and positive definite exactly when the group velocities span space. The participation ratio of a normalized mass-weighted mode lies between <code>1/N</code> and 1, with both equality cases; it is a local proof over Mathlib.</p>
+        <p>Three catalog formulas are recorded as defects and not covered. The non-analytic correction uses the free component <code>q^alpha</code> instead of the contracted <code>q_gamma</code>, so its q dependence cancels. The collision matrix of the linearized BTE has the wrong relaxation-time limit and is not symmetric. The cumulative conductivity takes the linearized-BTE input, for which it is a signed partial sum: a compiled three-mode example with one three-phonon process, Casimir boundary scattering and Bose-Einstein weights is not monotone in either the frequency or the mean-free-path binning. Inspect the <a href="#operator=compute_dynamical_matrix">dynamical matrix</a>, <a href="#operator=compute_dispersion">dispersion</a>, <a href="#operator=compute_group_velocity">group velocity</a> and <a href="#operator=contract_kappa%5Bbte_solver%3Drta%5D">relaxation-time conductivity</a> conditions and sources.</p>
+      </section>
+      <section class="gsec" id="devices-materials">
+        <h2>Analog devices, Arrhenius diffusion and ionic conduction (local proofs)</h2>
+        <p>Physlib has no device or solid-state diffusion model, so these results are local theorems over Mathlib about the catalog's own formulas. They cite no Physlib declaration and are counted apart from the Physlib-anchored proofs.</p>
+        <p>Every continuous positive drift law that does not depend on the choice of reference time is the catalog's power law, by the multiplicative Cauchy equation; this holds for one device and one level with a fixed exponent, while an array mean over a spread of exponents is not a power law. Conductances that follow the two-dimensional <code>T^(3/2)</code> injection law, inverted with the catalog's <code>T^2</code> law from two temperatures, return the barrier lowered by <code>k_B T_eff/2</code>, where <code>T_eff</code>, the reciprocal logarithmic mean of <code>1/T_1</code> and <code>1/T_2</code>, lies strictly between the two temperatures. An ensemble with two symmetric sites exchanging at the catalog's retention rate relaxes to one half with time constant <code>tau/2</code>, and no other evolution solves its master equation.</p>
+        <p>Under a linear ramp the expected hop count from zero bias is <code>exp((V - V*)/b)</code>, <code>b = k_B T/alpha_F</code>, minus <code>g_r k_B T/(alpha_F tau_0)</code>, with <code>tau_0</code> the zero-bias lifetime of the unprogrammed state over the SET barrier; it equals the catalog's RetentionTime only for symmetric sites. The first hop then follows a minimum-Gumbel law of total mass one whose mean, through <code>Gamma'(1) = -gamma</code>, is the catalog's set voltage <code>V* - gamma b</code>.</p>
+        <p>The programming error exceeds <code>c/sqrt(2 n_w)</code> for every kernel and window. For a conductance that changes monotonically during a pulse applied across the same two terminals, the dissipated energy lies between the catalog's pulse energies at the initial and the final conductance. For a channel of segments in series, the catalog conductance with the length-averaged conductivity is an upper bound on the true conductance.</p>
+        <p>The catalog's weighted Arrhenius fit is the weighted least-squares line of <code>log D</code> against <code>1/T</code>, and on exact Arrhenius data it returns the activation energy for any positive weights. Fitting the Nernst-Einstein conductivity <code>sigma</code> instead of <code>sigma T</code> in the same way returns <code>E_a - k_B T_eff</code> with <code>T_eff</code> inside the data's temperature range.</p>
+        <p>The conductance window, the coefficient of variation and the Einstein diffusivity <code>D = slope/(2d)</code> are definitions with nothing non-obvious to prove. The Schottky-Mott barrier is unbound because its validity, the absence of Fermi-level pinning, cannot be established algebraically. Inspect <code>OMAIDeviceMetrology.lean</code> and <code>OMAIMaterialsTransport.lean</code> in <code>lean/bridge</code>, and the conditions for
+          <a href="#operator=emit_thermionic_conductance">emit_thermionic_conductance</a>, <a href="#operator=ramp_set_voltage">ramp_set_voltage</a> and <a href="#operator=fit_arrhenius">fit_arrhenius</a>.</p>
+      </section>
       <section class="gsec" id="scope">
         <h2>Evidence and scope</h2>
         <ul>
           <li><strong>Exact definition:</strong> the displayed definitions correspond under the specified interpretation. This label alone is not a Lean proof.</li>
           <li><strong>Conditional:</strong> a model, units, index or normalization bridge is required. Inspect the remaining obligations.</li>
           <li><strong>Conceptual:</strong> a related model or concept, not a formula-equivalence claim.</li>
+          <li><strong>Local:</strong> a compiled theorem about the OMAI formula itself, over Mathlib, where Physlib has no model to anchor it. It cites no Physlib declaration. Rows it covers show the status Local proof, not Referenced, and the coverage ledger counts them apart from Physlib-anchored results.</li>
           <li><strong>Gap:</strong> no correspondence was established in the reviewed source. Other or later developments may supply one.</li>
         </ul>
         <p>Scalar thermoelectric results require a common operating point and explicit isotropic interpretation where OMAI carries tensor quantities.
@@ -157,7 +227,7 @@
         <h2>Reproduce and inspect</h2>
         <p>The <a href="../../data/formula_bindings.json">machine-readable inventory</a> is generated from the reviewed mapping records shipped with OMAI and its existing scientific identities.
           <a href="https://github.com/openmaterials-ai/openmaterials-ai/tree/27f71197ccfac0bbfed535a4376e941113bb567b/lean/bridge">Reviewed Lean source and build instructions</a>
-          are separate from the retained historical package.</p>
+          are in <code>lean/bridge</code>.</p>
         <pre class="formula-source">python -m omai.formula_bindings --check
 python -m omai.formula_bindings --check --physlib-path /path/to/pinned/physlib
 bash lean/bridge/check.sh
@@ -214,10 +284,12 @@ python -m omai.formula_bindings --check --lean-package lean/bridge</pre>
     var stats = [ ['Quantities referenced', c.nodes_mapped + ' / ' + c.nodes_total],
       ['Operators referenced', c.operators_mapped + ' / ' + c.operators_total],
       ['Quantities covered by compiled results', c.nodes_compiled + ' / ' + c.nodes_total],
-      ['Compiled formula output quantities', c.nodes_compiled_outputs], ['Standalone quantity interpretations', c.nodes_compiled_interpretations], ['Operators covered by compiled results', c.operators_compiled + ' / ' + c.operators_total],
+      ['Compiled formula output quantities', c.nodes_compiled_outputs], ['Standalone quantity interpretations', c.nodes_compiled_interpretations], ['Operators covered by Physlib-anchored compiled results', c.operators_compiled + ' / ' + c.operators_total],
+      ['Operators covered by local proofs only', (c.operators_compiled_local || 0) + ' / ' + c.operators_total],
+      ['Operators with any compiled proof', (c.operators_proved === undefined ? c.operators_compiled : c.operators_proved) + ' / ' + c.operators_total],
       ['Source-only binding records', c.source_correspondences], ['Compiled bridge records', c.compiled_bridges],
       ['Physlib declarations referenced', declarations.length], ['Physlib modules referenced', new Set(declarations.map(function (row) { return row.module; })).size],
-      ['Exact-definition relations', c.relations.exact_definition], ['Conditional relations', c.relations.conditional], ['Conceptual relations', c.relations.conceptual] ];
+      ['Exact-definition relations', c.relations.exact_definition], ['Conditional relations', c.relations.conditional], ['Conceptual relations', c.relations.conceptual], ['Local relations', c.relations.local || 0] ];
     document.getElementById('coverage-counts').innerHTML = stats.map(function (s) { return '<div><dt>' + F.esc(s[0]) + '</dt><dd>' + F.esc(s[1]) + '</dd></div>'; }).join('');
     var revisionLink = F.sourceHref(data.upstream.repository + '/tree/' + data.upstream.revision);
     if (revisionLink) document.getElementById('upstream').href = revisionLink;

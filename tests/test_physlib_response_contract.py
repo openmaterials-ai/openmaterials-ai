@@ -34,11 +34,15 @@ from omai.formula_bindings import (
     validate_formula_bindings,
 )
 from omai.operator.identity import canonical_json
+from physlib_tranches import (
+    GLOBAL_COVERAGE, bindings_after, contracts_after, pairs_after, subjects_after,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
 PACKAGE = ROOT / "lean/bridge"
-REVISION = "d70acc20677320d37b38e602e331e900466b704d"
+REVISION = "9b583cb6ef6e9cc537c4d4b786b508de1abbcf42"
 OLD_REVISION = "8ddcc004043c5b537e4225fa763121c176b62a4a"
+PREVIOUS_REVISIONS = (OLD_REVISION, "d70acc20677320d37b38e602e331e900466b704d")
 TOOLCHAIN = "leanprover/lean4:v4.35.0"
 BINDING_ID = "harmonic-static-cp-identity"
 CONTRACT_NAME = "response-formula-contract.json"
@@ -93,7 +97,10 @@ LEGACY_CONTRACT_HASHES = {
     "harmonic-density-formula-contract.json": "b3f5f43df5ae50417ec309a996dcdbbef311fcac9bd4bb72957f45da28533ba8",
     "joint-density-formula-contract.json": "f5a5bb01044f479cf9770573121442a84117af1a84a6976d5ede0765256dfd04"
 }
-REQUIRED_CONTRACTS = frozenset(LEGACY_CONTRACT_HASHES) | {CONTRACT_NAME}
+CP_ERA_CONTRACTS = frozenset(LEGACY_CONTRACT_HASHES) | {CONTRACT_NAME}
+GAMMA_CONTRACT_NAME = "thermal-gruneisen-formula-contract.json"
+# Later tranches add their own required contracts; see tests/physlib_tranches.py.
+REQUIRED_CONTRACTS = CP_ERA_CONTRACTS | {GAMMA_CONTRACT_NAME} | contracts_after()
 BASELINE_BINDINGS = frozenset(
     ['absolute-temperature',
      'abstract-crystal-structure',
@@ -148,17 +155,6 @@ PRESERVED_HASHES = {
     "omai/vectors/records.json": "d9aff626f7153b4b0b1b4db40d886b09ac4af8bc354048c221dae79dfa3f777f",
     "omai/vectors/releases.json": "e14c995a44f307fcfce04ea701cb59ad933a7f41239085a9799e6d3ed2c81bd3",
     "omai/vectors/render.json": "e01c9344751de35c5862da063da0ae27c8549aaed035d5117c6fcdb748446e76",
-    "lean/.gitignore": "b3ad09fc93f83fdbd0bee771258dd4a58d3798fd7e6048611dde5a804bb43f1e",
-    "lean/LintProbe.lean": "117cc40c968798d35dc7bfb098cac3bd8b582ad30860a2ec31d67175b8f3232a",
-    "lean/OpenMaterials.lean": "3238be4ebef10d77a7fa53a20235aed062d7e039715657ed40692892643e9f7a",
-    "lean/OpenMaterialsDimensions.lean": "a5d210f8bba4da8ae1f4a65b39906c142e43c6260612f508e6448242572b7c6e",
-    "lean/OpenMaterialsIdentities.lean": "f9744e2068b3ad28a9f8fcfd51dbc2d47a2f63b808d9e8fbb215aaefa7aecbbc",
-    "lean/OpenMaterialsUnits.lean": "6a51154bb4115565819d98bb8f53e8acbf5fe704aad12bb0e24b37bf7bce2ba4",
-    "lean/README.md": "d9aff6065a2201ac9dbca7520521163eec9e0b296e00dc3121029d69509b3361",
-    "lean/check.sh": "e342b394a4c7e9a281161acc21f8c80095d41a7bd28c62eed097c87b8d65673c",
-    "lean/lake-manifest.json": "c1aaccc183f37c07de7ed3e241513fabfabae08e39ecaca855dffe0070f83a90",
-    "lean/lakefile.toml": "b9769da9ef3e2d43f927ceb8c15ecc5d7bacea45431fdb5bf55cc0f3c2d3af7f",
-    "lean/lean-toolchain": "efac0b94923b2d8b6840cd35be9177ad0fc5ab2332f4f4311c98712cee92fdee",
     "lean/bridge/OMAIPhyslibSemantics.lean": "9ce9bbe14c751333465a9f08bdb5319f369361e136f2f8233e8e72e6614797a5",
     "lean/bridge/OMAIPhyslibContinuum.lean": "e8bff3cb5d44cd78885d8c5f200d8761e8c568cd0d101fc0c2110f521bdca7ff",
     "lean/bridge/OMAIPhyslibHarmonicEnsemble.lean": "1a1f7e60f5cf4a3e468d173109b0127d7685123e6e0130b69374df687b94e172",
@@ -215,6 +211,39 @@ def _assert_selected_scope(payload):
         "bindings_total": 22, "compiled_bridges": 17, "source_correspondences": 5,
     }
     for key, value in expected.items():
+        assert payload["coverage"][key] == value, key
+
+
+GAMMA_BINDING_ID = "harmonic-static-thermal-gruneisen-identity"
+GAMMA_SUBJECTS = {("operator", "contract_thermal_gruneisen_identity"), ("node", "ThermalGruneisen")}
+GAMMA_PAIR = {"name": "OMAI.PhyslibBridge.Response.thermalGruneisenIdentity",
+              "module": "OMAIPhyslibThermalGruneisen"}
+LATER_BINDING_IDS = bindings_after()
+LATER_SUBJECTS = subjects_after()
+LATER_PAIRS = pairs_after()
+
+
+def _assert_current_scope(payload):
+    """Exact real-payload ledger after the thermal Gruneisen tranche and every later one.
+
+    The Cp scope itself stays exactly CP_SUBJECTS; synthetic Cp-only tests keep
+    using _assert_selected_scope unchanged.
+    """
+    binding = _response_binding(payload)
+    assert binding["relation"] == "conditional"
+    evidence = binding["evidence"]
+    assert evidence["kind"] == "compiled_bridge"
+    explicit = [(row["kind"], row["id"]) for row in evidence.get("proved_targets", [])]
+    assert len(explicit) == 2 and set(explicit) == CP_SUBJECTS, "Cp proof scope broadened"
+    gamma = [row for row in payload["bindings"] if row["id"] == GAMMA_BINDING_ID]
+    assert len(gamma) == 1, "integration pending: expected exactly one reviewed thermal Gruneisen binding"
+    gamma_explicit = [(row["kind"], row["id"]) for row in gamma[0]["evidence"].get("proved_targets", [])]
+    assert len(gamma_explicit) == 2 and set(gamma_explicit) == GAMMA_SUBJECTS, "gamma proof scope broadened"
+    assert _subjects(payload) == BASELINE_SUBJECTS | CP_SUBJECTS | GAMMA_SUBJECTS | LATER_SUBJECTS, \
+        "unique proof subjects changed"
+    assert {row["id"] for row in payload["bindings"]} == (
+        BASELINE_BINDINGS | {BINDING_ID, GAMMA_BINDING_ID} | LATER_BINDING_IDS)
+    for key, value in GLOBAL_COVERAGE.items():
         assert payload["coverage"][key] == value, key
 
 
@@ -488,19 +517,20 @@ def test_response_record_copy_is_accepted(evidence_copy):
 
 
 @pytest.mark.parametrize("mutation", [
-    "old_revision", "failed_build", "wrong_command", "wrong_toolchain", "missing_source_hash",
+    *(f"old_revision:{revision}" for revision in PREVIOUS_REVISIONS),
+    "failed_build", "wrong_command", "wrong_toolchain", "missing_source_hash",
     "binding_source_hash", "binding_module", "record_primary_source_hash",
     "unrecorded_helper", "proof_bytes", "contract_bytes", "audit_bytes", "verifier_bytes",
     "missing_pair_audit", "failed_pair_audit", "missing_pair", "duplicate_pair", "wrong_owner",
     "wrong_pair_count", "missing_axiom_audit", "failed_axiom_audit", "unapproved_axiom",
     "missing_advertised_declaration", "wrong_declaration_count", "zero_theorem_count",
-    "wrong_dependencies", "missing_file",
+    *(f"wrong_dependencies:{revision}" for revision in PREVIOUS_REVISIONS), "missing_file",
 ])
 def test_response_record_consumer_refuses_provenance_drift(evidence_copy, mutation):
     data = evidence_copy
     record = data.record
-    if mutation == "old_revision":
-        record["upstream_revision"] = OLD_REVISION
+    if mutation.startswith("old_revision:"):
+        record["upstream_revision"] = mutation.partition(":")[2]
     elif mutation == "failed_build":
         record["status"] = "failed"
     elif mutation == "wrong_command":
@@ -555,8 +585,8 @@ def test_response_record_consumer_refuses_provenance_drift(evidence_copy, mutati
         record["axiom_audit"]["declaration_count"] += 1
     elif mutation == "zero_theorem_count":
         record["axiom_audit"]["theorem_count"] = 0
-    elif mutation == "wrong_dependencies":
-        record["dependencies"]["physlib"] = OLD_REVISION
+    elif mutation.startswith("wrong_dependencies:"):
+        record["dependencies"]["physlib"] = mutation.partition(":")[2]
     elif mutation == "missing_file":
         (data.root / "lean/bridge/harmonic-product-formula-contract.json").unlink()
     else:
@@ -610,7 +640,7 @@ def test_response_integration_contract_is_exact_and_reviewed(response_contract):
 
 
 def test_response_integration_unique_delta_and_binding_declarations(response_payload):
-    _assert_selected_scope(response_payload)
+    _assert_current_scope(response_payload)
     binding = _response_binding(response_payload)
     evidence = binding["evidence"]
     assert evidence["module"] == MODULE and evidence["source_path"] == SOURCE
@@ -636,14 +666,14 @@ def test_response_integration_current_record_covers_all_sources(response_payload
     assert (PACKAGE / "lean-toolchain").read_text().strip() == TOOLCHAIN
     assert NEW_SOURCES <= record["sources"].keys()
     assert {"lean/bridge/" + name for name in REQUIRED_CONTRACTS} <= record["sources"].keys()
-    expected_pairs = sorted([*BASELINE_PAIRS, {"name": DEFINITION, "module": MODULE}],
+    expected_pairs = sorted([*BASELINE_PAIRS, {"name": DEFINITION, "module": MODULE}, GAMMA_PAIR, *LATER_PAIRS],
                             key=lambda row: (row["name"], row["module"]))
     assert record["contract_name_audit"] == {
-        "status": "passed", "pair_count": 14, "pairs": expected_pairs,
+        "status": "passed", "pair_count": len(expected_pairs), "pairs": expected_pairs,
     }
     source_modules = sorted(
         ".".join(path.relative_to(PACKAGE).with_suffix("").parts)
-        for path in PACKAGE.rglob("*.lean") if ".lake" not in path.relative_to(PACKAGE).parts
+        for path in PACKAGE.glob("*.lean")
     )
     assert record["axiom_audit"]["scope"] == "source_modules_union_namespace_v1"
     assert record["axiom_audit"]["source_modules"] == source_modules
@@ -739,7 +769,7 @@ def test_response_real_baseline_provenance_negatives(compiled_package, tmp_path,
 
 def test_response_real_final_endpoint(response_compiled_package):
     package = response_compiled_package
-    pairs = _verify_strict([package / name for name in sorted(REQUIRED_CONTRACTS)], package)
+    pairs = _verify_strict([package / name for name in sorted(CP_ERA_CONTRACTS)], package)
     assert len(pairs) == 14
     assert {"name": DEFINITION, "module": MODULE} in pairs
 

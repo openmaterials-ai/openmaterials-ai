@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "scope": "Reviewed OMAI formula endpoint and exact Lean proof source. Hash and compiled-name checks detect drift and provenance errors; they are not automatic symbolic translation or numerical validation.",
+  "source_path": "lean/bridge/OMAIPhyslibThermalGruneisen.lean",
+  "source_sha256": "6669b924a8682f135cee4daeda9d2d76b5418aa1ee30117dd7975dc86dddece9",
+  "operators": [
+    {
+      "id": "contract_thermal_gruneisen_identity",
+      "uid": "1348e12defce337587f9c2b152a3a1c88f9d27ec8cc48fc30167aebadd907043",
+      "formula_sha256": "d84872a220cba0af3fed426df7df8137e40c15bf547cdb3a4132d5e20af18f23",
+      "formula_latex": "\\gamma_{th} = \\frac{K \\alpha_{V}}{C_V^{vol}}",
+      "lean_definition": "OMAI.PhyslibBridge.Response.thermalGruneisenIdentity"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "ThermalGruneisen",
+      "uid": "22b1bd519d50d93fd24a919e021bab85aff246464a66a08f8274558834983985"
+    }
+  ],
+  "interpretations": [
+    "Use the same finite family of full Nat harmonic occupation ensembles as the Cp binding: product counting measure, unweighted oscillator energies, dof=0 and phase-space unit=1, with static energy N_q*E_0(v) attached through an actual singleton ensemble before molar normalization.",
+    "Temperature T and primitive-cell volume v are positive. Every frequency is positive and C2 on an open positive-volume domain. Static energy E_0(v) is C2, arbitrary signed, and independent of temperature. No mode may have zero or imaginary frequency; an unmodified Gamma-centred grid with zero acoustic modes does not satisfy the premises.",
+    "Keep masses, composition, atom and q counts, reduced-q labels, uniform q weights and the Avogadro scale fixed, with one q mesh at every volume. Frequencies depend on volume only. Each labelled branch must be followed continuously through band crossings; sorted band order is not sufficient.",
+    "Define the mode Gruneisen parameter as gamma_i(v)=-v*omega_i_prime(v)/omega_i(v) from the volume family itself. Define Gamma(T,v)=sum_i gamma_i*c_i/sum_i c_i, where c_i is the actual derivative-defined canonical heat capacity of mode i at fixed v. Gamma does not use expansion, bulk modulus, the branch, the free energy or the quotient alpha_V*K/C_V_vol.",
+    "Evaluate Gamma, expansion, bulk modulus and volumetric heat capacity at the same temperature and at the branch volume v_B=V_m/N_A, per the same primitive cell that carries E_0(v) and the phonon grid. Supplied static energies, volumes and phonons must refer to that one cell.",
+    "The supplied volume path is differentiable at the evaluation temperature and satisfies domain membership and F_V+p_ext=0 throughout a neighborhood, with constant external pressure. Require F_VV>0 at the evaluation point. A pointwise stationarity equation alone is insufficient.",
+    "Interpret ThermalExpansion as the volumetric coefficient V_m_prime/V_m along that path, BulkModulus as the isothermal modulus V_m*F_VV at the same temperature, and VolumetricHeatCapacity as sum(c)/(N_q*v) at fixed v, equal to C_V_mol/V_m. Linear expansion, adiabatic or elastic moduli, static-only curvature and constant-pressure capacities are not these inputs.",
+    "Use the volumetric form only. The molar form alpha_V*K*V_m/C_V_mol is equivalent only with V_m and C_V_mol per mole of the same primitive cells. An adiabatic modulus paired with C_V_vol gives Gamma*(1+alpha_V*Gamma*T), not Gamma.",
+    "Supporting result, not a separate subject: at every point of the model domain, without a branch, the temperature derivative of pressure at fixed volume equals Gamma*C_V_vol.",
+    "Gamma, every gamma_i and alpha_V may be negative or zero. No statement is made at T=0, where Gamma is a limit of a ratio of vanishing capacities.",
+    "Embed model values coherently in SI: T in K, E_0 in J per primitive cell, v in m^3, V_m in m^3/mol, alpha_V in 1/K, isothermal bulk modulus in Pa and C_V_vol in J/(m^3 K). Convert Angstrom^3 by 10^-30, serving GPa by 10^9 and eV by 1.602176634e-19 J/eV. These exact-real interpretations do not certify floating-point adapters.",
+    "Only contract_thermal_gruneisen_identity and its ThermalGruneisen output are proof subjects. ThermalExpansion, BulkModulus and VolumetricHeatCapacity are input associations. Support, witness, fixed-volume and Mie-Gruneisen results do not certify the opaque contract_thermal_gruneisen contraction, FC3, finite-difference or Phonopy Gruneisen estimators, or numerical QHA producers."
+  ]
+}

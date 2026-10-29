@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Additive current-Physlib gate. Historical ../check.sh is deliberately separate.
+# Build the map's Lean package against its pinned Physlib and audit its axioms.
 set -euo pipefail
 BRIDGE_DIR="$(cd "$(dirname "$0")" && pwd)"
 export PATH="$HOME/.elan/bin:$PATH"

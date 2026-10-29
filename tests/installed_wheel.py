@@ -86,5 +86,69 @@ assert cp_rows[0] in formula_bindings_for_physlib(
     declaration="CanonicalEnsemble.meanEnergyT",
     module="Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
 )
-assert formula_bindings_for("compute_heat_capacity_p", kind="operator") == []
+assert all(row["id"] != "harmonic-static-cp-identity"
+           for row in formula_bindings_for("compute_heat_capacity_p", kind="operator"))
 print("installed wheel ok: conditional Cp identity, not its numerical sibling")
+
+gamma_rows = formula_bindings_for("contract_thermal_gruneisen_identity", kind="operator")
+assert len(gamma_rows) == 1 and gamma_rows[0]["id"] == "harmonic-static-thermal-gruneisen-identity"
+assert gamma_rows[0]["evidence"]["kind"] == "compiled_bridge"
+assert {(row["kind"], row["id"]) for row in gamma_rows[0]["evidence"]["proved_targets"]} == {
+    ("operator", "contract_thermal_gruneisen_identity"), ("node", "ThermalGruneisen"),
+}
+for declaration, module in (
+    ("CanonicalEnsemble.helmholtzFreeEnergy", "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic"),
+    ("CanonicalEnsemble.meanEnergy", "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic"),
+    ("CanonicalEnsemble.meanEnergyT", "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas"),
+    ("CanonicalEnsemble.heatCapacity", "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas"),
+):
+    assert gamma_rows[0] in formula_bindings_for_physlib(declaration=declaration, module=module)
+for sibling in ("compute_gruneisen", "contract_molar_volume"):
+    assert formula_bindings_for(sibling, kind="operator") == []
+assert all(row["id"] != "harmonic-static-thermal-gruneisen-identity"
+           for row in formula_bindings_for("contract_thermal_gruneisen", kind="operator"))
+assert formula_bindings_for("Gruneisen", kind="node") == []
+print("installed wheel ok: thermal Gruneisen identity, not its siblings")
+
+qha_expected = {
+    "compute_qha_gibbs": ("harmonic-qha-gibbs-energy", "QHAGibbsEnergy"),
+    "compute_heat_capacity_p": ("harmonic-qha-heat-capacity-p", "HeatCapacityConstantP"),
+    "compute_thermal_expansion": ("harmonic-qha-thermal-expansion", "ThermalExpansion"),
+    "compute_bulk_modulus_qha": ("harmonic-qha-bulk-modulus", None),
+    "contract_thermal_gruneisen": ("harmonic-qha-thermal-gruneisen-contraction", "ThermalGruneisen"),
+}
+for operator, (binding_id, output) in qha_expected.items():
+    qha_rows = formula_bindings_for(operator, kind="operator")
+    assert [row["id"] for row in qha_rows] == [binding_id], operator
+    assert qha_rows[0]["evidence"]["kind"] == "compiled_bridge"
+    assert qha_rows[0]["evidence"]["module"] == "OMAIPhyslibQHA"
+    expected_subjects = {("operator", operator)} | ({("node", output)} if output else set())
+    assert {(row["kind"], row["id"]) for row in qha_rows[0]["evidence"]["proved_targets"]} == expected_subjects
+    assert qha_rows[0] in formula_bindings_for_physlib(
+        declaration="CanonicalEnsemble.helmholtzFreeEnergy",
+        module="Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+    )
+print("installed wheel ok: local quasiharmonic producers, not mode-Gruneisen producers")
+
+lattice = {
+    "compute_dynamical_matrix": ("crystal-dynamical-matrix", "conditional"),
+    "compute_dispersion": ("crystal-phonon-dispersion", "conditional"),
+    "compute_group_velocity": ("crystal-group-velocity", "conditional"),
+    "contract_kappa[bte_solver=rta]": ("canonical-rta-thermal-conductivity", "conditional"),
+    "compute_participation_ratio": ("participation-ratio-bounds", "local"),
+}
+for operator, (binding_id, relation) in lattice.items():
+    rows = formula_bindings_for(operator, kind="operator")
+    assert [row["id"] for row in rows] == [binding_id], operator
+    assert rows[0]["relation"] == relation and rows[0]["evidence"]["kind"] == "compiled_bridge"
+    assert (relation == "local") == (rows[0]["sources"] == [])
+crystal_rows = formula_bindings_for_physlib(
+    declaration="Physlib.CondensedMatter.Crystal", module="Physlib.CondensedMatter.Crystal.Basic")
+assert {"crystal-dynamical-matrix", "crystal-phonon-dispersion", "crystal-group-velocity"} <= {
+    row["id"] for row in crystal_rows}
+for unbound in ("apply_nac_correction", "solve_bte[bte_solver=direct_inverse]",
+                "contract_kappa[bte_solver=direct_inverse]", "contract_cumulative_kappa[wrt=omega]",
+                "contract_cumulative_kappa[wrt=mfp]", "identity_dm", "sum_linewidths",
+                "solve_bte[bte_solver=rta]"):
+    assert formula_bindings_for(unbound, kind="operator") == []
+print("installed wheel ok: lattice dynamics on Physlib crystals, catalog transport defects unbound")

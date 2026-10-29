@@ -277,10 +277,10 @@ thermal conductivity with interfacial resistance), and an analog-device-metrolog
 domain (the conductance family of memristors and memtransistors and the Schottky
 contact that sets it), and a cure-kinetics domain (the degree of cure and glass
 transition of a thermoset); the unified map of
-132 quantities and 129 operators is content-addressed in the log-first store
+136 quantities and 133 operators is content-addressed in the log-first store
 (Part~\ref{part:kernel}), grown past its frozen genesis version through the
-contribution gates. Its dimensional layer is proven in Lean~4 against physlib
-and recompiled in CI on every change to the map or its generators, its evidence carries pinned conformance
+contribution gates. Its node dimensions and its compiled formula proofs live in one Lean~4 package
+pinned to one Physlib revision and rebuilt in CI on every change to the package or its generators, its evidence carries pinned conformance
 targets a re-run must reproduce, and the whole is held together by a suite of
 over 2,300 passing tests.
 
@@ -868,7 +868,7 @@ index.
   \item The version badge, a repository's statement of the map version it
   used: openmaterials.ai/badge/\textless{}version\textgreater{}.svg (the
   current version lives at /badge.svg).
-  \item The verified layer and its roadmap, live: \texttt{docs/lean/}
+  \item The Lean layer and its roadmap, live: \texttt{docs/lean/}
   (openmaterials.ai/lean and /lean/roadmap/).
   \item This document, browsable with a PDF download:
   \texttt{docs/document/} (openmaterials.ai/document).
@@ -2457,7 +2457,7 @@ We have committed to Python for Sprint 1. The trade-offs were:
         framework iteration to be cheap.
   \item \emph{Lean.} Not the right tool for running scientific computations;
         reserved as a verification target, a reservation since cashed in: the
-        verified layer of Part~\ref{part:status} compiles today.
+        Lean layer of Part~\ref{part:status} compiles today.
 \end{itemize}
 
 \section{Outlook}
@@ -2491,35 +2491,22 @@ Four longer-term directions follow naturally from the design:
         approximation theorems to be formally proved rather than asserted. The
         provenance mechanism makes this projection well-defined: each operation in $\pi$
         corresponds to a Lean lemma whose statement is the operation's error formula.
-        The first tiers are built, verified, and CI-gated (2026-07-17): \texttt{lean/}
-        is a standalone lake package on Lean~4.31.0 depending on physlib, the
-        community Lean~4 physics library, pinned by revision. Tier~1 declares every
-        exported node as a physics \texttt{Dimension} and proves one theorem per
-        verified executable edge: 105 nodes and 12 edge theorems compile against
-        physlib's five bases, and a generated seven-base extension adds the
-        amount-of-substance, current, and luminous-intensity quantities, so 124 of
-        the map's 132 nodes carry a machine-checked dimension. Of the eight left
-        out, five (\texttt{Structure}, \texttt{Potential}, and the opaque
-        autocorrelation kinds) have no dimensional content to prove; three
-        (\texttt{CellVolume}, \texttt{AtomicMass}, \texttt{AtomCount}) have
-        dimensions the exporter does not yet walk, generator work, not proof
-        work. Tier~2
-        states the map's executable identities as real-valued theorems against
-        Mathlib, 18 in all: composition theorems that substitute an upstream identity
-        into a downstream one and prove the chained form equals the flat form, and
-        law theorems for standalone rational operators; a units file proves a
-        declared SI-to-SI scale identity, not that every stored canonical number
-        is expressed in SI. A CI gate recompiles the full proof on every pull
-        request that touches the map or the generators, with warnings promoted to
-        errors, so the verified badge is the live state of the claim. A public
-        formalization roadmap rates all 129 operators by what a proof of the formula
-        would take (17 rational identities closed by the generator, 52 needing real
-        analysis, 19 trivially reflexive, 41 opaque code outputs with nothing
-        algebraic to prove), and a historical hand-reviewed crosswalk links map
-        nodes to Physlib source declarations. Its conceptual correspondences,
-        including legacy ``exact'' labels, are not proofs of model equivalence.
-        These counts and build evidence describe the retained dependency pin,
-        not current upstream Physlib. The
+        The map's Lean layer is one lake package, \texttt{lean/bridge/}, pinned to
+        one Physlib revision and one toolchain. It declares the dimension of each of
+        the 131 map nodes with dimensional content as a Physlib seven-base
+        \texttt{Dimension}; the five opaque nodes (\texttt{Structure},
+        \texttt{Potential}, \texttt{AssessedDatabase} and the two autocorrelation
+        kinds) have none. Its formula theorems are described below. Closed-form
+        formulas are not restated as theorems: concluding $YD = N$ from the
+        hypothesis $Y = N/D$ certifies nothing about the physics. An earlier package
+        on a separate Physlib pin, which held 18 such restatements and 13 dimension
+        coincidences, was retired on 2026-10-28. A public formalization roadmap rates
+        all 133 operators by what a theorem about the formula would take (36
+        closed-form definitions, 53 needing analysis, 44 external code outputs with
+        nothing algebraic to prove) and marks those with a compiled proof. A
+        historical hand-reviewed crosswalk links map nodes to Physlib source
+        declarations at an earlier revision. Its conceptual correspondences,
+        including legacy ``exact'' labels, are not proofs of model equivalence. The
         approximation-error theorems remain future work.
   \item \textbf{Theory-experiment integration.} Extend the representation functor to ingest
         experimental observables. The operator layer's graph-alignment machinery applies uniformly,
@@ -2542,10 +2529,9 @@ Four longer-term directions follow naturally from the design:
 
 \paragraph{Current formula bridge.}
 The \texttt{lean/bridge/} package targets Physlib revision
-\texttt{d70acc20677320d37b38e602e331e900466b704d} on Lean~4.35.0,
-independently of the historical package above. It uses the upstream
-seven-base \texttt{ISQDimensionBase}; current Physlib no longer needs an
-OMAI-specific extension to represent amount of substance or luminous intensity.
+\texttt{9b583cb6ef6e9cc537c4d4b786b508de1abbcf42} on Lean~4.35.0.
+It uses the upstream seven-base \texttt{ISQDimensionBase}, so no OMAI-specific
+extension is needed to represent amount of substance or luminous intensity.
 The mapping names each basis to preserve OMAI's dimension order and treats
 electric current as a base, with charge derived as current times time.
 The \href{https://openmaterials.ai/lean/bridge/}{formula-bridge inventory}
@@ -2600,6 +2586,44 @@ model examples, not real-material fits. Only the existing
 coverage; the numerical QHA route, fitting/minimization and input producers
 remain unverified. The \href{https://openmaterials.ai/lean/bridge/\#response}{response bridge}
 links the source, reviewed endpoint contract and explicit assumptions.
+
+The same volume family proves the thermal Gr\"uneisen identity
+\[
+  \Gamma=\frac{\sum_i \gamma_i c_i}{\sum_i c_i}=\frac{\alpha_V K_T}{C_V^{vol}},\qquad
+  \gamma_i=-\frac{v\,\omega_i'(v)}{\omega_i(v)},
+\]
+on a local stable constant-pressure branch. Here $\Gamma$ is defined directly
+from the volume derivatives of the mode frequencies and the actual canonical mode
+heat capacities $c_i$ at the branch volume; it uses no expansion, bulk modulus,
+branch or free energy. The volumetric expansion $\alpha_V=V_m'(T)/V_m(T)$ along the branch, the isothermal
+bulk modulus $K_T=V_m F_{VV}$ and $C_V^{vol}=\sum_i c_i/(N_q v)$ belong to the same
+free energy, temperature and primitive cell. A supporting fixed-volume result,
+$(\partial P/\partial T)_V=\Gamma C_V^{vol}$, needs no branch. The weights require
+angular SI frequency, while the mode parameters, as logarithmic derivatives, do
+not depend on a constant frequency scale. Every mode must have positive
+frequency; $\Gamma$, $\gamma_i$ and $\alpha_V$ may be negative, and no statement is
+made at $T=0$. Pairing an adiabatic modulus with $C_V^{vol}$ would give
+$\Gamma(1+\alpha_V\Gamma T)$ instead of $\Gamma$.
+
+Exact model examples set $\hbar\omega_b/(k_B T)=b+1$ and $\gamma_b=b+1$ for
+$b=0,1,2$. The weighted mean then lies strictly between $1$ and the arithmetic mean $2$:
+every weight is positive, and the higher-frequency modes, which carry the larger
+$\gamma_b$, have smaller heat-capacity weights. A negative-rate
+branch has $\Gamma<0$ and $\alpha_V<0$, and a constant-frequency control with a single $q$ point has
+$\Gamma=\alpha_V=0$. These are exact model examples, not real-material fits. Only
+the \texttt{contract\_thermal\_gruneisen\_identity} operator and its output gain
+compiled coverage. FC3 and finite-difference mode-Gr\"uneisen producers,
+phonopy's fitted thermal-Gr\"uneisen quotient, numerical QHA and input producers
+remain unverified; the opaque \texttt{contract\_thermal\_gruneisen} contraction is
+covered below as a corollary under the quasiharmonic interpretation.
+The \href{https://openmaterials.ai/lean/bridge/\#gruneisen}{thermal Gr\"uneisen bridge}
+links the source, reviewed endpoint contract and explicit assumptions.
+
+A further batch covers the five quasiharmonic producers. The Gibbs energy is the infimum of $F(T,V) + pV$ over a volume window, with $F$ the molar Helmholtz surface of the same ensembles. The $C^1$ implicit-function theorem gives a two-parameter equilibrium family $V(T,p)$ through every stable stationary point, and on any window across which $F + pV$ is convex that family is the unique minimizer, so a scan that verifies the convexity of $F + pV$ across its window selects a unique minimizer. The envelope relations identify $(\partial G/\partial T)_p$ with $-(N_A/N_q)$ times the ensemble entropy and $(\partial G/\partial p)_T$ with $V$. $C_P = -T(\partial^2 G/\partial T^2)_p$ equals the enthalpy derivative above and $C_V + T(\partial V/\partial T)_p(\partial S/\partial V)_T$, the form of phonopy's default polyfit estimator, through the Maxwell relation $(\partial S/\partial V)_T = -F_{TV} = \alpha_V K_T$, and $C_P > C_V$ exactly when $\alpha_V \neq 0$. The modulus $V F_{VV}$ at the selected volume equals $-V/(\partial V/\partial p)_T$ read off $G$; its positivity is the stability premise. Exact witnesses realize positive, negative and zero expansion. Numerical volume scans, equation-of-state fits, minimizers and phonopy are not verified.
+
+The bridge also holds local proofs: theorems over Mathlib about OMAI formulas that Physlib has no model for, counted apart from the Physlib-anchored results. Any stiffness tensor with the first minor symmetry that stores positive energy for every nonzero symmetric strain has positive Voigt moduli, so the catalog's Poisson ratio lies in $(-1, 1/2)$ for every crystal symmetry; isotropic tensors give the Lam\'e values, and for a cubic crystal $\mathrm{tr}\,\sigma = 3K\,\mathrm{tr}\,e$ and the energy minimized over cell shape at fixed volume has curvature $V_0 E''(V_0) = K$. The spheroid depolarization factor equals $\int_0^1 t^2/(t^2 + p^2(1-t^2))\,dt$ on both closed-form branches; for every shape the sign of the random Nan enhancement is that of $2b_{11} + b_{33}$; the Nan and Hasselman-Johnson conductivities of spheres reduce to Maxwell-Garnett with the interface-corrected filler conductivity, the catalog's $d$ being a diameter; and the aligned conductivity lies strictly between the series and parallel mixtures. The Kamal-Sourour cure time has a local inverse near every interior time that solves the rate law there, and the DiBenedetto relation is a strictly increasing bijection of $[0, 1]$ onto $[T_{g0}, T_{g\infty}]$ in kelvin.
+
+The lattice-dynamics layer uses Physlib's crystal structure for sites and translations. Force constants with equal mixed partials, translation invariance and finite range satisfy $\Phi_{ij}(-R) = \Phi_{ji}(R)$, the catalog dynamical matrix is Hermitian, and the acoustic sum rule gives at least three zero modes at $\Gamma$. Folding the force constants into a Born-von K\'arm\'an supercell reproduces the catalog $D(q)$ at commensurate wavevectors, where a mechanically stable supercell makes every $\omega^2$ nonnegative; incommensurate BTE meshes are not covered. On a differentiable eigenvector path away from $\Gamma$ the catalog group velocity equals $d\omega/dq$, and with Physlib canonical heat capacities the relaxation-time conductivity is symmetric and positive semidefinite. Formalization also exposed catalog defects. By inspection of the symbolic formulas, the non-analytic correction is independent of $q$ and the linearized-BTE collision matrix is not symmetric and has the wrong relaxation-time limit; these two operators stay gaps until the formulas are corrected. A machine-checked example with three modes, one three-phonon process and Casimir scattering shows that the cumulative conductivity of a linearized-BTE solution is not monotone: the partial sum is a valid formula, but its description assumes nonnegative modal contributions, which a linearized-BTE solution does not guarantee, so it defines no median mean free path.
 
 The package audit checks all imported kernel declarations owned by its source
 modules, including private and generated helpers, together with the existing
@@ -3312,14 +3336,14 @@ numbers:
         each a density in frequency), the eleven analog-device-metrology
         closed forms, the NEMD interface conductance and the two cure-kinetics
         edges.
-  \item \textbf{Verified layer.} 105 nodes and 12 edge theorems compile against
-        physlib (Lean~4.31.0, pinned by revision), the generated seven-base
-        extension lifts dimensional coverage to 124 of 132 nodes (five of the
-        eight remaining are opaque by design; three await exporter coverage),
-        and 18 identity theorems check against
-        Mathlib; a CI gate recompiles the proof on every relevant pull request
+  \item \textbf{Lean layer.} One package at one Physlib pin (Lean~4.35.0)
+        declares the dimension of 131 of the 136 nodes (the other five are
+        opaque by design) and proves conditional theorems about 45 of the 133
+        operator formulas (for an opaque code output, about an interpreted
+        definition of it), 24 citing Physlib declarations and 21 as local proofs over
+        Mathlib; a CI gate rebuilds it on every relevant pull request
         with warnings promoted to errors. The formalization roadmap page rates
-        every operator by what proving its formula would take.
+        every operator by what a theorem about its formula would take.
   \item \textbf{Tests.} The suite has over 2,300 passing tests.
 \end{itemize}
 

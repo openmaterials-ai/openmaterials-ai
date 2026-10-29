@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "scope": "Reviewed OMAI formula endpoints and exact Lean proof source for local theorems with no Physlib physics counterpart. Hash and compiled-name checks detect drift and provenance errors; they are not automatic symbolic translation or numerical validation.",
+  "source_path": "lean/bridge/OMAICompositeConductivity.lean",
+  "source_sha256": "e08799415b1e5345ed0cc6af0b192685f6d0f93606d3f8c0a0f91c3ed178096c",
+  "operators": [
+    {
+      "id": "depolarization_factors",
+      "uid": "e8bd01e04d39ccad6f7046883bfa8e955e67c23fcc2f8868be045f327b18482f",
+      "formula_sha256": "76cf8bc5f2cfa140cf9c69a817c7b4f0219d2b8336edf892f20184c6bfb304d4",
+      "formula_latex": "L_{33} = \\begin{cases} \\frac{1}{3} & \\text{for}\\: p = 1 \\\\\\frac{- \\sqrt{1 - \\frac{1}{p^{2}}} + \\operatorname{atanh}{\\left(\\sqrt{1 - \\frac{1}{p^{2}}} \\right)}}{p^{2} \\left(1 - \\frac{1}{p^{2}}\\right)^{\\frac{3}{2}}} & \\text{for}\\: p > 1 \\\\\\frac{\\sqrt{-1 + \\frac{1}{p^{2}}} - \\operatorname{atan}{\\left(\\sqrt{-1 + \\frac{1}{p^{2}}} \\right)}}{p^{2} \\left(-1 + \\frac{1}{p^{2}}\\right)^{\\frac{3}{2}}} & \\text{otherwise} \\end{cases}",
+      "lean_definition": "OMAI.PhyslibBridge.Composites.depolarization"
+    },
+    {
+      "id": "nan_effective_kappa",
+      "uid": "04d65e9f7a2f612eb94d018ebde08e8a1b39c1c5754d03e785ad92991a909fda",
+      "formula_sha256": "11db4a2afb71060dd77bbbb7da720b27898064b0068e327550d1435f1f85783a",
+      "formula_latex": "\\kappa_{c} = \\frac{k_{m} \\left(f_{vol} \\left(\\frac{2 \\left(1 - L_{11}\\right) \\left(- k_{m} + \\frac{{k_{f}}_{1,1}}{1 + \\frac{2 {k_{f}}_{1,1}}{G_{int} d_{1}}}\\right)}{L_{11} \\left(- k_{m} + \\frac{{k_{f}}_{1,1}}{1 + \\frac{2 {k_{f}}_{1,1}}{G_{int} d_{1}}}\\right) + k_{m}} + \\frac{\\left(1 - L_{33}\\right) \\left(- k_{m} + \\frac{{k_{f}}_{3,3}}{1 + \\frac{2 {k_{f}}_{3,3}}{G_{int} d_{3}}}\\right)}{L_{33} \\left(- k_{m} + \\frac{{k_{f}}_{3,3}}{1 + \\frac{2 {k_{f}}_{3,3}}{G_{int} d_{3}}}\\right) + k_{m}}\\right) + 3\\right)}{- f_{vol} \\left(\\frac{2 L_{11} \\left(- k_{m} + \\frac{{k_{f}}_{1,1}}{1 + \\frac{2 {k_{f}}_{1,1}}{G_{int} d_{1}}}\\right)}{L_{11} \\left(- k_{m} + \\frac{{k_{f}}_{1,1}}{1 + \\frac{2 {k_{f}}_{1,1}}{G_{int} d_{1}}}\\right) + k_{m}} + \\frac{L_{33} \\left(- k_{m} + \\frac{{k_{f}}_{3,3}}{1 + \\frac{2 {k_{f}}_{3,3}}{G_{int} d_{3}}}\\right)}{L_{33} \\left(- k_{m} + \\frac{{k_{f}}_{3,3}}{1 + \\frac{2 {k_{f}}_{3,3}}{G_{int} d_{3}}}\\right) + k_{m}}\\right) + 3}",
+      "lean_definition": "OMAI.PhyslibBridge.Composites.nanRandom"
+    },
+    {
+      "id": "nan_effective_kappa_aligned",
+      "uid": "e86ac8a4b69dbb670dbe3f8ec7fda7ff0309670bac4713851ced64a061cd7962",
+      "formula_sha256": "78db51dc39f38b3dff3f71c49db5450b2c9e89907cbbd61ba5b01852433353fb",
+      "formula_latex": "\\kappa_{c} = \\frac{k_{m} \\left(\\frac{f_{vol} \\left(1 - L_{33}\\right) \\left(- k_{m} + \\frac{{k_{f}}_{3,3}}{1 + \\frac{2 {k_{f}}_{3,3}}{G_{int} d_{3}}}\\right)}{L_{33} \\left(- k_{m} + \\frac{{k_{f}}_{3,3}}{1 + \\frac{2 {k_{f}}_{3,3}}{G_{int} d_{3}}}\\right) + k_{m}} + 1\\right)}{- \\frac{L_{33} f_{vol} \\left(- k_{m} + \\frac{{k_{f}}_{3,3}}{1 + \\frac{2 {k_{f}}_{3,3}}{G_{int} d_{3}}}\\right)}{L_{33} \\left(- k_{m} + \\frac{{k_{f}}_{3,3}}{1 + \\frac{2 {k_{f}}_{3,3}}{G_{int} d_{3}}}\\right) + k_{m}} + 1}",
+      "lean_definition": "OMAI.PhyslibBridge.Composites.nanAligned"
+    },
+    {
+      "id": "hasselman_johnson",
+      "uid": "33e0be2a3db8fa86dce200159c6c0a273161ee6d1a49c75a369b1621197e0a1a",
+      "formula_sha256": "9d0e588f6e47a7bc1e8345b77f6593376a9a9d3a07f847fd9ab69b039db49d6b",
+      "formula_latex": "\\kappa_{c} = \\frac{k_{m} \\left(2 f_{vol} \\left(- k_{m} + \\left(1 - \\frac{k_{m}}{G_{int} a_{rad}}\\right) {k_{f}}_{3,3}\\right) + 2 k_{m} + \\left(1 + \\frac{2 k_{m}}{G_{int} a_{rad}}\\right) {k_{f}}_{3,3}\\right)}{- f_{vol} \\left(- k_{m} + \\left(1 - \\frac{k_{m}}{G_{int} a_{rad}}\\right) {k_{f}}_{3,3}\\right) + 2 k_{m} + \\left(1 + \\frac{2 k_{m}}{G_{int} a_{rad}}\\right) {k_{f}}_{3,3}}",
+      "lean_definition": "OMAI.PhyslibBridge.Composites.hasselmanJohnson"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "DepolarizationFactor",
+      "uid": "297b3254a09037f017769b771e19ad849443911048f77078a804cbc334c38309"
+    },
+    {
+      "id": "ThermalConductivity[effective_medium=nan,orientation=random]",
+      "uid": "8cee68745e003909cd8e65688628af53a35c0803ace3f330394bbf0edf338d7b"
+    },
+    {
+      "id": "ThermalConductivity[effective_medium=nan,orientation=aligned]",
+      "uid": "fc292985123b709c76547dc02721e60797cf5693fbad40b874826291314d5dd3"
+    }
+  ],
+  "interpretations": [
+    "DepolarizationFactor carries the polar factor L33 of an axially symmetric spheroid with symmetry axis 3 and aspect ratio p = d3/d1 > 0 (p > 1 prolate, p < 1 oblate); L11 = (1 - L33)/2 is the catalog's auxiliary sum rule and is not proved.",
+    "The Nan formulas read the matrix conductivity k_m, the filler conductivities k_f[1,1] (transverse to axis 3) and k_f[3,3] (along axis 3), the full particle dimensions d_1 and d_3, the interface conductance G_int, the filler volume fraction f_vol in [0, 1] and the depolarization factors, in the catalog's input order. The per-direction interface-corrected filler conductivity k / (1 + 2 k / (G_int d)) is the convention of Nan, Liu, Lin and Li, Appl. Phys. Lett. 85, 3549 (2004); away from p = 1 it is a slab approximation.",
+    "G_int = q_int / Delta T_int > 0 with Delta T_int the temperature drop in the direction of the heat flux; the factor 2 counts the two interfaces a particle presents along a direction, and one G_int applies to every face.",
+    "Random means isotropic three-dimensional orientation. The aligned operator is the component along the alignment axis 3, which is the through-plane direction only for platelets; the transverse companion is an auxiliary formula and is not proved.",
+    "The Hasselman-Johnson formula reads k_m, the filler k_f[3,3] (the sphere conductivity), the sphere radius a_rad, G_int and f_vol. The catalog's d is a diameter, so the two formulas agree for spheres with d_1 = d_3 = 2 a_rad, L11 = L33 = 1/3 and k_f[1,1] = k_f[3,3]; inserting the radius into d doubles the interface penalty.",
+    "f_vol is a volume fraction, not a mass fraction or a percentage. Particles are monodisperse. All conductivities, G_int and lengths are positive and in one coherent unit system; the theorems are dilute effective-medium identities and bounds, not statements about percolating or strongly interacting fillers."
+  ]
+}

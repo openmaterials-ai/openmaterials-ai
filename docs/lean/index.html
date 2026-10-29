@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Verified layer | OpenMaterials</title>
-<meta name="description" content="The map's node dimensions are declared in Lean 4, and its edge dimension statements and operator identities are proven against physlib and Mathlib, with coverage counted from the published export.">
+<title>Lean | OpenMaterials</title>
+<meta name="description" content="One Lean 4 package, pinned to one Physlib revision, declares the dimension of every map node and proves conditional theorems about the map's formulas, with coverage counted from the published files.">
 <link rel="canonical" href="https://openmaterials.ai/lean/">
 <meta name="theme-color" content="#F4F1EA" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0F0E0C" media="(prefers-color-scheme: dark)">
@@ -12,8 +12,8 @@
 <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="openmaterials.ai">
-<meta property="og:title" content="Verified layer | OpenMaterials">
-<meta property="og:description" content="The map's node dimensions are declared in Lean 4, and its edge dimension statements and operator identities are proven against physlib and Mathlib, with coverage counted from the published export.">
+<meta property="og:title" content="Lean | OpenMaterials">
+<meta property="og:description" content="One Lean 4 package, pinned to one Physlib revision, declares the dimension of every map node and proves conditional theorems about the map's formulas, with coverage counted from the published files.">
 <meta property="og:url" content="https://openmaterials.ai/lean/">
 <meta property="og:image" content="https://openmaterials.ai/assets/og.png">
 <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
@@ -26,15 +26,6 @@
 <style>
   .of, .empty { color: var(--ink-2); }
   .stmt, .nid { font: 400 13px/20px var(--font-mono); white-space: nowrap; }
-  .thm { padding: 0; overflow: hidden; }
-  .thm-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 8px 16px; border-bottom: 1px solid var(--line); }
-  .thm-name { font: 400 13px/20px var(--font-mono); color: var(--ink); overflow-wrap: anywhere; }
-  .thm-src { margin-left: auto; font-size: 14px; line-height: 20px; }
-  .thm pre { margin: 0; padding: 16px; font: 400 13px/20px var(--font-mono); white-space: pre-wrap; overflow-wrap: anywhere; }
-  .xwalk { margin-top: 8px; padding: 8px 12px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); font-size: 12px; line-height: 16px; white-space: normal; }
-  .xwalk .xh { margin-bottom: 4px; font-weight: 500; color: var(--ink-2); }
-  .xwalk .kv .k { color: var(--ink-2); }
-  .xwalk code { overflow-wrap: anywhere; }
 </style>
 </head>
 <body>
@@ -43,127 +34,66 @@
 
 <main class="frame" id="main">
   <header class="page-head">
-    <h1>Verified layer</h1>
-    <p class="lede">This page shows the part of the map that a proof assistant has checked. Tier 1 declares the dimension of each exported node in <a href="https://lean-lang.org/">Lean 4</a> and, wherever an operator's output dimension is the product of its input dimensions, proves an edge theorem against physlib, the community Lean 4 physics library. Tier 2 states the map's operator identities as theorems over the reals, checked against Mathlib. Every theorem links to its generated source.</p>
+    <h1>Lean</h1>
+    <p class="lede">The map's Lean layer is one package, <code>lean/bridge</code>, pinned to one <a href="https://github.com/leanprover-community/physlib">Physlib</a> revision and one <a href="https://lean-lang.org/">Lean 4</a> toolchain. It declares the dimension of every map node as a Physlib seven-base ISQ dimension and proves conditional theorems about the map's formulas. The <a href="bridge/">formula bridge</a> lists each theorem with its conditions and evidence.</p>
   </header>
 
   <div class="page-body">
     <nav class="toc gtoc" aria-label="Contents">
       <a href="#proven">What is proven</a>
       <a href="#coverage">Coverage</a>
-      <a href="#edges">Edge theorems</a>
-      <a href="#identities">Identities</a>
-      <a href="#nodes">Nodes</a>
-      <a href="bridge/">Current formula bridge</a>
+      <a href="#nodes">Node dimensions</a>
       <a href="#reproduce">Reproduce this</a>
+      <a href="bridge/">Formula bridge</a>
       <a href="roadmap/">Roadmap</a>
     </nav>
 
     <article class="prose gwrap">
-      <noscript><p class="empty">This page renders the Lean export client-side and
-        needs JavaScript. The raw export is plain JSON in
-        <a href="../data/lean.json">../data/lean.json</a>, and the generated Lean
-        sources live in
-        <a href="https://github.com/openmaterials-ai/openmaterials-ai/tree/main/lean">lean/</a>.</p></noscript>
+      <noscript><p class="empty">This page renders the published files client-side and needs JavaScript. The raw data is plain JSON in <a href="../data/lean.json">../data/lean.json</a> and <a href="../data/formula_bindings.json">../data/formula_bindings.json</a>, and the Lean sources live in <a href="https://github.com/openmaterials-ai/openmaterials-ai/tree/main/lean/bridge">lean/bridge/</a>.</p></noscript>
       <div id="err" class="notice notice--error" hidden></div>
 
       <section class="gsec" id="proven">
         <h2>What is proven, and what is not</h2>
-        <p class="notice gnote">This page preserves the historical Lean 4.31.0 export against
-          Physlib <code>a74414af9cf7</code>. The <a href="bridge/">current formula bridge</a>
-          has a separate inventory, seven-base ISQ dimensions, assumptions, and proof evidence.
-          Historical build results do not validate the newer package.</p>
-        <h3>Tier 1: the dimensional layer</h3>
-        <p>Each exported map node has a declared dimension, a Lean definition of five
-          rational exponents over length, time, mass, charge, and temperature. A Tier 1
-          theorem exists only when an edge's output dimension is the product of its input
-          dimensions, and it states that equality; the generator skips every edge where
-          that rule fails, for example a sum of several inputs, a ratio, a derivative, or a
-          square root. The Lean compiler
-          checks each statement against physlib (Lean 4.31.0), and the file compiles with
-          zero errors and no <code>sorry</code> placeholders.</p>
-        <h3>Tier 2: the operator identities</h3>
-        <p>A composition theorem substitutes the upstream identity into the downstream one
-          and states that the chained form equals the flat form for all reals that satisfy
-          the stated hypotheses. A standalone law theorem proves an algebraic consequence
-          of an assumed formula (for example, clearing a nonzero denominator), not an
-          independent derivation of that physical law.</p>
-        <h3>Scope</h3>
-        <p>The historical Physlib representation has five bases, including charge rather
-          than current. This exporter omits nodes requiring mole, ampere, or candela bases;
-          its separate Mathlib-only seven-base companion preserves those dimensions.
-          Current Physlib provides <code>ISQDimensionBase</code> with all seven bases;
-          the <a href="bridge/">new package</a> uses that upstream foundation directly.
-          The counts below describe only the historical export.</p>
-        <p class="notice gnote">Limits: a node's dimension here is declared, and a theorem checks the dimensions of one edge or an algebraic identity. A theorem does not show that a formula is the right physics, that a code implements it correctly, or that a value on the map is accurate. The <a href="../agreement/">agreement page</a> carries the evidence for those questions.</p>
+        <p>A formula counts as proven when a compiled bridge states and proves something about it: that the catalog formula equals a quantity of an actual Physlib model under stated conditions, together with the model's limits, signs and witnesses. Where Physlib has no model, as for elastic solids, a local proof over Mathlib states the formula's properties directly; these are counted apart from Physlib-anchored results. The <a href="bridge/">bridge page</a> lists every such theorem, its conditions and its build record.</p>
+        <p>A closed-form formula is not restated as a theorem. Writing <code>Y = N/D</code> as a hypothesis and concluding <code>Y*D = N</code>, or substituting one definition into another and normalizing, certifies nothing about the physics, so the package contains no such statements. The <a href="roadmap/">roadmap</a> marks these formulas as definitions. A theorem about one must state a property, such as a limit, a bound or a reduction to another model.</p>
+        <p>Each node's dimension is a Physlib <code>Dimension ISQDimensionBase</code> definition over mass, length, time, temperature, amount, current and luminous intensity. These are declarations, not theorems. Nodes with an opaque dimension, such as a potential or a crystal structure, have none.</p>
+        <p class="notice gnote">Limits: a theorem holds for the model and conditions it states. It does not show that a code implements the formula correctly, that a numerical producer converged, or that a value on the map is accurate. The <a href="../agreement/">agreement page</a> carries the evidence for those questions.</p>
       </section>
 
       <section class="gsec" id="coverage">
         <h2>Coverage</h2>
-        <dl class="ledger" aria-label="Verified-layer coverage">
-          <div><dt>Declared node dimensions</dt><dd class="mono" id="c-nodes">&middot;</dd></div>
-          <div><dt>Edge theorems</dt><dd class="mono" id="c-edges">&middot;</dd></div>
-          <div><dt>Operator identities</dt><dd class="mono" id="c-idents">&middot;</dd></div>
+        <dl class="ledger" aria-label="Lean coverage">
+          <div><dt>Operator formulas with a compiled proof</dt><dd class="mono" id="c-ops">&middot;</dd></div>
+          <div><dt>of which anchored to Physlib</dt><dd class="mono" id="c-anchored">&middot;</dd></div>
+          <div><dt>of which local proofs over Mathlib</dt><dd class="mono" id="c-local">&middot;</dd></div>
+          <div><dt>Node dimensions declared</dt><dd class="mono" id="c-nodes">&middot;</dd></div>
+          <div><dt>Physlib revision</dt><dd class="mono" id="c-rev">&middot;</dd></div>
+          <div><dt>Lean toolchain</dt><dd class="mono" id="c-toolchain">&middot;</dd></div>
           <div><dt>Map version</dt><dd class="mono" id="c-version">&middot;</dd></div>
         </dl>
       </section>
 
-      <section class="gsec" id="edges">
-        <h2>Edge theorems (Tier 1)</h2>
-        <p>Each operator that passes the product rule has one theorem: the output's
-          dimension equals the product of its inputs' dimensions. Node names link to the quantity on
-          the map; every theorem lives in the generated
-          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/OpenMaterials.lean">lean/OpenMaterials.lean</a>.</p>
-        <div id="edge-list"><p class="empty">Loading&hellip;</p></div>
-      </section>
-
-      <section class="gsec" id="identities">
-        <h2>Operator identities (Tier 2)</h2>
-        <p>Each statement below is the generated source, verbatim, from
-          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/OpenMaterialsIdentities.lean">lean/OpenMaterialsIdentities.lean</a>.</p>
-        <div id="identity-list"><p class="empty">Loading&hellip;</p></div>
-      </section>
-
       <section class="gsec" id="nodes">
-        <h2>Nodes</h2>
-        <p>The table lists every exported map node and its declared dimension as five
-          exponents in physlib field order (length, time, mass, charge, temperature). Where a
-          node has a historical source correspondence, its crosswalk entry appears
-          under it. Legacy <code>exact</code> labels are conceptual alignments, not
-          compiled identifications of OMAI quantities with Physlib models. Use the
-          <a href="bridge/">current reviewed mappings</a> for model-specific conditions.</p>
+        <h2>Node dimensions</h2>
+        <p>Every encoded field of every map node, with its dimension in ISQ base symbols (M, L, T, &Theta;, N, I, J) and its declaration in the generated <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibDimensions.lean">lean/bridge/OMAIPhyslibDimensions.lean</a>. Node names link to the quantity on the map.</p>
         <div id="node-list"><p class="empty">Loading&hellip;</p></div>
       </section>
 
       <section class="gsec" id="reproduce">
         <h2>Reproduce this</h2>
-        <p>Every pull request that touches the map or the generators recompiles the full
-          proof against physlib, with warnings promoted to errors;
-          <a href="https://github.com/openmaterials-ai/openmaterials-ai/actions/workflows/lean.yml">each run is public</a>.</p>
-        <p><code>lean/</code> is a standalone lake package (library
-          <code>OpenMaterials</code>) on toolchain Lean 4.31.0, depending on
-          <a href="https://github.com/leanprover-community/physlib">physlib</a>
-          pinned by rev in <code>lakefile.toml</code>. The files are generated from
-          the live map and re-checked two ways: the Lean compiler proves them, and
-          the Python suite re-derives every dimensional identity so a regression
-          fails fast even without a Lean toolchain. From
-          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/README.md">lean/README.md</a>:</p>
+        <p>Every pull request that touches the bridge, its bindings or its generators rebuilds the package with warnings promoted to errors and checks every binding against the build; <a href="https://github.com/openmaterials-ai/openmaterials-ai/actions/workflows/physlib-bridge.yml">each run is public</a>. The commands below are from <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/README.md">lean/bridge/README.md</a>.</p>
         <div class="recipe">
-          <div class="recipe-head"><span class="recipe-title">Rebuild the proof</span><span class="recipe-lang">shell</span></div>
+          <div class="recipe-head"><span class="recipe-title">Rebuild the proofs</span><span class="recipe-lang">shell</span></div>
           <pre>git clone https://github.com/openmaterials-ai/openmaterials-ai.git
-cd openmaterials-ai/lean
+cd openmaterials-ai/lean/bridge
 
-lake exe cache get   # fetch the mathlib build cache (first build only)
-lake build           # compiles every generated module; zero errors, no sorry
+lake exe cache get   # fetch the Mathlib build cache (first build only)
+lake build --wfail   # every module; zero errors, zero warnings, no sorry
 
-# the Python re-check (no Lean toolchain needed), from the repo root:
-pip install -e . &amp;&amp; python -m pytest tests/test_physlean_export.py tests/test_lean_tier2.py -q</pre>
+# check every binding against the build, from the repo root:
+cd ../.. &amp;&amp; pip install -e . &amp;&amp; python -m omai.formula_bindings --check \
+  --physlib-path lean/bridge/.lake/packages/physlib --lean-package lean/bridge</pre>
         </div>
-        <p>The generated sources:
-          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/OpenMaterials.lean">OpenMaterials.lean</a> (Tier 1 declared dimensions and edge theorems),
-          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/OpenMaterialsIdentities.lean">OpenMaterialsIdentities.lean</a> (Tier 2 identities),
-          <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/OpenMaterialsDimensions.lean">OpenMaterialsDimensions.lean</a> (the seven-base dimensional closure),
-          and <a href="https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/OpenMaterialsUnits.lean">OpenMaterialsUnits.lean</a> (the generic SI-to-SI scale identity, not a proof that stored numerical values use SI).</p>
       </section>
     </article>
   </div>
@@ -173,14 +103,12 @@ pip install -e . &amp;&amp; python -m pytest tests/test_physlean_export.py tests
 <script src="../assets/site.js"></script>
 <script src="lib.js"></script>
 <script>
-/* The verified-layer view. Everything rendered here is read at load from the
-   published files: data/lean.json (the export), data/graph.json (for the
-   coverage denominators), and data/physlib_crosswalk.json (optional; when the
-   file or an entry is absent, the crosswalk block simply does not render). */
+/* The Lean overview. Everything rendered here is read at load from the
+   published files: data/lean.json (node dimensions), data/graph.json (the
+   node count) and data/formula_bindings.json (the compiled formula count). */
 (function () {
   'use strict';
   var L = window.LeanLib;
-  var REPO = 'https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/';
 
   function esc(s) {
     return String(s == null ? '' : s)
@@ -192,130 +120,57 @@ pip install -e . &amp;&amp; python -m pytest tests/test_physlean_export.py tests
     el.textContent = msg;
     el.hidden = false;
   }
-  function setText(id, v) {
+  function setHtml(id, html) {
     var el = document.getElementById(id);
-    if (el) el.textContent = v;
+    if (el) el.innerHTML = html;
   }
-  function mapLink(id) {
-    return '<a class="nid" href="../map/#node=' + encodeURIComponent(id) +
-      '" title="Open this quantity on the map">' + esc(id) + '</a>';
-  }
-
-  // A node name in a theorem is the sanitized Lean name; render it as the map
-  // node id (linked) when the reverse index resolves it, plain mono otherwise.
-  function nodeRef(leanName, idx) {
-    var id = idx[leanName];
-    return id ? mapLink(id) : '<span class="nid">' + esc(leanName) + '</span>';
+  function of(n, total, noun) {
+    return esc(n) + (total == null ? '' : ' <span class="of">of ' + esc(total) + ' ' + noun + '</span>');
   }
 
-  function renderStats(stats) {
-    var nodesEl = document.getElementById('c-nodes');
-    nodesEl.innerHTML = stats.nodes +
-      (stats.graphNodes ? ' <span class="of">of ' + stats.graphNodes + ' nodes</span>' : '');
-    var edgesEl = document.getElementById('c-edges');
-    edgesEl.innerHTML = stats.edges +
-      (stats.graphOps ? ' <span class="of">of ' + stats.graphOps + ' operators with a formula link</span>' : '');
-    setText('c-idents', String(stats.identities));
-    if (stats.version) setText('c-version', String(stats.version).slice(0, 12));
+  function renderStats(s) {
+    if (s.operatorsCompiled != null) setHtml('c-ops', of(s.operatorsCompiled, s.operatorsTotal, 'operators'));
+    if (s.operatorsAnchored != null) setHtml('c-anchored', esc(s.operatorsAnchored));
+    setHtml('c-local', esc(s.operatorsLocal));
+    setHtml('c-nodes', of(s.nodes, s.graphNodes, 'nodes'));
+    if (s.physlibRev) setHtml('c-rev', esc(String(s.physlibRev).slice(0, 12)));
+    if (s.toolchain) setHtml('c-toolchain', esc(s.toolchain));
+    if (s.version) setHtml('c-version', esc(String(s.version).slice(0, 12)));
   }
 
-  function renderEdges(lean, idx) {
-    var ops = Object.keys(lean.edges).sort();
-    var rows = ops.map(function (op) {
-      var e = L.parseEdge(lean.edges[op].lean);
-      var inputs = e.inputs.map(function (n) { return nodeRef(n, idx); }).join(' &middot; ');
+  function renderNodes(lean) {
+    var rows = L.nodeRows(lean).map(function (r) {
       return '<tr>' +
-        '<td data-label="Edge"><code>' + esc(op) + '</code></td>' +
-        '<td data-label="Output">' + nodeRef(e.output, idx) + '</td>' +
-        '<td data-label="Inputs">' + inputs + '</td>' +
-        '<td class="stmt" data-label="Dimension statement">' + esc(e.statement) + '</td>' +
-        '<td data-label="Theorem"><a class="nid" href="' + REPO + 'OpenMaterials.lean">' + esc(e.name) + '</a></td>' +
+        '<td data-label="Map node"><a class="nid" href="../map/#node=' + encodeURIComponent(r.node) +
+          '" title="Open this quantity on the map">' + esc(r.node) + '</a></td>' +
+        '<td data-label="Field"><code>' + esc(r.field) + '</code></td>' +
+        '<td class="stmt" data-label="Dimension">' + esc(r.dimension) + '</td>' +
+        '<td data-label="Declaration"><code>' + esc(r.declaration.split('.').pop()) + '</code></td>' +
         '</tr>';
     }).join('');
-    document.getElementById('edge-list').innerHTML =
-      '<div class="table-wrap"><table class="gtable stack"><thead><tr>' +
-      '<th>Edge</th><th>Output</th><th>Inputs</th><th>Dimension statement</th><th>Theorem</th>' +
-      '</tr></thead><tbody>' + rows + '</tbody></table></div>';
+    setHtml('node-list', '<div class="table-wrap"><table class="gtable stack"><thead><tr>' +
+      '<th>Map node</th><th>Field</th><th>Dimension</th><th>Declaration</th>' +
+      '</tr></thead><tbody>' + rows + '</tbody></table></div>');
   }
 
-  function renderIdentities(lean) {
-    var names = Object.keys(lean.identities).sort();
-    if (!names.length) {
-      document.getElementById('identity-list').innerHTML =
-        '<p class="empty">No identities in this export.</p>';
-      return;
-    }
-    var blocks = names.map(function (name) {
-      var entry = lean.identities[name];
-      var t = L.parseTheorem(entry.lean);
-      return '<div class="thm">' +
-        '<div class="thm-head"><span class="thm-name">' + esc(name) + '</span>' +
-        '<span class="thm-kind">' + esc(entry.kind || '') + '</span>' +
-        '<a class="thm-src" href="' + REPO + 'OpenMaterialsIdentities.lean">source</a></div>' +
-        '<pre>' + esc(entry.lean) + '</pre>' +
-        '</div>';
-    }).join('');
-    document.getElementById('identity-list').innerHTML = blocks;
-  }
-
-  // One crosswalk block: every field of the entry as a plain labelled
-  // key-value; URL-shaped strings become links, nothing else is interpreted.
-  function xwalkHtml(entry) {
-    if (Array.isArray(entry)) return entry.map(xwalkHtml).join('');
-    var rows = Object.keys(entry).map(function (k) {
-      var v = entry[k];
-      var vh;
-      if (typeof v === 'string' && /^https?:\/\//.test(v)) {
-        vh = '<a href="' + esc(v) + '">' + esc(v) + '</a>';
-      } else if (v !== null && typeof v === 'object') {
-        vh = '<code>' + esc(JSON.stringify(v)) + '</code>';
-      } else {
-        vh = '<code>' + esc(v) + '</code>';
-      }
-      return '<div class="kv"><span class="k">' + esc(k) + ':</span> ' + vh + '</div>';
-    }).join('');
-    return '<div class="xwalk"><div class="xh">Historical source correspondence (not an OMAI equivalence proof)</div>' + rows + '</div>';
-  }
-
-  function renderNodes(lean, xwalk) {
-    var ids = Object.keys(lean.nodes).sort();
-    var rows = ids.map(function (id) {
-      var n = L.parseNodeDef(lean.nodes[id].lean);
-      var exps = n.exponents ? n.exponents.map(esc).join(', ') : '';
-      var extra = xwalk[id] ? xwalkHtml(xwalk[id]) : '';
-      return '<tr>' +
-        '<td data-label="Map node">' + mapLink(id) + extra + '</td>' +
-        '<td class="stmt" data-label="Dimension (L, T, M, Q, &Theta;)">&#10216;' + exps + '&#10217;</td>' +
-        '<td data-label="Lean name"><code>' + esc(n.leanName || '') + '</code></td>' +
-        '</tr>';
-    }).join('');
-    document.getElementById('node-list').innerHTML =
-      '<div class="table-wrap"><table class="gtable stack"><thead><tr>' +
-      '<th>Map node</th><th>Dimension (L, T, M, Q, &Theta;)</th><th>Lean name</th>' +
-      '</tr></thead><tbody>' + rows + '</tbody></table></div>';
-  }
-
-  Promise.allSettled([
-    fetch('../data/lean.json').then(function (r) {
-      if (!r.ok) throw new Error('lean.json: HTTP ' + r.status);
+  function json(url) {
+    return fetch(url).then(function (r) {
+      if (!r.ok) throw new Error(url + ': HTTP ' + r.status);
       return r.json();
-    }),
-    fetch('../data/graph.json').then(function (r) { return r.ok ? r.json() : null; }),
-    fetch('../data/physlib_crosswalk.json').then(function (r) { return r.ok ? r.json() : null; })
-  ]).then(function (res) {
+    });
+  }
+
+  Promise.allSettled([json('../data/lean.json'), json('../data/graph.json'),
+                      json('../data/formula_bindings.json')]).then(function (res) {
     if (res[0].status !== 'fulfilled') {
-      fail('Could not load the Lean export (' + res[0].reason +
-        '). The raw file is ../data/lean.json.');
+      fail('Could not load the Lean index (' + res[0].reason + '). The raw file is ../data/lean.json.');
       return;
     }
     var lean = res[0].value;
     var graph = res[1].status === 'fulfilled' ? res[1].value : null;
-    var xwalk = L.normalizeCrosswalk(res[2].status === 'fulfilled' ? res[2].value : null);
-    var idx = L.leanNameIndex(lean.nodes);
-    renderStats(L.computeStats(lean, graph));
-    renderEdges(lean, idx);
-    renderIdentities(lean);
-    renderNodes(lean, xwalk);
+    var bindings = res[2].status === 'fulfilled' ? res[2].value : null;
+    renderStats(L.computeStats(lean, graph, bindings));
+    renderNodes(lean);
   });
 })();
 </script>

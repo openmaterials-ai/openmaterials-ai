@@ -1,11 +1,10 @@
 // Pure parsing/counting logic for the formalization roadmap page.
 // DOM-free so node:test can exercise it directly (same pattern as ../lib.js).
 
-const DIFFICULTIES = ["easy", "trivial", "hard", "na"];
+const DIFFICULTIES = ["definition", "hard", "na"];
 
 const DIFF_LABEL = {
-  easy: "Provable",
-  trivial: "Trivial",
+  definition: "Definition",
   hard: "Needs analysis",
   na: "Nothing to prove",
 };
@@ -15,7 +14,7 @@ const DIFF_LABEL = {
 // instead of a half-rendered table.
 function parseRoadmap(doc) {
   if (!doc || !Array.isArray(doc.rows)) throw new Error("roadmap: missing rows");
-  const counts = { easy: 0, trivial: 0, hard: 0, na: 0 };
+  const counts = { definition: 0, hard: 0, na: 0 };
   const domains = new Map();
   let proven = 0;
   for (const r of doc.rows) {
