@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "scope": "Reviewed OMAI formula endpoints and exact Lean proof source for local theorems with no Physlib physics counterpart. Hash and compiled-name checks detect drift and provenance errors; they are not automatic symbolic translation or numerical validation.",
+  "source_path": "lean/bridge/OMAIVACFSpectrum.lean",
+  "source_sha256": "29afe5cc67721583ea4d4822c7f16da22d4a2f1da277ec4d18013c8199d96c14",
+  "operators": [
+    {
+      "id": "fourier_to_dos",
+      "uid": "d6b71066f0cef4182e1d522d30c31326ecc2504428f3c8e6b42f5189b410a6f3",
+      "formula_sha256": "ef2d7d4503ff999157b0541bf106cb3d9c843a98b70d1084009e8b638628cee1",
+      "formula_latex": "{g}_{\\omega} = \\frac{\\int\\limits_{0}^{\\infty} \\cos{\\left(\\omega \\tau \\right)} {Cv}_{\\tau}\\, d\\tau}{\\pi}",
+      "lean_definition": "OMAI.PhyslibBridge.VACFSpectrum.catalogFourierDOS"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "PhononDOS",
+      "uid": "e14b6cdd007ca3af971aa52880811138606efdb47e30d5a26c2335903ce796f3"
+    }
+  ],
+  "interpretations": [
+    "catalogFourierDOS transcribes the catalog's g(omega) = (1/pi) int_0^infinity cos(omega tau) Cv(tau) dtau as a Lebesgue integral over (0, infinity) at angular frequency omega.",
+    "For the autocorrelation of lifetime-broadened modes, Cv(tau) = sum_m A_m exp(-Gamma_m tau) cos(omega_m tau) with every Gamma_m > 0, the transform is sum_m (A_m/2)[L(Gamma_m, omega - omega_m) + L(Gamma_m, omega + omega_m)] with L(Gamma, x) = Gamma/(pi (Gamma^2 + x^2)) the normalized Lorentzian; it integrates over all frequencies to Cv(0) = sum_m A_m for every set of linewidths, so the catalog's g carries the units and normalization of Cv, with Cv(0)/2 on omega > 0, and is proportional to a density of states normalized to the mode count.",
+    "As the linewidths s gamma_m shrink to zero, int g(omega) phi(omega) domega converges, for every integrable phi continuous at +-omega_m, to sum_m (A_m/2)(phi(omega_m) + phi(-omega_m)): the harmonic delta sum with mode weights A_m, split equally between +omega_m and -omega_m. The damped-cosine model is a hypothesis, not derived from dynamics; windows, finite trajectories and the equality of the weights A_m are outside the theorems."
+  ]
+}

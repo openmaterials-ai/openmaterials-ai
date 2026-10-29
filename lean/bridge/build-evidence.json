@@ -5,7 +5,7 @@
       "Quot.sound",
       "propext"
     ],
-    "declaration_count": 1766,
+    "declaration_count": 1877,
     "declarations": {
       "CanonicalEnsemble.heatCapacity.eq_1": [
         "Classical.choice",
@@ -3558,6 +3558,141 @@
         "Quot.sound",
         "propext"
       ],
+      "OMAI.PhyslibBridge.MDCorrelations.catalogHeatACF": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.MDCorrelations.catalogHeatACF.eq_1": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.MDCorrelations.catalogHeatACF_eq_invDFT": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.MDCorrelations.catalogHeatACF_zero_comm": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.MDCorrelations.catalogMSD": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.MDCorrelations.catalogMSD_eq_vacf": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.MDCorrelations.catalogVACF": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.MDCorrelations.double_sum_by_lag": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.MDCorrelations.greenKubo": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.MDCorrelations.greenKubo_symm_eq_helfand": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.MDCorrelations.helfandMoment": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.MDCorrelations.helfandMoment_eq": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.MDCorrelations.helfandMoment_succ_sub": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.MDCorrelations.increment_eq_sum": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.MDCorrelations.increment_product_sum": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.MDCorrelations.integral_linearInterp": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.MDCorrelations.integral_linearInterp_of_pos": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.MDCorrelations.integral_linearInterp_piece": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.MDCorrelations.lagSum": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.MDCorrelations.linearInterp": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.MDCorrelations.linearInterp.eq_1": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.MDCorrelations.linearInterp_eqOn": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.MDCorrelations.sum_Icc_eq_sum_range": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.MDCorrelations.sum_Icc_shift_periodic": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.MDCorrelations.sum_conj_mul_shift_eq_invDFT": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.MDCorrelations.sum_range_shift_periodic": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.MDCorrelations.trapezoid_sum": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
       "OMAI.PhyslibBridge.MaterialsTransport.arrheniusDiffusivity": [
         "Classical.choice",
         "Quot.sound",
@@ -3599,6 +3734,104 @@
         "propext"
       ],
       "OMAI.PhyslibBridge.MaterialsTransport.wlsSlope_minimizes": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.PhononSpectrum.boseKernel": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.PhononSpectrum.boseKernel_eq_tsum": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.PhononSpectrum.catalogDOS": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.PhononSpectrum.catalogDOS._proof_1": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.PhononSpectrum.catalogLandauer": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.PhononSpectrum.catalogLandauer._proof_1": [
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.PhononSpectrum.catalogLandauer_eq_heatCapacity": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.PhononSpectrum.catalogLandauer_unit_transmission": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.PhononSpectrum.catalogLandauer_unit_transmission_physlib": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.PhononSpectrum.crystalDOS_sum_rules": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.PhononSpectrum.crystalFrequencies": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.PhononSpectrum.crystalFrequencies._proof_1": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.PhononSpectrum.crystalFrequencies.congr_simp": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.PhononSpectrum.integral_boseKernel": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.PhononSpectrum.integral_catalogDOS": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.PhononSpectrum.integral_sq_mul_exp_neg": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.PhononSpectrum.landauerWeight_eq": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.PhononSpectrum.landauerWeight_eq_boseKernel": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.PhononSpectrum.landauerWeight_eq_heatCapacity": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.PhononSpectrum.sum_trace_dynamicalMatrix": [
         "Classical.choice",
         "Quot.sound",
         "propext"
@@ -4958,6 +5191,86 @@
         "propext"
       ],
       "OMAI.PhyslibBridge.StaticDielectric.staticDielectric_sub_posSemidef": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.VACFSpectrum.catalogFourierDOS": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.VACFSpectrum.catalogFourierDOS_damped": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.VACFSpectrum.cos_mul_dampedVACF": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.VACFSpectrum.dampedVACF": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.VACFSpectrum.integrableOn_exp_neg_mul_cos": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.VACFSpectrum.integrable_lorentzian": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.VACFSpectrum.integral_catalogFourierDOS_damped": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.VACFSpectrum.integral_exp_neg_mul_cos": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.VACFSpectrum.integral_lorentzian": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.VACFSpectrum.lorentzian": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.VACFSpectrum.lorentzian.eq_1": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.VACFSpectrum.lorentzian_eq_scaled": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.VACFSpectrum.tendsto_catalogFourierDOS_zero_linewidth": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.VACFSpectrum.unitLorentzian": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.VACFSpectrum.unitLorentzian.eq_1": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.VACFSpectrum.unitLorentzian_peak": [
         "Classical.choice",
         "Quot.sound",
         "propext"
@@ -6652,6 +6965,69 @@
         "Quot.sound",
         "propext"
       ],
+      "_private.OMAIMDCorrelations.0.OMAI.PhyslibBridge.MDCorrelations.catalogHeatACF_eq_invDFT._proof_1_1": [
+        "Quot.sound",
+        "propext"
+      ],
+      "_private.OMAIMDCorrelations.0.OMAI.PhyslibBridge.MDCorrelations.catalogMSD_eq_vacf._simp_1_1": [],
+      "_private.OMAIMDCorrelations.0.OMAI.PhyslibBridge.MDCorrelations.double_sum_by_lag._proof_1_1": [
+        "Quot.sound",
+        "propext"
+      ],
+      "_private.OMAIMDCorrelations.0.OMAI.PhyslibBridge.MDCorrelations.double_sum_by_lag._simp_1_2": [
+        "propext"
+      ],
+      "_private.OMAIMDCorrelations.0.OMAI.PhyslibBridge.MDCorrelations.greenKubo_symm_eq_helfand._proof_1_1": [
+        "Quot.sound",
+        "propext"
+      ],
+      "_private.OMAIMDCorrelations.0.OMAI.PhyslibBridge.MDCorrelations.greenKubo_symm_eq_helfand._simp_1_2": [
+        "propext"
+      ],
+      "_private.OMAIMDCorrelations.0.OMAI.PhyslibBridge.MDCorrelations.greenKubo_symm_eq_helfand._simp_1_3": [
+        "propext"
+      ],
+      "_private.OMAIMDCorrelations.0.OMAI.PhyslibBridge.MDCorrelations.greenKubo_symm_eq_helfand._simp_1_4": [
+        "propext"
+      ],
+      "_private.OMAIMDCorrelations.0.OMAI.PhyslibBridge.MDCorrelations.greenKubo_symm_eq_helfand._simp_1_5": [
+        "propext"
+      ],
+      "_private.OMAIMDCorrelations.0.OMAI.PhyslibBridge.MDCorrelations.greenKubo_symm_eq_helfand._simp_1_6": [
+        "propext"
+      ],
+      "_private.OMAIMDCorrelations.0.OMAI.PhyslibBridge.MDCorrelations.greenKubo_symm_eq_helfand._simp_1_7": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "_private.OMAIMDCorrelations.0.OMAI.PhyslibBridge.MDCorrelations.greenKubo_symm_eq_helfand._simp_1_8": [
+        "propext"
+      ],
+      "_private.OMAIMDCorrelations.0.OMAI.PhyslibBridge.MDCorrelations.increment_product_sum._proof_1_1": [
+        "Quot.sound",
+        "propext"
+      ],
+      "_private.OMAIMDCorrelations.0.OMAI.PhyslibBridge.MDCorrelations.increment_product_sum._proof_1_2": [
+        "Quot.sound",
+        "propext"
+      ],
+      "_private.OMAIMDCorrelations.0.OMAI.PhyslibBridge.MDCorrelations.increment_product_sum._proof_1_3": [
+        "Quot.sound",
+        "propext"
+      ],
+      "_private.OMAIMDCorrelations.0.OMAI.PhyslibBridge.MDCorrelations.increment_product_sum._proof_1_4": [
+        "Quot.sound",
+        "propext"
+      ],
+      "_private.OMAIMDCorrelations.0.OMAI.PhyslibBridge.MDCorrelations.sum_Icc_shift_periodic._proof_1_1": [
+        "Quot.sound",
+        "propext"
+      ],
+      "_private.OMAIMDCorrelations.0.OMAI.PhyslibBridge.MDCorrelations.sum_range_shift_periodic._proof_1_1": [
+        "Quot.sound",
+        "propext"
+      ],
       "_private.OMAIMaterialsTransport.0.OMAI.PhyslibBridge.MaterialsTransport.arrhenius_wls_recovers_activation._simp_1_1": [
         "propext"
       ],
@@ -7532,6 +7908,61 @@
         "Quot.sound",
         "propext"
       ],
+      "_private.OMAIPhyslibPhononSpectrum.0.OMAI.PhyslibBridge.PhononSpectrum.crystalDOS_sum_rules._simp_1_2": [
+        "propext"
+      ],
+      "_private.OMAIPhyslibPhononSpectrum.0.OMAI.PhyslibBridge.PhononSpectrum.crystalDOS_sum_rules._simp_1_3": [
+        "propext"
+      ],
+      "_private.OMAIPhyslibPhononSpectrum.0.OMAI.PhyslibBridge.PhononSpectrum.crystalDOS_sum_rules._simp_1_4": [
+        "propext"
+      ],
+      "_private.OMAIPhyslibPhononSpectrum.0.OMAI.PhyslibBridge.PhononSpectrum.crystalDOS_sum_rules._simp_1_5": [
+        "propext"
+      ],
+      "_private.OMAIPhyslibPhononSpectrum.0.OMAI.PhyslibBridge.PhononSpectrum.crystalDOS_sum_rules._simp_1_6": [
+        "propext"
+      ],
+      "_private.OMAIPhyslibPhononSpectrum.0.OMAI.PhyslibBridge.PhononSpectrum.crystalDOS_sum_rules._simp_1_7": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "_private.OMAIPhyslibPhononSpectrum.0.OMAI.PhyslibBridge.PhononSpectrum.crystalDOS_sum_rules._simp_1_8": [
+        "propext"
+      ],
+      "_private.OMAIPhyslibPhononSpectrum.0.OMAI.PhyslibBridge.PhononSpectrum.landauerWeight_eq._simp_1_1": [
+        "propext"
+      ],
+      "_private.OMAIPhyslibPhononSpectrum.0.OMAI.PhyslibBridge.PhononSpectrum.landauerWeight_eq._simp_1_2": [
+        "propext"
+      ],
+      "_private.OMAIPhyslibPhononSpectrum.0.OMAI.PhyslibBridge.PhononSpectrum.landauerWeight_eq._simp_1_3": [
+        "propext"
+      ],
+      "_private.OMAIPhyslibPhononSpectrum.0.OMAI.PhyslibBridge.PhononSpectrum.landauerWeight_eq._simp_1_4": [
+        "propext"
+      ],
+      "_private.OMAIPhyslibPhononSpectrum.0.OMAI.PhyslibBridge.PhononSpectrum.landauerWeight_eq._simp_1_5": [
+        "propext"
+      ],
+      "_private.OMAIPhyslibPhononSpectrum.0.OMAI.PhyslibBridge.PhononSpectrum.landauerWeight_eq._simp_1_6": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "_private.OMAIPhyslibPhononSpectrum.0.OMAI.PhyslibBridge.PhononSpectrum.landauerWeight_eq._simp_1_7": [
+        "propext"
+      ],
+      "_private.OMAIPhyslibPhononSpectrum.0.OMAI.PhyslibBridge.PhononSpectrum.sum_trace_dynamicalMatrix._simp_1_1": [
+        "Quot.sound",
+        "propext"
+      ],
+      "_private.OMAIPhyslibPhononSpectrum.0.OMAI.PhyslibBridge.PhononSpectrum.sum_trace_dynamicalMatrix._simp_1_2": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
       "_private.OMAIPhyslibQHA.0.OMAI.PhyslibBridge.Response.GibbsBranchAt.bulk_eq_gibbs_compressibility._simp_1_1": [
         "propext"
       ],
@@ -7997,6 +8428,52 @@
         "Classical.choice",
         "Quot.sound",
         "propext"
+      ],
+      "_private.OMAIVACFSpectrum.0.OMAI.PhyslibBridge.VACFSpectrum.catalogFourierDOS_damped._simp_1_1": [
+        "propext"
+      ],
+      "_private.OMAIVACFSpectrum.0.OMAI.PhyslibBridge.VACFSpectrum.catalogFourierDOS_damped._simp_1_2": [
+        "propext"
+      ],
+      "_private.OMAIVACFSpectrum.0.OMAI.PhyslibBridge.VACFSpectrum.catalogFourierDOS_damped._simp_1_3": [
+        "propext"
+      ],
+      "_private.OMAIVACFSpectrum.0.OMAI.PhyslibBridge.VACFSpectrum.catalogFourierDOS_damped._simp_1_4": [
+        "propext"
+      ],
+      "_private.OMAIVACFSpectrum.0.OMAI.PhyslibBridge.VACFSpectrum.catalogFourierDOS_damped._simp_1_5": [
+        "propext"
+      ],
+      "_private.OMAIVACFSpectrum.0.OMAI.PhyslibBridge.VACFSpectrum.catalogFourierDOS_damped._simp_1_6": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "_private.OMAIVACFSpectrum.0.OMAI.PhyslibBridge.VACFSpectrum.catalogFourierDOS_damped._simp_1_7": [
+        "propext"
+      ],
+      "_private.OMAIVACFSpectrum.0.OMAI.PhyslibBridge.VACFSpectrum.tendsto_catalogFourierDOS_zero_linewidth._simp_1_1": [
+        "propext"
+      ],
+      "_private.OMAIVACFSpectrum.0.OMAI.PhyslibBridge.VACFSpectrum.tendsto_catalogFourierDOS_zero_linewidth._simp_1_2": [
+        "propext"
+      ],
+      "_private.OMAIVACFSpectrum.0.OMAI.PhyslibBridge.VACFSpectrum.tendsto_catalogFourierDOS_zero_linewidth._simp_1_3": [
+        "propext"
+      ],
+      "_private.OMAIVACFSpectrum.0.OMAI.PhyslibBridge.VACFSpectrum.tendsto_catalogFourierDOS_zero_linewidth._simp_1_4": [
+        "propext"
+      ],
+      "_private.OMAIVACFSpectrum.0.OMAI.PhyslibBridge.VACFSpectrum.tendsto_catalogFourierDOS_zero_linewidth._simp_1_5": [
+        "propext"
+      ],
+      "_private.OMAIVACFSpectrum.0.OMAI.PhyslibBridge.VACFSpectrum.tendsto_catalogFourierDOS_zero_linewidth._simp_1_6": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "_private.OMAIVACFSpectrum.0.OMAI.PhyslibBridge.VACFSpectrum.tendsto_catalogFourierDOS_zero_linewidth._simp_1_7": [
+        "propext"
       ]
     },
     "namespace_prefix": "OMAI.PhyslibBridge",
@@ -8008,6 +8485,7 @@
       "OMAIDeviceMetrology",
       "OMAIElasticity",
       "OMAIElectronicStatistics",
+      "OMAIMDCorrelations",
       "OMAIMaterialsTransport",
       "OMAIPhyslibBridge",
       "OMAIPhyslibContinuum",
@@ -8029,6 +8507,7 @@
       "OMAIPhyslibModeGruneisen",
       "OMAIPhyslibParticipationRatio",
       "OMAIPhyslibPhononDispersion",
+      "OMAIPhyslibPhononSpectrum",
       "OMAIPhyslibQHA",
       "OMAIPhyslibQHAWitness",
       "OMAIPhyslibRTAConductivity",
@@ -8040,14 +8519,15 @@
       "OMAIPhyslibThermalGruneisen",
       "OMAISommerfeldTransport",
       "OMAIStabilityEnergies",
-      "OMAIStaticDielectric"
+      "OMAIStaticDielectric",
+      "OMAIVACFSpectrum"
     ],
     "status": "passed",
-    "theorem_count": 1307
+    "theorem_count": 1403
   },
   "command": "lake build --wfail",
   "contract_name_audit": {
-    "pair_count": 62,
+    "pair_count": 69,
     "pairs": [
       {
         "module": "OMAICalphad",
@@ -8186,12 +8666,36 @@
         "name": "OMAI.PhyslibBridge.Lattice.participationRatio"
       },
       {
+        "module": "OMAIMDCorrelations",
+        "name": "OMAI.PhyslibBridge.MDCorrelations.catalogHeatACF"
+      },
+      {
+        "module": "OMAIMDCorrelations",
+        "name": "OMAI.PhyslibBridge.MDCorrelations.catalogMSD"
+      },
+      {
+        "module": "OMAIMDCorrelations",
+        "name": "OMAI.PhyslibBridge.MDCorrelations.catalogVACF"
+      },
+      {
+        "module": "OMAIMDCorrelations",
+        "name": "OMAI.PhyslibBridge.MDCorrelations.greenKubo"
+      },
+      {
         "module": "OMAIMaterialsTransport",
         "name": "OMAI.PhyslibBridge.MaterialsTransport.arrheniusDiffusivity"
       },
       {
         "module": "OMAIMaterialsTransport",
         "name": "OMAI.PhyslibBridge.MaterialsTransport.ionicConductivity"
+      },
+      {
+        "module": "OMAIPhyslibPhononSpectrum",
+        "name": "OMAI.PhyslibBridge.PhononSpectrum.catalogDOS"
+      },
+      {
+        "module": "OMAIPhyslibPhononSpectrum",
+        "name": "OMAI.PhyslibBridge.PhononSpectrum.catalogLandauer"
       },
       {
         "module": "OMAIPhyslibHarmonicResponse",
@@ -8244,6 +8748,10 @@
       {
         "module": "OMAIStaticDielectric",
         "name": "OMAI.PhyslibBridge.StaticDielectric.staticDielectric"
+      },
+      {
+        "module": "OMAIVACFSpectrum",
+        "name": "OMAI.PhyslibBridge.VACFSpectrum.catalogFourierDOS"
       },
       {
         "module": "OMAIPhyslibSemantics",
@@ -8323,8 +8831,9 @@
     "lean/bridge/OMAIDeviceMetrology.lean": "e4512fd4eda1c0bf64a059a05ed51f0493cfd3ca131c891a2a223ba837d79edd",
     "lean/bridge/OMAIElasticity.lean": "dbc0efc3f35bcc223d28cd60d70fa591ab5f4cf9d285fe97360be6dca0602844",
     "lean/bridge/OMAIElectronicStatistics.lean": "42647fea45250902515d99acdf1e8d2bf9d809ce1e15ff7ad0890fe59d05bfde",
+    "lean/bridge/OMAIMDCorrelations.lean": "917518ed3091e35f1048b4284cbb3e55722d7d317d61aee29116cc6ca0a5b22e",
     "lean/bridge/OMAIMaterialsTransport.lean": "2aa396f9e92d7b2a52b7d8cceb05c7834dee771777c23c47094dd2b2ed82d379",
-    "lean/bridge/OMAIPhyslibBridge.lean": "9a74ff31918862f6046cb1ed4bdee4357a6c4ef9647fa03588ddffe590cbec96",
+    "lean/bridge/OMAIPhyslibBridge.lean": "6ca1112fa156f7b2a42d7ed1e1795d1ae04ea9d4f3a8b505cdd407cdcfe93e82",
     "lean/bridge/OMAIPhyslibContinuum.lean": "e8bff3cb5d44cd78885d8c5f200d8761e8c568cd0d101fc0c2110f521bdca7ff",
     "lean/bridge/OMAIPhyslibDimensions.lean": "19081539b9e0b1499f407b54fdc174c0ff85bff56976771de11cb386c52a461e",
     "lean/bridge/OMAIPhyslibElectronicTransport.lean": "2609b6b410cb84b120f782adf88b7204e13bcef14ddee5adbce92f5c89805f45",
@@ -8344,6 +8853,7 @@
     "lean/bridge/OMAIPhyslibModeGruneisen.lean": "0ea8fbbed0fe6920dd0c712a0f2d55768c4cca218f5193a1dce1ffd29f7046b5",
     "lean/bridge/OMAIPhyslibParticipationRatio.lean": "2306537ae007125fc41ba3654b265cb1fd19cca3ab33769cf1590bad269203fa",
     "lean/bridge/OMAIPhyslibPhononDispersion.lean": "70bd052d1d32afe828a3a8f7e26e406d5ec1e121b86ad0d9b08717f8c0f87f1a",
+    "lean/bridge/OMAIPhyslibPhononSpectrum.lean": "45133a66accf8fa1e98f2b212ce134570cb5cbfc29e4c716969f5ea4d402ebe6",
     "lean/bridge/OMAIPhyslibQHA.lean": "2347e44452e37e3a05131ad636dd20f6ad7ea74dcc60c97fb8a2134f63f68f96",
     "lean/bridge/OMAIPhyslibQHAWitness.lean": "44e893abf1aebd6cf833d75389e61b64b055e2fca6bf7c31192721081bc525ae",
     "lean/bridge/OMAIPhyslibRTAConductivity.lean": "13267fa6d967df842f39251b23a0c2b70cd230f2553a444964f4bdc2229e34a8",
@@ -8356,7 +8866,8 @@
     "lean/bridge/OMAISommerfeldTransport.lean": "c303015e23f3b7c5632ac2d151386da80b0be03afd4c6ae6c5d2860b559b4905",
     "lean/bridge/OMAIStabilityEnergies.lean": "d5da7a1eb03e27c9869c6f8f735f37c0256cc03eebaf8eba7d90a7cb221eaa34",
     "lean/bridge/OMAIStaticDielectric.lean": "2b899fb132527638b2b75870b52b3a757eecd409506b576a3dc73edf0272fe88",
-    "lean/bridge/audit.py": "a22c47be89a0f4476d250533bb277f2aedcf5aad9ff8935af86d29f1d4f67853",
+    "lean/bridge/OMAIVACFSpectrum.lean": "29afe5cc67721583ea4d4822c7f16da22d4a2f1da277ec4d18013c8199d96c14",
+    "lean/bridge/audit.py": "7d4c3246f728270d04531e08da0a613aaa6893ff579ed42f1d05775975626443",
     "lean/bridge/carrier-statistics-formula-contract.json": "a7446bb199398508637ed277e55cfcca45349226288af374d12dae3d4d323a87",
     "lean/bridge/composites-formula-contract.json": "734b687bf6b86e9137262d777abe60958f8452ff53f6ec6532c482d9098cba32",
     "lean/bridge/continuum-formula-contract.json": "b5fb4368abccaac9fcde8b6ccb6dfd55402f14f1a9537e898645484ba69b2e8f",
@@ -8370,9 +8881,11 @@
     "lean/bridge/harmonic-sums-formula-contract.json": "c897e8de5d7c1b7211f95e0cd599479c87a738de946be683bd5ab3ae78be1699",
     "lean/bridge/joint-density-formula-contract.json": "f5a5bb01044f479cf9770573121442a84117af1a84a6976d5ede0765256dfd04",
     "lean/bridge/lake-manifest.json": "d4f51a8aa0ee98c0c8a34a7f9cc00accf43ee3a67571f571c0e35318d0956e53",
-    "lean/bridge/lakefile.toml": "34685cd3264e8d8c8ea4d1b2e56c77e0eca2cc87fd5bce5f86e52df1b36db398",
+    "lean/bridge/lakefile.toml": "9ec6396a4c6c2127bc2ae4301cb80f2122070126023d6c7d02be2a8f7f73eb17",
     "lean/bridge/lean-toolchain": "ca5f1f601d34c49079e38d7e7041eb0f2a9c227fbc1df0f404820069a052330c",
     "lean/bridge/materials-transport-formula-contract.json": "4e345358c5fa3f5c81fdfffe451736c573d12aeed7555f6e8aa82be9d1c53c2d",
+    "lean/bridge/md-correlations-formula-contract.json": "4a10e034d4823fe30d53b6e1a05720e3b1a05ebe832237305ca98c0f7983131c",
+    "lean/bridge/phonon-spectrum-formula-contract.json": "054c3e987ae33afb6f303bbd7253aaf1f8b01461e780fc1783e0e93dc70f18b1",
     "lean/bridge/phonon-structure-formula-contract.json": "9d9772031ec689a7e206609f91eb38e9161f27f1dedc81c63c313066789a6e97",
     "lean/bridge/qha-formula-contract.json": "60876d432d5819f8ed568770ec7df5ed7ad64fdc1e00c2c2fd03bd061b9f83c1",
     "lean/bridge/response-formula-contract.json": "f4f446f1967c45ccf508f42232e070d468121b0967459f93fc0c496210adf353",
@@ -8381,6 +8894,7 @@
     "lean/bridge/static-dielectric-formula-contract.json": "8ba154e6b078c128c80a0f6425ad6c93472ecb006812bd4c7b0cc70d55c6dc17",
     "lean/bridge/thermal-gruneisen-formula-contract.json": "61759afd04057fdd607005bf49ae8ad84e2d3d916f7c331b45886a66620acdca",
     "lean/bridge/thermochemistry-formula-contract.json": "4afff8e935bfe1756e68e4d985c048232b6a31d487c86582f26d64780e99513d",
+    "lean/bridge/vacf-spectrum-formula-contract.json": "c01a234d6704883dde033e682ec882859a1078e474b35bd3d870b57c40d106df",
     "lean/bridge/verify_contracts.py": "57225331e3e602ec50c4cb707f6b0b8c4f9cc7b7476e978cfa8a94ccd7708ffc"
   },
   "status": "passed",

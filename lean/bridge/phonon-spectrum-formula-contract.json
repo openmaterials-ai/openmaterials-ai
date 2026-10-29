@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "scope": "Reviewed OMAI formula endpoints and exact Lean proof source for the phonon density of states on a Physlib crystal and the Landauer conductance with the Physlib oscillator heat capacity. Hash and compiled-name checks detect drift and provenance errors; they are not automatic symbolic translation or numerical validation.",
+  "source_path": "lean/bridge/OMAIPhyslibPhononSpectrum.lean",
+  "source_sha256": "45133a66accf8fa1e98f2b212ce134570cb5cbfc29e4c716969f5ea4d402ebe6",
+  "operators": [
+    {
+      "id": "compute_dos",
+      "uid": "c42288d9daf6b41adc999cb7f35f8dc0d46478006f253df31c7aedf2605783bc",
+      "formula_sha256": "8c3bd346a566aedaa4ea5dc0a812a8404cd1a6e7d221e4e7e5709550addeab01",
+      "formula_latex": "g = \\frac{\\sum_{\\substack{1 \\leq \\mathbf{q} \\leq N_{q}\\\\1 \\leq \\nu \\leq 3 N}} \\delta{\\left(\\omega - {\\omega}_{\\mathbf{q},\\nu} \\right)}}{N_{q}}",
+      "lean_definition": "OMAI.PhyslibBridge.PhononSpectrum.catalogDOS"
+    },
+    {
+      "id": "compute_conductance[transport_model=landauer]",
+      "uid": "1201b09100e9aaac69f343b09ff8c8002c6de6dec1c843458bec89e3151ef436",
+      "formula_sha256": "ae627a4fd4b58e0fea7656eb1b7f74fb8e4377ca53f2de6f080e09ca05e57aef",
+      "formula_latex": "\\mathcal{G} = \\frac{\\int\\limits_{0}^{\\infty} \\bar{\\h} \\omega \\frac{\\partial}{\\partial T} n_{BE}{\\left(\\frac{\\bar{\\h} \\omega}{T k_{B}} \\right)} {\\mathcal{T}}_{\\omega}\\, d\\omega}{2 \\pi}",
+      "lean_definition": "OMAI.PhyslibBridge.PhononSpectrum.catalogLandauer"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "PhononDOS",
+      "uid": "e14b6cdd007ca3af971aa52880811138606efdb47e30d5a26c2335903ce796f3"
+    },
+    {
+      "id": "ThermalConductance[transport_model=landauer]",
+      "uid": "50084cef8405999bb14c2ff71b98f70f982d71254e3ec35bed543a10bbbbf542"
+    }
+  ],
+  "interpretations": [
+    "catalogDOS transcribes the catalog's g = (1/N_q) sum_{q,nu} delta(omega - omega_{q nu}) as a measure on frequency, a sum of point masses; integrals against it are (1/N_q) sum_{q,nu} f(omega_{q nu}). Gaussian or tetrahedron smearing is not covered.",
+    "On a finite Born-von Karman crystal of Physlib sites, with the frequencies the nonnegative square roots of the eigenvalues of the catalog dynamical matrix built from the crystal's own force constants, taken at every character of the finite translation group (N_q = |G|, the full mesh), a harmonic energy that is never negative and positive masses give the sum rules int g = 3 N_cell and int omega^2 g = sum_i Phi_ii(0)/M_i over the unit-cell displacement components i. Zero modes count with omega = 0; symmetry-reduced meshes are not covered.",
+    "catalogLandauer transcribes the catalog's G(T) = (1/(2 pi)) int_0^infinity hbar omega T(omega) d n_BE(hbar omega/(k_B T))/dT domega with the transmission T(omega) at angular frequency omega. For omega > 0 and T > 0 the weight hbar omega dn_BE/dT equals the derivative-defined canonical heat capacity of the Physlib quantum harmonic oscillator of angular frequency omega, with Physlib's hbar and k_B, so G(T) is the transmission-weighted spectral integral of the Physlib heat capacity of one oscillator per frequency divided by 2 pi.",
+    "With unit transmission at every frequency, G(T) = pi^2 k_B^2 T/(3 h) = pi k_B^2 T/(6 hbar), the thermal conductance quantum of one channel, from int_0^infinity x^2 e^x/(e^x - 1)^2 dx = pi^2/3."
+  ]
+}

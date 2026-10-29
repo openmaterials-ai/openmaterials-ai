@@ -3603,6 +3603,238 @@
         "build_record": "lean/bridge/build-evidence.json",
         "source_sha256": "2b899fb132527638b2b75870b52b3a757eecd409506b576a3dc73edf0272fe88"
       }
+    },
+    {
+      "id": "md-correlation-estimators",
+      "targets": [
+        {
+          "kind": "operator",
+          "id": "compute_velocity_autocorrelation",
+          "uid": "9c182752f0970df148341ff0e66df8e5be8c74744e79d9626847399355dab7a2",
+          "formula_sha256": "f3c1b5e43f2f5fc7b9ee7b7b2f2202e3b9b282fec518c74a87f993d3ddb3c758"
+        },
+        {
+          "kind": "operator",
+          "id": "compute_msd",
+          "uid": "ce9b639e5b88ed7e27cd2e0c879c620c582b0435d01365ea1dc35eb3fafdeeaa",
+          "formula_sha256": "b4f9b442a0af59ae09e92327dd9753d2a819fddaa612827d64c5dfb7d03a7146"
+        },
+        {
+          "kind": "operator",
+          "id": "autocorrelate_heat_current",
+          "uid": "70b3a24785d80cd8cd1e3940c64032d39cad772ff92e73cd458f8b617ef40b1e",
+          "formula_sha256": "44d85341be03b3ba6fccd6399e75dc62c09a61b36f4f3a2798f5d09b6d515a0e"
+        },
+        {
+          "kind": "operator",
+          "id": "contract_kappa[transport_model=green_kubo]",
+          "uid": "89d2d05c87fbf2327a442b230ebc1349fbcc1ec158fb59ea5ab22f7727d915f7",
+          "formula_sha256": "e2bb1307e05a6ec0ade5c2361ced5a02baf17d92a07791dad85ed9215e77ea16"
+        },
+        {
+          "kind": "node",
+          "id": "VelocityAutocorrelation",
+          "uid": "f8b092359048e5130d56697ca9504bb4740b875aca685a8f760316bfb5e9a661"
+        },
+        {
+          "kind": "node",
+          "id": "MeanSquaredDisplacement",
+          "uid": "28ebe96bc049a92e4318fd5242778f30e5647531d0a2b39c5891546329c8bca0"
+        },
+        {
+          "kind": "node",
+          "id": "HeatCurrentACF",
+          "uid": "d8f44a4cce5e3dfea1ec9329189d49ac70e33d69cab222e2679f7791a30613ac"
+        },
+        {
+          "kind": "node",
+          "id": "ThermalConductivity[transport_model=green_kubo]",
+          "uid": "25dc9f7af8aec52efb6be16b7b7c76f8334b03056f8838c3ff432fdad8482fb6"
+        }
+      ],
+      "relation": "local",
+      "statement": "For a velocity record periodic over the origin window, v(t + n_lag) = v(t), with positions advanced by the stored velocity, r(t + 1) = r(t) + dt v(t), the catalog's mean squared displacement is M(tau) = dt^2 [tau Cv(0) + 2 sum_{k=1}^{tau-1} (tau - k) Cv(k)] with Cv the catalog's velocity autocorrelation: the Einstein and Green-Kubo diffusion estimators are one function of the trajectory. For a heat current periodic over the origin window with the Helfand moment advanced by the current, G(t + 1) = G(t) + dt J(t), and m >= 1, the symmetrized Green-Kubo conductivity (kappa_ab + kappa_ba)/2 at tau_max = m dt, with the integral of the sampled autocorrelation taken as the integral of its piecewise-linear interpolant (the trapezoid rule), equals the central-difference Einstein-Helfand estimator V (Lambda_ab(m + 1) - Lambda_ab(m - 1))/(4 k_B T^2 dt) with Lambda_ab(tau) = sum_t (G_a(t + tau) - G_a(t))(G_b(t + tau) - G_b(t))/n_lag. For a periodic heat current the catalog's origin-averaged autocorrelation is the inverse discrete Fourier transform of the cross spectrum conj(F J_a) F J_b/n_lag of one period, the FFT route.",
+      "sources": [],
+      "conditions": [
+        "compute_velocity_autocorrelation, compute_msd, autocorrelate_heat_current and contract_kappa[transport_model=green_kubo] are transcribed: origin sums over t = 1, ..., n_lag divided by N_atoms n_lag or n_lag, with the three Cartesian components summed into Cv and M, and kappa_ab = V int_0^tau_max Jcorr_ab dtau/(k_B T^2). Records are indexed by the integer sample; dt is the sampling step.",
+        "Periodicity over the origin window, v(t + n_lag) = v(t) and J(t + n_lag) = J(t), is the circular-correlation hypothesis of the FFT route (the catalog's periodic-padding assumption). A trajectory of n_lag + tau_max samples correlated linearly is not periodic; the identities are exact for the circular estimators, and the end corrections of the linear estimator are not bounded here. Nothing is claimed about ensemble averages, ergodicity, finite-trajectory bias, statistical error or convergence in n_lag.",
+        "r(t + 1) = r(t) + dt v(t) holds exactly when the stored velocity is the finite-difference velocity of unwrapped positions (the catalog's unwrap_pbc); for velocity-Verlet velocities it holds up to the dt^2 F/(2 m) term of the integrator step, which the identity does not absorb. G is the time-integrated catalog current, G(t + 1) = G(t) + dt J(t), the energy moment per unit volume (Helfand).",
+        "The Green-Kubo integral from 0 to m dt is defined through the piecewise-linear interpolant of the samples Jcorr(k), k = 0, ..., m, so int = dt [Jcorr(0)/2 + sum_{k=1}^{m-1} Jcorr(k) + Jcorr(m)/2]; Simpson or rectangle rules differ at O(dt^2). The symmetrization (ab + ba)/2 is part of the identity: Jcorr_ab alone differs from the Helfand estimator by its antisymmetric part, and for a = b no symmetrization is needed. The identity holds for every real dt, k_B and T (both sides vanish at zero), so the physical ranges dt > 0, k_B > 0 and T > 0 are not hypotheses of the theorem.",
+        "The FFT identity uses the samples J(1), ..., J(n_lag) of one period on Z/n_lag, F the unnormalized transform F x(k) = sum_j x_j exp(-2 pi i j k/n_lag) and F^-1 with the factor 1/n_lag; the cross spectrum is divided by n_lag again, matching the catalog's 1/n_lag.",
+        "Units: v in m/s, r in m, dt in s, J in W/m^2, Jcorr in W^2/m^4, V in m^3, k_B in J/K, T in K, kappa in W/(m K). The catalog's ps, Angstrom and THz are conversions outside the theorems. compute_heat_current is not covered; its catalog formula is recorded as a defect."
+      ],
+      "conventions": {
+        "model_scope": "Discrete time-correlation estimators of a sampled classical trajectory: origin-averaged correlations, the Einstein and Helfand moments and the trapezoid Green-Kubo integral. Physlib has no molecular-dynamics trajectory model, so these are local theorems over Mathlib that identify no Physlib declaration.",
+        "component_scope": "Scalar Cv and M summed over the three components and all atoms; the full 3x3 tensors Jcorr_ab, kappa_ab and Lambda_ab, with the symmetrized pair (ab, ba) for the Green-Kubo identity.",
+        "normalization_basis": "Per atom and per origin for Cv and M; per origin for Jcorr and Lambda; kappa per unit volume through V and the current per unit volume.",
+        "frequency_convention": "Not applicable; lags are integer sample indices and tau_max = m dt.",
+        "unit_embedding": "Coherent SI as stated in the conditions; the theorems are exact-real identities and certify no floating-point or FFT implementation.",
+        "held_fixed": "n_lag, dt, V, T and k_B are fixed inputs; the records are fixed functions of the sample index.",
+        "admissibility": "Records periodic with period n_lag; integrated records advanced by dt times the rate; m >= 1 for the Green-Kubo identity; N_atoms and n_lag enter only as divisors.",
+        "reference_energy": "Not applicable; per-atom energies enter only through the heat current, which is not covered.",
+        "qpoint_weighting": "Not applicable; no Brillouin-zone sum enters."
+      },
+      "remaining_obligations": [
+        "compute_heat_current is not covered: its catalog formula is a recorded defect, and the Irving-Kirkwood, Hardy and virial decompositions are not formalized.",
+        "Ensemble averaging, ergodicity, the statistical error of a finite trajectory, the choice of tau_max (the plateau), finite-size effects, quantum corrections and the end effects of the linear (zero-padded) correlator are not addressed.",
+        "The diffusivity from the slope of the mean squared displacement (contract_diffusivity) is a definition and is not bound; the Einstein-Helfand estimator under periodic boundaries with wrapped coordinates is not covered."
+      ],
+      "evidence": {
+        "kind": "compiled_bridge",
+        "module": "OMAIMDCorrelations",
+        "declarations": [
+          "OMAI.PhyslibBridge.MDCorrelations.catalogMSD_eq_vacf",
+          "OMAI.PhyslibBridge.MDCorrelations.greenKubo_symm_eq_helfand",
+          "OMAI.PhyslibBridge.MDCorrelations.catalogHeatACF_eq_invDFT"
+        ],
+        "source_path": "lean/bridge/OMAIMDCorrelations.lean",
+        "build_record": "lean/bridge/build-evidence.json",
+        "source_sha256": "917518ed3091e35f1048b4284cbb3e55722d7d317d61aee29116cc6ca0a5b22e"
+      }
+    },
+    {
+      "id": "vacf-spectrum-lorentzian-limit",
+      "targets": [
+        {
+          "kind": "operator",
+          "id": "fourier_to_dos",
+          "uid": "d6b71066f0cef4182e1d522d30c31326ecc2504428f3c8e6b42f5189b410a6f3",
+          "formula_sha256": "ef2d7d4503ff999157b0541bf106cb3d9c843a98b70d1084009e8b638628cee1"
+        },
+        {
+          "kind": "node",
+          "id": "PhononDOS",
+          "uid": "e14b6cdd007ca3af971aa52880811138606efdb47e30d5a26c2335903ce796f3"
+        }
+      ],
+      "relation": "local",
+      "statement": "For the velocity autocorrelation of lifetime-broadened modes, Cv(tau) = sum_m A_m exp(-Gamma_m tau) cos(omega_m tau) with every Gamma_m > 0, the catalog transform g(omega) = (1/pi) int_0^infinity cos(omega tau) Cv(tau) dtau equals sum_m (A_m/2)[L(Gamma_m, omega - omega_m) + L(Gamma_m, omega + omega_m)] with L(Gamma, x) = Gamma/(pi (Gamma^2 + x^2)) the normalized Lorentzian of half-width Gamma. Its integral over all frequencies is Cv(0) = sum_m A_m for every set of positive linewidths. As the linewidths s gamma_m shrink to zero, int g(omega) phi(omega) domega converges, for every integrable phi continuous at +-omega_m, to sum_m (A_m/2)(phi(omega_m) + phi(-omega_m)): the harmonic delta-sum density of states with mode weights A_m, counted at +omega_m and -omega_m with half weight each.",
+      "sources": [],
+      "conditions": [
+        "fourier_to_dos is transcribed as the Lebesgue integral over (0, infinity) at angular frequency omega; the damped-cosine form of Cv is a hypothesis on the input, not derived from the dynamics, and every linewidth must be positive (an undamped mode has no integrable transform).",
+        "Normalization: the catalog's g integrates to Cv(0) over the whole real line and to Cv(0)/2 over omega > 0, in the units of Cv (velocity squared per atom, summed over the three components; Cv(0) = 3 k_B T/m for one mass in equipartition). It is proportional to a density of states normalized to the number of modes, not equal to one; the (2/pi) int cos(omega tau) Cv(tau)/Cv(0) dtau convention normalizes the one-sided spectrum to 1 and differs by the factor 2/Cv(0).",
+        "Equal mode weights A_m are not implied; they hold for a classical harmonic crystal of one atomic mass in equipartition, and in general A_m are the velocity weights of the modes. The zero-linewidth limit is weak convergence against integrable test functions continuous at the mode frequencies, with all linewidths scaled by one factor s -> 0+.",
+        "Frequencies are angular (rad/s) with tau in s; a spectrum on linear frequency in THz needs omega = 2 pi 10^12 nu. Windows, finite trajectories, the discrete cosine transform and the dos_broadening scheme of the catalog are outside the theorems."
+      ],
+      "conventions": {
+        "model_scope": "Cosine transform of a sum of exponentially damped cosines and its zero-linewidth limit. Physlib has no molecular-dynamics or spectral-estimation model, so these are local theorems over Mathlib that identify no Physlib declaration.",
+        "component_scope": "The scalar Cv summed over components and atoms, and its scalar transform g(omega) on the whole real line.",
+        "normalization_basis": "g carries the normalization of Cv: total integral Cv(0), half of it on omega > 0; per atom when Cv is per atom.",
+        "frequency_convention": "Angular frequency omega in rad/s and lag tau in s; Lorentzian half-widths Gamma_m in rad/s.",
+        "unit_embedding": "Cv in m^2/s^2 per atom and g in m^2/s per atom (velocity squared times time); exact-real statements that certify no numerical transform.",
+        "held_fixed": "Mode amplitudes A_m, frequencies omega_m and linewidths Gamma_m are fixed inputs; the limit scales the linewidths by one factor.",
+        "admissibility": "Every Gamma_m > 0 (or gamma_m > 0 with s > 0); phi integrable and continuous at +-omega_m for the limit.",
+        "reference_energy": "Not applicable.",
+        "qpoint_weighting": "Not applicable; modes enter as a finite list with their weights A_m."
+      },
+      "remaining_obligations": [
+        "The damped-cosine form of the autocorrelation and the mode weights A_m are not derived from a trajectory or a harmonic model; lineshapes beyond one Lorentzian per mode are not covered.",
+        "Finite trajectories, window functions, the discrete cosine transform and the Gaussian dos_broadening scheme are not addressed.",
+        "The identification of the zero-linewidth limit with compute_dos on a q mesh (equal weights, the mode count 3 N) is not proved; only the weak limit to the weighted delta sum is."
+      ],
+      "evidence": {
+        "kind": "compiled_bridge",
+        "module": "OMAIVACFSpectrum",
+        "declarations": [
+          "OMAI.PhyslibBridge.VACFSpectrum.catalogFourierDOS_damped",
+          "OMAI.PhyslibBridge.VACFSpectrum.integral_catalogFourierDOS_damped",
+          "OMAI.PhyslibBridge.VACFSpectrum.tendsto_catalogFourierDOS_zero_linewidth"
+        ],
+        "source_path": "lean/bridge/OMAIVACFSpectrum.lean",
+        "build_record": "lean/bridge/build-evidence.json",
+        "source_sha256": "29afe5cc67721583ea4d4822c7f16da22d4a2f1da277ec4d18013c8199d96c14"
+      }
+    },
+    {
+      "id": "crystal-dos-landauer-conductance",
+      "targets": [
+        {
+          "kind": "operator",
+          "id": "compute_dos",
+          "uid": "c42288d9daf6b41adc999cb7f35f8dc0d46478006f253df31c7aedf2605783bc",
+          "formula_sha256": "8c3bd346a566aedaa4ea5dc0a812a8404cd1a6e7d221e4e7e5709550addeab01"
+        },
+        {
+          "kind": "operator",
+          "id": "compute_conductance[transport_model=landauer]",
+          "uid": "1201b09100e9aaac69f343b09ff8c8002c6de6dec1c843458bec89e3151ef436",
+          "formula_sha256": "ae627a4fd4b58e0fea7656eb1b7f74fb8e4377ca53f2de6f080e09ca05e57aef"
+        },
+        {
+          "kind": "node",
+          "id": "PhononDOS",
+          "uid": "e14b6cdd007ca3af971aa52880811138606efdb47e30d5a26c2335903ce796f3"
+        },
+        {
+          "kind": "node",
+          "id": "ThermalConductance[transport_model=landauer]",
+          "uid": "50084cef8405999bb14c2ff71b98f70f982d71254e3ec35bed543a10bbbbf542"
+        }
+      ],
+      "relation": "conditional",
+      "statement": "compute_dos is read as the measure g = (1/N_q) sum_{q,nu} delta(omega - omega_{q nu}) on frequency. On a finite Born-von Karman crystal of Physlib sites, with the frequencies the nonnegative square roots of the eigenvalues of the catalog dynamical matrix built from the crystal's own force constants, taken at every character of the finite translation group (the full mesh, N_q = |G|), a harmonic energy that is never negative and positive masses give the sum rules int g = 3 N_cell, the number of modes per wavevector, and int omega^2 g = sum_i Phi_ii(0)/M_i over the unit-cell displacement components, so the mean-square frequency is the mass-weighted on-site force constant averaged over modes. compute_conductance[transport_model=landauer] is read as G(T) = (1/(2 pi)) int_0^infinity hbar omega T(omega) d n_BE(hbar omega/(k_B T))/dT domega. For omega > 0 and T > 0 the weight hbar omega dn_BE/dT is the derivative-defined canonical heat capacity of the Physlib quantum harmonic oscillator of angular frequency omega, with Physlib's hbar and k_B, so G(T) is the transmission-weighted spectral integral of the Physlib heat capacity of one oscillator per frequency divided by 2 pi; with unit transmission G(T) = pi^2 k_B^2 T/(3 h), the thermal conductance quantum, from int_0^infinity x^2 e^x/(e^x - 1)^2 dx = pi^2/3.",
+      "sources": [
+        {
+          "module": "Physlib.CondensedMatter.Crystal.Basic",
+          "name": "Physlib.CondensedMatter.Crystal",
+          "kind": "structure",
+          "line": 65
+        },
+        {
+          "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
+          "name": "CanonicalEnsemble.heatCapacity",
+          "kind": "def",
+          "line": 417
+        },
+        {
+          "module": "Physlib.QuantumMechanics.HarmonicOscillator.OneDimension.Basic",
+          "name": "QuantumMechanics.OneDimension.HarmonicOscillator",
+          "kind": "structure",
+          "line": 63
+        },
+        {
+          "module": "Physlib.Thermodynamics.Temperature.Basic",
+          "name": "Temperature",
+          "kind": "structure",
+          "line": 32
+        }
+      ],
+      "conditions": [
+        "compute_dos is transcribed as a sum of point masses (1/N_q) sum_{q,nu} delta(omega - omega_{q nu}); the catalog's Gaussian or tetrahedron dos_broadening and symmetry-reduced meshes are not covered. The crystal is Physlib.CondensedMatter.Crystal with a finite translation group G, as in the crystal-phonon-dispersion binding: the mesh is every character of G (N_q = |G|, the full Born-von Karman mesh) and the frequencies are the nonnegative square roots of the eigenvalues of the catalog dynamical matrix built from the supercell's own force constants with the cell-vector phase.",
+        "The total-weight rule int g = 3 N_cell needs only the mode count (three per unit-cell site) and holds for any frequencies; the second-moment rule needs a harmonic energy that is never negative (Stable, so every eigenvalue is nonnegative and omega^2 is the eigenvalue) and positive masses, and reads sum_i Phi_ii(0)/M_i over the 3 N_cell displacement components i of the reference cell, Phi_ii(0) the on-site self force constant. Zero modes count at omega = 0.",
+        "compute_conductance[transport_model=landauer] is transcribed with the transmission T(omega) at angular frequency omega and the derivative in T of n_BE(hbar omega/(k_B T)). The weight identity hbar omega dn_BE/dT = c_omega(T) holds for omega > 0 and T > 0, with c_omega the derivative-defined heat capacity of Physlib's canonical ensemble of the full Nat-spectrum oscillator of angular frequency omega, as in the harmonic-mode-heat-capacity binding, and with Physlib's hbar and k_B.",
+        "The integral form G = (1/(2 pi)) int T(omega) c_omega(T) domega is an integrand identity under the Lebesgue integral over (0, infinity) and does not by itself establish integrability for an arbitrary T(omega); the unit-transmission value pi^2 k_B^2 T/(3 h), 9.46e-13 W/K at 1 K, is proved with the explicit Bose integral. Ballistic, coherent transport in the Landauer picture: the transmission is an input and its producers are not verified.",
+        "Frequencies are angular (rad/s); T(omega) is a dimensionless number of transmitting channels at omega; hbar in J s and k_B in J/K give G in W/K. Physlib's h is 2 pi hbar."
+      ],
+      "conventions": {
+        "model_scope": "Harmonic phonon density of states on a finite Physlib crystal, and the Landauer thermal conductance with the Physlib canonical heat capacity of one quantum oscillator per frequency. The lattice-dynamics and Landauer content is OMAI-local; Physlib supplies the crystal bookkeeping, the oscillator, the canonical heat capacity and the constants.",
+        "component_scope": "Scalar density of states on frequency and scalar conductance of one lead pair; no tensor components.",
+        "normalization_basis": "Density of states per wavevector (divided by N_q) with 3 N_cell modes per wavevector; conductance per channel through T(omega).",
+        "frequency_convention": "Angular SI frequency omega in rad/s for both formulas, as in the canonical heat capacities; stored linear THz requires omega = 2 pi 10^12 nu, and the density of states then rescales by 2 pi 10^12.",
+        "unit_embedding": "Coherent SI: omega in rad/s, Phi in N/m, M in kg, hbar in J s, k_B in J/K, T in K, G in W/K. Exact-real statements; floating-point evaluation is not certified.",
+        "held_fixed": "Force constants, masses and the translation group for the density of states; the transmission and the temperature for the conductance.",
+        "admissibility": "Finite translation group and positive masses; Stable force constants for the second moment; omega > 0 and T > 0 for the weight identity; T > 0 for the conductance quantum.",
+        "reference_energy": "Zero-point energy does not enter the canonical heat capacity or the conductance.",
+        "qpoint_weighting": "Uniform weights over every character of the finite translation group; symmetry-reduced or tetrahedron weights are outside these statements."
+      },
+      "remaining_obligations": [
+        "Smeared and tetrahedron densities of states, symmetry-reduced meshes, interpolation to incommensurate wavevectors and the phonopy, kALDo and Quantum ESPRESSO producers are not verified; higher moments and the Debye model are not covered.",
+        "The transmission function (atomistic Green's function or mode counting) and its producers are not verified; integrability of the conductance integrand for an arbitrary transmission is not proved; inelastic and diffusive corrections to the Landauer picture are outside the model.",
+        "The Physlib constants hbar and k_B are used as declared; no statement is made about their values beyond Physlib's definitions."
+      ],
+      "evidence": {
+        "kind": "compiled_bridge",
+        "module": "OMAIPhyslibPhononSpectrum",
+        "declarations": [
+          "OMAI.PhyslibBridge.PhononSpectrum.crystalDOS_sum_rules",
+          "OMAI.PhyslibBridge.PhononSpectrum.landauerWeight_eq_heatCapacity",
+          "OMAI.PhyslibBridge.PhononSpectrum.catalogLandauer_eq_heatCapacity",
+          "OMAI.PhyslibBridge.PhononSpectrum.catalogLandauer_unit_transmission"
+        ],
+        "source_path": "lean/bridge/OMAIPhyslibPhononSpectrum.lean",
+        "build_record": "lean/bridge/build-evidence.json",
+        "source_sha256": "45133a66accf8fa1e98f2b212ce134570cb5cbfc29e4c716969f5ea4d402ebe6"
+      }
     }
   ],
   "gap_reasons": {
@@ -3636,7 +3868,8 @@
       "compute_carrier_density": "An external selector over the structure (which species are mobile, counted over the cell volume); nothing algebraic to prove beyond its dimension.",
       "compute_configurational_energy": "An external cluster-expansion evaluation over a fitted checkpoint; nothing algebraic to prove beyond its dimension.",
       "compute_reaction_energy": "Catalog defect. The formula sums signed formula-unit coefficients c_rxn[i] times per-atom formation energies (FormationEnergy is in eV/atom), which is neither the reaction energy nor independent of the elemental references: for 2 Li + 1/2 O2 -> Li2O with Delta H_f(Li2O) = -2.0616 eV/atom it gives -2.0616 eV, and -1.6616 eV with mu_Li shifted by 0.3 eV, against the true -6.1848 eV. The reaction energy is Delta E_rxn = sum_i nu_i N_i Delta H_f,i with nu_i the signed formula-unit coefficients and N_i the atoms per reduced formula unit, per reaction as balanced (divide by the atoms of the reaction for eV/atom); it is independent of the elemental references exactly when the reaction is balanced (reactionEnergy_reference_independent_iff in OMAIStabilityEnergies). The ReactionEnergy node excludes the SISSO dGf(T) cousin, but its rxn-network representation computes from GibbsComputedEntry dGf(T); the edge should state which quantity it consumes.",
-      "compute_transition_temperature": "No current Physlib CALPHAD/Gibbs-assessed database correspondence identified. The local proof covers only a unary system or a congruent transformation at one composition, the equal-Gibbs-energy temperature; the alloy boundary locus of the catalog (liquidus, solidus, solvus, where a phase fraction reaches 0 or 1) is not proved."
+      "compute_transition_temperature": "No current Physlib CALPHAD/Gibbs-assessed database correspondence identified. The local proof covers only a unary system or a congruent transformation at one composition, the equal-Gibbs-energy temperature; the alloy boundary locus of the catalog (liquidus, solidus, solvus, where a phase fraction reaches 0 or 1) is not proved.",
+      "compute_heat_current": "Catalog defect. The formula condenses the Irving-Kirkwood current to one atom: its virial term (1/2) sum_i r_{i,alpha} F_{i,alpha} v_{i,alpha}/V_cell multiplies the total force on atom i by the absolute position of the same atom on the same Cartesian index, so it changes with the choice of origin (shifting every position by a adds a_alpha sum_i F_{i,alpha} v_{i,alpha}/(2 V_cell), the rate of change of the kinetic energy along alpha, which is not zero) and with the periodic image, and it drops the off-diagonal stress components. The description's own pair form is right: J_alpha = (1/V_cell) [sum_i E_i v_{i,alpha} + (1/2) sum_{i != j} r_{ij,alpha} (F_ij . v_i)] with r_ij = r_i - r_j and F_ij the force on i from j, equivalently sum_i sum_beta W_{i,alpha beta} v_{i,beta} with the per-atom virial W_{i,alpha beta} = (1/2) sum_{j != i} r_{ij,alpha} F_{ij,beta}; many-body potentials use the per-atom virial of Fan et al., Phys. Rev. B 92, 094301 (2015). OMAIMDCorrelations proves nothing about this operator."
     }
   }
 }

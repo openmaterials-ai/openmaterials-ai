@@ -37,3 +37,6 @@ public import OMAISommerfeldTransport
 public import OMAIPhyslibElectronicTransport
 public import OMAIElectronicStatistics
 public import OMAIStaticDielectric
+public import OMAIMDCorrelations
+public import OMAIVACFSpectrum
+public import OMAIPhyslibPhononSpectrum
