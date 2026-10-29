@@ -1,0 +1,132 @@
+{
+  "key": "qe-d3q",
+  "headline": "D3Q: third-order anharmonicity by perturbation theory, thermal transport by variation",
+  "claim": "A Quantum ESPRESSO extension: three-phonon matrix elements for arbitrary wave vectors by the 2n+1 theorem, and the phonon Boltzmann equation solved exactly by conjugate gradients.",
+  "hero": {
+    "glyph": "orbital",
+    "title": "No supercells for the third order",
+    "text": "The 2n+1 theorem of density functional perturbation theory gives the third derivative of the energy from first-order wave functions, for three arbitrary wave vectors and for metals as well as insulators (Paulatto 2013)."
+  },
+  "features": [
+    {
+      "glyph": "orbital",
+      "title": "DFPT 2n+1 matrix elements",
+      "text": "An extension of the D3 code computes the anharmonic coefficients on a coarse q grid, 4x4x4 for diamond, then Fourier interpolates them to the dense mesh (Fugallo 2013)."
+    },
+    {
+      "glyph": "arrow-cycle",
+      "title": "Variational conjugate gradient",
+      "text": "The exact BTE solution minimizes a quadratic functional. Preconditioned conjugate gradients converge in four iterations where plain iteration fails at 77 (Fugallo 2013)."
+    },
+    {
+      "glyph": "scattering",
+      "title": "Normal, Umklapp, isotopes, borders",
+      "text": "Three-phonon normal and Umklapp collisions, elastic isotope scattering from mass variance, and border scattering through a Casimir length and shape factor (Fugallo 2013)."
+    },
+    {
+      "glyph": "spectrum",
+      "title": "Linewidths at any q",
+      "text": "Anharmonic broadening of each branch at finite T, with steps and spikes along the optical branches of graphene and nonzero TA and LA widths at small q (Paulatto 2013)."
+    },
+    {
+      "glyph": "heat-flow",
+      "title": "Collective excitations",
+      "text": "The exact solution holds collective phonon excitations, the heat carriers in graphite and graphene, where the SMA is ten times too low (Fugallo 2014)."
+    }
+  ],
+  "facts": [
+    {
+      "value": "4",
+      "label": "conjugate gradient iterations, diamond at 100 K",
+      "source": "Fugallo 2013"
+    },
+    {
+      "value": "3",
+      "label": "times higher kappa for 0% C13 than 0.07% diamond",
+      "source": "Fugallo 2013"
+    },
+    {
+      "value": "30x30x30",
+      "label": "q mesh for converged diamond lifetimes, 20 cm-1",
+      "source": "Fugallo 2013"
+    }
+  ],
+  "workflow": [
+    {
+      "title": "Harmonic part",
+      "text": "Quantum ESPRESSO ground state and DFPT phonons on a coarse q grid. d3_q2r.x writes mat2R."
+    },
+    {
+      "title": "Third order by DFPT",
+      "text": "The 2n+1 matrix elements on the coarse grid. d3_qq2rr.x writes the real-space mat3R."
+    },
+    {
+      "title": "Refine mat3R",
+      "text": "d3_asr3.x imposes acoustic sum rules and d3_sparse.x prunes small elements."
+    },
+    {
+      "title": "Linewidths",
+      "text": "d3_lw.x with calculation='lw imag' on a dense q mesh and a smearing in cm-1."
+    },
+    {
+      "title": "Conductivity",
+      "text": "d3_tk.x with calculation='sma' for RTA or 'cgp' for the exact variational solution."
+    }
+  ],
+  "applications": [
+    {
+      "glyph": "layers",
+      "title": "Graphite and graphene, exact versus SMA",
+      "text": "The exact BTE gives the 2000 W/m/K measured in graphite. The SMA gives a tenth. Graphene reaches intrinsic kappa only near 1 mm, with mean free paths of hundreds of um (Fugallo 2014).",
+      "source": "Fugallo 2014"
+    },
+    {
+      "glyph": "wave",
+      "title": "Phonon hydrodynamics in 2D",
+      "text": "In graphene, BN, MoS2, graphane and fluorographene normal scattering dominates above cryogenic T: Poiseuille and Ziman regimes, second sound over about 1 mm in graphene (Cepellotti 2015).",
+      "source": "Cepellotti 2015"
+    },
+    {
+      "glyph": "crystal",
+      "title": "Isotopically enriched diamond",
+      "text": "At 100 K the exact BTE follows measurements for 98.9%, 99.9% and 99.93% C12 samples, and predicts up to three times higher kappa for fully enriched diamond (Fugallo 2013).",
+      "source": "Fugallo 2013"
+    }
+  ],
+  "sources": [
+    {
+      "label": "Fugallo 2013",
+      "doi": "10.1103/PhysRevB.88.045430"
+    },
+    {
+      "label": "Paulatto 2013",
+      "doi": "10.1103/PhysRevB.87.214303"
+    },
+    {
+      "label": "Fugallo 2014",
+      "doi": "10.1021/nl502059f"
+    },
+    {
+      "label": "Cepellotti 2015",
+      "doi": "10.1038/ncomms7400"
+    }
+  ],
+  "detail": [
+    {
+      "heading": "Third-order force constants without supercells",
+      "text": "The three-phonon scattering coefficients are third derivatives of the total energy with respect to three phonon displacements with wave vectors q, q' and q'' summing to a reciprocal lattice vector. The 2n+1 theorem of density functional perturbation theory expresses them through the first-order change of the density and wave functions, so no supercell is needed. Paulatto 2013 extended the D3 code of Quantum ESPRESSO from the (0, -q, q) case to three arbitrary wave vectors and to metals and zero-gap systems (Paulatto 2013). The coefficients are computed on a coarse grid, 4x4x4 for diamond, and Fourier interpolated to the dense mesh of the transport calculation (Fugallo 2013)."
+    },
+    {
+      "heading": "The exact solution of the Boltzmann equation",
+      "text": "The Omini-Sparavigna iteration from the single-mode approximation converges only when resistive processes dominate. Fugallo 2013 recast the problem as the minimization of a quadratic functional whose minimum is the conductivity and solved it with a preconditioned conjugate gradient. For diamond at 100 K on a 30x30x30 mesh with 20 cm-1 smearing the iteration becomes unstable after 77 steps at a precision of about 300 W/m/K, while the conjugate gradient converges in four. Without borders the iteration fails after 91 steps with an error near 3000 W/m/K (Fugallo 2013). The transport step cost two orders of magnitude more CPU time than the DFPT force constants."
+    },
+    {
+      "heading": "Linewidths and the single-mode approximation",
+      "text": "The anharmonic broadening of a mode is the imaginary part of its self energy, summed over a fine q grid with the two energy-conserving deltas smeared. In graphene the broadening of the optical branches shows sudden steps and spikes, and the TA and LA branches keep a finite width at small q at finite temperature. Within the single-mode approximation the out-of-plane conductivity of graphite agrees with experiment while the in-plane value is about a factor two too low (Paulatto 2013). The exact solution closes this gap. The in-plane conductivity of graphite is an order of magnitude above the SMA and matches the 2000 W/m/K measured on large perfect crystals (Fugallo 2014)."
+    },
+    {
+      "heading": "Validation",
+      "text": "For diamond the exact BTE follows the measured temperature dependence for samples with 98.9%, 99.9% and 99.93% C12, and a Casimir length of 0.3 cm with shape factor 0.5 describes the finite size (Fugallo 2013). For graphene the exact solution reaches the diffusive limit at lengths two orders of magnitude above the SMA, between 100 um and 1 mm, so an intrinsic kappa needs samples of order 1 mm. Hydrogenation halves the conductivity and fluorination cuts it by an order of magnitude (Fugallo 2014). In graphene, boron nitride and graphane second sound survives to room temperature, and in graphene it propagates over distances of order 1 mm (Cepellotti 2015)."
+    }
+  ]
+}

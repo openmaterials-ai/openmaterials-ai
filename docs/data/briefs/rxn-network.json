@@ -1,0 +1,118 @@
+{
+  "key": "rxn-network",
+  "headline": "reaction-network: reaction pathways through a graph of solid-state reactions",
+  "claim": "Builds a weighted graph of balanced reactions among phases from thermochemistry data and searches it for low-cost multi-step routes to a target phase.",
+  "hero": {
+    "glyph": "network",
+    "title": "Phase space as a graph",
+    "text": "Nodes are combinations of up to n phases, and edges are balanced reactions weighted by a softplus cost of the Gibbs energy per reactant atom. The C-Cl-Li-Mn-O-Y network had 5855 nodes and 121,176 edges (McDermott 2021)."
+  },
+  "features": [
+    {
+      "glyph": "database",
+      "title": "Thermochemistry inputs",
+      "text": "Formation enthalpies from the Materials Project, Gibbs energies from the Bartel descriptor, elemental G from FactSage, gases and A2CO3 from NIST-JANAF (McDermott 2021)."
+    },
+    {
+      "glyph": "fit-curve",
+      "title": "Softplus cost",
+      "text": "C = ln(1 + exp((273 K / T) dG)) maps dG per reactant atom to a positive weight, so exergonic steps are cheap and endergonic steps stay possible (McDermott 2021)."
+    },
+    {
+      "glyph": "search",
+      "title": "Pathfinding",
+      "text": "Yen's k shortest paths on Dijkstra, crossover reactions among intermediates from the phase diagram, then mass-balanced combinations via a pseudoinverse (McDermott 2021)."
+    },
+    {
+      "glyph": "phase-diagram",
+      "title": "Filters",
+      "text": "The code removes phases above a hull cutoff, interdependent steps and hypothetical intermediates. n = 2 reacting phases keeps the combinatorics in check (McDermott 2021)."
+    },
+    {
+      "glyph": "bars",
+      "title": "Selectivity metrics",
+      "text": "Later versions rank single reactions by primary competition among the precursors and secondary competition with the target (McDermott 2023)."
+    }
+  ],
+  "facts": [
+    {
+      "value": "121,176",
+      "label": "edges in the C-Cl-Li-Mn-O-Y network",
+      "source": "McDermott 2021"
+    },
+    {
+      "value": "82985",
+      "label": "BaTiO3 synthesis reactions enumerated and ranked",
+      "source": "McDermott 2023"
+    },
+    {
+      "value": "3,017",
+      "label": "reactions forming Y2Mn2O7 in a 13-element space",
+      "source": "Todd 2021"
+    }
+  ],
+  "workflow": [
+    {
+      "title": "Choose the system",
+      "text": "Target, precursors, temperature, energy above hull cutoff and any open element such as O2."
+    },
+    {
+      "title": "Build the network",
+      "text": "Phases from the Materials Project get Gibbs energies, reactions are balanced and weighted."
+    },
+    {
+      "title": "Find paths",
+      "text": "k shortest paths to each target, crossover reactions, balanced combinations of steps."
+    },
+    {
+      "title": "Inspect the ranking",
+      "text": "Several low-cost pathways are listed. Compare them with in situ diffraction."
+    }
+  ],
+  "applications": [
+    {
+      "glyph": "phase-diagram",
+      "title": "Why Na2CO3 selects Y2Mn2O7",
+      "text": "Among 3,017 reactions forming Y2Mn2O7 at 650 C, 2 NaMnO2 + 2 YOCl + 1/2 O2 sits on the Pareto front. Its chemical potential distance is 0.055 eV/atom against 1.608 (Li) and 0.924 (K).",
+      "source": "Todd 2021"
+    },
+    {
+      "glyph": "bars",
+      "title": "Selectivity of BaTiO3 synthesis routes",
+      "text": "From 2,536,160 binary reactions among 2417 phases, 82985 BaTiO3 routes were ranked and 9 tested. Metathesis routes gave mainly BaTiO3 at 600 to 700 C. BaCO3 + TiO2 was incomplete at 1000 C.",
+      "source": "McDermott 2023"
+    }
+  ],
+  "sources": [
+    {
+      "label": "McDermott 2021",
+      "doi": "10.1038/s41467-021-23339-x"
+    },
+    {
+      "label": "Todd 2021",
+      "doi": "10.1021/jacs.1c06229"
+    },
+    {
+      "label": "McDermott 2023",
+      "doi": "10.1021/acscentsci.3c01051"
+    }
+  ],
+  "detail": [
+    {
+      "heading": "Network model and cost function",
+      "text": "Every combination of distinct phases up to size n becomes a reactants node and a products node, and a directed edge joins two nodes whenever a stoichiometrically balanced reaction exists between them. Zero-weight edges loop products back into reactant nodes that contain them, so multi-step pathways appear as walks, and a precursors node and a target node bound the search. Raw Gibbs energies do not work as weights. Negative values create infinite cycles for Dijkstra, kinetic heuristics are excluded, and molar energies scale with stoichiometry. The softplus C = ln(1 + exp((273 K / T) dG)), dG per reactant atom, was chosen over ReLU and piecewise-linear forms (McDermott 2021)."
+    },
+    {
+      "heading": "Pathfinding, combinatorics and filters",
+      "text": "Yen's algorithm yields k shortest loopless paths to each target from Dijkstra's first path, and pathfinding runs separately toward each product, including byproducts such as CO2. Crossover reactions among the intermediates are computed combinatorially and from the compositional phase diagram, which admits open elements through a grand potential. Steps are combined by solving A m = c with the Moore-Penrose pseudoinverse in SciPy, the total cost is the multiplicity-weighted mean, and interdependent step pairs are consolidated. For N = 76 phases the reaction count grows from about 5.78e3 at n = 1 to 8.56e6 at n = 2 and 5.36e9 at n = 3, so the authors recommend n = 2 (McDermott 2021)."
+    },
+    {
+      "heading": "Validation on reported syntheses",
+      "text": "For YMnO3 by Li-assisted metathesis the network at 900 K with a 30 meV/atom hull filter gave 20 pathways, and paths 2 and 3 match the observed route through YOCl + LiMnO2, with YOCl, Y3O4Cl, Y2O3 and LiMnO2 all seen in situ. For Fe2SiS4 from iron silicides path 14 is the lowest-cost route containing all observed intermediates FeS2, FeSi and SiS2. For YBa2Cu3O6.5 from BaO2, BaCuO2 appears in 7 of the top 10 paths. For the unsynthesized cathode MgMo3(PO4)3O a network of 21,564 entries and 660,909 nodes produced 2,270 reactions, 186 after a metathesis filter (McDermott 2021)."
+    },
+    {
+      "heading": "Dependencies and later versions",
+      "text": "Phase diagrams and reaction balancing run on pymatgen, graphs on graph-tool, with Materials Project data version 2020.09.08 (McDermott 2021). Todd 2021 implemented reaction enumeration and ranking by grand potential energy plus total chemical potential distance in the same package, enumerating 3,017 Y2Mn2O7 reactions from 2,878 phases stable at 650 C. McDermott 2023 added a jobflow synthesis planning workflow to the package at materialsproject/reaction-network, with Materials Project version 2022.10.28, a 0.830 eV per CO3 correction for carbonates and selectivity metrics tested on 3520 text-mined literature reactions, of which 82.8% have negative reaction energy."
+    }
+  ]
+}

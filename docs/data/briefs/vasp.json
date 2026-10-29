@@ -1,0 +1,113 @@
+{
+  "key": "vasp",
+  "headline": "VASP: plane-wave DFT with the projector augmented-wave method",
+  "claim": "A plane-wave code built on RMM-DIIS iterative diagonalization and Pulay density mixing, with a PAW formulation that reproduces all-electron bond lengths to within 0.5 percent.",
+  "hero": {
+    "glyph": "orbital",
+    "title": "PAW from ultrasoft pseudopotentials",
+    "text": "The ultrasoft total energy follows from linearizing two terms of a modified PAW functional. With its Hamiltonian, forces and stress tensor, PAW fits into plane-wave codes that support ultrasoft potentials (Kresse 1999)."
+  },
+  "features": [
+    {
+      "glyph": "arrow-cycle",
+      "title": "Self-consistency cycle",
+      "text": "RMM-DIIS diagonalization alternates with Pulay mixing of the charge density. The iteration count to a given precision is almost independent of system size (Kresse 1996)."
+    },
+    {
+      "glyph": "chart-up",
+      "title": "Scaling",
+      "text": "Time per iteration grows as N squared in the atom count up to 1000 electrons. A 256 MB workstation handled 100 transition metal or 200 simple element atoms (Kresse 1996)."
+    },
+    {
+      "glyph": "magnet",
+      "title": "Magnetic metals",
+      "text": "PAW energies of Fe, Co and Ni atoms are within 10 meV of all-electron values. Standard ultrasoft potentials overestimate the bcc Fe magnetic energy by 120 meV in GGA."
+    },
+    {
+      "glyph": "crystal",
+      "title": "Inputs and outputs on the map",
+      "text": "Structures enter as POSCAR and leave as CONTCAR. Energies, forces, stresses, Born charges, dielectric and elastic tensors come from OUTCAR and vasprun.xml."
+    }
+  ],
+  "facts": [
+    {
+      "value": "0.5%",
+      "label": "bond length error, PAW vs all-electron, 400 eV",
+      "source": "Kresse 1999"
+    },
+    {
+      "value": "11 GPa",
+      "label": "PAW FM bcc to NM hcp transition pressure, Fe",
+      "source": "Kresse 1999"
+    },
+    {
+      "value": "1000",
+      "label": "electrons up to which N squared scaling holds",
+      "source": "Kresse 1996"
+    }
+  ],
+  "workflow": [
+    {
+      "title": "Prepare the inputs",
+      "text": "POSCAR for the cell and positions, POTCAR with PAW datasets, KPOINTS and INCAR."
+    },
+    {
+      "title": "Converge the ground state",
+      "text": "Davidson or RMM-DIIS steps with Pulay mixing until the energy and forces settle."
+    },
+    {
+      "title": "Relax or perturb",
+      "text": "Ionic relaxation to CONTCAR, or finite displacements and fields for phonons and tensors."
+    },
+    {
+      "title": "Parse the results",
+      "text": "pymatgen and atomate2 read OUTCAR and vasprun.xml into the map quantities."
+    }
+  ],
+  "applications": [
+    {
+      "glyph": "thermometer",
+      "title": "Electron heat capacity of hot metals",
+      "text": "PAW GGA densities of states on a 31x31x31 mesh for Al, Cu, Ag, Au, Ni, Pt, W and Ti. Coupling and heat capacity deviate up to an order of magnitude from the linear and constant models.",
+      "source": "Lin 2008"
+    },
+    {
+      "glyph": "heat-flow",
+      "title": "Anharmonicity of SnSe",
+      "text": "PAW PBE phonons in a 112-atom supercell give average Gruneisen parameters of 4.1, 2.1 and 2.3 along a, b and c. The DFT minimum lattice conductivity along a at 770 K is 0.256 W/m/K.",
+      "source": "Zhao 2014"
+    }
+  ],
+  "sources": [
+    {
+      "label": "Kresse 1996",
+      "doi": "10.1103/PhysRevB.54.11169"
+    },
+    {
+      "label": "Kresse 1999",
+      "doi": "10.1103/PhysRevB.59.1758"
+    },
+    {
+      "label": "Lin 2008",
+      "doi": "10.1103/PhysRevB.77.075133"
+    },
+    {
+      "label": "Zhao 2014",
+      "doi": "10.1038/nature13184"
+    }
+  ],
+  "detail": [
+    {
+      "heading": "Self-consistency and PAW",
+      "text": "VASP solves the Kohn-Sham equations in a plane-wave basis and reaches the ground state through a self-consistency cycle rather than direct minimization of the functional (Kresse 1996). The paper compares blocked Davidson, sequential conjugate-gradient and RMM-DIIS diagonalization and finds RMM-DIIS most efficient for large systems. Pulay's scheme mixes the charge density under a metric and preconditioner designed for plane waves. Core electrons enter through the PAW method, which splits the Hartree energy as pseudopotential plane-wave codes do and includes partial core corrections in the exchange-correlation energy on the plane-wave grid (Kresse 1999)."
+    },
+    {
+      "heading": "Numerics and scale",
+      "text": "For metals the self-consistency cycle is significantly faster than direct minimization with conjugate gradients, and the number of iterations to a given precision is almost independent of system size (Kresse 1996). Computer time per iteration scales as the square of the number of atoms for systems up to 1000 electrons. In 1996 the program handled up to 100 transition metal atoms or 200 simple element atoms on 256 MB workstations. Cholesky-based Gram-Schmidt orthonormalization ran two to four times faster than the sequential scheme. PAW bond length errors stay below 0.5 percent even for datasets needing less than 400 eV (Kresse 1999)."
+    },
+    {
+      "heading": "Validation",
+      "text": "Against relaxed-core all-electron results, PAW dimer bond lengths differ by less than 0.1 percent at a 700 eV cutoff, 0.2 percent for F2, and generally by less than 0.5 percent with 400 eV datasets (Kresse 1999). For diamond, Si, V, Ca and CaF2 the lattice constants, bulk moduli and cohesive energies agree with earlier PAW and FLAPW results within 0.5, 5 and 1 percent. In Fe, Co and Ni atoms the PAW interconfigurational and magnetic energies differ from all-electron values by at most 10 meV. The PAW transition pressure from FM bcc to NM hcp Fe is 11 GPa. For the bcc Fe magnetic energy the standard ultrasoft potential is off by 50 meV in the LDA and overestimates it by 120 meV in the GGA."
+    }
+  ]
+}

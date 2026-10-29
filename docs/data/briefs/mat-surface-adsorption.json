@@ -1,0 +1,107 @@
+{
+  "key": "mat-surface-adsorption",
+  "headline": "mat-surface-adsorption: adsorption energies on the sites of a slab",
+  "claim": "An AtomisticSkills skill that cuts a slab from a bulk crystal, places an adsorbate on every ontop, bridge and hollow site and relaxes each with a machine-learned potential.",
+  "hero": {
+    "glyph": "surface",
+    "title": "E(adslab) - E(slab) - E(adsorbate)",
+    "text": "AdsorptionCalc relaxes the bulk, cuts the slab at the given Miller index, relaxes the clean slab and the gas-phase molecule, then relaxes the adsorbate on each site. Each site's adsorption energy is the difference in eV."
+  },
+  "features": [
+    {
+      "glyph": "neural",
+      "title": "Catalysis-trained potentials",
+      "text": "Models trained on Open Catalyst data come first: EquiformerV2 S2EF-OC20, UMA uma-s-1p1 and MACE-OMAT-0. MPtrj-only models are discouraged for their force errors."
+    },
+    {
+      "glyph": "layers",
+      "title": "Slab geometry",
+      "text": "The slab is at least 10 A thick and the vacuum at least 20 A by default. The adsorbate starts 0.9 A above the surface. --adsorption_sites picks ontop, bridge or hollow."
+    },
+    {
+      "glyph": "arrow-cycle",
+      "title": "Relaxations",
+      "text": "By default ASE BFGS relaxes the bulk, the clean slab and the adsorbate to fmax 0.05 eV/A within 500 steps. Each of the three relaxations has a flag to switch it off."
+    },
+    {
+      "glyph": "code",
+      "title": "Inputs and outputs",
+      "text": "Inputs are a bulk CIF or POSCAR, an adsorbate XYZ or SMILES string and a Miller index such as [1,1,1]. adsorption_results.json lists every site and the most stable one."
+    }
+  ],
+  "facts": [
+    {
+      "value": "20 A",
+      "label": "default minimum vacuum between slab images",
+      "source": "mat-surface-adsorption SKILL.md"
+    },
+    {
+      "value": "10 A",
+      "label": "default minimum slab thickness",
+      "source": "mat-surface-adsorption SKILL.md"
+    },
+    {
+      "value": "0.05 eV/A",
+      "label": "default force convergence of the relaxations",
+      "source": "mat-surface-adsorption SKILL.md"
+    }
+  ],
+  "workflow": [
+    {
+      "title": "Pick model and facet",
+      "text": "Choose an OC-trained model and a Miller index. Supply the bulk and adsorbate files."
+    },
+    {
+      "title": "Build the slab",
+      "text": "calculate_adsorption.py relaxes the bulk and cuts a slab, 10 A of material, 20 A vacuum."
+    },
+    {
+      "title": "Place and relax",
+      "text": "The adsorbate is set 0.9 A above each ontop, bridge and hollow site and relaxed."
+    },
+    {
+      "title": "Read the energies",
+      "text": "adsorption_results.json gives E_ads per site and names the most stable site."
+    }
+  ],
+  "applications": [
+    {
+      "glyph": "surface",
+      "title": "CO on Cu(111)",
+      "text": "The worked example relaxes CO on the ontop, bridge and hollow sites of a Cu(111) slab with MACE-OMAT-0-small. The README gives -0.5 to -1.5 eV as typical, ontop usually most stable.",
+      "source": "CO on Cu(111) example README"
+    }
+  ],
+  "sources": [
+    {
+      "label": "AtomisticSkills README",
+      "url": "https://github.com/learningmatter-mit/AtomisticSkills"
+    },
+    {
+      "label": "mat-surface-adsorption SKILL.md",
+      "url": "https://github.com/learningmatter-mit/AtomisticSkills/blob/main/skills/mat-surface-adsorption/SKILL.md"
+    },
+    {
+      "label": "CO on Cu(111) example README",
+      "url": "https://github.com/learningmatter-mit/AtomisticSkills/blob/main/skills/mat-surface-adsorption/examples/CO_on_Cu111/README.md"
+    },
+    {
+      "label": "calculate_adsorption.py",
+      "url": "https://github.com/learningmatter-mit/AtomisticSkills/blob/main/skills/mat-surface-adsorption/scripts/calculate_adsorption.py"
+    }
+  ],
+  "detail": [
+    {
+      "heading": "One site at a time on a relaxed slab",
+      "text": "The skill wraps matcalc's AdsorptionCalc and its calc_adslabs call. It relaxes the bulk, cuts a slab for the requested Miller index given as a JSON list such as [1,1,1], and relaxes the clean slab and the isolated adsorbate on their own. AdsorptionCalc then places the adsorbate on each ontop, bridge and hollow site, 0.9 A above the surface by default, and relaxes every adsorbate-slab configuration. The adsorption energy of a site is E(adsorbate+slab) - E(slab) - E(adsorbate). A negative value is exothermic, and the SKILL.md gives -0.5 to -5.0 eV as the usual range for strong chemisorption."
+    },
+    {
+      "heading": "Numerics and cost",
+      "text": "The relaxations use ASE's BFGS to fmax 0.05 eV/A with at most 500 steps. The slab holds at least 10 A of material and 20 A of vacuum, which the SKILL.md calls critical against periodic-image interactions, and layered materials may need a thicker slab. Cost scales with the number of sites and the slab size, so --adsorption_sites ontop or bridge trims the search. The bulk should be a well-relaxed crystal and the adsorbate a gas-phase molecule, not a periodic structure."
+    },
+    {
+      "heading": "Potentials and environment",
+      "text": "The SKILL.md ranks potentials for this task. Open Catalyst models are first: FAIRChem EquiformerV2-31M and 153M S2EF-OC20-All+MD, UMA uma-s-1p1 and uma-m-1p1, and MACE-OMAT-0-small and medium. MatPES models such as CHGNet-PES-MatPES-PBE-1M-2026.9 and TensorNet-PES-MatPES-PBE-2025.2 come second. It advises against models trained only on MPtrj because of their force errors. The command runs through venv/run in the fairchem environment for FairChem models and in mlip for MACE and MatGL. The sibling skill mat-surface-energy computes surface energies and Wulff shapes."
+    }
+  ]
+}

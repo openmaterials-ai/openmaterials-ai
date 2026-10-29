@@ -1,0 +1,105 @@
+{
+  "key": "xtb",
+  "headline": "xtb: extended tight-binding for geometries, frequencies and noncovalent interactions",
+  "claim": "The free xtb program runs the GFN family, mostly semiempirical tight-binding methods with element-specific parameters up to radon (Z = 86), fitted on gas-phase reference data.",
+  "hero": {
+    "glyph": "molecule",
+    "title": "GFN2-xTB, multipoles and D4",
+    "text": "Second-order density fluctuations enter as damped interactions of cumulative atomic multipoles, with charge-dependent D4 dispersion solved self-consistently. No hydrogen or halogen bond corrections (Bannwarth 2019)."
+  },
+  "features": [
+    {
+      "glyph": "layers",
+      "title": "Four levels of theory",
+      "text": "GFN1-xTB and GFN2-xTB with self-consistent charges, non-iterative GFN0-xTB, and the GFN-FF force field. GFN0 is 2 to 20 times faster than GFN2 (Bannwarth 2020)."
+    },
+    {
+      "glyph": "atoms",
+      "title": "Whole periodic table",
+      "text": "Global and element-specific parameters only, available for all elements up to Z = 86, with an f-in-core treatment for lanthanides (Bannwarth 2019)."
+    },
+    {
+      "glyph": "workflow",
+      "title": "Composite keywords",
+      "text": "Geometry optimization, harmonic frequencies and thermodynamic functions run from the geometry file alone. ANCopt uses a Lindh model Hessian (Bannwarth 2020)."
+    },
+    {
+      "glyph": "density",
+      "title": "GBSA solvation",
+      "text": "A generalized Born model with surface area terms is coupled to all GFN methods, avoiding the integration grid of a polarizable continuum (Bannwarth 2020)."
+    },
+    {
+      "glyph": "network",
+      "title": "Driver for other programs",
+      "text": "crest runs parallel xtb instances for conformer searches and enso re-ranks ensembles. ASE and mGSM call xtb. AMS, CP2K, DFTB+ and ORCA implement GFN (Bannwarth 2020)."
+    }
+  ],
+  "facts": [
+    {
+      "value": "0.9",
+      "label": "kcal/mol mean MAD, eight GMTKN55 NCI sets",
+      "source": "Bannwarth 2020"
+    },
+    {
+      "value": "4.0",
+      "label": "kcal/mol MAD, S30L association energies",
+      "source": "Bannwarth 2019"
+    },
+    {
+      "value": "5.7 pm",
+      "label": "MAD in 50 transition metal bond lengths, TMC32",
+      "source": "Bannwarth 2020"
+    }
+  ],
+  "workflow": [
+    {
+      "title": "Provide a geometry",
+      "text": "A geometry file. Set charge with --chrg and unpaired electrons with --uhf. No input file."
+    },
+    {
+      "title": "Pick the GFN level",
+      "text": "GFN2-xTB by default, GFN1, GFN0 or GFN-FF for larger systems, GBSA for solvent."
+    },
+    {
+      "title": "Optimize and vibrate",
+      "text": "xtb <geom> --ohess optimizes with ANCopt and computes the Hessian in one run."
+    },
+    {
+      "title": "Read thermodynamics",
+      "text": "The THERMO block gives enthalpy, entropy and heat capacity at the chosen temperature."
+    },
+    {
+      "title": "Sample conformers",
+      "text": "crest drives biased MD runs with xtb and re-ranks the ensemble."
+    }
+  ],
+  "applications": [],
+  "sources": [
+    {
+      "label": "Bannwarth 2019",
+      "doi": "10.1021/acs.jctc.8b01176"
+    },
+    {
+      "label": "Bannwarth 2020",
+      "doi": "10.1002/wcms.1493"
+    }
+  ],
+  "detail": [
+    {
+      "heading": "The GFN methods",
+      "text": "The xTB energy is a density-functional perturbation expansion in density fluctuations about neutral spherical atoms, with a partially polarized, mostly minimal valence basis. GFN1-xTB keeps terms to third order with monopole electrostatics, D3 dispersion and a halogen bond correction (Bannwarth 2020). GFN2-xTB adds anisotropic second-order terms through damped cumulative atomic multipoles and the self-consistent D4 dispersion model, and needs no hydrogen or halogen bond corrections (Bannwarth 2019). GFN0-xTB drops the charge iterations for a first-order model, and GFN-FF replaces the zeroth-order tight-binding terms with bond, angle and torsion potentials (Bannwarth 2020)."
+    },
+    {
+      "heading": "Numerics and scale",
+      "text": "The methods target systems of roughly 1000 atoms and run at least two orders of magnitude faster than ab initio methods (Bannwarth 2019). GFNn-xTB scales cubically with atom count and GFN-FF quadratically. On a quad-core desktop, energies and gradients for proteins of 300 to 6000 atoms show GFN0-xTB 2 to 20 times faster than GFN1 and GFN2, and GFN-FF about two further orders of magnitude faster. ANCopt builds normal mode coordinates from a Lindh model Hessian and combines a rational function step with BFGS updates. GFN2-xTB with GBSA relaxes metal-organic polyhedra of 1100 to 1400 atoms in about one hour, and a Pd30L60 polyhedron of almost 2500 atoms in a few days (Bannwarth 2020)."
+    },
+    {
+      "heading": "Distribution and interfaces",
+      "text": "xtb is published under the LGPL v3 or later on GitHub, with conda-forge and EasyBuild packages and documentation at xtb-docs.readthedocs.io (Bannwarth 2020). Composite keywords cover optimization, harmonic frequencies and thermodynamic functions, so most calculations need only the geometry. xtb drives crest conformer searches, feeds enso for DFT re-ranking with mRRHO and GBSA corrections, and feeds QCEIMS. The GFN methods are also implemented inside AMS, CP2K, DFTB+, entos, ORCA and TeraChem, with interfaces in ASE and Cuby4. On the map xtb serves molar heat capacities from the THERMO block of an --ohess run, and reaction enthalpies from one such run per species."
+    },
+    {
+      "heading": "Validation",
+      "text": "ROT34 rotational constants deviate by 1.24 percent (GFN2), 1.10 percent (GFN1) and 2.50 percent (PM6-D3H4X) in SRD (Bannwarth 2019). For the TMC32 set of 50 transition metal bond lengths the MADs are 5.0 pm for GFN1 and 5.7 pm for GFN2, and across the TMG145 complexes bond lengths deviate by 7.5 and 8.3 pm against about 30 pm for PM6 and PM7. GFN2-xTB averages a 0.9 kcal/mol MAD over eight GMTKN55 noncovalent sets, with 0.6 and 0.2 kcal/mol on HEAVY28 and RG18. On S30L GFN2-xTB reaches 4.0 kcal/mol, close to some large basis DFT-D methods. GFNn-xTB is not recommended for accurate covalent reaction energies and barriers (Bannwarth 2020)."
+    }
+  ]
+}

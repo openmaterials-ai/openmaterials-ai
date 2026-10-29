@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1200">
+<meta name="robots" content="noindex">
+<title>AtomisticSkills mat-diffusion-analysis card | OpenMaterials</title>
+<link rel="canonical" href="https://openmaterials.ai/codes/mat-diffusion-analysis/">
+<link rel="stylesheet" href="../../../assets/site.css">
+<style>
+  html, body { margin: 0; background: #FBFAF6; }
+  body { width: 1200px; overflow: hidden; }
+
+  .info { --info-pad: 20px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); overflow: hidden; }
+  .info-head { padding: var(--info-pad) var(--info-pad) 12px; border-bottom: 1px solid var(--line); }
+  .info-eyebrow { margin: 0 0 6px; font: 500 11px/16px var(--font-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-2); }
+  .info-title { margin: 0; font: 450 26px/30px var(--font-serif); letter-spacing: -0.014em; max-width: none; }
+  .info-claim { margin: 8px 0 0; font-size: 16px; line-height: 23px; color: var(--ink-2); max-width: none; }
+  .info-zones { display: grid; grid-template-columns: 1fr; }
+  .info-zone { padding: var(--info-pad); }
+  .info-zone-b { background: color-mix(in srgb, var(--accent) 8%, var(--surface)); border-top: 1px solid var(--line); }
+  .info-zone h3, .info-flow h3 { margin: 0 0 12px; font: 500 11.5px/16px var(--font-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-2); }
+  .info-panels { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
+  .info-panel { display: flex; gap: 12px; align-items: flex-start; min-width: 0; }
+  .info-panel .glyph { flex: none; width: 44px; height: 44px; color: var(--ink-2); }
+  .info-panel .glyph .a { stroke: var(--accent); }
+  .info-panel .glyph rect.a, .info-panel .glyph circle.a, .info-panel .glyph path.f, .info-panel .glyph rect.f, .info-panel .glyph circle.f, .info-panel .glyph ellipse.f { fill: color-mix(in srgb, var(--accent) 14%, transparent); }
+  .info-panel .glyph circle.a, .info-panel .glyph rect.a { fill: color-mix(in srgb, var(--accent) 35%, transparent); }
+  .info-panel h4 { margin: 0 0 2px; font: 500 15px/20px var(--font-serif); }
+  .info-panel p { margin: 0; font-size: 13.5px; line-height: 19px; max-width: none; }
+  .info-hero { margin-bottom: 18px; padding-bottom: 18px; border-bottom: 1px solid var(--line); }
+  .info-hero .glyph { width: 88px; height: 88px; }
+  .info-hero h4 { font-size: 19px; line-height: 24px; }
+  .info-hero p { font-size: 15px; line-height: 21px; }
+  .info-facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin: 0 0 16px; padding: 0; list-style: none; }
+  .info-facts li { display: flex; flex-direction: column; max-width: none; }
+  .info-value { font: 400 30px/34px var(--font-mono); color: var(--accent); letter-spacing: -0.02em; }
+  .info-label { font-size: 13px; line-height: 18px; }
+  .info-src { font: 400 11px/16px var(--font-mono); color: var(--ink-2); text-decoration: none; }
+  a.info-src:hover { color: var(--ink); text-decoration: underline; }
+  .info-flow { padding: var(--info-pad); border-top: 1px solid var(--line); }
+  .info-flow ol { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin: 0; padding: 0; list-style: none; counter-reset: step; }
+  .info-flow li { position: relative; max-width: none; padding-top: 24px; counter-increment: step; }
+  .info-flow li::before { content: counter(step, decimal-leading-zero); position: absolute; top: 0; left: 0; font: 500 11px/16px var(--font-mono); color: var(--accent); }
+  .info-flow li::after { content: ""; position: absolute; top: 7px; left: 26px; right: 0; border-top: 1px solid var(--line); }
+  .info-flow h4 { margin: 0 0 2px; font: 500 14px/20px var(--font-serif); }
+  .info-flow p { margin: 0; font-size: 12.5px; line-height: 17px; color: var(--ink-2); max-width: none; }
+  .info-foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 16px; padding: 12px var(--info-pad); border-top: 1px solid var(--line); font-size: 12px; line-height: 18px; color: var(--ink-2); }
+  .info-url { font-family: var(--font-mono); }
+  @media (min-width: 700px) { .info-zones { grid-template-columns: 3fr 2fr; } .info-zone-b { border-top: 0; border-left: 1px solid var(--line); } }
+
+  /* the poster: a fixed 1920 x 1080 canvas, always light */
+  .info.poster { --info-pad: 36px; position: relative; width: 1920px; height: 1080px; border: 0; border-radius: 0; color-scheme: light; background: #FBFAF6; color: #1C1A17; display: grid; grid-template-rows: auto 1fr auto auto; }
+  .info.poster .info-head { padding: 40px 56px 22px; }
+  .info.poster .info-eyebrow { font-size: 16px; line-height: 22px; margin-bottom: 10px; }
+  .info.poster .info-title { font-size: 54px; line-height: 60px; }
+  .info.poster .info-claim { font-size: 25px; line-height: 34px; margin-top: 12px; }
+  .info.poster .info-zones { grid-template-columns: 3fr 2fr; min-height: 0; }
+  .info.poster .info-zone { padding: 24px 56px; overflow: hidden; }
+  .info.poster .info-zone-b { border-top: 0; border-left: 1px solid var(--line); }
+  .info.poster .info-zone h3, .info.poster .info-flow h3 { font-size: 15px; line-height: 20px; margin-bottom: 18px; }
+  .info.poster .info-panels { grid-template-columns: repeat(2, 1fr); gap: 18px 32px; }
+  .info.poster.n5 .info-zone-a .info-panels { grid-template-columns: repeat(3, 1fr); gap: 18px 28px; }
+  .info.poster .info-zone-b .info-panels { grid-template-columns: 1fr; gap: 18px; }
+  .info.poster .info-panel .glyph { width: 60px; height: 60px; }
+  .info.poster .info-panel h4 { font-size: 22px; line-height: 27px; margin-bottom: 4px; }
+  .info.poster .info-panel p { font-size: 17.5px; line-height: 24px; }
+  .info.poster.n5 .info-zone-a .info-panel p { font-size: 16.5px; line-height: 22px; }
+  .info.poster .info-hero { margin-bottom: 20px; padding-bottom: 20px; }
+  .info.poster .info-hero .glyph { width: 140px; height: 140px; }
+  .info.poster .info-hero h4 { font-size: 30px; line-height: 36px; }
+  .info.poster .info-hero p { font-size: 21px; line-height: 29px; }
+  .info.poster .info-facts { grid-template-columns: repeat(3, 1fr); gap: 18px; margin-bottom: 22px; }
+  .info.poster .info-value { font-size: 36px; line-height: 42px; white-space: nowrap; }
+  .info.poster .info-label { font-size: 17px; line-height: 23px; }
+  .info.poster .info-src { font-size: 14px; line-height: 20px; }
+  .info.poster .info-flow { padding: 20px 56px 24px; overflow: hidden; }
+  .info.poster .info-flow ol { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 24px; }
+  .info.poster .info-flow li { padding-top: 30px; }
+  .info.poster .info-flow li::before { font-size: 15px; line-height: 20px; }
+  .info.poster .info-flow li::after { top: 9px; left: 36px; }
+  .info.poster .info-flow h4 { font-size: 21px; line-height: 27px; }
+  .info.poster .info-flow p { font-size: 17px; line-height: 23px; }
+  .info.poster .info-foot { padding: 18px 56px 26px; font-size: 17px; line-height: 24px; }
+
+  /* the social card: a fixed 1200 x 630 canvas, always light */
+  .info.card { --info-pad: 28px; width: 1200px; height: 630px; border: 0; border-radius: 0; color-scheme: light; background: #FBFAF6; color: #1C1A17; display: grid; grid-template-rows: auto 1fr auto; }
+  .info.card .info-head { padding: 36px 48px 20px; }
+  .info.card .info-eyebrow { font-size: 14px; line-height: 20px; margin-bottom: 10px; }
+  .info.card .info-title { font-size: 44px; line-height: 50px; }
+  .info.card .info-claim { font-size: 21px; line-height: 29px; margin-top: 10px; }
+  .info.card .info-zones { grid-template-columns: 3fr 2fr; min-height: 0; }
+  .info.card .info-zone { padding: 24px 48px; overflow: hidden; }
+  .info.card .info-zone-b { border-top: 0; border-left: 1px solid var(--line); }
+  .info.card .info-hero { margin: 0; padding: 0; border: 0; }
+  .info.card .info-hero .glyph { width: 120px; height: 120px; }
+  .info.card .info-hero h4 { font-size: 27px; line-height: 33px; }
+  .info.card .info-hero p { font-size: 18px; line-height: 25px; }
+  .info.card .info-facts { grid-template-columns: 1fr; gap: 10px; margin: 0; }
+  .info.card .info-facts li { flex-direction: row; align-items: baseline; gap: 12px; }
+  .info.card .info-value { font-size: 30px; line-height: 36px; white-space: nowrap; min-width: 150px; }
+  .info.card .info-label { font-size: 15px; line-height: 20px; }
+  .info.card .info-src { display: none; }
+  .info.card .info-foot { padding: 14px 48px 20px; font-size: 15px; line-height: 22px; }
+</style>
+</head>
+<body>
+<div class="info card" data-code="mat-diffusion-analysis"><header class="info-head"><p class="info-eyebrow">openmaterials.ai / codes / AtomisticSkills mat-diffusion-analysis</p><h2 class="info-title">mat-diffusion-analysis: diffusivity and activation energy from MD</h2><p class="info-claim">An AtomisticSkills skill that reads ASE trajectories at several temperatures, takes the diffusivity from the mean squared displacement and fits a weighted Arrhenius line for E_a.</p></header><div class="info-zones"><section class="info-zone info-zone-a"><div class="info-panel info-hero"><svg class="glyph" viewBox="0 0 64 64" width="64" height="64" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="14" cy="14" r="2" class="f"/><circle cx="14" cy="26" r="2" class="f"/><circle cx="14" cy="38" r="2" class="f"/><circle cx="14" cy="50" r="2" class="f"/><circle cx="26" cy="14" r="2" class="f"/><circle cx="26" cy="26" r="2" class="f"/><circle cx="26" cy="38" r="2" class="f"/><circle cx="26" cy="50" r="2" class="f"/><circle cx="38" cy="14" r="2" class="f"/><circle cx="38" cy="26" r="2" class="f"/><circle cx="38" cy="38" r="2" class="f"/><circle cx="38" cy="50" r="2" class="f"/><circle cx="50" cy="14" r="2" class="f"/><circle cx="50" cy="26" r="2" class="f"/><circle cx="50" cy="38" r="2" class="f"/><circle cx="50" cy="50" r="2" class="f"/><path class="a" d="M14 50 L26 38 L26 26 L38 26 L38 14 L50 14"/><circle cx="50" cy="14" r="3.6" class="a"/></svg><div><h4>MSD slope to Arrhenius slope</h4><p>analyze_diffusion.py runs pymatgen&#x27;s DiffusionAnalyzer on each trajectory after a 5 ps equilibration skip and reports D with its error. calculate_activation_energy.py fits ln D against 1/T, weighted by those errors.</p></div></div></section><section class="info-zone info-zone-b"><ul class="info-facts"><li><span class="info-value">5.0 ps</span><span class="info-label">default equilibration skipped before the MSD fit</span><span class="info-src">mat-diffusion-analysis SKILL.md</span></li><li><span class="info-value">0.95</span><span class="info-label">R^2 below which the Arrhenius fit warns</span><span class="info-src">calculate_activation_energy.py</span></li><li><span class="info-value">0.152 eV</span><span class="info-label">Li activation energy in LGPS, five temperatures</span><span class="info-src">LGPS example README</span></li></ul></section></div><footer class="info-foot"><span>Sources: AtomisticSkills README, mat-diffusion-analysis SKILL.md, LGPS example README, analyze_diffusion.py, calculate_activation_energy.py.</span><span class="info-url">https://openmaterials.ai/codes/mat-diffusion-analysis/</span></footer></div>
+<script>
+  // a zone whose text runs past its box is scaled down in 2% steps, never below 80%
+  addEventListener("load", function () {
+    document.querySelectorAll(".info-zone, .info-flow").forEach(function (zone) {
+      var kids = Array.prototype.slice.call(zone.children), z = 1;
+      while (zone.scrollHeight > zone.clientHeight + 1 && z > 0.8) {
+        z -= 0.02;
+        kids.forEach(function (k) { k.style.zoom = z; });
+      }
+      if (zone.scrollHeight > zone.clientHeight + 1) document.body.setAttribute("data-overflow", "1");
+    });
+  });
+</script>
+</body>
+</html>

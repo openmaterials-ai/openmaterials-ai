@@ -1,0 +1,132 @@
+{
+  "key": "orca",
+  "headline": "ORCA: quantum chemistry for molecules, from DFT to multireference methods",
+  "claim": "A molecular electronic structure program. In version 5.0 the SHARK integral engine makes analytic Hessians, TD-DFT and magnetic properties about 5 to 10 times faster.",
+  "hero": {
+    "glyph": "spectrum",
+    "title": "Spectroscopy from first principles",
+    "text": "ORCA grew out of the spectroscopy of open-shell transition metal complexes. It computes g tensors, hyperfine couplings, NMR shieldings, spin-spin couplings, harmonic frequencies and excited states (Neese 2022)."
+  },
+  "features": [
+    {
+      "glyph": "code",
+      "title": "The SHARK integral engine",
+      "text": "ORCA 5.0 computes two-electron integrals with a new algorithm, up to 5 to 6 times faster for g and higher angular momentum. Segmented and ANO bases run well (Neese 2022)."
+    },
+    {
+      "glyph": "orbital",
+      "title": "Semi-empirical to multireference methods",
+      "text": "Semi-empirical, Hartree-Fock, 588 density functionals through LibXC 5.1.0, DLPNO-CCSD(T) and DLPNO-MP2 local correlation, CASSCF with NEVPT2 and CASPT2 (Neese 2022)."
+    },
+    {
+      "glyph": "fit-curve",
+      "title": "Self-adapting grids",
+      "text": "Typical DefGrid2 errors are 0.01 kcal/mol in relative energies, 0.1 per cm in analytic harmonic frequencies and below 0.001 eV in excitation energies (Neese 2022)."
+    },
+    {
+      "glyph": "arrow-cycle",
+      "title": "SCF convergence",
+      "text": "DIIS with SOSCF is the default. A trust-radius augmented Hessian solver starts only when a case stalls. Less numerical noise cuts SCF and geometry cycles by about 30%."
+    },
+    {
+      "glyph": "layers",
+      "title": "Multilevel and embedding",
+      "text": "QM/MM with CHARMM, AMBER and OpenFF force fields, ONIOM with up to three layers, and Crystal-QMMM embedding set up from a .cif by orca_crystalprep (Neese 2022)."
+    }
+  ],
+  "facts": [
+    {
+      "value": "14-15x",
+      "label": "parallel speedup on 16 cores, Vancomycin SCF",
+      "source": "Neese 2022"
+    },
+    {
+      "value": "1008 s",
+      "label": "Penicillin B3LYP/def2-TZVP Hessian, was 17,925 s",
+      "source": "Neese 2022"
+    },
+    {
+      "value": "0.1 cm-1",
+      "label": "typical DefGrid2 error, analytic frequencies",
+      "source": "Neese 2022"
+    }
+  ],
+  "workflow": [
+    {
+      "title": "Write the input",
+      "text": "Method and basis set keywords, then the geometry. orca_crystalprep reads a .cif."
+    },
+    {
+      "title": "Converge and optimize",
+      "text": "SCF with DIIS or TRAH, geometry optimization or NEB to a transition state."
+    },
+    {
+      "title": "Frequencies and properties",
+      "text": "Analytic Hessian, then NMR, EPR, TD-DFT, polarizabilities or coupled-cluster energies."
+    },
+    {
+      "title": "Read the results",
+      "text": "More than 250 properties are written to the ASCII property file (Neese 2022)."
+    },
+    {
+      "title": "Chain with compound",
+      "text": "Compound scripts chain steps, such as reoptimizing until no imaginary mode is left."
+    }
+  ],
+  "applications": [
+    {
+      "glyph": "magnet",
+      "title": "Spin-phonon relaxation in [(tpaPh)Fe]-",
+      "text": "ORCA CASSCF D tensors along every normal mode give an effective barrier of 19.7 per cm against 26 per cm measured, below the computed first excitation at 94 per cm.",
+      "source": "Lunghi 2017"
+    },
+    {
+      "glyph": "wave",
+      "title": "Phonon-driven relaxation of a vanadyl qubit",
+      "text": "ORCA CASSCF+NEVPT2 g tensors and PBE hyperfine A tensors for VO(acac)2. Above 5 T the Zeeman modulation by acoustic phonons dominates the relaxation. Below 1 T the hyperfine coupling does.",
+      "source": "Lunghi 2019"
+    },
+    {
+      "glyph": "molecule",
+      "title": "The killer phonon mode of DNTT",
+      "text": "ORCA PBE0/def2-SVP site energies and transfer integrals along each mode single out the sliding mode, 23 per cm in DNTT and 24 per cm in C8-DNTT-C8, with 45 and 75 percent of fluctuations.",
+      "source": "Schweicher 2019"
+    }
+  ],
+  "sources": [
+    {
+      "label": "Neese 2022",
+      "doi": "10.1002/wcms.1606"
+    },
+    {
+      "label": "Lunghi 2017",
+      "doi": "10.1038/ncomms14620"
+    },
+    {
+      "label": "Lunghi 2019",
+      "doi": "10.1126/sciadv.aax7163"
+    },
+    {
+      "label": "Schweicher 2019",
+      "doi": "10.1002/adma.201902407"
+    }
+  ],
+  "detail": [
+    {
+      "heading": "Electronic structure methods",
+      "text": "ORCA covers semi-empirical methods, Hartree-Fock, DFT with LDA, GGA, meta-GGA, hybrid, double-hybrid and range-separated functionals, and wavefunction methods for single and multireference problems (Neese 2022). Local correlation uses pair natural orbitals in large domains. This family includes DLPNO-CCSD(T) with F12 for open shells, DLPNO-MP2 analytic second derivatives for polarizabilities and NMR shieldings, and DLPNO-STEOM coupled cluster for excited states. CASPT2 and NEVPT2 were reformulated to avoid the four-particle density, next to DLPNO-NEVPT2-F12 and a fully internally contracted MRCCSD. Solvation enters through CPCM and SMD, up to coupled-cluster energies."
+    },
+    {
+      "heading": "Numerics and scale",
+      "text": "Version 5.0 rebuilt the integral layer around SHARK, a C++ engine up to 5 to 6 times faster than traditional algorithms for high angular momentum integrals. SHARK now drives analytic Hessians, TD-DFT and response properties about 5 to 10 times faster than before (Neese 2022). RIJCOSX is the default for hybrid functionals. On 16 cores of an AMD EPYC 7302 machine the Fock builds for Vancomycin (176 atoms) ran 14 to 15 times faster than on one core, and about 25 times on 32 cores. The B3LYP/def2-TZVP analytic Hessian of Penicillin (42 atoms) fell from 17,925 s in ORCA 4.2.1 to 1008 s. The new grids are 2 to 4 times larger than the old defaults, but integration still scales linearly."
+    },
+    {
+      "heading": "Licensing and interfaces",
+      "text": "ORCA is free of charge for academic users and sold to industry through FAccTs, with more than 40,000 registered academic users and a manual of over 1300 pages (Neese 2022). The compound scripting language automates protocols such as reoptimizing along an imaginary mode until a true minimum is found, and exposes more than 250 properties through the ASCII property file. QM/MM reads CHARMM, AMBER and OpenFF force fields, ONIOM nests up to three layers, and Crystal-QMMM embeds a cluster in converged point charges."
+    },
+    {
+      "heading": "Validation",
+      "text": "The grid incompleteness errors of DefGrid2 are 0.01 kcal/mol in relative energies (0.05 with COSX), 0.1 per cm in analytic harmonic frequencies (0.04 with COSX) and below 0.001 eV in excitation energies, and DefGrid3 cuts them by a further factor 2 to 5 (Neese 2022). With the new grids the RIJCOSX results are nearly indistinguishable from fully analytic exchange. In the application papers, ORCA CASSCF D tensors give [(tpaPh)Fe]- an effective barrier of 19.7 per cm against a measured 26 per cm (Lunghi 2017). The computed relaxation time of VO(acac)2 starts to converge to experiment above 5 T (Lunghi 2019)."
+    }
+  ]
+}

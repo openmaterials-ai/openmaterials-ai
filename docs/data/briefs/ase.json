@@ -1,0 +1,122 @@
+{
+  "key": "ase",
+  "headline": "ASE: Python objects and a common calculator interface for atomistic simulation",
+  "claim": "A Python library whose Atoms object and calculator interface let one script drive many electronic structure and force field codes with the same optimizers, dynamics and analysis.",
+  "hero": {
+    "glyph": "code",
+    "title": "One interface, many codes",
+    "text": "A calculator takes atomic numbers and positions and returns energy, forces and stress. About 30 codes, from Abinit and VASP to EMT and Lennard-Jones, plug in by files, pipes or in-process Python (Hjorth Larsen 2017)."
+  },
+  "features": [
+    {
+      "glyph": "atoms",
+      "title": "Atoms object",
+      "text": "Positions, cell, periodic flags, velocities and moments in NumPy arrays, units eV and Angstrom. Structures from ase.build, ase.spacegroup or ase.io (Hjorth Larsen 2017)."
+    },
+    {
+      "glyph": "spring",
+      "title": "Optimizers and dynamics",
+      "text": "BFGS, L-BFGS, FIRE and MDMin relax structures. Velocity Verlet, Berendsen, Langevin and Nose-Hoover integrators run MD. Filters relax the cell too (Hjorth Larsen 2017)."
+    },
+    {
+      "glyph": "free-energy",
+      "title": "Saddle points and global search",
+      "text": "Nudged elastic band with climbing image and AutoNEB, the dimer method, basin hopping, minima hopping and a genetic algorithm in ase.ga (Hjorth Larsen 2017)."
+    },
+    {
+      "glyph": "phonon",
+      "title": "Vibrations and thermochemistry",
+      "text": "ase.vibrations and ase.phonons build the Hessian by finite differences, 6N + 1 force calls. Thermo classes turn the modes into U, S, F and G (Hjorth Larsen 2017)."
+    },
+    {
+      "glyph": "database",
+      "title": "Database and parallelism",
+      "text": "ase.db stores Atoms rows with key-value pairs in JSON, SQLite3 or PostgreSQL. Calculators run in parallel as subprocesses or under mpiexec (Hjorth Larsen 2017)."
+    }
+  ],
+  "facts": [
+    {
+      "value": "about 30",
+      "label": "atomic-scale codes with an ASE calculator",
+      "source": "Hjorth Larsen 2017"
+    },
+    {
+      "value": "65",
+      "label": "file formats recognized by ase.io",
+      "source": "Hjorth Larsen 2017"
+    },
+    {
+      "value": "6N + 1",
+      "label": "force calls for a finite-difference Hessian",
+      "source": "Hjorth Larsen 2017"
+    }
+  ],
+  "workflow": [
+    {
+      "title": "Build the structure",
+      "text": "ase.build.bulk, surface or molecule, ase.spacegroup.crystal, or read() from a file."
+    },
+    {
+      "title": "Attach a calculator",
+      "text": "atoms.calc = NWChem(xc='PBE') or any other code. get_potential_energy() runs it."
+    },
+    {
+      "title": "Relax or propagate",
+      "text": "BFGS(atoms).run() relaxes, ase.md integrators propagate, a Trajectory records frames."
+    },
+    {
+      "title": "Analyse",
+      "text": "Vibrations, Phonons, thermochemistry classes, equation of state fits, band structures."
+    },
+    {
+      "title": "Store",
+      "text": "write() to traj or another format, or ase.db rows queried with the ase db tool."
+    }
+  ],
+  "applications": [
+    {
+      "glyph": "thermometer",
+      "title": "Negative thermal expansion of ScF3",
+      "text": "Self-consistent phonon free energies F(V,T) fit to the Birch-Murnaghan equation of state in ASE. The thermal expansion changes sign at 400 to 500 K (SCP) or 600 to 800 K (ISC).",
+      "source": "Oba 2019"
+    },
+    {
+      "glyph": "ensemble",
+      "title": "SSCHA driven through ASE calculators",
+      "text": "The stochastic self-consistent harmonic approximation code runs in a local automatic mode where ASE supplies energies, forces and stresses from Quantum ESPRESSO, VASP, SIESTA or LAMMPS.",
+      "source": "Monacelli 2021"
+    }
+  ],
+  "sources": [
+    {
+      "label": "Hjorth Larsen 2017",
+      "doi": "10.1088/1361-648X/aa680e"
+    },
+    {
+      "label": "Oba 2019",
+      "doi": "10.1103/PhysRevMaterials.3.033601"
+    },
+    {
+      "label": "Monacelli 2021",
+      "doi": "10.1088/1361-648X/ac066b"
+    }
+  ],
+  "detail": [
+    {
+      "heading": "Atoms, calculators and communication",
+      "text": "The Atoms object holds chemical symbols, Cartesian positions, an optional cell with periodic flags, and per-atom arrays of momenta, magnetic moments and other quantities, all backed by NumPy. A calculator is a black box that returns energy, forces and possibly stress for an Atoms object. Most calculators write an input file, launch the code as a subprocess, wait and parse the output. GPAW, EMT and Asap run inside the Python process with zero-copy data exchange. The CP2K calculator talks over pipes, so the process stays alive between calls (Hjorth Larsen 2017)."
+    },
+    {
+      "heading": "Algorithms built on the interface",
+      "text": "ase.optimize holds BFGS, L-BFGS, MDMin, FIRE and SciPy optimizers, plus a preconditioned L-BFGS that gave speedups of up to an order of magnitude over plain L-BFGS on solid-state tests, growing with system size. Constraints fix atoms, bond lengths or internal coordinates, and filters expose cell strain so lattice vectors relax with the atoms. ase.md provides velocity Verlet, Berendsen, Langevin and Nose-Hoover thermostats and Berendsen or Parrinello-Rahman pressure control. Saddle points come from NEB, climbing-image NEB, AutoNEB and the dimer method, global minima from basin hopping, minima hopping and ase.ga (Hjorth Larsen 2017)."
+    },
+    {
+      "heading": "Vibrations, phonons and thermodynamics",
+      "text": "ASE assembles the Hessian from finite-difference forces, 6N + 1 evaluations for N displaced atoms, and imposes momentum conservation to average out egg-box noise from real-space grids. ase.phonons repeats the primitive cell into a supercell and builds the dynamical matrix D(k) from the displaced-atom forces. The paper shows fcc Al from a 7 x 7 x 7 EMT supercell. HarmonicThermo, IdealGasThermo and CrystalThermo give U, S, F and G, and ase.phasediagram draws convex hulls and Pourbaix diagrams from about 500 stored dissolution energies. The BEEFEnsemble class estimates exchange-correlation errors from an ensemble of functionals and works with GPAW and VASP (Hjorth Larsen 2017)."
+    },
+    {
+      "heading": "License and use by other codes",
+      "text": "ASE is free software under LGPLv2.1 or newer, installs with pip install ase and needs only Python and NumPy, with SciPy and matplotlib recommended. Amp, matscipy, quippy and Atomistica build on the calculator interface (Hjorth Larsen 2017). The SSCHA code uses ASE to call Quantum ESPRESSO, VASP, SIESTA, CP2K or LAMMPS for the forces on its stochastic populations (Monacelli 2021). Oba 2019 fit the anharmonic free energy curves of ScF3 to the Birch-Murnaghan equation of state with ASE to get lattice constants and bulk moduli at finite temperature."
+    }
+  ]
+}

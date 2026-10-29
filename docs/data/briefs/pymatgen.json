@@ -1,0 +1,128 @@
+{
+  "key": "pymatgen",
+  "headline": "pymatgen: structures, file formats and thermodynamic analysis for materials data",
+  "claim": "The Python library behind the Materials Project: core objects for structures and computed entries, parsers for electronic structure codes, and phase diagram and reaction analysis.",
+  "hero": {
+    "glyph": "phase-diagram",
+    "title": "From energies to phase diagrams",
+    "text": "ComputedEntry objects (composition plus energy) feed the phasediagram package, which builds compositional and grand canonical hulls. One DFT run plus Materials Project entries placed Li4SnS4 on the hull (Ong 2013)."
+  },
+  "features": [
+    {
+      "glyph": "crystal",
+      "title": "Core objects",
+      "text": "Element, Lattice, Site, PeriodicSite, Structure, Molecule and Composition live in the core package. Most objects serialize to JSON via to_dict and from_dict (Ong 2013)."
+    },
+    {
+      "glyph": "code",
+      "title": "Input and output",
+      "text": "The io package reads CIF through PyCifRW, molecular formats through OpenBabel and VASP files through vaspio, and converts a Structure to an ASE Atoms object (Ong 2013)."
+    },
+    {
+      "glyph": "workflow",
+      "title": "Transformations and alchemy",
+      "text": "SubstitutionTransformation, species removal, ordering of disordered cells, supercells. alchemy applies a sequence to many structures and keeps the history (Ong 2013)."
+    },
+    {
+      "glyph": "database",
+      "title": "Assimilation and compatibility",
+      "text": "borg walks a directory tree and turns VASP runs into ComputedEntry objects in parallel. compatibility mixes GGA and GGA+U energies with fitted corrections (Ong 2013)."
+    },
+    {
+      "glyph": "network",
+      "title": "Materials API client",
+      "text": "The matproj package queries the Materials Project REST API for structures, formation energies, calculation parameters and experimental thermochemistry (Ong 2013)."
+    }
+  ],
+  "facts": [
+    {
+      "value": "1",
+      "label": "DFT run needed to place Li4SnS4 on the hull",
+      "source": "Ong 2013"
+    },
+    {
+      "value": "1521",
+      "label": "semiconductors in the DFPT phonon database",
+      "source": "Petretto 2018"
+    },
+    {
+      "value": "29,902",
+      "label": "ICSD phases pulled from the Materials Project",
+      "source": "Sun 2016"
+    }
+  ],
+  "workflow": [
+    {
+      "title": "Read structures",
+      "text": "Structure from a CIF or POSCAR via the io package, or Materials Project data via matproj."
+    },
+    {
+      "title": "Transform",
+      "text": "Substitute, order or make supercells with the transformations package."
+    },
+    {
+      "title": "Write inputs and run",
+      "text": "vaspio_set writes VASP inputs with Materials Project parameters. Run the code."
+    },
+    {
+      "title": "Assimilate",
+      "text": "borg collects runs into ComputedEntry objects, compatibility corrects the energies."
+    },
+    {
+      "title": "Analyse",
+      "text": "phasediagram hulls, reaction_calculator energies, band structure and DOS plots."
+    }
+  ],
+  "applications": [
+    {
+      "glyph": "phonon",
+      "title": "DFPT phonons for 1521 inorganic solids",
+      "text": "ABINIT phonon bands, Born charges and dielectric tensors for 1521 semiconductors, inputs and analysis through pymatgen and AbiPy. Gamma frequencies of 53 compounds: MARE 4.6% vs experiment.",
+      "source": "Petretto 2018"
+    },
+    {
+      "glyph": "bars",
+      "title": "The thermodynamic scale of metastability",
+      "text": "Materials Project energies for 29,902 ICSD phases, retrieved with pymatgen through the Materials API: 50.5% metastable, median 15 meV/atom above ground state, 90th percentile 67 meV/atom.",
+      "source": "Sun 2016"
+    },
+    {
+      "glyph": "density",
+      "title": "Amorphous limit of metastability",
+      "text": "Melt-quench AIMD workflows on pymatgen, custodian, FireWorks and atomate set an upper energy bound for synthesizable polymorphs and classified more than 700 polymorphs in 41 systems.",
+      "source": "Aykol 2018"
+    }
+  ],
+  "sources": [
+    {
+      "label": "Ong 2013",
+      "doi": "10.1016/j.commatsci.2012.10.028"
+    },
+    {
+      "label": "Petretto 2018",
+      "doi": "10.1038/sdata.2018.65"
+    },
+    {
+      "label": "Sun 2016",
+      "doi": "10.1126/sciadv.1600225"
+    },
+    {
+      "label": "Aykol 2018",
+      "doi": "10.1126/sciadv.aaq0148"
+    }
+  ],
+  "detail": [
+    {
+      "heading": "Objects, tests and serialization",
+      "text": "pymatgen is object oriented and test driven, and every non-trivial class and method has a unit test. The core package defines Element, Lattice, Site, PeriodicSite, Structure, Molecule and Composition. The entries package wraps a composition and an energy into a ComputedEntry that is independent of whether the energy came from VASP, ABINIT or another code, and ExpEntry holds experimental thermochemistry. Most objects implement to_dict and from_dict, so they round-trip through JSON files or a MongoDB database such as the one behind the Materials Project (Ong 2013)."
+    },
+    {
+      "heading": "Thermodynamic analysis",
+      "text": "entries.compatibility adjusts GGA+U energies with experimental binary formation enthalpies so they mix with GGA energies, and corrects the overbinding of O2 and N2. MaterialsProjectCompatibility and MITCompatibility carry the two parameter sets. analysis.reaction_calculator balances reactions and computes their energies. The phasediagram package builds compositional and grand canonical hulls. In the Li4SnS4 example one VASP ground-state run plus Materials Project entries gave the Li-Sn-S diagram and a chemical potential map with stability only over a narrow range of Li chemical potential, where a standalone study needs more than 30 structures (Ong 2013)."
+    },
+    {
+      "heading": "Interfaces and use in other studies",
+      "text": "The io package supports CIF via PyCifRW, molecular formats via OpenBabel, VASP input and output via vaspio with Materials Project parameter sets in vaspio_set, limited Gaussian input, and an aseio adaptor to ASE Atoms. The matproj package talks to the Materials API, a RESTful interface returning JSON for each material (Ong 2013). The DFPT phonon database of Petretto 2018 used pymatgen with AbiPy to generate ABINIT inputs and analyze the results under FireWorks. Sun 2016 retrieved its 29,902 phases from the Materials Project with pymatgen, and Aykol 2018 built its melt-quench workflow on pymatgen, custodian, FireWorks and atomate."
+    }
+  ]
+}

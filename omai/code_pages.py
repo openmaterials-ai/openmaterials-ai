@@ -7,13 +7,16 @@ Every page is generated, never hand edited. Inputs, all under docs/data:
 - ``references/<key>.json``: the curated papers (the code, methods, applications), exported from Zotero
   by ``omai.refs_export``; without a file the page falls back to the citations in codes.json;
 - ``code_pages.json``: the hand-written summary, tagline and links; a key without a summary gets a
-  sentence derived from its representation, never invented prose.
+  sentence derived from its representation, never invented prose;
+- ``briefs/<key>.json``: the brief behind the infographic and the detail sections (``omai.briefs``);
+- ``graph.json``: the map itself, for the code's submap (``omai.submap``).
 
-The page opens with the map itself, embedded with the code's coverage lit (``map/?embed=1#code=<key>``),
-then the summary, the quantities served, the releases, the references and the citation line. A social
-card (1200 x 630) is drawn as SVG and rasterized with ImageMagick when ``convert`` is on the PATH;
-``omai.code_cards`` then replaces each PNG with a screenshot of the code's lit submap when Chrome is
-available. The PNGs are a release artifact whose bytes depend on the build machine, the HTML does not.
+The page opens with the infographic drawn from the brief, then the summary, the detail sections, the
+submap with the quantities served, the releases, the references and the citation line. Each code also
+gets a poster page at ``codes/<key>/infographic/`` (the same infographic on a 1920 x 1080 canvas, not
+indexed) that ``omai.code_cards`` screenshots into the LinkedIn poster and the 1200 x 630 social card
+when Chrome is available; without Chrome a text card drawn as SVG and rasterized with ImageMagick stays.
+The PNGs are a release artifact whose bytes depend on the build machine, the HTML does not.
 
 Run as::
 
@@ -31,10 +34,13 @@ import shutil
 import subprocess
 from pathlib import Path
 
+from omai import briefs, infographic, submap
+
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "docs" / "data"
 OUT = ROOT / "docs" / "codes"
 CARDS = ROOT / "docs" / "assets" / "og" / "codes"
+POSTERS = ROOT / "docs" / "assets" / "infographics"
 SITE = "https://openmaterials.ai"
 GROUPS = {
     "code": ("The code", "The papers that describe the code; cite them when you use it."),
@@ -105,7 +111,8 @@ def rasterize(svg_path: Path, png_path: Path) -> None:
         subprocess.run([conv, str(svg_path), "-define", "png:exclude-chunks=date,time", str(png_path)], check=True)
 
 
-def page(key: str, rep: dict, reg: dict, refs: dict | None, text: dict, has_card: bool) -> str:
+def page(key: str, rep: dict, reg: dict, refs: dict | None, text: dict, has_card: bool, brief: dict | None = None,
+         graph: dict | None = None, has_poster: bool = False) -> str:
     name = display_name(key, rep)
     nodes = sorted(rep)
     tagline = text.get("tagline") or f"{quantities(len(nodes))} on the OpenMaterials map."
@@ -119,7 +126,6 @@ def page(key: str, rep: dict, reg: dict, refs: dict | None, text: dict, has_card
     license_ = next((e.get("license") for e in rep.values() if e.get("license")), "")
     releases = sorted(reg.get("releases") or [], key=lambda r: r.get("released") or "", reverse=True)
     canonical = f"{SITE}/codes/{key}/"
-    embed_src = f"../../map/?embed=1#code={key}"
     embed_abs = f"{SITE}/map/?embed=1#code={key}"
     snippet = f'<iframe src="{embed_abs}" title="{name} on the OpenMaterials map" width="100%" height="480" loading="lazy" style="border:1px solid #EBEBEB;border-radius:6px"></iframe>'
     og_image = f"{SITE}/assets/og/codes/{key}.png" if has_card else f"{SITE}/assets/og.png"
@@ -137,6 +143,21 @@ def page(key: str, rep: dict, reg: dict, refs: dict | None, text: dict, has_card
         links.append(f'<a href="{esc(url)}" rel="noopener">Repository</a>')
     links.append(f'<a href="../../map/#code={esc(key)}">On the map</a>')
     links.append('<a href="../">All codes</a>')
+
+    info_html = ""
+    if brief:
+        own = infographic.self_reported(brief, refs)
+        poster_links = '<a href="infographic/">Poster page</a>' + (f'<a href="../../assets/infographics/{esc(key)}.png" download>Download the poster (PNG, 1920 x 1080)</a>' if has_poster else "")
+        info_html = (
+            f'<figure class="gsec info-figure" id="infographic">{infographic.block(brief, name, key, self_reported=own)}'
+            f'<figcaption><span>What {esc(name)} is, how it works and what it is used for, from the papers listed as sources. Every number links to its paper.</span>{poster_links}</figcaption></figure>'
+        )
+    detail_html = ""
+    if brief and brief.get("detail"):
+        detail_html = '<section class="gsec" id="detail"><h2>In more detail</h2>' + "".join(
+            f'<h3>{esc(d["heading"])}</h3><p>{esc(d["text"])}</p>' for d in brief["detail"]
+        ) + "</section>"
+    submap_html = submap.svg(graph, set(nodes), fit_under=760) if graph else ""
 
     served = "".join(
         f'<li><a href="../../map/#node={esc(n)}"><span class="bib-node">{esc(n)}</span></a>'
@@ -184,7 +205,10 @@ def page(key: str, rep: dict, reg: dict, refs: dict | None, text: dict, has_card
     else:
         cite_html = '<p class="empty">No citation recorded on the map representation.</p>'
 
-    toc = [("map", "On the map"), ("about", f"What {name} is"), ("serves", "What it computes")]
+    toc = ([("infographic", "At a glance")] if info_html else []) + [("about", f"What {name} is")]
+    if detail_html:
+        toc.append(("detail", "In more detail"))
+    toc.append(("serves", "On the map"))
     if rel_html:
         toc.append(("releases", "Releases"))
     toc += [("references", "References"), ("cite", "How to cite")]
@@ -216,15 +240,15 @@ def page(key: str, rep: dict, reg: dict, refs: dict | None, text: dict, has_card
 <link rel="preload" href="../../assets/fonts/jetbrains-mono-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="../../assets/site.css">
 <style>
-  /* a code's landing page: the map first, then the record (generated by omai/code_pages.py) */
-  .map-embed {{ margin: 24px 0 8px; }}
-  .map-embed iframe {{ display: block; width: 100%; height: 480px; border: 1px solid var(--line); border-radius: var(--radius, 6px); background: var(--page); }}
-  @media (max-width: 600px) {{ .map-embed iframe {{ height: 360px; }} }}
-  .map-embed figcaption {{ display: flex; flex-wrap: wrap; gap: 4px 16px; margin-top: 8px; font-size: 14px; line-height: 20px; color: var(--ink-2); }}
-  .map-embed figcaption a {{ color: var(--ink); }}
-  .map-embed details {{ flex-basis: 100%; margin-top: 4px; }}
-  .map-embed summary {{ cursor: pointer; }}
-  .map-embed pre {{ margin: 8px 0 0; padding: 12px; overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius, 6px); background: var(--surface); font: 400 12px/18px var(--font-mono); white-space: pre-wrap; overflow-wrap: anywhere; }}
+{{EXTRA_CSS}}
+  /* a code's landing page: the infographic first, then the record (generated by omai/code_pages.py) */
+  .info-figure {{ margin: 0 0 8px; }}
+  .info-figure figcaption, .submap-figure figcaption {{ display: flex; flex-wrap: wrap; gap: 4px 16px; margin-top: 8px; font-size: 14px; line-height: 20px; color: var(--ink-2); }}
+  .info-figure figcaption a, .submap-figure figcaption a {{ color: var(--ink); }}
+  .submap-figure {{ margin: 16px 0 24px; }}
+  .submap-figure details {{ flex-basis: 100%; margin-top: 4px; }}
+  .submap-figure summary {{ cursor: pointer; }}
+  .submap-figure pre {{ margin: 8px 0 0; padding: 12px; overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius, 6px); background: var(--surface); font: 400 12px/18px var(--font-mono); white-space: pre-wrap; overflow-wrap: anywhere; }}
   .code-links {{ display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 14px; line-height: 20px; }}
   .code-links a {{ color: var(--ink); }}
   .serves {{ display: grid; gap: 8px; margin: 12px 0 0; padding: 0; list-style: none; }}
@@ -258,14 +282,7 @@ def page(key: str, rep: dict, reg: dict, refs: dict | None, text: dict, has_card
     <nav class="toc gtoc" aria-label="Contents">{toc_html}</nav>
 
     <article class="prose gwrap">
-      <figure class="map-embed gsec" id="map">
-        <iframe src="{embed_src}" title="{esc(name)} on the OpenMaterials map" loading="lazy"></iframe>
-        <figcaption>
-          <span>The quantities {esc(name)} computes, lit on the map. Select one for its formula and the other codes that compute it.</span>
-          <a href="../../map/#code={esc(key)}">Open the full map</a>
-          <details><summary>Embed this map</summary><pre>{esc(snippet)}</pre></details>
-        </figcaption>
-      </figure>
+      {info_html}
 
       <section class="gsec" id="about">
         <h2>What {esc(name)} is</h2>
@@ -273,9 +290,19 @@ def page(key: str, rep: dict, reg: dict, refs: dict | None, text: dict, has_card
         <p class="code-links">{"".join(links)}{f'<span>License: {esc(license_)}</span>' if license_ else ""}</p>
       </section>
 
+      {detail_html}
+
       <section class="gsec" id="serves">
         <h2>What it computes on the map</h2>
-        <p>{quantities(len(nodes))}, each with the interface the representation records. The link opens the quantity on the map.</p>
+        <p>{quantities(len(nodes))}, drawn by tier with the data flow between them. Dashed boxes are intermediate quantities. Select one for its formula and the other codes that compute it.</p>
+        <figure class="submap-figure">
+          <div class="submap">{submap_html}</div>
+          <figcaption>
+            <a href="../../map/#code={esc(key)}">Open the full map</a>
+            <details><summary>Embed this submap</summary><pre>{esc(snippet)}</pre></details>
+          </figcaption>
+        </figure>
+        <p>Each quantity with the interface the representation records.</p>
         <ul class="serves">{served}</ul>
       </section>
 
@@ -297,13 +324,14 @@ def page(key: str, rep: dict, reg: dict, refs: dict | None, text: dict, has_card
 <script src="../../assets/site.js"></script>
 </body>
 </html>
-"""
+""".replace("{EXTRA_CSS}", (infographic.CSS if info_html else "") + submap.CSS)
 
 
 def build(write_cards: bool = True) -> list[str]:
     codes = load("codes.json")
     registry = load("registry.json").get("code", {})
     texts = load("code_pages.json")
+    graph = load("graph.json")
     built = []
     for key in sorted(codes):
         if not KEY.fullmatch(key):
@@ -321,9 +349,23 @@ def build(write_cards: bool = True) -> list[str]:
             svg.write_text(card_svg(display_name(key, rep), text.get("tagline") or f"{quantities(len(rep))} on the OpenMaterials map.", len(rep)), encoding="utf-8")
             rasterize(svg, CARDS / f"{key}.png")
         has_card = (CARDS / f"{key}.png").exists()
+        has_poster = (POSTERS / f"{key}.png").exists()
+        brief = briefs.load(key)
+        if brief:
+            problems = briefs.validate(brief, refs)
+            if problems:
+                raise ValueError(f"brief {key}: " + "; ".join(problems))
         out = OUT / key / "index.html"
         out.parent.mkdir(parents=True, exist_ok=True)
-        out.write_text(page(key, rep, reg, refs, text, has_card), encoding="utf-8")
+        out.write_text(page(key, rep, reg, refs, text, has_card, brief, graph, has_poster), encoding="utf-8")
+        poster = OUT / key / "infographic" / "index.html"
+        if brief:
+            poster.parent.mkdir(parents=True, exist_ok=True)
+            own = infographic.self_reported(brief, refs)
+            poster.write_text(infographic.poster_page(brief, display_name(key, rep), key, self_reported=own), encoding="utf-8")
+            (poster.parent / "card.html").write_text(infographic.poster_page(brief, display_name(key, rep), key, mode="card"), encoding="utf-8")
+        elif poster.exists():
+            shutil.rmtree(poster.parent)
         built.append(key)
     for stale in OUT.iterdir():  # a key dropped from codes.json takes its page with it
         if stale.is_dir() and stale.name not in built:

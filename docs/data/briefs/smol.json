@@ -1,0 +1,113 @@
+{
+  "key": "smol",
+  "headline": "smol: cluster expansions and Monte Carlo on lattices",
+  "claim": "Builds generalized cluster expansions on pymatgen structures, fits them to first-principles energies and samples canonical and semigrand canonical ensembles by Monte Carlo.",
+  "hero": {
+    "glyph": "lattice",
+    "title": "Energy as a function of occupancy",
+    "text": "In H(sigma) = sum over beta of m_beta J_beta Theta_beta(sigma), correlation functions over symmetry-equivalent clusters multiply fitted coefficients. The function set may be a basis or redundant (Barroso-Luque 2022)."
+  },
+  "features": [
+    {
+      "glyph": "grid",
+      "title": "smol.cofe",
+      "text": "Site function sets (polynomial, trigonometric, indicator) and cluster orbits from a disordered pymatgen structure with species, charges or vacancies (Barroso-Luque 2022)."
+    },
+    {
+      "glyph": "spring",
+      "title": "Extra interaction terms",
+      "text": "An optional electrostatic pair potential for ionic structures improves training convergence. Other pair or strain terms fit the same slot (Barroso-Luque 2022)."
+    },
+    {
+      "glyph": "ensemble",
+      "title": "smol.moca",
+      "text": "Monte Carlo in canonical and semigrand canonical ensembles. Proposals, ensembles, traces and kernels are separate objects. Updates run in Cython (Barroso-Luque 2022)."
+    },
+    {
+      "glyph": "fit-curve",
+      "title": "Fitting",
+      "text": "Coefficients come from regularized linear regression, for instance lasso on the l1 norm of the ECIs with the penalty tuned by fivefold cross-validation (Xie 2024)."
+    },
+    {
+      "glyph": "network",
+      "title": "Materials Project stack",
+      "text": "The only cluster expansion package built on pymatgen, so FireWorks, atomate and database tools slot in around it (Barroso-Luque 2022)."
+    }
+  ],
+  "facts": [
+    {
+      "value": "0.5 meV",
+      "label": "RMSE per atom, Ag-Li gamma-brass expansion",
+      "source": "Xie 2024"
+    },
+    {
+      "value": "1,000,000",
+      "label": "Metropolis steps per T at or below 500 K",
+      "source": "Xie 2024"
+    }
+  ],
+  "workflow": [
+    {
+      "title": "Define the lattice model",
+      "text": "A disordered pymatgen Structure with allowed species per site, cutoffs per cluster size."
+    },
+    {
+      "title": "Compute training data",
+      "text": "Enumerate orderings, relax with DFT, collect energies as the fitting targets."
+    },
+    {
+      "title": "Fit the expansion",
+      "text": "Build the feature matrix in smol.cofe, fit ECIs by regularized regression, check CV error."
+    },
+    {
+      "title": "Sample",
+      "text": "Run canonical or semigrand Monte Carlo in smol.moca over temperature and composition."
+    },
+    {
+      "title": "Integrate",
+      "text": "Average energy, heat capacity, free energy by thermodynamic integration, ground states."
+    }
+  ],
+  "applications": [
+    {
+      "glyph": "phase-diagram",
+      "title": "Ag-Li free energies for anode-free cells",
+      "text": "Cluster expansions for BCC, FCC and gamma-brass (RMSE 3.3, 1.5 and 0.5 meV/atom), canonical MC and thermodynamic integration give free energies. Four phases stable at 200 K, two at 300 K.",
+      "source": "Xie 2024"
+    },
+    {
+      "glyph": "atoms",
+      "title": "Paddlewheel effect in Li3PS4",
+      "text": "Low-energy Li/vacancy orderings of alpha and beta Li3PS4 also came from smol cluster expansion Monte Carlo. NEB puts a 120 degree PS4 rotation above 1 eV and a Li hop in beta at 0.112 eV.",
+      "source": "Jun 2024"
+    }
+  ],
+  "sources": [
+    {
+      "label": "Barroso-Luque 2022",
+      "doi": "10.21105/joss.04504"
+    },
+    {
+      "label": "Xie 2024",
+      "doi": "10.1002/aenm.202302960"
+    },
+    {
+      "label": "Jun 2024",
+      "doi": "10.1073/pnas.2316493121"
+    }
+  ],
+  "detail": [
+    {
+      "heading": "Formalism",
+      "text": "A configuration is a string of occupation variables, one per site of an N-site supercell, and any lattice model is a sum of cluster functions over subsets of sites. smol writes a symmetry-invariant model as H(sigma) = sum over beta of m_beta J_beta Theta_beta(sigma), with crystallographic multiplicities m_beta, coefficients J_beta and correlation functions Theta_beta that average cluster product functions over orbits of symmetry-equivalent clusters. Unlike the classical cluster expansion, the set of correlation functions need not be a basis: any complete set spanning the invariant subspace, redundant or not, is allowed (Barroso-Luque 2022)."
+    },
+    {
+      "heading": "Design and fitting",
+      "text": "smol is pure Python with a few Cython components, object oriented along the mathematical abstractions, and lean in dependencies, with structure handling and regression from other packages. It is the only cluster expansion package built on pymatgen, which supplies structures and symmetries and links it to FireWorks and atomate. Against the C++ packages ATAT and CASM and the Python package icet, its stated aim is fast development of new methodology (Barroso-Luque 2022). Xie 2024 fitted coefficients by lasso with the penalty from fivefold cross-validation on 64, 134 and 96 training structures for BCC, FCC and gamma-brass Ag-Li, reaching RMSE of 3.3, 1.5 and 0.5 meV/atom with smol and sparse-lm."
+    },
+    {
+      "heading": "Sampling and thermodynamics",
+      "text": "smol.moca samples canonical and semigrand canonical ensembles with interchangeable proposal, ensemble, trace and kernel objects (Barroso-Luque 2022). Xie 2024 annealed Ag-Li cells from 10000 K to 20 K with 250,000 to 1,000,000 Metropolis steps per temperature and integrated the average energy over beta for the configurational free energy, adding Phonopy phonon terms. At 200 K four phases are stable, at 300 K only FCC Ag and the BCC solid solution. Jun 2024 drew low-energy Li/vacancy orderings of Li3PS4 from smol Monte Carlo for its local occupancy analysis."
+    }
+  ]
+}

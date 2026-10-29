@@ -1,0 +1,107 @@
+{
+  "key": "mat-equation-of-state",
+  "headline": "mat-equation-of-state: the bulk modulus from an energy-volume curve",
+  "claim": "An AtomisticSkills skill that scales a cell over a range of volumes, relaxes each point with a machine-learned potential and fits a Birch-Murnaghan equation of state via matcalc.",
+  "hero": {
+    "glyph": "fit-curve",
+    "title": "Birch-Murnaghan fit of E(V)",
+    "text": "By default the potential relaxes 11 volumes spanning linear strains of plus or minus 10%. matcalc fits energy against volume to the Birch-Murnaghan form. Its minimum gives V0 and E0, its curvature B0 in GPa."
+  },
+  "features": [
+    {
+      "glyph": "neural",
+      "title": "Energy-only potentials",
+      "text": "The skill loads MACE, MatGL or FAIRChem. Only total energies enter the fit, so MPtrj models work, but the skill prefers OMAT or MatPES models such as MACE-OMAT-0-small."
+    },
+    {
+      "glyph": "arrow-cycle",
+      "title": "Two relaxation stages",
+      "text": "--relax_structure relaxes ions and cell first, so the scan is centred on the model's own V0. matcalc then relaxes every strained point, cell shape free at fixed volume."
+    },
+    {
+      "glyph": "code",
+      "title": "Inputs and outputs",
+      "text": "Input is a relaxed CIF or POSCAR. eos_results.json holds B0 in GPa, V0 in A^3, E0 in eV and the R^2 of the fit. energies_volumes.dat holds the scan for refitting."
+    },
+    {
+      "glyph": "search",
+      "title": "What moves B0",
+      "text": "The default fmax of 0.1 eV/A is loose for a cell relaxation. A pre-relaxation that stops early shifts the scan window and B0. The skill advises 0.02 to 0.05 eV/A for B0."
+    }
+  ],
+  "facts": [
+    {
+      "value": "11",
+      "label": "strain points in the default scan",
+      "source": "mat-equation-of-state SKILL.md"
+    },
+    {
+      "value": "10%",
+      "label": "default maximum linear strain, volume (1+e)^3 V0",
+      "source": "mat-equation-of-state SKILL.md"
+    },
+    {
+      "value": "96.43 GPa",
+      "label": "Si bulk modulus, MACE-OMAT-0-small, 7 points",
+      "source": "Si example README"
+    }
+  ],
+  "workflow": [
+    {
+      "title": "Choose a potential",
+      "text": "Pick an OMAT or MatPES model and the mlip or fairchem environment through venv/run."
+    },
+    {
+      "title": "Relax the input cell",
+      "text": "calculate_eos.py relaxes ions and cell vectors so the scan centres on the model's V0."
+    },
+    {
+      "title": "Scan the volumes",
+      "text": "--n_points 11 and --max_abs_strain 0.1 set the scan. Each strained cell is relaxed."
+    },
+    {
+      "title": "Fit and report",
+      "text": "The Birch-Murnaghan fit writes B0, V0, E0 and R^2 to eos_results.json."
+    }
+  ],
+  "applications": [
+    {
+      "glyph": "crystal",
+      "title": "Diamond Si with MACE-OMAT-0-small",
+      "text": "Seven points at plus or minus 8% give B0 = 96.43 GPa against about 98 GPa measured, V0 = 39.99 A^3 for the two-atom cell (a = 5.426 A against 5.431 A) and R^2 = 0.999988.",
+      "source": "Si example README"
+    }
+  ],
+  "sources": [
+    {
+      "label": "AtomisticSkills README",
+      "url": "https://github.com/learningmatter-mit/AtomisticSkills"
+    },
+    {
+      "label": "mat-equation-of-state SKILL.md",
+      "url": "https://github.com/learningmatter-mit/AtomisticSkills/blob/main/skills/mat-equation-of-state/SKILL.md"
+    },
+    {
+      "label": "Si example README",
+      "url": "https://github.com/learningmatter-mit/AtomisticSkills/blob/main/skills/mat-equation-of-state/examples/Si/README.md"
+    },
+    {
+      "label": "calculate_eos.py",
+      "url": "https://github.com/learningmatter-mit/AtomisticSkills/blob/main/skills/mat-equation-of-state/scripts/calculate_eos.py"
+    }
+  ],
+  "detail": [
+    {
+      "heading": "A relaxed scan fitted to Birch-Murnaghan",
+      "text": "calculate_eos.py hands the structure and the potential to matcalc's EOSCalc with n_points and max_abs_strain. The strain is linear, so the target volumes are (1+e)^3 times V0 for e between minus and plus 0.1 by default, despite matcalc's docstring calling it volumetric. matcalc relaxes every strained point. With allow_shape_change on (matcalc 0.5 or later) the cell shape relaxes at constant volume as well, which is the E(V) a Birch-Murnaghan fit assumes. Symmetry forbids a shape change in cubic cells, so there the flag changes nothing. For anisotropic cells a frozen shape overestimates B0."
+    },
+    {
+      "heading": "Numerical sensitivity of the fit",
+      "text": "The pre-relaxation and the per-point relaxations share one fmax, 0.1 eV/A by default. The SKILL.md calls this loose for a cell relaxation and asks for 0.02 to 0.05 eV/A when B0 matters, since a pre-relaxation that stops early moves the whole scan window. V0 from the fit is far less sensitive than B0. The Si example with seven points at plus or minus 8% reaches R^2 = 0.999988 and B0 = 96.43 GPa against about 98 GPa measured, an error the README puts near 2%."
+    },
+    {
+      "heading": "Interfaces and output files",
+      "text": "matcalc exposes the Birch-Murnaghan fit as bulk_modulus_bm and r2_score_bm but not the fitted v0 and e0, and its volume and energy keys describe the relaxed input cell. The script therefore refits the scan with pymatgen's BirchMurnaghan and reads v0 and e0 off the fit. For diamond Si at plus or minus 8% strain the relaxed-cell keys lie 0.88 A^3 and 3 meV away from that minimum. The scan itself is saved to energies_volumes.dat and repeated under energy_volume_curve in eos_results.json. The skill runs in the mlip environment for MACE and MatGL and in fairchem for FairChem or UMA."
+    }
+  ]
+}
