@@ -1002,7 +1002,7 @@ def _verify_strict(paths, package):
         assert command[:5] == ["lake", "--no-build", "env", "lean", "-j2"]
         assert kwargs["env"]["LEAN_NUM_THREADS"] == "2"
         assert kwargs["env"]["MATHLIB_NO_CACHE_ON_UPDATE"] == "1"
-        assert kwargs["timeout"] == 120
+        assert kwargs["timeout"] == verifier._probe_timeout()
         return real_run([*command[:5], "-DwarningAsError=true", *command[5:]], **kwargs)
 
     verifier.subprocess = SimpleNamespace(run=strict_run, TimeoutExpired=subprocess.TimeoutExpired)

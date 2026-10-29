@@ -16,9 +16,27 @@ from collections.abc import Iterable
 from pathlib import Path, PurePosixPath
 
 _IDENTIFIER = r"(?:[^\W\d]|_)[\w']*(?:\.(?:[^\W\d]|_)[\w']*)*"
-# Seconds each compiler probe may take. Loading the environment alone can exceed two minutes on
-# a loaded host; OMAI_LEAN_PROBE_TIMEOUT raises the limit there without touching the audit.
-_TIMEOUT_SECONDS = int(os.environ.get("OMAI_LEAN_PROBE_TIMEOUT", "120"))
+_DEFAULT_TIMEOUT_SECONDS = 120
+
+
+def _probe_timeout() -> int:
+    """Seconds each compiler probe may take, read when the probe starts.
+
+    The default is 120. Loading the Lean environment alone can exceed that on a loaded host, so
+    OMAI_LEAN_PROBE_TIMEOUT (a positive integer of seconds) raises the limit there. The audit
+    itself does not change.
+    """
+    raw = os.environ.get("OMAI_LEAN_PROBE_TIMEOUT", "").strip()
+    if not raw:
+        return _DEFAULT_TIMEOUT_SECONDS
+    try:
+        seconds = int(raw)
+    except ValueError:
+        seconds = 0
+    if seconds <= 0:
+        raise ValueError(
+            f"OMAI_LEAN_PROBE_TIMEOUT must be a positive integer of seconds, got {raw!r}")
+    return seconds
 
 
 def _identifier(value: object, label: str) -> str:
@@ -90,8 +108,8 @@ def verify_compiled_contract_names(
     Each operator must name a definition; optional names on node endpoints are
     also checked. ``definition_source_path`` overrides contract ``source_path``.
     No build or evidence update is performed. Run after the caller's successful
-    umbrella build. The compiler probe has a 120-second limit by default (OMAI_LEAN_PROBE_TIMEOUT
-    overrides it, in seconds) and two threads.
+    umbrella build. The compiler probe has a 120-second limit by default and two threads.
+    OMAI_LEAN_PROBE_TIMEOUT (seconds) raises the limit on a loaded host.
     """
     package = Path(lean_package).resolve()
     imports, source_roots = _library_configuration(package)
@@ -158,7 +176,7 @@ run_cmd do
             result = subprocess.run(
                 ["lake", "--no-build", "env", "lean", "-j2", str(probe)],
                 cwd=package, text=True, capture_output=True, env=environment,
-                timeout=_TIMEOUT_SECONDS, check=False,
+                timeout=_probe_timeout(), check=False,
             )
         except (subprocess.TimeoutExpired, OSError) as error:
             raise ValueError("compiled contract name/module audit could not complete") from error

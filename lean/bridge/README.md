@@ -109,7 +109,7 @@ The audit requires every source module to be reachable with full private data;
 its probe deliberately uses non-module imports for that visibility. It rejects
 any transitive axiom outside `propext`, `Classical.choice`, `Quot.sound`
 (in particular `sorryAx`). Expanded audit counts are not counts of new formulas.
-Both compiler probes (contract names, axiom audit) stop after 120 s; `OMAI_LEAN_PROBE_TIMEOUT` (seconds) raises the limit on a host where loading the environment alone takes longer.
+Both compiler probes (contract names, axiom audit) stop after 120 s. `OMAI_LEAN_PROBE_TIMEOUT` (a positive integer of seconds) raises the limit on a host where loading the environment alone takes longer.
 
 The source-reference audit builds the mapped Physlib modules and checks each
 fully qualified declaration name and defining module in Lean's compiled
