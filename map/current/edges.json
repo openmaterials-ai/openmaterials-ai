@@ -225,7 +225,7 @@
    }
   },
   "meta": {
-   "description": "Landauer thermal conductance G(T) = (1/(2\u03c0)) \u222b \u210f\u03a9 T(\u03a9) (dn/dT) d\u03a9: the ballistic (coherent) heat conductance of a lead/junction system from its phonon transmission T(\u03a9), integrated against the derivative of the Bose-Einstein occupation n. The coherent-transport terminal observable, the Landauer sibling of the BTE / Wigner / QHGK / MD \u03ba routes. Frequency (\u03a9) enters both as the transmission's spectral argument and as the integration variable; the temperature dependence lives in \u2202n/\u2202T. MESCAL evaluates it via eskm_tools.landauer (THz in, nW/K out).",
+   "description": "Landauer thermal conductance G(T) = (1/(2\u03c0)) \u222b \u210f\u03a9 T(\u03a9) (dn/dT) d\u03a9: the ballistic (coherent) heat conductance of a lead/junction system from its phonon transmission T(\u03a9), integrated against the derivative of the Bose-Einstein occupation n. The coherent-transport terminal observable, the Landauer sibling of the BTE / Wigner / QHGK / MD \u03ba routes. Frequency (\u03a9) enters both as the transmission's spectral argument and as the integration variable; the temperature dependence lives in \u2202n/\u2202T.",
    "formula_latex": "\\mathcal{G} = \\frac{\\int\\limits_{0}^{\\infty} \\bar{\\h} \\omega \\frac{\\partial}{\\partial T} n_{BE}{\\left(\\frac{\\bar{\\h} \\omega}{T k_{B}} \\right)} {\\mathcal{T}}_{\\omega}\\, d\\omega}{2 \\pi}",
    "formula_srepr": "Equality(Symbol('\\\\mathcal{G}'), Mul(Rational(1, 2), Pow(pi, Integer(-1)), Integral(Mul(Symbol('\\\\hbar', positive=True), Symbol('\\\\omega', positive=True), Derivative(Function('n_{BE}')(Mul(Pow(Symbol('T', positive=True), Integer(-1)), Symbol('\\\\hbar', positive=True), Symbol('\\\\omega', positive=True), Pow(Symbol('k_B', positive=True), Integer(-1)))), Tuple(Symbol('T', positive=True), Integer(1))), Indexed(IndexedBase(Symbol('\\\\mathcal{T}')), Symbol('\\\\omega', positive=True))), Tuple(Symbol('\\\\omega', positive=True), Integer(0), oo))))",
    "name": "compute_conductance[transport_model=landauer]",
@@ -3243,7 +3243,7 @@
    "schemes": {}
   },
   "meta": {
-   "description": "Source: the per-frequency phonon transmission T(nu) of a lead/junction system, emitted directly by a coherent-transport code (MESCAL) from its direct mode-matching S-matrix. The coherent-transport analogue of the provided Linewidth / force constants the BTE chain reads.",
+   "description": "Source: the per-frequency phonon transmission T(nu) of a lead/junction system, emitted directly by a coherent-transport code from its mode-matching S-matrix. The coherent-transport analogue of the provided Linewidth / force constants the BTE chain reads.",
    "formula_latex": "{\\mathcal{T}}_{\\omega} = \\mathcal{T}_{provided}",
    "formula_srepr": "Equality(Indexed(IndexedBase(Symbol('\\\\mathcal{T}')), IndexedBase(Symbol('\\\\omega'))), Symbol('\\\\mathcal{T}_{provided}'))",
    "name": "provide_transmission",

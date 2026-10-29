@@ -697,18 +697,12 @@ def test_instances_bundle_32_records_all_uid_pinned():
     # 14 signed-off thermal-conductivity / mass-density values from three parsed
     # papers (kaldo-2020-barbalinardo 8, qhgk-2019-isaeva 3, esfarjani-2011 3),
     # each pinned to its node uid and carrying a verbatim, page-located quote.
-    # 83 after the MESCAL onboarding (2026-07-13): the carbon-bilayer Landauer
-    # conductance G(300 K) from the committed reference/milestoneA/conductance.dat
-    # artifact, unit nW/K converted to canonical W/K, pinned to the new
-    # ThermalConductance[transport_model=landauer] node. 84 after the composites
+    # 83 after the coherent-transport onboarding (2026-07-13): one value on the
+    # new ThermalConductance[transport_model=landauer] node. 84 after the composites
     # domain (2026-07-13): the DGEBA epoxy + 5 vol% GNP reference Nan-EMT
     # effective conductivity 1.2452 W/(m K) from the materialscodegraph tool,
     # pinned to ThermalConductivity[effective_medium=nan,orientation=random].
-    # 86 after the MESCAL bulk-Si golden evidence (2026-07-14): the ballistic
-    # transmission peak (278.983249 at 6.07824268 THz) and the acoustic
-    # staircase anchor (2.99992757 at 0.05 THz) from the committed
-    # reference/fixtures/level2_bulk_si_n8.npz artifact, both pinned to the
-    # PhononTransmission node with the eskm provenance quoted verbatim.
+    # 86 after two values on the PhononTransmission node (2026-07-14).
     # 87 after the amorphous-alloys (Lundgren) MassDensity apply (2026-07-14):
     # the a-Si fixed density 2.32 g/cm3 in the NVT ensemble, pinned to
     # MassDensity, the one uncurated own-result value from that parse (its
@@ -725,10 +719,11 @@ def test_instances_bundle_32_records_all_uid_pinned():
     # instances whose mesh-only conditions leave the value unreproducible.
     # 93 after the Hou 2025 apply (2026-10-05): the UPS work functions of
     # pristine and oxygen-plasma-treated MoS2, two measurements on WorkFunction.
+    # 90 after the three coherent-transport values were removed (2026-10-29).
     from omai.map_data import build_instances
 
     insts = build_instances()
-    assert len(insts) == 93
+    assert len(insts) == 90
     for it in insts:
         assert it.get("node_uid"), f"instance for {it['variable']} lacks node_uid"
 

@@ -82,7 +82,7 @@ def test_qhgk_is_hidden_state():
 
 
 def test_landauer_conductance_edge_dimension_composition():
-    """The MESCAL coherent-transport edge: compute_conductance[landauer] produces
+    """The coherent-transport edge: compute_conductance[landauer] produces
     the Landauer ThermalConductance from PhononTransmission, Frequency, and
     Temperature, and its formula PROVES the thermal_conductance dimension
     (power per temperature, W/K = M L^2 T^-3 Th^-1)."""

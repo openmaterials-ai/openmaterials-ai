@@ -7,6 +7,7 @@ id.
 
 ## Unreleased
 
+- One private code representation is removed from the public commons: its thermal-transport representation module and re-exports, its credits, release file, `index/codes` entry and `codes.json` and registry key, and its three values on `PhononTransmission` and `ThermalConductance[transport_model=landauer]` (ids `c7f4680c4137`, `0f2bfa99c572`, `a39a58b64ef2`) with their share pages under `docs/i/`. The representation count moves from 34 to 33 and the value count from 93 to 90. Records 304 and 305 (`edit_meta`) drop the code name from the descriptions of `provide_transmission` and `compute_conductance[transport_model=landauer]`; both nodes and both edges stay, and no node or edge uid moves. The graph version moves from `2b27f48fbddb` to `0e140d4a8620`, and the unified lineage version from `45be98afae7c` to `f99d3395022a`. The packaged kaldo external-solve request pins the new graph version, so its `request_id` moves from `77ba6b7ef660` to `bd572a2f6a25`; its `lineage_id` is unchanged. A record whose `execution.registry` names the removed code now gives `{field: "execution.registry", kind: "code"}` as an unlisted code, the same reason as before. Removing a public module takes the minor version.
 - One Lean package. The Lean 4.31 package in `lean/` (pinned to Physlib
   a74414af) is removed, with its generators `omai.lean_identities` and
   `omai.lean_units` and the `lean.yml` workflow. It held five-base node
@@ -80,22 +81,9 @@ id.
 Every consumer pins `openmaterials-ai==0.4.0`. No id changes: the map, its
 operators and graph_version (baf99346) are unchanged.
 
-- `meskal`: the release's `license_source` and the code's credits say the
-  source repository is not public, and the credits `url` is null; they cited
-  a repository and a page that are not public. The licence read at v1.1.0
-  (BSD-3-Clause) is unchanged. Release entries stay append-only: an entry's
-  `license_source` text may now be corrected, while `version`, `tag`,
-  `commit`, `released` and `spdx` never change.
-- The `mescal` representation is removed (`docs/data/codes.json` and
-  `registry.json` lose the key; `index/codes/mescal.json` is deleted): MESCAL
-  is MESKAL's former name and `meskal` maps the same two nodes. `mescal` is an
-  alias of `meskal`, so `release_check` resolves an `execution.registry` row
-  naming it against MESKAL's releases (a null-version row with a digest is now
-  reported), and `private_reasons` gives
-  `{field: "execution.registry", kind: "code"}` (public before). The three
-  MESCAL values keep their ids. Removed API:
-  `omai.thermal_transport.representation.mescal`, the `MESCAL_*` names and
-  `CODE_CREDITS["mescal"]`; this takes the minor version.
+- Release entries stay append-only: an entry's `license_source` text may
+  now be corrected, while `version`, `tag`, `commit`, `released` and `spdx`
+  never change.
 - `omai.cure_kinetics.evaluate`: `cure_conversion` evaluates
   kamal_cure_conversion as its own integral (Gauss-Legendre in
   s = ln(alpha / (1 - alpha)) and a Newton root, no time step; other rate laws
@@ -123,13 +111,12 @@ operators and graph_version (baf99346) are unchanged.
 
 Every consumer pins `openmaterials-ai==0.3.1`.
 
-- `meskal` is a private code: its release file carries `"visibility":
+- One code is marked private: its release file carries `"visibility":
   "private"`, since its source has no public repository, and `registry.json`
-  (shipped as `omai/data/registry.json`), `docs/data/codes.json` and
-  `index/codes/meskal.json` carry the same key. A record whose
-  `execution.registry` names it gives
-  `{field: "execution.registry", kind: "code"}`: a MESKAL record with no
-  other private evidence, public under 0.3.0, is now private. The site reads
+  (shipped as `omai/data/registry.json`) and `docs/data/codes.json` carry
+  the same key. A record whose `execution.registry` names it gives
+  `{field: "execution.registry", kind: "code"}`: such a record with no other
+  private evidence, public under 0.3.0, is now private. The site reads
   the live registry; a consumer with a bundled 0.3.0 registry disagrees with
   it until it takes 0.3.1. No id changes.
 - `render_interface_conductance` documents `lead_length_nm` as side A's length
@@ -346,7 +333,7 @@ No lineage id and no vector id changes. These map and record ids changed since
   reports what a lineage cites.
 - Authored code releases (docs/data/releases/<representation>.json,
   `{aliases, releases}`): gpumd 3.9.5, kaldo 2.2.1, lammps 2025.7.22.4.0 and
-  2025.7.22.5.0, meskal 1.1.0, phono3py 4.4.0, qe qe-7.5 (alias
+  2025.7.22.5.0, phono3py 4.4.0, qe qe-7.5 (alias
   `quantum-espresso`), qe-d3q q-e-7.5. `omai.evidence.code_releases` reads
   them. The release check, `omai.lineages.release_check(execution,
   codes=None)`, reports the `execution.registry` rows that resolve to no
@@ -378,8 +365,8 @@ No lineage id and no vector id changes. These map and record ids changed since
   `WorkFunction`, `ElectronAffinity`, `ProgrammingPulseEnergy`, `SetVoltage`
   and `RetentionTime`, and ten edges. `MigrationBarrier` joins the materials
   domain.
-- Representations: meskal (MESKAL 1.1.0, eighteen thermal-transport nodes),
-  qe-d3q (D3Q and thermal2), and an ev.x `BulkModulus` row on qe.
+- Representations: qe-d3q (D3Q and thermal2) and an ev.x `BulkModulus` row
+  on qe.
 - `canonical_uid` canonicalizes a partially occupied cell, naming such a site
   by its species and occupancies to 5 decimals (0.1.3 raised on it).
 

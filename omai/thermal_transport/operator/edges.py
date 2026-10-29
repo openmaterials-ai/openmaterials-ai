@@ -964,8 +964,8 @@ compute_kappa_qhgk = Operator(
 
 
 # Coherent phonon transport (Landauer). PhononTransmission is a source-tier
-# observable a coherent-transport code (MESKAL) emits directly from its
-# lead/junction S-matrix; like the other source nodes (Potential, Temperature,
+# observable a coherent-transport code emits directly from its lead/junction
+# S-matrix; like the other source nodes (Potential, Temperature,
 # ForceConstants) it is produced by a nullary provide_ edge. The Landauer
 # conductance then integrates it against the Bose-Einstein energy window.
 _T_trans = sp.IndexedBase(r"\mathcal{T}")
@@ -978,8 +978,8 @@ provide_transmission = Operator(
     formula=sp.Eq(_T_trans[_omega], _T_trans_provided),
     description=(
         "Source: the per-frequency phonon transmission T(nu) of a lead/junction "
-        "system, emitted directly by a coherent-transport code (MESCAL) from its "
-        "direct mode-matching S-matrix. The coherent-transport analogue of the "
+        "system, emitted directly by a coherent-transport code from its "
+        "mode-matching S-matrix. The coherent-transport analogue of the "
         "provided Linewidth / force constants the BTE chain reads."
     ),
 )
@@ -1018,8 +1018,7 @@ compute_conductance_landauer = Operator(
         "Bose-Einstein occupation n. The coherent-transport terminal observable, "
         "the Landauer sibling of the BTE / Wigner / QHGK / MD κ routes. Frequency "
         "(Ω) enters both as the transmission's spectral argument and as the "
-        "integration variable; the temperature dependence lives in ∂n/∂T. MESCAL "
-        "evaluates it via eskm_tools.landauer (THz in, nW/K out)."
+        "integration variable; the temperature dependence lives in ∂n/∂T."
     ),
 )
 

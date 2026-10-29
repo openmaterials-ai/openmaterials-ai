@@ -212,7 +212,7 @@ console.log(JSON.stringify({titles, quotes: recs.map(r => Sources.parts(r.source
   conds: recs.map(r => Sources.condText(r.conditions)), methods: recs.map(r => Sources.methodLine(r, codes)),
   ptse2: Sources.condText(one('457f936b93d9').conditions), si: Sources.condText(one('f735a05c14db').conditions),
   conformance: Sources.methodLine(one('f64affbf549a'), codes),
-  precision: Sources.condText(one('c7f4680c4137').conditions),
+  precision: Sources.condText({precision: 'frozen reference output (reference commit 0123abcd); the solver reproduces it on the CPU complex128 path (source of truth; GPU complex64 is the fast path)'}),
   ethanol: [...new Set(Sources.groups(recs)['atomisticskills-chem-bond-dissociation-ethanol'].map(r => Sources.methodLine(r, codes)))],
   name: nodeName('ThermalConductivity[bte_solver=direct_inverse]'),
   labels: [].concat(...agreement.groups.map(g => g.members.map(m => label(m)))),
@@ -244,7 +244,7 @@ def test_sources_take_their_citations_and_print_plain_words():
     assert got["si"].startswith("T 300 K · ")
     assert not [c for c in got["conds"] if "unstated" in c or re.search(r"\b[0-9a-f]{64}\b", c)]
     assert got["conformance"].endswith(" 2.2.1 run of Si with the Tersoff potential")
-    assert "precision = frozen eskm reference output; MESCAL reproduces it on the CPU complex128 path" in got["precision"]
+    assert "precision = frozen reference output; the solver reproduces it on the CPU complex128 path" in got["precision"]
     assert "commit" not in got["precision"] and "source of truth" not in got["precision"]
     assert got["ethanol"] == ["Computed with MACE-OFF23-small"], "one line per distinct method"
     assert not [m for m in got["methods"] if ".json" in m], "no repo paths in a method line"
@@ -267,5 +267,5 @@ def test_the_home_names_codes_that_ran_values():
     named = re.search(r"Values come from published papers and from runs of ([^.<]+)\.", HOME).group(1)
     alias = {a: rep for rep, e in codes.items() for a in next(iter(e.values())).get("aliases", [])}
     ran |= {alias[k] for k in ran if k in alias}
-    for key in ("kaldo", "phono3py", "qe", "meskal", "xtb"):
+    for key in ("kaldo", "phono3py", "qe", "xtb"):
         assert key in ran and next(iter(codes[key].values()))["name"] in named, key

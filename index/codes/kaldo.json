@@ -1,31 +1,13 @@
 {
  "representation": "kaldo",
- "lineage_version": "45be98afae7c2813f40dabc9996ac11c7ab4257172bd72f31c69a52a62798e1a",
- "map_version": "2b27f48fbddbf744f9098d169ed290cf034274d63b732bdb6420ee8963bf3bce",
+ "lineage_version": "f99d3395022a5076089f844bdf413301aaf08b28362f8b85fc673f36d9154023",
+ "map_version": "0e140d4a86202a7e315ef1ef3e11b083106866cc41545ec97003ecae562712cc",
  "covers": [
   {
    "node": "BareDynamicalMatrix",
    "uid": "e62e58716111fdc1dff24d18e75c70904cbb07ce6e0025e24fcdac8c4ed0a53d",
    "api": "HarmonicWithQ(q)._dynmat_fourier",
    "unit": null
-  },
-  {
-   "node": "BornCharges",
-   "uid": "438f0314dee5f9e98d88e4a7ba4425ef0edd207605338b318340da27bf28b2a4",
-   "api": "atoms.info['born_charges']",
-   "unit": "dimensionless"
-  },
-  {
-   "node": "CumulativeKappa[wrt=mfp]",
-   "uid": "b6a79d756cf45fc64a3a07feb9e46c7372f398b3ee54806bf1c9903d8a42039f",
-   "api": "Conductivity.cumulative_conductivity_per_mfp",
-   "unit": "W_per_m_per_K"
-  },
-  {
-   "node": "CumulativeKappa[wrt=omega]",
-   "uid": "55eaa32f15db94d55448456fb26f1c3ecaafcc9a3da2947f1615258c492542ef",
-   "api": "Conductivity.cumulative_conductivity_per_omega",
-   "unit": "W_per_m_per_K"
   },
   {
    "node": "DielectricTensor",
@@ -181,24 +163,6 @@
    "node": "ThermalConductivity[transport_model=qhgk]",
    "uid": "8932e3cbadef74a82802b43fd1d25328cb40e6136c90df3b6a4a998e77f9567b",
    "api": "Conductivity(method='qhgk').conductivity",
-   "unit": "W_per_m_per_K"
-  },
-  {
-   "node": "ThermalConductivity[transport_model=wigner]",
-   "uid": "35e6000d8a0f2e4572e667befbd4cd5a8c6005fa8f6ef08791b6879c77baba64",
-   "api": "Conductivity(method='wigner').conductivity",
-   "unit": "W_per_m_per_K"
-  },
-  {
-   "node": "ThermalConductivity[transport_model=wigner_coherences]",
-   "uid": "7f8d407ef3f36290c7f8e385cddb4a06a3c1bf34563f1df35ded2bb532e69fa4",
-   "api": "Conductivity(method='wigner').coherences_conductivity",
-   "unit": "W_per_m_per_K"
-  },
-  {
-   "node": "ThermalConductivity[transport_model=wigner_populations]",
-   "uid": "3f837e061bf37d1ad104455abad3b9bd3d8bb16048a656977c2488fd3c4bd521",
-   "api": "Conductivity(method='wigner').populations_conductivity",
    "unit": "W_per_m_per_K"
   },
   {
