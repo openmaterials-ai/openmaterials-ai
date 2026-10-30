@@ -159,7 +159,7 @@
   <button class="btn btn--ghost btn--sm" id="zoomOut" type="button" aria-label="Zoom out">&minus;</button>
   <button class="btn btn--ghost btn--sm" id="zoomIn" type="button" aria-label="Zoom in">+</button>
   <button class="btn btn--secondary btn--sm" id="fitBtn" type="button">Fit</button>
-  <button class="btn btn--secondary btn--sm" id="copylink" type="button" aria-label="Copy link to this view">Copy link</button>
+  <button class="btn btn--secondary btn--sm" id="copylink" type="button" aria-label="Copy a share link to the lit quantities, or a link to this view when none are lit">Share</button>
   <button class="btn btn--secondary btn--sm" id="embedBtn" type="button" aria-label="Copy an embed snippet for this view">Embed</button>
 </div>
 <div id="banner" class="notice"></div>
@@ -176,7 +176,7 @@
   <span><i class="sw hid"></i>Hidden</span>
   <span><i class="sw param"></i>Parameter</span>
 </div>
-<p class="caption" id="caption">Select a quantity to see its formula, what it is built from, what it feeds, and the codes that compute it.</p>
+<p class="caption" id="caption">Select a quantity to see its formula, what it is built from, what it feeds, and the codes that compute it. Shift-click to pick several quantities, then press Share for a link to them.</p>
 <a class="embed-out" id="embedOut" href="../map/" target="_top">Open the full map</a>
 <div class="om-panel" id="panel" role="complementary" aria-label="Map selection and formal references" tabindex="-1"></div>
 </div>
@@ -536,10 +536,43 @@ function focusNode(id){
   vp.querySelectorAll('.edge').forEach(el=>{ const ab=el.dataset.edge.split('>>'); const inc=(ab[0]===id||ab[1]===id); el.classList.toggle('dim', !inc); el.classList.toggle('hot', inc); });
 }
 function clearSel(){
+  picked.clear();
   depth='expanded'; panelEl.style.display='none';
   activeCode=null; codeFilter.value=''; lastFocus=null; lastAnchor=null;
   applyDepth();
   syncHash(null);
+}
+// Shift-click picks quantities one by one; the pick is lit like a code and Share links to it.
+const picked=new Set();
+function togglePick(id){
+  if(picked.has(id)) picked.delete(id); else picked.add(id);
+  if(!picked.size){ clearSel(); return; }
+  activeCode=null; codeFilter.value=''; panelEl.style.display='none'; captionEl.hidden=true;
+  depth='focused'; clearDim();
+  vp.querySelectorAll('.node').forEach(el=>{ el.classList.toggle('dim', !picked.has(el.dataset.id)); el.classList.toggle('sel', picked.has(el.dataset.id)); });
+  vp.querySelectorAll('.edge').forEach(el=>{ const ab=el.dataset.edge.split('>>'); const on=picked.has(ab[0])&&picked.has(ab[1]); el.classList.toggle('dim', !on); el.classList.toggle('hot', on); });
+  mapStatus.textContent=picked.size+(picked.size===1?' quantity':' quantities')+' picked. Share copies a link to them.';
+}
+// What Share links to: every quantity lit on the map now (a code, a quantity and its neighbors, an operator, a pick)
+function litIds(){ return depth==='focused' ? [...new Set([...vp.querySelectorAll('.node:not(.dim)')].map(el=>el.dataset.id))] : []; }
+// share.js and the latest snapshot load once, in the background, so Share can write the clipboard inside
+// the click (WebKit drops the user gesture across awaits).
+let shareKit=null, shareKitLoading=null;
+function loadShareKit(){   // memoizes success only, so a failed fetch is retried on the next Share
+  return shareKit ? Promise.resolve(shareKit) : (shareKitLoading=shareKitLoading||(async()=>{
+    const S=await import('../assets/share.js');
+    const index=await (await fetch('../data/v/index.json')).json();
+    const snap=await (await fetch('../data/v/'+index.latest+'.json')).json();
+    return (shareKit={S,index,snap});
+  })().catch(()=>null).finally(()=>{ shareKitLoading=null; }));
+}
+loadShareKit();
+function shareLink(kit){
+  const ids=litIds(); if(!kit||!ids.length) return null;
+  const known=ids.filter(id=>kit.snap.nodes.some(n=>n.id===id)); if(!known.length) return null;
+  const url=kit.S.shareURL(kit.index.latest, kit.S.encode(kit.snap, known));
+  fetch(url+'.png',{mode:'no-cors'}).catch(()=>{});   // draw the card now, before the link is posted
+  return url;
 }
 window.navTo=function(id){ const n=nodeById[id]; if(n) selectNode(n); };
 function chip(id){ return '<button type="button" class="chip" onclick="navTo(\''+attr(id).replace(/'/g,"&#39;")+'\')">'+(symHtml[id]||esc(id))+'</button>'; }
@@ -551,6 +584,7 @@ function mappedByHtml(id){
 }
 function selectNode(node){
   if(!node) return;
+  picked.clear();
   captionEl.hidden=true;
   const id=node.id; focusNode(id);
   const ins=parents[id]||[], outs=children[id]||[];
@@ -607,6 +641,7 @@ function selectEdge(key, op){
 // Formal references are navigation metadata; they never become graph edges.
 function selectOperator(id){
   const row=formulaBindings.operators[id]; if(!row) return;
+  picked.clear();
   captionEl.hidden=true; depth='focused'; clearDim();
   const related=new Set(row.inputs.concat(row.outputs));
   vp.querySelectorAll('.node').forEach(el=>{ el.classList.toggle('dim',!related.has(el.dataset.id)); el.classList.toggle('sel',row.outputs.includes(el.dataset.id)); });
@@ -677,21 +712,26 @@ function applyHash(){
   selectNode(nodeById[id]); fitTo(neighborhood(id),id);
 }
 window.addEventListener('hashchange', applyHash);
-document.getElementById('copylink').addEventListener('click', function(){
-  const btn=this, url=location.href;
-  const done=function(){ btn.textContent='Copied'; setTimeout(function(){ btn.textContent='Copy link'; },1200); };
+// Share: the permanent /m/ link for what is lit, else a link to this view of the map
+document.getElementById('copylink').addEventListener('click', async function(){
+  const btn=this;
+  const url=shareLink(shareKit||await loadShareKit())||location.href;   // no snapshot or nothing lit: the view link
+  const done=function(){ btn.textContent='Copied'; setTimeout(function(){ btn.textContent='Share'; },1200); };
   if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(url).then(done,function(){ window.prompt('Copy this link:',url); }); }
   else{ window.prompt('Copy this link:',url); }
 });
 
 // ---- embed mode (EMBED is read in the shared section, before the label floor is set)
 if(EMBED){ document.body.classList.add('embed'); document.getElementById('embedOut').href=location.pathname+location.hash; }
-function embedSnippet(){
-  const u=new URL(location.href); u.searchParams.set('embed','1');
-  return '<iframe src="'+u.href+'" title="OpenMaterials map" width="100%" height="480" loading="lazy" style="border:1px solid #EBEBEB;border-radius:6px"></iframe>';
+// Embed: the readable submap of what is lit (/m/...?embed=1), else this view of the full map
+async function embedSnippet(){
+  const link=shareLink(shareKit||await loadShareKit());
+  let src=link?link+'?embed=1':null;
+  if(!src){ const u=new URL(location.href); u.searchParams.set('embed','1'); src=u.href; }
+  return '<iframe src="'+attr(src)+'" title="OpenMaterials map" width="100%" height="480" loading="lazy" style="border:1px solid #DDD7CB;border-radius:2px"></iframe>';
 }
-document.getElementById('embedBtn').addEventListener('click', function(){
-  const btn=this, s=embedSnippet();
+document.getElementById('embedBtn').addEventListener('click', async function(){
+  const btn=this, s=await embedSnippet();
   const done=function(){ btn.textContent='Copied'; setTimeout(function(){ btn.textContent='Embed'; },1200); };
   if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(s).then(done,function(){ window.prompt('Copy this embed code:',s); }); }
   else{ window.prompt('Copy this embed code:',s); }
@@ -705,7 +745,7 @@ document.querySelector('.view-switch').addEventListener('click', e=>{
 
 // click routing
 svg.addEventListener('click', e=>{ if(moved)return;
-  const nd=e.target.closest('.node'); if(nd){ selectNode(nodeById[nd.dataset.id]); return; }
+  const nd=e.target.closest('.node'); if(nd){ if(e.shiftKey) togglePick(nd.dataset.id); else selectNode(nodeById[nd.dataset.id]); return; }
   const ed=e.target.closest('.edge'); if(ed){ selectEdge(ed.dataset.edge, ed.dataset.op); return; }
   const bh=e.target.closest('.bh'); if(bh){ showTier(+bh.parentNode.dataset.band); return; }
   clearSel();
@@ -738,7 +778,7 @@ function renderCodeBar(){ Object.keys(codesData).sort().forEach(code=>{ const o=
 codeFilter.addEventListener('change', function(){ if(this.value) toggleCode(this.value); else if(activeCode) toggleCode(activeCode); });
 function toggleCode(code){
   if(activeCode===code){ activeCode=null; codeFilter.value=''; depth='expanded'; applyDepth(); return; }
-  activeCode=code; codeFilter.value=code;
+  activeCode=code; codeFilter.value=code; picked.clear();
   const set=new Set(Object.keys(codesData[code]||{}));
   depth='focused'; clearDim(); panelEl.style.display='none';
   vp.querySelectorAll('.node').forEach(el=> el.classList.toggle('dim', !set.has(el.dataset.id)));

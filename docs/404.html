@@ -12,12 +12,13 @@
 <!-- GitHub Pages serves this file for every unknown path. Until the site Worker is routed on the
      domain, the short links the site hands out are forwarded here, before paint, to the pages that
      already resolve them: /l/<id> and /l/<scheme:ref>/<id> to the datasheet, /s/<code> to the
-     playground's stored set. -->
+     playground's stored set, /m/<snapshot>/<selection> to the share page. -->
 <script>(function(){try{var p=location.pathname,m,t;
 if(m=p.match(/^\/l\/([0-9a-f]{8,64})\/?$/i))t='/play/#id='+m[1].toLowerCase();
 else if(m=p.match(/^\/l\/[a-z][a-z0-9+.-]*:[^/]+\/([0-9a-f]{8,64})\/?$/i))t='/play/#id='+m[1].toLowerCase();
 else if(m=p.match(/^\/s\/([1-9A-HJ-NP-Za-km-z]{9})\/?$/))t='/play/#s='+m[1];
-if(t){document.documentElement.dataset.forward='play';location.replace(t);}}catch(e){}})();</script>
+else if(m=p.match(/^\/m\/([0-9a-f]{8,64})\/((?:[0-9a-f]{2})+)\/?$/))t='/share/'+(location.search||'')+'#'+m[1]+'/'+m[2];
+if(t){document.documentElement.dataset.forward=t.indexOf('/share/')===0?'share':'play';location.replace(t);}}catch(e){}})();</script>
 <script>try{const t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch{}</script>
 <link rel="preload" href="/assets/fonts/newsreader-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/jetbrains-mono-latin.woff2" as="font" type="font/woff2" crossorigin>

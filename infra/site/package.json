@@ -1,0 +1,12 @@
+{
+  "name": "openmaterials-site-worker",
+  "private": true,
+  "type": "module",
+  "description": "The openmaterials.ai site Worker. npm ci installs resvg for the share card and wrangler for deploys.",
+  "dependencies": {
+    "@resvg/resvg-wasm": "2.6.2"
+  },
+  "devDependencies": {
+    "wrangler": "4.150.0"
+  }
+}

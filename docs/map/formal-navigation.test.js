@@ -33,7 +33,7 @@ function harness() {
     esc:FB.esc,attr:FB.esc,tex:s=>FB.esc(s),chip:id=>'<button>'+id+'</button>',
     fitTo:(ids,anchor)=>calls.push({type:'fit',ids,anchor}),
     selectNode:node=>calls.push({type:'node',id:node.id}),
-    neighborhood:id=>[id],toggleCode:()=>{},};
+    neighborhood:id=>[id],toggleCode:()=>{},picked:new Set(),};
   vm.createContext(context);new vm.Script(handlers).runInContext(context);
   return {context,elements,calls,nodeElements,formalData};
 }
