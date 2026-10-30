@@ -22,7 +22,7 @@ def test_page_contract():
     assert "<!--share-meta-->" in s
     assert 'from "/assets/share.js"' in s and 'from "/assets/submap.js"' in s
     assert "<noscript>" in s
-    assert "—" not in s
+    assert "\u2014" not in s
     for line in submap.CSS.strip().splitlines():
         assert line.strip() in s, line
 
