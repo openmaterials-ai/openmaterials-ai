@@ -4,7 +4,7 @@
 version 1, request/lineage hashing, ordered node identities, and execution
 metadata's exclusion from identity are unchanged.
 
-This API ships from openmaterials-ai 0.5.0. The 0.4.0 wheel does not include it.
+This API ships from openmaterials-ai 0.5.0, on PyPI as 0.5.1 (the same code). The 0.4.0 wheel does not include it.
 
 `build_request` and `parse_request` still return mutable dictionaries;
 `validate_request` still returns its report. Builders now detach caller-owned
