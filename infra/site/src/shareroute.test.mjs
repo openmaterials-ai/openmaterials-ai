@@ -22,14 +22,17 @@ test("a share page carries the card and oEmbed tags crawlers read", async () => 
   const body = await r.text();
   assert.match(body, /<title>kALDo \| OpenMaterials<\/title>/);
   assert.match(body, /<meta name="twitter:card" content="summary_large_image">/);
-  assert.match(body, new RegExp(`<meta property="og:image" content="https://openmaterials-site.example.workers.dev/m/${H}/${kaldo}.png">`));
+  assert.match(body, new RegExp(`<meta property="og:image" content="https://openmaterials.ai/m/${H}/${kaldo}.png">`));
+  assert.ok(!body.split("<style>")[0].includes('name="robots"'), "a code's own selection may be indexed");
+  const one = await (await get(`/m/${H}/${encode(snap, ["Temperature"])}`)).text();
+  assert.match(one.split("<style>")[0], /<meta name="robots" content="noindex">/);
   assert.match(body, /application\/json\+oembed/);
   assert.ok(!body.includes("<!--share-meta-->"));
 });
 
 test("a longer prefix gets the canonical 12-character link", async () => {
   const body = await (await get(`/m/${index.latest}/${kaldo}`)).text();
-  assert.match(body, new RegExp(`<link rel="canonical" href="https://openmaterials-site.example.workers.dev/m/${H}/${kaldo}">`));
+  assert.match(body, new RegExp(`<link rel="canonical" href="https://openmaterials.ai/m/${H}/${kaldo}">`));
 });
 
 test("bad links are refused before anything is rendered", async () => {
@@ -51,27 +54,27 @@ test("oEmbed answers a rich iframe of the embed view", async () => {
   const j = await r.json();
   assert.equal(j.type, "rich");
   assert.equal(j.width, 500);
-  assert.match(j.html, new RegExp(`src="https://openmaterials-site.example.workers.dev/m/${H}/${kaldo}\\?embed=1"`));
+  assert.match(j.html, new RegExp(`src="https://openmaterials.ai/m/${H}/${kaldo}\\?embed=1"`));
   assert.equal(j.thumbnail_width, 1200);
   assert.equal((await get(`/oembed?url=${encodeURIComponent("https://example.com/m/" + H + "/80")}`)).status, 404);
   assert.equal((await get(`/oembed?url=${u}&format=xml`)).status, 501);
 });
 
-test("a stored card is served from KV; past the daily limit the site card stands in", async () => {
-  const store = new Map();
-  const kv = { get: async (k, type) => (store.has(k) ? store.get(k) : null), put: async (k, v) => { store.set(k, v); } };
-  const e = { ...env, SHORTLINKS: kv };
-  const key = `card:${index.latest}:${kaldo}`;
-  store.set(key, new Uint8Array([137, 80, 78, 71]).buffer);
-  const r = await worker.fetch(new Request(`https://openmaterials.ai/m/${H}/${kaldo}.png`), e);
-  assert.equal(r.status, 200);
-  assert.equal(r.headers.get("content-type"), "image/png");
-  assert.match(r.headers.get("cache-control"), /immutable/);
-  const { CARDS_PER_DAY } = await import("./shareroute.js");
-  store.set(`rl:card:${new Date().toISOString().slice(0, 10)}:unknown`, String(CARDS_PER_DAY));
-  const other = encode(snap, ["Temperature"]);
-  const r2 = await worker.fetch(new Request(`https://openmaterials.ai/m/${H}/${other}.png`), e);
+test("past the render limit, or when a render fails, the site card stands in", async () => {
+  const limited = { ...env, CARD_LIMITER: { limit: async () => ({ success: false }) } };
+  const r = await worker.fetch(new Request(`https://openmaterials.ai/m/${H}/${kaldo}.png`), limited);
+  assert.equal(r.status, 302);
+  assert.match(r.headers.get("location"), /\/assets\/og\.png$/);
+  // under node the WASM bundle cannot load, so the render fails and falls back the same way
+  const r2 = await worker.fetch(new Request(`https://openmaterials.ai/m/${H}/${kaldo}.png`), env);
   assert.equal(r2.status, 302);
-  assert.match(r2.headers.get("location"), /\/assets\/og\.png$/);
-  assert.equal((await worker.fetch(new Request(`https://openmaterials.ai/m/${H}/8000.png`), e)).status, 400);
+  assert.equal((await worker.fetch(new Request(`https://openmaterials.ai/m/${H}/8000.png`), env)).status, 400);
+});
+
+test("a code the live registry no longer lists drops out of the shell", async () => {
+  const reg = JSON.parse(readFileSync(new URL("data/registry.json", DOCS)));
+  delete reg.code.kaldo;
+  const e = { ASSETS: { fetch: async (req) => (new URL(req.url).pathname === "/data/registry.json" ? Response.json(reg) : env.ASSETS.fetch(req)) } };
+  const body = await (await worker.fetch(new Request(`https://openmaterials-site.example.workers.dev/m/${H}/${kaldo}`), e)).text();
+  assert.ok(!body.includes("<title>kALDo"), "kALDo is no longer named");
 });

@@ -3,11 +3,10 @@
 // page itself is docs/share/index.html; this module only writes the meta tags crawlers read
 // (X, LinkedIn and Slack do not run JavaScript) and the oEmbed answer.
 
-import { PREFIX, encode, describe, parseShare, title } from "../../../docs/assets/share.js";
+import { PREFIX, SITE, codesOf, encode, describe, parseShare, title } from "../../../docs/assets/share.js";
 
-// New cards per IP per day; past it a link unfurls with the site's own card, so a flood of
-// made-up selections cannot fill the store.
-export const CARDS_PER_DAY = 1000;
+// Bump when the card drawing changes, so cached cards of the old drawing are not served.
+export const CARD_VERSION = 1;
 
 const PATH_RE = /^\/m\/([^/]+)\/([^/]+?)(\.png)?$/;
 
@@ -19,9 +18,10 @@ export function parseMPath(pathname) {
   return ref ? { prefix: ref.snapshot, selection: ref.selection, png: !!m[3] } : null;
 }
 
-export function shareMeta(snap, hash, ids, origin) {
+// Canonical, og:url, the card and the embed always name openmaterials.ai, also when the staging copy serves the page.
+export function shareMeta(snap, hash, ids) {
   const hex = encode(snap, ids);
-  const url = `${origin}/m/${hash.slice(0, PREFIX)}/${hex}`;
+  const url = `${SITE}/m/${hash.slice(0, PREFIX)}/${hex}`;
   return {
     title: `${title(snap, ids)} | OpenMaterials`,
     name: title(snap, ids),
@@ -29,12 +29,13 @@ export function shareMeta(snap, hash, ids, origin) {
     url,
     image: `${url}.png`,
     embed: `${url}?embed=1`,
+    index: codesOf(snap, ids).length > 0,  // only a code's own selection is worth a search result
   };
 }
 
 const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
-export function shellHTML(template, meta, origin) {
+export function shellHTML(template, meta) {
   const tags = [
     `<meta name="description" content="${esc(meta.description)}">`,
     `<link rel="canonical" href="${esc(meta.url)}">`,
@@ -47,12 +48,13 @@ export function shellHTML(template, meta, origin) {
     `<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">`,
     `<meta property="og:image:alt" content="Submap of ${esc(meta.name)} on the OpenMaterials map, with the selected quantities in their tiers.">`,
     `<meta name="twitter:card" content="summary_large_image">`,
-    `<link rel="alternate" type="application/json+oembed" href="${esc(`${origin}/oembed?url=${encodeURIComponent(meta.url)}&format=json`)}" title="${esc(meta.title)}">`,
+    ...(meta.index ? [] : [`<meta name="robots" content="noindex">`]),
+    `<link rel="alternate" type="application/json+oembed" href="${esc(`${SITE}/oembed?url=${encodeURIComponent(meta.url)}&format=json`)}" title="${esc(meta.title)}">`,
   ].join("\n");
-  return template.replace(/<title>[^<]*<\/title>/, `<title>${esc(meta.title)}</title>`).replace("<!--share-meta-->", tags);
+  return template.replace(/<title>[^<]*<\/title>/, () => `<title>${esc(meta.title)}</title>`).replace("<!--share-meta-->", () => tags);
 }
 
-export function oembedJSON(meta, origin, maxwidth, maxheight) {
+export function oembedJSON(meta, maxwidth, maxheight) {
   const width = Math.min(Number(maxwidth) > 0 ? Number(maxwidth) : 760, 760);
   const height = Math.min(Number(maxheight) > 0 ? Number(maxheight) : 480, 480);
   return {
@@ -60,7 +62,7 @@ export function oembedJSON(meta, origin, maxwidth, maxheight) {
     type: "rich",
     title: meta.title,
     provider_name: "OpenMaterials",
-    provider_url: origin,
+    provider_url: SITE,
     width,
     height,
     html: `<iframe src="${esc(meta.embed)}" title="${esc(meta.name)} on the OpenMaterials map" width="${width}" height="${height}" loading="lazy" style="border:1px solid #DDD7CB;border-radius:2px"></iframe>`,

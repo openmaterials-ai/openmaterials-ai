@@ -23,12 +23,20 @@ f.onload = async () => {
   const w = f.contentWindow, d = w.document;
   let copied = null;
   Object.defineProperty(w.navigator, 'clipboard', { value: { writeText: async (t) => { copied = t; } } });
-  for (let i = 0; i < 100 && !d.querySelector('.node'); i++) await wait(100);
-  await wait(300);
-  for (const id of %s) d.querySelector('.node[data-id="' + id + '"]').dispatchEvent(new w.MouseEvent('click', { bubbles: true, shiftKey: true }));
+  for (let i = 0; i < 300 && !d.querySelector('.node'); i++) await wait(100);
+  // ready: the hash selection applied (something dimmed, when the link names one) and the share kit loaded
+  for (let i = 0; i < 300 && w.location.hash && !d.querySelector('.node.dim'); i++) await wait(100);
+  for (let i = 0; i < 300 && !w.eval('shareKit'); i++) await wait(100);
+  const picks = %s;
+  // the map may still settle its first view; pick until exactly the picks are lit
+  for (let i = 0; i < 20 && picks.length && d.querySelectorAll('.node.sel').length !== picks.length; i++) {
+    w.eval('clearSel()');
+    for (const id of picks) d.querySelector('.node[data-id="' + id + '"]').dispatchEvent(new w.MouseEvent('click', { bubbles: true, shiftKey: true }));
+    await wait(200);
+  }
   d.getElementById('copylink').click();
-  for (let i = 0; i < 100 && copied === null; i++) await wait(100);
-  document.getElementById('out').textContent = 'COPIED ' + copied;
+  for (let i = 0; i < 300 && copied === null; i++) await wait(100);
+  document.getElementById('out').textContent = 'COPIED ' + copied + ' KIT ' + !!w.eval('shareKit') + ' LIT ' + w.eval('litIds()').length;
 };
 </script>"""
 
@@ -63,7 +71,7 @@ def copied(server, hash_, shift_ids):
     base, pages = server
     name = f"/__harness{len(pages)}.html"
     pages[name] = HARNESS % (hash_, json.dumps(shift_ids))
-    out = subprocess.run([CHROME, "--headless=new", "--no-sandbox", "--disable-gpu", "--virtual-time-budget=20000", "--dump-dom", base + name],
+    out = subprocess.run([CHROME, "--headless=new", "--no-sandbox", "--disable-gpu", "--virtual-time-budget=60000", "--dump-dom", base + name],
                          capture_output=True, text=True, timeout=90).stdout
     m = re.search(r"COPIED ([^<\s]+)", out)
     assert m, out[-2000:]

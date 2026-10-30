@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import {
   encode, decode, parseShare, resolveSnapshot, title, codesOf, chainOf, codesCovering, relatedCodes,
-  nextSteps, describe, toLatest, shareURL,
+  nextSteps, describe, counts, withPublicCodes, toLatest, shareURL,
 } from "../../../docs/assets/share.js";
 
 const V = new URL("../../../docs/data/v/", import.meta.url);
@@ -66,7 +66,13 @@ test("codes, related codes, next steps and the description", () => {
   const steps = nextSteps(snap, ["ForceConstants[order=2]"]);
   assert.ok(steps.some((s) => s.id === "Potential" && s.via === "input"));
   assert.ok(steps.every((s) => s.id !== "ForceConstants[order=2]"));
-  assert.match(describe(snap, k), new RegExp(`^${k.length} quantities in \\d+ tiers? of the OpenMaterials map, computed by \\d+ codes?: .+ and ${k.length - 3} more\\.$`));
+  assert.match(describe(snap, k), new RegExp(`^The ${k.length} quantities kALDo represents on the map, in \\d+ tiers\\. On the OpenMaterials map: .+ and ${k.length - 3} more\\.$`));
+  assert.equal(counts(snap, ["Temperature", "Potential"]).replace(/\d+ codes/, "N codes"), "Represented in N codes.");
+  assert.equal(counts(snap, ["Potential", "ForceConstants[order=2]"]).replace(/\d+ codes/, "N codes"), "2 quantities in 1 tier, represented in N codes.");
+  assert.match(counts(snap, snap.codes.mace.nodes), / represent on the map, /);
+  const none = snap.nodes.find((n) => !Object.values(snap.codes).some((c) => c.nodes.includes(n.id)));
+  if (none) assert.equal(counts(snap, [none.id]), "1 quantity in 1 tier.");
+  assert.match(counts(snap, snap.nodes.map((n) => n.id)), /^Represented in \d+ codes\.$/);
 });
 
 test("an older snapshot maps forward by uid and through supersedes", () => {
@@ -81,4 +87,15 @@ test("an older snapshot maps forward by uid and through supersedes", () => {
   assert.deepEqual(m.renamed, [["OldTemperature", "Temperature"]]);
   assert.deepEqual(m.removed, ["Potential"]);
   assert.deepEqual(m.ids, [dos.id, "Temperature"]);
+});
+
+test("a code the live registry no longer lists as public drops out", () => {
+  const reg = JSON.parse(readFileSync(new URL("../registry.json", V)));
+  assert.deepEqual(Object.keys(withPublicCodes(snap, reg).codes), Object.keys(snap.codes));
+  const hidden = structuredClone(reg);
+  hidden.code.kaldo = { ...hidden.code.kaldo, visibility: "private" };
+  delete hidden.code.phonopy;
+  const s2 = withPublicCodes(snap, hidden);
+  assert.ok(!("kaldo" in s2.codes) && !("phonopy" in s2.codes) && "gpumd" in s2.codes);
+  assert.equal(s2.nodes, snap.nodes);
 });

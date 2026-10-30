@@ -96,13 +96,13 @@
   <section class="share-map">
     <figure class="share-fig">
       <div class="submap" id="submap"><noscript><p class="notice">This page draws the selection with JavaScript. The data is plain JSON under <a href="/data/v/index.json">data/v/</a>.</p></noscript></div>
-      <figcaption>The submap places the selected quantities in their map tiers and draws the data flow between them. Each box opens its quantity on the full map. A selection of fewer than four quantities also shows their direct inputs and outputs, drawn hollow.</figcaption>
+      <figcaption>The submap places the selected quantities in their map tiers and draws the data flow between them. Each box opens its quantity on the full map. Dashed boxes are intermediate quantities. A selection of fewer than four quantities also shows their direct inputs and outputs, drawn hollow.</figcaption>
       <a class="embed-out" id="embedOut" href="/map/" target="_top">Open on OpenMaterials</a>
     </figure>
   </section>
 
-  <section class="share-section" id="quantities" hidden><h2>The quantities</h2><p>Each entry gives the dimension and the map definition of a quantity. It also says whether a Lean declaration checks the dimension and whether physlib names the quantity.</p><ul class="qty" id="qty"></ul></section>
-  <section class="share-section" id="codes" hidden><h2>Codes that compute them</h2><p id="codesLede"></p><ul class="bars" id="bars"></ul></section>
+  <section class="share-section" id="quantities" hidden><h2>The quantities</h2><p>Each entry gives the dimension and the map definition of a quantity. It also names the physlib declaration that matches the quantity exactly, where one exists.</p><ul class="qty" id="qty"></ul></section>
+  <section class="share-section" id="codes" hidden><h2>Codes that represent them</h2><p id="codesLede"></p><ul class="bars" id="bars"></ul></section>
   <section class="share-section" id="related" hidden><h2>Related codes</h2><p>The score of another code is the number of quantities it shares with this selection divided by the number in either of the two (the Jaccard index).</p><ul class="chips" id="relatedList"></ul></section>
   <section class="share-section" id="next" hidden><h2>Quantities one edge away</h2><p>These quantities lie one edge from the selection on the map. Each link opens the selection with that quantity added.</p><div id="nextList"></div></section>
   <section class="share-section" id="about" hidden><h2>About this link</h2><p class="provenance" id="provenance"></p></section>
@@ -114,7 +114,7 @@
 import { svg } from "/assets/submap.js";
 import {
   SITE, PREFIX, encode, decode, parseShare, resolveSnapshot, shareURL, title, codesOf, codesCovering,
-  relatedCodes, nextSteps, tiersOf, toLatest,
+  relatedCodes, nextSteps, counts, withPublicCodes, toLatest,
 } from "/assets/share.js";
 
 const $ = (id) => document.getElementById(id);
@@ -124,6 +124,7 @@ const VIA_WORKER = location.pathname.startsWith("/m/");
 if (EMBED) document.body.classList.add("embed");
 // links between share pages: /m/ where the Worker serves them, /share/#... on a host without it
 const here = (h, hx) => (VIA_WORKER ? shareURL(h, hx, "") : `/share/#${h.slice(0, PREFIX)}/${hx}`);
+const NOFOLLOW = ' rel="nofollow"';
 const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
 const symHTML = (runs) => (runs || []).map(([t, lv]) => (lv ? `<${lv}>${esc(t)}</${lv}>` : esc(t))).join("");
 const tex = (latex) => {
@@ -156,23 +157,24 @@ async function main() {
   const hash = found.hash;
   let snap;
   try { snap = await getJSON(`/data/v/${hash}.json`); } catch (e) { return fail(`This page could not read snapshot ${hash.slice(0, PREFIX)}.`); }
+  // codes made private after the snapshot was frozen drop out; an unreadable registry shows no codes
+  snap = withPublicCodes(snap, await getJSON("/data/registry.json").catch(() => null));
   const sel = decode(snap, ref.selection);
   if (!sel.ok) return fail(`The selection does not fit this snapshot: ${sel.reason}.`);
   const ids = sel.ids, nodes = new Map(snap.nodes.map((n) => [n.id, n]));
   const hex = encode(snap, ids), link = shareURL(hash, hex);
-  const named = title(snap, ids), codes = codesOf(snap, ids), cover = codesCovering(snap, ids), tiers = tiersOf(snap, ids);
+  const named = title(snap, ids), codes = codesOf(snap, ids), cover = codesCovering(snap, ids);
   const openHref = codes.length ? `/map/#code=${encodeURIComponent(codes[0])}` : ids.length === 1 ? `/map/#node=${encodeURIComponent(ids[0])}` : "/map/";
 
   document.title = `${named} | OpenMaterials`;
   $("submap").innerHTML = svg(snap, ids, { mapHref: "/map/", fitUnder: 760 });
   $("embedOut").href = link;
-  if (EMBED) return;
+  if (EMBED) { $("submap").querySelectorAll("a").forEach((a) => { a.target = "_top"; }); return; }
+  if (!codes.length) document.head.insertAdjacentHTML("beforeend", '<meta name="robots" content="noindex">');
 
   $("eyebrow").textContent = `Shared map selection · snapshot ${hash.slice(0, PREFIX)} · map ${snap.map_version.slice(0, 8)}`;
   $("title").textContent = named;
-  const computed = `computed by ${plural(cover.length, "code", "codes")} on the map.`;
-  $("lede").textContent = named.startsWith(`${ids.length} quantities`) ? `Quantities ${computed}`
-    : `${plural(ids.length, "quantity", "quantities")} in ${plural(tiers.length, "tier", "tiers")}, ${computed}`;
+  $("lede").textContent = counts(snap, ids);
   $("open").href = openHref;
   $("actions").hidden = false;
   $("copy").addEventListener("click", function () { copy(link, this, "Copy link"); if (VIA_WORKER) fetch(`${location.pathname}.png`, { mode: "no-cors" }).catch(() => {}); });
@@ -190,7 +192,7 @@ async function main() {
       if (m.renamed.length) parts.push("Renamed since: " + m.renamed.map(([a, b]) => `${esc(name(snap, a))} is now ${esc(name(latest, b))}`).join(", ") + ".");
       if (m.superseded.length) parts.push("Redefined since: " + m.superseded.map(([a, b]) => `${esc(name(latest, b))} replaces ${esc(name(snap, a))}`).join(", ") + ".");
       if (m.removed.length) parts.push("Not on the latest map: " + m.removed.map((a) => esc(name(snap, a))).join(", ") + ".");
-      const there = m.ids.length ? ` <a href="${esc(here(index.latest, encode(latest, m.ids)))}">Open the same selection on the latest map</a>.` : "";
+      const there = m.ids.length ? ` <a href="${esc(here(index.latest, encode(latest, m.ids)))}"${NOFOLLOW}>Open the same selection on the latest map</a>.` : "";
       $("banner").innerHTML = `<p class="notice">This link shows the map as it was when the link was made.${there} ${parts.join(" ")}</p>`;
     } catch (e) {
       $("banner").innerHTML = `<p class="notice">This link shows the map as it was when the link was made. This page could not read the latest snapshot.</p>`;
@@ -199,7 +201,7 @@ async function main() {
 
   $("qty").innerHTML = ids.map((id) => {
     const n = nodes.get(id);
-    const flags = [n.dimension ? `dimension ${esc(n.dimension)}` : "", n.lean ? "Lean: dimension checked" : "",
+    const flags = [n.dimension ? `dimension ${esc(n.dimension)}` : "",
       ...n.physlib.map((p) => (p.url && p.url.startsWith("https://") ? `physlib: <a href="${esc(p.url)}" rel="noopener">${esc(p.name)}</a>` : `physlib: ${esc(p.name)}`))].filter(Boolean);
     return `<li><div><h3><span class="sym">${symHTML(n.sym)}</span><a href="/map/#node=${encodeURIComponent(id)}">${esc(n.name)}</a></h3>` +
       `<div class="meta">${esc(id)} · ${esc(n.tier)}</div><div class="meta">${flags.join(" · ")}</div></div>` +
@@ -208,7 +210,7 @@ async function main() {
   $("quantities").hidden = false;
 
   if (cover.length) {
-    $("codesLede").textContent = `Each bar counts how many of the ${plural(ids.length, "selected quantity", "selected quantities")} a code computes, as the commons records it.`;
+    $("codesLede").textContent = `Each bar counts how many of the ${plural(ids.length, "selected quantity", "selected quantities")} a code's representation on the map covers. A representation records that the code reads or returns a quantity, through which interface.`;
     $("bars").innerHTML = cover.map((c) => `<li><a href="/codes/${encodeURIComponent(c.key)}/">${esc(c.name)}</a>` +
       `<span class="bar" aria-hidden="true"><span style="width:${(100 * c.count / ids.length).toFixed(1)}%"></span></span><span class="n">${c.count} of ${ids.length}</span></li>`).join("");
     $("codes").hidden = false;
@@ -216,7 +218,7 @@ async function main() {
   if (codes.length) {
     const rel = relatedCodes(snap, ids, codes);
     if (rel.length) {
-      $("relatedList").innerHTML = rel.map((r) => `<li><a href="${esc(here(hash, encode(snap, snap.codes[r.key].nodes)))}">${esc(r.name)}<span class="n">${r.score.toFixed(2)}</span></a></li>`).join("");
+      $("relatedList").innerHTML = rel.map((r) => `<li><a href="${esc(here(hash, encode(snap, snap.codes[r.key].nodes)))}"${NOFOLLOW}>${esc(r.name)}<span class="n">${r.score.toFixed(2)}</span></a></li>`).join("");
       $("related").hidden = false;
     }
   }
@@ -225,10 +227,10 @@ async function main() {
     const byTier = new Map();
     for (const s of steps) { if (!byTier.has(s.tier)) byTier.set(s.tier, []); byTier.get(s.tier).push(s); }
     $("nextList").innerHTML = [...byTier].map(([t, ss]) => `<p class="tier-label">${esc(t)}</p><ul class="chips">` +
-      ss.map((s) => `<li><a href="${esc(here(hash, encode(snap, ids.concat([s.id]))))}">${esc(s.name)}<span class="n">${s.via === "input" ? "feeds it" : "follows from it"}</span></a></li>`).join("") + "</ul>").join("");
+      ss.map((s) => `<li><a href="${esc(here(hash, encode(snap, ids.concat([s.id]))))}"${NOFOLLOW}>${esc(s.name)}<span class="n">${s.via === "input" ? "feeds it" : "follows from it"}</span></a></li>`).join("") + "</ul>").join("");
     $("next").hidden = false;
   }
-  $("provenance").innerHTML = `Snapshot <a href="/data/v/${hash}.json">${hash}</a> of the OpenMaterials commons supplies this page. The snapshot was frozen when it was published, so the link shows the same page for as long as the site exists. ` +
+  $("provenance").innerHTML = `Snapshot <a href="/data/v/${hash}.json">${hash}</a> of the OpenMaterials commons supplies this page. The snapshot was frozen when it was published, so the link reads the same data for as long as the site serves it. ` +
     `The snapshot carries map version ${esc(snap.map_version)}. The hex code at the end of the link encodes the selection, one bit per quantity in snapshot order.`;
   $("about").hidden = false;
 }

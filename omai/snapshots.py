@@ -1,9 +1,10 @@
 """Share-link snapshots: the data a /m/<snapshot>/<selection> link reads, frozen under its content hash.
 
 A snapshot holds the map's quantities with their plain names and symbols already drawn, the data flow,
-the public codes, Lean and physlib status, and the uid succession from the map log. Its name is the
-sha256 of its canonical bytes, so a link made today renders the same page forever. Files under
-docs/data/v/ are written once and never rewritten; index.json lists them in first-seen order.
+the public codes, the exact physlib matches, and the uid succession from the map log. Its name is the
+sha256 of its canonical bytes, so a link made today reads the same data forever. Files under
+docs/data/v/ are written once and never rewritten. index.json lists every snapshot file on disk, so a
+merge that drops a name from the list cannot orphan a link. FORMAT numbers the schema for readers.
 
 A selection is a bitset over the snapshot's nodes in order: node 0 is the high bit of the first hex
 digit, lowercase hex, whole bytes, trailing zero bytes trimmed, at least one bit set.
@@ -21,6 +22,7 @@ from omai import submap
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "docs" / "data"
 OUT = DATA / "v"
+FORMAT = 1
 
 
 def _load(name: str):
@@ -37,12 +39,16 @@ def _succession() -> dict[str, list[str]]:
     return out
 
 
+def public(entry: dict | None) -> bool:
+    """A code enters a snapshot only with a registry entry that is public (omai.evidence's rule)."""
+    return entry is not None and entry.get("visibility", "public") == "public"
+
+
 def build_snapshot() -> dict:
     from omai.code_pages import display_name
 
     graph = _load("graph.json")
     catalog = {e["id"]: e for e in _load("catalog.json")}
-    lean = _load("lean.json")["nodes"]
     physlib = _load("physlib_crosswalk.json")["nodes"]
     registry = _load("registry.json").get("code", {})
     nodes = []
@@ -54,15 +60,16 @@ def build_snapshot() -> dict:
             "symbol": n.get("symbol") or "", "formula": n.get("formula") or "",
             "name": submap.node_name(n["id"]), "sym": [list(r) for r in runs] if runs else None,
             "dimension": cat.get("dimension"), "description": cat.get("description"),
-            "lean": n["id"] in lean,
-            "physlib": [{"name": p["name"], "module": p["module"], "url": p.get("source_url")} for p in physlib.get(n["id"]) or []],
+            "physlib": [{"name": p["name"], "module": p["module"], "url": p.get("source_url")}
+                        for p in physlib.get(n["id"]) or [] if p.get("confidence") == "exact"],
         })
     codes = {
         key: {"name": display_name(key, rep), "nodes": sorted(rep)}
         for key, rep in sorted(_load("codes.json").items())
-        if (registry.get(key) or {}).get("visibility") != "private"
+        if public(registry.get(key))
     }
     return {
+        "format": FORMAT,
         "map_version": _load("version.json")["version"],
         "tiers": [{"name": t["name"], "order": t.get("order", i)} for i, t in enumerate(graph["tiers"])],
         "nodes": nodes,
@@ -86,8 +93,9 @@ def write_snapshot(out: Path = OUT) -> str:
         f.write_bytes(b)
     idx_path = out / "index.json"
     seen = json.loads(idx_path.read_text())["snapshots"] if idx_path.exists() else []
-    if h not in seen:
-        seen.append(h)
+    on_disk = sorted(p.stem for p in out.glob("*.json") if p.name != "index.json")
+    seen = [x for x in seen if x in on_disk] + [x for x in on_disk if x not in seen and x != h]
+    seen.append(h) if h not in seen else None
     idx_path.write_text(json.dumps({"latest": h, "snapshots": seen}, indent=1) + "\n")
     return h
 

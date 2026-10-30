@@ -114,12 +114,38 @@ export function nextSteps(snap, ids, limit = 12) {
     .slice(0, limit);
 }
 
+// The counts line under a title. A code's entries on the map are its representation: they record that the
+// code reads or returns a quantity, not that it computes it, so the line says "represented".
+export function counts(snap, ids) {
+  const tiers = tiersOf(snap, ids), n = codesCovering(snap, ids).length, own = codesOf(snap, ids);
+  const inTiers = `in ${plural(tiers.length, "tier", "tiers")}`;
+  if (own.length) {
+    const names = list(own.map((k) => snap.codes[k].name));
+    return `The ${plural(ids.length, "quantity", "quantities")} ${names} ${own.length > 1 ? "represent" : "represents"} on the map, ${inTiers}.`;
+  }
+  const where = n ? `, represented in ${plural(n, "code", "codes")}` : "";
+  return title(snap, ids).startsWith(`${ids.length} quantities`)
+    ? (n ? `Represented in ${plural(n, "code", "codes")}.` : "No code on the map represents them.")
+    : `${plural(ids.length, "quantity", "quantities")} ${inTiers}${where}.`;
+}
+
 export function describe(snap, ids) {
-  const nodes = byId(snap), codes = codesCovering(snap, ids), tiers = tiersOf(snap, ids);
+  const nodes = byId(snap);
   const names = ids.slice(0, 3).map((i) => nodes.get(i).name);
   const more = ids.length > 3 ? ` and ${ids.length - 3} more` : "";
-  return `${plural(ids.length, "quantity", "quantities")} in ${plural(tiers.length, "tier", "tiers")} of the OpenMaterials map, ` +
-    `computed by ${plural(codes.length, "code", "codes")}: ${names.join(", ")}${more}.`;
+  return `${counts(snap, ids)} On the OpenMaterials map: ${names.join(", ")}${more}.`;
+}
+
+// The snapshot with only the codes the live registry still lists as public: a code made private after a
+// snapshot was frozen drops out of every page that reads it.
+export function withPublicCodes(snap, registry) {
+  const reg = (registry && registry.code) || {};
+  const codes = {};
+  for (const k of Object.keys(snap.codes)) {
+    const e = reg[k];
+    if (e && (e.visibility || "public") === "public") codes[k] = snap.codes[k];
+  }
+  return { ...snap, codes };
 }
 
 // The same quantities on a newer snapshot, matched by uid, then through the supersede chain

@@ -555,13 +555,22 @@ function togglePick(id){
 }
 // What Share links to: every quantity lit on the map now (a code, a quantity and its neighbors, an operator, a pick)
 function litIds(){ return depth==='focused' ? [...new Set([...vp.querySelectorAll('.node:not(.dim)')].map(el=>el.dataset.id))] : []; }
-async function shareLink(){
-  const ids=litIds(); if(!ids.length) return null;
-  const S=await import('../assets/share.js');
-  const index=await (await fetch('../data/v/index.json')).json();
-  const snap=await (await fetch('../data/v/'+index.latest+'.json')).json();
-  const known=ids.filter(id=>snap.nodes.some(n=>n.id===id)); if(!known.length) return null;
-  const url=S.shareURL(index.latest, S.encode(snap, known));
+// share.js and the latest snapshot load once, in the background, so Share can write the clipboard inside
+// the click (WebKit drops the user gesture across awaits).
+let shareKit=null, shareKitLoading=null;
+function loadShareKit(){   // memoizes success only, so a failed fetch is retried on the next Share
+  return shareKit ? Promise.resolve(shareKit) : (shareKitLoading=shareKitLoading||(async()=>{
+    const S=await import('../assets/share.js');
+    const index=await (await fetch('../data/v/index.json')).json();
+    const snap=await (await fetch('../data/v/'+index.latest+'.json')).json();
+    return (shareKit={S,index,snap});
+  })().catch(()=>null).finally(()=>{ shareKitLoading=null; }));
+}
+loadShareKit();
+function shareLink(kit){
+  const ids=litIds(); if(!kit||!ids.length) return null;
+  const known=ids.filter(id=>kit.snap.nodes.some(n=>n.id===id)); if(!known.length) return null;
+  const url=kit.S.shareURL(kit.index.latest, kit.S.encode(kit.snap, known));
   fetch(url+'.png',{mode:'no-cors'}).catch(()=>{});   // draw the card now, before the link is posted
   return url;
 }
@@ -706,8 +715,7 @@ window.addEventListener('hashchange', applyHash);
 // Share: the permanent /m/ link for what is lit, else a link to this view of the map
 document.getElementById('copylink').addEventListener('click', async function(){
   const btn=this;
-  let url=location.href;
-  try{ url=(await shareLink())||url; }catch(e){ /* the snapshot could not be read: the view link stands in */ }
+  const url=shareLink(shareKit||await loadShareKit())||location.href;   // no snapshot or nothing lit: the view link
   const done=function(){ btn.textContent='Copied'; setTimeout(function(){ btn.textContent='Share'; },1200); };
   if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(url).then(done,function(){ window.prompt('Copy this link:',url); }); }
   else{ window.prompt('Copy this link:',url); }
@@ -717,8 +725,8 @@ document.getElementById('copylink').addEventListener('click', async function(){
 if(EMBED){ document.body.classList.add('embed'); document.getElementById('embedOut').href=location.pathname+location.hash; }
 // Embed: the readable submap of what is lit (/m/...?embed=1), else this view of the full map
 async function embedSnippet(){
-  let src=null;
-  try{ const link=await shareLink(); if(link) src=link+'?embed=1'; }catch(e){ /* fall back to the map view */ }
+  const link=shareLink(shareKit||await loadShareKit());
+  let src=link?link+'?embed=1':null;
   if(!src){ const u=new URL(location.href); u.searchParams.set('embed','1'); src=u.href; }
   return '<iframe src="'+attr(src)+'" title="OpenMaterials map" width="100%" height="480" loading="lazy" style="border:1px solid #DDD7CB;border-radius:2px"></iframe>';
 }

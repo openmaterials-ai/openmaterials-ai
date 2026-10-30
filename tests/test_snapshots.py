@@ -18,8 +18,8 @@ def test_snapshot_is_deterministic_and_named_by_its_hash(tmp_path):
 def test_snapshot_holds_no_private_code():
     snap = build_snapshot()
     reg = json.loads((DATA / "registry.json").read_text()).get("code", {})
-    private = {k for k, v in reg.items() if v.get("visibility") == "private"}
-    assert not private & set(snap["codes"])
+    assert all(snapshots.public(reg.get(k)) for k in snap["codes"])
+    assert not snapshots.public(None) and not snapshots.public({"visibility": "private"}) and snapshots.public({})
     raw = snapshot_bytes(snap).lower()
     assert b"meskal" not in raw and b"mescal" not in raw
 
@@ -74,3 +74,32 @@ def test_selection_round_trip_and_rejections():
     over = format(1 << (8 * ((n + 8) // 8) - 1 - n), "0%dx" % (2 * ((n + 8) // 8)))
     for bad in ["", "0", "00", "ABC", "abc", over]:
         assert decode(snap, bad) is None, bad
+
+
+def test_every_snapshot_file_is_listed_and_named_by_its_hash():
+    out = DATA / "v"
+    index = json.loads((out / "index.json").read_text())
+    files = {p.stem for p in out.glob("*.json") if p.name != "index.json"}
+    assert set(index["snapshots"]) == files and len(index["snapshots"]) == len(files)
+    for h in files:
+        assert hashlib.sha256((out / f"{h}.json").read_bytes()).hexdigest() == h
+
+
+def test_a_dropped_index_entry_comes_back(tmp_path, monkeypatch):
+    h1 = write_snapshot(tmp_path)
+    real = snapshots.build_snapshot
+    monkeypatch.setattr(snapshots, "build_snapshot", lambda: {**real(), "map_version": "b"})
+    h2 = write_snapshot(tmp_path)
+    (tmp_path / "index.json").write_text(json.dumps({"latest": h2, "snapshots": [h2]}))  # a merge kept one side
+    monkeypatch.setattr(snapshots, "build_snapshot", lambda: {**real(), "map_version": "c"})
+    h3 = write_snapshot(tmp_path)
+    assert json.loads((tmp_path / "index.json").read_text())["snapshots"] == [h2, h1, h3]
+
+
+def test_snapshot_states_its_format_and_only_exact_physlib_matches():
+    snap = build_snapshot()
+    assert snap["format"] == snapshots.FORMAT == 1
+    cross = json.loads((DATA / "physlib_crosswalk.json").read_text())["nodes"]
+    for n in snap["nodes"]:
+        assert [p["name"] for p in n["physlib"]] == [p["name"] for p in cross.get(n["id"]) or [] if p.get("confidence") == "exact"]
+        assert "lean" not in n
