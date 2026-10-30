@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shared map selection | OpenMaterials</title>
+<!--share-meta-->
+<meta name="theme-color" content="#F4F1EA" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0F0E0C" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<script>try{const t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch{}</script>
+<link rel="preload" href="/assets/fonts/newsreader-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/jetbrains-mono-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/site.css">
+<link rel="stylesheet" href="/assets/vendor/katex/dist/katex.min.css">
+<style>
+  /* the submap, as on the code pages (omai/submap.py CSS; tests/test_share_page.py keeps them equal) */
+  .submap { margin: 16px 0 8px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .submap-svg { display: block; max-width: none; font-family: var(--font-serif); }
+  .submap-svg a { text-decoration: none; }
+  .submap-svg.fit { width: 100%; height: auto; }
+  .sm-col { fill: var(--surface); stroke: var(--line); }
+  .sm-tier { font: 500 11px var(--font-mono); letter-spacing: .06em; text-transform: uppercase; fill: var(--ink-2); }
+  .sm-edge { fill: none; stroke: var(--edge); stroke-width: 1.4; opacity: .8; }
+  .sm-head { fill: var(--edge); }
+  .sm-node rect { fill: var(--page); stroke: var(--accent); stroke-width: 1.4; }
+  .sm-node.sm-hid rect { stroke-dasharray: 4 3; }
+  .sm-node.sm-ctx rect { stroke: var(--line); }
+  .sm-node.sm-ctx .sm-name, .sm-node.sm-ctx .sm-sym { fill: var(--ink-2); }
+  .sm-node:hover rect, .sm-node:focus rect { fill: var(--surface-2); }
+  .sm-name { font-size: 13px; fill: var(--ink); }
+  .sm-sym { font: 400 12px var(--font-mono); fill: var(--accent); }
+  .sm-node.sm-ctx .sm-sym { fill: var(--ink-2); }
+
+  /* a shared selection: the submap first, then what the commons says about it */
+  .share-head .eyebrow { overflow-wrap: anywhere; }
+  .share-head .notice { margin-top: 16px; }
+  .frame > section.share-map { padding-block: 32px; }
+  .share-fig { margin: 0; }
+  .share-fig figcaption { margin-top: 8px; font-size: 14px; line-height: 20px; color: var(--ink-2); }
+  .share-snippet { margin: 12px 0 0; padding: 12px; overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); font: 400 12px/18px var(--font-mono); white-space: pre-wrap; overflow-wrap: anywhere; }
+  .qty { display: grid; gap: 0; margin: 16px 0 0; padding: 0; list-style: none; }
+  .qty li { max-width: none; padding: 16px 0; border-top: 1px solid var(--line); display: grid; gap: 4px 24px; grid-template-columns: minmax(0, 1fr); }
+  @media (min-width: 761px) { .qty li { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); } }
+  .qty h3 { margin: 0; font: 450 17px/24px var(--font-serif); }
+  .qty h3 a { color: var(--ink); text-decoration: none; }
+  .qty h3 a:hover { text-decoration: underline; }
+  .qty .sym { font: 400 14px/20px var(--font-mono); color: var(--accent); margin-right: 8px; }
+  .qty .meta { font: 400 12px/18px var(--font-mono); color: var(--ink-2); overflow-wrap: anywhere; }
+  .qty .meta a { color: var(--ink-2); }
+  .qty p { margin: 0; font-size: 15px; line-height: 22px; max-width: none; }
+  .qty .fx { overflow-x: auto; font-size: 14px; padding-top: 4px; }
+  .bars { display: grid; gap: 8px; margin: 16px 0 0; padding: 0; list-style: none; }
+  .bars li { max-width: none; display: grid; grid-template-columns: minmax(120px, 220px) minmax(0, 1fr) auto; gap: 12px; align-items: center; font-size: 15px; line-height: 22px; }
+  .bars a { color: var(--ink); }
+  .bar { height: 8px; background: var(--surface-2); border-radius: 1px; overflow: hidden; }
+  .bar span { display: block; height: 100%; background: var(--accent); }
+  .bars .n { font: 400 12px/18px var(--font-mono); color: var(--ink-2); }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0 0; padding: 0; list-style: none; }
+  .chips li { max-width: none; }
+  .chips a { display: inline-flex; gap: 8px; align-items: baseline; padding: 4px 10px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); color: var(--ink); text-decoration: none; font-size: 14px; line-height: 20px; }
+  .chips a:hover { background: var(--surface-2); }
+  .chips .n { font: 400 11px/16px var(--font-mono); color: var(--ink-2); }
+  .tier-label { margin: 16px 0 0; font: 500 11.5px/16px var(--font-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-2); }
+  .provenance { font-size: 14px; line-height: 20px; color: var(--ink-2); }
+  .provenance a { color: var(--ink); overflow-wrap: anywhere; }
+
+  /* ?embed=1: the submap alone, for iframes */
+  body.embed { background: var(--page); }
+  body.embed [data-site-header], body.embed [data-site-footer], body.embed .skip-link, body.embed .share-head, body.embed .share-section, body.embed .share-fig figcaption { display: none; }
+  body.embed .frame > section { padding: 12px; border: 0; }
+  .embed-out { display: none; }
+  body.embed .embed-out { display: inline-block; margin-top: 8px; font-size: 13px; line-height: 18px; color: var(--ink); }
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<div data-site-header></div>
+
+<main class="frame" id="main">
+  <header class="page-head share-head">
+    <p class="eyebrow" id="eyebrow">Shared map selection</p>
+    <h1 id="title">Loading the selection</h1>
+    <p class="lede" id="lede"></p>
+    <div id="banner"></div>
+    <div class="cta-row" id="actions" hidden>
+      <button class="btn btn--primary btn--sm" id="copy" type="button">Copy link</button>
+      <button class="btn btn--secondary btn--sm" id="embed" type="button" aria-expanded="false" aria-controls="snippet">Embed</button>
+      <a class="btn btn--secondary btn--sm" id="open" href="/map/">Open in the full map</a>
+      <a class="btn btn--secondary btn--sm" id="png" href="#" download hidden>Download PNG</a>
+    </div>
+    <pre class="share-snippet" id="snippet" hidden></pre>
+  </header>
+
+  <section class="share-map">
+    <figure class="share-fig">
+      <div class="submap" id="submap"><noscript><p class="notice">This page draws the selection with JavaScript. The data is plain JSON under <a href="/data/v/index.json">data/v/</a>.</p></noscript></div>
+      <figcaption>The selected quantities in their tiers on the map, with the data flow between them. Each box opens the quantity on the full map. When fewer than four are selected, their direct inputs and outputs are drawn hollow.</figcaption>
+      <a class="embed-out" id="embedOut" href="/map/" target="_top">Open on OpenMaterials</a>
+    </figure>
+  </section>
+
+  <section class="share-section" id="quantities" hidden><h2>The quantities</h2><p>Each with its dimension, its definition on the map, and whether a Lean declaration checks its dimension or physlib names it.</p><ul class="qty" id="qty"></ul></section>
+  <section class="share-section" id="codes" hidden><h2>Codes that compute them</h2><p id="codesLede"></p><ul class="bars" id="bars"></ul></section>
+  <section class="share-section" id="related" hidden><h2>Related codes</h2><p>Other codes ranked by the overlap of the quantities they compute with this selection (shared quantities over all quantities of either).</p><ul class="chips" id="relatedList"></ul></section>
+  <section class="share-section" id="next" hidden><h2>One step further on the map</h2><p>Quantities one edge from the selection. Each link opens this selection with that quantity added.</p><div id="nextList"></div></section>
+  <section class="share-section" id="about" hidden><h2>About this link</h2><p class="provenance" id="provenance"></p></section>
+</main>
+<div data-site-footer></div>
+<script src="/assets/site.js"></script>
+<script src="/assets/vendor/katex/dist/katex.min.js"></script>
+<script type="module">
+import { svg } from "/assets/submap.js";
+import {
+  SITE, PREFIX, encode, decode, parseShare, resolveSnapshot, shareURL, title, codesOf, codesCovering,
+  relatedCodes, nextSteps, tiersOf, toLatest,
+} from "/assets/share.js";
+
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+const EMBED = new URLSearchParams(location.search).get("embed") === "1";
+const VIA_WORKER = location.pathname.startsWith("/m/");
+if (EMBED) document.body.classList.add("embed");
+// links between share pages: /m/ where the Worker serves them, /share/#... on a host without it
+const here = (h, hx) => (VIA_WORKER ? shareURL(h, hx, "") : `/share/#${h.slice(0, PREFIX)}/${hx}`);
+const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
+const symHTML = (runs) => (runs || []).map(([t, lv]) => (lv ? `<${lv}>${esc(t)}</${lv}>` : esc(t))).join("");
+const tex = (latex) => {
+  if (window.katex && latex) { try { return katex.renderToString(latex, { throwOnError: false }); } catch (e) { /* plain text below */ } }
+  return esc(latex || "");
+};
+const getJSON = async (url) => { const r = await fetch(url); if (!r.ok) throw new Error(`${url}: ${r.status}`); return r.json(); };
+
+function fail(message) {
+  document.title = "Shared map selection | OpenMaterials";
+  $("title").textContent = "This link does not open a selection";
+  $("lede").innerHTML = `${esc(message)} <a href="/map/">Open the map</a> to make a new link.`;
+  $("submap").innerHTML = "";
+  document.querySelector(".share-fig figcaption").hidden = true;
+}
+
+function copy(text, btn, label) {
+  const done = () => { btn.textContent = "Copied"; setTimeout(() => { btn.textContent = label; }, 1200); };
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, () => window.prompt("Copy:", text));
+  else window.prompt("Copy:", text);
+}
+
+async function main() {
+  const ref = parseShare(VIA_WORKER ? location.pathname : location.hash);
+  if (!ref) return fail("The link is not a share link of the form /m/<snapshot>/<selection>.");
+  let index;
+  try { index = await getJSON("/data/v/index.json"); } catch (e) { return fail("The list of map snapshots could not be read."); }
+  const found = resolveSnapshot(index, ref.snapshot);
+  if (!found.ok) return fail(found.reason === "ambiguous" ? `The snapshot ${ref.snapshot} matches more than one snapshot; the link needs a longer prefix.` : `No snapshot of the map is named ${ref.snapshot}.`);
+  const hash = found.hash;
+  let snap;
+  try { snap = await getJSON(`/data/v/${hash}.json`); } catch (e) { return fail(`Snapshot ${hash.slice(0, PREFIX)} could not be read.`); }
+  const sel = decode(snap, ref.selection);
+  if (!sel.ok) return fail(`The selection does not fit this snapshot: ${sel.reason}.`);
+  const ids = sel.ids, nodes = new Map(snap.nodes.map((n) => [n.id, n]));
+  const hex = encode(snap, ids), link = shareURL(hash, hex);
+  const named = title(snap, ids), codes = codesOf(snap, ids), cover = codesCovering(snap, ids), tiers = tiersOf(snap, ids);
+  const openHref = codes.length ? `/map/#code=${encodeURIComponent(codes[0])}` : ids.length === 1 ? `/map/#node=${encodeURIComponent(ids[0])}` : "/map/";
+
+  document.title = `${named} | OpenMaterials`;
+  $("submap").innerHTML = svg(snap, ids, { mapHref: "/map/", fitUnder: 760 });
+  $("embedOut").href = link;
+  if (EMBED) return;
+
+  $("eyebrow").textContent = `Shared map selection · snapshot ${hash.slice(0, PREFIX)} · map ${snap.map_version.slice(0, 8)}`;
+  $("title").textContent = named;
+  $("lede").textContent = `${plural(ids.length, "quantity", "quantities")} in ${plural(tiers.length, "tier", "tiers")}, computed by ${plural(cover.length, "code", "codes")} on the map.`;
+  $("open").href = openHref;
+  $("actions").hidden = false;
+  $("copy").addEventListener("click", function () { copy(link, this, "Copy link"); if (VIA_WORKER) fetch(`${location.pathname}.png`, { mode: "no-cors" }).catch(() => {}); });
+  const snippet = `<iframe src="${link}?embed=1" title="${esc(named)} on the OpenMaterials map" width="100%" height="480" loading="lazy" style="border:1px solid #DDD7CB;border-radius:2px"></iframe>`;
+  $("snippet").textContent = snippet;
+  $("embed").addEventListener("click", function () { const open = $("snippet").hidden; $("snippet").hidden = !open; this.setAttribute("aria-expanded", String(open)); if (open) copy(snippet, this, "Embed"); });
+  if (VIA_WORKER) { $("png").href = `/m/${hash.slice(0, PREFIX)}/${hex}.png`; $("png").hidden = false; }
+
+  if (hash !== index.latest) {
+    try {
+      const latest = await getJSON(`/data/v/${index.latest}.json`);
+      const m = toLatest(snap, latest, ids);
+      const name = (s, id) => (s.nodes.find((n) => n.id === id) || { name: id }).name;
+      const parts = [];
+      if (m.renamed.length) parts.push("Renamed since: " + m.renamed.map(([a, b]) => `${esc(name(snap, a))} is now ${esc(name(latest, b))}`).join("; ") + ".");
+      if (m.superseded.length) parts.push("Redefined since: " + m.superseded.map(([a, b]) => `${esc(name(snap, a))}, now ${esc(name(latest, b))}`).join("; ") + ".");
+      if (m.removed.length) parts.push("Not on the latest map: " + m.removed.map((a) => esc(name(snap, a))).join(", ") + ".");
+      const there = m.ids.length ? ` <a href="${esc(here(index.latest, encode(latest, m.ids)))}">Open the same selection on the latest map</a>.` : "";
+      $("banner").innerHTML = `<p class="notice">This link shows the map as it was when the link was made.${there} ${parts.join(" ")}</p>`;
+    } catch (e) {
+      $("banner").innerHTML = `<p class="notice">This link shows the map as it was when the link was made. The latest snapshot could not be read.</p>`;
+    }
+  }
+
+  $("qty").innerHTML = ids.map((id) => {
+    const n = nodes.get(id);
+    const flags = [n.dimension ? `dimension ${esc(n.dimension)}` : "", n.lean ? "Lean: dimension checked" : "",
+      ...n.physlib.map((p) => (p.url && p.url.startsWith("https://") ? `physlib: <a href="${esc(p.url)}" rel="noopener">${esc(p.name)}</a>` : `physlib: ${esc(p.name)}`))].filter(Boolean);
+    return `<li><div><h3><span class="sym">${symHTML(n.sym)}</span><a href="/map/#node=${encodeURIComponent(id)}">${esc(n.name)}</a></h3>` +
+      `<div class="meta">${esc(id)} · ${esc(n.tier)}</div><div class="meta">${flags.join(" · ")}</div></div>` +
+      `<div>${n.description ? `<p>${esc(n.description)}</p>` : ""}${n.formula ? `<div class="fx">${tex(n.formula)}</div>` : ""}</div></li>`;
+  }).join("");
+  $("quantities").hidden = false;
+
+  if (cover.length) {
+    $("codesLede").textContent = `How many of the ${plural(ids.length, "selected quantity", "selected quantities")} each code computes, as the commons records it.`;
+    $("bars").innerHTML = cover.map((c) => `<li><a href="/codes/${encodeURIComponent(c.key)}/">${esc(c.name)}</a>` +
+      `<span class="bar" aria-hidden="true"><span style="width:${(100 * c.count / ids.length).toFixed(1)}%"></span></span><span class="n">${c.count} of ${ids.length}</span></li>`).join("");
+    $("codes").hidden = false;
+  }
+  if (codes.length) {
+    const rel = relatedCodes(snap, ids, codes);
+    if (rel.length) {
+      $("relatedList").innerHTML = rel.map((r) => `<li><a href="${esc(here(hash, encode(snap, snap.codes[r.key].nodes)))}">${esc(r.name)}<span class="n">${r.score.toFixed(2)}</span></a></li>`).join("");
+      $("related").hidden = false;
+    }
+  }
+  const steps = nextSteps(snap, ids);
+  if (steps.length) {
+    const byTier = new Map();
+    for (const s of steps) { if (!byTier.has(s.tier)) byTier.set(s.tier, []); byTier.get(s.tier).push(s); }
+    $("nextList").innerHTML = [...byTier].map(([t, ss]) => `<p class="tier-label">${esc(t)}</p><ul class="chips">` +
+      ss.map((s) => `<li><a href="${esc(here(hash, encode(snap, ids.concat([s.id]))))}">${esc(s.name)}<span class="n">${s.via === "input" ? "feeds it" : "follows from it"}</span></a></li>`).join("") + "</ul>").join("");
+    $("next").hidden = false;
+  }
+  $("provenance").innerHTML = `This page is drawn from snapshot <a href="/data/v/${hash}.json">${hash}</a> of the OpenMaterials commons, frozen when it was published, so the link shows the same page for as long as the site exists. ` +
+    `Map version ${esc(snap.map_version)}. The selection is the hex code at the end of the link, one bit per quantity in the snapshot's order.`;
+  $("about").hidden = false;
+}
+main();
+window.addEventListener("hashchange", () => { if (!VIA_WORKER) location.reload(); });
+</script>
+</body>
+</html>
