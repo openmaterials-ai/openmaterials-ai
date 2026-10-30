@@ -214,7 +214,7 @@ for (const ref in byRef) titles[ref] = Sources.titleOf(byRef[ref], codes);
 const one = id => recs.find(r => r.id.startsWith(id));
 console.log(JSON.stringify({titles, quotes: recs.map(r => Sources.parts(r.source.detail).quote),
   conds: recs.map(r => Sources.condText(r.conditions)), methods: recs.map(r => Sources.methodLine(r, codes)),
-  ptse2: Sources.condText(one('457f936b93d9').conditions), si: Sources.condText(one('f735a05c14db').conditions),
+  ptse2: Sources.condText(one('adab238871da').conditions), si: Sources.condText(one('f735a05c14db').conditions),
   conformance: Sources.methodLine(one('f64affbf549a'), codes),
   precision: Sources.condText({precision: 'frozen reference output (reference commit 0123abcd); the solver reproduces it on the CPU complex128 path (source of truth; GPU complex64 is the fast path)'}),
   ethanol: [...new Set(Sources.groups(recs)['atomisticskills-chem-bond-dissociation-ethanol'].map(r => Sources.methodLine(r, codes)))],

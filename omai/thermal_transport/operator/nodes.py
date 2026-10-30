@@ -379,9 +379,10 @@ TOTAL_LINEWIDTH = HiddenSpace(
     gauge_invariant_contractions=("ThermalConductivity[bte_solver=direct_inverse]",),
     description=(
         "Sum of all enabled scattering channels (anharmonic + isotope + "
-        "boundary + ...). The BTE solver consumes this. Matthiessen's rule "
-        "holds under the linearized BTE, so the channels add. Channels a "
-        "given run does not model contribute zero."
+        "boundary + ...). The BTE solver consumes this. The linearized "
+        "collision operator is a sum over independent mechanisms, so the "
+        "channel rates add (Matthiessen's rule at the rate level). Channels "
+        "a given run does not model contribute zero."
     ),
     tier="Scattering",
 )
