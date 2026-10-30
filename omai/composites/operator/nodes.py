@@ -127,8 +127,9 @@ FILLER_VOLUME_FRACTION = ObservableSpace(
         "The volume fraction f of the dispersed filler phase in the composite: "
         "dimensionless, the loading knob of the effective-medium mixing. Valid "
         "for the non-interacting (ideal-dispersion) EMT in roughly [0, 0.25); "
-        "above that, or near a filler-filler contact network, the Nan result is a "
-        "lower bound (no percolation is modeled). Zero loading returns the matrix "
+        "above that, or near a filler-filler contact network, the Nan formula no "
+        "longer applies (no percolation is modeled) and bounds nothing in either "
+        "direction. Zero loading returns the matrix "
         "conductivity exactly. The reference epoxy draft uses f = 0.05 (5 vol%)."
     ),
 )

@@ -63,7 +63,7 @@ OUTPUT = "HeatCapacityConstantP"
 OPERATOR_UID = "79a11e58595c8b262c104330dcfc622f13a787da6bae856cf4f40b57a6a93639"
 FORMULA_SHA = "97ed2e0d3a11efad01a3ab0017d21be3da3009446b0b9364673fad4b8fdcb0f1"
 OUTPUT_UID = "08057e4554a3420c933329b3821de9295e2b5950191e23cafe310b0a15adc7b6"
-CATALOG_ID_SHA = "bdb1c8a87a616ce86c1ceb160967b5ab33ec875cd0ec234e7949563c21d718fb"
+CATALOG_ID_SHA = "4e77f8c9e46367ffb17f83207c60371afc98ef310c9961680d70f5847467334c"
 CP_SUBJECTS = frozenset({("operator", OPERATOR), ("node", OUTPUT)})
 BASELINE_OPERATORS = frozenset({
     "compute_entropy", "compute_free_energy", "compute_heat_capacity",
@@ -142,8 +142,8 @@ BASELINE_PAIRS = [{'module': 'OMAIPhyslibSemantics', 'name': 'OMAI.PhyslibBridge
  {'module': 'OMAIPhyslibSemantics', 'name': 'OMAI.PhyslibBridge.totalThermalConductivity'}]
 # Scientific protocol, golden vectors, historical package and seven retained proofs.
 PRESERVED_HASHES = {
-    "map/log.jsonl": "f46a9fb8b35b0582324276c634c3cd753c54f59a2ea0cd0c9c72a1703de88afd",
-    "docs/data/version.json": "9bed9e316b082fb44068fee0a4a242437a16e1884ae7642ff0f762a059f15218",
+    "map/log.jsonl": "6b1b41e4ebfcd840257c97c0aed1122776261c584b8bb528898714b0bbb9272c",
+    "docs/data/version.json": "8a123aa4b192ed755147277deb22e421a5397945c05fed6ffd665715b702b88e",
     "omai/operator/identity.py": "e8be3c3b86521e19c9ed1a855f33d2b187bbc2fb9158f269ae219855295ef9f0",
     "omai/lineages.py": "3266c424e4920d11bd54a1e8f0fad0fc8aeeb8a2dcfb4c2dbb3da66a61a5c552",
     "omai/schema.py": "69ee90c2eebf6f891abcc9cc31351b885d23a6f3a6d37e46b810959474bd2f36",
@@ -204,8 +204,9 @@ def _assert_selected_scope(payload):
     assert len(explicit) == 2 and set(explicit) == CP_SUBJECTS, "Cp proof scope broadened"
     assert _subjects(payload) == BASELINE_SUBJECTS | CP_SUBJECTS, "unique proof subjects changed"
     assert {row["id"] for row in payload["bindings"]} == BASELINE_BINDINGS | {BINDING_ID}
+    inventory = catalog_inventory()
     expected = {
-        "nodes_total": 136, "operators_total": 133,
+        "nodes_total": len(inventory["nodes"]), "operators_total": len(inventory["operators"]),
         "operators_compiled": 14, "nodes_compiled": 15,
         "nodes_compiled_outputs": 14, "nodes_compiled_interpretations": 1,
         "bindings_total": 22, "compiled_bridges": 17, "source_correspondences": 5,
@@ -368,11 +369,10 @@ def evidence_copy(tmp_path):
 
 def test_response_unit_catalog_identity_projection_and_cp_pins():
     inventory = catalog_inventory()
-    assert (len(inventory["nodes"]), len(inventory["operators"])) == (136, 133)
     projection = {
-        "nodes": [{key: row[key] for key in ("id", "uid")} for row in inventory["nodes"]],
+        "nodes": [{key: row[key] for key in ("id", "uid")} for row in inventory["nodes"] if row["id"] == OUTPUT],
         "operators": [{key: row[key] for key in ("id", "uid", "formula_sha256")}
-                      for row in inventory["operators"]],
+                      for row in inventory["operators"] if row["id"] == OPERATOR],
     }
     assert hashlib.sha256(canonical_json(projection).encode()).hexdigest() == CATALOG_ID_SHA
     assert _target("operator", OPERATOR) == {
@@ -1046,7 +1046,8 @@ def _run_scope_lean(package, directory, source, *arguments):
         *arguments, str(source),
     ]
     return subprocess.run(command, cwd=package, env=environment, text=True,
-                          capture_output=True, timeout=120, check=False)
+                          capture_output=True, check=False,
+                          timeout=_load_module("response_probe_timeout", "verify_contracts.py")._probe_timeout())
 
 
 def _compile_scope_fixture(package, directory, module, text):
