@@ -1547,7 +1547,7 @@
    "quantity": "linewidth"
   },
   "meta": {
-   "description": "Per-mode boundary scattering rate from the Casimir / Matthiessen form: \u0393_boundary(q\u03bd) = |v_q\u03bd| / L where L is the boundary length scale (operator parameter). Gauge-dependent inherits GroupVelocity's basis dependence at degenerate \u03c9.",
+   "description": "Per-mode boundary linewidth from the Casimir / Matthiessen form: \u0393_boundary(q\u03bd) = |v_q\u03bd| / (2L), half the Casimir rate |v_q\u03bd| / L, where L is the boundary length scale (operator parameter). Gauge-dependent: inherits GroupVelocity's basis dependence at degenerate \u03c9.",
    "name": "Linewidth[channel=boundary]",
    "symbol": "\\Gamma_{\\mathrm{bnd}}",
    "tier": "Scattering"
@@ -2897,7 +2897,7 @@
    "quantity": "linewidth"
   },
   "meta": {
-   "description": "Per-mode three-phonon anharmonic linewidth from Fermi's golden rule (the channel the existing compute_linewidth produces). Per-element values depend on BZ-summation choice (a permutation gauge: weights redistribute between modes but conserve the total). Contractions (\u03a3\u0393, \u03ba_LBTE) are the gauge-invariant content.",
+   "description": "Per-mode three-phonon anharmonic linewidth \u0393 = Im \u03a3 = 1/(2\u03c4) from Fermi's golden rule (the channel compute_linewidth produces). Per-element values depend on BZ-summation choice (a permutation gauge: weights redistribute between modes but conserve the total). Contractions (\u03a3\u0393, \u03ba_LBTE) are the gauge-invariant content.",
    "name": "Linewidth[channel=anharmonic_3ph]",
    "symbol": "\\Gamma_{\\mathrm{3ph}}",
    "tier": "Scattering"

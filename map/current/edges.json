@@ -260,6 +260,28 @@
   },
   "uid": "1201b09100e9aaac69f343b09ff8c8002c6de6dec1c843458bec89e3151ef436"
  },
+ "1326da3355b506b5142329e3b074a09589b95e4e18d1819c4c44ad579c1fd41e": {
+  "identity": {
+   "formula": "Equality(Indexed(IndexedBase(Symbol('\\\\Gamma^{bnd}')), Symbol('\\\\mathbf{q}'), Symbol('\\\\nu', integer=True)), Mul(Rational(1, 2), Pow(Symbol('L', positive=True), Integer(-1)), Pow(Sum(Pow(Indexed(IndexedBase(Symbol('v')), Symbol('\\\\alpha', integer=True), Symbol('\\\\mathbf{q}'), Symbol('\\\\nu', integer=True)), Integer(2)), Tuple(Symbol('\\\\alpha', integer=True), Integer(1), Integer(3))), Rational(1, 2))))",
+   "inputs": [
+    "d1934e166dbd0c91125936f9b2ccc0100af0ba44ed439003aae76b47b6d26fc6",
+    "fa262448f625b62f5a8c6934518bb8ddc5d3a5a5ce69203b3e2f6b10b21cc4b8"
+   ],
+   "output": "81288248a2b40f0abfe78b058ffa4025a0312324e8af26b801017b9a0971961e",
+   "outputs": [
+    "81288248a2b40f0abfe78b058ffa4025a0312324e8af26b801017b9a0971961e"
+   ],
+   "schemes": {}
+  },
+  "meta": {
+   "description": "Casimir boundary linewidth \u0393 = |v| / (2L), half the Casimir rate 1/\u03c4 = |v| / L, with L a user-supplied sample / mean-free-path length scale. Linear in the group-velocity magnitude; independent of temperature. Inherits GroupVelocity's gauge-dependence at degenerate \u03c9.",
+   "formula_latex": "{\\Gamma^{bnd}}_{\\mathbf{q},\\nu} = \\frac{\\sqrt{\\sum_{\\alpha=1}^{3} {v}_{\\alpha,\\mathbf{q},\\nu}^{2}}}{2 L}",
+   "formula_srepr": "Equality(Indexed(IndexedBase(Symbol('\\\\Gamma^{bnd}')), Symbol('\\\\mathbf{q}'), Symbol('\\\\nu', integer=True)), Mul(Rational(1, 2), Pow(Symbol('L', positive=True), Integer(-1)), Pow(Sum(Pow(Indexed(IndexedBase(Symbol('v')), Symbol('\\\\alpha', integer=True), Symbol('\\\\mathbf{q}'), Symbol('\\\\nu', integer=True)), Integer(2)), Tuple(Symbol('\\\\alpha', integer=True), Integer(1), Integer(3))), Rational(1, 2))))",
+   "name": "compute_boundary_scattering",
+   "schemes": {}
+  },
+  "uid": "1326da3355b506b5142329e3b074a09589b95e4e18d1819c4c44ad579c1fd41e"
+ },
  "1348e12defce337587f9c2b152a3a1c88f9d27ec8cc48fc30167aebadd907043": {
   "identity": {
    "formula": "Equality(Symbol('\\\\gamma_{th}'), Mul(Pow(Symbol('C_V^{vol}'), Integer(-1)), Symbol('K'), Symbol('\\\\alpha_V')))",
@@ -1430,6 +1452,9 @@
    "name": "compute_boundary_scattering",
    "schemes": {}
   },
+  "superseded_by": [
+   "1326da3355b506b5142329e3b074a09589b95e4e18d1819c4c44ad579c1fd41e"
+  ],
   "uid": "6b7443f91473aedb777319f94c644d0f6832223bd64dd3338d22300045d62de2"
  },
  "6e99a335cfb6b775c858856c9f81be42bf54bb931975aa16e4b13eedfa874b61": {
@@ -2563,6 +2588,36 @@
   },
   "uid": "bb3f3ca8c5f842995d1e84cb06a7ebfc7073b0963abff93daba9352b5fe505ec"
  },
+ "bed23822fc14b9f811e9d35b8361d56e0e38a34327b9e5b2c4e7f5aad6eebb72": {
+  "identity": {
+   "formula": "Equality(Indexed(IndexedBase(Symbol('\\\\Gamma')), Symbol('\\\\mathbf{q}'), Symbol('\\\\nu', integer=True)), Mul(Rational(1, 2), pi, Pow(Symbol('N_q', positive=True, integer=True), Integer(-1)), Pow(Symbol('\\\\hbar', positive=True), Integer(-2)), Sum(Mul(Add(Mul(Add(Mul(Integer(-1), Integer(2), Function('n_{BE}')(Mul(Pow(Symbol('T', positive=True), Integer(-1)), Symbol('\\\\hbar', positive=True), Pow(Symbol('k_B', positive=True), Integer(-1)), Indexed(IndexedBase(Symbol('\\\\omega')), Add(Mul(Integer(-1), Symbol(\"\\\\mathbf{q'}\")), Symbol('\\\\mathbf{q}')), Symbol(\"\\\\nu''\", integer=True))))), Mul(Integer(2), Function('n_{BE}')(Mul(Pow(Symbol('T', positive=True), Integer(-1)), Symbol('\\\\hbar', positive=True), Pow(Symbol('k_B', positive=True), Integer(-1)), Indexed(IndexedBase(Symbol('\\\\omega')), Symbol(\"\\\\mathbf{q'}\"), Symbol(\"\\\\nu'\", integer=True)))))), Function('\\\\delta')(Add(Mul(Integer(-1), Indexed(IndexedBase(Symbol('\\\\omega')), Add(Mul(Integer(-1), Symbol(\"\\\\mathbf{q'}\")), Symbol('\\\\mathbf{q}')), Symbol(\"\\\\nu''\", integer=True))), Indexed(IndexedBase(Symbol('\\\\omega')), Symbol(\"\\\\mathbf{q'}\"), Symbol(\"\\\\nu'\", integer=True)), Indexed(IndexedBase(Symbol('\\\\omega')), Symbol('\\\\mathbf{q}'), Symbol('\\\\nu', integer=True))))), Mul(Add(Function('n_{BE}')(Mul(Pow(Symbol('T', positive=True), Integer(-1)), Symbol('\\\\hbar', positive=True), Pow(Symbol('k_B', positive=True), Integer(-1)), Indexed(IndexedBase(Symbol('\\\\omega')), Add(Mul(Integer(-1), Symbol(\"\\\\mathbf{q'}\")), Symbol('\\\\mathbf{q}')), Symbol(\"\\\\nu''\", integer=True)))), Function('n_{BE}')(Mul(Pow(Symbol('T', positive=True), Integer(-1)), Symbol('\\\\hbar', positive=True), Pow(Symbol('k_B', positive=True), Integer(-1)), Indexed(IndexedBase(Symbol('\\\\omega')), Symbol(\"\\\\mathbf{q'}\"), Symbol(\"\\\\nu'\", integer=True)))), Integer(1)), Function('\\\\delta')(Add(Mul(Integer(-1), Indexed(IndexedBase(Symbol('\\\\omega')), Add(Mul(Integer(-1), Symbol(\"\\\\mathbf{q'}\")), Symbol('\\\\mathbf{q}')), Symbol(\"\\\\nu''\", integer=True))), Mul(Integer(-1), Indexed(IndexedBase(Symbol('\\\\omega')), Symbol(\"\\\\mathbf{q'}\"), Symbol(\"\\\\nu'\", integer=True))), Indexed(IndexedBase(Symbol('\\\\omega')), Symbol('\\\\mathbf{q}'), Symbol('\\\\nu', integer=True)))))), Function('|V_3|^2')(Symbol('\\\\mathbf{q}'), Symbol('\\\\nu', integer=True), Symbol(\"\\\\mathbf{q'}\"), Symbol(\"\\\\nu'\", integer=True), Add(Mul(Integer(-1), Symbol(\"\\\\mathbf{q'}\")), Symbol('\\\\mathbf{q}')), Symbol(\"\\\\nu''\", integer=True))), Tuple(Symbol(\"\\\\mathbf{q'}\"), Integer(1), Symbol('N_q', positive=True, integer=True)), Tuple(Symbol(\"\\\\nu'\", integer=True), Integer(1), Mul(Integer(3), Symbol('N', positive=True, integer=True))), Tuple(Symbol(\"\\\\nu''\", integer=True), Integer(1), Mul(Integer(3), Symbol('N', positive=True, integer=True))))))",
+   "inputs": [
+    "21ba7756f45c808d3d91ed059c34c532f04845781d549b4c16573d9462bb2902",
+    "63f9bd32d94d77e12afbb96f5b1b7a870de6b1f5805213b7f3c3ff227da301f0",
+    "73372380af126dde147e403f69339b87ee2f938a896dd5b56e9100c055dc8f93",
+    "fa262448f625b62f5a8c6934518bb8ddc5d3a5a5ce69203b3e2f6b10b21cc4b8"
+   ],
+   "output": "f52d161ad0be284c121c6fd10fe403c922aaa59646746c12719622004da5fa3a",
+   "outputs": [
+    "f52d161ad0be284c121c6fd10fe403c922aaa59646746c12719622004da5fa3a"
+   ],
+   "schemes": {
+    "broadening_param": "stdev",
+    "symmetry_group": "C1"
+   }
+  },
+  "meta": {
+   "description": "Anharmonic 3-phonon linewidth \u0393 = Im \u03a3 = 1/(2\u03c4) from Fermi's golden rule, with the prefactor \u03c0/(2N_q \u210f\u00b2): in angular units phono3py's imaginary self-energy and half of ShengBTE's rate 1/\u03c4. The kernel |V\u2083|\u00b2 is the Maradudin-Fein matrix element (auxiliary_formulas[0]): \u03a6\u00b3 contracted with eigenvectors, mass factors and Bloch phases, scaled by \u210f\u00b3/(8 \u03c9 \u03c9' \u03c9''), an energy squared. The same kernel appears in the LBTE collision matrix \u03a9~ (solve_bte_direct.auxiliary_formulas[0]). Energy delta is replaced by a Gaussian of canonical width \u03c3 = stdev. n_BE(x) = (e^{x} - 1)^{-1} with x = \u210f\u03c9/(k_B T). q'' is fixed by crystal momentum conservation: q'' = q - q' (mod a reciprocal lattice vector). Under crystal symmetry G \u2282 O(3), the BZ sum \u03a3_{q'} can be restricted to the irreducible wedge BZ/G with multiplicity weights |G\u00b7q'|; symmetry_group=G asserts this reduction. symmetry_group=C1 means the full ordered grid is summed.",
+   "formula_latex": "{\\Gamma}_{\\mathbf{q},\\nu} = \\frac{\\pi \\sum_{\\substack{1 \\leq \\mathbf{q'} \\leq N_{q}\\\\1 \\leq \\nu' \\leq 3 N\\\\1 \\leq \\nu'' \\leq 3 N}} \\left(\\left(- 2 n_{BE}{\\left(\\frac{\\bar{\\h} {\\omega}_{- \\mathbf{q'} + \\mathbf{q},\\nu''}}{T k_{B}} \\right)} + 2 n_{BE}{\\left(\\frac{\\bar{\\h} {\\omega}_{\\mathbf{q'},\\nu'}}{T k_{B}} \\right)}\\right) \\delta{\\left(- {\\omega}_{- \\mathbf{q'} + \\mathbf{q},\\nu''} + {\\omega}_{\\mathbf{q'},\\nu'} + {\\omega}_{\\mathbf{q},\\nu} \\right)} + \\left(n_{BE}{\\left(\\frac{\\bar{\\h} {\\omega}_{- \\mathbf{q'} + \\mathbf{q},\\nu''}}{T k_{B}} \\right)} + n_{BE}{\\left(\\frac{\\bar{\\h} {\\omega}_{\\mathbf{q'},\\nu'}}{T k_{B}} \\right)} + 1\\right) \\delta{\\left(- {\\omega}_{- \\mathbf{q'} + \\mathbf{q},\\nu''} - {\\omega}_{\\mathbf{q'},\\nu'} + {\\omega}_{\\mathbf{q},\\nu} \\right)}\\right) \\operatorname{|V}^{2}_{3|}{\\left(\\mathbf{q},\\nu,\\mathbf{q'},\\nu',- \\mathbf{q'} + \\mathbf{q},\\nu'' \\right)}}{2 N_{q} \\bar{\\h}^{2}}",
+   "formula_srepr": "Equality(Indexed(IndexedBase(Symbol('\\\\Gamma')), Symbol('\\\\mathbf{q}'), Symbol('\\\\nu', integer=True)), Mul(Rational(1, 2), pi, Pow(Symbol('N_q', positive=True, integer=True), Integer(-1)), Pow(Symbol('\\\\hbar', positive=True), Integer(-2)), Sum(Mul(Add(Mul(Add(Mul(Integer(-1), Integer(2), Function('n_{BE}')(Mul(Pow(Symbol('T', positive=True), Integer(-1)), Symbol('\\\\hbar', positive=True), Pow(Symbol('k_B', positive=True), Integer(-1)), Indexed(IndexedBase(Symbol('\\\\omega')), Add(Mul(Integer(-1), Symbol(\"\\\\mathbf{q'}\")), Symbol('\\\\mathbf{q}')), Symbol(\"\\\\nu''\", integer=True))))), Mul(Integer(2), Function('n_{BE}')(Mul(Pow(Symbol('T', positive=True), Integer(-1)), Symbol('\\\\hbar', positive=True), Pow(Symbol('k_B', positive=True), Integer(-1)), Indexed(IndexedBase(Symbol('\\\\omega')), Symbol(\"\\\\mathbf{q'}\"), Symbol(\"\\\\nu'\", integer=True)))))), Function('\\\\delta')(Add(Mul(Integer(-1), Indexed(IndexedBase(Symbol('\\\\omega')), Add(Mul(Integer(-1), Symbol(\"\\\\mathbf{q'}\")), Symbol('\\\\mathbf{q}')), Symbol(\"\\\\nu''\", integer=True))), Indexed(IndexedBase(Symbol('\\\\omega')), Symbol(\"\\\\mathbf{q'}\"), Symbol(\"\\\\nu'\", integer=True)), Indexed(IndexedBase(Symbol('\\\\omega')), Symbol('\\\\mathbf{q}'), Symbol('\\\\nu', integer=True))))), Mul(Add(Function('n_{BE}')(Mul(Pow(Symbol('T', positive=True), Integer(-1)), Symbol('\\\\hbar', positive=True), Pow(Symbol('k_B', positive=True), Integer(-1)), Indexed(IndexedBase(Symbol('\\\\omega')), Add(Mul(Integer(-1), Symbol(\"\\\\mathbf{q'}\")), Symbol('\\\\mathbf{q}')), Symbol(\"\\\\nu''\", integer=True)))), Function('n_{BE}')(Mul(Pow(Symbol('T', positive=True), Integer(-1)), Symbol('\\\\hbar', positive=True), Pow(Symbol('k_B', positive=True), Integer(-1)), Indexed(IndexedBase(Symbol('\\\\omega')), Symbol(\"\\\\mathbf{q'}\"), Symbol(\"\\\\nu'\", integer=True)))), Integer(1)), Function('\\\\delta')(Add(Mul(Integer(-1), Indexed(IndexedBase(Symbol('\\\\omega')), Add(Mul(Integer(-1), Symbol(\"\\\\mathbf{q'}\")), Symbol('\\\\mathbf{q}')), Symbol(\"\\\\nu''\", integer=True))), Mul(Integer(-1), Indexed(IndexedBase(Symbol('\\\\omega')), Symbol(\"\\\\mathbf{q'}\"), Symbol(\"\\\\nu'\", integer=True))), Indexed(IndexedBase(Symbol('\\\\omega')), Symbol('\\\\mathbf{q}'), Symbol('\\\\nu', integer=True)))))), Function('|V_3|^2')(Symbol('\\\\mathbf{q}'), Symbol('\\\\nu', integer=True), Symbol(\"\\\\mathbf{q'}\"), Symbol(\"\\\\nu'\", integer=True), Add(Mul(Integer(-1), Symbol(\"\\\\mathbf{q'}\")), Symbol('\\\\mathbf{q}')), Symbol(\"\\\\nu''\", integer=True))), Tuple(Symbol(\"\\\\mathbf{q'}\"), Integer(1), Symbol('N_q', positive=True, integer=True)), Tuple(Symbol(\"\\\\nu'\", integer=True), Integer(1), Mul(Integer(3), Symbol('N', positive=True, integer=True))), Tuple(Symbol(\"\\\\nu''\", integer=True), Integer(1), Mul(Integer(3), Symbol('N', positive=True, integer=True))))))",
+   "name": "compute_linewidth[channel=anharmonic_3ph]",
+   "schemes": {
+    "broadening_param": "stdev",
+    "symmetry_group": "C1"
+   }
+  },
+  "uid": "bed23822fc14b9f811e9d35b8361d56e0e38a34327b9e5b2c4e7f5aad6eebb72"
+ },
  "c0093343fed48c5cc30a81368be68ddd6000b7ecab4d816c2a1601a01f35163e": {
   "identity": {
    "formula": "Equality(Indexed(IndexedBase(Symbol('J')), Symbol('\\\\alpha', integer=True), Symbol('t', integer=True)), Mul(Pow(Symbol('V_{cell}', positive=True), Integer(-1)), Add(Sum(Mul(Indexed(IndexedBase(Symbol('E')), Symbol('i', integer=True), Symbol('t', integer=True)), Indexed(IndexedBase(Symbol('v')), Symbol('i', integer=True), Symbol('\\\\alpha', integer=True), Symbol('t', integer=True))), Tuple(Symbol('i', integer=True), Integer(1), Symbol('N_{atoms}', positive=True, integer=True))), Mul(Rational(1, 2), Sum(Mul(Indexed(IndexedBase(Symbol('F^{md}')), Symbol('i', integer=True), Symbol('\\\\alpha', integer=True), Symbol('t', integer=True)), Indexed(IndexedBase(Symbol('r')), Symbol('i', integer=True), Symbol('\\\\alpha', integer=True), Symbol('t', integer=True)), Indexed(IndexedBase(Symbol('v')), Symbol('i', integer=True), Symbol('\\\\alpha', integer=True), Symbol('t', integer=True))), Tuple(Symbol('i', integer=True), Integer(1), Symbol('N_{atoms}', positive=True, integer=True)))))))",
@@ -3178,6 +3233,9 @@
     "symmetry_group": "C1"
    }
   },
+  "superseded_by": [
+   "bed23822fc14b9f811e9d35b8361d56e0e38a34327b9e5b2c4e7f5aad6eebb72"
+  ],
   "uid": "d621418b9f5a046b12c5dbaadbb6a83fee0b1a013dc84ab1ccc25423eba06605"
  },
  "d6b71066f0cef4182e1d522d30c31326ecc2504428f3c8e6b42f5189b410a6f3": {

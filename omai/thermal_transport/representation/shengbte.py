@@ -596,9 +596,9 @@ SHENGBTE_BOUNDARY_LINEWIDTH = SpaceRepresentationSpec(
     },
     code_api={"Gamma": "BTE.w_boundary"},
     notes=(
-        "BTE.w_boundary: Casimir boundary scattering rate in ps⁻¹. "
-        "Active when nanowires=.TRUE. or a length scale is supplied via "
-        "the CONTROL &flags block; magnitude tracks |v_qν| / L."
+        "BTE.w_boundary: Casimir boundary scattering rate |v_qν| / L in "
+        "ps⁻¹, written for L = 1 nm and specularity p = 0 (scale by "
+        "(1 nm) / L). ShengBTE does not use it in the bulk conductivity."
     ),
 )
 
@@ -633,8 +633,9 @@ SHENGBTE_COMPUTE_BOUNDARY_SCATTERING = OperatorRepresentationSpec(
     operator=compute_boundary_scattering,
     representation_name="shengbte",
     notes=(
-        "Casimir Γ_boundary = |v| / L; L set via the `length` parameter "
-        "in CONTROL &flags."
+        "Casimir rate 1/τ = |v| / L, twice the canonical linewidth "
+        "Γ_boundary = |v| / (2L). ShengBTE writes it for L = 1 nm and "
+        "p = 0 and does not use it in the bulk conductivity."
     ),
 )
 
