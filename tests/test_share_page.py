@@ -27,6 +27,13 @@ def test_page_contract():
         assert line.strip() in s, line
 
 
+
+def test_hidden_beats_button_display():
+    # the Download PNG button carries hidden off the Worker; .btn sets display, so the stylesheet must let hidden win
+    css = (DATA.parent / "assets" / "site.css").read_text()
+    assert re.search(r"^\[hidden\] \{ display: none !important; \}", css, re.M)
+    assert re.search(r'id="png"[^>]*\shidden', PAGE.read_text())
+
 @pytest.fixture(scope="module")
 def docs_server():
     class Quiet(http.server.SimpleHTTPRequestHandler):
