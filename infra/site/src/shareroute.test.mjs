@@ -62,13 +62,16 @@ test("oEmbed answers a rich iframe of the embed view", async () => {
 
 test("past the render limit, or when a render fails, the site card stands in", async () => {
   const limited = { ...env, CARD_LIMITER: { limit: async () => ({ success: false }) } };
-  const r = await worker.fetch(new Request(`https://openmaterials.ai/m/${H}/${kaldo}.png`), limited);
+  // The example host, as in every other test here: on the openmaterials.ai
+  // host the Worker refreshes data from the live site first, so a bundled
+  // snapshot newer than the deployed one would 404 against production state.
+  const r = await worker.fetch(new Request(`https://openmaterials-site.example.workers.dev/m/${H}/${kaldo}.png`), limited);
   assert.equal(r.status, 302);
   assert.match(r.headers.get("location"), /\/assets\/og\.png$/);
   // under node the WASM bundle cannot load, so the render fails and falls back the same way
-  const r2 = await worker.fetch(new Request(`https://openmaterials.ai/m/${H}/${kaldo}.png`), env);
+  const r2 = await worker.fetch(new Request(`https://openmaterials-site.example.workers.dev/m/${H}/${kaldo}.png`), env);
   assert.equal(r2.status, 302);
-  assert.equal((await worker.fetch(new Request(`https://openmaterials.ai/m/${H}/8000.png`), env)).status, 400);
+  assert.equal((await worker.fetch(new Request(`https://openmaterials-site.example.workers.dev/m/${H}/8000.png`), env)).status, 400);
 });
 
 test("a code the live registry no longer lists drops out of the shell", async () => {
