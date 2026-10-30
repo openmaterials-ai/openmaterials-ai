@@ -31,7 +31,7 @@ def test_worker_is_additive_over_the_static_site():
     cfg = _wrangler_config()
     assert cfg["assets"]["directory"] == "../../docs", \
         "the Worker must serve the SAME docs/ the static site publishes"
-    assert set(cfg["assets"]["run_worker_first"]) == {"/l/*", "/s", "/s/*", "/badge/*", "/healthz"}, \
+    assert set(cfg["assets"]["run_worker_first"]) == {"/l/*", "/s", "/s/*", "/badge/*", "/healthz", "/m/*", "/oembed"}, \
         "only the named dynamic routes may bypass the assets"
     assert cfg["name"] == "openmaterials-site"
 
@@ -213,3 +213,8 @@ def test_python_and_javascript_encode_alike():
               "process.stdout.write(JSON.stringify(o));});")
     got = _json.loads(run_module(script, _json.dumps(snap)))
     assert got == {k: encode(snap, c["nodes"]) for k, c in snap["codes"].items()}
+
+
+def test_share_routes_under_node():
+    from node_runner import run_node_test
+    run_node_test(_SITE / "src" / "shareroute.test.mjs")

@@ -24,6 +24,8 @@ import {
   shortlinkHTML, shortlinkNotFoundHTML,
 } from "./shortlinks.js";
 import { badgeSVG, statBadgeSVG, BADGE_PATH_RE, STAT_BADGE_PATH_RE } from "./badge.js";
+import { parseMPath, shareMeta, shellHTML, oembedJSON, errorHTML } from "./shareroute.js";
+import { PREFIX, decode, resolveSnapshot } from "../../../docs/assets/share.js";
 
 // Origins allowed to mint (the read side is public by design). localhost
 // covers wrangler dev and the docs http.server used by tests.
@@ -40,14 +42,14 @@ const corsHeaders = (origin) => ({
   "access-control-allow-headers": "content-type",
 });
 
-async function assetJSON(env, request, path) {
+async function asset(env, request, path, read) {
   const url = new URL(request.url);
   url.pathname = path;
   url.search = "";
   if (url.hostname === "openmaterials.ai") {
     try {
       const live = await fetch(url, { cf: { cacheTtl: 60 }, signal: AbortSignal.timeout(3000) });
-      if (live.ok) return await live.json();
+      if (live.ok) return await read(live);
       console.warn(`live ${path}: ${live.status}; using the bundled copy`);
     } catch (e) {
       console.warn(`live ${path}: ${e}; using the bundled copy`);
@@ -55,8 +57,10 @@ async function assetJSON(env, request, path) {
   }
   const res = await env.ASSETS.fetch(new Request(url, { method: "GET" }));
   if (!res.ok) throw new Error(`asset ${path}: ${res.status}`);
-  return res.json();
+  return read(res);
 }
+const assetJSON = (env, request, path) => asset(env, request, path, (r) => r.json());
+const assetText = (env, request, path) => asset(env, request, path, (r) => r.text());
 
 const html = (body, status, headers = {}) =>
   new Response(body, {
@@ -163,6 +167,9 @@ export default {
       return handleShortlink(request, env, url);
     }
 
+    if (url.pathname.startsWith("/m/")) return handleShare(request, env, url);
+    if (url.pathname === "/oembed") return handleOembed(request, env, url);
+
     // Everything else is the static site, exactly as GitHub Pages serves it.
     return env.ASSETS.fetch(request);
   },
@@ -268,4 +275,62 @@ async function handleShortlink(request, env, url) {
   }
 
   return new Response("method not allowed", { status: 405 });
+}
+
+// A share link: the snapshot (immutable, named by its hash) and the selection decoded against it.
+// {ok: true, hash, snap, ids} or {ok: false, response}
+async function loadShare(request, env, prefix, selection) {
+  let index, snap;
+  try {
+    index = await assetJSON(env, request, "/data/v/index.json");
+  } catch (e) {
+    return { ok: false, response: html(errorHTML("The list of map snapshots is unavailable."), 503) };
+  }
+  const found = resolveSnapshot(index, prefix);
+  if (!found.ok) {
+    return { ok: false, response: html(errorHTML(found.reason === "ambiguous"
+      ? `The snapshot prefix ${prefix} matches more than one snapshot.` : `No map snapshot is named ${prefix}.`), 404) };
+  }
+  try {
+    snap = await assetJSON(env, request, `/data/v/${found.hash}.json`);
+  } catch (e) {
+    return { ok: false, response: html(errorHTML(`Snapshot ${found.hash.slice(0, PREFIX)} is unavailable.`), 503) };
+  }
+  const d = decode(snap, selection);
+  if (!d.ok) return { ok: false, response: html(errorHTML(`The selection does not fit snapshot ${found.hash.slice(0, PREFIX)}: ${d.reason}.`), 400) };
+  return { ok: true, hash: found.hash, snap, ids: d.ids };
+}
+
+async function handleShare(request, env, url) {
+  const ref = parseMPath(url.pathname);
+  if (!ref) return html(errorHTML("A share link is /m/<snapshot>/<selection>, with 8 to 64 hex characters of the snapshot and the selection in lowercase hex."), 400);
+  const s = await loadShare(request, env, ref.prefix, ref.selection);
+  if (!s.ok) return s.response;
+  if (ref.png) return sharePNG(env, s);
+  let template;
+  try {
+    template = await assetText(env, request, "/share/index.html");
+  } catch (e) {
+    return html(errorHTML("The share page is unavailable."), 503);
+  }
+  return html(shellHTML(template, shareMeta(s.snap, s.hash, s.ids, url.origin), url.origin), 200,
+    { "cache-control": "public, max-age=3600" });
+}
+
+async function handleOembed(request, env, url) {
+  const cors = { "access-control-allow-origin": "*" };
+  if ((url.searchParams.get("format") || "json") !== "json") return new Response("only format=json", { status: 501, headers: cors });
+  let target;
+  try { target = new URL(url.searchParams.get("url") || ""); } catch (e) { target = null; }
+  const ref = target && target.host === url.host ? parseMPath(target.pathname) : null;
+  if (!ref || ref.png) return Response.json({ error: "not a share link of this site" }, { status: 404, headers: cors });
+  const s = await loadShare(request, env, ref.prefix, ref.selection);
+  if (!s.ok) return Response.json({ error: "share link not found" }, { status: 404, headers: cors });
+  return Response.json(oembedJSON(shareMeta(s.snap, s.hash, s.ids, url.origin), url.origin,
+    url.searchParams.get("maxwidth"), url.searchParams.get("maxheight")), { headers: { ...cors, "cache-control": "public, max-age=3600" } });
+}
+
+// The card: drawn once per link with resvg and kept in KV, so later requests are a read.
+async function sharePNG(env, s) {
+  return new Response("card rendering is not deployed", { status: 501 });
 }
