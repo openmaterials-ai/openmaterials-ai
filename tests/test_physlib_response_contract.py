@@ -141,9 +141,11 @@ BASELINE_PAIRS = [{'module': 'OMAIPhyslibSemantics', 'name': 'OMAI.PhyslibBridge
  {'module': 'OMAIPhyslibContinuum', 'name': 'OMAI.PhyslibBridge.pressureFromStress'},
  {'module': 'OMAIPhyslibSemantics', 'name': 'OMAI.PhyslibBridge.totalThermalConductivity'}]
 # Scientific protocol, golden vectors, historical package and seven retained proofs.
+# The map log and the version stamp change with every map contribution, so they
+# are checked semantically, not byte-pinned: test_genesis replays the committed
+# log against its materialized view, and test_lineage_artifact rebuilds the
+# version stamp and checks its append-only chain.
 PRESERVED_HASHES = {
-    "map/log.jsonl": "3bd38146ef9a74faa61f9a9adbaabd7e2692fc6fa2a77636f042a608c47dac2f",
-    "docs/data/version.json": "cd181646e6657662a464e7696b6ae081085426d4ce20f9c995e4a67298d040b3",
     "omai/operator/identity.py": "e8be3c3b86521e19c9ed1a855f33d2b187bbc2fb9158f269ae219855295ef9f0",
     "omai/lineages.py": "3266c424e4920d11bd54a1e8f0fad0fc8aeeb8a2dcfb4c2dbb3da66a61a5c552",
     "omai/schema.py": "69ee90c2eebf6f891abcc9cc31351b885d23a6f3a6d37e46b810959474bd2f36",
