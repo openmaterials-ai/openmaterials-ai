@@ -1,75 +1,195 @@
 {
  "version": {
-  "physlib_rev": "a74414af9cf713084dd59943fa706980cb7573de",
-  "generated": "2026-07-17",
-  "method": "manual scan of physlib source"
+  "physlib_rev": "9b583cb6ef6e9cc537c4d4b786b508de1abbcf42",
+  "generated": "2026-10-30",
+  "method": "manual scan of the Physlib library at the Lean bridge pin, graded against the bridge's compiled bindings. The repository's PhyslibAlpha staging library is not cited."
  },
  "nodes": {
-  "Potential": [],
+  "Potential": [
+   {
+    "name": "ClassicalMechanics.HarmonicOscillator.potentialEnergy",
+    "module": "Physlib.ClassicalMechanics.HarmonicOscillator.Basic",
+    "kind": "def",
+    "informal": "The harmonic potential energy k x^2 / 2, the one-degree-of-freedom quadratic expansion of a Born-Oppenheimer potential.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/ClassicalMechanics/HarmonicOscillator/Basic.lean#L200",
+    "confidence": "related"
+   }
+  ],
   "Temperature": [
    {
     "name": "Temperature",
     "module": "Physlib.Thermodynamics.Temperature.Basic",
     "kind": "structure",
-    "informal": "Absolute temperature as a nonnegative real, the type used across physlib thermodynamics.",
-    "source_url": "https://github.com/leanprover-community/physlib/blob/a74414af9cf713084dd59943fa706980cb7573de/Physlib/Thermodynamics/Temperature/Basic.lean#L31",
+    "informal": "Absolute temperature as a nonnegative real, the type used across Physlib thermodynamics.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/Thermodynamics/Temperature/Basic.lean#L32",
     "confidence": "exact"
    },
    {
-    "name": "Temperature.\u03b2",
+    "name": "Temperature.β",
     "module": "Physlib.Thermodynamics.Temperature.Basic",
     "kind": "def",
     "informal": "Inverse temperature beta = 1/(kB T) derived from a Temperature.",
-    "source_url": "https://github.com/leanprover-community/physlib/blob/a74414af9cf713084dd59943fa706980cb7573de/Physlib/Thermodynamics/Temperature/Basic.lean#L58",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/Thermodynamics/Temperature/Basic.lean#L59",
     "confidence": "related"
    }
   ],
-  "ForceConstants[order=2]": [],
+  "ForceConstants[order=2]": [
+   {
+    "name": "ClassicalMechanics.HarmonicOscillator.k",
+    "module": "Physlib.ClassicalMechanics.HarmonicOscillator.Basic",
+    "kind": "def",
+    "informal": "The spring constant k > 0 of a one-dimensional oscillator, the stable one-degree-of-freedom case of the second-order force constants.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/ClassicalMechanics/HarmonicOscillator/Basic.lean#L126",
+    "confidence": "related"
+   }
+  ],
   "ForceConstants[order=3]": [],
   "BornCharges": [],
   "DielectricTensor": [],
-  "BareDynamicalMatrix": [],
-  "DynamicalMatrix": [],
-  "Frequency": [
+  "BareDynamicalMatrix": [
    {
-    "name": "ClassicalMechanics.HarmonicOscillator.\u03c9",
-    "module": "Physlib.ClassicalMechanics.HarmonicOscillator.Basic",
-    "kind": "def",
-    "informal": "Angular frequency of the classical harmonic oscillator, the model behind phonon modes.",
-    "source_url": "https://github.com/leanprover-community/physlib/blob/a74414af9cf713084dd59943fa706980cb7573de/Physlib/ClassicalMechanics/HarmonicOscillator/Basic.lean#L150",
+    "name": "Physlib.CondensedMatter.Crystal",
+    "module": "Physlib.CondensedMatter.Crystal.Basic",
+    "kind": "structure",
+    "informal": "The crystal whose sites and translations index the force constants the bridge folds into the dynamical matrix.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Crystal/Basic.lean#L65",
+    "confidence": "related"
+   },
+   {
+    "name": "Physlib.CondensedMatter.Crystal.Site",
+    "module": "Physlib.CondensedMatter.Crystal.Basic",
+    "kind": "structure",
+    "informal": "A crystal site, the atom index of the dynamical-matrix blocks.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Crystal/Basic.lean#L90",
     "confidence": "related"
    }
   ],
-  "Eigenvectors": [],
-  "GroupVelocity": [],
+  "DynamicalMatrix": [
+   {
+    "name": "Physlib.CondensedMatter.Crystal",
+    "module": "Physlib.CondensedMatter.Crystal.Basic",
+    "kind": "structure",
+    "informal": "The crystal whose sites and translations index the dynamical matrix, before and after the non-analytic correction.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Crystal/Basic.lean#L65",
+    "confidence": "related"
+   },
+   {
+    "name": "Physlib.CondensedMatter.Crystal.Site",
+    "module": "Physlib.CondensedMatter.Crystal.Basic",
+    "kind": "structure",
+    "informal": "A crystal site, the atom index of the dynamical-matrix blocks.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Crystal/Basic.lean#L90",
+    "confidence": "related"
+   }
+  ],
+  "Frequency": [
+   {
+    "name": "ClassicalMechanics.HarmonicOscillator.ω",
+    "module": "Physlib.ClassicalMechanics.HarmonicOscillator.Basic",
+    "kind": "def",
+    "informal": "Angular frequency of the classical harmonic oscillator, the model behind phonon modes.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/ClassicalMechanics/HarmonicOscillator/Basic.lean#L156",
+    "confidence": "related"
+   },
+   {
+    "name": "Physlib.CondensedMatter.Crystal",
+    "module": "Physlib.CondensedMatter.Crystal.Basic",
+    "kind": "structure",
+    "informal": "The crystal on whose Born-von Karman folding the bridge proves omega^2 >= 0 at commensurate wavevectors.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Crystal/Basic.lean#L65",
+    "confidence": "related"
+   }
+  ],
+  "Eigenvectors": [
+   {
+    "name": "Physlib.CondensedMatter.Crystal",
+    "module": "Physlib.CondensedMatter.Crystal.Basic",
+    "kind": "structure",
+    "informal": "The crystal on whose sites the bridge's dispersion relation places the eigenvector components.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Crystal/Basic.lean#L65",
+    "confidence": "related"
+   },
+   {
+    "name": "Physlib.CondensedMatter.Crystal.Site",
+    "module": "Physlib.CondensedMatter.Crystal.Basic",
+    "kind": "structure",
+    "informal": "A crystal site, the atom index of the eigenvector blocks.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Crystal/Basic.lean#L90",
+    "confidence": "related"
+   }
+  ],
+  "GroupVelocity": [
+   {
+    "name": "Physlib.CondensedMatter.Crystal",
+    "module": "Physlib.CondensedMatter.Crystal.Basic",
+    "kind": "structure",
+    "informal": "The crystal on which the bridge proves the group velocity equals d omega/dq along a differentiable eigenvector path.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Crystal/Basic.lean#L65",
+    "confidence": "related"
+   },
+   {
+    "name": "Physlib.CondensedMatter.Crystal.Site",
+    "module": "Physlib.CondensedMatter.Crystal.Basic",
+    "kind": "structure",
+    "informal": "A crystal site, the atom index of the dynamical-matrix blocks.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Crystal/Basic.lean#L90",
+    "confidence": "related"
+   }
+  ],
   "HeatCapacity": [
    {
     "name": "CanonicalEnsemble.heatCapacity",
     "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
     "kind": "def",
     "informal": "Constant-volume heat capacity C_V = dU/dT of a canonical ensemble.",
-    "source_url": "https://github.com/leanprover-community/physlib/blob/a74414af9cf713084dd59943fa706980cb7573de/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L417",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L417",
     "confidence": "exact"
+   },
+   {
+    "name": "QuantumMechanics.OneDimension.HarmonicOscillator.eigenValue",
+    "module": "Physlib.QuantumMechanics.HarmonicOscillator.OneDimension.TISE",
+    "kind": "def",
+    "informal": "The oscillator spectrum (n + 1/2) hbar omega that the bridge feeds into the canonical ensemble to prove the per-mode heat capacity.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29",
+    "confidence": "related"
    }
   ],
-  "VolumetricHeatCapacity": [],
-  "MolarHeatCapacity": [],
+  "VolumetricHeatCapacity": [
+   {
+    "name": "CanonicalEnsemble.heatCapacity",
+    "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
+    "kind": "def",
+    "informal": "The constant-volume heat capacity C_V = dU/dT of a canonical ensemble as a derivWithin of the mean energy on T > 0.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L417",
+    "confidence": "related"
+   }
+  ],
+  "MolarHeatCapacity": [
+   {
+    "name": "CanonicalEnsemble.heatCapacity",
+    "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
+    "kind": "def",
+    "informal": "Heat capacity of a canonical ensemble as the temperature derivative of the mean energy.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L417",
+    "confidence": "related"
+   }
+  ],
   "HelmholtzFreeEnergy": [
    {
     "name": "CanonicalEnsemble.helmholtzFreeEnergy",
     "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
     "kind": "def",
     "informal": "Helmholtz free energy F = -kB T log Z of a canonical ensemble.",
-    "source_url": "https://github.com/leanprover-community/physlib/blob/a74414af9cf713084dd59943fa706980cb7573de/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L676",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L680",
     "confidence": "exact"
    },
    {
-    "name": "MicroHamiltonian.helmholtzA",
-    "module": "Physlib.StatisticalMechanics.MicroCanonicalEnsemble.ThermoQuantities",
+    "name": "QuantumMechanics.OneDimension.HarmonicOscillator.eigenValue",
+    "module": "Physlib.QuantumMechanics.HarmonicOscillator.OneDimension.TISE",
     "kind": "def",
-    "informal": "Helmholtz free energy A = -T log Z as a function of temperature.",
-    "source_url": "https://github.com/leanprover-community/physlib/blob/a74414af9cf713084dd59943fa706980cb7573de/Physlib/StatisticalMechanics/MicroCanonicalEnsemble/ThermoQuantities.lean#L85",
-    "confidence": "exact"
+    "informal": "The oscillator spectrum (n + 1/2) hbar omega that the bridge feeds into the canonical ensemble to prove the per-mode free energy.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29",
+    "confidence": "related"
    }
   ],
   "Entropy": [
@@ -78,15 +198,7 @@
     "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
     "kind": "def",
     "informal": "Thermodynamic entropy of a canonical ensemble as -kB times the mean log physical probability.",
-    "source_url": "https://github.com/leanprover-community/physlib/blob/a74414af9cf713084dd59943fa706980cb7573de/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L796",
-    "confidence": "exact"
-   },
-   {
-    "name": "MicroHamiltonian.entropyS",
-    "module": "Physlib.StatisticalMechanics.MicroCanonicalEnsemble.ThermoQuantities",
-    "kind": "def",
-    "informal": "Entropy defined as minus the temperature derivative of the Helmholtz free energy.",
-    "source_url": "https://github.com/leanprover-community/physlib/blob/a74414af9cf713084dd59943fa706980cb7573de/Physlib/StatisticalMechanics/MicroCanonicalEnsemble/ThermoQuantities.lean#L89",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L800",
     "confidence": "exact"
    },
    {
@@ -94,15 +206,15 @@
     "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
     "kind": "def",
     "informal": "Differential (Gibbs) entropy of the canonical distribution, entropy up to a phase-space constant.",
-    "source_url": "https://github.com/leanprover-community/physlib/blob/a74414af9cf713084dd59943fa706980cb7573de/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L565",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L566",
     "confidence": "related"
    },
    {
-    "name": "entropy",
-    "module": "Physlib.Thermodynamics.IdealGas.Basic",
+    "name": "QuantumMechanics.OneDimension.HarmonicOscillator.eigenValue",
+    "module": "Physlib.QuantumMechanics.HarmonicOscillator.OneDimension.TISE",
     "kind": "def",
-    "informal": "Entropy S(U,V,N) of a monophase ideal gas, the Sackur-Tetrode-style model expression.",
-    "source_url": "https://github.com/leanprover-community/physlib/blob/a74414af9cf713084dd59943fa706980cb7573de/Physlib/Thermodynamics/IdealGas/Basic.lean#L34",
+    "informal": "The oscillator spectrum (n + 1/2) hbar omega that the bridge feeds into the canonical ensemble to prove the per-mode entropy.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29",
     "confidence": "related"
    }
   ],
@@ -112,41 +224,145 @@
     "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
     "kind": "def",
     "informal": "Mean energy U of a canonical ensemble, the ensemble average of the microstate energy.",
-    "source_url": "https://github.com/leanprover-community/physlib/blob/a74414af9cf713084dd59943fa706980cb7573de/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L518",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L519",
     "confidence": "exact"
    },
    {
-    "name": "MicroHamiltonian.internalU",
-    "module": "Physlib.StatisticalMechanics.MicroCanonicalEnsemble.ThermoQuantities",
+    "name": "QuantumMechanics.OneDimension.HarmonicOscillator.eigenValue",
+    "module": "Physlib.QuantumMechanics.HarmonicOscillator.OneDimension.TISE",
     "kind": "def",
-    "informal": "Internal energy U defined as minus the beta derivative of log Z.",
-    "source_url": "https://github.com/leanprover-community/physlib/blob/a74414af9cf713084dd59943fa706980cb7573de/Physlib/StatisticalMechanics/MicroCanonicalEnsemble/ThermoQuantities.lean#L80",
-    "confidence": "exact"
+    "informal": "The oscillator spectrum (n + 1/2) hbar omega that the bridge feeds into the canonical ensemble to prove the per-mode internal energy.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29",
+    "confidence": "related"
    }
   ],
-  "MolarHelmholtzFreeEnergy": [],
-  "MolarEntropy": [],
-  "MolarInternalEnergy": [],
+  "MolarHelmholtzFreeEnergy": [
+   {
+    "name": "CanonicalEnsemble.helmholtzFreeEnergy",
+    "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+    "kind": "def",
+    "informal": "Helmholtz free energy -kB T log Z of a canonical ensemble.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L680",
+    "confidence": "related"
+   }
+  ],
+  "MolarEntropy": [
+   {
+    "name": "CanonicalEnsemble.thermodynamicEntropy",
+    "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+    "kind": "def",
+    "informal": "Thermodynamic entropy of a canonical ensemble at temperature T.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L800",
+    "confidence": "related"
+   }
+  ],
+  "MolarInternalEnergy": [
+   {
+    "name": "CanonicalEnsemble.meanEnergy",
+    "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+    "kind": "def",
+    "informal": "Mean (internal) energy of a canonical ensemble as the integral of the energy against the Boltzmann probability measure.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L519",
+    "confidence": "related"
+   }
+  ],
   "Linewidth[channel=anharmonic_3ph]": [],
   "Linewidth[channel=isotope]": [],
   "Linewidth[channel=boundary]": [],
   "Linewidth[channel=total]": [],
   "IsotopeAbundances": [],
-  "PhononDOS": [],
+  "PhononDOS": [
+   {
+    "name": "Physlib.CondensedMatter.Crystal",
+    "module": "Physlib.CondensedMatter.Crystal.Basic",
+    "kind": "structure",
+    "informal": "The crystal over whose modes the bridge proves the density-of-states count and second-moment sum rules.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Crystal/Basic.lean#L65",
+    "confidence": "related"
+   }
+  ],
   "Gruneisen": [],
   "PhaseSpace3Phonon": [],
   "MeanFreeDisplacement[bte_solver=rta]": [],
   "MeanFreeDisplacement[bte_solver=direct_inverse]": [],
-  "ThermalConductivity[bte_solver=rta]": [],
-  "ThermalConductivity": [],
-  "ThermalConductivity[bte_solver=direct_inverse]": [],
+  "ThermalConductivity[bte_solver=rta]": [
+   {
+    "name": "CanonicalEnsemble.heatCapacity",
+    "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
+    "kind": "def",
+    "informal": "The per-mode canonical heat capacity c in kappa = sum c v F, with which the bridge proves the RTA conductivity symmetric and positive semidefinite.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L417",
+    "confidence": "related"
+   },
+   {
+    "name": "QuantumMechanics.OneDimension.HarmonicOscillator",
+    "module": "Physlib.QuantumMechanics.HarmonicOscillator.OneDimension.Basic",
+    "kind": "structure",
+    "informal": "The quantum oscillator whose canonical heat capacity is the per-mode c.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/Basic.lean#L63",
+    "confidence": "related"
+   }
+  ],
+  "ThermalConductivity": [
+   {
+    "name": "CondensedMatter.ThermoelectricMaterial",
+    "module": "Physlib.CondensedMatter.Thermoelectric.Basic",
+    "kind": "structure",
+    "informal": "A thermoelectric material record carrying the lattice and electronic conductivities kl > 0 and ke >= 0 as scalar fields.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L102",
+    "confidence": "related"
+   },
+   {
+    "name": "CondensedMatter.ThermoelectricMaterial.totalThermalConductivity",
+    "module": "Physlib.CondensedMatter.Thermoelectric.Basic",
+    "kind": "def",
+    "informal": "The scalar total thermal conductivity kl + ke of a thermoelectric material.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L143",
+    "confidence": "related"
+   }
+  ],
+  "ThermalConductivity[bte_solver=direct_inverse]": [
+   {
+    "name": "CondensedMatter.ThermoelectricMaterial.κl",
+    "module": "Physlib.CondensedMatter.Thermoelectric.Basic",
+    "kind": "def",
+    "informal": "The lattice summand kl > 0 of the thermoelectric record, the slot a linearized-BTE lattice conductivity fills.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L109",
+    "confidence": "related"
+   },
+   {
+    "name": "CondensedMatter.ThermoelectricMaterial.totalThermalConductivity",
+    "module": "Physlib.CondensedMatter.Thermoelectric.Basic",
+    "kind": "def",
+    "informal": "The total conductivity kl + ke of the thermoelectric record, positive by the bridge's binding.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L143",
+    "confidence": "related"
+   }
+  ],
   "ThermalConductivity[transport_model=wigner_populations]": [],
   "ThermalConductivity[transport_model=wigner_coherences]": [],
   "ThermalConductivity[transport_model=wigner]": [],
   "ThermalConductivity[transport_model=qhgk]": [],
   "CumulativeKappa[wrt=omega]": [],
   "CumulativeKappa[wrt=mfp]": [],
-  "Trajectory": [],
+  "Trajectory": [
+   {
+    "name": "ClassicalMechanics.ReferenceFrame.Particle",
+    "module": "Physlib.ClassicalMechanics.PointParticle.Basic",
+    "kind": "structure",
+    "informal": "A point particle given by its mass and its time-dependent position in frame coordinates, twice differentiable in an inertial frame.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/ClassicalMechanics/PointParticle/Basic.lean#L47",
+    "confidence": "related"
+   },
+   {
+    "name": "ClassicalMechanics.ReferenceFrame.Particle.velocity",
+    "module": "Physlib.ClassicalMechanics.PointParticle.Basic",
+    "kind": "def",
+    "informal": "The particle velocity as the time derivative of its position.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/ClassicalMechanics/PointParticle/Basic.lean#L64",
+    "confidence": "related"
+   }
+  ],
   "HeatCurrent": [],
   "HeatCurrentACF": [],
   "VelocityAutocorrelation": [],
@@ -157,42 +373,154 @@
   "ParticipationRatio": [],
   "ModalDiffusivity": [],
   "PhononTransmission": [],
-  "ThermalConductance[transport_model=landauer]": [],
-  "QuantumKineticEnergy": [],
-  "HeatCapacity[method=pimd]": [],
-  "PotentialOfMeanForce": [],
-  "Structure": [],
+  "ThermalConductance[transport_model=landauer]": [
+   {
+    "name": "CanonicalEnsemble.heatCapacity",
+    "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
+    "kind": "def",
+    "informal": "The canonical heat capacity, which the bridge proves equal to the Landauer weight of one oscillator mode.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L417",
+    "confidence": "related"
+   },
+   {
+    "name": "QuantumMechanics.OneDimension.HarmonicOscillator",
+    "module": "Physlib.QuantumMechanics.HarmonicOscillator.OneDimension.Basic",
+    "kind": "structure",
+    "informal": "The quantum oscillator whose canonical ensemble supplies that Landauer weight.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/Basic.lean#L63",
+    "confidence": "related"
+   }
+  ],
+  "QuantumKineticEnergy": [
+   {
+    "name": "QuantumMechanics.SpaceDQuantumSystem.kineticOperator",
+    "module": "Physlib.QuantumMechanics.SpaceDQuantumSystem",
+    "kind": "def",
+    "informal": "The kinetic-energy operator p^2/(2m) of a d-dimensional quantum system, the observable whose thermal expectation the PIMD estimator measures.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/QuantumMechanics/SpaceDQuantumSystem.lean#L93",
+    "confidence": "related"
+   }
+  ],
+  "HeatCapacity[method=pimd]": [
+   {
+    "name": "CanonicalEnsemble.heatCapacity",
+    "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
+    "kind": "def",
+    "informal": "The constant-volume heat capacity C_V = dU/dT of a canonical ensemble, the quantity the PIMD estimator measures.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L417",
+    "confidence": "related"
+   },
+   {
+    "name": "CanonicalEnsemble.fluctuation_dissipation_energy_parametric",
+    "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
+    "kind": "theorem",
+    "informal": "C_V = Var(E)/(kB T^2), the energy-fluctuation identity the scaled-coordinates double-virial estimator estimates.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L440",
+    "confidence": "related"
+   },
+   {
+    "name": "CanonicalEnsemble.energyVariance",
+    "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+    "kind": "def",
+    "informal": "The energy variance <E^2> - <E>^2 of the canonical ensemble at temperature T.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L526",
+    "confidence": "related"
+   }
+  ],
+  "PotentialOfMeanForce": [
+   {
+    "name": "CanonicalEnsemble.μProd",
+    "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+    "kind": "def",
+    "informal": "The normalized Boltzmann probability measure of a canonical ensemble, whose marginal along a collective variable gives the P(s) that the potential of mean force is -kB T log of.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L445",
+    "confidence": "related"
+   },
+   {
+    "name": "CanonicalEnsemble.helmholtzFreeEnergy",
+    "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+    "kind": "def",
+    "informal": "The unconstrained free energy -kB T log Z that the constrained free energy F(s) specializes.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L680",
+    "confidence": "related"
+   }
+  ],
+  "Structure": [
+   {
+    "name": "Physlib.CondensedMatter.Crystal",
+    "module": "Physlib.CondensedMatter.Crystal.Basic",
+    "kind": "structure",
+    "informal": "A crystal as a finite nonempty unit cell of labels with sites generated by a finitely generated abelian translation group.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Crystal/Basic.lean#L65",
+    "confidence": "related"
+   },
+   {
+    "name": "Physlib.CondensedMatter.Crystal.Embedding",
+    "module": "Physlib.CondensedMatter.Crystal.Embedding",
+    "kind": "structure",
+    "informal": "An embedding of a crystal into a normed space, assigning a lattice vector to each translation and a position to each unit-cell label.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Crystal/Embedding.lean#L62",
+    "confidence": "related"
+   }
+  ],
   "TotalEnergy": [],
-  "Forces": [],
-  "Stress": [],
+  "Forces": [
+   {
+    "name": "ClassicalMechanics.ReferenceFrame.Force",
+    "module": "Physlib.ClassicalMechanics.Force",
+    "kind": "structure",
+    "informal": "A time-dependent force vector acting on a target object in a reference frame, the general force object per-atom forces instantiate.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/ClassicalMechanics/Force.lean#L45",
+    "confidence": "related"
+   },
+   {
+    "name": "ClassicalMechanics.HarmonicOscillator.force",
+    "module": "Physlib.ClassicalMechanics.HarmonicOscillator.Basic",
+    "kind": "def",
+    "informal": "The oscillator force as minus the gradient of the potential energy, the one-dimensional pattern of the Hellmann-Feynman force -dE/dR.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/ClassicalMechanics/HarmonicOscillator/Basic.lean#L451",
+    "confidence": "related"
+   }
+  ],
+  "Stress": [
+   {
+    "name": "FluidDynamics.CauchyFlow.IsInviscid",
+    "module": "Physlib.FluidDynamics.CauchyFlow.Inviscid",
+    "kind": "def",
+    "informal": "The inviscid Cauchy condition sigma = -p I, the sign convention the bridge proves for the stress-to-pressure contraction.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/FluidDynamics/CauchyFlow/Inviscid.lean#L54",
+    "confidence": "related"
+   }
+  ],
   "MagneticMoment": [],
   "BandGap": [],
   "ElasticConstants": [],
-  "BulkModulus": [],
+  "BulkModulus": [
+   {
+    "name": "CanonicalEnsemble.helmholtzFreeEnergy",
+    "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+    "kind": "def",
+    "informal": "The canonical free energy whose volume curvature K = V d^2F/dV^2 the bridge proves for the quasiharmonic bulk modulus.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L680",
+    "confidence": "related"
+   }
+  ],
   "ShearModulus": [],
   "Pressure": [
    {
     "name": "NVEHamiltonian.pressure",
     "module": "Physlib.StatisticalMechanics.MicroCanonicalEnsemble.ThermoQuantities",
     "kind": "def",
-    "informal": "Pressure as the volume conjugate, minus the volume derivative of the Helmholtz free energy.",
-    "source_url": "https://github.com/leanprover-community/physlib/blob/a74414af9cf713084dd59943fa706980cb7573de/Physlib/StatisticalMechanics/MicroCanonicalEnsemble/ThermoQuantities.lean#L219",
-    "confidence": "exact"
-   },
-   {
-    "name": "IdealGas.ideal_gas_law",
-    "module": "Physlib.StatisticalMechanics.MicroCanonicalEnsemble.IdealGas",
-    "kind": "theorem",
-    "informal": "The ideal gas law PV = nRT proven for the formalized ideal gas.",
-    "source_url": "https://github.com/leanprover-community/physlib/blob/a74414af9cf713084dd59943fa706980cb7573de/Physlib/StatisticalMechanics/MicroCanonicalEnsemble/IdealGas.lean#L195",
+    "informal": "Pressure as minus the volume derivative of the Helmholtz free energy of a classical NVE system, the ensemble definition behind the MD virial pressure.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/MicroCanonicalEnsemble/ThermoQuantities.lean#L219",
     "confidence": "related"
    },
    {
-    "name": "DimPressure",
-    "module": "Physlib.Units.WithDim.Pressure",
+    "name": "FluidDynamics.CauchyFlow.IsInviscid",
+    "module": "Physlib.FluidDynamics.CauchyFlow.Inviscid",
     "kind": "def",
-    "informal": "Pressure as a dimensionful quantity with units such as pascal, bar, and atmosphere.",
-    "source_url": "https://github.com/leanprover-community/physlib/blob/a74414af9cf713084dd59943fa706980cb7573de/Physlib/Units/WithDim/Pressure.lean#L24",
+    "informal": "The inviscid Cauchy condition sigma = -p I, the sign convention of the bridge's stress-to-pressure contraction.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/FluidDynamics/CauchyFlow/Inviscid.lean#L54",
     "confidence": "related"
    }
   ],
@@ -213,29 +541,234 @@
   "PhaseFraction": [],
   "TransitionTemperature": [],
   "CalphadMolarEntropy": [],
-  "QHAGibbsEnergy": [],
-  "ThermalExpansion": [],
-  "HeatCapacityConstantP": [],
-  "ThermalGruneisen": [],
+  "QHAGibbsEnergy": [
+   {
+    "name": "CanonicalEnsemble.helmholtzFreeEnergy",
+    "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+    "kind": "def",
+    "informal": "The canonical free energy summed over modes at each volume into the quasiharmonic F(V, T), whose minimum of F + pV over V the bridge proves.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L680",
+    "confidence": "related"
+   },
+   {
+    "name": "CanonicalEnsemble.thermodynamicEntropy",
+    "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+    "kind": "def",
+    "informal": "The canonical entropy entering the bridge's quasiharmonic Gibbs-energy binding.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L800",
+    "confidence": "related"
+   }
+  ],
+  "ThermalExpansion": [
+   {
+    "name": "CanonicalEnsemble.helmholtzFreeEnergy",
+    "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+    "kind": "def",
+    "informal": "The canonical free energy whose quasiharmonic minimum the bridge differentiates in temperature for the expansion coefficient.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L680",
+    "confidence": "related"
+   },
+   {
+    "name": "CanonicalEnsemble.heatCapacity",
+    "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
+    "kind": "def",
+    "informal": "The canonical heat capacity in the bridge's thermal-expansion binding.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L417",
+    "confidence": "related"
+   }
+  ],
+  "HeatCapacityConstantP": [
+   {
+    "name": "CanonicalEnsemble.heatCapacity",
+    "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
+    "kind": "def",
+    "informal": "The canonical C_V = dU/dT. C_P - C_V = T V alpha^2 B, which at p = 0 is the internal-pressure term.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L417",
+    "confidence": "related"
+   }
+  ],
+  "ThermalGruneisen": [
+   {
+    "name": "CanonicalEnsemble.heatCapacity",
+    "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
+    "kind": "def",
+    "informal": "The canonical heat capacity in the bridge's identity gamma = K alpha / C_V and its mode-weighted contraction.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L417",
+    "confidence": "related"
+   },
+   {
+    "name": "QuantumMechanics.OneDimension.HarmonicOscillator.eigenValue",
+    "module": "Physlib.QuantumMechanics.HarmonicOscillator.OneDimension.TISE",
+    "kind": "def",
+    "informal": "The oscillator spectrum whose volume dependence defines the mode Gruneisen parameters the bridge contracts.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29",
+    "confidence": "related"
+   }
+  ],
   "HOMOLUMOGap": [],
   "ReactionBarrier[construction=neb_mep]": [],
   "BondDissociationEnergy": [],
-  "MolecularFrequency": [],
+  "MolecularFrequency": [
+   {
+    "name": "QuantumMechanics.HarmonicOscillator",
+    "module": "Physlib.QuantumMechanics.HarmonicOscillator.Basic",
+    "kind": "structure",
+    "informal": "The d-dimensional harmonic oscillator carrying one positive natural frequency per mode, the object the normal-mode frequencies of a molecule parametrize after diagonalizing the mass-weighted Hessian.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/QuantumMechanics/HarmonicOscillator/Basic.lean#L59",
+    "confidence": "related"
+   },
+   {
+    "name": "ClassicalMechanics.HarmonicOscillator.ω",
+    "module": "Physlib.ClassicalMechanics.HarmonicOscillator.Basic",
+    "kind": "def",
+    "informal": "The classical oscillator frequency sqrt(k/m), the one-mode case of the mass-weighted Hessian eigenfrequencies.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/ClassicalMechanics/HarmonicOscillator/Basic.lean#L156",
+    "confidence": "related"
+   }
+  ],
   "StaticDielectricTensor": [],
   "ElectronicDOS": [],
-  "ElectricalConductivity[carrier=electronic]": [],
-  "SeebeckCoefficient": [],
-  "ElectronicThermalConductivity": [],
+  "ElectricalConductivity[carrier=electronic]": [
+   {
+    "name": "CondensedMatter.ThermoelectricMaterial.σ",
+    "module": "Physlib.CondensedMatter.Thermoelectric.Basic",
+    "kind": "def",
+    "informal": "The electrical conductivity sigma > 0 of the thermoelectric record, the sigma of PF = sigma S^2 and zT.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L107",
+    "confidence": "exact"
+   },
+   {
+    "name": "CondensedMatter.ThermoelectricMaterial",
+    "module": "Physlib.CondensedMatter.Thermoelectric.Basic",
+    "kind": "structure",
+    "informal": "The linear-response thermoelectric material record that carries sigma among its four transport coefficients.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L102",
+    "confidence": "related"
+   }
+  ],
+  "SeebeckCoefficient": [
+   {
+    "name": "CondensedMatter.ThermoelectricMaterial.S",
+    "module": "Physlib.CondensedMatter.Thermoelectric.Basic",
+    "kind": "def",
+    "informal": "The Seebeck coefficient S of a thermoelectric material, the voltage per unit temperature difference (a structure field, hence a projection).",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L105",
+    "confidence": "exact"
+   },
+   {
+    "name": "CondensedMatter.ThermoelectricMaterial",
+    "module": "Physlib.CondensedMatter.Thermoelectric.Basic",
+    "kind": "structure",
+    "informal": "The linear-response thermoelectric material that carries S among its four transport coefficients.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L102",
+    "confidence": "related"
+   }
+  ],
+  "ElectronicThermalConductivity": [
+   {
+    "name": "CondensedMatter.ThermoelectricMaterial.κe",
+    "module": "Physlib.CondensedMatter.Thermoelectric.Basic",
+    "kind": "def",
+    "informal": "The electronic contribution kappa_e to the thermal conductivity, a nonnegative field of the thermoelectric-material record.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L111",
+    "confidence": "exact"
+   },
+   {
+    "name": "CondensedMatter.ThermoelectricMaterial.totalThermalConductivity",
+    "module": "Physlib.CondensedMatter.Thermoelectric.Basic",
+    "kind": "def",
+    "informal": "The total thermal conductivity kappa_l + kappa_e, the sum in which the node is the electronic summand.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L143",
+    "confidence": "related"
+   }
+  ],
   "CarrierMobility": [],
   "Diffusivity": [],
   "ActivationEnergy": [],
   "ElectricalConductivity[carrier=ionic]": [],
-  "ConfigurationalEnergy": [],
+  "ConfigurationalEnergy": [
+   {
+    "name": "Physlib.CondensedMatter.Crystal",
+    "module": "Physlib.CondensedMatter.Crystal.Basic",
+    "kind": "structure",
+    "informal": "A crystal whose sites carry unit-cell labels. A cluster expansion is an energy functional on occupation functions over Crystal.Site.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Crystal/Basic.lean#L65",
+    "confidence": "related"
+   }
+  ],
   "CarrierDensity": [],
-  "ThermalConductivity[contribution=total]": [],
-  "MolarVolume": [],
-  "PowerFactor": [],
-  "ZT": [],
+  "ThermalConductivity[contribution=total]": [
+   {
+    "name": "CondensedMatter.ThermoelectricMaterial.totalThermalConductivity",
+    "module": "Physlib.CondensedMatter.Thermoelectric.Basic",
+    "kind": "def",
+    "informal": "The total thermal conductivity as the sum kl + ke of the lattice and electronic channels.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L143",
+    "confidence": "exact"
+   },
+   {
+    "name": "CondensedMatter.ThermoelectricMaterial",
+    "module": "Physlib.CondensedMatter.Thermoelectric.Basic",
+    "kind": "structure",
+    "informal": "The material record holding the two summands kl and ke with their sign constraints.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L102",
+    "confidence": "related"
+   }
+  ],
+  "MolarVolume": [
+   {
+    "name": "Physlib.CondensedMatter.Crystal.Embedding",
+    "module": "Physlib.CondensedMatter.Crystal.Embedding",
+    "kind": "structure",
+    "informal": "An embedding of a crystal by lattice vectors, whose cell covolume times N_A/Z is the molar volume.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Crystal/Embedding.lean#L62",
+    "confidence": "related"
+   }
+  ],
+  "PowerFactor": [
+   {
+    "name": "CondensedMatter.ThermoelectricMaterial.powerFactor",
+    "module": "Physlib.CondensedMatter.Thermoelectric.Basic",
+    "kind": "def",
+    "informal": "The thermoelectric power factor PF = sigma S^2 of a material.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L125",
+    "confidence": "exact"
+   },
+   {
+    "name": "CondensedMatter.ThermoelectricMaterial",
+    "module": "Physlib.CondensedMatter.Thermoelectric.Basic",
+    "kind": "structure",
+    "informal": "A thermoelectric material in linear response, carrying S, sigma, and the two thermal conductivities.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L102",
+    "confidence": "related"
+   }
+  ],
+  "ZT": [
+   {
+    "name": "CondensedMatter.ThermoelectricMaterial.figureOfMerit",
+    "module": "Physlib.CondensedMatter.Thermoelectric.Basic",
+    "kind": "def",
+    "informal": "The dimensionless thermoelectric figure of merit zT = sigma S^2 T / (kl + ke) of a material at temperature T.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L158",
+    "confidence": "exact"
+   },
+   {
+    "name": "CondensedMatter.ThermoelectricMaterial.powerFactor",
+    "module": "Physlib.CondensedMatter.Thermoelectric.Basic",
+    "kind": "def",
+    "informal": "The thermoelectric power factor PF = sigma S^2, the numerator of zT.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L125",
+    "confidence": "related"
+   },
+   {
+    "name": "CondensedMatter.ThermoelectricMaterial",
+    "module": "Physlib.CondensedMatter.Thermoelectric.Basic",
+    "kind": "structure",
+    "informal": "The four-coefficient linear-response thermoelectric material zT is defined over.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L102",
+    "confidence": "related"
+   }
+  ],
   "ThermalConductivity[role=matrix]": [],
   "ThermalConductivity[role=filler]": [],
   "InterfaceConductance": [],
@@ -244,9 +777,44 @@
   "ThermalConductivity[effective_medium=nan,orientation=random]": [],
   "ThermalConductivity[effective_medium=nan,orientation=aligned]": [],
   "InterfaceConductance[transport_model=nemd]": [],
-  "CellVolume": [],
-  "AtomicMass": [],
-  "AtomCount": [],
+  "CellVolume": [
+   {
+    "name": "Physlib.CondensedMatter.Crystal.Embedding",
+    "module": "Physlib.CondensedMatter.Crystal.Embedding",
+    "kind": "structure",
+    "informal": "An embedding of a crystal into a normed space by lattice vectors and basis positions. The cell volume is the covolume of the lattice vectors.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Crystal/Embedding.lean#L62",
+    "confidence": "related"
+   }
+  ],
+  "AtomicMass": [
+   {
+    "name": "ClassicalMechanics.ReferenceFrame.Particle.mass",
+    "module": "Physlib.ClassicalMechanics.PointParticle.Basic",
+    "kind": "def",
+    "informal": "The positive constant mass of a point particle, the per-atom mass a crystal's sites would carry.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/ClassicalMechanics/PointParticle/Basic.lean#L49",
+    "confidence": "related"
+   },
+   {
+    "name": "Physlib.CondensedMatter.Crystal",
+    "module": "Physlib.CondensedMatter.Crystal.Basic",
+    "kind": "structure",
+    "informal": "A crystal with a finite unit cell of labels, on which per-species masses are a positive function.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Crystal/Basic.lean#L65",
+    "confidence": "related"
+   }
+  ],
+  "AtomCount": [
+   {
+    "name": "Physlib.CondensedMatter.Crystal",
+    "module": "Physlib.CondensedMatter.Crystal.Basic",
+    "kind": "structure",
+    "informal": "A crystal with a finite nonempty unit cell of labels. The atom count is the cardinality of its UnitCell type.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Crystal/Basic.lean#L65",
+    "confidence": "related"
+   }
+  ],
   "ConductanceState": [],
   "ConductanceWindow": [],
   "ConductanceDriftExponent": [],
@@ -268,5 +836,96 @@
   "PotentialForceFitError": [],
   "PotentialVirialFitError": [],
   "PotentialUncertaintyExceedance[method=committee_force_spread]": []
+ },
+ "needs_upstream": {
+  "ActivationEnergy": "An Arrhenius rate law with the activation energy E_a in the Boltzmann factor exp(-E_a / (kB T)), in Thermodynamics next to Temperature.β. The Lean bridge formalizes it locally in OMAIMaterialsTransport, the upstreaming candidate.",
+  "AdsorptionEnergy": "A total-energy function on relaxed atomic configurations (slab, adsorbate, adsorbate-on-slab) whose differences define binding energies, a surface-energetics extension of Physlib.CondensedMatter.Crystal. The Lean bridge formalizes it locally in OMAIStabilityEnergies, the upstreaming candidate.",
+  "AssessedDatabase": "A CALPHAD Gibbs-energy model family (per-phase molar Gibbs energy G_m(T, composition) with SER lattice stabilities and Redlich-Kister excess terms), a new Thermodynamics area.",
+  "BandGap": "A band structure of a periodic Hamiltonian with the gap as the conduction-band minimum minus the valence-band maximum, in the CondensedMatter.BandTheory stub. The Physlib library has only a single-band tight-binding chain, which has no gap.",
+  "BondDissociationEnergy": "A molecular ground-state total-energy function whose differences over relaxed fragments define bond energies, a molecular many-electron area under QuantumMechanics that the Physlib library does not have.",
+  "BornCharges": "A per-site rank-2 Born effective charge tensor Z* = (Omega/e) dP/du, the polarization response of a crystal to a sublattice displacement in units of the elementary charge, in CondensedMatter.Response.",
+  "CalphadMolarEntropy": "A molar entropy S = -dG/dT of an assessed CALPHAD phase model, in Thermodynamics next to the Gibbs energy it differentiates. The Lean bridge formalizes it locally in OMAICalphad, the upstreaming candidate.",
+  "CarrierDensity": "A number density def N/V for particles of an NVE system or mobile carriers on a crystal, StatisticalMechanics or CondensedMatter.",
+  "CarrierMobility": "A carrier mobility def mu = sigma/(n_c e) requiring an electrical conductivity, a carrier number density and the elementary charge on one material, CondensedMatter.Response. The Lean bridge formalizes it locally in OMAIElectronicStatistics, the upstreaming candidate.",
+  "ChemicalPotential": "A chemical potential as the particle-number or mole-fraction derivative of a free energy at fixed temperature, in Thermodynamics. No quantum canonical free energy in the Physlib library is yet a function of particle number. The Lean bridge formalizes it locally in OMAICalphad, the upstreaming candidate.",
+  "ClassificationAccuracy": "A fraction-of-correct-labels def over a finite test set. It is a model-quality metric with no physics content, whose nearest home is Physlib.Mathematics rather than any physics area.",
+  "ConductanceDriftExponent": "A power-law relaxation law G(t) = G(t0) (t/t0)^(-nu) for a device conductance, needing a device conductance-versus-time concept in a CondensedMatter device-response area.",
+  "ConductanceRelaxationTime": "A characteristic time of a programmed conductance decay under a read protocol, needing the same device conductance-versus-time concept in a CondensedMatter device-response area.",
+  "ConductanceState": "A two-terminal chord conductance G = I/V of a device at a stated read bias, in Electromagnetism or CondensedMatter.Response. The Lean bridge formalizes it locally in OMAIDeviceMetrology, the upstreaming candidate.",
+  "ConductanceWindow": "The ratio G_max/G_min over one device's programmable conductance states, needing the device conductance-state concept first, CondensedMatter device response.",
+  "CumulativeKappa[wrt=mfp]": "A mode-resolved phonon thermal-conductivity sum over the Brillouin zone (per-mode heat capacity, group velocity, mean free path) admitting partial sums by mean-free-path cutoff, CondensedMatter lattice-dynamics transport. PhyslibAlpha's BrillouinZone (CondensedMatter/Crystal/Brillouin.lean) is the natural Brillouin-zone base.",
+  "CumulativeKappa[wrt=omega]": "The same mode-resolved phonon thermal-conductivity sum admitting partial sums by frequency cutoff, CondensedMatter lattice-dynamics transport. PhyslibAlpha's BrillouinZone (CondensedMatter/Crystal/Brillouin.lean) is the natural Brillouin-zone base.",
+  "CureConversion": "A reacted-fraction order parameter alpha in [0,1] with a cure-kinetics rate law for a thermosetting resin, a chemical-kinetics area the Physlib library does not have. The Lean bridge formalizes it locally in OMAICureKinetics, the upstreaming candidate.",
+  "DepolarizationFactor": "The Eshelby depolarization factors of a spheroidal inclusion from the electrostatics of a uniformly polarized body, Electromagnetism. The Lean bridge formalizes it locally in OMAICompositeConductivity, the upstreaming candidate.",
+  "DielectricTensor": "A positive-definite rank-2 relative permittivity tensor of a crystal (the electronic eps_inf) in an Electromagnetism material-response area. The Physlib library carries only the vacuum constants.",
+  "Diffusivity": "A self-diffusion coefficient def from the long-time slope of the mean-square displacement of a trajectory or stochastic process, StatisticalMechanics.",
+  "DotProductError": "An RMS error of an analog weighted sum computed by programmed device conductances, needing the device conductance-state concept first, outside the current Physlib library. The Lean bridge formalizes it locally in OMAIDeviceMetrology, the upstreaming candidate.",
+  "ElasticConstants": "A rank-4 elastic stiffness tensor as the second strain derivative of an energy density on a crystal embedding, CondensedMatter.Response. The Lean bridge formalizes it locally in OMAICellElasticity, the upstreaming candidate.",
+  "ElectricalConductivity[carrier=ionic]": "A Nernst-Einstein ionic conductivity sigma = n (z e)^2 D / (kB T) from a tracer diffusivity, in StatisticalMechanics or CondensedMatter. The Physlib library's only conductivity is the sigma field of the thermoelectric record. The Lean bridge formalizes it locally in OMAIMaterialsTransport, the upstreaming candidate.",
+  "ElectronAffinity": "Needs a CondensedMatter.BandTheory definition of a single-particle spectrum with a vacuum reference level, with chi : ℝ defined as the vacuum energy minus the lowest unoccupied eigenvalue.",
+  "ElectronicDOS": "Needs a CondensedMatter.BandTheory density of states: the pushforward measure of the band energies E_nk over the Brillouin zone, whose density with respect to Lebesgue measure on energy is g(E). PhyslibAlpha's BrillouinZone (CondensedMatter/Crystal/Brillouin.lean) is the natural Brillouin-zone base. The Lean bridge formalizes it locally in OMAIElectronicStatistics, the upstreaming candidate.",
+  "EnergyAboveHull": "Needs a Thermodynamics phase-stability module: formation energy per atom as a function on composition space together with its lower convex envelope, E_hull being the pointwise difference. The Lean bridge formalizes it locally in OMAIStabilityEnergies, the upstreaming candidate.",
+  "FillerVolumeFraction": "Needs a CondensedMatter effective-medium composite structure for a two-phase mixture carrying a volume fraction f : ℝ with 0 ≤ f ≤ 1 as a defining field.",
+  "ForceConstants[order=3]": "Needs a lattice-dynamics module with the crystal potential energy as a function of atomic displacements and its third derivative tensor at equilibrium. The Lean bridge formalizes it locally in OMAIAtomisticDerivatives, the upstreaming candidate.",
+  "FormationEnergy": "Needs a Thermodynamics definition of the energy of a compound minus the composition-weighted energies of its elemental reference phases, divided by the atom count.",
+  "GlassTransitionTemperature": "A glass-transition temperature as the location of the heat-capacity step of a vitrifying network, in Thermodynamics. Only the Physlib Temperature type exists for it. The Lean bridge formalizes it locally in OMAICureKinetics, the upstreaming candidate.",
+  "GrainBoundaryEnergy": "Needs an excess-energy-per-area functional on a bicrystal, two Physlib.CondensedMatter.Crystal embeddings joined across a plane with gamma_GB = (E_slab - N E_bulk)/(2A). Crystal and Crystal.Embedding exist but no energy model does. The Lean bridge formalizes it locally in OMAIStabilityEnergies, the upstreaming candidate.",
+  "Gruneisen": "Needs a lattice-dynamics module with volume-parametrized mode frequencies omega_qnu(V), gamma_qnu being -(V/omega) d omega/dV.",
+  "HOMOLUMOGap": "Needs ordered discrete eigenvalues of a finite-dimensional single-particle Hamiltonian (QuantumMechanics.HilbertSpaces.FiniteTarget) with an electron count N, the gap being the spin-orbital eigenvalue difference e_(N+1) - e_N.",
+  "HeatCurrent": "Needs a microscopic heat-flux observable: an Irving-Kirkwood energy-flux vector on an N-particle phase space, or at least a heat-flux field extending FluidDynamics.ThermodynamicCauchyFlow.",
+  "HeatCurrentACF": "Needs a stationary time-autocorrelation functional <J_a(0) J_b(tau)> of a vector observable under an equilibrium canonical measure in StatisticalMechanics. PhyslibAlpha's StructureFactor module (a translation-invariant correlation function as the Fourier transform of a positive measure) is the natural base. The Lean bridge formalizes it locally in OMAIMDCorrelations, the upstreaming candidate.",
+  "InterfaceConductance": "Needs an interfacial transport coefficient in a transport module: G = q/DeltaT relating the normal heat flux across an interface to the temperature discontinuity.",
+  "InterfaceConductance[transport_model=nemd]": "Needs the same interfacial Kapitza conductance definition G = q/DeltaT. The NEMD protocol is a measurement method, not a separate mathematical object.",
+  "InterfaceTrapRelaxationTime": "Needs a first-order linear relaxation law du/dt = -u/tau in ClassicalMechanics, exponential decay with the time constant tau as the defining datum.",
+  "IsotopeAbundances": "Needs a per-species isotope distribution (masses with abundance fractions summing to one) and its normalized mass variance g_i = sum_x f_ix (1 - m_ix/mbar_i)^2 in a materials-data or StatisticalMechanics module.",
+  "Linewidth[channel=anharmonic_3ph]": "Needs a Fermi-golden-rule transition rate for a cubic phonon-phonon coupling on a lattice-dynamics mode space. QFT.PerturbationTheory holds generic Wick machinery but no phonons.",
+  "Linewidth[channel=boundary]": "Needs per-mode group velocities and the Casimir rate Gamma = |v|/L for a boundary length scale L in a phonon transport module.",
+  "Linewidth[channel=isotope]": "Needs the Tamura rate in a lattice-dynamics module: mode frequencies, eigenvectors and per-site mass variances combined as (pi/2) omega^2 times the sum over final modes q'nu' of sum_i g_i |e_i(q nu)* . e_i(q' nu')|^2 delta(omega - omega').",
+  "Linewidth[channel=total]": "Needs Matthiessen summation, a finite sum of per-channel scattering rates over a common mode space, once any channel rate exists.",
+  "MagneticMoment": "Needs a magnetic dipole moment: in Electromagnetism as the first moment of a current distribution, or in QuantumMechanics as a g-factor times a spin expectation value in Bohr magnetons.",
+  "MassDensity": "A cell mass density rho = (sum of the atomic masses) / V_cell on an embedded Physlib.CondensedMatter.Crystal. The Physlib library's FluidDynamics.MassDensity is a continuum fluid field.",
+  "MeanFreeDisplacement[bte_solver=direct_inverse]": "Needs the linearized phonon Boltzmann transport equation: a collision operator on mode space whose solution F_qnu is the per-mode mean free displacement. No Boltzmann transport machinery exists in the Physlib library.",
+  "MeanFreeDisplacement[bte_solver=rta]": "Needs per-mode group velocity and linewidth with F = v/(2 Gamma) under the relaxation-time approximation. Neither ingredient exists in the Physlib library.",
+  "MeanSquaredDisplacement": "Needs trajectory observables in StatisticalMechanics: the time-origin and particle averaged squared displacement <|r(t+tau) - r(t)|^2> of an N-particle path. The Lean bridge formalizes it locally in OMAIMDCorrelations, the upstreaming candidate.",
+  "MigrationBarrier": "Needs a potential-energy-surface module (natural home ClassicalMechanics or StatisticalMechanics) with a configuration-space potential V : C -> R and the activation energy defined as the saddle-point value minus the local-minimum value along a path between two minima.",
+  "ModalDiffusivity": "Needs CondensedMatter phonon infrastructure: a lattice-dynamics mode spectrum, a heat-flux operator with matrix elements S^a between modes and Lorentzian-broadened overlaps, from which the QHGK per-mode diffusivity D = (1/3) tr sum S S L(omega) is assembled.",
+  "MolarEnthalpy": "An enthalpy H = U + pV in Thermodynamics, with the CALPHAD molar enthalpy H = G + TS of an assessed phase model as its equilibrium-assemblage case. The Lean bridge formalizes it locally in OMAICalphad, the upstreaming candidate.",
+  "MolarGibbsEnergy": "A Gibbs energy G = F + pV as the Legendre transform of a Helmholtz free energy in volume, in Thermodynamics. A CALPHAD G(T, x) further needs a phase-indexed, composition-dependent assessed model. The Lean bridge formalizes it locally in OMAICalphad, the upstreaming candidate.",
+  "ParticipationRatio": "Needs CondensedMatter lattice dynamics with normalized vibrational eigenvectors, on which the participation ratio is PR = 1/(N sum_i a_i^2) with a_i the per-atom squared eigenvector norm, between 1/N and 1. The Lean bridge formalizes it locally in OMAIPhyslibParticipationRatio, the upstreaming candidate.",
+  "PhaseFraction": "Needs a Thermodynamics multi-phase equilibrium module: per-phase molar Gibbs energies, a convex (lever-rule) minimization over phase assemblages at fixed composition, and the minimizing molar amounts of each stable phase. The Lean bridge formalizes it locally in OMAICalphad, the upstreaming candidate.",
+  "PhaseSpace3Phonon": "Needs CondensedMatter phonon dispersions omega(q, nu) on a Brillouin-zone mesh and energy-conservation Dirac deltas, from which the three-phonon joint density of states P3 is a normalized sum over momentum-conserving triples. PhyslibAlpha's BrillouinZone (CondensedMatter/Crystal/Brillouin.lean) is the natural Brillouin-zone base.",
+  "PhononTransmission": "Needs a CondensedMatter (or quantum scattering) transmission function T(omega) of a junction between two semi-infinite periodic leads, via a scattering matrix or Caroli/NEGF formula. The Physlib library has no transmission coefficient anywhere (RectangularBarrier stops before scattering amplitudes).",
+  "PoissonRatio": "Needs a linear-elasticity module (natural home CondensedMatter or a continuum-mechanics area): stress and strain tensors, the isotropic stiffness relations, and the Poisson ratio as minus the transverse-to-axial strain ratio under uniaxial stress. The Lean bridge formalizes it locally in OMAIElasticity, the upstreaming candidate.",
+  "PotentialEnergyFitError": "Needs an interatomic-potential area with a fitted potential, reference-labelled structures, and the root-mean-square per-atom energy residual over a held-out set. Both the potential abstraction and the fitting-statistics layer are absent from the Physlib library.",
+  "PotentialForceFitError": "Needs an interatomic-potential area with per-atom forces of a fitted potential against reference forces and the root-mean-square residual over all Cartesian components of a held-out set. The Physlib library has no interatomic-potential area.",
+  "PotentialUncertaintyExceedance[method=committee_force_spread]": "Needs a committee (ensemble-of-potentials) uncertainty model with a per-configuration force-spread statistic and an exceedance fraction over the checks of a molecular dynamics run. This lies entirely outside the current Physlib library.",
+  "PotentialVirialFitError": "Needs an interatomic-potential area with per-structure virial (stress) tensors of a fitted potential against reference virials and the root-mean-square per-atom residual over the six independent components. The Physlib library has no interatomic-potential area.",
+  "ProgrammingPulseEnergy": "Needs a circuit-level device model (natural home Electromagnetism): instantaneous dissipated power I(t) V(t) and its time integral over one programming pulse. The Physlib library has no circuit or device layer. The Lean bridge formalizes it locally in OMAIDeviceMetrology, the upstreaming candidate.",
+  "ReactionBarrier[construction=neb_mep]": "Needs a potential-energy-surface module with minimum-energy paths between configurations and the barrier defined as the peak value along the path minus the reactant-minimum value. The Physlib library has no configuration-space potential surfaces or saddle points.",
+  "ReactionEnergy": "Needs a Thermodynamics (or materials) module with per-compound formation energies indexed by composition and the stoichiometrically weighted difference of products minus reactants for a balanced reaction. The Lean bridge formalizes it locally in OMAIStabilityEnergies, the upstreaming candidate.",
+  "RetentionTime": "Needs a stochastic-dynamics module with first-passage (survival) probabilities of a Markov state and the 1/e time of the survival function. The Physlib library has no stochastic processes. The Lean bridge formalizes it locally in OMAIDeviceMetrology, the upstreaming candidate.",
+  "SchottkyBarrierHeight[band_carrier=electron]": "Needs CondensedMatter.BandTheory content (currently an empty stub): band edges and a Fermi level at a metal-semiconductor interface, with the barrier as the conduction-band-edge minus metal-Fermi-level energy difference.",
+  "SetVoltage": "Needs a resistive-switching device model (outside the current Physlib library, nearest home Electromagnetism): a voltage-driven two-state system with a switching threshold under a monotonically rising drive. The Lean bridge formalizes it locally in OMAIDeviceMetrology, the upstreaming candidate.",
+  "ShearModulus": "A CondensedMatter elasticity module with an isotropic linear-elastic solid (Lame pair mu, lambda or a rank-4 stiffness tensor) in which G = mu relates shear stress to shear strain. The Physlib library has no solid elasticity. The Lean bridge formalizes it locally in OMAIElasticity, the upstreaming candidate.",
+  "StateCoefficientOfVariation": "A general coefficient-of-variation definition sigma/mu for a real random variable in the Mathematics/probability support layer, which this node would specialize to programmed conductance levels across cells or cycles.",
+  "StaticDielectricTensor": "An Electromagnetism material-response module with a linear constitutive map D = eps_vac eps_r E carrying a rank-2 relative-permittivity tensor eps_r, extending the vacuum constants of Electromagnetism.FreeSpace. The Lean bridge formalizes it locally in OMAIStaticDielectric, the upstreaming candidate.",
+  "SurfaceEnergy": "A CondensedMatter surface module defining the excess energy per unit area of a half-space termination (slab) of a Crystal, gamma = (E_slab - N E_bulk) / (2A). The Physlib library has no surface or slab formalism. The Lean bridge formalizes it locally in OMAIStabilityEnergies, the upstreaming candidate.",
+  "ThermalConductivity[effective_medium=nan,orientation=aligned]": "A CondensedMatter effective-medium module formalizing the Nan et al. formula: a map from matrix conductivity, filler conductivity tensor, filler geometry and interface conductance to the anisotropic composite conductivity for aligned inclusions. The Lean bridge formalizes it locally in OMAICompositeConductivity, the upstreaming candidate.",
+  "ThermalConductivity[effective_medium=nan,orientation=random]": "The same Nan et al. effective-medium module, orientation-averaged over randomly oriented inclusions to an isotropic scalar composite conductivity. The Lean bridge formalizes it locally in OMAICompositeConductivity, the upstreaming candidate.",
+  "ThermalConductivity[role=filler]": "A two-phase composite structure in a CondensedMatter effective-medium module whose filler phase carries an intrinsic rank-2 conductivity tensor in the inclusion principal frame.",
+  "ThermalConductivity[role=matrix]": "The same two-phase composite structure with the host phase carrying a scalar bulk matrix conductivity km.",
+  "ThermalConductivity[transport_model=green_kubo]": "A StatisticalMechanics linear-response module with stationary time-correlation functions of a heat-flux observable along a Hamiltonian flow and their time integral (Green-Kubo). The Physlib library has no correlation functions or molecular dynamics. PhyslibAlpha's StructureFactor module (a translation-invariant correlation function as the Fourier transform of a positive measure) is the natural base. The Lean bridge formalizes it locally in OMAIMDCorrelations, the upstreaming candidate.",
+  "ThermalConductivity[transport_model=hnemd]": "The same MD transport infrastructure plus the Evans homogeneous driving term in the equations of motion, with kappa read from the steady flux-to-driving-force ratio.",
+  "ThermalConductivity[transport_model=nemd]": "A steady-state Fourier-law definition J = -kappa grad T for a finite driven system in a CondensedMatter or StatisticalMechanics transport module. The Physlib library has no heat flux or temperature field.",
+  "ThermalConductivity[transport_model=qhgk]": "A quasi-harmonic Green-Kubo module needing phonon normal modes, generalized mode velocities and Lorentzian broadening of width Gamma on top of the missing phonon formalism. PhyslibAlpha's BrillouinZone (CondensedMatter/Crystal/Brillouin.lean) is the natural Brillouin-zone base.",
+  "ThermalConductivity[transport_model=wigner]": "A phonon Wigner transport equation in CondensedMatter whose solution splits kappa into populations and coherences channels. It requires a phonon band-structure formalism the Physlib library lacks. PhyslibAlpha's BrillouinZone (CondensedMatter/Crystal/Brillouin.lean) is the natural Brillouin-zone base.",
+  "ThermalConductivity[transport_model=wigner_coherences]": "The coherences (interband, wave-like) channel of the same missing phonon Wigner transport module.",
+  "ThermalConductivity[transport_model=wigner_populations]": "The populations (intraband, particle-like) channel of the same missing phonon Wigner transport module.",
+  "TotalEnergy": "A QuantumMechanics ground-state energy definition (infimum of the spectrum of a many-electron Hamiltonian, or a variational energy functional) attached to QuantumSystem. The Physlib library has no ground-state energy or density-functional formalism.",
+  "TransitionTemperature": "A StatisticalMechanics phase-coexistence module comparing per-phase free energies and defining the temperature where the stable phase changes on a T-x diagram. The Physlib library has no multi-phase free-energy comparison or nonanalyticity formalism. The Lean bridge formalizes it locally in OMAICalphad, the upstreaming candidate.",
+  "VelocityAutocorrelation": "A stationary time-correlation function <f(0) g(tau)> over a measure-preserving Hamiltonian flow in StatisticalMechanics, specialized to per-atom velocities. The Physlib library has no correlation functions. PhyslibAlpha's StructureFactor module (a translation-invariant correlation function as the Fourier transform of a positive measure) is the natural base. The Lean bridge formalizes it locally in OMAIMDCorrelations, the upstreaming candidate.",
+  "Voltage": "An electrochemistry definition in Thermodynamics, V = -Delta G / (z F), built from free-energy differences between intercalated, de-intercalated and metal-reservoir phases. The Physlib library has neither reaction free energies nor charged reservoirs. The Lean bridge formalizes it locally in OMAIStabilityEnergies, the upstreaming candidate.",
+  "WorkFunction": "A CondensedMatter surface electronic-structure module with a Fermi level and the asymptotic vacuum electrostatic potential of a half-crystal, giving the work function as the vacuum-level energy -e phi_vac minus the Fermi energy E_F. The Physlib library has neither.",
+  "YoungsModulus": "The same missing CondensedMatter isotropic elasticity module as for the shear modulus, where E_Y = mu (3 lambda + 2 mu) / (lambda + mu) follows from the stiffness tensor of a linear-elastic solid. The Lean bridge formalizes it locally in OMAIElasticity, the upstreaming candidate."
  }
 }
