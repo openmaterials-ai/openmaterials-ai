@@ -1431,7 +1431,7 @@ async function mintShortlink(env, btn, publishPrivate){
   var refusal = null;
   try {
     // a set opened from (or already given) a short link keeps its code
-    var endpoints = currentShortCode ? [] : [location.origin + '/s', SHORTLINK_ORIGIN + '/s'];
+    var endpoints = currentShortCode ? [] : [location.origin + '/s/', SHORTLINK_ORIGIN + '/s/'];
     var res = null, lastErr = null;
     for (var i = 0; i < endpoints.length && !refusal; i++) {
       try {
