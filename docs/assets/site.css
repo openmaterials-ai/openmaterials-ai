@@ -43,6 +43,7 @@
 @media (min-width: 961px) { :root { --inset: 48px; --section-y: 120px; --head-gap: 72px; } }
 
 *, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; }  /* the attribute wins over .btn, .cta-row and other display rules */
 html { background: var(--page); color: var(--ink); scroll-padding-top: var(--header-h); -webkit-text-size-adjust: 100%; }
 html, body { overflow-x: clip; }
 body { margin: 0; background: var(--page); font: 400 17px/26px var(--font-sans); font-optical-sizing: auto; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
