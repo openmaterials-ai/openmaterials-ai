@@ -48,9 +48,10 @@ kamal_cure_conversion = Operator(
         "alpha of d alpha' / rate(alpha'), implicit in alpha, so not "
         "sympy-executable; the dimensional gate proves both sides are a time. "
         "A_1 = 0 (pure autocatalysis) needs alpha_0 > 0. With no diffusion control "
-        "and constants fit to data before vitrification, the value is an upper "
-        "bound throughout the hold, loosest near and past vitrification; constants "
-        "fit across vitrification absorb the slowdown and bound nothing."
+        "and constants fit to data before vitrification, the value loses validity "
+        "near and past vitrification, where diffusion control slows the real "
+        "cure; constants fit across vitrification absorb the slowdown and say "
+        "nothing outside the fit window."
     ),
 )
 

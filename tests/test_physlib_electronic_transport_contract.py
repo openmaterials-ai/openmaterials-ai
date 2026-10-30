@@ -2,7 +2,7 @@
 
 Frozen literals are reviewed pins. The compiler probe consumes an already-built
 package selected with PHYSLIB_BRIDGE_PACKAGE and never writes build evidence.
-Global coverage totals are pinned in tests/physlib_tranches.py; this file checks
+The global coverage ledger lives in tests/physlib_tranches.py; this file checks
 only its own bindings.
 """
 from __future__ import annotations
@@ -240,11 +240,11 @@ def test_opaque_producers_are_marked_interpreted_in_the_roadmap():
     assert not rows[UNBOUND_DEFECT]["proven"]
 
 
-def test_non_analytic_correction_stays_a_recorded_defect():
+def test_non_analytic_correction_stays_an_unbound_gap():
     rows = {row["id"]: row for row in _packaged_bindings()["inventory"]["operators"]}
     row = rows[UNBOUND_DEFECT]
     assert row["status"] == "gap" and row["binding_ids"] == []
-    assert row["reason"].startswith("Catalog defect.")
+    assert row["reason"].startswith("Corrected (issue 188)")
     dielectric = json.dumps(_binding("static-dielectric-ionic-response"))
     assert "apply_nac_correction" in dielectric and "Gonze-Lee" in dielectric
 

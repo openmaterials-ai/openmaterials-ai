@@ -9696,7 +9696,7 @@
     "lean/bridge/response-formula-contract.json": "f4f446f1967c45ccf508f42232e070d468121b0967459f93fc0c496210adf353",
     "lean/bridge/semantic-formula-contract.json": "21002241bb9dae2d674df0ede26cf7f0804823591675bcb4099142e7a5d1b123",
     "lean/bridge/stability-formula-contract.json": "504e459bf61eabbb2dc3c73932a481f62ef27c34add3e8fb28985d79cf67d738",
-    "lean/bridge/static-dielectric-formula-contract.json": "e2c52ab75c423bd4d85656fe47f4bd420bf349c07fa9cbb5f56a530adddc9f06",
+    "lean/bridge/static-dielectric-formula-contract.json": "b10954d1615df47fcdf64a7f159978f58ec4cc3bde0d9994855f4183bfd18438",
     "lean/bridge/thermal-gruneisen-formula-contract.json": "61759afd04057fdd607005bf49ae8ad84e2d3d916f7c331b45886a66620acdca",
     "lean/bridge/thermochemistry-formula-contract.json": "ba8cb599e33fd957fe23e2986a914c93cd5e5c38522950fc8b67882dc805dd4b",
     "lean/bridge/vacf-spectrum-formula-contract.json": "a700f07266793902464627bc1e4bc5fa249f6e8a4cf30cf7db46da1e56ba9bd5",

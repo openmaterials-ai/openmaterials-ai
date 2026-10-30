@@ -102,11 +102,13 @@ NOT_CITED = {"planeWave_conj", "planeWave_zero", "planeWave_add", "neg_mem_shell
 # or replaced by the physical three-mode witness.
 REMOVED = ("dispersion_orthonormal_real", "dispersion_eigenvalue_real", "dispersion_real_frequencies_of_stable",
            "cumulativeKappa_saturates", "witnessCollision")
-CATALOG_DEFECTS = {"apply_nac_correction": "Catalog defect",
-                   "solve_bte[bte_solver=direct_inverse]": "Catalog defect",
-                   "contract_kappa[bte_solver=direct_inverse]": "defective collision matrix",
-                   "contract_cumulative_kappa[wrt=omega]": "Catalog defect",
-                   "contract_cumulative_kappa[wrt=mfp]": "Catalog defect"}
+# Formalization exposed these as catalog defects; the formulas are corrected
+# (issue 188) and each reason says so, but none carries a theorem.
+CATALOG_DEFECTS = {"apply_nac_correction": "Corrected (issue 188)",
+                   "solve_bte[bte_solver=direct_inverse]": "Corrected (issue 188)",
+                   "contract_kappa[bte_solver=direct_inverse]": "symmetric by construction",
+                   "contract_cumulative_kappa[wrt=omega]": "signed partial sum",
+                   "contract_cumulative_kappa[wrt=mfp]": "signed partial sum"}
 UNBOUND = {"identity_dm", "sum_linewidths", "solve_bte[bte_solver=rta]", *CATALOG_DEFECTS}
 
 
@@ -202,18 +204,18 @@ def test_registry_entry_matches_the_payload():
         assert rows[subject]["status"] == expected, subject
 
 
-def test_catalog_defects_stay_gaps_with_their_reasons():
+def test_corrected_catalog_formulas_stay_gaps_with_their_reasons():
     from omai.map_data import DOMAINS
     op = next(e for d in DOMAINS for e in d.edges if e.name == "apply_nac_correction")
-    # The Born-charge contraction uses the free component q^alpha, not the summed q_gamma.
-    assert "Sum(q^\\alpha*Z^*[i, \\gamma, \\alpha], (\\gamma, 1, 3))" in repr(op.formula)
+    # The Born-charge contraction sums q_gamma against the field index of Z*.
+    assert "Sum(Z^*[i, \\gamma, \\alpha]*q[\\gamma], (\\gamma, 1, 3))" in repr(op.formula)
     payload = _packaged_bindings()
     rows = {row["id"]: row for row in payload["inventory"]["operators"]}
     for op_id in UNBOUND:
         assert rows[op_id]["binding_ids"] == [] and rows[op_id]["status"] == "gap", op_id
     for op_id, marker in CATALOG_DEFECTS.items():
         assert marker in rows[op_id]["reason"], op_id
-    assert "Gonze-Lee" in rows["apply_nac_correction"]["reason"]
+    assert "Gonze and Lee" in rows["apply_nac_correction"]["reason"]
     assert "C^(1/2) Omega~ C^(1/2)" in rows["solve_bte[bte_solver=direct_inverse]"]["reason"]
     assert "not monotone" in rows["contract_cumulative_kappa[wrt=mfp]"]["reason"]
 

@@ -1,12 +1,17 @@
 """Reviewed proof tranches of the Lean bridge that landed after the thermal Gruneisen tranche.
 
 Each tranche test pins its own scope exactly. The global ledgers (required contracts,
-contract-name pairs, proof subjects, binding ids, module order and coverage) change with
-every later tranche, so they are kept here once: a new tranche appends one entry and
-updates ``GLOBAL_COVERAGE`` instead of editing every earlier test. Entries are frozen
-review pins, in landing order.
+proof subjects, binding ids, module order and coverage) change with every later tranche,
+so they are kept here once: a new tranche appends one entry and updates
+``GLOBAL_COVERAGE`` instead of editing every earlier test. Entries are frozen review
+pins, in landing order. The contract-name pairs are read from each tranche's contract
+files, which declare them (issue 188, item 9); each tranche's own test file still pins
+its reviewed names literally.
 """
 from __future__ import annotations
+
+import json
+from pathlib import Path
 
 from omai.formula_bindings import catalog_inventory
 
@@ -24,9 +29,6 @@ TRANCHES = (
             ("node", "ThermalGruneisen"), ("operator", "compute_bulk_modulus_qha"),
             ("operator", "compute_heat_capacity_p"), ("operator", "compute_qha_gibbs"),
             ("operator", "compute_thermal_expansion"), ("operator", "contract_thermal_gruneisen")}),
-        "pairs": tuple({"name": "OMAI.PhyslibBridge.Response." + name, "module": "OMAIPhyslibQHA"} for name in (
-            "qhaBulkModulus", "qhaGibbsEnergy", "qhaHeatCapacityP", "qhaThermalExpansion",
-            "qhaThermalGruneisen")),
         "modules": ("OMAIPhyslibGibbsBranch", "OMAIPhyslibQHA", "OMAIPhyslibQHAWitness"),
     },
     {
@@ -38,8 +40,6 @@ TRANCHES = (
             ("node", "YoungsModulus"), ("operator", "compute_bulk_modulus_eos"),
             ("operator", "contract_bulk_modulus"), ("operator", "contract_poisson_ratio"),
             ("operator", "contract_shear_modulus"), ("operator", "contract_youngs_modulus")}),
-        "pairs": tuple({"name": "OMAI.PhyslibBridge.Elasticity." + name, "module": "OMAIElasticity"} for name in (
-            "eosBulk", "poissonRatio", "voigtBulk", "voigtShear", "youngsModulus")),
         "modules": ("OMAIElasticity",),
     },
     {
@@ -54,11 +54,6 @@ TRANCHES = (
             ("operator", "depolarization_factors"), ("operator", "dibenedetto_glass_transition"),
             ("operator", "hasselman_johnson"), ("operator", "kamal_cure_conversion"),
             ("operator", "nan_effective_kappa"), ("operator", "nan_effective_kappa_aligned")}),
-        "pairs": tuple(
-            [{"name": "OMAI.PhyslibBridge.Composites." + name, "module": "OMAICompositeConductivity"}
-             for name in ("depolarization", "hasselmanJohnson", "nanAligned", "nanRandom")]
-            + [{"name": "OMAI.PhyslibBridge.CureKinetics." + name, "module": "OMAICureKinetics"}
-               for name in ("diBenedetto", "kamalCureTime")]),
         "modules": ("OMAICompositeConductivity", "OMAICureKinetics"),
     },
     {
@@ -72,13 +67,6 @@ TRANCHES = (
             ("node", "ThermalConductivity[bte_solver=rta]"), ("operator", "compute_dispersion"),
             ("operator", "compute_dynamical_matrix"), ("operator", "compute_group_velocity"),
             ("operator", "compute_participation_ratio"), ("operator", "contract_kappa[bte_solver=rta]")}),
-        "pairs": (
-            {"name": "OMAI.PhyslibBridge.Lattice.DispersionRelation", "module": "OMAIPhyslibLatticeDynamics"},
-            {"name": "OMAI.PhyslibBridge.Lattice.ForceConstants.dynamicalMatrix",
-             "module": "OMAIPhyslibLatticeDynamics"},
-            {"name": "OMAI.PhyslibBridge.Lattice.catalogGroupVelocity", "module": "OMAIPhyslibGroupVelocity"},
-            {"name": "OMAI.PhyslibBridge.Lattice.modeContractedKappa", "module": "OMAIPhyslibKappaContraction"},
-            {"name": "OMAI.PhyslibBridge.Lattice.participationRatio", "module": "OMAIPhyslibParticipationRatio"}),
         "modules": ("OMAIPhyslibLatticeDynamics", "OMAIPhyslibPhononDispersion", "OMAIPhyslibGroupVelocity",
                     "OMAIPhyslibLatticeWitness", "OMAIPhyslibKappaContraction", "OMAIPhyslibRTAConductivity",
                     "OMAIPhyslibParticipationRatio"),
@@ -96,12 +84,6 @@ TRANCHES = (
             ("operator", "emit_thermionic_conductance"), ("operator", "fit_arrhenius"),
             ("operator", "propagate_programming_error"), ("operator", "ramp_set_voltage"),
             ("operator", "zero_bias_retention")}),
-        "pairs": tuple(
-            [{"name": "OMAI.PhyslibBridge.DeviceMetrology." + name, "module": "OMAIDeviceMetrology"}
-             for name in ("deviceConductance", "driftConductance", "programmingError", "pulseEnergy",
-                          "rampSetVoltage", "retentionTime", "thermionicConductance")]
-            + [{"name": "OMAI.PhyslibBridge.MaterialsTransport." + name, "module": "OMAIMaterialsTransport"}
-               for name in ("arrheniusDiffusivity", "ionicConductivity")]),
         "modules": ("OMAIDeviceMetrology", "OMAIMaterialsTransport"),
     },
     {
@@ -120,13 +102,6 @@ TRANCHES = (
             ("operator", "compute_calphad_entropy"), ("operator", "compute_chemical_potentials"),
             ("operator", "compute_molar_enthalpy"), ("operator", "compute_phase_fractions"),
             ("operator", "compute_transition_temperature"), ("operator", "solve_equilibrium")}),
-        "pairs": tuple(
-            [{"name": "OMAI.PhyslibBridge.Stability." + name, "module": "OMAIStabilityEnergies"}
-             for name in ("adsorptionEnergy", "catalogReactionEnergy", "energyAboveHull",
-                          "grainBoundaryEnergy", "intercalationVoltage", "surfaceEnergy")]
-            + [{"name": "OMAI.PhyslibBridge.Calphad." + name, "module": "OMAICalphad"}
-               for name in ("calphadEntropy", "chemicalPotentials", "equilibriumGibbs", "leverFractions",
-                            "molarEnthalpy", "transitionTemperature")]),
         "modules": ("OMAIStabilityEnergies", "OMAICalphad"),
     },
     {
@@ -144,12 +119,6 @@ TRANCHES = (
             ("operator", "compute_fc2_finite_displacement"), ("operator", "compute_force_constants[order=2]"),
             ("operator", "compute_force_constants[order=3]"), ("operator", "compute_forces_hf"),
             ("operator", "compute_molecular_frequencies"), ("operator", "compute_stress_cell")}),
-        "pairs": tuple(
-            [{"name": "OMAI.PhyslibBridge.Atomistic." + name, "module": "OMAIAtomisticDerivatives"}
-             for name in ("fdForceConstant", "forceConstant2", "forceConstant3", "hfForce")]
-            + [{"name": "OMAI.PhyslibBridge.CellElasticity." + name, "module": "OMAICellElasticity"}
-               for name in ("cellStress", "elasticConstants")]
-            + [{"name": "OMAI.PhyslibBridge.MolecularModes.molecularFrequencies", "module": "OMAIMolecularModes"}]),
         "modules": ("OMAIAtomisticDerivatives", "OMAICellElasticity", "OMAIMolecularModes"),
     },
     {
@@ -165,12 +134,6 @@ TRANCHES = (
             ("operator", "compute_carrier_mobility"), ("operator", "compute_electronic_conductivity"),
             ("operator", "compute_electronic_dos"), ("operator", "compute_electronic_thermal_conductivity"),
             ("operator", "compute_seebeck"), ("operator", "compute_static_dielectric")}),
-        "pairs": tuple(
-            [{"name": "OMAI.PhyslibBridge.ElectronicTransport." + name, "module": "OMAIPhyslibElectronicTransport"}
-             for name in ("boltzmannConductivity", "boltzmannKappaE", "boltzmannSeebeck")]
-            + [{"name": "OMAI.PhyslibBridge.ElectronicStatistics." + name, "module": "OMAIElectronicStatistics"}
-               for name in ("boltzmannMobility", "electronicDOS")]
-            + [{"name": "OMAI.PhyslibBridge.StaticDielectric.staticDielectric", "module": "OMAIStaticDielectric"}]),
         "modules": ("OMAISommerfeldTransport", "OMAIPhyslibElectronicTransport", "OMAIElectronicStatistics",
                     "OMAIStaticDielectric"),
     },
@@ -188,18 +151,38 @@ TRANCHES = (
             ("operator", "compute_dos"), ("operator", "compute_msd"),
             ("operator", "compute_velocity_autocorrelation"),
             ("operator", "contract_kappa[transport_model=green_kubo]"), ("operator", "fourier_to_dos")}),
-        "pairs": tuple(
-            [{"name": "OMAI.PhyslibBridge.MDCorrelations." + name, "module": "OMAIMDCorrelations"}
-             for name in ("catalogHeatACF", "catalogMSD", "catalogVACF", "greenKubo")]
-            + [{"name": "OMAI.PhyslibBridge.VACFSpectrum.catalogFourierDOS", "module": "OMAIVACFSpectrum"}]
-            + [{"name": "OMAI.PhyslibBridge.PhononSpectrum." + name, "module": "OMAIPhyslibPhononSpectrum"}
-               for name in ("catalogDOS", "catalogLandauer")]),
         "modules": ("OMAIMDCorrelations", "OMAIVACFSpectrum", "OMAIPhyslibPhononSpectrum"),
     },
 )
 
 # The one frozen global coverage ledger of the published bindings; the totals come from the
 # live inventory.
+_BRIDGE = Path(__file__).resolve().parent.parent / "lean" / "bridge"
+
+
+def _contract_pairs(contracts: tuple[str, ...]) -> tuple[dict, ...]:
+    """The (lean_definition, module) pairs the tranche's contract files declare.
+
+    A missing contract file contributes no pairs instead of aborting import:
+    the owning tranche's own tests report the absence ("integration pending"),
+    and the contract-name audit comparison fails on the shortfall.
+    """
+    pairs = set()
+    for name in contracts:
+        if not (_BRIDGE / name).is_file():
+            continue
+        contract = json.loads((_BRIDGE / name).read_text())
+        for endpoint in [*contract.get("operators", []), *contract.get("nodes", [])]:
+            if "lean_definition" in endpoint:
+                source = endpoint.get("definition_source_path", contract["source_path"])
+                module = ".".join(Path(source).relative_to("lean/bridge").with_suffix("").parts)
+                pairs.add((endpoint["lean_definition"], module))
+    return tuple({"name": name, "module": module} for name, module in sorted(pairs))
+
+
+for _tranche in TRANCHES:
+    _tranche["pairs"] = _contract_pairs(_tranche["contracts"])
+
 GLOBAL_COVERAGE = {
     "nodes_total": len(_INVENTORY["nodes"]), "nodes_mapped": 35,
     "operators_total": len(_INVENTORY["operators"]), "operators_mapped": 29,

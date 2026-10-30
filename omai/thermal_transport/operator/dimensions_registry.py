@@ -59,6 +59,7 @@ from omai.operator.dimensions import (
     LENGTH,
     LENGTH_TIMES_FREQUENCY,
     MASS,
+    PERMITTIVITY,
     TEMPERATURE,
     THERMAL_CONDUCTANCE,
     THERMAL_CONDUCTIVITY,
@@ -132,9 +133,21 @@ register_symbol_dimensions({
     # Force constants.
     r"\Phi^{(2)}": ENERGY_PER_LENGTH_SQUARED,
     r"\Phi^{(3)}": ENERGY_PER_LENGTH_CUBED,
-    # Dimensionless response tensors.
+    # Dimensionless response tensors, the SI electrostatic constants and the
+    # wavevector components of the non-analytic correction (Gonze and Lee,
+    # PRB 55, 10355 (1997), eq. 79): Z* in units of the elementary charge and
+    # the relative permittivity are dimensionless, the vacuum permittivity
+    # \varepsilon_{vac} carries PERMITTIVITY (\varepsilon_0 is the static
+    # dielectric tensor's field symbol), and the components q_gamma carry an
+    # inverse length. The elementary charge e_c stays unregistered (like the
+    # materials domain's e_c; the analog-device domain's registered charge is
+    # q_e), and the gate SKIPS apply_nac_correction regardless: M is globally
+    # unregistered and sqrt(M_i M_j) is a half-integer power of a dimensionful
+    # base, which dimension_of reports as unknown.
     r"Z^*": DIMENSIONLESS,
     r"\varepsilon_\infty": DIMENSIONLESS,
+    r"\varepsilon_{vac}": PERMITTIVITY,
+    "q": DIMENSIONLESS / LENGTH,
     # Amorphous / localization diagnostics (kaldo delta scan, records 208-211).
     # The participation ratio p and the per-atom (cartesian-summed squared
     # eigenvector) amplitude a are both DIMENSIONLESS; registering a lets the

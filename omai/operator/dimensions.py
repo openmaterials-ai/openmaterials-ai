@@ -160,6 +160,10 @@ CONDUCTANCE = Dimension("conductance", (-1, -2, 3, 0, 0, 2, 0))
 # Electric charge, the coulomb (current times time): the elementary charge q_e
 # that turns k_B T into a thermal voltage in the thermionic-emission law.
 ELECTRIC_CHARGE = Dimension("electric_charge", (0, 0, 1, 0, 0, 1, 0))
+# Vacuum permittivity, farads per metre: F/m = C^2/(J m) = M^-1 L^-3 T^4 I^2.
+# The epsilon_0 of the SI non-analytic dynamical-matrix correction prefactor
+# e^2/(epsilon_0 V_cell) (Gonze and Lee, PRB 55, 10355 (1997), eq. 79).
+PERMITTIVITY = Dimension("permittivity", (-1, -3, 4, 0, 0, 2, 0))
 # Current per squared temperature, A K^-2: the thermionic prefactor A_c A* of a
 # contact (area times effective Richardson constant).
 CURRENT_PER_TEMPERATURE_SQUARED = Dimension("current_per_temperature_squared", (0, 0, 0, -2, 0, 1, 0))
@@ -251,6 +255,7 @@ DIMENSIONS: dict[str, Dimension] = {
         ELECTRICAL_CONDUCTIVITY,
         CONDUCTANCE,
         ELECTRIC_CHARGE,
+        PERMITTIVITY,
         CURRENT_PER_TEMPERATURE_SQUARED,
         SEEBECK,
         MOBILITY,

@@ -19,7 +19,7 @@ thermal_transport), so all are declared here on their producing / owning node.
     The random node also carries the Nan-notation intermediates its producing
     formula's auxiliary equations define (kc_{11}, kc_{33}, \beta_{11},
     \beta_{33}: the interface-corrected filler conductivities and the
-    Bruggeman-Nan terms of Nan 1997), and the aligned node its transverse
+    beta terms of Nan 1997), and the aligned node its transverse
     companion \kappa_c^{al11}, exactly as MolarVolume carries the V_{cell} its
     producing formula reads (formula-adjacent symbols live on the owning space).
   * InterfaceConductance[transport_model=nemd] carries G_{int} and the heat

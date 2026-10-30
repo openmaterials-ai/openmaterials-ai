@@ -30,9 +30,15 @@ register_formula_constants({
     r"\mathbf{q'}",
     r"\mathbf{R}",
     r"\mathbf{R'}",
-    # Per-component q-vector symbols (NAC formula).
-    r"q^\alpha",
-    r"q^\beta",
+    # Per-component q-vector base and the SI electrostatic constants of the
+    # non-analytic correction (Gonze and Lee, PRB 55, 10355 (1997), eq. 79):
+    # q_gamma components, the elementary charge e_c (the materials domain's
+    # symbol; the analog-device domain spells it q_e) and the vacuum
+    # permittivity (named \varepsilon_{vac} because \varepsilon_0 is the
+    # static dielectric tensor's field symbol).
+    "q",
+    "e_c",
+    r"\varepsilon_{vac}",
     # Displacement labels (FC2 / FC3 derivative formulas).
     "u_i(0)",
     "u_j(R)",
@@ -121,7 +127,8 @@ register_space_symbols({
     "MeanFreeDisplacement[bte_solver=rta]": {"F"},
     "MeanFreeDisplacement[bte_solver=direct_inverse]": {
         "F",
-        r"\mathcal{M}",  # collision matrix used in solve_bte_direct's auxiliary formula
+        r"\mathcal{M}",  # weighted collision matrix of solve_bte_direct's auxiliary formulas
+        r"\tilde{\Omega}",  # its detailed-balance-symmetric rate-units factor
     },
     "ThermalConductivity": {r"\kappa"},
     "ThermalConductivity[bte_solver=rta]": {r"\kappa"},
