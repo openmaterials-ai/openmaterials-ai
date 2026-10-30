@@ -1203,3 +1203,6 @@ if __name__ == "__main__":
     # last, after write_version() has written docs/data/version.json.
     from omai.cross_code import build_agreement as _build_agreement
     print("wrote", _build_agreement())
+    # Share links read a frozen snapshot of the files above, so it is taken after all of them.
+    from omai.snapshots import write_snapshot as _write_snapshot
+    print("wrote snapshot", _write_snapshot())
