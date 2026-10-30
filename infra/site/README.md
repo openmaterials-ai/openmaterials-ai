@@ -19,7 +19,7 @@ static site cannot express:
   renderer. A well-formed prefix that matches no committed value gets a 404
   naming it; a malformed one gets a 400 before any data is read.
 
-- `POST /s` and `GET /s/<code>[/raw]`: the short-link store, the Worker's one
+- `POST /s/` (or `/s`) and `GET /s/<code>[/raw]`: the short-link store, the Worker's one
   write surface. Minting stores a lineage envelope (or a bare record, read as
   a one-element envelope) in the `SHORTLINKS` KV namespace, byte for byte as
   sent, and returns `<origin>/s/<code>`; the code is 9 unambiguous base58

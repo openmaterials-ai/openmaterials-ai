@@ -184,14 +184,16 @@ export default {
 // by the registry as read now is served no-store and noindex.
 async function handleShortlink(request, env, url) {
   const origin = request.headers.get("origin");
+  // /s/ too: the domain route for the exact /s misses once ?publish_private=1 is added
+  const mint = url.pathname === "/s" || url.pathname === "/s/";
 
-  if (request.method === "OPTIONS" && url.pathname === "/s") {
+  if (request.method === "OPTIONS" && mint) {
     return isMintOrigin(origin)
       ? new Response(null, { status: 204, headers: corsHeaders(origin) })
       : new Response(null, { status: 403 });
   }
 
-  if (request.method === "POST" && url.pathname === "/s") {
+  if (request.method === "POST" && mint) {
     if (!isMintOrigin(origin)) {
       return Response.json({ error: "origin not allowed to mint" }, { status: 403 });
     }
