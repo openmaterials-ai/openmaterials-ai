@@ -694,10 +694,12 @@ PHONO3PY_COMPUTE_BOUNDARY_SCATTERING = OperatorRepresentationSpec(
     notes=(
         "phono3py.conductivity.scattering_solvers.compute_bulk_boundary_"
         "scattering: Γ_boundary = |v|·1e6·Å / (4π·L), with L the "
-        "`boundary_mfp` parameter (in micrometres). The factor of 1/(4π) "
-        "is phono3py's bulk-boundary convention, distinct from kaldo's "
-        "2|v|/L (Casimir + Matthiessen sum) and ShengBTE's |v|/L; "
-        "cross-code comparison at this Γ requires the convention factor."
+        "`boundary_mfp` parameter (in micrometres). The factor 1/(4π) is the "
+        "1/2 of Γ = 1/(2τ) times the 1/(2π) from angular to linear THz: in "
+        "angular units this is |v| / (2L), the canonical Γ = Im Σ, so "
+        "phono3py's Casimir "
+        "rate is 1/τ = |v| / L, the same as ShengBTE's. kaldo's "
+        "McKelvey-Schockley 2|v_α| / L_α is a different boundary model."
     ),
 )
 

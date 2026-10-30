@@ -327,8 +327,8 @@ ANHARMONIC_LINEWIDTH = HiddenSpace(
     kind="scaffolding",
     gauge_invariant_contractions=("ThermalConductivity[bte_solver=direct_inverse]",),
     description=(
-        "Per-mode three-phonon anharmonic linewidth from Fermi's golden "
-        "rule (the channel the existing compute_linewidth produces). "
+        "Per-mode three-phonon anharmonic linewidth Γ = Im Σ = 1/(2τ) from "
+        "Fermi's golden rule (the channel compute_linewidth produces). "
         "Per-element values depend on BZ-summation choice (a permutation "
         "gauge: weights redistribute between modes but conserve the total). "
         "Contractions (ΣΓ, κ_LBTE) are the gauge-invariant content."
@@ -363,9 +363,10 @@ BOUNDARY_LINEWIDTH = HiddenSpace(
     kind="scaffolding",
     gauge_invariant_contractions=("ThermalConductivity[bte_solver=direct_inverse]",),
     description=(
-        "Per-mode boundary scattering rate from the Casimir / Matthiessen "
-        "form: Γ_boundary(qν) = |v_qν| / L where L is the boundary length "
-        "scale (operator parameter). Gauge-dependent inherits "
+        "Per-mode boundary linewidth from the Casimir / Matthiessen form: "
+        "Γ_boundary(qν) = |v_qν| / (2L), half the Casimir rate |v_qν| / L, "
+        "where L is the boundary length scale (operator parameter). "
+        "Gauge-dependent: inherits "
         "GroupVelocity's basis dependence at degenerate ω."
     ),
     tier="Scattering",

@@ -737,8 +737,8 @@ KALDO_BOUNDARY_LINEWIDTH = SpaceRepresentationSpec(
     },
     notes=(
         "kaldo applies McKelvey-Schockley boundary scattering inline inside "
-        "Conductivity.calculate_mfp_inv: when `finite_length_method='ms'` "
-        "and a length L is supplied, Γ_total is incremented by 2|v_α|/L_α "
+        "Conductivity.calculate_mfp_inverse: when `finite_length_method='ms'` "
+        "and a length L is supplied, the bandwidth (a rate) is incremented by 2|v_α|/L_α "
         "per direction α. No separate boundary-Γ array is exposed; the "
         "value is consumed directly by the LBTE solve."
     ),
@@ -803,8 +803,8 @@ KALDO_COMPUTE_BOUNDARY_SCATTERING = OperatorRepresentationSpec(
     operator=compute_boundary_scattering,
     representation_name="kaldo",
     notes=(
-        "McKelvey-Schockley form Γ_boundary = 2|v_α|/L_α, applied inline "
-        "inside Conductivity.calculate_mfp_inv when "
+        "McKelvey-Schockley rate 2|v_α|/L_α, applied inline inside "
+        "Conductivity.calculate_mfp_inverse when "
         "finite_length_method='ms'. A 'ballistic' mode is also exposed."
     ),
 )

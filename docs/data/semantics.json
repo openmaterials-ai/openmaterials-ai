@@ -1722,7 +1722,7 @@
 "compute linewidth channel anharmonic 3ph",
 "compute_linewidth[channel=anharmonic_3ph]"
 ],
-"uid": "d621418b9f5a046b12c5dbaadbb6a83fee0b1a013dc84ab1ccc25423eba06605"
+"uid": "bed23822fc14b9f811e9d35b8361d56e0e38a34327b9e5b2c4e7f5aad6eebb72"
 },
 {
 "curated": [],
@@ -1742,7 +1742,7 @@
 "compute boundary scattering",
 "compute_boundary_scattering"
 ],
-"uid": "6b7443f91473aedb777319f94c644d0f6832223bd64dd3338d22300045d62de2"
+"uid": "1326da3355b506b5142329e3b074a09589b95e4e18d1819c4c44ad579c1fd41e"
 },
 {
 "curated": [],

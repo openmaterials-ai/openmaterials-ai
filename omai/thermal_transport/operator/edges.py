@@ -266,10 +266,16 @@ _MOLAR_INTERNAL_ENERGY_FORMULA = sp.Eq(
     _N_A * sp.Sum(_e_mode[_q, _nu], (_q, 1, _N_q), (_nu, 1, _N_modes)) / _N_q,
 )
 
-# Γ_{q,ν} = (π/Nℏ²) Σ_{q', ν', ν''} |V_3|² × [
+# Γ_{q,ν} = (π / 2N_q ℏ²) Σ_{q', ν', ν''} |V_3|² × [
 #     (1 + n' + n'') δ(ω - ω' - ω'')
 #   + 2 (n' - n'') δ(ω + ω' - ω'')
 # ]   (q'' = q - q' implicit by crystal momentum conservation)
+# This is the linewidth Γ = Im Σ = 1/(2τ), the canonical convention of
+# normalizations.py. With |V_3|² an energy squared (ℏ³ included below) it
+# equals, in angular units, phono3py's imaginary self-energy (Togo, Chaput and Tanaka, PRB 91,
+# 094306 (2015)) and half of ShengBTE's rate 1/τ (Li, Carrete, Katcho and
+# Mingo, Comput. Phys. Commun. 185, 1747 (2014)). The 1/N_q makes the
+# Brillouin-zone sum a mean, so Γ converges as the q-mesh refines.
 _om = _omega[_q, _nu]
 _om_p = _omega[_qp, _nu_p]
 _om_pp = _omega[_q - _qp, _nu_pp]
@@ -283,7 +289,7 @@ _absorption = 2 * (_n_p - _n_pp) * _delta(_om + _om_p - _om_pp)
 
 _LW_FORMULA = sp.Eq(
     _Gamma[_q, _nu],
-    sp.pi / (_N_atoms * _hbar**2)
+    sp.pi / (2 * _N_q * _hbar**2)
     * sp.Sum(
         _V3 * (_combination + _absorption),
         (_qp, 1, _N_q),
@@ -293,24 +299,32 @@ _LW_FORMULA = sp.Eq(
 )
 
 
-# Auxiliary structural definition of |V₃|² (Maradudin-Fein form). The
-# main formula above uses |V₃|² as an opaque kernel; this auxiliary
-# equation makes the eigenvector / FC3 / mass dependence explicit, so
-# the same kernel can be reused verbatim in the LBTE collision matrix
-# Ξ (see _M_DEFINITION below). i, j, k run over atoms in the primitive
-# cell; R, R' over lattice vectors.
+# Auxiliary structural definition of |V₃|² (Maradudin-Fein form), an energy
+# squared. The main formula above uses |V₃|² as an opaque kernel; this
+# auxiliary equation makes the eigenvector / FC3 / mass dependence explicit,
+# so the same kernel can be reused verbatim in the LBTE collision matrix Ω~
+# (see _M_DEFINITION below). As in the Gruneisen contraction, i, j, k run over
+# the 3N (atom, Cartesian) coordinates of the cell, m_i is the mass of the
+# atom carrying coordinate i, and R, R' over the cells of the second and third
+# atoms with their Bloch phases. Written in the decay labeling q'' = q - q';
+# the absorption term follows by q' -> -q' with e(-q') = e(q')*. The collision
+# matrix evaluates it in the q + q' + q'' = G labeling, where
+# |V₃|²(q, q', -q-q') is the decay-labeled kernel at (q, -q', q+q').
 _e = sp.IndexedBase("e")
 _m = sp.IndexedBase("m")
 _V3sq_definition_rhs = (
     sp.Abs(
         sp.Sum(
             _Phi3[_i, _j, _k, _R, _Rp]
-            * _e[_i, _q, _nu] * _e[_j, _qp, _nu_p] * _e[_k, _q - _qp, _nu_pp]
+            * _e[_i, _q, _nu] * sp.conjugate(_e[_j, _qp, _nu_p])
+            * sp.conjugate(_e[_k, _q - _qp, _nu_pp])
+            * sp.exp(-sp.I * _qp * _R) * sp.exp(-sp.I * (_q - _qp) * _Rp)
             / sp.sqrt(_m[_i] * _m[_j] * _m[_k]),
             (_i, 1, _N_modes), (_j, 1, _N_modes), (_k, 1, _N_modes),
-            (_R, 1, _N_q), (_Rp, 1, _N_q),
+            (_R, -sp.oo, sp.oo), (_Rp, -sp.oo, sp.oo),
         )
     ) ** 2
+    * _hbar**3
     / (8 * _omega[_q, _nu] * _omega[_qp, _nu_p] * _omega[_q - _qp, _nu_pp])
 )
 _V3SQ_DEFINITION = sp.Eq(_V3, _V3sq_definition_rhs)
@@ -329,7 +343,7 @@ _BTE_RTA_FORMULA = sp.Eq(
 # operator is symmetric: its diagonal is the scattering rate 1/τ = 2Γ (angular
 # units, the same Γ as compute_linewidth) and its off-diagonal elements are
 # built from the same |V₃|² with the constant of 2Γ (twice compute_linewidth's
-# π/(N ħ²)), weighted by 1/sinh(ħω''/2k_BT) = 2 sqrt(n''(n''+1))
+# π/(2N_q ħ²)), weighted by 1/sinh(ħω''/2k_BT) = 2 sqrt(n''(n''+1))
 # of the third mode, with momentum conservation q + q' + q'' = G and the three
 # energy channels. With M F = c v the relaxation-time limit is F = v/(2Γ), and
 # κ N_q V = Σ sqrt(c c') v (Ω~^-1) v is positive semidefinite whenever Ω~ is.
@@ -344,7 +358,7 @@ _V3_sym = _V3sq(_q, _nu, _qp, _nu_p, -_q - _qp, _nu_pp)
 
 _OMEGA_TILDE = (
     2 * _Gamma[_q, _nu] * sp.KroneckerDelta(_q, _qp) * sp.KroneckerDelta(_nu, _nu_p)
-    + 2 * sp.pi / (_N_atoms * _hbar**2) * sp.Sum(
+    + sp.pi / (_N_q * _hbar**2) * sp.Sum(
         _V3_sym * 2 * sp.sqrt(_n_pp * (1 + _n_pp))
         * (_delta(_om_p - _om + _om_pp) + _delta(_om_p - _om - _om_pp)
            + _delta(_om_p + _om - _om_pp)),
@@ -625,12 +639,15 @@ compute_anharmonic_linewidth = Operator(
     formula=_LW_FORMULA,
     auxiliary_formulas=(_V3SQ_DEFINITION,),
     description=(
-        "Anharmonic 3-phonon linewidth: imaginary self-energy from "
-        "Fermi's golden rule. The kernel |V₃|² is the Maradudin-Fein "
-        "matrix element (auxiliary_formulas[0]): a triple sum of Φ³ "
-        "contracted with eigenvectors and mass factors, scaled by "
-        "1/(8 ω ω' ω''). The same kernel appears in the LBTE collision "
-        "matrix Ξ (see solve_bte_direct.auxiliary_formulas[0]). Energy "
+        "Anharmonic 3-phonon linewidth Γ = Im Σ = 1/(2τ) from Fermi's "
+        "golden rule, with the prefactor π/(2N_q ℏ²): in angular units "
+        "phono3py's imaginary self-energy and half of ShengBTE's rate 1/τ. "
+        "The kernel |V₃|² is "
+        "the Maradudin-Fein matrix element (auxiliary_formulas[0]): Φ³ "
+        "contracted with eigenvectors, mass factors and Bloch phases, scaled "
+        "by ℏ³/(8 ω ω' ω''), an energy squared. The same kernel appears in "
+        "the LBTE collision matrix Ω~ (solve_bte_direct.auxiliary_formulas[0]). "
+        "Energy "
         "delta is replaced by a Gaussian of canonical width σ = stdev. "
         "n_BE(x) = (e^{x} - 1)^{-1} with x = ℏω/(k_B T). q'' is fixed by crystal "
         "momentum conservation: q'' = q - q' (mod a reciprocal lattice "
@@ -691,15 +708,16 @@ compute_isotope_scattering = Operator(
 )
 
 
-# Casimir / boundary scattering (Matthiessen form):
-#   Γ_boundary(qν) = |v_qν| / L
+# Casimir / boundary scattering (Matthiessen form). The Casimir rate is
+# 1/τ = |v_qν| / L, so the linewidth Γ = Im Σ = 1/(2τ) is
+#   Γ_boundary(qν) = |v_qν| / (2L)
 # where L is a length parameter for the sample size / mean free path cap.
 _L_boundary = sp.Symbol("L", positive=True)
 _BOUNDARY_FORMULA = sp.Eq(
     sp.IndexedBase(r"\Gamma^{bnd}")[_q, _nu],
     sp.sqrt(sp.Sum(
         _v[_alpha, _q, _nu] ** 2, (_alpha, 1, 3),
-    )) / _L_boundary,
+    )) / (2 * _L_boundary),
 )
 
 compute_boundary_scattering = Operator(
@@ -709,8 +727,9 @@ compute_boundary_scattering = Operator(
     parameters=(Parameter("boundary_length_scale", LENGTH),),
     formula=_BOUNDARY_FORMULA,
     description=(
-        "Casimir boundary scattering rate: Γ = |v| / L, with L a "
-        "user-supplied sample / mean-free-path length scale. Linear in "
+        "Casimir boundary linewidth Γ = |v| / (2L), half the Casimir rate "
+        "1/τ = |v| / L, with L a user-supplied sample / mean-free-path "
+        "length scale. Linear in "
         "the group-velocity magnitude; independent of temperature. "
         "Inherits GroupVelocity's gauge-dependence at degenerate ω."
     ),

@@ -1,7 +1,7 @@
 {
  "representation": "pymatgen",
- "lineage_version": "ba4214ff67d6f18419a06af24ad873f315cbde37c5f334a3316fdee2b983cd5f",
- "map_version": "2933ca50010ba5a9354ef7db24330e29796a298eb5311c8e401467602bac26f8",
+ "lineage_version": "1feeefc2b1d64a151e2353d44f6061790bf2bf32716af8960df455fe8529ea09",
+ "map_version": "e7e0bfd4f7ca169712d560153660d12575240ca46dff4b1b3b138e7117081033",
  "covers": [
   {
    "node": "ActivationEnergy",

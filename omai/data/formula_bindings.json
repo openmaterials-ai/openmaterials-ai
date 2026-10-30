@@ -5577,10 +5577,10 @@
       },
       {
         "id": "compute_boundary_scattering",
-        "uid": "6b7443f91473aedb777319f94c644d0f6832223bd64dd3338d22300045d62de2",
+        "uid": "1326da3355b506b5142329e3b074a09589b95e4e18d1819c4c44ad579c1fd41e",
         "domain": "thermal_transport",
-        "formula_sha256": "8e1cba737ed89a13200ddabae9e4b2a50ec6d062587f4d17c6ec5552944864c1",
-        "formula_latex": "{\\Gamma^{bnd}}_{\\mathbf{q},\\nu} = \\frac{\\sqrt{\\sum_{\\alpha=1}^{3} {v}_{\\alpha,\\mathbf{q},\\nu}^{2}}}{L}",
+        "formula_sha256": "4710be932ea5cc929dedfe2bb5cf1b7e240e1781fa12cc45f9dcdd33c6c8c78e",
+        "formula_latex": "{\\Gamma^{bnd}}_{\\mathbf{q},\\nu} = \\frac{\\sqrt{\\sum_{\\alpha=1}^{3} {v}_{\\alpha,\\mathbf{q},\\nu}^{2}}}{2 L}",
         "inputs": [
           "Frequency",
           "GroupVelocity"
@@ -6288,10 +6288,10 @@
       },
       {
         "id": "compute_linewidth[channel=anharmonic_3ph]",
-        "uid": "d621418b9f5a046b12c5dbaadbb6a83fee0b1a013dc84ab1ccc25423eba06605",
+        "uid": "bed23822fc14b9f811e9d35b8361d56e0e38a34327b9e5b2c4e7f5aad6eebb72",
         "domain": "thermal_transport",
-        "formula_sha256": "a17b3c65d17f3e45c868ef12c700f423adc4c674433a856dacdf876575d3ddf5",
-        "formula_latex": "{\\Gamma}_{\\mathbf{q},\\nu} = \\frac{\\pi \\sum_{\\substack{1 \\leq \\mathbf{q'} \\leq N_{q}\\\\1 \\leq \\nu' \\leq 3 N\\\\1 \\leq \\nu'' \\leq 3 N}} \\left(\\left(- 2 n_{BE}{\\left(\\frac{\\bar{\\h} {\\omega}_{- \\mathbf{q'} + \\mathbf{q},\\nu''}}{T k_{B}} \\right)} + 2 n_{BE}{\\left(\\frac{\\bar{\\h} {\\omega}_{\\mathbf{q'},\\nu'}}{T k_{B}} \\right)}\\right) \\delta{\\left(- {\\omega}_{- \\mathbf{q'} + \\mathbf{q},\\nu''} + {\\omega}_{\\mathbf{q'},\\nu'} + {\\omega}_{\\mathbf{q},\\nu} \\right)} + \\left(n_{BE}{\\left(\\frac{\\bar{\\h} {\\omega}_{- \\mathbf{q'} + \\mathbf{q},\\nu''}}{T k_{B}} \\right)} + n_{BE}{\\left(\\frac{\\bar{\\h} {\\omega}_{\\mathbf{q'},\\nu'}}{T k_{B}} \\right)} + 1\\right) \\delta{\\left(- {\\omega}_{- \\mathbf{q'} + \\mathbf{q},\\nu''} - {\\omega}_{\\mathbf{q'},\\nu'} + {\\omega}_{\\mathbf{q},\\nu} \\right)}\\right) \\operatorname{|V}^{2}_{3|}{\\left(\\mathbf{q},\\nu,\\mathbf{q'},\\nu',- \\mathbf{q'} + \\mathbf{q},\\nu'' \\right)}}{N \\bar{\\h}^{2}}",
+        "formula_sha256": "c5b1c700e285f83bade4999b264e709ae736be2f329f4eabb6ab45a86980b7e4",
+        "formula_latex": "{\\Gamma}_{\\mathbf{q},\\nu} = \\frac{\\pi \\sum_{\\substack{1 \\leq \\mathbf{q'} \\leq N_{q}\\\\1 \\leq \\nu' \\leq 3 N\\\\1 \\leq \\nu'' \\leq 3 N}} \\left(\\left(- 2 n_{BE}{\\left(\\frac{\\bar{\\h} {\\omega}_{- \\mathbf{q'} + \\mathbf{q},\\nu''}}{T k_{B}} \\right)} + 2 n_{BE}{\\left(\\frac{\\bar{\\h} {\\omega}_{\\mathbf{q'},\\nu'}}{T k_{B}} \\right)}\\right) \\delta{\\left(- {\\omega}_{- \\mathbf{q'} + \\mathbf{q},\\nu''} + {\\omega}_{\\mathbf{q'},\\nu'} + {\\omega}_{\\mathbf{q},\\nu} \\right)} + \\left(n_{BE}{\\left(\\frac{\\bar{\\h} {\\omega}_{- \\mathbf{q'} + \\mathbf{q},\\nu''}}{T k_{B}} \\right)} + n_{BE}{\\left(\\frac{\\bar{\\h} {\\omega}_{\\mathbf{q'},\\nu'}}{T k_{B}} \\right)} + 1\\right) \\delta{\\left(- {\\omega}_{- \\mathbf{q'} + \\mathbf{q},\\nu''} - {\\omega}_{\\mathbf{q'},\\nu'} + {\\omega}_{\\mathbf{q},\\nu} \\right)}\\right) \\operatorname{|V}^{2}_{3|}{\\left(\\mathbf{q},\\nu,\\mathbf{q'},\\nu',- \\mathbf{q'} + \\mathbf{q},\\nu'' \\right)}}{2 N_{q} \\bar{\\h}^{2}}",
         "inputs": [
           "Frequency",
           "Eigenvectors",
