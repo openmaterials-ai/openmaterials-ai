@@ -2504,9 +2504,12 @@ Four longer-term directions follow naturally from the design:
         all 133 operators by what a theorem about the formula would take (36
         closed-form definitions, 53 needing analysis, 44 external code outputs with
         nothing algebraic to prove) and marks those with a compiled proof. A
-        historical hand-reviewed crosswalk links map nodes to Physlib source
-        declarations at an earlier revision. Its conceptual correspondences,
-        including legacy ``exact'' labels, are not proofs of model equivalence. The
+        hand-reviewed crosswalk links map nodes to Physlib source declarations
+        at the bridge's pinned revision, graded against the declarations the
+        compiled bindings use: 47 of 136 nodes cite at least one (11 with an
+        exact concept match), and each of the other 89 carries a proposal for
+        the upstream definition that would cover it. An ``exact'' label names a
+        concept match, not a proof of model equivalence. The
         approximation-error theorems remain future work.
   \item \textbf{Theory-experiment integration.} Extend the representation functor to ingest
         experimental observables. The operator layer's graph-alignment machinery applies uniformly,

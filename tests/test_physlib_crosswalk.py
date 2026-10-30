@@ -79,13 +79,40 @@ def test_source_paths_exist_in_clone(crosswalk):
                 node_id, e["module"])
 
 
+def test_every_node_matched_or_marked_needs_upstream(crosswalk, catalog_ids):
+    """Issue 169 step 1: a node either cites physlib declarations or carries a
+    proposal for the upstream definition that would cover it."""
+    needs = crosswalk["needs_upstream"]
+    assert set(needs) <= catalog_ids, sorted(set(needs) - catalog_ids)
+    for node_id, proposal in needs.items():
+        assert isinstance(proposal, str) and proposal.strip(), node_id
+    empty = {n for n, entries in crosswalk["nodes"].items() if not entries}
+    assert set(needs) == empty, (sorted(empty - set(needs)), sorted(set(needs) - empty))
+
+
+def test_text_has_no_em_dash(crosswalk):
+    texts = list(crosswalk["needs_upstream"].values())
+    texts += [e["informal"] for entries in crosswalk["nodes"].values() for e in entries]
+    assert not [t for t in texts if "\N{EM DASH}" in t]
+
+
+def test_pinned_rev_is_the_bridge_rev(crosswalk):
+    manifest = json.loads(Path("lean/bridge/lake-manifest.json").read_text())
+    rev = next(p["rev"] for p in manifest["packages"] if p["name"].lower() == "physlib")
+    assert crosswalk["version"]["physlib_rev"] == rev
+
+
 def test_resolve_surfaces_physlib(crosswalk):
     sem = build_semantics(build_graph_dict(DOMAINS))
     hits = resolve("temperature", sem)
     hit = next(h for h in hits if h["id"] == "Temperature")
     assert hit["physlib"] == crosswalk["nodes"]["Temperature"]
     assert hit["physlib"][0]["confidence"] == "exact"
+    # the neutral kappa node surfaces its thermoelectric anchor
+    kappa = resolve("thermal-conductivity", sem)
+    hit_k = next(h for h in kappa if h["id"] == "ThermalConductivity")
+    assert hit_k["physlib"][0]["module"].startswith("Physlib.CondensedMatter")
     # coverage gap: a node without formal coverage carries no physlib key
-    gap = resolve("thermal-conductivity", sem)
+    gap = resolve("born charges", sem)
     assert all("physlib" not in h for h in gap)
-    assert physlib_for("ThermalConductivity") == []
+    assert physlib_for("BornCharges") == []
