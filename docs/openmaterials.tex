@@ -834,7 +834,7 @@ the reviewers decide what enters the commons.
 
 \section{Status and build order}
 
-Today's map is 245 change records past v1, its frozen genesis version:
+Today's map is 254 change records past v1, its frozen genesis version:
 133 typed quantities plus 3 promoted
 parameters, the symbolic formula on every relational edge, 33 representations
 mapped (phono3py 31 variables, kaldo 28, phonopy 22, pymatgen 22, ShengBTE 20,
@@ -2629,7 +2629,7 @@ The catalog's forces, cell stress, force constants, finite-displacement force co
 
 The electronic transport producers are opaque code outputs, so each gets an interpreted definition stated in its binding. The conductivity, Seebeck coefficient and electronic thermal conductivity are read as BoltzTraP2's Onsager moments $L_k = \sum_b w_b (E_b - \mu)^k$ of a nonnegative transport window: $\sigma = e^2 L_0$, $S = -(L_1/L_0)/(eT)$ and $\kappa_e = (L_2 - L_1^2/L_0)/T$. At $T > 0$ the electronic thermal conductivity is nonnegative and vanishes exactly when the window sits at one energy; with $L_0 > 0$ and any lattice conductivity $\kappa_l > 0$ the coefficients fill a Physlib thermoelectric material, whose figure of merit, when the window spans more than one energy and $L_1 \neq 0$, lies strictly below the Mahan-Sofo bound $L_1^2/(L_0 L_2 - L_1^2)$, approached as $\kappa_l \to 0$. For an energy-independent transport distribution the Fermi-window moments $1$, $0$ and $\pi^2/3$ give $S = 0$ and the Sommerfeld Lorenz number $(\pi^2/3)(k_B/e)^2$. Local theorems show that a Boltzmann mobility with state-by-state additive scattering rates is at most the Matthiessen combination of the per-mechanism mobilities, that the density of states of a finite level set fixes a unique Fermi level at $k_B T > 0$ for every count strictly between zero and the number of states, and that the static dielectric tensor $\varepsilon_0 = \varepsilon_\infty + c\, Z^T D^{-1} Z$ has a positive semidefinite ionic term and obeys the generalized Lyddane-Sachs-Teller relation along every direction $u$ with $u \cdot \epsilon_\infty u > 0$. The molecular-dynamics estimators are transcribed and proved as discrete identities for records periodic over the origin window: the mean squared displacement is $dt^2 [\tau C_v(0) + 2\sum_{k<\tau} (\tau - k) C_v(k)]$, the trapezoid Green-Kubo conductivity is the central-difference Einstein-Helfand estimator, and the origin-averaged heat-current autocorrelation is the inverse discrete Fourier transform of the cross spectrum; the cosine transform of a sum of damped cosines, normalized by $6/(\pi C_v(0))$, is a sum of Lorentzians that integrates to three states per atom on $\omega > 0$ for $C_v(0) \neq 0$ and tends weakly to the harmonic delta sum as the linewidths vanish. On a finite Born-von K\'arm\'an crystal of Physlib sites the catalog density of states has total weight $3N_{\mathrm{cell}}$ and second moment $\sum_i \Phi_{ii}(0)/M_i$, and the Landauer weight $\hbar\omega\,\partial n_{BE}/\partial T$ is the Physlib oscillator heat capacity, so unit transmission gives the conductance quantum $\pi^2 k_B^2 T/(3h)$. The catalog's heat-current formula, which multiplied each atom's total force by its own absolute position, is corrected to the per-atom virial form and is not covered. Physlib supplies the coefficient axioms and the figure of merit; the moment identities are proved locally. No theorem verifies a BoltzTraP2, amset, phonopy, kALDo, GPUMD or LAMMPS implementation; band structures, scattering rates, transmissions and trajectories are inputs.
 
-The lattice-dynamics layer uses Physlib's crystal structure for sites and translations. Force constants with equal mixed partials, translation invariance and finite range satisfy $\Phi_{ij}(-R) = \Phi_{ji}(R)$, the catalog dynamical matrix is Hermitian, and the acoustic sum rule gives at least three zero modes at $\Gamma$. Folding the force constants into a Born-von K\'arm\'an supercell reproduces the catalog $D(q)$ at commensurate wavevectors, where a mechanically stable supercell makes every $\omega^2$ nonnegative; incommensurate BTE meshes are not covered. On a differentiable eigenvector path away from $\Gamma$ the catalog group velocity equals $d\omega/dq$, and with Physlib canonical heat capacities the relaxation-time conductivity is symmetric and positive semidefinite. Formalization also exposed catalog defects. By inspection of the symbolic formulas, the non-analytic correction is independent of $q$ and the linearized-BTE collision matrix is not symmetric and has the wrong relaxation-time limit; these two operators stay gaps until the formulas are corrected. A machine-checked example with three modes, one three-phonon process and Casimir scattering shows that the cumulative conductivity of a linearized-BTE solution is not monotone: the partial sum is a valid formula, but its description assumes nonnegative modal contributions, which a linearized-BTE solution does not guarantee, so it defines no median mean free path.
+The lattice-dynamics layer uses Physlib's crystal structure for sites and translations. Force constants with equal mixed partials, translation invariance and finite range satisfy $\Phi_{ij}(-R) = \Phi_{ji}(R)$, the catalog dynamical matrix is Hermitian, and the acoustic sum rule gives at least three zero modes at $\Gamma$. Folding the force constants into a Born-von K\'arm\'an supercell reproduces the catalog $D(q)$ at commensurate wavevectors, where a mechanically stable supercell makes every $\omega^2$ nonnegative; incommensurate BTE meshes are not covered. On a differentiable eigenvector path away from $\Gamma$ the catalog group velocity equals $d\omega/dq$, and with Physlib canonical heat capacities the relaxation-time conductivity is symmetric and positive semidefinite. Formalization also exposed catalog defects, since corrected: the non-analytic correction multiplied free wavevector components instead of contracting them, so it was independent of $q$, and now carries the Gonze-Lee form, whose $q \to 0$ limit is the term of the Lyddane-Sachs-Teller theorem; the linearized-BTE collision matrix was not symmetric and had the wrong relaxation-time limit, and is now the symmetric weighting of Chaput's collision matrix. A machine-checked example with three modes, one three-phonon process and Casimir scattering shows that the cumulative conductivity of a linearized-BTE solution is not monotone: the partial sum is a valid formula, and its description now says that it is a distribution only for nonnegative modal contributions.
 
 The package audit checks all imported kernel declarations owned by its source
 modules, including private and generated helpers, together with the existing
@@ -3256,12 +3256,12 @@ trusted). What remains, in order:
 \label{sec:status-live}
 
 The map is at store head version
-\texttt{2d7cf79f7e4508d7eacce7e7b11750e941c9e70697e647978f92c05d384db459}
-(2026-10-30, 345 records), 245 change records past the frozen genesis hash
+\texttt{06b0bf80b83960768ef418537ed29e8a1a9ccfc0e7ad901f2423f0213fd61f3d}
+(2026-10-30, 354 records), 254 change records past the frozen genesis hash
 \texttt{e6e8044e92039696417b53b220b0f3f10559a286b0eaabbe7ea4167ff510f6cd}
 (2026-07-07, the untouched 100-record prefix). Since the lineage became the one
 named artifact, the published stamp also carries the unified \emph{lineage
-version} (\texttt{80dba7fc47c8\ldots}): one rolling content hash over the
+version} (\texttt{98da97c6d855\ldots}): one rolling content hash over the
 derivation graph and the instance-format rules together, appended to a chain
 whose root is the genesis, so a change to either the physics or the record
 format moves the one version the published stamp and every page cite (records
@@ -3346,9 +3346,9 @@ numbers:
         edges.
   \item \textbf{Lean layer.} One package at one Physlib pin (Lean~4.35.0)
         declares the dimension of 131 of the 136 nodes (the other five are
-        opaque by design) and proves conditional theorems about 77 of the 133
+        opaque by design) and proves conditional theorems about 78 of the 133
         operator formulas (for an opaque code output, about an interpreted
-        definition of it), 29 citing Physlib declarations and 48 as local proofs over
+        definition of it), 29 citing Physlib declarations and 49 as local proofs over
         Mathlib; a CI gate rebuilds it on every relevant pull request
         with warnings promoted to errors. The formalization roadmap page rates
         every operator by what a theorem about its formula would take.

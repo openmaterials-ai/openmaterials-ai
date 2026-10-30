@@ -23,7 +23,7 @@ direction `u`, adding the non-analytic correction `c (Z u)(Z u)^T / (u eps_inf u
 long-wavelength limit to `D` multiplies the product of the squared frequencies by
 `(u eps_0 u) / (u eps_inf u)`: the generalized Lyddane-Sachs-Teller relation
 `prod omega_LO^2 / prod omega_TO^2 = eps_0 / eps_inf`. The correction used here is the
-Gonze-Lee form, not the catalog's `apply_nac_correction`, whose q dependence cancels.
+Gonze-Lee form, the `q -> 0` limit of the catalog's `apply_nac_correction` along the direction of `q`.
 Physlib has no dielectric model, so these are local results over Mathlib.
 -/
 

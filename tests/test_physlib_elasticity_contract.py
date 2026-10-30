@@ -43,7 +43,9 @@ KEY_THEOREMS = {
     "cubic_relaxed_eosBulk_eq_voigtBulk": "eosBulk (relaxedEnergy (cubic c11 c12 c44) E0 V0) V0 = voigtBulk (cubic c11 c12 c44)",
 }
 # Restatements and symmetry-blind results that must not be cited (review of 426f141).
-NOT_CITED = {"strainEnergy_hydrostatic", "eosBulk_quadratic_strain", "cubic_relaxed_sInf",
+NOT_CITED = {"voigtBulk_isotropic", "voigtShear_isotropic", "poissonRatio_isotropic", "youngsModulus_isotropic",
+             "voigtBulk_cubic", "voigtShear_cubic", "cubic_hydrostatic_stress", "cubic_trace_stress",
+             "strainEnergy_hydrostatic", "eosBulk_quadratic_strain", "cubic_relaxed_sInf",
              "isotropic_strainEnergy", "isotropic_strainEnergy_split", "poissonRatio_bounds"}
 
 

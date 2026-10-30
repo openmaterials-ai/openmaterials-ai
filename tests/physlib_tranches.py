@@ -164,13 +164,15 @@ TRANCHES = (
             ("node", "StaticDielectricTensor"),
             ("operator", "compute_carrier_mobility"), ("operator", "compute_electronic_conductivity"),
             ("operator", "compute_electronic_dos"), ("operator", "compute_electronic_thermal_conductivity"),
-            ("operator", "compute_seebeck"), ("operator", "compute_static_dielectric")}),
+            ("operator", "compute_seebeck"), ("operator", "compute_static_dielectric"),
+            ("operator", "apply_nac_correction")}),
         "pairs": tuple(
             [{"name": "OMAI.PhyslibBridge.ElectronicTransport." + name, "module": "OMAIPhyslibElectronicTransport"}
              for name in ("boltzmannConductivity", "boltzmannKappaE", "boltzmannSeebeck")]
             + [{"name": "OMAI.PhyslibBridge.ElectronicStatistics." + name, "module": "OMAIElectronicStatistics"}
                for name in ("boltzmannMobility", "electronicDOS")]
-            + [{"name": "OMAI.PhyslibBridge.StaticDielectric.staticDielectric", "module": "OMAIStaticDielectric"}]),
+            + [{"name": "OMAI.PhyslibBridge.StaticDielectric." + name, "module": "OMAIStaticDielectric"}
+               for name in ("nonAnalytic", "staticDielectric")]),
         "modules": ("OMAISommerfeldTransport", "OMAIPhyslibElectronicTransport", "OMAIElectronicStatistics",
                     "OMAIStaticDielectric"),
     },
@@ -203,10 +205,10 @@ TRANCHES = (
 GLOBAL_COVERAGE = {
     "nodes_total": len(_INVENTORY["nodes"]), "nodes_mapped": 35,
     "operators_total": len(_INVENTORY["operators"]), "operators_mapped": 29,
-    "nodes_local": 38, "operators_local": 48, "bindings_total": 52, "source_correspondences": 5,
+    "nodes_local": 38, "operators_local": 49, "bindings_total": 52, "source_correspondences": 5,
     "compiled_bridges": 47, "nodes_compiled": 26, "nodes_compiled_outputs": 25,
-    "nodes_compiled_interpretations": 1, "operators_compiled": 29, "operators_compiled_local": 48,
-    "nodes_compiled_local": 42, "operators_proved": 77, "nodes_proved": 68,
+    "nodes_compiled_interpretations": 1, "operators_compiled": 29, "operators_compiled_local": 49,
+    "nodes_compiled_local": 42, "operators_proved": 78, "nodes_proved": 68,
     "upstream_declarations_referenced": 36, "upstream_modules_referenced": 10,
     "relations": {"exact_definition": 1, "conditional": 29, "conceptual": 4, "local": 18},
 }

@@ -18,7 +18,7 @@ noncomputable section
 
 namespace OMAI.PhyslibBridge.Lattice
 
-open Physlib.CondensedMatter Matrix ComplexConjugate
+open Physlib.CondensedMatter Matrix ComplexConjugate Filter Topology
 
 /-- The catalog group velocity `v = ∑_{i,j} conj(e_i) (∂D/∂q)_{ij} e_j / (2 ω)`. -/
 def catalogGroupVelocity {n : Type*} [Fintype n] (e : n → ℂ) (dD : Matrix n n ℂ)
@@ -33,44 +33,47 @@ theorem catalogGroupVelocity_eq {n : Type*} [Fintype n] (e : n → ℂ) (dD : Ma
   rw [Finset.sum_comm]
   simp only [dotProduct, mulVec, Pi.star_apply, RCLike.star_def, Finset.mul_sum, mul_assoc]
 
-/-- Hellmann-Feynman: along a differentiable path of matrices that are Hermitian at `t`, a
-differentiable normalized eigenvector with real eigenvalue `λ(s)` makes `λ` differentiable at `t`
-with `λ'(t) = e(t)^dagger A'(t) e(t)`, and that number is real. -/
+/-- Hellmann-Feynman: along a path of matrices differentiable at `t` and Hermitian there, an
+eigenvector differentiable at `t` that is normalized with real eigenvalue `λ(s)` for `s` near `t` makes
+`λ` differentiable at `t` with `λ'(t) = e(t)^dagger A'(t) e(t)`, and that number is real. The
+eigen-equation and the normalization are used on a neighbourhood of `t` only. -/
 theorem hellmann_feynman {n : Type*} [Fintype n] (A : ℝ → Matrix n n ℂ) (A' : Matrix n n ℂ)
     (e : ℝ → n → ℂ) (e' : n → ℂ) (lam : ℝ → ℝ) (t : ℝ)
     (hA : ∀ i j, HasDerivAt (fun s => A s i j) (A' i j) t)
     (he : ∀ i, HasDerivAt (fun s => e s i) (e' i) t)
-    (heig : ∀ s, (A s).mulVec (e s) = (lam s : ℂ) • e s)
-    (hnorm : ∀ s, star (e s) ⬝ᵥ e s = 1)
+    (heig : ∀ᶠ s in 𝓝 t, (A s).mulVec (e s) = (lam s : ℂ) • e s)
+    (hnorm : ∀ᶠ s in 𝓝 t, star (e s) ⬝ᵥ e s = 1)
     (hherm : (A t).IsHermitian) :
     HasDerivAt lam (star (e t) ⬝ᵥ A'.mulVec (e t)).re t ∧
       (star (e t) ⬝ᵥ A'.mulVec (e t)).im = 0 := by
+  have heig0 := heig.self_of_nhds
   -- The Rayleigh quotient along the path, written entrywise.
   have hf : HasDerivAt (fun s => ∑ i, ∑ j, star (e s i) * A s i j * e s j)
       (∑ i, ∑ j, ((star (e' i) * A t i j + star (e t i) * A' i j) * e t j +
         star (e t i) * A t i j * e' j)) t := by
     refine HasDerivAt.fun_sum fun i _ => HasDerivAt.fun_sum fun j _ => ?_
     exact (((he i).star).mul (hA i j)).mul (he j)
-  have hval : (fun s => ∑ i, ∑ j, star (e s i) * A s i j * e s j) =
+  -- Near `t` the Rayleigh quotient is the eigenvalue.
+  have hval : (fun s => ∑ i, ∑ j, star (e s i) * A s i j * e s j) =ᶠ[𝓝 t]
       fun s => (lam s : ℂ) := by
-    funext s
+    filter_upwards [heig, hnorm] with s hs hn
     have h1 : star (e s) ⬝ᵥ (A s).mulVec (e s) = (lam s : ℂ) := by
-      rw [heig, dotProduct_smul, hnorm, smul_eq_mul, mul_one]
+      rw [hs, dotProduct_smul, hn, smul_eq_mul, mul_one]
     rw [← h1]
     simp only [dotProduct, mulVec, Pi.star_apply, Finset.mul_sum, mul_assoc]
-  rw [hval] at hf
+  replace hf := hf.congr_of_eventuallyEq hval.symm
   -- Derivative of the normalization.
   have hn : HasDerivAt (fun s => ∑ i, star (e s i) * e s i)
       (∑ i, (star (e' i) * e t i + star (e t i) * e' i)) t :=
     HasDerivAt.fun_sum fun i _ => ((he i).star).mul (he i)
-  have hnconst : (fun s => ∑ i, star (e s i) * e s i) = fun _ => (1 : ℂ) := by
-    funext s
-    simpa [dotProduct] using hnorm s
-  rw [hnconst] at hn
+  have hnconst : (fun s => ∑ i, star (e s i) * e s i) =ᶠ[𝓝 t] fun _ => (1 : ℂ) := by
+    filter_upwards [hnorm] with s hs
+    simpa [dotProduct] using hs
+  replace hn := hn.congr_of_eventuallyEq hnconst.symm
   have hn0 := (hasDerivAt_const t (1 : ℂ)).unique hn
   -- The two eigenvector-derivative terms combine into lam * (d/dt of the norm) = 0.
   have hleft : ∑ i, ∑ j, star (e' i) * A t i j * e t j = (lam t : ℂ) * ∑ i, star (e' i) * e t i := by
-    have := congrArg (fun w => star e' ⬝ᵥ w) (heig t)
+    have := congrArg (fun w => star e' ⬝ᵥ w) heig0
     simp only [dotProduct, mulVec, Pi.smul_apply, smul_eq_mul, Pi.star_apply] at this
     rw [Finset.mul_sum]
     simp only [Finset.mul_sum, mul_assoc] at this ⊢
@@ -79,7 +82,7 @@ theorem hellmann_feynman {n : Type*} [Fintype n] (A : ℝ → Matrix n n ℂ) (A
     ring
   have hrow : star (e t) ᵥ* A t = (lam t : ℂ) • star (e t) := by
     have := star_mulVec (A t) (e t)
-    rw [hherm.eq, heig, star_smul] at this
+    rw [hherm.eq, heig0, star_smul] at this
     simpa using this.symm
   have hright : ∑ i, ∑ j, star (e t i) * A t i j * e' j =
       (lam t : ℂ) * ∑ i, star (e t i) * e' i := by
@@ -171,19 +174,21 @@ theorem hasDerivAt_dynamicalMatrix {G : Type*} [AddCommGroup G]
   exact (hasDerivAt_planeWave_line pos q α R).mul_const _
 
 /-- Group velocity of a crystal branch, on a differentiable eigenvector path away from Gamma.
-Along the wavevector line `q + s e_α`, let `e(s)` be a differentiable normalized eigenvector of
-the catalog dynamical matrix with eigenvalue `ω(s)^2` and `ω(0)^2 > 0`. Then the catalog expression
-`e^dagger (∂D/∂q_α) e / (2 ω)`, with the actual derivative of the catalog matrix, is a real number
-`v`, and `ω = sqrt(ω^2)` is differentiable along the line with derivative `v`. A nondegenerate
-branch away from Gamma admits such a path; that existence is a hypothesis here. -/
+Along the wavevector line `q + s e_α`, let `e(s)` be a differentiable eigenvector of the catalog
+dynamical matrix, normalized and with eigenvalue `ω(s)^2` for `s` near `0`, with `ω(0)^2 > 0`.
+Then the catalog expression `e^dagger (∂D/∂q_α) e / (2 ω)`, with the actual derivative of the
+catalog matrix, is a real number `v`, and `ω = sqrt(ω^2)` is differentiable along the line with
+derivative `v`. A nondegenerate branch away from Gamma admits such a path; that existence is a
+hypothesis here. -/
 theorem catalogGroupVelocity_eq_deriv {G : Type*} [AddCommGroup G]
     [AddGroup.FG G] [DecidableEq G] {C : Crystal G} [Fintype C.UnitCell]
     (Φ : ForceConstants C) (pos : G →+ (Axis → ℝ)) (q : Axis → ℝ) (M : C.UnitCell → ℝ)
     (α : Axis) (e : ℝ → Mode C → ℂ) (e' : Mode C → ℂ) (lam : ℝ → ℝ)
     (he : ∀ i, HasDerivAt (fun s => e s i) (e' i) 0)
-    (heig : ∀ s, (Φ.dynamicalMatrix (planeWave pos (q + s • Pi.single α 1)) M).mulVec (e s) =
-      (lam s : ℂ) • e s)
-    (hnorm : ∀ s, star (e s) ⬝ᵥ e s = 1) (hpos : 0 < lam 0) :
+    (heig : ∀ᶠ s in 𝓝 0,
+      (Φ.dynamicalMatrix (planeWave pos (q + s • Pi.single α 1)) M).mulVec (e s) =
+        (lam s : ℂ) • e s)
+    (hnorm : ∀ᶠ s in 𝓝 0, star (e s) ⬝ᵥ e s = 1) (hpos : 0 < lam 0) :
     ∃ v : ℝ, catalogGroupVelocity (e 0) (Φ.dynamicalMatrixDeriv pos q M α) (Real.sqrt (lam 0)) =
         v ∧ HasDerivAt (fun s => Real.sqrt (lam s)) v 0 := by
   have hherm : (Φ.dynamicalMatrix (planeWave pos (q + (0 : ℝ) • Pi.single α 1)) M).IsHermitian :=

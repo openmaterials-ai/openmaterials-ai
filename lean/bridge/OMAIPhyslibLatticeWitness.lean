@@ -3,7 +3,9 @@ springs on the Physlib crystal `ofUnitCell ℤ Unit` has the textbook catalog dy
 longitudinal dispersion and group velocity, so the hypotheses of the Hellmann-Feynman
 group-velocity theorem are satisfiable. Einstein springs on the three-cell ring
 `ofUnitCell (ZMod 3) Unit` are mechanically stable, so the stability hypothesis of the
-dispersion theorem is satisfiable. -/
+dispersion theorem is satisfiable. The chain springs folded onto a finite ring of cells
+`ℤ ⧸ N`, in particular the three-cell ring `ℤ ⧸ 3ℤ`, are mechanically stable, so the
+folded-stability hypothesis of the commensurate-wavevector theorem is satisfiable. -/
 module
 
 public import OMAIPhyslibGroupVelocity
@@ -178,8 +180,8 @@ theorem chain_groupVelocity (K Mass a : ℝ) (hK : 0 < K) (hMass : 0 < Mass) (q 
   have hsqrt : Real.sqrt (lam 0) = 2 * Real.sqrt (K / Mass) * Real.sin (x / 2) := by
     rw [hlam0, Real.sqrt_sq (by positivity)]
   obtain ⟨v, hv, hd⟩ := (springs K).catalogGroupVelocity_eq_deriv (chainPos a) q (fun _ => Mass) 0
-    (fun _ => longitudinal) 0 lam (fun _ => hasDerivAt_const _ _) heig
-    (fun _ => longitudinal_normalized) hpos
+    (fun _ => longitudinal) 0 lam (fun _ => hasDerivAt_const _ _) (Filter.Eventually.of_forall heig)
+    (Filter.Eventually.of_forall fun _ => longitudinal_normalized) hpos
   have hvl : v = 2 * K / Mass * (a * Real.sin x) / (2 * Real.sqrt (lam 0)) :=
     hd.unique (hlam.sqrt hpos.ne')
   have hlam0' : lam 0 = longitudinalOmega2 K Mass a (q 0) := by simp [lam]
@@ -228,5 +230,110 @@ theorem einstein_stable (K : ℝ) (hK : 0 ≤ K) : (einstein K).Stable := by
     split_ifs
     · positivity
     · exact le_refl _
+
+/-- The chain springs folded onto a finite ring of cells `ℤ ⧸ N`. The harmonic energy of the
+folded supercell is `K ∑_n (u_n - u_{n+1})^2` in the longitudinal displacements `u_n`, so the
+folded force constants are mechanically stable for `K ≥ 0`. This is the hypothesis
+`(Φ.fold N).Stable` of `planeWave_dynamicalMatrix_posSemidef_of_folded_stable`. -/
+theorem springs_fold_stable (K : ℝ) (hK : 0 ≤ K) (N : AddSubgroup ℤ) [Fintype (ℤ ⧸ N)]
+    [DecidableEq (ℤ ⧸ N)] : ((springs K).fold N).Stable := by
+  intro u
+  -- The folded force constants: longitudinal only, summed over the cells that fold together.
+  have hphi : ∀ (a b : (foldCrystal chain N).Site) (α β : Axis),
+      ((springs K).fold N).phi a α b β =
+        if α = 0 ∧ β = 0 then
+          ∑ R ∈ ({-1, 0, 1} : Finset ℤ) with QuotientAddGroup.mk (s := N) R = b.cell - a.cell, K * coupling R
+        else 0 := by
+    intro a b α β
+    simp only [ForceConstants.fold, springs_shell]
+    by_cases h : α = 0 ∧ β = 0 <;> simp [ForceConstants.fc, springs, h]
+  -- Only the longitudinal components enter.
+  have hab : ∀ a b : (foldCrystal chain N).Site,
+      ∑ α, ∑ β, u a α * ((springs K).fold N).phi a α b β * u b β =
+        u a 0 * (∑ R ∈ ({-1, 0, 1} : Finset ℤ) with QuotientAddGroup.mk (s := N) R = b.cell - a.cell,
+          K * coupling R) * u b 0 := by
+    intro a b
+    rw [Finset.sum_eq_single (0 : Axis)]
+    · rw [Finset.sum_eq_single (0 : Axis)]
+      · simp [hphi]
+      · intro β _ hβ
+        simp [hphi, hβ]
+      · simp
+    · intro α _ hα
+      simp [hphi, hα]
+    · simp
+  set v : ℤ ⧸ N → ℝ := fun n => u ⟨n, ()⟩ 0
+  -- The energy as a double sum over cells.
+  have hE : ((springs K).fold N).energy u =
+      ∑ n : ℤ ⧸ N, ∑ m : ℤ ⧸ N,
+        v n * (∑ R ∈ ({-1, 0, 1} : Finset ℤ) with QuotientAddGroup.mk (s := N) R = m - n, K * coupling R) * v m := by
+    unfold ForceConstants.energy
+    rw [sum_sites, Fintype.sum_unique]
+    refine Finset.sum_congr rfl fun n _ => ?_
+    rw [Finset.sum_comm, sum_sites, Fintype.sum_unique]
+    exact Finset.sum_congr rfl fun m _ => hab _ _
+  -- Each cell couples to itself and to its two neighbours: the fibre sum collapses.
+  have hfib : ∀ n : ℤ ⧸ N,
+      ∑ m : ℤ ⧸ N,
+          v n * (∑ R ∈ ({-1, 0, 1} : Finset ℤ) with QuotientAddGroup.mk (s := N) R = m - n, K * coupling R) * v m =
+        ∑ R ∈ ({-1, 0, 1} : Finset ℤ), v n * (K * coupling R) * v (n + (R : ℤ ⧸ N)) := by
+    intro n
+    simp only [Finset.mul_sum, Finset.sum_mul]
+    have hm : ∀ m : ℤ ⧸ N,
+        ∑ R ∈ ({-1, 0, 1} : Finset ℤ) with QuotientAddGroup.mk (s := N) R = m - n, v n * (K * coupling R) * v m =
+          ∑ R ∈ ({-1, 0, 1} : Finset ℤ) with n + QuotientAddGroup.mk (s := N) R = m,
+            v n * (K * coupling R) * v (n + (R : ℤ ⧸ N)) := by
+      intro m
+      refine Finset.sum_congr (Finset.filter_congr fun R _ => ?_) fun R hR => ?_
+      · rw [eq_sub_iff_add_eq, add_comm]
+      · rw [(Finset.mem_filter.1 hR).2]
+    rw [Finset.sum_congr rfl fun m _ => hm m]
+    exact Finset.sum_fiberwise_of_maps_to (fun R _ => Finset.mem_univ _) _
+  -- The nearest-neighbour sum is a sum of squared differences.
+  have c1 : coupling (-1) = -1 := by norm_num [coupling]
+  have c0 : coupling 0 = 2 := by norm_num [coupling]
+  have c2 : coupling 1 = -1 := by norm_num [coupling]
+  have hterm : ∀ n : ℤ ⧸ N,
+      ∑ R ∈ ({-1, 0, 1} : Finset ℤ), v n * (K * coupling R) * v (n + (R : ℤ ⧸ N)) =
+        K * (2 * v n ^ 2 - v n * v (n + -((1 : ℤ) : ℤ ⧸ N)) - v n * v (n + ((1 : ℤ) : ℤ ⧸ N))) := by
+    intro n
+    rw [Finset.sum_insert (by decide), Finset.sum_insert (by decide), Finset.sum_singleton, c1, c0,
+      c2, QuotientAddGroup.mk_neg, QuotientAddGroup.mk_zero, add_zero]
+    ring
+  have hshift : ∑ n : ℤ ⧸ N, v n * v (n + -((1 : ℤ) : ℤ ⧸ N)) =
+      ∑ n : ℤ ⧸ N, v n * v (n + ((1 : ℤ) : ℤ ⧸ N)) := by
+    have h := Equiv.sum_comp (Equiv.addRight ((1 : ℤ) : ℤ ⧸ N))
+      (fun n => v n * v (n + -((1 : ℤ) : ℤ ⧸ N)))
+    simp only [Equiv.coe_addRight, add_neg_cancel_right] at h
+    rw [← h]
+    exact Finset.sum_congr rfl fun n _ => mul_comm _ _
+  have hsq : ∑ n : ℤ ⧸ N, v (n + ((1 : ℤ) : ℤ ⧸ N)) ^ 2 = ∑ n : ℤ ⧸ N, v n ^ 2 := by
+    have h := Equiv.sum_comp (Equiv.addRight ((1 : ℤ) : ℤ ⧸ N)) (fun n => v n ^ 2)
+    simpa only [Equiv.coe_addRight] using h
+  have hsum : ∑ n : ℤ ⧸ N,
+      (2 * v n ^ 2 - v n * v (n + -((1 : ℤ) : ℤ ⧸ N)) - v n * v (n + ((1 : ℤ) : ℤ ⧸ N))) =
+        ∑ n : ℤ ⧸ N, (v n - v (n + ((1 : ℤ) : ℤ ⧸ N))) ^ 2 := by
+    have expand : ∀ n : ℤ ⧸ N, (v n - v (n + ((1 : ℤ) : ℤ ⧸ N))) ^ 2 =
+        v n ^ 2 - 2 * (v n * v (n + ((1 : ℤ) : ℤ ⧸ N))) + v (n + ((1 : ℤ) : ℤ ⧸ N)) ^ 2 :=
+      fun n => by ring
+    simp only [expand, Finset.sum_sub_distrib, Finset.sum_add_distrib, ← Finset.mul_sum, hshift,
+      hsq]
+    ring
+  rw [hE, Finset.sum_congr rfl fun n _ => hfib n, Finset.sum_congr rfl fun n _ => hterm n,
+    ← Finset.mul_sum, hsum]
+  exact mul_nonneg hK (Finset.sum_nonneg fun n _ => sq_nonneg _)
+
+/-- The translations of the chain modulo three cells, `3ℤ`. -/
+abbrev threeCells : AddSubgroup ℤ := AddSubgroup.zmultiples (3 : ℤ)
+
+/-- The three cosets of `3ℤ`, counted through `ZMod 3`. -/
+instance threeCells.fintype : Fintype (ℤ ⧸ threeCells) :=
+  Fintype.ofEquiv (ZMod 3) (Int.quotientZMultiplesNatEquivZMod 3).symm.toEquiv
+
+/-- The chain springs folded onto the three-cell ring `ℤ ⧸ 3ℤ` are mechanically stable: the
+folded-stability hypothesis of the commensurate-wavevector theorem is satisfiable. -/
+theorem springs_fold_three_stable (K : ℝ) (hK : 0 ≤ K) :
+    ((springs K).fold threeCells).Stable :=
+  springs_fold_stable K hK threeCells
 
 end OMAI.PhyslibBridge.LatticeWitness

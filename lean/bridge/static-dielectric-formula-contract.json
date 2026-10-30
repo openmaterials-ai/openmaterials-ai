@@ -2,7 +2,7 @@
   "schema_version": 1,
   "scope": "Reviewed OMAI formula endpoints and exact Lean proof source for local theorems with no Physlib physics counterpart. Hash and compiled-name checks detect drift and provenance errors; they are not automatic symbolic translation or numerical validation.",
   "source_path": "lean/bridge/OMAIStaticDielectric.lean",
-  "source_sha256": "e1fd2cce2adacf6a3c23ad21332c9f1ee1f0f7f8217e39f0222eedb71aa0b277",
+  "source_sha256": "16a387817543a5bc9e530f3ef6d377909d0994670788d47ab5c90596c3317da8",
   "operators": [
     {
       "id": "compute_static_dielectric",
@@ -10,6 +10,13 @@
       "formula_sha256": "1aeb264ede74c9b48a916c554fbae4dfba2344232049591cd7231a254307fddd",
       "formula_latex": "\\varepsilon_{0} = \\varepsilon_0^{stat}{\\left(\\varepsilon_{\\infty},Z^{*},\\omega,e \\right)}",
       "lean_definition": "OMAI.PhyslibBridge.StaticDielectric.staticDielectric"
+    },
+    {
+      "id": "apply_nac_correction",
+      "uid": "b8fd10813fea32fe974f69f9bf3b2129e374e4556047828e7ffb768249e5bb12",
+      "formula_sha256": "f81d4dc1d53be67dc0902b57c7bf91ec745a39a8d584827ffd023470de9e431f",
+      "formula_latex": "{D}_{i,j,\\mathbf{q}} = {D^{bare}}_{i,j,\\mathbf{q}} + \\frac{4 \\pi q_{e}^{2} \\left(\\sum_{\\gamma=1}^{3} {Z^{*}}_{i,\\gamma,\\alpha} {q}_{\\gamma}\\right) \\sum_{\\delta=1}^{3} {Z^{*}}_{j,\\delta,\\beta} {q}_{\\delta}}{V_{cell} \\sqrt{{M}_{i} {M}_{j}} \\sum_{\\substack{1 \\leq \\gamma \\leq 3\\\\1 \\leq \\delta \\leq 3}} {\\varepsilon_{\\infty}}_{\\gamma,\\delta} {q}_{\\delta} {q}_{\\gamma}}",
+      "lean_definition": "OMAI.PhyslibBridge.StaticDielectric.nonAnalytic"
     }
   ],
   "nodes": [
@@ -21,6 +28,7 @@
   "interpretations": [
     "compute_static_dielectric is an opaque output in the catalog. The interpreted definition is eps_0 = eps_inf + c Z^T D^-1 Z, with D the Gamma-point dynamical matrix on the optical coordinates (the acoustic translations projected out, so D is positive definite for a stable crystal), Z the mass-weighted Born-charge matrix Z*_{kappa,alpha beta}/sqrt(M_kappa) on those coordinates, and c = 4 pi e^2/Omega in Gaussian units (e^2/(epsilon_vac Omega) in SI, epsilon_vac the vacuum permittivity). In the eigenbasis of D this is the mode-oscillator-strength sum sum_m Z~_m Z~_m^T/omega_m^2 over the polar modes that the catalog describes; it needs the Gamma eigenvectors through D, not only the frequencies the catalog lists as input.",
     "With D positive definite and c > 0, eps_0 - eps_inf is positive semidefinite and u (eps_0 - eps_inf) u = 0 exactly when Z u = 0: the ionic term never lowers the response and vanishes along a direction exactly when no polar mode couples to it.",
-    "Along a direction u with u eps_inf u > 0, adding the Gonze-Lee long-wavelength correction c (Z u)(Z u)^T/(u eps_inf u) to D gives a Hermitian matrix whose eigenvalues are the longitudinal squared frequencies along u, and the product of these over the product of the eigenvalues of D equals (u eps_0 u)/(u eps_inf u): the generalized Lyddane-Sachs-Teller relation. The correction is not the catalog's apply_nac_correction, whose q dependence cancels and which stays a recorded defect."
+    "Along a direction u with u eps_inf u > 0, adding the Gonze-Lee long-wavelength correction c (Z u)(Z u)^T/(u eps_inf u) to D gives a Hermitian matrix whose eigenvalues are the longitudinal squared frequencies along u, and the product of these over the product of the eigenvalues of D equals (u eps_0 u)/(u eps_inf u): the generalized Lyddane-Sachs-Teller relation.",
+    "nonAnalytic transcribes the q -> 0 limit of the catalog's apply_nac_correction along the direction u of q: the term added to the dynamical matrix is c (Z u)(Z u)^T/(u eps_inf u) with c = 4 pi q_e^2/Omega (Gaussian units) and Z the mass-weighted Born-charge matrix, the Cartesian block of the atom pair being the outer product of the contracted Born charges over the scalar u . eps_inf . u. The finite-q Ewald sum of the gonze_lee scheme is a representation choice."
   ]
 }

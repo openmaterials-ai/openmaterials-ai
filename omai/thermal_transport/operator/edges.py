@@ -162,19 +162,23 @@ _Z_star = sp.IndexedBase(r"Z^*")
 _eps_inf = sp.IndexedBase(r"\varepsilon_\infty")
 _gamma_idx, _delta_idx = sp.symbols(r"\gamma \delta", integer=True)
 
-# Use a free vector q with three Cartesian components for the limit; the
-# symbol here is schematic — the substantive content is that the correction
-# is bilinear in (q · Z*) and inversely bilinear in (q · ε∞ · q).
-_q_alpha = sp.Symbol(r"q^\alpha")
-_q_beta = sp.Symbol(r"q^\beta")
+# Gonze-Lee non-analytic term in the q -> 0 limit (Gonze and Lee, Phys. Rev. B 55, 10355
+# (1997), eq. 79), Gaussian units (4 pi q_e^2 -> q_e^2/epsilon_vac in SI): for the atom pair
+# (i, j) the 3x3 Cartesian block (alpha, beta) of D, as for D^{bare}, is the outer product of
+# the contracted Born charges (q . Z*_i)_alpha = sum_gamma q_gamma Z*_{i, gamma alpha} and
+# (q . Z*_j)_beta over the scalar q . eps_inf . q, divided by sqrt(M_i M_j). The direction of q
+# is what survives the limit, which is the LO-TO splitting at Gamma. Finite-q Ewald forms
+# (Gonze-Lee, Wang) are the representations' business.
+_q_comp = sp.IndexedBase("q")
+_q_e = sp.Symbol("q_e")
 
 _DM_NAC_TERM = (
-    (4 * sp.pi / (_V_cell * sp.sqrt(_M[_i] * _M[_j])))
-    * sp.Sum(_q_alpha * _Z_star[_i, _gamma_idx, _alpha],
+    (4 * sp.pi * _q_e**2 / (_V_cell * sp.sqrt(_M[_i] * _M[_j])))
+    * sp.Sum(_q_comp[_gamma_idx] * _Z_star[_i, _gamma_idx, _alpha],
              (_gamma_idx, 1, 3))
-    * sp.Sum(_q_beta * _Z_star[_j, _delta_idx, _beta],
+    * sp.Sum(_q_comp[_delta_idx] * _Z_star[_j, _delta_idx, _beta],
              (_delta_idx, 1, 3))
-    / sp.Sum(_q_alpha * _eps_inf[_gamma_idx, _delta_idx] * _q_beta,
+    / sp.Sum(_q_comp[_gamma_idx] * _eps_inf[_gamma_idx, _delta_idx] * _q_comp[_delta_idx],
              (_gamma_idx, 1, 3), (_delta_idx, 1, 3))
 )
 _DM_NAC_FORMULA = sp.Eq(
@@ -319,45 +323,38 @@ _BTE_RTA_FORMULA = sp.Eq(
 
 # LBTE / direct-inverse: Σ_{q'ν'} M_{qν,q'ν'} F^α_{q'ν'} = c_{qν} v^α_{qν}
 #
-# The collision matrix M is built from the same three-phonon |V₃|² used in
-# compute_linewidth, but with the second mode index (q'ν') held free
-# rather than summed. Explicit form:
-#
-#   M_{qν, q'ν'} = (2 Γ_{qν} / ℏ) δ_{qν,q'ν'}  −  Ξ_{qν, q'ν'}
-#
-# The diagonal term is the RTA scattering rate (2Γ/ℏ with our canonical
-# Γ = Im Σ; the factor 2 comes from the linewidth-vs-scattering-rate
-# relation 1/τ = 2Γ in angular-frequency units). The off-diagonal term Ξ
-# is the "scattering-in" matrix: the same |V₃|² × occupation × energy-δ
-# expression as in Γ_qν, but with q' held free instead of summed.
-# Momentum conservation fixes q'' = q − q' (decay channel) or q'' = q + q'
-# (absorption channel, modulo a reciprocal-lattice vector). Coefficients
-# in front of (1 + n + n) and (n − n) match the standard linearized form
-# (Omini-Sparavigna 1995, Broido et al. 2007); they're scaled relative to
-# Γ_qν's prefactors by a factor of 2 because Ξ contributes through F^α_{q'ν'}
-# in the matrix equation rather than appearing inside the rate at q,ν.
-_om_p = _omega[_qp, _nu_p]
-_om_pp_decay = _omega[_q - _qp, _nu_pp]
-_om_pp_absorption = _omega[_q - _qp, _nu_pp]  # same q'' index under our sign convention
-# n_BE takes the dimensionless ℏω/(k_B T), same convention as compute_linewidth.
-_n_p_ratio = _n_BE(_hbar * _om_p / (_kB * _T))
-_n_pp_ratio = _n_BE(_hbar * _om_pp_decay / (_kB * _T))
-_V3_decay = _V3sq(_q, _nu, _qp, _nu_p, _q - _qp, _nu_pp)
-_V3_absorption = _V3sq(_q, _nu, _qp, _nu_p, _q - _qp, _nu_pp)
+# M is the symmetric weighting M = C^(1/2) Ω~ C^(1/2) of Chaput's symmetric
+# collision matrix Ω~ (Phys. Rev. Lett. 110, 265506 (2013)), C = diag(c). In
+# the representation f = sinh(ħω/2k_BT) n^(1) the linearized three-phonon
+# operator is symmetric: its diagonal is the scattering rate 1/τ = 2Γ (angular
+# units, the same Γ as compute_linewidth) and its off-diagonal elements are
+# built from the same |V₃|² with the constant of 2Γ (twice compute_linewidth's
+# π/(N ħ²)), weighted by 1/sinh(ħω''/2k_BT) = 2 sqrt(n''(n''+1))
+# of the third mode, with momentum conservation q + q' + q'' = G and the three
+# energy channels. With M F = c v the relaxation-time limit is F = v/(2Γ), and
+# κ N_q V = Σ sqrt(c c') v (Ω~^-1) v is positive semidefinite whenever Ω~ is.
+# The BZ-summation strategy for Σ_{ν''} and the outer Σ_{q'} stays a
+# discretization choice (declared on per-code OperatorRepresentationSpecs).
 _om = _omega[_q, _nu]
+_om_p = _omega[_qp, _nu_p]
+_om_pp = _omega[-_q - _qp, _nu_pp]
+# n_BE takes the dimensionless ℏω/(k_B T), same convention as compute_linewidth.
+_n_pp = _n_BE(_hbar * _om_pp / (_kB * _T))
+_V3_sym = _V3sq(_q, _nu, _qp, _nu_p, -_q - _qp, _nu_pp)
 
-_XI_qq = sp.pi / (_N_atoms * _hbar**2) * sp.Sum(
-    _V3_decay * 2 * (1 + _n_p_ratio + _n_pp_ratio)
-    * _delta(_om - _om_p - _om_pp_decay)
-    + _V3_absorption * 4 * (_n_p_ratio - _n_pp_ratio)
-    * _delta(_om + _om_p - _om_pp_absorption),
-    (_nu_pp, 1, _N_modes),
+_OMEGA_TILDE = (
+    2 * _Gamma[_q, _nu] * sp.KroneckerDelta(_q, _qp) * sp.KroneckerDelta(_nu, _nu_p)
+    + 2 * sp.pi / (_N_atoms * _hbar**2) * sp.Sum(
+        _V3_sym * 2 * sp.sqrt(_n_pp * (1 + _n_pp))
+        * (_delta(_om_p - _om + _om_pp) + _delta(_om_p - _om - _om_pp)
+           + _delta(_om_p + _om - _om_pp)),
+        (_nu_pp, 1, _N_modes),
+    )
 )
 
 _M_DEFINITION = sp.Eq(
     _M_collision[_q, _nu, _qp, _nu_p],
-    (2 * _Gamma[_q, _nu] / _hbar) * sp.KroneckerDelta(_q, _qp) * sp.KroneckerDelta(_nu, _nu_p)
-    - _XI_qq,
+    sp.sqrt(_c[_q, _nu] * _c[_qp, _nu_p]) * _OMEGA_TILDE,
 )
 
 _BTE_DIRECT_FORMULA_SYSTEM = sp.Eq(
@@ -515,15 +512,21 @@ apply_nac_correction = Operator(
     schemes={"nac_scheme": "gonze_lee"},
     formula=_DM_NAC_FORMULA,
     description=(
-        "Polar branch: adds the non-analytic correction (LO-TO splitting) "
-        "to the bare dynamical matrix using Born effective charges Z* and "
-        "the macroscopic dielectric tensor ε∞. The correction term is "
-        "bilinear in (q · Z*) and inversely bilinear in (q · ε∞ · q), so "
-        "it depends on the q-direction in the q→0 limit and produces the "
-        "LO-TO splitting at Γ. Default nac_scheme is gonze_lee (a "
-        "Gaussian-truncated reciprocal-space sum, the form phonopy "
-        "implements via Phonopy(nac_method='gonze')); the parry_brigham / "
-        "Wang Ewald summation is an alternative."
+        "Polar branch: adds the non-analytic correction (LO-TO splitting) to "
+        "the bare dynamical matrix from the Born effective charges Z* and the "
+        "high-frequency dielectric tensor eps_inf. In the q -> 0 limit the "
+        "Cartesian block (alpha, beta) of the atom pair (i, j) is "
+        "4 pi q_e^2 (sum_gamma q_gamma Z*_{i,gamma alpha}) (sum_delta q_delta "
+        "Z*_{j,delta beta}) / (V_cell sqrt(M_i M_j) q . eps_inf . q) (Gonze and "
+        "Lee, Phys. Rev. B 55, 10355 (1997), eq. 79; Gaussian units, 4 pi q_e^2 "
+        "-> q_e^2/epsilon_vac in SI): the wavevector enters contracted with the "
+        "Born charges and with eps_inf, so only its direction survives and the "
+        "term depends on the direction of approach to Gamma. Default nac_scheme "
+        "is gonze_lee (the Gaussian-truncated reciprocal-space sum phonopy "
+        "implements via Phonopy(nac_method='gonze')); the parry_brigham / Wang "
+        "Ewald summation is an alternative. SUPERSEDES the schematic form that "
+        "multiplied free components q^alpha and q^beta instead of contracting "
+        "q_gamma, so that its q dependence cancelled, and that lacked q_e^2."
     ),
 )
 
@@ -767,13 +770,24 @@ solve_bte_direct = Operator(
     formula=_BTE_DIRECT_FORMULA,
     auxiliary_formulas=(_M_DEFINITION,),
     description=(
-        "Full linearized BTE: solve M·F = c·v for F, where M is the "
-        "linearized three-phonon collision matrix. M has a diagonal (RTA) "
-        "part 2Γ/ℏ and off-diagonal scattering-in terms Ξ built from the "
-        "same |V₃|² as compute_linewidth (see auxiliary_formulas[0] for "
-        "the explicit definition). Off-diagonals capture inter-mode "
-        "redistribution that RTA drops; κ obtained from this F is "
-        "gauge-invariant. Under crystal symmetry G the matrix M "
+        "Full linearized BTE: solve M F = c v for the mean free displacement F, "
+        "with M = C^(1/2) Omega~ C^(1/2) the symmetric weighting of Chaput's "
+        "symmetric collision matrix Omega~ (Phys. Rev. Lett. 110, 265506 "
+        "(2013)) and C = diag(c) the per-mode heat capacities (see "
+        "auxiliary_formulas[0]). Omega~ has the scattering rate 2 Gamma of "
+        "compute_linewidth on its diagonal and off-diagonal elements built "
+        "from the same |V_3|^2 with the constant of 2 Gamma (twice "
+        "compute_linewidth's), weighted by 2 sqrt(n''(n''+1)) of the third "
+        "mode, with q + q' + q'' = G and the three energy channels; its "
+        "relaxation-time limit gives F = v/(2 Gamma), and kappa from this F is "
+        "the quadratic form sqrt(c) v . Omega~^-1 . sqrt(c) v over N_q V_cell, "
+        "positive "
+        "semidefinite whenever Omega~ is. Off-diagonals capture inter-mode "
+        "redistribution that RTA drops; kappa obtained from this F is "
+        "gauge-invariant. SUPERSEDES the form (2 Gamma/hbar) delta - Xi, which "
+        "had the relaxation-time limit F = hbar c v/(2 Gamma), was not "
+        "symmetric and placed the absorption channel at q'' = q - q'. Under "
+        "crystal symmetry G the matrix M "
         "block-diagonalizes on the irreducible q-set BZ/G, so the linear "
         "system can be solved on the reduced space and unfolded by G; "
         "symmetry_group=G asserts this. symmetry_group=C1 means M is "
@@ -1060,9 +1074,16 @@ contract_cumulative_kappa_omega = Operator(
     schemes={"binning": "linear"},
     formula=_CUMULATIVE_KAPPA_OMEGA_FORMULA,
     description=(
-        "Cumulative κ vs frequency threshold ω_c. Saturates at κ_LBTE "
-        "for ω_c → max ω. The binning convention captures how the "
-        "frequency axis is discretized (linear / log)."
+        "Cumulative kappa versus the frequency threshold omega_c: the partial "
+        "sum of the modal terms c v F over the modes with omega <= omega_c, "
+        "reaching kappa_LBTE at the highest frequency. It is a distribution "
+        "(nondecreasing in omega_c) when every modal term is nonnegative, as for "
+        "the diagonal components with the relaxation-time F = v/(2 Gamma); with "
+        "the linearized-BTE F "
+        "the modal terms are signed and the partial sum need not be monotone "
+        "(OMAIPhyslibKappaContraction exhibits a three-mode counterexample). "
+        "The binning convention captures how the frequency axis is "
+        "discretized (linear / log)."
     ),
 )
 
@@ -1074,10 +1095,15 @@ contract_cumulative_kappa_mfp = Operator(
     schemes={"binning": "log"},
     formula=_CUMULATIVE_KAPPA_MFP_FORMULA,
     description=(
-        "Cumulative κ vs mean-free-path threshold Λ_c. Heavily used "
-        "for nanoscale design (the Λ at which κ_cum = κ/2 is the "
-        "characteristic transport length). Conventionally on a log-Λ "
-        "axis since mode mean-free-paths span many orders of magnitude."
+        "Cumulative kappa versus the mean-free-path threshold Lambda_c: the "
+        "partial sum of the modal terms c v F over the modes with |F| <= "
+        "Lambda_c. The Lambda at which kappa_cum = kappa/2 is a characteristic "
+        "transport length when every modal term is nonnegative, as for the "
+        "diagonal components with the relaxation-time F; with the linearized-BTE "
+        "F the terms are signed "
+        "and the partial sum need not be monotone, so that median need not be "
+        "unique. Conventionally on a log-Lambda axis since mode mean free paths "
+        "span many orders of magnitude."
     ),
 )
 

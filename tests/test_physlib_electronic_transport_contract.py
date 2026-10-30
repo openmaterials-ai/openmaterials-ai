@@ -89,6 +89,7 @@ TRANCHES = {
         "sources": set(),
         "imports": None,
         "definitions": {
+            "apply_nac_correction": ("nonAnalytic", "def nonAnalytic (epsInf : Matrix (Fin 3) (Fin 3) ℝ) (Z : Matrix n (Fin 3) ℝ) (c : ℝ)\n    (u : Fin 3 → ℝ) : Matrix n n ℝ :=\n  (c / (u ⬝ᵥ epsInf *ᵥ u)) • vecMulVec (Z *ᵥ u) (Z *ᵥ u)"),
             "compute_static_dielectric": ("staticDielectric", "def staticDielectric (epsInf : Matrix (Fin 3) (Fin 3) ℝ) (D : Matrix n n ℝ)\n    (Z : Matrix n (Fin 3) ℝ) (c : ℝ) : Matrix (Fin 3) (Fin 3) ℝ :=\n  epsInf + c • (Zᵀ * D⁻¹ * Z)"),
         },
         "helpers": ["(c / (u ⬝ᵥ epsInf *ᵥ u)) • vecMulVec (Z *ᵥ u) (Z *ᵥ u)"],
@@ -115,7 +116,8 @@ SOMMERFELD = {
     "not_cited": {"fermiWindow_neg", "integral_fermiWindow", "integral_mul_fermiWindow",
                   "integral_sq_mul_fermiWindow", "kineticIntegral_eq"},
 }
-UNBOUND_DEFECT = "apply_nac_correction"
+UNBOUND_DEFECTS = ("solve_bte[bte_solver=direct_inverse]", "contract_kappa[bte_solver=direct_inverse]",
+                   "contract_cumulative_kappa[wrt=omega]", "contract_cumulative_kappa[wrt=mfp]")
 
 
 def _binding(binding_id):
@@ -236,17 +238,26 @@ def test_opaque_producers_are_marked_interpreted_in_the_roadmap():
     for spec in TRANCHES.values():
         for op in spec["definitions"]:
             assert rows[op]["proven"], op
+            if op == "apply_nac_correction":
+                continue  # a transcribed formula, not an opaque producer
             assert rows[op]["difficulty"] == "na" and "interpreted definition" in rows[op]["reason"], op
-    assert not rows[UNBOUND_DEFECT]["proven"]
+    for op in UNBOUND_DEFECTS:
+        assert not rows[op]["proven"], op
 
 
-def test_non_analytic_correction_stays_a_recorded_defect():
+def test_non_analytic_correction_is_bound_in_its_long_wavelength_limit():
+    import sympy as sp
+    from omai.thermal_transport.operator.edges import apply_nac_correction
+    srepr = sp.srepr(apply_nac_correction.formula)
+    assert "Symbol('q_e')" in srepr and "IndexedBase(Symbol('q'))" in srepr
     rows = {row["id"]: row for row in _packaged_bindings()["inventory"]["operators"]}
-    row = rows[UNBOUND_DEFECT]
-    assert row["status"] == "gap" and row["binding_ids"] == []
-    assert row["reason"].startswith("Catalog defect.")
-    dielectric = json.dumps(_binding("static-dielectric-ionic-response"))
-    assert "apply_nac_correction" in dielectric and "Gonze-Lee" in dielectric
+    row = rows["apply_nac_correction"]
+    assert row["status"] == "local" and row["binding_ids"] == ["static-dielectric-ionic-response"]
+    dielectric = " ".join(_binding("static-dielectric-ionic-response")["conditions"])
+    assert "apply_nac_correction" in dielectric and "Gonze-Lee" in dielectric and "nonAnalytic" in dielectric
+    for op in UNBOUND_DEFECTS:
+        assert rows[op]["status"] == "gap" and rows[op]["binding_ids"] == []
+        assert rows[op]["reason"].startswith("Not covered.")
 
 
 def test_conventions_a_user_could_get_wrong_are_stated():

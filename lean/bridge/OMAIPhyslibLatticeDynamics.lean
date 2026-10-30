@@ -59,6 +59,22 @@ def DispersionRelation {n : Type*} [Fintype n] (D : Matrix n n ℂ) (omega2 : �
     Prop :=
   ∀ i, ∑ j, D i j * e j = omega2 * e i
 
+/-- A positive semidefinite dynamical matrix has real, nonnegative `ω²`. Every solution of the
+catalog dispersion relation with a nonzero eigenvector has `Re ω² ≥ 0` and `Im ω² = 0`, since
+`e^† D e = ω² e^† e` with `e^† D e ≥ 0` and `e^† e > 0`. -/
+theorem dispersion_omega2_nonneg {n : Type*} [Fintype n] {D : Matrix n n ℂ} {omega2 : ℂ}
+    {e : n → ℂ} (hD : D.PosSemidef) (h : DispersionRelation D omega2 e) (he : e ≠ 0) :
+    0 ≤ omega2.re ∧ omega2.im = 0 := by
+  have hmul : D.mulVec e = omega2 • e := funext fun i => h i
+  have hq : star e ⬝ᵥ D.mulVec e = omega2 * (star e ⬝ᵥ e) := by
+    rw [hmul, dotProduct_smul, smul_eq_mul]
+  have hpos : 0 < star e ⬝ᵥ e := dotProduct_star_self_pos_iff.2 he
+  have hnn := hD.dotProduct_mulVec_nonneg e
+  rw [hq, Complex.nonneg_iff] at hnn
+  rw [Complex.pos_iff] at hpos
+  simp only [Complex.mul_re, Complex.mul_im, ← hpos.2, mul_zero, sub_zero, zero_add] at hnn
+  exact ⟨by nlinarith [hnn.1, hpos.1], (mul_eq_zero.1 hnn.2.symm).resolve_right hpos.1.ne'⟩
+
 /-- Second-order force constants of a crystal: the real second derivatives of the lattice
 potential with respect to the displacement of site `a` along `α` and of site `b` along `β`.
 `symm` is the equality of mixed partial derivatives, `translate` the invariance of the

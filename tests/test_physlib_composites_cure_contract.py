@@ -67,6 +67,7 @@ TRANCHES = {
 # Corollaries, substitutions, facts about helpers and catalog-to-catalog identities kept out
 # of the citations (some are private helpers or no longer in the source).
 NOT_CITED = {
+    "OMAI.PhyslibBridge.Composites.tendsto_kapitzaCorrected",
     "OMAI.PhyslibBridge.Composites.nanRandom_sphere_eq_hasselmanJohnson",
     "OMAI.PhyslibBridge.Composites.tendsto_depolarization_sphere",
     "OMAI.PhyslibBridge.Composites.criticalRadius_gt_kapitza",

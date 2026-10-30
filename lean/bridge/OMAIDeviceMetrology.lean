@@ -317,29 +317,34 @@ theorem retention_barrier_two_temperatures (Em : ℝ) {T1 T2 nu0 kB : ℝ} (h1 :
   field_simp
 
 /-- An ensemble of devices with two symmetric sites, each hopping to the other at the
-catalog's retention rate `1/tau`, has a programmed fraction `p` with `p' = (1 - p)/tau - p/tau`.
-Every such `p` relaxes to one half with time constant `tau/2`:
-`p(t) = 1/2 + (p(0) - 1/2) exp(-2 t / tau)`. -/
+catalog's retention rate `1/tau`, has a programmed fraction `p` with `p' = (1 - p)/tau - p/tau`
+from the programming instant `t = 0` on, as a right derivative at `t = 0`. Every such `p` relaxes to one half with time constant
+`tau/2`: `p(t) = 1/2 + (p(0) - 1/2) exp(-2 t / tau)` for `t ≥ 0`. Nothing is assumed about `p`
+before `t = 0`. -/
 theorem retention_symmetric_relaxation (Em T nu0 kB : ℝ) (hnu : 0 < nu0) {p : ℝ → ℝ}
-    (hp : ∀ t, HasDerivAt p ((1 - p t) / retentionTime Em T nu0 kB - p t / retentionTime Em T nu0 kB) t)
-    (t : ℝ) :
+    (hp : ∀ s ∈ Ici (0 : ℝ),
+      HasDerivWithinAt p ((1 - p s) / retentionTime Em T nu0 kB - p s / retentionTime Em T nu0 kB)
+        (Ici 0) s)
+    {t : ℝ} (ht : t ∈ Ici (0 : ℝ)) :
     p t = 1 / 2 + (p 0 - 1 / 2) * exp (-2 * t / retentionTime Em T nu0 kB) := by
   set tau := retentionTime Em T nu0 kB
   have htau : 0 < tau := div_pos (exp_pos _) hnu
   set q : ℝ → ℝ := fun s => (p s - 1 / 2) * exp (2 * s / tau)
-  have hq : ∀ s, HasDerivAt q 0 s := by
-    intro s
+  have hq : ∀ s ∈ Ici (0 : ℝ), HasDerivWithinAt q 0 (Ici 0) s := by
+    intro s hs
     have he : HasDerivAt (fun s => exp (2 * s / tau)) (exp (2 * s / tau) * (2 / tau)) s := by
       have := ((hasDerivAt_id' s).const_mul (2 / tau)).exp
       convert this using 1
       · funext x; congr 1; ring
       · ring_nf
-    have := ((hp s).sub_const (1 / 2)).mul he
+    have := ((hp s hs).sub_const (1 / 2)).mul he.hasDerivWithinAt
     convert this using 1
     field_simp
     ring
-  have hconst : q t = q 0 := is_const_of_deriv_eq_zero (fun s => (hq s).differentiableAt)
-    (fun s => (hq s).deriv) t 0
+  have hconst : q t = q 0 :=
+    constant_of_has_deriv_right_zero (a := 0) (b := t)
+      (fun s hs => (hq s hs.1).continuousWithinAt.mono Icc_subset_Ici_self)
+      (fun s hs => (hq s hs.1).mono (Ici_subset_Ici.2 hs.1)) t ⟨ht, le_rfl⟩
   simp only [q, mul_zero, zero_div, exp_zero, mul_one] at hconst
   have hpos := exp_pos (2 * t / tau)
   have : p t - 1 / 2 = (p 0 - 1 / 2) * exp (-2 * t / tau) := by
