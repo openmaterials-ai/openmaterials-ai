@@ -2,7 +2,7 @@
   "schema_version": 1,
   "scope": "Reviewed OMAI formula endpoints and exact Lean proof source for local theorems with no Physlib physics counterpart. Hash and compiled-name checks detect drift and provenance errors; they are not automatic symbolic translation or numerical validation.",
   "source_path": "lean/bridge/OMAIStabilityEnergies.lean",
-  "source_sha256": "d5da7a1eb03e27c9869c6f8f735f37c0256cc03eebaf8eba7d90a7cb221eaa34",
+  "source_sha256": "b0fd879de1d46103e675413995828b25254511988335990bb901354b6dd2ca80",
   "operators": [
     {
       "id": "compute_energy_above_hull",
@@ -38,6 +38,13 @@
       "formula_sha256": "f9a65c5a348516a72f064663e00f68d094e9511ed620539de392d4377397aca6",
       "formula_latex": "\\gamma_{GB} = \\frac{- N_{GB} E^{bulk}_{GB}{\\left(E_{tot},\\mathcal{S} \\right)} + E^{GB}{\\left(E_{tot},\\mathcal{S} \\right)}}{2 A_{GB}}",
       "lean_definition": "OMAI.PhyslibBridge.Stability.grainBoundaryEnergy"
+    },
+    {
+      "id": "compute_reaction_energy",
+      "uid": "2204ada808d0fae7706fe31723755bcc9614f2901bff9230e163f47a7e95cdf7",
+      "formula_sha256": "c69c9c84d6d962cea6ea1f005df0612832d065d6fa4d759dfff5c9b1e08cbe1f",
+      "formula_latex": "\\Delta E_{rxn} = \\sum_{i=1}^{N_{rxn}} {N^{fu}}_{i} {\\Delta H_{f}}_{i} {c_{rxn}}_{i}",
+      "lean_definition": "OMAI.PhyslibBridge.Stability.catalogReactionEnergy"
     }
   ],
   "nodes": [
@@ -60,12 +67,16 @@
     {
       "id": "GrainBoundaryEnergy",
       "uid": "f81c9c7907dc4297e44624098da25bfd87c1654a4198853bb185891282c24528"
+    },
+    {
+      "id": "ReactionEnergy",
+      "uid": "a5736aa4760c27562f9e189829763a891b6fed83fe4a030a7e306b8d909d825c"
     }
   ],
   "interpretations": [
     "compute_energy_above_hull is opaque in the catalog. Its interpreted definition is the per-atom distance h_i - hull(x_i) of entry i's formation energy above the lower convex hull of the competing entries S, the hull at composition y being the least sum_j w_j h_j over nonnegative weights supported on S that sum to one and reproduce y in atomic fractions. Formation energies and compositions are per atom; the competing set is the producer's hull_source, computed with one energy model and correction scheme.",
     "compute_adsorption_energy, compute_intercalation_voltage, compute_surface_energy and compute_grain_boundary_energy are transcribed as written in the catalog, with the opaque selectors E^{adslab}, E^{slab}, E^{full}, E^{empty}, E^{bulk} and E^{GB} as real-valued cell energies from one energy model. The grain-boundary transcription is the same function as the surface-energy transcription.",
     "The intercalation voltage uses the catalog sign V = -(E_full - E_empty - n mu)/(n q): positive when inserting n working ions from the metal reservoir lowers the energy, with q the charge transferred per ion (z e for an ion of valence z; the catalog's q_e is correct only for monovalent ions). Its open-circuit profile is V(x) = -(E'(x) - mu)/q in the ion content x.",
-    "compute_formation_energy is a per-atom definition (E - sum_a n_a mu_a)/N with nothing to prove on its own; it is not a proof subject. compute_reaction_energy is not covered: its catalog formula applies formula-unit coefficients to per-atom formation energies."
+    "compute_formation_energy is a per-atom definition (E - sum_a n_a mu_a)/N with nothing to prove on its own; it is not a proof subject. compute_reaction_energy, corrected on 2026-10-29 to sum_i c_rxn[i] N^fu[i] dH_f[i], is transcribed as catalogReactionEnergy c N h = sum_i c_i N_i h_i; it equals reactionEnergy (c N) h, and it is independent of the elemental reference energies exactly when the reaction is balanced."
   ]
 }

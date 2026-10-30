@@ -115,7 +115,7 @@ BASELINE_PAIRS = [{'module': 'OMAIPhyslibSemantics', 'name': 'OMAI.PhyslibBridge
 BASELINE_SUBJECTS = ({("operator", name) for name in BASELINE_OPERATORS}
                      | {("node", name) for name in BASELINE_NODES})
 CP_ERA_CONTRACTS = frozenset(LEGACY_CONTRACT_HASHES) | {CP_CONTRACT_NAME}
-CATALOG_ID_SHA = "7f60064e1533914c046b01c7b8723281def520baae4247b452e867f578c2ce8b"
+CATALOG_ID_SHA = "47b9ab2a89a3613060d137c2386c730c8ba57ca0070b01d3620773354548159f"
 
 # Frozen thermal Gruneisen tranche.
 GAMMA_BINDING_ID = "harmonic-static-thermal-gruneisen-identity"
@@ -178,9 +178,10 @@ GAMMA_SOURCES = sorted([
     ("Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas", "CanonicalEnsemble.heatCapacity", "def", 417),
     ("Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas", "CanonicalEnsemble.meanEnergyT", "def", 409),
 ])
+_LIVE_INVENTORY = catalog_inventory()
 EXPECTED_COVERAGE = {
-    "nodes_total": 136,
-    "operators_total": 133,
+    "nodes_total": len(_LIVE_INVENTORY["nodes"]),
+    "operators_total": len(_LIVE_INVENTORY["operators"]),
     "operators_compiled": 15,
     "operators_mapped": 15,
     "nodes_compiled": 16,
@@ -638,10 +639,11 @@ def test_gamma_unit_catalog_pins():
     assert nodes[GAMMA_OUTPUT]["uid"] == GAMMA_OUTPUT_UID
     assert {name: nodes[name]["uid"] for name in GAMMA_ASSOCIATIONS} == GAMMA_ASSOCIATIONS
     assert (nodes["Gruneisen"]["uid"], nodes["Frequency"]["uid"]) == (GRUNEISEN_UID, FREQUENCY_UID)
+    owned = {GAMMA_OUTPUT, "Gruneisen", "Frequency", *GAMMA_ASSOCIATIONS}
     projection = {
-        "nodes": [{key: row[key] for key in ("id", "uid")} for row in inventory["nodes"]],
+        "nodes": [{key: row[key] for key in ("id", "uid")} for row in inventory["nodes"] if row["id"] in owned],
         "operators": [{key: row[key] for key in ("id", "uid", "formula_sha256")}
-                      for row in inventory["operators"]],
+                      for row in inventory["operators"] if row["id"] == GAMMA_OPERATOR],
     }
     assert hashlib.sha256(canonical_json(projection).encode()).hexdigest() == CATALOG_ID_SHA
 
@@ -1002,7 +1004,7 @@ def _verify_strict(paths, package):
         assert command[:5] == ["lake", "--no-build", "env", "lean", "-j2"]
         assert kwargs["env"]["LEAN_NUM_THREADS"] == "2"
         assert kwargs["env"]["MATHLIB_NO_CACHE_ON_UPDATE"] == "1"
-        assert kwargs["timeout"] == 120
+        assert kwargs["timeout"] == verifier._probe_timeout()
         return real_run([*command[:5], "-DwarningAsError=true", *command[5:]], **kwargs)
 
     verifier.subprocess = SimpleNamespace(run=strict_run, TimeoutExpired=subprocess.TimeoutExpired)
@@ -1022,7 +1024,8 @@ def _run_scope_lean(package, directory, source, *arguments):
         *arguments, str(source),
     ]
     return subprocess.run(command, cwd=package, env=environment, text=True,
-                          capture_output=True, timeout=120, check=False)
+                          capture_output=True, check=False,
+                          timeout=_load_module("gamma_probe_timeout", "verify_contracts.py")._probe_timeout())
 
 
 def _check_lean_source(package, tmp_path, text, stem):

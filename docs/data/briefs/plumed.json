@@ -1,0 +1,132 @@
+{
+  "key": "plumed",
+  "headline": "PLUMED: collective variables and bias forces plugged into MD engines",
+  "claim": "A C++ library that computes collective variables from the positions an MD engine passes it and returns bias forces, so one implementation of each method serves every engine.",
+  "hero": {
+    "glyph": "free-energy",
+    "title": "Bias forces by the chain rule",
+    "text": "Each input line creates an Action: a collective variable, a function of variables, a bias or an output. PLUMED differentiates the bias through the variable derivatives and returns forces to the engine (Tribello 2014)."
+  },
+  "features": [
+    {
+      "glyph": "workflow",
+      "title": "Actions and pilots",
+      "text": "Pilot Actions such as METAD, UPPER_WALL and PRINT set the schedule. Only the Actions the active pilots need run at a step, so costly variables wait (Tribello 2014)."
+    },
+    {
+      "glyph": "fit-curve",
+      "title": "Collective variables",
+      "text": "Distances, angles, torsions, coordination numbers, RMSD, path variables, secondary structure, radius of gyration, cell volume, energy, dipoles, MATHEVAL (Tribello 2014)."
+    },
+    {
+      "glyph": "bars",
+      "title": "Free-energy methods",
+      "text": "Umbrella sampling, steered MD with MOVINGRESTRAINT, well-tempered metadynamics with adaptive hills, parallel tempering, multiple walkers, bias exchange (Tribello 2014)."
+    },
+    {
+      "glyph": "network",
+      "title": "Engine interface",
+      "text": "Engines call create, a generic data call, finalize (Tribello 2014). C, C++, Fortran, Python APIs. Native in AMBER, LAMMPS, DL_POLY, i-PI, OpenMM (PLUMED consortium 2019)."
+    },
+    {
+      "glyph": "database",
+      "title": "PLUMED-NEST",
+      "text": "A public repository of input files and data to reproduce published enhanced-sampling runs, each parsed against current and development PLUMED (PLUMED consortium 2019)."
+    }
+  ],
+  "facts": [
+    {
+      "value": "10",
+      "label": "MD codes interfaced with PLUMED 1",
+      "source": "Tribello 2014"
+    },
+    {
+      "value": "0.05 eps",
+      "label": "spread of the LJ7 free energy over 16 runs",
+      "source": "Tribello 2014"
+    },
+    {
+      "value": "6",
+      "label": "modules contributed by groups outside the core",
+      "source": "PLUMED consortium 2019"
+    }
+  ],
+  "workflow": [
+    {
+      "title": "Write the input",
+      "text": "One Action per line: labelled variables, biases with ARG=, PRINT ... FILE=colvar STRIDE=."
+    },
+    {
+      "title": "Link the engine",
+      "text": "Use the native interface or a patch. The engine calls PLUMED after each force evaluation."
+    },
+    {
+      "title": "Run the biased MD",
+      "text": "PLUMED adds the bias forces and virial and writes COLVAR and the hills at the set stride."
+    },
+    {
+      "title": "Reconstruct F(s)",
+      "text": "plumed sum_hills on the hills, or plumed driver with HISTOGRAM and reweighting on a run."
+    }
+  ],
+  "applications": [
+    {
+      "glyph": "molecule",
+      "title": "Folding of HIV-1 protease in a Go model",
+      "text": "Parallel tempering in the well-tempered ensemble with GROMACS and PLUMED converges the folding free energy in under 2.5e7 steps. Plain PT has not converged after 2.4e8 (Bonomi 2010).",
+      "source": "Bonomi 2010"
+    },
+    {
+      "glyph": "free-energy",
+      "title": "Ligand binding to trypsin and COX-2",
+      "text": "Funnel metadynamics in NAMD with PLUMED: -8.5 +/- 0.7 kcal/mol for benzamidine-trypsin (measured -6.4 to -7.3) and -11.1 +/- 1.5 for SC-558/COX-2 (about -12) (Limongelli 2013).",
+      "source": "Limongelli 2013"
+    },
+    {
+      "glyph": "crystal",
+      "title": "Polymorphs of urea and naphthalene",
+      "text": "Well-tempered metadynamics in GROMACS 5.1.4 with PLUMED 2 crystallizes 108 urea and 36 naphthalene molecules from the liquid, finds the known forms and predicts new ones (Piaggi 2018).",
+      "source": "Piaggi 2018"
+    }
+  ],
+  "sources": [
+    {
+      "label": "Tribello 2014",
+      "doi": "10.1016/j.cpc.2013.09.018"
+    },
+    {
+      "label": "PLUMED consortium 2019",
+      "doi": "10.1038/s41592-019-0506-8"
+    },
+    {
+      "label": "Bonomi 2010",
+      "doi": "10.1103/PhysRevLett.104.190601"
+    },
+    {
+      "label": "Limongelli 2013",
+      "doi": "10.1073/pnas.1303186110"
+    },
+    {
+      "label": "Piaggi 2018",
+      "doi": "10.1073/pnas.1811056115"
+    }
+  ],
+  "detail": [
+    {
+      "heading": "How a step works",
+      "text": "The engine calls PLUMED at three points, at initialization, after each force evaluation and at the end (Tribello 2014). On each call it reads the input as a list of Actions whose dependencies fix the order of evaluation, computes the collective variables and their derivatives with respect to atom positions and cell vectors, evaluates the bias V(s, t), and accumulates the forces on the atoms by running the active Actions in reverse. PLUMED 2 computes the virial of the bias, so it runs at constant pressure as well as constant temperature (Tribello 2014). The same input runs on the fly or on a stored trajectory through the driver tool."
+    },
+    {
+      "heading": "Collective variables and methods",
+      "text": "The free energy follows from F(s) = -kB T log P(s) along the chosen variables, and a bias is a function of those variables, so new variables can be assembled in the input with COMBINE, MATHEVAL and the MultiColvar moments without writing C++ (Tribello 2014). Multi-replica schemes (parallel tempering metadynamics, multiple walkers, bias exchange) use MPI (Tribello 2014). Contributed modules add variationally enhanced sampling (VES), the extended-system adaptive biasing force (DRR), experiment-directed simulation (EDS), logMFD, the permutation-invariant vector (PIV), MAZE and PLUMED-ISDB for NMR, SAXS and cryo-EM restraints (PLUMED consortium 2019)."
+    },
+    {
+      "heading": "Engines and tools",
+      "text": "PLUMED compiles as static object files or a dynamic library (Tribello 2014), and its LGPL license lets it be linked to proprietary codes (PLUMED consortium 2019). The 2019 list of engines is ACEMD, Amber, DL_POLY, GROMACS, LAMMPS, NAMD, OpenMM, ABIN, CP2K, i-PI, PINY-MD and Quantum ESPRESSO, and VMD, HTMD and OpenPathSampling use it for analysis (PLUMED consortium 2019). The plumed executable carries the command-line tools driver and sum_hills and the Lennard-Jones code simplemd (Tribello 2014)."
+    },
+    {
+      "heading": "Validation and reproducibility",
+      "text": "A regression test suite re-analyzes stored trajectories and must reproduce precomputed results within computational accuracy (Tribello 2014). Documentation is generated from the source with Doxygen, one HTML page per Action with its keywords, so error messages and the manual share one description (Tribello 2014). PLUMED-NEST holds the input files and data behind published simulations, each parsed automatically against the current and the development version, and consortium members commit to deposit the inputs of their papers (PLUMED consortium 2019)."
+    }
+  ]
+}

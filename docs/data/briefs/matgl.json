@@ -1,0 +1,124 @@
+{
+  "key": "matgl",
+  "headline": "MatGL: graph potentials for the periodic table, M3GNet and CHGNet",
+  "claim": "Graph neural network potentials trained on Materials Project relaxation trajectories for 89 elements, one of which also predicts the magnetic moment on every site.",
+  "hero": {
+    "glyph": "network",
+    "title": "Three-body graphs, 89 elements",
+    "text": "Atoms are nodes, bonds are edges, and bond angles enter through a bond graph. Energies, forces, stresses and, in CHGNet, magnetic moments come from one network pretrained on the Materials Project."
+  },
+  "features": [
+    {
+      "glyph": "network",
+      "title": "M3GNet architecture",
+      "text": "Bond features are updated from all other bonds at the same atom, angles expanded in spherical Bessel functions and harmonics. Three blocks, 227,549 weights (Chen 2022)."
+    },
+    {
+      "glyph": "magnet",
+      "title": "CHGNet charge constraint",
+      "text": "CHGNet predicts site magnetic moments from the atom features and trains on them as a target, so the latent space separates valence states such as V3+ and V4+ (Deng 2023)."
+    },
+    {
+      "glyph": "atoms",
+      "title": "Inputs and outputs",
+      "text": "A crystal structure with lattice and positions in, total energy out. Forces and stresses follow by automatic differentiation with respect to coordinates and strain."
+    },
+    {
+      "glyph": "database",
+      "title": "Training data",
+      "text": "M3GNet learned from 187,687 ionic steps of 62,783 compounds. CHGNet learned from MPtrj, 1,580,395 configurations with 7,944,833 magnetic moments (Chen 2022, Deng 2023)."
+    },
+    {
+      "glyph": "workflow",
+      "title": "Interfaces",
+      "text": "Both models run as ASE calculators with structures from pymatgen. Relaxations use the FIRE optimizer, and CHGNet energies feed cluster expansions in smol (Deng 2023)."
+    }
+  ],
+  "facts": [
+    {
+      "value": "0.035 eV",
+      "label": "energy MAE per atom, M3GNet on its test set",
+      "source": "Chen 2022"
+    },
+    {
+      "value": "31,664,858",
+      "label": "hypothetical crystals relaxed with M3GNet",
+      "source": "Chen 2022"
+    },
+    {
+      "value": "0.032 muB",
+      "label": "magnetic moment MAE of CHGNet on MPtrj test",
+      "source": "Deng 2023"
+    }
+  ],
+  "workflow": [
+    {
+      "title": "Load a pretrained model",
+      "text": "Pick M3GNet for energies, forces and stresses, or CHGNet when magnetic moments matter."
+    },
+    {
+      "title": "Build a structure",
+      "text": "A pymatgen Structure or ASE Atoms object, any composition of the 89 covered elements."
+    },
+    {
+      "title": "Relax or run MD",
+      "text": "Relax positions and cell with FIRE, or integrate NVT dynamics at a 2 fs step through ASE."
+    },
+    {
+      "title": "Read the outputs",
+      "text": "Energy in eV, forces in eV/A, stress in eV/A^3 and, for CHGNet, magnetic moments in muB."
+    }
+  ],
+  "applications": [
+    {
+      "glyph": "search",
+      "title": "Screening 31 million hypothetical crystals",
+      "text": "In the M3GNet paper, relaxing 31,664,858 substituted ICSD prototypes left 1,849,096 below the MP hull. Of the 1000 lowest, 999 were stable by DFT and none were in MP.",
+      "source": "Chen 2022"
+    },
+    {
+      "glyph": "arrow-cycle",
+      "title": "Charge disproportionation in LixMnO2",
+      "text": "In the CHGNet paper, a 1.5 ns run at 1100 K turned orthorhombic Li0.5MnO2 into a spinel-like phase about 50 meV per oxygen lower, with Mn2+ rising sharply near 0.8 ns.",
+      "source": "Deng 2023"
+    },
+    {
+      "glyph": "chart-down",
+      "title": "Softening across 1000 unseen compounds",
+      "text": "For over 90% of 1000 WBM compounds, M3GNet and CHGNet forces fall below DFT with fitted slopes under 1. One extra configuration cut CHGNet force MAE from 0.190 to 0.166 eV/A.",
+      "source": "Deng 2025"
+    }
+  ],
+  "sources": [
+    {
+      "label": "Chen 2022",
+      "doi": "10.1038/s43588-022-00349-3"
+    },
+    {
+      "label": "Deng 2023",
+      "doi": "10.1038/s42256-023-00716-3"
+    },
+    {
+      "label": "Deng 2025",
+      "doi": "10.1038/s41524-024-01500-6"
+    }
+  ],
+  "detail": [
+    {
+      "heading": "Many-body graph networks",
+      "text": "M3GNet adds atomic coordinates and the lattice matrix to the materials graph so that forces and stresses can be taken as derivatives. Each bond feature is updated from the other bonds at the same atom, with the angle expanded in spherical Bessel functions and spherical harmonics and a cutoff function that vanishes smoothly with its first two derivatives (Chen 2022). CHGNet keeps an atom graph and a bond graph, updates atom, bond and angle features in each interaction block, and projects the atom features after three blocks onto site magnetic moments. The last block then predicts energy from features that already carry charge-state information (Deng 2023)."
+    },
+    {
+      "heading": "Numerics and scale",
+      "text": "M3GNet uses a 5 A radial cutoff, a 4 A three-body cutoff, 64-dimensional embeddings and three main blocks, 227,549 weights in all, trained with a Huber loss on energy, forces and stress with weights 1, 1 and 0.1. Its test MAEs are 0.035 eV/atom, 0.072 eV/A and 0.41 GPa. A relaxation of K57Se34 took 22 s on one CPU core against 15 hours on 32 cores for DFT (Chen 2022). CHGNet has 400,438 parameters, a 5 A atom-graph and 3 A bond-graph cutoff, and reaches 30 meV/atom, 77 meV/A, 0.348 GPa and 0.032 muB on the MPtrj test set of 157,955 structures. Four atom convolution layers give it a 20 A receptive field (Deng 2023)."
+    },
+    {
+      "heading": "Training data and interfaces",
+      "text": "Both models were built on Materials Project data. M3GNet used the MPF.2021.2.8 snapshot of GGA and GGA+U relaxations, CHGNet the MPtrj dataset parsed from the September 2022 database with the GGA/GGA+U mixing correction applied. CHGNet is implemented in PyTorch with structure handling from pymatgen, relaxation and MD through the ASE interface, and cluster expansions through smol (Deng 2023). The same architecture without lattice inputs works as a molecular force field on MD17, and with an intensive readout as a property model on Matbench (Chen 2022)."
+    },
+    {
+      "heading": "Validation",
+      "text": "M3GNet reproduces phonon dispersions of three SiO2 polymorphs and phonon DOS centres of 1,521 materials with an MAE of 44.2 cm-1, falling to 28.8 cm-1 after a constant shift. Its relaxed volumes bring the median volume error of test structures from 2.4% to 0.6% (Chen 2022). CHGNet was the best of nine models on Matbench Discovery at the time of writing. It agrees with ab initio MD on room-temperature conductivities of Li superionic conductors and infers the same tetrahedral Mn valences as GGA+U at 0.4 ns and 1.5 ns of the LiMnO2 trajectory. Fine-tuning on Li-Fe-P-O structures lowers its test error from 23 to 15 meV/atom (Deng 2023)."
+    }
+  ]
+}

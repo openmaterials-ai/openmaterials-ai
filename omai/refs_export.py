@@ -98,6 +98,7 @@ EXCLUDE_APPLICATIONS_REVIEWS = {  # reviews, perspectives and overviews that cit
 EXCLUDE_PER_CODE = {  # a paper that uses another code of the roster: (code key, doi) pairs
     ("phono3py", "10.1103/physrevb.92.144308"): "harmonic phonons with phonopy, no lifetimes (Brivio 2015)",
     ("phono3py", "10.1039/c6cp03474h"): "finite displacements with phonopy, lifetimes measured by Raman (Leguy 2016)",
+    ("amset", "10.1103/physrevapplied.19.044052"): "transport with BoltzTraP2 and deformation-potential lifetimes, cites AMSET for GaN only (Chen 2023)",
 }
 EXCLUDE_APPLICATIONS = {
     "10.1103/physrevb.73.155114": "CASTEP DFPT paper (Refson 2006), not a VASP study",

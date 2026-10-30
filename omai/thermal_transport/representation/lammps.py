@@ -340,9 +340,10 @@ LAMMPS_AUTOCORRELATE_HEAT_CURRENT = OperatorRepresentationSpec(
     notes=(
         "`fix ave/correlate` is the direct-sum, O(N²) variant. For the "
         "FFT/Wiener-Khinchin path users dump J(t) to a file and "
-        "post-process with numpy. Both are numerically equivalent under "
-        "periodic padding; the operator layer no longer declares a "
-        "`correlation_method` scheme."
+        "post-process with numpy. The direct sum is the linear correlation, "
+        "which a zero-padded FFT reproduces; an unpadded FFT gives the "
+        "circular correlation of one period instead. The operator layer no "
+        "longer declares a `correlation_method` scheme."
     ),
 )
 
@@ -354,7 +355,9 @@ LAMMPS_COMPUTE_VELOCITY_AUTOCORRELATION = OperatorRepresentationSpec(
         "`compute vacf` is direct-sum. The compute resets at the step it "
         "was created on; for long correlation windows users re-create "
         "the compute periodically or run from a saved velocity dump. The "
-        "FFT alternative is numerically equivalent under periodic padding."
+        "direct sum is the linear correlation, which a zero-padded FFT "
+        "reproduces; an unpadded FFT gives the circular correlation of one "
+        "period instead."
     ),
 )
 

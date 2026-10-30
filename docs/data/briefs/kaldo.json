@@ -1,0 +1,128 @@
+{
+  "key": "kaldo",
+  "headline": "kALDo: phonon transport in crystals and glasses from the same force constants",
+  "claim": "An anharmonic lattice dynamics code that solves the phonon Boltzmann equation for crystals and the quasi-harmonic Green-Kubo equations for disordered solids in one Python workflow.",
+  "hero": {
+    "glyph": "lattice",
+    "title": "One theory for order and disorder",
+    "text": "Second and third order force constants feed both the Boltzmann equation, solved by RTA, iteration or inversion, and the quasi-harmonic Green-Kubo method for glasses and alloys beyond 1e4 atoms (Barbalinardo 2020)."
+  },
+  "features": [
+    {
+      "glyph": "scattering",
+      "title": "Three BTE solvers",
+      "text": "RTA, self-consistent iteration and direct inversion of the scattering matrix, quantum or classical statistics. RTA undershoots silicon by about 5% (Barbalinardo 2020)."
+    },
+    {
+      "glyph": "diffusion",
+      "title": "QHGK for disordered solids",
+      "text": "A real-space Green-Kubo sum over mode pairs with generalized velocities and lifetimes. It reduces to RTA in crystals and to Allen-Feldman with a fixed bandwidth."
+    },
+    {
+      "glyph": "gpu",
+      "title": "Tensor algebra on GPU or CPU",
+      "text": "The projection of the cubic potential on phonon modes runs as 2Nk(3N) tensor products of size (Nk 3N)^2, in NumPy and TensorFlow on CPU or GPU (Barbalinardo 2020)."
+    },
+    {
+      "glyph": "network",
+      "title": "Force constants from any code",
+      "text": "Finite differences through any ASE calculator (DFT, tight binding, force fields), a native LAMMPS interface in USER-PHONON, or compressed-sensing fits from hiPhive."
+    },
+    {
+      "glyph": "cube",
+      "title": "Unfolding for large cells",
+      "text": "When the cell exceeds twice the interaction range, kALDo computes forces inside the cell and unfolds them by periodic boundary conditions, cutting Nreplicas N atoms to N."
+    }
+  ],
+  "facts": [
+    {
+      "value": "147",
+      "label": "W/m/K, silicon at 300 K, quantum BTE, inversion",
+      "source": "Barbalinardo 2020"
+    },
+    {
+      "value": "17,000",
+      "label": "atoms in the QHGK Si-Ge clathrate alloy cell",
+      "source": "Barbalinardo 2020"
+    },
+    {
+      "value": "9960",
+      "label": "W/m/K, (10,0) nanotube at 300 K, quantum BTE",
+      "source": "Barbalinardo 2021"
+    }
+  ],
+  "workflow": [
+    {
+      "title": "Force constants",
+      "text": "ForceConstants(calculator=...): .second and .third by finite differences through ASE."
+    },
+    {
+      "title": "Phonons",
+      "text": "Phonons(temperature=...): frequencies, velocities, phase space, bandwidths, heat capacity."
+    },
+    {
+      "title": "Conductivity",
+      "text": "Conductivity(method='rta', 'inverse' or 'qhgk'): conductivity, mean_free_path."
+    },
+    {
+      "title": "Modal analysis",
+      "text": "Cumulative kappa against frequency or mean free path, participation_ratio, diffusivity."
+    }
+  ],
+  "applications": [
+    {
+      "glyph": "heat-flow",
+      "title": "Convergence of kappa in a carbon nanotube",
+      "text": "For a (10,0) nanotube the BTE gives 9960 W/m/K with quantum statistics and 3190 classical at 300 K. The longest mean free path is 6 mm, so kappa converges only past 1 mm (Barbalinardo 2021).",
+      "source": "Barbalinardo 2021"
+    },
+    {
+      "glyph": "diffusion",
+      "title": "Diffuson coherence in amorphous silicon",
+      "text": "In a 4096-atom Stillinger-Weber a-Si model, kALDo gave the QHGK conductivity set against a coherence model in which diffuson clusters propagate up to a micron (Zhang 2022).",
+      "source": "Zhang 2022"
+    },
+    {
+      "glyph": "interface",
+      "title": "AlN-SiC interface seen by EELS",
+      "text": "Vibrational EELS resolves a temperature drop within about 2 nm of the interface. kALDo on a NEP force calculator gave the phonon eigenvectors for the modal analysis of NEMD cells (Liu 2025).",
+      "source": "Liu 2025"
+    }
+  ],
+  "sources": [
+    {
+      "label": "Barbalinardo 2020",
+      "doi": "10.1063/5.0020443"
+    },
+    {
+      "label": "Barbalinardo 2021",
+      "doi": "10.1103/PhysRevLett.127.025902"
+    },
+    {
+      "label": "Zhang 2022",
+      "doi": "10.1038/s41524-022-00776-w"
+    },
+    {
+      "label": "Liu 2025",
+      "doi": "10.1038/s41586-025-09108-6"
+    }
+  ],
+  "detail": [
+    {
+      "heading": "Boltzmann transport in crystals",
+      "text": "kALDo builds the dynamical matrix and the three-phonon scattering tensor from second and third order force constants on a supercell. It then solves the linearized BTE in the relaxation time approximation, by self-consistent iteration or by direct inversion of the scattering matrix. The iteration converges only when the off-diagonal part of the scattering matrix is smaller than the diagonal, so inversion is the reference when memory allows (Barbalinardo 2020). For diamond silicon with DFPT second-order constants from Quantum ESPRESSO, inversion with quantum statistics gives 147 W/m/K at 300 K, RTA about 5% less, the classical limit 123 W/m/K and Tersoff 305 (Barbalinardo 2020)."
+    },
+    {
+      "heading": "Quasi-harmonic Green-Kubo for disordered solids",
+      "text": "QHGK writes the conductivity as a sum over pairs of modes with a generalized velocity and a generalized lifetime. It is a real-space method at the Gamma point and costs the same as BTE-RTA. In the Si116Ge20 type-II clathrate replicated 5x5x5 (17,000 atoms) it gives 31.0 W/m/K at 300 K, close to the BTE reference for the periodic alloy. Placing the Ge atoms at random over the 17,000-atom cell drops kappa to 1.7 W/m/K, a factor 200 below diamond silicon. Third-order splines interpolate the lifetimes for the large cell from a 3x3x3 cell of 3672 atoms (Barbalinardo 2020). Mode diffusivities show the loss builds up below 3 THz."
+    },
+    {
+      "heading": "Numerics and scale",
+      "text": "The expensive step is the projection of the third-order potential on phonon modes, which scales as (Nk 3N)^3. kALDo casts it as 2Nk(3N) tensor multiplications of size (Nk 3N)^2 for the BTE and (3N)^2 for QHGK, executed by NumPy and TensorFlow on multithreaded CPUs or GPUs. Memory is (3N)^2 numbers for QHGK, Nk(3N)^2 for RTA and Nk^2(3N)^2 for the full inversion. The energy-conserving delta is Gaussian, Lorentzian or triangular, and a frequency threshold stores the generalized velocity as a sparse tensor. Quasi-momentum conservation cuts the phonon state from (Nk 3N)^2 to 2Nk(3N)^2 entries (Barbalinardo 2020)."
+    },
+    {
+      "heading": "Interfaces and uses",
+      "text": "Force constants come from any ASE calculator, from a native LAMMPS interface in the USER-PHONON package, or from hiPhive fits. The CNT study paired kALDo with GPUMD equilibrium MD and corrected finite-length BTE with the McKelvey-Shockley flux method, where the Matthiessen rule overestimates kappa for every length above 10 nm (Barbalinardo 2021). Zhang 2022 used kALDo for the QHGK reference in amorphous silicon (Zhang 2022). Liu 2025 ran kALDo on a neuroevolution potential to get eigenvectors for an AlN-SiC interface (Liu 2025). The code is on GitHub."
+    }
+  ]
+}

@@ -68,6 +68,7 @@ from omai.mechanics.operator.nodes import ELASTIC_CONSTANTS
 from omai.materials.operator.shared_primitives import STRUCTURE
 from omai.thermal_transport.operator.nodes import POTENTIAL
 from omai.thermal_transport.operator.nodes import (
+    EIGENVECTORS,
     BORN_CHARGES,
     DIELECTRIC_TENSOR,
     FREQUENCY_STATE,
@@ -88,6 +89,7 @@ _mu_e = sp.Symbol(r"\mu_e")
 _eps_inf = sp.Symbol(r"\varepsilon_\infty")   # DielectricTensor
 _Zstar = sp.Symbol(r"Z^*")                     # BornCharges
 _omega = sp.Symbol(r"\omega")                  # Frequency
+_e_modes = sp.Symbol("e")                      # Eigenvectors
 _S_struct = sp.Symbol(r"\mathcal{S}")          # Structure
 _C = sp.Symbol("C")                            # ElasticConstants
 # Opaque solver functions (applied functions, not free symbols).
@@ -104,27 +106,31 @@ _mu_bte = sp.Function(r"\mu^{bte}")
 
 compute_static_dielectric = Operator(
     name="compute_static_dielectric",
-    inputs=(DIELECTRIC_TENSOR, BORN_CHARGES, FREQUENCY_STATE),
+    inputs=(DIELECTRIC_TENSOR, BORN_CHARGES, FREQUENCY_STATE, EIGENVECTORS),
     outputs=(STATIC_DIELECTRIC_TENSOR,),
     schemes={"method": "ionic_contribution"},
-    formula=sp.Eq(_eps0, _eps0_stat(_eps_inf, _Zstar, _omega)),
+    formula=sp.Eq(_eps0, _eps0_stat(_eps_inf, _Zstar, _omega, _e_modes)),
     is_executable_in_sympy_override=False,
     description=(
-        "Static dielectric tensor eps_0 = eps_0^{stat}[eps_inf, Z*, omega]: "
+        "Static dielectric tensor eps_0 = eps_0^{stat}[eps_inf, Z*, omega, e]: "
         "the high-frequency electronic dielectric tensor eps_inf plus the ionic "
         "(lattice-polarization) contribution built from the Born effective "
-        "charges Z* and the phonon frequencies omega (the mode-oscillator-"
-        "strength sum over the polar modes). eps_0^{stat} is an opaque function "
-        "over the three phonon/dielectric inputs; the method scheme records the "
-        "ionic_contribution assembly (eps_0 = eps_inf + ionic). atomate2's "
-        "VaspAmsetMaker assembles it from the dielectric + Born-charge outputs "
-        "(vasp/flows/amset.py:261-266). Implicit (a mode-strength sum over the "
+        "charges Z*, the Gamma-point phonon frequencies omega and eigenvectors "
+        "e (the mode-oscillator-strength sum over the polar modes, with the "
+        "mode strength Z^T e_m / sqrt(M) of each eigenvector). eps_0^{stat} is "
+        "an opaque function over the four phonon/dielectric inputs; the method "
+        "scheme records the "
+        "ionic_contribution assembly (eps_0 = eps_inf + ionic). VASP's DFPT run "
+        "evaluates the mode-strength sum as epsilon_ionic; atomate2's "
+        "VaspAmsetMaker adds it to epsilon_static (vasp/flows/amset.py:261-266) "
+        "and passes the Born charges and normal modes to the POP-frequency step. "
+        "Implicit (a mode-strength sum over the "
         "polar phonons), so not sympy-executable."
     ),
 )
 
 _TRANSPORT_SCHEMES = {
-    "method": "bte_ibte",
+    "method": "bte_mrta",
     "scattering": "adp_imp_pop",
     "interpolation": "boltztrap2",
 }
@@ -148,7 +154,7 @@ compute_electronic_conductivity = Operator(
         "frequency). The dense band structure / wavefunction amset interpolates "
         "and the ADP deformation potentials are amset inputs that are not map "
         "nodes (deferred source parameters). The schemes record the "
-        "iterative-BTE method, the adp_imp_pop scattering, and the boltztrap2 "
+        "momentum-relaxation-time BTE method, the adp_imp_pop scattering, and the boltztrap2 "
         "interpolation. Implicit (an interpolated-BTE solve over a scattering "
         "model), so not sympy-executable."
     ),
@@ -170,7 +176,7 @@ compute_seebeck = Operator(
         "frequencies feed the identical scattering model; the deformation "
         "potentials and the dense bands are the deferred non-node inputs). The "
         "SIGN of S carries the carrier type. The schemes record the "
-        "iterative-BTE method, the adp_imp_pop scattering, and the boltztrap2 "
+        "momentum-relaxation-time BTE method, the adp_imp_pop scattering, and the boltztrap2 "
         "interpolation. Implicit, so not sympy-executable."
     ),
 )
@@ -193,7 +199,7 @@ compute_electronic_thermal_conductivity = Operator(
         "bands deferred). amset's own source flags the kappa unit as unconfirmed "
         "(data.py:483 '# TODO: confirm unit of kappa'; header '?'); W/(m K) is "
         "the BoltzTraP2 convention, carried with that caveat on the representation. The "
-        "schemes record the iterative-BTE method, the adp_imp_pop scattering, "
+        "schemes record the momentum-relaxation-time BTE method, the adp_imp_pop scattering, "
         "and the boltztrap2 interpolation. Implicit, so not sympy-executable."
     ),
 )
@@ -213,7 +219,7 @@ compute_carrier_mobility = Operator(
         "full rank-4 elastic tensor, phonon frequencies; deformation potentials "
         "and dense bands deferred); with separate_mobility amset also reports a "
         "per-mechanism breakdown (a resolved-spectrum layer deferred here). The "
-        "schemes record the iterative-BTE method, the adp_imp_pop scattering, "
+        "schemes record the momentum-relaxation-time BTE method, the adp_imp_pop scattering, "
         "and the boltztrap2 interpolation. Implicit, so not sympy-executable."
     ),
 )

@@ -1,0 +1,111 @@
+{
+  "key": "mat-diffusion-analysis",
+  "headline": "mat-diffusion-analysis: diffusivity and activation energy from MD",
+  "claim": "An AtomisticSkills skill that reads ASE trajectories at several temperatures, takes the diffusivity from the mean squared displacement and fits a weighted Arrhenius line for E_a.",
+  "hero": {
+    "glyph": "diffusion",
+    "title": "MSD slope to Arrhenius slope",
+    "text": "analyze_diffusion.py runs pymatgen's DiffusionAnalyzer on each trajectory after a 5 ps equilibration skip and reports D with its error. calculate_activation_energy.py fits ln D against 1/T, weighted by those errors."
+  },
+  "features": [
+    {
+      "glyph": "thermometer",
+      "title": "Several temperatures",
+      "text": "The skill asks for NVT or NPT runs at 4 to 6 temperatures between 600 and 1200 K from the run_md tool of the mace or matgl skill, in supercells over 10 A on every side."
+    },
+    {
+      "glyph": "clock",
+      "title": "Early stopping",
+      "text": "The diffusion monitor stops a run once the transport property has converged and writes diffusion_{specie}.json and the MSD plot into the trajectory folder."
+    },
+    {
+      "glyph": "fit-curve",
+      "title": "Weighted fit with uncertainties",
+      "text": "The fit weights each temperature by the standard deviation of its D. The covariance propagates into E_a and into the conductivity extrapolated to 300 K in mS/cm."
+    },
+    {
+      "glyph": "code",
+      "title": "Inputs and outputs",
+      "text": "Input is an ASE .traj file per temperature with its .log for the frame interval. Outputs are diffusion_results.json per run, msd_{specie}.png and arrhenius_plot.png."
+    }
+  ],
+  "facts": [
+    {
+      "value": "5.0 ps",
+      "label": "default equilibration skipped before the MSD fit",
+      "source": "mat-diffusion-analysis SKILL.md"
+    },
+    {
+      "value": "0.95",
+      "label": "R^2 below which the Arrhenius fit warns",
+      "source": "calculate_activation_energy.py"
+    },
+    {
+      "value": "0.152 eV",
+      "label": "Li activation energy in LGPS, five temperatures",
+      "source": "LGPS example README"
+    }
+  ],
+  "workflow": [
+    {
+      "title": "Run MD",
+      "text": "run_md at 4 to 6 temperatures, supercell_min_length 10 A, diffusion monitor optional."
+    },
+    {
+      "title": "Diffusivity per run",
+      "text": "analyze_diffusion.py trajectory.traj --species Li --temperature 600 --ignore_ps 5.0"
+    },
+    {
+      "title": "Arrhenius fit",
+      "text": "calculate_activation_energy.py results/ reads md_*K/diffusion_results.json and fits E_a."
+    },
+    {
+      "title": "Check linearity",
+      "text": "Inspect the MSD plots for a linear regime and the R^2 of the Arrhenius line."
+    }
+  ],
+  "applications": [
+    {
+      "glyph": "diffusion",
+      "title": "Li in Li10GeP2S12 (LGPS)",
+      "text": "A 2x2x1 supercell of about 200 atoms, 20 ps of NVT at 600 to 1000 K with MatPES-r2SCAN, gives E_a = 0.152 +/- 0.035 eV and a 300 K conductivity of 91.44 +/- 79.18 mS/cm.",
+      "source": "LGPS example README"
+    }
+  ],
+  "sources": [
+    {
+      "label": "AtomisticSkills README",
+      "url": "https://github.com/learningmatter-mit/AtomisticSkills"
+    },
+    {
+      "label": "mat-diffusion-analysis SKILL.md",
+      "url": "https://github.com/learningmatter-mit/AtomisticSkills/blob/main/skills/mat-diffusion-analysis/SKILL.md"
+    },
+    {
+      "label": "LGPS example README",
+      "url": "https://github.com/learningmatter-mit/AtomisticSkills/blob/main/skills/mat-diffusion-analysis/examples/LGPS/README.md"
+    },
+    {
+      "label": "analyze_diffusion.py",
+      "url": "https://github.com/learningmatter-mit/AtomisticSkills/blob/main/skills/mat-diffusion-analysis/scripts/analyze_diffusion.py"
+    },
+    {
+      "label": "calculate_activation_energy.py",
+      "url": "https://github.com/learningmatter-mit/AtomisticSkills/blob/main/skills/mat-diffusion-analysis/scripts/calculate_activation_energy.py"
+    }
+  ],
+  "detail": [
+    {
+      "heading": "Einstein diffusivity and a weighted Arrhenius fit",
+      "text": "analyze_diffusion.py converts the ASE frames after the ignore_ps skip into pymatgen structures and calls DiffusionAnalyzer.from_structures with smoothed=False and step_skip=1, using the frame interval read from the MD .log file. The diffusivity of the chosen species comes from the slope of the mean squared displacement, in cm^2/s, with its standard deviation from the structural variance of the MSD. calculate_activation_energy.py collects md_*K/diffusion_results.json and calls pymatgen's fit_arrhenius with the per-temperature errors. It fits the Arrhenius law D(T) = D0 exp(-E_a/k_B T) as a weighted line in ln D against 1/T."
+    },
+    {
+      "heading": "Numerics and checks",
+      "text": "The SKILL.md asks for 4 to 6 temperatures, typically between 600 and 1200 K, supercells longer than 10 A in every direction and more than 20 mobile ions for the statistics. The user should check the MSD for a linear regime after the equilibration skip, 5.0 ps by default. The fitting script prints R^2 and warns below 0.95. It propagates the uncertainties through the covariance matrix of the weighted fit into E_a and into the diffusivity and ionic conductivity extrapolated to 300 K through pymatgen's get_extrapolated_conductivity, which takes the structure file given by --structure. In the LGPS example this gives 0.152 +/- 0.035 eV and 91.44 +/- 79.18 mS/cm from five 20 ps runs."
+    },
+    {
+      "heading": "Interfaces and environment",
+      "text": "Trajectories must be ASE .traj files, produced by the run_md tool of a potential skill such as mace or matgl, which expands the cell to supercell_min_length (10 A by default) and can run several structures at once. The diffusion monitor from mat-md-monitors stops a run when D has converged within a threshold and saves diffusion_{specie}.json and msd_{specie}.png itself, so step 2 is skipped for those runs. The analysis scripts run in the cpu environment through venv/run. The sibling skill mat-md-monitors documents the monitors."
+    }
+  ]
+}

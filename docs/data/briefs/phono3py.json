@@ -1,0 +1,126 @@
+{
+  "key": "phono3py",
+  "headline": "phono3py: phonon lifetimes and thermal conductivity from third-order force constants",
+  "claim": "A supercell code that fits third-order force constants to DFT forces, computes three-phonon linewidths on symmetry-reduced grids and solves the linearized Boltzmann equation.",
+  "hero": {
+    "glyph": "scattering",
+    "title": "Linewidths across the Brillouin zone",
+    "text": "The imaginary part of the phonon self energy, from the three-phonon interaction strength and the tetrahedron method, is mapped over the zone for nine zincblende compounds among the 33 studied (Togo 2015)."
+  },
+  "features": [
+    {
+      "glyph": "cube",
+      "title": "Supercell finite displacements",
+      "text": "Single and pair displacements of 0.03 A in supercells, reduced by site symmetry, recovered by crystal symmetry. Forces come from an external code like VASP (Togo 2015)."
+    },
+    {
+      "glyph": "grid",
+      "title": "Symmetry-reduced q grids",
+      "text": "Gamma-centred regular grids, point group, time reversal and permutation symmetry cut the q, q' pairs. Lifetimes at irreducible points spread over many nodes (Togo 2023)."
+    },
+    {
+      "glyph": "spectrum",
+      "title": "Linear tetrahedron method",
+      "text": "Energy conservation in the self energy and joint density of states is integrated analytically over 24 tetrahedra per grid point by a module returning weights (Togo 2023)."
+    },
+    {
+      "glyph": "heat-flow",
+      "title": "RTA or direct LBTE solution",
+      "text": "Kappa from mode heat capacity, group velocity and lifetime in single-mode RTA, or from the direct solution of the linearized Boltzmann equation, and isotopes (Togo 2015)."
+    },
+    {
+      "glyph": "wave",
+      "title": "Finite temperature displacements",
+      "text": "Random supercell displacements drawn from harmonic oscillators at a given temperature, valid when all commensurate modes are stable, for averaged properties (Togo 2023)."
+    }
+  ],
+  "facts": [
+    {
+      "value": "33",
+      "label": "zincblende and wurtzite compounds, RTA and LBTE",
+      "source": "Togo 2015"
+    },
+    {
+      "value": "0.03 A",
+      "label": "atomic displacement for second and third order",
+      "source": "Togo 2015"
+    },
+    {
+      "value": "7.26e2",
+      "label": "W/m/K, cubic BN at 300 K with isotopes, LBTE",
+      "source": "Togo 2015"
+    }
+  ],
+  "workflow": [
+    {
+      "title": "Displace supercells",
+      "text": "Generate symmetry-reduced displacements of 0.03 A in supercells for fc2 and fc3."
+    },
+    {
+      "title": "Compute forces",
+      "text": "Run the DFT code on every displaced supercell and collect the forces."
+    },
+    {
+      "title": "Fit force constants",
+      "text": "Build fc2 and fc3 from the forces. Add the non-analytical correction from Born charges."
+    },
+    {
+      "title": "Linewidths on a mesh",
+      "text": "Interaction strengths and imaginary self energies on a q mesh with the tetrahedron method."
+    },
+    {
+      "title": "Conductivity",
+      "text": "Kappa by RTA or LBTE, mode lifetimes and cumulative kappa from kappa-mXXXXXX.hdf5."
+    }
+  ],
+  "applications": [
+    {
+      "glyph": "wave",
+      "title": "CsPbBr3, particle and wave heat flow",
+      "text": "The Wigner conductivity, run in phono3py, gives at 300 K about 1/3 of kappa_xx from populations and 2/3 from coherences, closer to experiment. At 50 K populations give 3/4 (Simoncelli 2022).",
+      "source": "Simoncelli 2022"
+    },
+    {
+      "glyph": "layers",
+      "title": "Janus MoSSe monolayer",
+      "text": "Phono3py with VASP in the RTA gives a room temperature kappa of 13.90 W/m/K for MoSSe, between 23.15 for MoS2 and 11.54 for MoSe2, at one thickness of 24.64 A (Guo 2018).",
+      "source": "Guo 2018"
+    }
+  ],
+  "sources": [
+    {
+      "label": "Togo 2015",
+      "doi": "10.1103/PhysRevB.91.094306"
+    },
+    {
+      "label": "Togo 2023",
+      "doi": "10.1088/1361-648X/acd831"
+    },
+    {
+      "label": "Simoncelli 2022",
+      "doi": "10.1103/PhysRevX.12.041011"
+    },
+    {
+      "label": "Guo 2018",
+      "doi": "10.1039/c8cp00350e"
+    }
+  ],
+  "detail": [
+    {
+      "heading": "Force constants from supercells",
+      "text": "Second and third order force constants come from the supercell approach with finite atomic displacements of 0.03 A. The crystal symmetry selects the first displaced atom and the site symmetry left after the first selects the second. Applying the symmetry operations to the computed elements recovers the full tensors. In the 2015 study the harmonic constants used 4x4x4 supercells of the conventional cell (512 atoms) for zincblende and 5x5x3 (300 atoms) for wurtzite, and the cubic constants 2x2x2 (64 atoms) and 3x3x2 (72 atoms). The non-analytical term correction adds the long-range Coulomb part from Born charges and the dielectric tensor (Togo 2015)."
+    },
+    {
+      "heading": "Linewidths, grids and the tetrahedron method",
+      "text": "The phonon lifetime is the reciprocal of twice the imaginary part of the self energy, computed from the phonon-phonon interaction strength by Fermi's golden rule. Lifetimes were sampled on 96x96x96 and 80x80x48 meshes for the band structures and 19x19x19 and 19x19x15 meshes for the conductivities (Togo 2015). phono3py uses a Gamma-centred regular grid so that q and q' pairs map onto the grid, and reduces them by the crystallographic point group, time reversal and permutation symmetry. It integrates the energy-conserving deltas with the linear tetrahedron method, implemented as a module that returns weights per grid point (Togo 2023)."
+    },
+    {
+      "heading": "RTA and the direct solution",
+      "text": "Under the single-mode relaxation time approximation kappa is a sum over irreducible q points of heat capacity times the outer product of group velocities times lifetime, weighted by the number of branches in the star of q (Togo 2023). The direct solution of the linearized Boltzmann equation follows Chaput's method. For the 33 compounds it gives values close to the RTA. The exceptions at 300 K with isotope scattering include BAs, 1.23e3 by RTA versus 2.94e3 W/m/K, and GaN, 1.54e2 versus 1.81e2 (Togo 2015). Isotope scattering enters as a separate rate from the mass variance of each element (Togo 2015)."
+    },
+    {
+      "heading": "Validation",
+      "text": "Table IV of the 2015 paper compares LBTE values with isotopes to room temperature experiments: BN 7.26e2 against 7.6e2, BP 4.20e2 against 3.5e2, GaP 1.04e2 against 1.00e2, InP 85.2 against 93, GaAs 32.1 against 45 W/m/K. Zincblende and wurtzite polytypes of the same composition give similar conductivities, densities of states and linewidth distributions (Togo 2015). The random displacement scheme in the 2023 paper is valid only when every commensurate mode is dynamically stable, and for strongly anharmonic phases the authors recommend renormalized frequencies from self-consistent phonon calculations (Togo 2023)."
+    }
+  ]
+}

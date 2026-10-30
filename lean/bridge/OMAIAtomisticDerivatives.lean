@@ -19,15 +19,16 @@ has no model of an interatomic potential, so these are local results over Mathli
 A configuration assigns three Cartesian coordinates to every site of a finite set. An energy
 invariant under rigid translations and differentiable at a configuration has forces that sum
 to zero there. A potential invariant under rigid translations has second-order force
-constants whose sum over the sites of one index vanishes where it is twice continuously
-differentiable, and third-order ones where it is three times continuously differentiable (the
-acoustic sum rules). An energy invariant under rotations in a coordinate plane and
-differentiable at a configuration exerts no torque in that plane. The central-difference
-estimate of a force constant from displaced forces differs from the derivative by at most
-`M h^2 / 6`, with `M` a bound on the third derivative of the force along the displacement, a
-quartic force constant when the force is `-grad V`. The force need only be three times
-continuously differentiable on an open set containing the displacement segment, so pair
-potentials singular at zero separation are covered.
+constants whose sum over the sites of one index vanishes wherever the first partial derivative
+`dV/du_k` is differentiable, and third-order ones wherever the second-order force constant
+`Phi2_{kl}` is differentiable (the acoustic sum rules); a potential twice or three times
+continuously differentiable there qualifies. An energy invariant under rotations in a
+coordinate plane and differentiable at a configuration exerts no torque in that plane. The
+central-difference estimate of a force constant from displaced forces differs from the
+derivative by at most `M h^2 / 6`, with `M` a bound on the third derivative of the force along
+the displacement, a quartic force constant when the force is `-grad V`. The force need only be
+three times continuously differentiable on an open set containing the displacement segment, so
+pair potentials singular at zero separation are covered.
 
 Partial derivatives are read off Mathlib's `fderiv`, which is zero where a function is not
 differentiable. Each sum rule therefore carries a differentiability hypothesis at the point
@@ -245,25 +246,34 @@ theorem partialAt_translate (g : (A × Fin 3 → ℝ) → ℝ) (hg : ∀ x t, g 
   exact hg y t
 
 /-- The acoustic sum rule at second order: for a potential invariant under rigid translations
-and twice continuously differentiable at `u`, `sum_s Phi2_{k, (s, beta)} = 0` for every
-coordinate `k` and direction `beta`. -/
+whose first partial derivative `dV/du_k` is differentiable at `u`, `sum_s Phi2_{k, (s, beta)} = 0`
+for every direction `beta`. A potential twice continuously differentiable at `u` qualifies. -/
 theorem forceConstant2_sum_eq_zero (V : (A × Fin 3 → ℝ) → ℝ) (hV : ∀ x t, V (translate t x) = V x)
-    (u : A × Fin 3 → ℝ) (hV2 : ContDiffAt ℝ 2 V u) (k : A × Fin 3) (β : Fin 3) :
+    (u : A × Fin 3 → ℝ) (k : A × Fin 3) (hV2 : DifferentiableAt ℝ (fun x => partialAt V k x) u)
+    (β : Fin 3) :
     ∑ s, forceConstant2 V u k (s, β) = 0 :=
-  sum_partialAt_eq_zero_of_translate _ u
-    ((contDiffAt_partialAt (n := 1) (hV2.of_le (by norm_num)) k).differentiableAt (by norm_num))
-    (fun t => partialAt_translate V hV k u t) β
+  sum_partialAt_eq_zero_of_translate _ u hV2 (fun t => partialAt_translate V hV k u t) β
 
 /-- The acoustic sum rule at third order: for a potential invariant under rigid translations
-and three times continuously differentiable at `u`, `sum_s Phi3_{k, l, (s, gamma)} = 0`. -/
+whose second-order force constant `Phi2_{kl}` is differentiable in the configuration at `u`,
+`sum_s Phi3_{k, l, (s, gamma)} = 0` for every direction `gamma`. A potential three times
+continuously differentiable at `u` qualifies. -/
 theorem forceConstant3_sum_eq_zero (V : (A × Fin 3 → ℝ) → ℝ) (hV : ∀ x t, V (translate t x) = V x)
-    (u : A × Fin 3 → ℝ) (hV3 : ContDiffAt ℝ 3 V u) (k l : A × Fin 3) (γ : Fin 3) :
+    (u : A × Fin 3 → ℝ) (k l : A × Fin 3)
+    (hV3 : DifferentiableAt ℝ (fun y => forceConstant2 V y k l) u) (γ : Fin 3) :
     ∑ s, forceConstant3 V u k l (s, γ) = 0 :=
-  sum_partialAt_eq_zero_of_translate (fun y => forceConstant2 V y k l) u
+  sum_partialAt_eq_zero_of_translate (fun y => forceConstant2 V y k l) u hV3
+    (fun t => partialAt_translate _ (partialAt_translate V hV k) l u t) γ
+
+/-- A potential three times continuously differentiable at `u` satisfies the hypothesis of the
+third-order sum rule. -/
+theorem forceConstant3_sum_eq_zero_of_contDiffAt (V : (A × Fin 3 → ℝ) → ℝ)
+    (hV : ∀ x t, V (translate t x) = V x) (u : A × Fin 3 → ℝ) (hV3 : ContDiffAt ℝ 3 V u)
+    (k l : A × Fin 3) (γ : Fin 3) : ∑ s, forceConstant3 V u k l (s, γ) = 0 :=
+  forceConstant3_sum_eq_zero V hV u k l
     ((contDiffAt_partialAt (n := 1)
       ((contDiffAt_partialAt (n := 2) (hV3.of_le (by norm_num)) k).of_le (by norm_num)) l).differentiableAt
-      (by norm_num))
-    (fun t => partialAt_translate _ (partialAt_translate V hV k) l u t) γ
+      (by norm_num)) γ
 
 /-- For a potential three times continuously differentiable at `u`, the third-order force
 constants are symmetric under every permutation of their three indices. -/

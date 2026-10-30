@@ -1,0 +1,128 @@
+{
+  "key": "fairchem",
+  "headline": "fairchem: machine-learned potentials for catalysis and materials",
+  "claim": "The FAIR Chemistry library of graph neural network potentials and the Open Catalyst datasets they learn from, OC20 for adsorbates on stable surfaces and OC22 for oxides.",
+  "hero": {
+    "glyph": "surface",
+    "title": "Adsorbates on surfaces at scale",
+    "text": "OC20 holds 1,281,040 DFT relaxations of 82 adsorbates on surfaces from 55 elements, about 264,890,000 single points. Models trained on it predict energies and forces for unseen adsorbates and catalysts (Chanussot 2021)."
+  },
+  "features": [
+    {
+      "glyph": "workflow",
+      "title": "Three tasks",
+      "text": "S2EF maps a structure to energy and forces, IS2RS predicts the relaxed structure from an initial one, IS2RE predicts the relaxed adsorption energy (Chanussot 2021)."
+    },
+    {
+      "glyph": "network",
+      "title": "Graph neural network models",
+      "text": "CGCNN, SchNet and DimeNet++ with a 6 A cutoff and up to 50 neighbours (Chanussot 2021). Forces come from the energy gradient or directly, as in ForceNet and GemNet."
+    },
+    {
+      "glyph": "layers",
+      "title": "OC22 oxide electrocatalysts",
+      "text": "62,331 relaxations of oxide slabs and adsorbate-covered slabs with PBE+U and spin polarization, all atoms free, and the DFT total energy as target (Tran 2023)."
+    },
+    {
+      "glyph": "arrow-cycle",
+      "title": "Transfer between datasets",
+      "text": "Pretraining GemNet-OC on OC20 and fine-tuning on OC22 lowers the in-domain total energy MAE from 0.374 eV to 0.239 eV (Tran 2023)."
+    },
+    {
+      "glyph": "code",
+      "title": "Code and checkpoints",
+      "text": "The ocp repository publishes baseline models, data loaders and training scripts, and its MODELS.md lists pretrained OC20 checkpoints (Chanussot 2021)."
+    }
+  ],
+  "facts": [
+    {
+      "value": "1,281,040",
+      "label": "DFT relaxations in OC20",
+      "source": "Chanussot 2021"
+    },
+    {
+      "value": "0.028 eV/A",
+      "label": "force MAE, DimeNet++ large, OC20 S2EF in-domain",
+      "source": "Chanussot 2021"
+    },
+    {
+      "value": "240M",
+      "label": "core-hours of DFT behind OC22",
+      "source": "Tran 2023"
+    }
+  ],
+  "workflow": [
+    {
+      "title": "Pick a pretrained model",
+      "text": "Choose a checkpoint trained on OC20, OC22 or both, matched to metals or oxides."
+    },
+    {
+      "title": "Build slab and adsorbate",
+      "text": "Cut a surface from a bulk cell, add vacuum and place the adsorbate on a site."
+    },
+    {
+      "title": "Predict energy and forces",
+      "text": "The calculator returns the energy and per-atom forces of the structure in one pass."
+    },
+    {
+      "title": "Relax or screen",
+      "text": "Iterate forces to a relaxed geometry, or rank many adsorbate placements by energy."
+    },
+    {
+      "title": "Confirm with DFT",
+      "text": "A single DFT point on the relaxed structure checks the model prediction."
+    }
+  ],
+  "applications": [
+    {
+      "glyph": "search",
+      "title": "Lowest-energy adsorbate placements",
+      "text": "OC20-trained potentials plus one DFT single point per pick matched dense DFT within 0.1 eV, or went lower, for 87.36% of OC20-Dense systems at a 2290x speedup.",
+      "source": "Lan 2023"
+    },
+    {
+      "glyph": "fit-curve",
+      "title": "OER scaling on oxide surfaces",
+      "text": "In the OC22 paper, GemNet-OC gives the OOH against OH Gibbs scaling with slope 0.73 and intercept 3.44 eV, against the literature 0.73 and 3.49 eV.",
+      "source": "Tran 2023"
+    },
+    {
+      "glyph": "surface",
+      "title": "Adsorption energies on rutile oxides",
+      "text": "In the OC22 paper, predicted O, H and OH adsorption energies on rutile surfaces correlate with BEEF-vdW literature values at 75% or better, most within 0.6 eV.",
+      "source": "Tran 2023"
+    }
+  ],
+  "sources": [
+    {
+      "label": "Chanussot 2021",
+      "doi": "10.1021/acscatal.0c04525"
+    },
+    {
+      "label": "Tran 2023",
+      "doi": "10.1021/acscatal.2c05426"
+    },
+    {
+      "label": "Lan 2023",
+      "doi": "10.1038/s41524-023-01121-5"
+    }
+  ],
+  "detail": [
+    {
+      "heading": "Datasets and tasks",
+      "text": "OC20 places one of 82 adsorbates on a random low Miller index facet of a stable Materials Project bulk and relaxes it in VASP with RPBE until forces fall below 0.03 eV/A, with subsurface atoms fixed. Adsorption energies are referenced to the relaxed slab and gas-phase molecules. The training set holds 640,081 relaxations and over 133 million structures, with validation and test splits for unseen adsorbates, unseen catalysts and both (Chanussot 2021). OC22 samples 4,286 oxides, enumerates terminations up to Miller index 3, removes some surface oxygens and places O, H, N, C, OH, OOH, H2O, CO or O2 adsorbates at several coverages, all relaxed with PBE+U and spin polarization (Tran 2023)."
+    },
+    {
+      "heading": "Numerics and scale",
+      "text": "The OC20 baselines use 128, 1024 and 192 hidden channels for CGCNN, SchNet and DimeNet++, 3.6, 7.4 and 1.8 million parameters, graphs cut at 6 A with up to 50 neighbours, and a loss that sums the energy error and the per-structure mean force error. The best in-domain S2EF force MAE is 0.0280 eV/A for a force-only DimeNet++-Large, and the best energy MAE is 0.3585 eV for an energy-only DimeNet++ (Chanussot 2021). OC22 cost over 240 million core-hours. On its S2EF-Total test, GemNet-OC with a 12 A cutoff reaches 0.374 eV in-domain energy MAE and 0.029 eV/A force MAE, ahead of SchNet, DimeNet++, ForceNet, SpinConv, PaiNN and GemNet-dT (Tran 2023)."
+    },
+    {
+      "heading": "Interfaces and code",
+      "text": "pymatgen enumerates the surfaces, and CatKit and ASE place the adsorbates. The Open-Catalyst-Dataset repository holds all source for dataset generation. The ocp repository publishes baseline models, data loaders and training scripts, and its MODELS.md lists pretrained OC20 checkpoints (Chanussot 2021, Tran 2023). On the map fairchem serves energy, forces and stress through FAIRChemCalculator, the ASE calculator that wraps a pretrained predictor."
+    },
+    {
+      "heading": "Validation",
+      "text": "OC20 scores models by energy MAE, force MAE on free atoms, force cosine and EFwT, the fraction of structures with energy within 0.02 eV and all forces within 0.03 eV/A of DFT. ADwT judges relaxed structures by the fraction within a distance threshold of the DFT geometry (Chanussot 2021). On OC22, GemNet-OC reproduces published O, H and OH adsorption energies on rutile surfaces with at least 75% linear correlation. Its OOH versus OH Gibbs scaling has slope 0.73 and intercept 3.44 eV against the literature 0.73 and 3.49 eV. Fine-tuning from OC20 improves energy MAE at every fraction of OC22 training data (Tran 2023)."
+    }
+  ]
+}

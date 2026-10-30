@@ -9,21 +9,25 @@ public import Mathlib.Tactic
 /-!
 # Vibrational density of states from the velocity autocorrelation
 
-The catalog's `fourier_to_dos` reads a quantity proportional to the vibrational density of
-states (`Cv(0)/2`-normalized on `omega > 0`) off the velocity autocorrelation by the cosine
-transform `g(omega) = (1/pi) int_0^infinity cos(omega tau) Cv(tau)
-d tau`. Physlib has no model of a molecular dynamics trajectory, so these are local theorems over
-Mathlib.
+The catalog's `fourier_to_dos` reads the vibrational density of states per atom off the velocity
+autocorrelation by the cosine transform
+`g(omega) = (6 / (pi Cv(0))) int_0^infinity cos(omega tau) Cv(tau) d tau`, normalized to 3
+states per atom on `omega > 0`. Here `Cv` is the per-atom autocorrelation summed over the three
+Cartesian components, so `Cv(0) = 3 k_B T / m` for one mass in classical equipartition. The
+`(2/pi) int cos(omega tau) Cv(tau) / Cv(0) d tau` convention normalizes the one-sided spectrum
+to 1 and differs by the factor 3. Physlib has no model of a molecular dynamics trajectory, so
+these are local theorems over Mathlib.
 
 For the autocorrelation of lifetime-broadened modes,
-`Cv(tau) = sum_m A_m exp(-Gamma_m tau) cos(omega_m tau)` with every `Gamma_m > 0`, the catalog
-transform is a sum of Lorentzians of half-width `Gamma_m` centred at `+omega_m` and `-omega_m`,
-each with weight `A_m / 2`. Its integral over all frequencies is `Cv(0)` for every set of
-linewidths, and as the linewidths shrink to zero it converges, against every integrable test
-function continuous at the mode frequencies, to the delta sum `sum_m (A_m / 2)
-(delta(omega - omega_m) + delta(omega + omega_m))`: the harmonic delta-sum density of states with
-mode weights `A_m`. No statement is made about a finite trajectory, a window function, or
-whether the weights `A_m` are equal.
+`Cv(tau) = sum_m A_m exp(-Gamma_m tau) cos(omega_m tau)` with every `Gamma_m > 0`, so that
+`Cv(0) = sum_m A_m`, the catalog transform is a sum of Lorentzians of half-width `Gamma_m`
+centred at `+omega_m` and `-omega_m`, each with weight `3 A_m / Cv(0)`. For `Cv(0) != 0` its
+integral is 6 over the real line and 3 over `omega > 0` for every set of linewidths, and as the
+linewidths shrink to zero it converges, against every integrable test function continuous at
+the mode frequencies, to the delta sum
+`sum_m (3 A_m / Cv(0)) (delta(omega - omega_m) + delta(omega + omega_m))`: the harmonic
+delta-sum density of states with mode weights `3 A_m / Cv(0)`. No statement is made about a
+finite trajectory, a window function, or whether the weights `A_m` are equal.
 -/
 
 @[expose] public section
@@ -36,15 +40,24 @@ open scoped Topology
 namespace OMAI.PhyslibBridge.VACFSpectrum
 
 /-- The reviewed catalog expression of `fourier_to_dos`,
-`g(omega) = int_0^infinity cos(omega tau) Cv(tau) d tau / pi`. This definition alone is not a
-physical proof. -/
+`g(omega) = (6 / (pi Cv(0))) int_0^infinity cos(omega tau) Cv(tau) d tau`, the density of
+states per atom normalized to 3 on `omega > 0`. This definition alone is not a physical proof. -/
 def catalogFourierDOS (Cv : ℝ → ℝ) (omega : ℝ) : ℝ :=
-  (∫ tau in Ioi 0, cos (omega * tau) * Cv tau) / π
+  6 / (π * Cv 0) * ∫ tau in Ioi 0, cos (omega * tau) * Cv tau
+
+/-- The catalog transform is even in `omega`. -/
+theorem catalogFourierDOS_neg (Cv : ℝ → ℝ) (omega : ℝ) :
+    catalogFourierDOS Cv (-omega) = catalogFourierDOS Cv omega := by
+  simp only [catalogFourierDOS, neg_mul, cos_neg]
 
 /-- The velocity autocorrelation of lifetime-broadened modes with amplitudes `A`, half-widths
 `Gamma` and frequencies `w`. -/
 def dampedVACF {M : ℕ} (A Gamma w : Fin M → ℝ) (tau : ℝ) : ℝ :=
   ∑ m, A m * exp (-Gamma m * tau) * cos (w m * tau)
+
+/-- The zero-lag autocorrelation is the sum of the mode weights, `Cv(0) = sum_m A_m`. -/
+theorem dampedVACF_zero {M : ℕ} (A Gamma w : Fin M → ℝ) : dampedVACF A Gamma w 0 = ∑ m, A m := by
+  simp [dampedVACF]
 
 /-- The normalized Lorentzian of half-width `Gamma` at detuning `x`. -/
 def lorentzian (Gamma x : ℝ) : ℝ := Gamma / (π * (Gamma ^ 2 + x ^ 2))
@@ -110,26 +123,28 @@ theorem cos_mul_dampedVACF {M : ℕ} (A Gamma w : Fin M → ℝ) (omega tau : �
   ring
 
 /-- For lifetime-broadened modes the catalog transform is a sum of Lorentzians of half-width
-`Gamma_m` at `+omega_m` and `-omega_m`, each with weight `A_m / 2`. -/
+`Gamma_m` at `+omega_m` and `-omega_m`, each with weight `3 A_m / Cv(0)`, `Cv(0) = sum_m A_m`.
+No hypothesis on `Cv(0)` is needed: for `Cv(0) = 0` both sides vanish under Lean's convention
+`x / 0 = 0`. -/
 theorem catalogFourierDOS_damped {M : ℕ} (A Gamma w : Fin M → ℝ) (hG : ∀ m, 0 < Gamma m)
     (omega : ℝ) :
     catalogFourierDOS (dampedVACF A Gamma w) omega =
-      ∑ m, A m / 2 * (lorentzian (Gamma m) (omega - w m) + lorentzian (Gamma m) (omega + w m)) := by
+      ∑ m, 3 * A m / (∑ n, A n) *
+        (lorentzian (Gamma m) (omega - w m) + lorentzian (Gamma m) (omega + w m)) := by
   unfold catalogFourierDOS
+  rw [dampedVACF_zero]
   simp only [cos_mul_dampedVACF]
   rw [integral_finsetSum]
   swap
   · intro m _
     exact ((integrableOn_exp_neg_mul_cos (hG m) _).add (integrableOn_exp_neg_mul_cos (hG m) _)).const_mul _
-  rw [sum_div]
+  rw [mul_sum]
   refine sum_congr rfl fun m _ => ?_
   rw [integral_const_mul, integral_add (integrableOn_exp_neg_mul_cos (hG m) _)
     (integrableOn_exp_neg_mul_cos (hG m) _),
     integral_exp_neg_mul_cos (hG m), integral_exp_neg_mul_cos (hG m)]
-  unfold lorentzian
-  have h1 : 0 < Gamma m ^ 2 + (omega - w m) ^ 2 := by have := hG m; positivity
-  have h2 : 0 < Gamma m ^ 2 + (omega + w m) ^ 2 := by have := hG m; positivity
-  field_simp
+  simp only [lorentzian, div_eq_mul_inv, mul_inv]
+  ring
 
 theorem integral_lorentzian {G : ℝ} (hG : 0 < G) (c : ℝ) :
     ∫ x, lorentzian G (x - c) = 1 := by
@@ -151,27 +166,51 @@ theorem integrable_lorentzian {G : ℝ} (hG : 0 < G) (c : ℝ) :
     rw [h]; exact (integrable_inv_one_add_mul_sq (inv_ne_zero hG.ne')).const_mul _
   exact this.comp_sub_right c
 
-/-- The catalog density of states of lifetime-broadened modes integrates to the zero-lag
-autocorrelation `Cv(0) = sum_m A_m` for every set of positive linewidths. -/
+/-- For `Cv(0) = sum_m A_m != 0` the catalog density of states of lifetime-broadened modes
+integrates to 6 over the real line for every set of positive linewidths: 3 states per atom on
+each side of `omega = 0`. -/
 theorem integral_catalogFourierDOS_damped {M : ℕ} (A Gamma w : Fin M → ℝ)
-    (hG : ∀ m, 0 < Gamma m) :
-    ∫ omega, catalogFourierDOS (dampedVACF A Gamma w) omega = dampedVACF A Gamma w 0 := by
+    (hG : ∀ m, 0 < Gamma m) (hA : ∑ m, A m ≠ 0) :
+    ∫ omega, catalogFourierDOS (dampedVACF A Gamma w) omega = 6 := by
   simp only [catalogFourierDOS_damped A Gamma w hG]
   rw [integral_finsetSum]
   swap
   · intro m _
     exact ((integrable_lorentzian (hG m) _).add (by
       simpa [sub_neg_eq_add] using integrable_lorentzian (hG m) (-w m))).const_mul _
-  unfold dampedVACF
-  refine sum_congr rfl fun m _ => ?_
-  rw [integral_const_mul, integral_add (integrable_lorentzian (hG m) _)
-    (by simpa [sub_neg_eq_add] using integrable_lorentzian (hG m) (-w m)),
-    integral_lorentzian (hG m)]
-  have := integral_lorentzian (hG m) (-w m)
-  simp only [sub_neg_eq_add] at this
-  rw [this]
-  simp only [mul_zero, exp_zero, cos_zero, mul_one]
-  ring
+  have hL : ∀ m, ∫ omega, lorentzian (Gamma m) (omega - w m) + lorentzian (Gamma m) (omega + w m) =
+      2 := by
+    intro m
+    rw [integral_add (integrable_lorentzian (hG m) _)
+      (by simpa [sub_neg_eq_add] using integrable_lorentzian (hG m) (-w m)),
+      integral_lorentzian (hG m)]
+    have := integral_lorentzian (hG m) (-w m)
+    simp only [sub_neg_eq_add] at this
+    rw [this]
+    norm_num
+  simp_rw [integral_const_mul, hL]
+  have hsum : ∑ m, 3 * A m / (∑ n, A n) * 2 = 6 * ((∑ m, A m) / ∑ n, A n) := by
+    rw [sum_div, mul_sum]
+    exact sum_congr rfl fun m _ => by ring
+  rw [hsum, div_self hA, mul_one]
+
+/-- For `Cv(0) = sum_m A_m != 0` the catalog density of states of lifetime-broadened modes
+integrates to 3 over `omega > 0`, the number of states per atom, for every set of positive
+linewidths; the transform is even in `omega`. -/
+theorem integral_Ioi_catalogFourierDOS_damped {M : ℕ} (A Gamma w : Fin M → ℝ)
+    (hG : ∀ m, 0 < Gamma m) (hA : ∑ m, A m ≠ 0) :
+    ∫ omega in Ioi 0, catalogFourierDOS (dampedVACF A Gamma w) omega = 3 := by
+  have heven : ∀ omega, catalogFourierDOS (dampedVACF A Gamma w) omega =
+      catalogFourierDOS (dampedVACF A Gamma w) |omega| := fun omega => by
+    rcases le_or_gt 0 omega with h | h
+    · rw [abs_of_nonneg h]
+    · rw [abs_of_neg h, catalogFourierDOS_neg]
+  have h2 : (2 : ℝ) * ∫ omega in Ioi 0, catalogFourierDOS (dampedVACF A Gamma w) omega = 6 :=
+    calc (2 : ℝ) * ∫ omega in Ioi 0, catalogFourierDOS (dampedVACF A Gamma w) omega
+        = ∫ omega, catalogFourierDOS (dampedVACF A Gamma w) |omega| := integral_comp_abs.symm
+      _ = ∫ omega, catalogFourierDOS (dampedVACF A Gamma w) omega := by simp_rw [← heven]
+      _ = 6 := integral_catalogFourierDOS_damped A Gamma w hG hA
+  linarith
 
 /-- The unit Lorentzian profile `1 / (pi (1 + x^2))`. -/
 def unitLorentzian (x : ℝ) : ℝ := 1 / (π * (1 + x ^ 2))
@@ -209,12 +248,13 @@ theorem unitLorentzian_peak :
 
 /-- As the linewidths `s gamma_m` shrink to zero, the catalog density of states of
 lifetime-broadened modes converges, against every integrable test function continuous at the
-mode frequencies, to the delta sum `sum_m (A_m / 2) (phi(omega_m) + phi(-omega_m))`. -/
+mode frequencies, to the delta sum `sum_m (3 A_m / Cv(0)) (phi(omega_m) + phi(-omega_m))`,
+`Cv(0) = sum_m A_m`. No hypothesis on `Cv(0)` is needed: for `Cv(0) = 0` both sides vanish. -/
 theorem tendsto_catalogFourierDOS_zero_linewidth {M : ℕ} (A gamma w : Fin M → ℝ)
     (hg : ∀ m, 0 < gamma m) {phi : ℝ → ℝ} (hphi : Integrable phi)
     (hc : ∀ m, ContinuousAt phi (w m) ∧ ContinuousAt phi (-w m)) :
     Tendsto (fun s : ℝ => ∫ omega, catalogFourierDOS (dampedVACF A (s • gamma) w) omega * phi omega)
-      (𝓝[>] 0) (𝓝 (∑ m, A m / 2 * (phi (w m) + phi (-w m)))) := by
+      (𝓝[>] 0) (𝓝 (∑ m, 3 * A m / (∑ n, A n) * (phi (w m) + phi (-w m)))) := by
   obtain ⟨hnn, hone, hdecay⟩ := unitLorentzian_peak
   have hpeak : ∀ (x0 : ℝ) (g : ℝ) (hg : 0 < g), ContinuousAt phi x0 →
       Tendsto (fun s : ℝ => ∫ x, lorentzian (s * g) (x - x0) * phi x) (𝓝[>] 0) (𝓝 (phi x0)) := by
@@ -254,12 +294,12 @@ theorem tendsto_catalogFourierDOS_zero_linewidth {M : ℕ} (A gamma w : Fin M �
       _ = (s * gamma m)⁻¹ / π := by field_simp
   have hsum : ∀ᶠ s in 𝓝[>] (0 : ℝ),
       ∫ omega, catalogFourierDOS (dampedVACF A (s • gamma) w) omega * phi omega =
-        ∑ m, A m / 2 * ((∫ x, lorentzian (s * gamma m) (x - w m) * phi x) +
+        ∑ m, 3 * A m / (∑ n, A n) * ((∫ x, lorentzian (s * gamma m) (x - w m) * phi x) +
           ∫ x, lorentzian (s * gamma m) (x - -w m) * phi x) := by
     filter_upwards [self_mem_nhdsWithin] with s (hs : 0 < s)
     have hG : ∀ m, 0 < (s • gamma) m := fun m => by simpa using mul_pos hs (hg m)
     have hpt : ∀ omega, catalogFourierDOS (dampedVACF A (s • gamma) w) omega * phi omega =
-        ∑ m, A m / 2 * (lorentzian (s * gamma m) (omega - w m) * phi omega +
+        ∑ m, 3 * A m / (∑ n, A n) * (lorentzian (s * gamma m) (omega - w m) * phi omega +
           lorentzian (s * gamma m) (omega - -w m) * phi omega) := by
       intro omega
       rw [catalogFourierDOS_damped A (s • gamma) w hG, sum_mul]
@@ -270,7 +310,7 @@ theorem tendsto_catalogFourierDOS_zero_linewidth {M : ℕ} (A gamma w : Fin M �
     rw [integral_finsetSum]
     swap
     · intro m _
-      exact ((hint s hs m (w m)).add (hint s hs m (-w m))).const_mul (A m / 2)
+      exact ((hint s hs m (w m)).add (hint s hs m (-w m))).const_mul (3 * A m / ∑ n, A n)
     refine sum_congr rfl fun m _ => ?_
     rw [integral_const_mul, integral_add (hint s hs m _) (hint s hs m _)]
   refine Tendsto.congr' (EventuallyEq.symm hsum) ?_

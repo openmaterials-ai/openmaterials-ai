@@ -53,7 +53,11 @@ HELPERS = {
          "def translate (t : Fin 3 → ℝ) (R : A × Fin 3 → ℝ) : A × Fin 3 → ℝ := fun k => R k + t k.2",
          "(F (u - h • Pi.single i 1) j - F (u + h • Pi.single i 1) j) / (2 * h)"],
     MM: ["  fun k l => forceConstant2 V u k l / Real.sqrt (m k.1 * m l.1)"],
-    CE: [],
+    CE: ["def greenLagrange (F : Cell) (a b : Fin 3) : ℝ :=\n"
+         "  ((∑ c, F (c, a) * F (c, b)) - Elasticity.kron a b) / 2",
+         "def svkEnergy (lam mu V0 : ℝ) (F : Cell) : ℝ :=\n"
+         "  V0 * (lam / 2 * (∑ a, greenLagrange F a a) ^ 2 +\n"
+         "    mu * ∑ a, ∑ b, greenLagrange F a b * greenLagrange F b a)"],
 }
 CONTRACTS = {
     "lean/bridge/dft-derivatives-formula-contract.json": (
@@ -82,31 +86,41 @@ BINDINGS = {
 }
 KEY_THEOREMS = {
     AD: {
-        "hfForce_sum_eq_zero": "(hd : DifferentiableAt ℝ E R) (hE : ∀ t, E (translate t R) = E R) (α : Fin 3) :\n    ∑ i, hfForce E R i α = 0",
-        "hfForce_torque_eq_zero": "∑ i, (R (i, α) * hfForce E R i β - R (i, β) * hfForce E R i α) = 0",
-        "forceConstant2_sum_eq_zero": "(hV2 : ContDiffAt ℝ 2 V u) (k : A × Fin 3) (β : Fin 3) :\n    ∑ s, forceConstant2 V u k (s, β) = 0",
-        "forceConstant3_sum_eq_zero": "(hV3 : ContDiffAt ℝ 3 V u) (k l : A × Fin 3) (γ : Fin 3) :\n    ∑ s, forceConstant3 V u k l (s, γ) = 0",
-        "centralDifference_error": "|centralDifference F u i j h - fdForceConstant F u i j| ≤ M * h ^ 2 / 6",
-        "pairEnergy_force": "hfForce pairEnergy pairConfig 0 0 = 2",
+        "hfForce_sum_eq_zero": " (E : (A × Fin 3 → ℝ) → ℝ) (R : A × Fin 3 → ℝ)\n    (hd : DifferentiableAt ℝ E R) (hE : ∀ t, E (translate t R) = E R) (α : Fin 3) :\n    ∑ i, hfForce E R i α = 0",
+        "hfForce_torque_eq_zero": " (E : (A × Fin 3 → ℝ) → ℝ) (R : A × Fin 3 → ℝ) (α β : Fin 3)\n    (hd : DifferentiableAt ℝ E R) (hE : ∀ s, E (rotatePlane α β s R) = E R) :\n    ∑ i, (R (i, α) * hfForce E R i β - R (i, β) * hfForce E R i α) = 0",
+        "forceConstant2_sum_eq_zero": " (V : (A × Fin 3 → ℝ) → ℝ) (hV : ∀ x t, V (translate t x) = V x)\n    (u : A × Fin 3 → ℝ) (k : A × Fin 3) (hV2 : DifferentiableAt ℝ (fun x => partialAt V k x) u)\n    (β : Fin 3) :\n    ∑ s, forceConstant2 V u k (s, β) = 0",
+        "forceConstant3_sum_eq_zero": " (V : (A × Fin 3 → ℝ) → ℝ) (hV : ∀ x t, V (translate t x) = V x)\n    (u : A × Fin 3 → ℝ) (k l : A × Fin 3)\n    (hV3 : DifferentiableAt ℝ (fun y => forceConstant2 V y k l) u) (γ : Fin 3) :\n    ∑ s, forceConstant3 V u k l (s, γ) = 0",
+        "centralDifference_error": " (F : (A × Fin 3 → ℝ) → A × Fin 3 → ℝ) (u : A × Fin 3 → ℝ)\n    (i j : A × Fin 3) {U : Set ℝ} {h M : ℝ} (hh : 0 < h)\n    (hFu : DifferentiableAt ℝ (fun x => F x j) u) (hU : IsOpen U) (hIcc : Set.Icc (-h) h ⊆ U)\n    (hF : ContDiffOn ℝ 3 (fun t : ℝ => F (u + t • Pi.single i 1) j) U)\n    (hM : ∀ t ∈ Set.Icc (-h) h, |iteratedDeriv 3 (fun t : ℝ => F (u + t • Pi.single i 1) j) t| ≤ M) :\n    |centralDifference F u i j h - fdForceConstant F u i j| ≤ M * h ^ 2 / 6",
+        "pairEnergy_force": " : hfForce pairEnergy pairConfig 0 0 = 2",
     },
     CE: {
-        "cellStress_rotation_balance":
-            "∑ b, cellStress E V F α b * F (β, b) = ∑ b, cellStress E V F β b * F (α, b)",
-        "elasticConstants_symmetries":
-            "(hfree : ∀ a b, cellStress E V referenceCell a b = 0) (a b c d : Fin 3) :",
+        "cellStress_rotation_balance": " (E : Cell → ℝ) (V : ℝ) (F : Cell) (α β : Fin 3)\n    (hd : DifferentiableAt ℝ E F) (hE : ∀ s, E (rotateCell α β s F) = E F) :\n    ∑ b, cellStress E V F α b * F (β, b) = ∑ b, cellStress E V F β b * F (α, b)",
+        "elasticConstants_symmetries": " (E : Cell → ℝ) (V : ℝ)\n    (hrot : ∀ α β, α ≠ β → ∀ᶠ G in 𝓝 referenceCell, ∀ s, E (rotateCell α β s G) = E G)\n    (hE : ContDiffAt ℝ 2 E referenceCell)\n    (hfree : ∀ a b, cellStress E V referenceCell a b = 0) (a b c d : Fin 3) :\n    elasticConstants E V referenceCell a b c d = elasticConstants E V referenceCell c d a b ∧\n      elasticConstants E V referenceCell a b c d = elasticConstants E V referenceCell b a c d ∧\n      elasticConstants E V referenceCell a b c d = elasticConstants E V referenceCell a b d c",
+        "voigt_pos_of_stable_reference": " (E : Cell → ℝ) (V : ℝ)\n    (hrot : ∀ α β, α ≠ β → ∀ᶠ G in 𝓝 referenceCell, ∀ s, E (rotateCell α β s G) = E G)\n    (hE : ContDiffAt ℝ 2 E referenceCell)\n    (hfree : ∀ a b, cellStress E V referenceCell a b = 0)\n    (hstable : Elasticity.PosDef (fun a b c d => elasticConstants E V referenceCell a b c d)) :\n    0 < Elasticity.voigtBulk (fun a b c d => elasticConstants E V referenceCell a b c d) ∧\n      0 < Elasticity.voigtShear (fun a b c d => elasticConstants E V referenceCell a b c d) ∧\n      -1 < Elasticity.poissonRatio\n          (Elasticity.voigtBulk (fun a b c d => elasticConstants E V referenceCell a b c d))\n          (Elasticity.voigtShear (fun a b c d => elasticConstants E V referenceCell a b c d)) ∧\n      Elasticity.poissonRatio\n          (Elasticity.voigtBulk (fun a b c d => elasticConstants E V referenceCell a b c d))\n          (Elasticity.voigtShear (fun a b c d => elasticConstants E V referenceCell a b c d)) < 1 / 2",
+        "svkEnergy_rotateCell": " (lam mu V0 : ℝ) (α β : Fin 3) (hαβ : α ≠ β) (s : ℝ) (F : Cell) :\n    svkEnergy lam mu V0 (rotateCell α β s F) = svkEnergy lam mu V0 F",
+        "svkEnergy_contDiff": " (lam mu V0 : ℝ) : ContDiff ℝ 2 (svkEnergy lam mu V0)",
+        "svkEnergy_cellStress_referenceCell": " (lam mu V0 V : ℝ) (a b : Fin 3) :\n    cellStress (svkEnergy lam mu V0) V referenceCell a b = 0",
+        "svkEnergy_elasticConstants_symmetries": " (lam mu V0 V : ℝ) (a b c d : Fin 3) :\n    elasticConstants (svkEnergy lam mu V0) V referenceCell a b c d =\n        elasticConstants (svkEnergy lam mu V0) V referenceCell c d a b ∧\n      elasticConstants (svkEnergy lam mu V0) V referenceCell a b c d =\n        elasticConstants (svkEnergy lam mu V0) V referenceCell b a c d ∧\n      elasticConstants (svkEnergy lam mu V0) V referenceCell a b c d =\n        elasticConstants (svkEnergy lam mu V0) V referenceCell a b d c",
+        "svkEnergy_elasticConstants": " (lam mu V0 V : ℝ) (a b c d : Fin 3) :\n    elasticConstants (svkEnergy lam mu V0) V referenceCell a b c d =\n      V0 / V * Elasticity.isotropic lam mu a b c d",
+        "svkEnergy_posDef": " {lam mu V0 : ℝ} (hlam : 0 ≤ lam) (hmu : 0 < mu) (hV0 : 0 < V0) :\n    Elasticity.PosDef\n      (fun a b c d => elasticConstants (svkEnergy lam mu V0) V0 referenceCell a b c d)",
+        "svkEnergy_voigt_pos": " {lam mu V0 : ℝ} (hlam : 0 ≤ lam) (hmu : 0 < mu) (hV0 : 0 < V0) :\n    0 < Elasticity.voigtBulk\n          (fun a b c d => elasticConstants (svkEnergy lam mu V0) V0 referenceCell a b c d) ∧\n      0 < Elasticity.voigtShear\n          (fun a b c d => elasticConstants (svkEnergy lam mu V0) V0 referenceCell a b c d) ∧\n      -1 < Elasticity.poissonRatio\n          (Elasticity.voigtBulk\n            (fun a b c d => elasticConstants (svkEnergy lam mu V0) V0 referenceCell a b c d))\n          (Elasticity.voigtShear\n            (fun a b c d => elasticConstants (svkEnergy lam mu V0) V0 referenceCell a b c d)) ∧\n      Elasticity.poissonRatio\n          (Elasticity.voigtBulk\n            (fun a b c d => elasticConstants (svkEnergy lam mu V0) V0 referenceCell a b c d))\n          (Elasticity.voigtShear\n            (fun a b c d => elasticConstants (svkEnergy lam mu V0) V0 referenceCell a b c d)) <\n        1 / 2",
     },
     MM: {
-        "molecularFrequencies_of_isLocalMin": "(hm : ∀ i, 0 < m i) (hV : ContDiffAt ℝ 2 V u) (hmin : IsLocalMin V u)",
-        "massWeightedHessian_translation":
-            "(hV2 : ContDiffAt ℝ 2 V u)\n    (m : A → ℝ) (hm : ∀ i, 0 < m i) (β : Fin 3) :\n    massWeightedHessian V u m *ᵥ (fun k => if k.2 = β then Real.sqrt (m k.1) else 0) = 0",
+        "molecularFrequencies_of_isLocalMin": " (V : (A × Fin 3 → ℝ) → ℝ) (u : A × Fin 3 → ℝ)\n    (m : A → ℝ) (hm : ∀ i, 0 < m i) (hV : ContDiffAt ℝ 2 V u) (hmin : IsLocalMin V u)\n    (i : A × Fin 3) :\n    0 ≤ molecularFrequencies (massWeightedHessian_isHermitian V u m hV) i ∧\n      molecularFrequencies (massWeightedHessian_isHermitian V u m hV) i ^ 2 =\n        (massWeightedHessian_isHermitian V u m hV).eigenvalues i",
+        "massWeightedHessian_translation": " (V : (A × Fin 3 → ℝ) → ℝ)\n    (hV : ∀ x t, V (translate t x) = V x) (u : A × Fin 3 → ℝ) (hV2 : ContDiffAt ℝ 2 V u)\n    (m : A → ℝ) (hm : ∀ i, 0 < m i) (β : Fin 3) :\n    massWeightedHessian V u m *ᵥ (fun k => if k.2 = β then Real.sqrt (m k.1) else 0) = 0",
     },
 }
 # Support lemmas kept out of the citations: the general invariance lemmas, the Mathlib
-# specializations and the positive-semidefinite Hessian step.
+# specializations, the positive-semidefinite Hessian step and the Green-Lagrange strain algebra
+# behind the St Venant-Kirchhoff witness.
 NOT_CITED = {NA + "fderiv_apply_eq_zero_of_invariant_curve", NA + "partialAt_symm",
              NA + "sum_partialAt_eq_zero_of_translate", NA + "central_difference_bound",
-             NC + "elasticConstants_major", NM + "massWeightedHessian_isHermitian",
-             NM + "massWeightedHessian_posSemidef"}
+             NC + "elasticConstants_major", NC + "referenceCell_apply",
+             NC + "svkEnergy_partialAt", NC + "svkEnergy_hasFDerivAt_referenceCell",
+             NA + "forceConstant3_sum_eq_zero_of_contDiffAt",
+             NC + "greenLagrange_referenceCell", NC + "greenLagrange_rotateCell",
+             NM + "massWeightedHessian_isHermitian", NM + "massWeightedHessian_posSemidef"}
+ALLOWED_AXIOMS = {"propext", "Classical.choice", "Quot.sound"}
 
 
 def _binding(binding_id):
@@ -145,7 +159,7 @@ def test_lean_definitions_are_the_reviewed_transcriptions():
         text = (ROOT / source).read_text()
         for name, statement in theorems.items():
             assert re.search(r"theorem " + name + r"\b", text), name
-            assert statement in text, name
+            assert "theorem " + name + statement + " :=" in text, name
 
 
 @pytest.mark.parametrize("source", [AD, CE, MM])
@@ -197,12 +211,17 @@ def test_conventions_a_user_could_get_wrong_are_stated():
     assert any("converse fails" in text for text in modes["conditions"])
 
 
-def test_gruneisen_formula_is_recorded_as_a_catalog_defect():
+def test_gruneisen_formula_is_maradudin_fein_and_stays_unbound():
+    import sympy as sp
+    from omai.thermal_transport.operator.edges import compute_gruneisen
+    srepr = sp.srepr(compute_gruneisen.formula)
+    for symbol in ("IndexedBase(Symbol('e'))", "IndexedBase(Symbol('m'))", "IndexedBase(Symbol('r'))", "exp("):
+        assert symbol in srepr, symbol
     payload = _packaged_bindings()
     row = next(r for r in payload["inventory"]["operators"] if r["id"] == "compute_gruneisen")
     assert row["status"] == "gap" and row["binding_ids"] == []
-    assert row["reason"].startswith("Catalog defect.")
-    for phrase in ("leaves k, R and R' free", "Maradudin-Fein", "e*_{alpha kappa}(q nu)"):
+    assert row["reason"].startswith("Not covered.")
+    for phrase in ("Maradudin-Fein contraction", "derivative-defined gamma_i", "selected volume"):
         assert phrase in row["reason"], phrase
 
 
@@ -217,6 +236,23 @@ def test_registry_pins_this_tranche():
     assert entry["subjects"] == subjects
     assert {p["name"] for p in entry["pairs"]} == {name for name, _, _ in DEFINITIONS.values()}
     assert entry["modules"] == ("OMAIAtomisticDerivatives", "OMAICellElasticity", "OMAIMolecularModes")
+
+
+def test_build_record_covers_this_tranche():
+    record = json.loads((ROOT / "lean/bridge/build-evidence.json").read_text())
+    assert record["status"] == "passed" and record["command"] == "lake build --wfail"
+    tracked = [AD, CE, MM, *sorted(CONTRACTS)]
+    assert {path: record["sources"][path] for path in tracked} == {
+        path: hashlib.sha256((ROOT / path).read_bytes()).hexdigest() for path in tracked}
+    audit = record["axiom_audit"]
+    assert audit["status"] == "passed"
+    assert {"OMAIAtomisticDerivatives", "OMAICellElasticity", "OMAIMolecularModes"} <= set(audit["source_modules"])
+    declarations = audit["declarations"]
+    cited = {name for binding_id in BINDINGS for name in _binding(binding_id)["evidence"]["declarations"]}
+    pinned = {ns + name for source, ns in ((AD, NA), (CE, NC), (MM, NM)) for name in KEY_THEOREMS[source]}
+    for name in sorted(cited | pinned | NOT_CITED):
+        assert name in declarations, name
+        assert set(declarations[name]) <= ALLOWED_AXIOMS, name
 
 
 def test_compiled_theorems_use_standard_axioms_only():
@@ -238,4 +274,4 @@ def test_compiled_theorems_use_standard_axioms_only():
     reported = re.findall(r"'([^']+)' depends on axioms: \[([^\]]*)\]", result.stdout)
     assert {name for name, _ in reported} == set(names)
     for name, axioms in reported:
-        assert set(a.strip() for a in axioms.split(",")) <= {"propext", "Classical.choice", "Quot.sound"}, name
+        assert set(a.strip() for a in axioms.split(",")) <= ALLOWED_AXIOMS, name

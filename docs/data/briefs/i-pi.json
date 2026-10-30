@@ -1,0 +1,136 @@
+{
+  "key": "i-pi",
+  "headline": "i-PI: path integral molecular dynamics with forces over a socket",
+  "claim": "A Python force engine that moves the nuclei, classical or as ring polymers, while an external code returns energies and forces over a socket.",
+  "hero": {
+    "glyph": "ring",
+    "title": "Ring polymers from any force code",
+    "text": "i-PI is the server. It sends positions and cell vectors to clients, receives energy, forces and stress, and moves the atoms. With several beads, one forcefield serves several clients in parallel (Litman 2024)."
+  },
+  "features": [
+    {
+      "glyph": "atoms",
+      "title": "Sampling methods",
+      "text": "MD and PIMD in the NVE, NVT, NPT and NsT ensembles, GLE and PIGLET thermostats, RPMD, CMD, TRPMD, ring polymer instantons, replica exchange, metadynamics (Litman 2024)."
+    },
+    {
+      "glyph": "network",
+      "title": "Socket protocol",
+      "text": "UNIX domain sockets on one host or TCP/IP across a network. Clients start on their own and must keep the atom count and order fixed for the whole run (Litman 2024)."
+    },
+    {
+      "glyph": "code",
+      "title": "Clients",
+      "text": "Examples ship for ASE, CASTEP, CP2K, LAMMPS, DFTB+, FHI-aims, Quantum ESPRESSO and VASP. A new Python interface is one small file under drivers/py/pes/ (Litman 2024)."
+    },
+    {
+      "glyph": "clock",
+      "title": "Overhead per step",
+      "text": "i-PI 3.0 cut the base NVE overhead from 0.47 ms to 0.09 ms per step and the TCP/IP constant from 21.54 ms to 1.26 ms by disabling Nagle's algorithm (Litman 2024)."
+    },
+    {
+      "glyph": "ensemble",
+      "title": "Committee models",
+      "text": "An ffcommittee block averages several potentials and reports their spread as the error, with a weighted baseline model and a store of high-error structures (Litman 2024)."
+    }
+  ],
+  "facts": [
+    {
+      "value": "2.16",
+      "label": "ns/day, 4096 H2O, DeePMD, 8 V100 GPUs, via i-PI",
+      "source": "Litman 2024"
+    },
+    {
+      "value": "0.09 ms",
+      "label": "base overhead per NVE step in i-PI 3.0",
+      "source": "Litman 2024"
+    },
+    {
+      "value": "0.6%",
+      "label": "CH4+H tunneling factors vs an independent code",
+      "source": "Kapil 2019"
+    }
+  ],
+  "workflow": [
+    {
+      "title": "Write the XML input",
+      "text": "One XML file with <system>, <ensemble>, <ffsocket> blocks and a <motion> mode."
+    },
+    {
+      "title": "Start i-PI",
+      "text": "i-PI opens its sockets and waits for clients to connect."
+    },
+    {
+      "title": "Launch the clients",
+      "text": "Start the force code (LAMMPS fix_ipi, the ASE driver, a DFT code) at the socket address."
+    },
+    {
+      "title": "Run and restart",
+      "text": "Each step trades positions for energy, forces and stress. Restart files are written."
+    },
+    {
+      "title": "Post-process",
+      "text": "Print properties and trajectories (x_centroid, f_centroid) and run the i-pi tools."
+    }
+  ],
+  "applications": [
+    {
+      "glyph": "spectrum",
+      "title": "Infrared spectrum of liquid water",
+      "text": "Thermostatted RPMD in i-PI with LAMMPS, 216 q-TIP4P/F waters and 32 beads, washes out the RPMD resonances. The OH stretch peak sits about 75 cm-1 below the classical one (Rossi 2014).",
+      "source": "Rossi 2014"
+    },
+    {
+      "glyph": "ring",
+      "title": "Fourth-order path integrals for ice",
+      "text": "Finite-difference Suzuki-Chin PIMD, implemented in i-PI, reaches an error of a few meV per molecule for hexagonal ice at 100 K with 48 beads. Trotter PIMD needs more than 128 (Kapil 2016).",
+      "source": "Kapil 2016"
+    },
+    {
+      "glyph": "thermometer",
+      "title": "Melting point of ab initio water",
+      "text": "i-PI with LAMMPS and a revPBE0-D3 neural network potential gives Tm = 267(2) K for H2O and 275(2) K for D2O, against 273.15 K and 276.97 K measured (Cheng 2019).",
+      "source": "Cheng 2019"
+    }
+  ],
+  "sources": [
+    {
+      "label": "Kapil 2019",
+      "doi": "10.1016/j.cpc.2018.09.020"
+    },
+    {
+      "label": "Litman 2024",
+      "doi": "10.1063/5.0215869"
+    },
+    {
+      "label": "Rossi 2014",
+      "doi": "10.1063/1.4883861"
+    },
+    {
+      "label": "Kapil 2016",
+      "doi": "10.1063/1.4971438"
+    },
+    {
+      "label": "Cheng 2019",
+      "doi": "10.1073/pnas.1815117116"
+    }
+  ],
+  "detail": [
+    {
+      "heading": "Architecture",
+      "text": "i-PI is a client-server code in Python 3 under a dual GPL and MIT license (Litman 2024). The System class holds the atoms, the number of beads, the ensemble and the initialization. The Forces class sums several force components, each computed by a Forcefield instance with its own client, so one input can mix a cheap and an expensive potential, or treat an adsorbate and its surface with different numbers of beads (Kapil 2019). The Motion class evolves the atoms, and SMotion classes act across systems for replica exchange. A client may return a JSON extras string with further quantities, such as Born effective charges or committee energies, which i-PI attaches to the force (Litman 2024)."
+    },
+    {
+      "heading": "Numerics and scale",
+      "text": "The overhead per step is modelled as A + B N_a. In i-PI 3.0 the NVE integrator costs 0.09 ms plus 0.02 us per atom on one core, and UNIX socket communication adds 0.25 ms plus 0.06 us per atom (Litman 2024). With LAMMPS and a DeePMD potential for 4096 water molecules, i-PI matches LAMMPS up to 288 CPU cores and reaches 2.16 ns/day against 2.54 ns/day for LAMMPS alone on 8 V100 GPUs with a 0.5 fs step (Litman 2024). Bosonic PIMD scales quadratically with particle number instead of exponentially. At N = 1024 the exchange costs 44 times a distinguishable run (Litman 2024). Fourth-order and perturbed path integrals, PIGLET and ring polymer contraction cut the number of beads needed (Kapil 2019)."
+    },
+    {
+      "heading": "Interfaces",
+      "text": "Any code that can open a socket can drive i-PI. The distribution includes a Fortran and a Python driver as templates, and LAMMPS ships fix_ipi (Litman 2024). The ASE and LAMMPS interfaces give access to the potentials those packages wrap, among them MACE, DeePMD and n2p2 (Litman 2024). i-PI links PLUMED natively as a ForceField, so metadynamics hills and restarts stay in sync (Kapil 2019). The documentation has examples for ASE, CASTEP, CP2K, LAMMPS, DFTB+, ffsGDML, FHI-aims, librascal, Quantum ESPRESSO, VASP, elphmod and YAFF, with HPC submission scripts (Litman 2024)."
+    },
+    {
+      "heading": "Validation",
+      "text": "Continuous integration runs every example for a few steps and a regression suite against stored reference outputs (Litman 2024). The ring polymer instanton rates for CH4 + H with the CBE potential agree within 0.6% with an independent implementation, with tunneling enhancement 9.75 at 300 K and 94992 at 150 K (Kapil 2019). Bosonic PIMD of 512 trapped non-interacting bosons with 42 beads is plotted against the analytical energy per particle with a 0.5% error band (Litman 2024). The perturbed path integral estimator recovers the nuclear quantum contribution to the energy of aspirin to 0.5% with six beads, where the virial estimator is off by 2.5% with twenty-eight (Kapil 2019)."
+    }
+  ]
+}

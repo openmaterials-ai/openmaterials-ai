@@ -24,12 +24,13 @@ curves: convex in composition, below every phase curve, and above every convex f
 below them. If every phase's Gibbs function is concave in temperature, the equilibrium
 Gibbs energy at fixed composition is concave in temperature, so its entropy is
 nondecreasing and, at nonnegative temperature, its enthalpy is nondecreasing, through
-every phase transition. At a two-phase minimum with interior compositions both
-differentiable phase curves share the common tangent, so the chemical potentials agree.
-Mass balance fixes the phase fractions to the lever rule. For a unary system or a
-congruent transformation, a Gibbs-energy difference that changes sign with a positive
-entropy difference has exactly one transition temperature, where the stable phase
-switches.
+every phase transition. At a two-phase local extremum with interior compositions both
+differentiable phase curves share the common tangent, so the chemical potentials agree, and
+where the equilibrium envelope follows the two-phase chord its tangent intercepts are those
+common-tangent intercepts. Mass balance fixes the phase fractions to the lever rule. For a
+unary system or a congruent transformation, a Gibbs-energy difference that changes sign
+with a positive entropy difference has exactly one transition temperature, where the
+stable phase switches.
 -/
 
 @[expose] public section
@@ -248,11 +249,11 @@ theorem calphadEntropy_monotoneOn {G : ℝ → ℝ} {I : Set ℝ} (hG : ConcaveO
   simp only [derivWithin.neg] at this
   simpa [calphadEntropy] using this
 
-/-- A molar Gibbs energy concave in temperature on a set `I` of nonnegative temperatures has a
-nondecreasing enthalpy channel on the interior of `I`, latent heats at transitions
-included. -/
+/-- A molar Gibbs energy concave in temperature on a set `I` whose interior holds only
+nonnegative temperatures has a nondecreasing enthalpy channel on the interior of `I`, latent
+heats at transitions included. -/
 theorem molarEnthalpy_monotoneOn {G : ℝ → ℝ} {I : Set ℝ} (hG : ConcaveOn ℝ I G)
-    (hpos : ∀ T ∈ I, 0 ≤ T) : MonotoneOn (molarEnthalpy G) (interior I) := by
+    (hpos : ∀ T ∈ interior I, 0 ≤ T) : MonotoneOn (molarEnthalpy G) (interior I) := by
   intro T1 h1 T2 h2 hle
   rcases hle.eq_or_lt with rfl | hlt
   · rfl
@@ -260,7 +261,7 @@ theorem molarEnthalpy_monotoneOn {G : ℝ → ℝ} {I : Set ℝ} (hG : ConcaveOn
   have hs := hf.slope_le_leftDeriv_of_mem_interior (interior_subset h1) h2 hlt
   have hlr := hf.leftDeriv_le_rightDeriv_of_mem_interior h2
   have hmono := hf.monotoneOn_rightDeriv h1 h2 hlt.le
-  have hT1 := hpos T1 (interior_subset h1)
+  have hT1 := hpos T1 h1
   rw [slope_def_field] at hs
   simp only [derivWithin.neg, Pi.neg_apply] at hs hlr hmono
   have hd : 0 < T2 - T1 := sub_pos.mpr hlt
@@ -278,12 +279,14 @@ theorem equilibrium_entropy_monotoneOn {P : Type*} {gT : ℝ → P → ℝ → �
     MonotoneOn (calphadEntropy (equilibriumGibbsT gT x)) (interior I) :=
   calphadEntropy_monotoneOn (equilibriumGibbsT_concaveOn hI hB hconc x)
 
-/-- Under the same hypotheses and nonnegative temperatures, the equilibrium enthalpy at any
-fixed composition is nondecreasing on the interior of `I`, latent heats included. -/
+/-- Under the same hypotheses, with nonnegative temperatures on the interior of `I`, the
+equilibrium enthalpy at any fixed composition is nondecreasing on the interior of `I`, latent
+heats included. -/
 theorem equilibrium_enthalpy_monotoneOn {P : Type*} {gT : ℝ → P → ℝ → ℝ} {I : Set ℝ}
     (hI : Convex ℝ I) {B : ℝ → ℝ} (hB : ∀ T ∈ I, ∀ p y, y ∈ Icc (0 : ℝ) 1 → B T ≤ gT T p y)
-    (hconc : ∀ p y, y ∈ Icc (0 : ℝ) 1 → ConcaveOn ℝ I (fun T => gT T p y)) (hpos : ∀ T ∈ I, 0 ≤ T)
-    (x : ℝ) : MonotoneOn (molarEnthalpy (equilibriumGibbsT gT x)) (interior I) :=
+    (hconc : ∀ p y, y ∈ Icc (0 : ℝ) 1 → ConcaveOn ℝ I (fun T => gT T p y))
+    (hpos : ∀ T ∈ interior I, 0 ≤ T) (x : ℝ) :
+    MonotoneOn (molarEnthalpy (equilibriumGibbsT gT x)) (interior I) :=
   molarEnthalpy_monotoneOn (equilibriumGibbsT_concaveOn hI hB hconc x) hpos
 
 /-! ## Chemical potentials -/
@@ -293,12 +296,14 @@ compositions `y1 < x < y2`, each phase weighted by the lever rule. -/
 def twoPhaseEnergy (g1 g2 : ℝ → ℝ) (x y1 y2 : ℝ) : ℝ :=
   ((y2 - x) * g1 y1 + (x - y1) * g2 y2) / (y2 - y1)
 
-/-- At a two-phase minimum with interior compositions `x1 < x < x2`, the tangents of both
-phase Gibbs curves are the common chord: both phases have the same chemical potentials. -/
-theorem commonTangent_of_isLocalMin {g1 g2 : ℝ → ℝ} {x x1 x2 : ℝ} (h1 : x1 < x) (h2 : x < x2)
+/-- At a two-phase local extremum with interior compositions `x1 < x < x2`, where the
+two-phase mixture energy has a local extremum in each phase composition (only the vanishing
+derivative is used), the tangents of both phase Gibbs curves are the common chord: both phases have the same chemical
+potentials. -/
+theorem commonTangent_of_isLocalExtr {g1 g2 : ℝ → ℝ} {x x1 x2 : ℝ} (h1 : x1 < x) (h2 : x < x2)
     (hd1 : DifferentiableAt ℝ g1 x1) (hd2 : DifferentiableAt ℝ g2 x2)
-    (hmin1 : IsLocalMin (fun y => twoPhaseEnergy g1 g2 x y x2) x1)
-    (hmin2 : IsLocalMin (fun y => twoPhaseEnergy g1 g2 x x1 y) x2) :
+    (hext1 : IsLocalExtr (fun y => twoPhaseEnergy g1 g2 x y x2) x1)
+    (hext2 : IsLocalExtr (fun y => twoPhaseEnergy g1 g2 x x1 y) x2) :
     deriv g1 x1 = (g2 x2 - g1 x1) / (x2 - x1) ∧ deriv g2 x2 = (g2 x2 - g1 x1) / (x2 - x1) ∧
       chemicalPotentials g1 x1 = chemicalPotentials g2 x2 := by
   have h21 : x2 - x1 ≠ 0 := by linarith
@@ -322,8 +327,8 @@ theorem commonTangent_of_isLocalMin {g1 g2 : ℝ → ℝ} {x x1 x2 : ℝ} (h1 : 
       (((hasDerivAt_id x2).sub_const x).mul_const _).add (hd2.hasDerivAt.const_mul _)
     have hdn : HasDerivAt (fun y => y - x1) 1 x2 := by simpa using (hasDerivAt_id x2).sub_const x1
     exact hn.div hdn h21
-  have e1 := hmin1.hasDerivAt_eq_zero k1
-  have e2 := hmin2.hasDerivAt_eq_zero k2
+  have e1 := hext1.hasDerivAt_eq_zero k1
+  have e2 := hext2.hasDerivAt_eq_zero k2
   have hsq : (x2 - x1) ^ 2 ≠ 0 := pow_ne_zero 2 h21
   rw [div_eq_zero_iff, or_iff_left hsq] at e1 e2
   have hd1' : d1 = (g2 x2 - g1 x1) / (x2 - x1) := by
@@ -343,6 +348,37 @@ theorem commonTangent_of_isLocalMin {g1 g2 : ℝ → ℝ} {x x1 x2 : ℝ} (h1 : 
   have c2 : deriv g2 x2 = (g2 x2 - g1 x1) / (x2 - x1) := hd2'
   funext k
   fin_cases k <;> simp [chemicalPotentials, c1, c2] <;> field_simp <;> ring
+
+/-- Where the equilibrium envelope agrees near `x` with the two-phase chord between the phase
+compositions `x1` and `x2`, its slope at `x` is the slope of that chord. -/
+theorem deriv_equilibriumGibbs_of_twoPhaseChord {P : Type*} {g : P → ℝ → ℝ} {g1 g2 : ℝ → ℝ}
+    {x x1 x2 : ℝ} (henv : equilibriumGibbs g =ᶠ[𝓝 x] fun y => twoPhaseEnergy g1 g2 y x1 x2) :
+    deriv (equilibriumGibbs g) x = (g2 x2 - g1 x1) / (x2 - x1) := by
+  have hn : HasDerivAt (fun y => (x2 - y) * g1 x1 + (y - x1) * g2 x2)
+      (-1 * g1 x1 + 1 * g2 x2) x :=
+    (((hasDerivAt_id x).const_sub x2).mul_const _).add
+      (((hasDerivAt_id x).sub_const x1).mul_const _)
+  have hchord : HasDerivAt (fun y => twoPhaseEnergy g1 g2 y x1 x2)
+      ((g2 x2 - g1 x1) / (x2 - x1)) x :=
+    (hn.div_const (x2 - x1)).congr_deriv (by ring)
+  rw [henv.deriv_eq, hchord.deriv]
+
+/-- Where the equilibrium envelope follows the two-phase chord near `x` and both phase curves
+have the common-tangent slope at their compositions `x1 < x2` (the conclusions of
+`commonTangent_of_isLocalExtr`), the tangent intercepts of the envelope at `x`, the catalog's
+chemical potentials, are the common-tangent intercepts of either phase. -/
+theorem chemicalPotentials_equilibriumGibbs_of_twoPhaseChord {P : Type*} {g : P → ℝ → ℝ}
+    {g1 g2 : ℝ → ℝ} {x x1 x2 : ℝ} (h12 : x1 < x2)
+    (henv : equilibriumGibbs g =ᶠ[𝓝 x] fun y => twoPhaseEnergy g1 g2 y x1 x2)
+    (hd1 : deriv g1 x1 = (g2 x2 - g1 x1) / (x2 - x1))
+    (hd2 : deriv g2 x2 = (g2 x2 - g1 x1) / (x2 - x1)) :
+    chemicalPotentials (equilibriumGibbs g) x = chemicalPotentials g1 x1 ∧
+      chemicalPotentials (equilibriumGibbs g) x = chemicalPotentials g2 x2 := by
+  have h21 : x2 - x1 ≠ 0 := (sub_pos.mpr h12).ne'
+  have hderiv := deriv_equilibriumGibbs_of_twoPhaseChord henv
+  have hval : equilibriumGibbs g x = twoPhaseEnergy g1 g2 x x1 x2 := henv.eq_of_nhds
+  constructor <;> funext k <;> fin_cases k <;>
+    simp [chemicalPotentials, hderiv, hval, hd1, hd2, twoPhaseEnergy] <;> field_simp <;> ring
 
 /-! ## Phase fractions -/
 

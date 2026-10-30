@@ -1,0 +1,119 @@
+{
+  "key": "diffcsp",
+  "headline": "DiffCSP: crystal structure prediction by joint equivariant diffusion",
+  "claim": "Given a composition, a diffusion model denoises the lattice and the fractional coordinates together under periodic E(3) invariance and returns candidate structures in seconds.",
+  "hero": {
+    "glyph": "lattice",
+    "title": "Lattice and coordinates together",
+    "text": "The lattice follows a denoising diffusion with a Gaussian prior and an O(3)-equivariant score. Fractional coordinates follow score matching with a wrapped normal, which builds periodicity into the model."
+  },
+  "features": [
+    {
+      "glyph": "grid",
+      "title": "Fractional coordinates",
+      "text": "Positions live in [0,1)^3 and enter the network through a Fourier transform of relative fractional vectors, invariant to periodic translation with no multi-graph edges."
+    },
+    {
+      "glyph": "network",
+      "title": "Denoising network",
+      "text": "EGNN-style message passing on the fully connected graph, with L^T L for O(3) invariance. Six layers, 512 hidden states, 256 Fourier features on MP-20 (Jiao 2023)."
+    },
+    {
+      "glyph": "arrow-cycle",
+      "title": "Sampling",
+      "text": "1,000 diffusion steps, an ancestral predictor with a Langevin corrector for the coordinates, and k candidates per composition, k = 1 or 20 in the benchmarks (Jiao 2023)."
+    },
+    {
+      "glyph": "atoms",
+      "title": "Ab initio generation",
+      "text": "A discrete diffusion on atom types lets the same model generate compositions too, with 100% structural validity on Perov-5, Carbon-24 and MP-20 (Jiao 2023)."
+    }
+  ],
+  "facts": [
+    {
+      "value": "77.93%",
+      "label": "match rate on MP-20 with 20 samples",
+      "source": "Jiao 2023"
+    },
+    {
+      "value": "10 s",
+      "label": "for 20 candidates per compound, USPEX 12.5 h",
+      "source": "Jiao 2023"
+    },
+    {
+      "value": "0.0492",
+      "label": "normalised RMSE of matched MP-20 structures",
+      "source": "Jiao 2023"
+    }
+  ],
+  "workflow": [
+    {
+      "title": "Give a composition",
+      "text": "The atom types of one unit cell, as one-hot vectors, fix the conditional p(L, F | A)."
+    },
+    {
+      "title": "Sample candidates",
+      "text": "Draw the lattice from N(0, I) and coordinates from U(0, 1), then denoise for 1,000 steps."
+    },
+    {
+      "title": "Match or relax",
+      "text": "Compare with pymatgen StructureMatcher (stol 0.5, angle_tol 10, ltol 0.3) or relax."
+    },
+    {
+      "title": "Evaluate",
+      "text": "Rank the k candidates by energy with DFT or a potential and keep the best structure."
+    }
+  ],
+  "applications": [
+    {
+      "glyph": "lattice",
+      "title": "Kagome and Lieb lattice quantum materials",
+      "text": "SCIGEN steered DiffCSP to 10 million Archimedean and Lieb lattice compounds. Of 26,000 relaxed with DFT, 53% were structurally stable, and two predicted materials were synthesised.",
+      "source": "Okabe 2025"
+    },
+    {
+      "glyph": "thermometer",
+      "title": "Superconductors by guided diffusion",
+      "text": "A DiffCSP model pretrained on Alexandria and fine-tuned on 7183 superconductors gave 34,027 unique candidates from 200,000 samples, 773 with a DFT Tc above 5 K.",
+      "source": "Prakash 2026"
+    },
+    {
+      "glyph": "clock",
+      "title": "Fifteen compounds against USPEX",
+      "text": "In the DiffCSP paper, it matched 73.33% of 15 MP-20 compounds with 20 candidates in about 10 s each, against 53.33% for the USPEX evolutionary search at 12.5 h.",
+      "source": "Jiao 2023"
+    }
+  ],
+  "sources": [
+    {
+      "label": "Jiao 2023",
+      "doi": "10.52202/075280-0767"
+    },
+    {
+      "label": "Okabe 2025",
+      "doi": "10.1038/s41563-025-02355-y"
+    },
+    {
+      "label": "Prakash 2026",
+      "doi": "10.1038/s41524-026-02117-7"
+    }
+  ],
+  "detail": [
+    {
+      "heading": "Periodic E(3) invariance",
+      "text": "The distribution p(L, F | A) must be invariant to permutations, to orthogonal transformations of the lattice and to periodic translations of the fractional coordinates. DiffCSP builds in each separately. The lattice L follows a DDPM with a cosine variance schedule and a prior N(0, I). The coordinates F follow score matching with a wrapped normal transition and an exponential noise schedule from 0.005 to 0.5, initialised from U(0, 1). The denoising network takes L^T L and the Fourier transform of relative fractional coordinates. It outputs the lattice score as L times an MLP of pooled features, and one score per node. Three propositions prove the result periodic E(3) invariant (Jiao 2023)."
+    },
+    {
+      "heading": "Numerics and scale",
+      "text": "The MP-20 model has 6 layers and 512 hidden states with 256 Fourier features and trains for 1,000 epochs, 5.2 hours on a GeForce RTX 3090. Generating 20 candidates for every MP-20 test structure takes 18.4 GPU hours against 95.2 for CDVAE, because DiffCSP needs 1,000 steps where CDVAE needs 5,000. With 20 samples the match rates are 98.60% on Perov-5, 88.47% on Carbon-24, 77.93% on MP-20 and 34.02% on MPTS-52, with RMSE 0.0128, 0.2192, 0.0492 and 0.1749 (Jiao 2023)."
+    },
+    {
+      "heading": "Data and interfaces",
+      "text": "Training and test data are the CDVAE splits of Perov-5 (18,928 perovskites), Carbon-24 (10,153 carbon structures), MP-20 (45,231 Materials Project structures) and the chronological MPTS-52 (40,476 structures). Lattices are Niggli reduced before training. The StructureMatcher of pymatgen scores the matches. The code is at github.com/jiaor17/DiffCSP (Jiao 2023). On the map DiffCSP serves the generated-structure quantity, candidate cells written as CIF files for later evaluation."
+    },
+    {
+      "heading": "Validation",
+      "text": "Ablations on MP-20 with one sample test each component. Joint diffusion gives a 51.49% match rate, generating the lattice first then coordinates 50.03%, coordinates first 36.73%. Removing the L^T L inner product drops the rate to 1.66%. Replacing the wrapped normal by a Gaussian gives 34.09% and dropping the Fourier transform 29.15%. Multi-graph edges in place of the fully connected graph give 25.85% to 28.05%. In ab initio generation DiffCSP matches CDVAE on validity and coverage and lowers the property statistic distances on MP-20 from 0.6875 to 0.3502 for density and from 0.2778 to 0.1247 for formation energy (Jiao 2023)."
+    }
+  ]
+}

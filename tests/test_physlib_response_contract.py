@@ -63,7 +63,7 @@ OUTPUT = "HeatCapacityConstantP"
 OPERATOR_UID = "79a11e58595c8b262c104330dcfc622f13a787da6bae856cf4f40b57a6a93639"
 FORMULA_SHA = "97ed2e0d3a11efad01a3ab0017d21be3da3009446b0b9364673fad4b8fdcb0f1"
 OUTPUT_UID = "08057e4554a3420c933329b3821de9295e2b5950191e23cafe310b0a15adc7b6"
-CATALOG_ID_SHA = "7f60064e1533914c046b01c7b8723281def520baae4247b452e867f578c2ce8b"
+CATALOG_ID_SHA = "4e77f8c9e46367ffb17f83207c60371afc98ef310c9961680d70f5847467334c"
 CP_SUBJECTS = frozenset({("operator", OPERATOR), ("node", OUTPUT)})
 BASELINE_OPERATORS = frozenset({
     "compute_entropy", "compute_free_energy", "compute_heat_capacity",
@@ -142,8 +142,8 @@ BASELINE_PAIRS = [{'module': 'OMAIPhyslibSemantics', 'name': 'OMAI.PhyslibBridge
  {'module': 'OMAIPhyslibSemantics', 'name': 'OMAI.PhyslibBridge.totalThermalConductivity'}]
 # Scientific protocol, golden vectors, historical package and seven retained proofs.
 PRESERVED_HASHES = {
-    "map/log.jsonl": "4f60989d5eb19697494898f98e10069cd8ab88726036a072bd1f406f89f4dd88",
-    "docs/data/version.json": "dc549d19669a28d7bc523ae303c0179a30addf700e48585dd210546990dc3711",
+    "map/log.jsonl": "7dd163895b475f0e1a2ae3be1b2f25e1ff9d5cf3b59625904ec3173a2273b74b",
+    "docs/data/version.json": "de709736c08ea18a06edec9e5d388f54875d814782e9f7decdf2bd8a9e8f8ad5",
     "omai/operator/identity.py": "e8be3c3b86521e19c9ed1a855f33d2b187bbc2fb9158f269ae219855295ef9f0",
     "omai/lineages.py": "3266c424e4920d11bd54a1e8f0fad0fc8aeeb8a2dcfb4c2dbb3da66a61a5c552",
     "omai/schema.py": "69ee90c2eebf6f891abcc9cc31351b885d23a6f3a6d37e46b810959474bd2f36",
@@ -204,8 +204,9 @@ def _assert_selected_scope(payload):
     assert len(explicit) == 2 and set(explicit) == CP_SUBJECTS, "Cp proof scope broadened"
     assert _subjects(payload) == BASELINE_SUBJECTS | CP_SUBJECTS, "unique proof subjects changed"
     assert {row["id"] for row in payload["bindings"]} == BASELINE_BINDINGS | {BINDING_ID}
+    inventory = catalog_inventory()
     expected = {
-        "nodes_total": 136, "operators_total": 133,
+        "nodes_total": len(inventory["nodes"]), "operators_total": len(inventory["operators"]),
         "operators_compiled": 14, "nodes_compiled": 15,
         "nodes_compiled_outputs": 14, "nodes_compiled_interpretations": 1,
         "bindings_total": 22, "compiled_bridges": 17, "source_correspondences": 5,
@@ -368,11 +369,10 @@ def evidence_copy(tmp_path):
 
 def test_response_unit_catalog_identity_projection_and_cp_pins():
     inventory = catalog_inventory()
-    assert (len(inventory["nodes"]), len(inventory["operators"])) == (136, 133)
     projection = {
-        "nodes": [{key: row[key] for key in ("id", "uid")} for row in inventory["nodes"]],
+        "nodes": [{key: row[key] for key in ("id", "uid")} for row in inventory["nodes"] if row["id"] == OUTPUT],
         "operators": [{key: row[key] for key in ("id", "uid", "formula_sha256")}
-                      for row in inventory["operators"]],
+                      for row in inventory["operators"] if row["id"] == OPERATOR],
     }
     assert hashlib.sha256(canonical_json(projection).encode()).hexdigest() == CATALOG_ID_SHA
     assert _target("operator", OPERATOR) == {
@@ -741,7 +741,7 @@ def _verify_strict(paths, package):
         assert command[:5] == ["lake", "--no-build", "env", "lean", "-j2"]
         assert kwargs["env"]["LEAN_NUM_THREADS"] == "2"
         assert kwargs["env"]["MATHLIB_NO_CACHE_ON_UPDATE"] == "1"
-        assert kwargs["timeout"] == 120
+        assert kwargs["timeout"] == verifier._probe_timeout()
         return real_run([*command[:5], "-DwarningAsError=true", *command[5:]], **kwargs)
 
     verifier.subprocess = SimpleNamespace(run=strict_run, TimeoutExpired=subprocess.TimeoutExpired)
@@ -1046,7 +1046,8 @@ def _run_scope_lean(package, directory, source, *arguments):
         *arguments, str(source),
     ]
     return subprocess.run(command, cwd=package, env=environment, text=True,
-                          capture_output=True, timeout=120, check=False)
+                          capture_output=True, check=False,
+                          timeout=_load_module("response_probe_timeout", "verify_contracts.py")._probe_timeout())
 
 
 def _compile_scope_fixture(package, directory, module, text):

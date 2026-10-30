@@ -2,13 +2,13 @@
   "schema_version": 1,
   "scope": "Reviewed OMAI formula endpoints and exact Lean proof source for local theorems with no Physlib physics counterpart. Hash and compiled-name checks detect drift and provenance errors; they are not automatic symbolic translation or numerical validation.",
   "source_path": "lean/bridge/OMAIVACFSpectrum.lean",
-  "source_sha256": "d5f50026897ff1ecc38ad0b59b26deb457b461ba3d40fb29047a938dbc3bbe67",
+  "source_sha256": "88e529acc3a8f224ce2e62aa781b8176694eeee06b49daa9fdd5d517ce32661d",
   "operators": [
     {
       "id": "fourier_to_dos",
-      "uid": "d6b71066f0cef4182e1d522d30c31326ecc2504428f3c8e6b42f5189b410a6f3",
-      "formula_sha256": "ef2d7d4503ff999157b0541bf106cb3d9c843a98b70d1084009e8b638628cee1",
-      "formula_latex": "{g}_{\\omega} = \\frac{\\int\\limits_{0}^{\\infty} \\cos{\\left(\\omega \\tau \\right)} {Cv}_{\\tau}\\, d\\tau}{\\pi}",
+      "uid": "c142a31f3e5f89612d68319b4c2186372bf15592f88b09a1f2cc1356564428c0",
+      "formula_sha256": "b4cdd53d454584e5202fb019a24ae3f4bc8ef51ba843fd0210c4e91456c43c13",
+      "formula_latex": "{g}_{\\omega} = \\frac{6 \\int\\limits_{0}^{\\infty} \\cos{\\left(\\omega \\tau \\right)} {Cv}_{\\tau}\\, d\\tau}{\\pi {Cv}_{0}}",
       "lean_definition": "OMAI.PhyslibBridge.VACFSpectrum.catalogFourierDOS"
     }
   ],
@@ -19,8 +19,8 @@
     }
   ],
   "interpretations": [
-    "catalogFourierDOS transcribes the catalog's g(omega) = (1/pi) int_0^infinity cos(omega tau) Cv(tau) dtau as a Lebesgue integral over (0, infinity) at angular frequency omega.",
-    "For the autocorrelation of lifetime-broadened modes, Cv(tau) = sum_m A_m exp(-Gamma_m tau) cos(omega_m tau) with every Gamma_m > 0, the transform is sum_m (A_m/2)[L(Gamma_m, omega - omega_m) + L(Gamma_m, omega + omega_m)] with L(Gamma, x) = Gamma/(pi (Gamma^2 + x^2)) the normalized Lorentzian; it integrates over all frequencies to Cv(0) = sum_m A_m for every set of linewidths, so the catalog's g carries the units and normalization of Cv, with Cv(0)/2 on omega > 0, and is proportional to a density of states normalized to the mode count.",
-    "As the linewidths s gamma_m shrink to zero, int g(omega) phi(omega) domega converges, for every integrable phi continuous at +-omega_m, to sum_m (A_m/2)(phi(omega_m) + phi(-omega_m)): the harmonic delta sum with mode weights A_m, split equally between +omega_m and -omega_m. The damped-cosine model is a hypothesis, not derived from dynamics; windows, finite trajectories and the equality of the weights A_m are outside the theorems."
+    "catalogFourierDOS transcribes the catalog's g(omega) = (6/(pi Cv(0))) int_0^infinity cos(omega tau) Cv(tau) dtau as a Lebesgue integral over (0, infinity) at angular frequency omega, the density of states per atom normalized to 3 states on omega > 0.",
+    "For the autocorrelation of lifetime-broadened modes, Cv(tau) = sum_m A_m exp(-Gamma_m tau) cos(omega_m tau) with every Gamma_m > 0 and Cv(0) = sum_m A_m, the transform is sum_m (3 A_m/Cv(0))[L(Gamma_m, omega - omega_m) + L(Gamma_m, omega + omega_m)] with L(Gamma, x) = Gamma/(pi (Gamma^2 + x^2)) the normalized Lorentzian; for Cv(0) != 0 it integrates to 6 over the real line and to 3 over omega > 0.",
+    "As the linewidths s gamma_m shrink to zero, int g(omega) phi(omega) domega converges, for every integrable phi continuous at +-omega_m, to sum_m (3 A_m/Cv(0))(phi(omega_m) + phi(-omega_m)): the harmonic delta sum with mode weights 3 A_m/Cv(0), split equally between +omega_m and -omega_m. The damped-cosine model and the mode weights are hypotheses on the input, not derived from a trajectory."
   ]
 }

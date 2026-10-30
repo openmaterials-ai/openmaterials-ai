@@ -89,6 +89,7 @@ _E_adsorbate = sp.Function(r"E^{adsorbate}")
 _dE_rxn = sp.Symbol(r"\Delta E_{rxn}")
 _Hf_indexed = sp.IndexedBase(r"\Delta H_f")
 _c_rxn = sp.IndexedBase(r"c_{rxn}")
+_N_fu = sp.IndexedBase(r"N^{fu}")
 _i_rxn = sp.Symbol("i")
 _N_rxn = sp.Symbol(r"N_{rxn}", positive=True)
 # Grain-boundary energy: the CSL slab / bulk selectors and boundary area,
@@ -144,7 +145,9 @@ compute_energy_above_hull = Operator(
         "hull is an opaque convex-hull function of the competing entries; "
         "WHERE those entries come from is the hull_source scheme (the "
         "Materials Project database, R2SCAN or GGA+U thermo types, in the "
-        "committed examples). Zero exactly for the ground state. Implicit "
+        "committed examples). Zero for every entry on the lower convex hull, "
+        "the ground state at its composition and every other stable phase, and "
+        "positive for metastable entries. Implicit "
         "(a convex-hull construction), so not sympy-executable."
     ),
 )
@@ -169,7 +172,11 @@ compute_surface_energy = Operator(
         "are opaque selectors over the TotalEnergy family (the slab "
         "supercell built by pymatgen SlabGenerator for the chosen (hkl), "
         "and the bulk reference per formula unit, N_slab counting the bulk "
-        "units in the slab); A_surf is the slab's in-plane cell area. "
+        "units in the slab); A_surf is the slab's in-plane cell area. The form "
+        "assumes a stoichiometric slab (N_slab bulk formula units) with both faces "
+        "of the same termination and a bulk reference from the same settings, "
+        "so that N_slab E_bulk removes the bulk part; a non-stoichiometric "
+        "termination needs chemical-potential terms this formula does not carry. "
         "Computed in eV/A^2 and quoted in J/m^2 (factor "
         "16.021766339999996; the skill truncates to 16.0218). Implicit "
         "(slab construction plus relaxations), so not sympy-executable."
@@ -193,7 +200,10 @@ compute_intercalation_voltage = Operator(
         "intercalated (E^{full}) and de-intercalated (E^{empty}) cells, "
         "minus n_ion atoms of the working-ion metal reservoir (chemical "
         "potential mu_ion per atom), over the transferred charge n_ion q_e "
-        "(one electron per ion for Li). With energies in eV the eV/e "
+        "(q_e the elementary charge, one electron per ion: the form holds for "
+        "monovalent working ions such as Li, Na and K; an ion of valence z "
+        "transfers z electrons per ion and needs n_ion z q_e in the "
+        "denominator). With energies in eV the eV/e "
         "quotient is volts exactly, no Faraday factor. E^{full} and "
         "E^{empty} are opaque selectors over the TotalEnergy family (the "
         "de-intercalated cell built by Structure.remove_species in the "
@@ -239,32 +249,35 @@ compute_reaction_energy = Operator(
     schemes={"method": "stoichiometric_combination"},
     formula=sp.Eq(
         _dE_rxn,
-        sp.Sum(_c_rxn[_i_rxn] * _Hf_indexed[_i_rxn], (_i_rxn, 1, _N_rxn)),
+        sp.Sum(_c_rxn[_i_rxn] * _N_fu[_i_rxn] * _Hf_indexed[_i_rxn], (_i_rxn, 1, _N_rxn)),
     ),
     description=(
-        "Reaction energy Delta E_rxn = sum_i c_rxn_i H_f_i: the CLOSED-FORM "
-        "stoichiometric combination of the per-species formation energies of a "
-        "balanced reaction, the signed coefficient c_rxn_i positive for products "
-        "and negative for reactants, so the single sum is exactly "
-        "sum_p c_p H_f(p) - sum_r c_r H_f(r) (rxn_network's ComputedReaction.energy "
-        "over a reduced-composition entry set, total eV; energy_per_atom = "
-        "energy/num_atoms). SUPERSEDES the v1 opaque edge (whole-map physics review "
-        "2026-07-10, recommendation B1): the v1 formula was an opaque applied "
-        "function E^{rxn}[Delta H_f]; this v2 spells out the real sum, so it is "
-        "sympy-executable and the dimensional gate PROVES it (the dimensionless "
-        "coefficient c_rxn_i times the ENERGY formation energy H_f_i is ENERGY, "
-        "matching Delta E_rxn). The relation between the nodes is now executable "
-        "WITHOUT merging the energy tags (the review's answer to 'combine the "
-        "energy formulas': combine the RELATION, keep the tags). \\Delta H_f is "
-        "the registered FormationEnergy symbol as an IndexedBase (the per-species "
-        "formation energies the reaction consumes, the same family-of-values "
-        "convention compute_surface_energy uses); c_{rxn} is the signed "
-        "stoichiometric coefficient and N_{rxn} the species count, both scheme "
-        "data surfaced by this closed form. The method scheme still records the "
-        "stoichiometric_combination, and WHICH entries plus the MP energy "
-        "provenance ride in the conditions. NOT built from the finite-T SISSO "
-        "Gibbs dGf(T) cousin (a naive equate is forbidden). Closed-form and "
-        "sympy-executable."
+        "Reaction energy Delta E_rxn = sum_i c_rxn_i N^{fu}_i Delta H_f_i: the "
+        "closed-form stoichiometric combination of the per-atom formation "
+        "energies of a balanced reaction. c_rxn_i is the signed formula-unit "
+        "coefficient (positive for products, negative for reactants), N^{fu}_i "
+        "the number of atoms in the reduced formula unit of species i, so that "
+        "c_rxn_i N^{fu}_i Delta H_f_i is the formation energy of the c_rxn_i "
+        "formula units that react, and Delta H_f_i the per-atom FormationEnergy "
+        "the edge consumes (the 0 K or 298 K DFT formation energy referenced to "
+        "the elements). The sum is the as-balanced total in eV; dividing by the "
+        "atoms of the reaction gives eV per reaction atom, the normalization "
+        "recorded as a condition. It is independent of the elemental reference "
+        "energies exactly when the reaction is balanced, sum_i c_rxn_i n_{i,a} = "
+        "0 for every element a. SUPERSEDES the 2026-07-10 form sum_i c_rxn_i "
+        "Delta H_f_i, which applied formula-unit coefficients to per-atom "
+        "energies: for 2 Li + 1/2 O2 -> Li2O with Delta H_f(Li2O) = -2.0616 "
+        "eV/atom it gave -2.0616 eV against the reaction energy -6.1848 eV, and "
+        "it shifted with the elemental references. rxn_network's "
+        "ComputedReaction.energy is this sum over formation energies per formula "
+        "unit, but its entries carry the finite-temperature SISSO dGf(T): an "
+        "instance from the rxn-network representation consumes dGf(T) at its "
+        "temperature, which is not the 0 K or 298 K FormationEnergy, and the "
+        "temperature is an instance condition. N_{rxn} is the species count; "
+        "the method scheme records the stoichiometric_combination, and which "
+        "entries plus the energy provenance ride in the conditions. Closed-form "
+        "and sympy-executable; the dimensional gate proves it (dimensionless "
+        "coefficients and atom counts times the ENERGY formation energy)."
     ),
 )
 
@@ -291,7 +304,10 @@ compute_grain_boundary_energy = Operator(
         "GrainBoundaryGenerator for the chosen Sigma / tilt / axis / GB plane, "
         "and the bulk reference per atom, N_GB counting the atoms; the "
         "committed Cu example uses the per-atom bulk energy -10.825556 eV); "
-        "A_GB is the boundary in-plane area. Computed in eV/A^2 and quoted in "
+        "A_GB is the boundary in-plane area. The 2 A_GB form needs the fully "
+        "periodic cell with two boundaries and no vacuum; a slab with vacuum has "
+        "one boundary and two free surfaces, whose surface energy must be "
+        "subtracted. Computed in eV/A^2 and quoted in "
         "J/m^2. Realized by mat-grain-boundary over an MLIP relax (relax_cell="
         "False), NOT a fipy phase-field output; the method scheme records the "
         "slab_energy_difference. Implicit (CSL slab construction plus "

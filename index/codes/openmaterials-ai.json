@@ -1,7 +1,7 @@
 {
  "representation": "openmaterials-ai",
- "lineage_version": "f5a7cb57594ff353ac31b226ac5c47ffb2a08960cfe922281055d0ef8912af1e",
- "map_version": "02b3fc768e6697b01ff55226b52d957589cffb3fa52eafd8caddf4d7ef8020e3",
+ "lineage_version": "80dba7fc47c8a716cddf917935016c2a613916ff70ddba64c211088d8b2d5bae",
+ "map_version": "2d7cf79f7e4508d7eacce7e7b11750e941c9e70697e647978f92c05d384db459",
  "covers": [
   {
    "node": "CureConversion",
@@ -37,6 +37,14 @@
    "spdx": "Apache-2.0 AND CC-BY-4.0",
    "tag": "v0.4.0",
    "version": "0.4.0"
+  },
+  {
+   "commit": "1aac5dfafd194aad1a715812c54f82acbfb6b7ee",
+   "license_source": "https://github.com/openmaterials-ai/openmaterials-ai/tree/v0.5.0 (LICENSE, Apache License 2.0; LICENSE-DATA, CC BY 4.0 for the map data, including the package's copy under omai/data/; pyproject.toml license Apache-2.0 AND CC-BY-4.0)",
+   "released": "2026-10-29",
+   "spdx": "Apache-2.0 AND CC-BY-4.0",
+   "tag": "v0.5.0",
+   "version": "0.5.0"
   }
  ]
 }

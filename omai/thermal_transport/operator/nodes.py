@@ -406,7 +406,10 @@ PHONON_DOS = ObservableSpace(
     description=(
         "Density of states g(ω) = (1/N_q) Σ_qν δ(ω − ω_qν). A 1-D array "
         "binned in ω, states per unit frequency (dimension 1/frequency, the "
-        "δ's). Gauge-invariant: ω_qν are basis-independent and the "
+        "δ's). The normalization is an instance condition, not part of the "
+        "dimension: compute_dos integrates to the 3 N modes of the primitive "
+        "cell and fourier_to_dos to 3 states per atom. "
+        "Gauge-invariant: ω_qν are basis-independent and the "
         "sum over (q, ν) is uniformly weighted."
     ),
     tier="Harmonic",
@@ -701,7 +704,7 @@ HEAT_CURRENT = HiddenSpace(
     description=(
         "Instantaneous heat-current vector J(t) computed from a Trajectory "
         "via the Irving-Kirkwood (or Hardy, or virial) decomposition. "
-        "Per-element J_α(t) is a stochastic MD snapshot — gauge-dependent. "
+        "Per-element J_α(t) is a stochastic MD snapshot, gauge-dependent. "
         "The cross-code observable is the time-correlation HeatCurrentACF, "
         "which is what enters Green-Kubo κ."
     ),

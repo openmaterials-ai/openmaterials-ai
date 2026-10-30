@@ -403,19 +403,19 @@
         {
           "kind": "operator",
           "id": "compute_electronic_conductivity",
-          "uid": "9fc03548d4ca70a6634ed22f93f7efb198f00c48c8c8b0bd94b2b37d7f73c456",
+          "uid": "9b20bb39ed27457a9f0c5655ab1001b0abdcf86c4ab4883c87e8a54847e0ab72",
           "formula_sha256": "2de7ab9fcfdde2fac6c5e3ab0e88316483e11a22ae90687e08aa8897908580e0"
         },
         {
           "kind": "operator",
           "id": "compute_electronic_thermal_conductivity",
-          "uid": "fe7f863a4325b44bf1f15e1b1f2521d7ec03c5c3bd0efa796998b12b6975f1e3",
+          "uid": "b24757dc6349ac2bcf8429ab264385f76d6895fc52baea4eb380f7d7e063ca11",
           "formula_sha256": "7ffb8ea9b51164875b7f3eaa724d017c8c846b3fd22f4da0befa6169596c9586"
         },
         {
           "kind": "operator",
           "id": "compute_seebeck",
-          "uid": "8514fb3e8586db31ec55ec353254d206a41722760541644b2b5c08f770716a81",
+          "uid": "f34ee134bfed051ae79dfece5f9ff45df4c2c202e784ccf6c3bf50035709d208",
           "formula_sha256": "75307432c842b2c58ffc978745dd0992e89936a44fab7dc40bb06a24a887b939"
         }
       ],
@@ -445,11 +445,11 @@
         }
       ],
       "conditions": [
-        "compute_electronic_conductivity, compute_seebeck and compute_electronic_thermal_conductivity are opaque Boltzmann-transport outputs in the catalog. The interpreted definitions are BoltzTraP2's Onsager coefficients evaluated on a finite energy grid, L_k = sum_b w_b (E_b - mu)^k with w_b = Sigma(E_b) (-df/dE)(E_b) Delta E >= 0 and Sigma the diagonal transport distribution sum_k v_k^2 tau_k delta(E - E_k)/(N_k V). The relaxation time enters only through w, so amset's state-resolved (band and k-point) rates and a constant relaxation time are both admitted; one diagonal Cartesian component (or one principal axis) at a time, since off-diagonal weights v_a v_b are not sign definite. The catalog's bte_ibte scheme is read as amset's momentum-relaxation-time solution, whose state weights v_k^2 tau_k are nonnegative; a self-consistent iterative BTE solution has no state-resolved nonnegative weights and is outside these hypotheses.",
+        "compute_electronic_conductivity, compute_seebeck and compute_electronic_thermal_conductivity are opaque Boltzmann-transport outputs in the catalog. The interpreted definitions are BoltzTraP2's Onsager coefficients evaluated on a finite energy grid, L_k = sum_b w_b (E_b - mu)^k with w_b = Sigma(E_b) (-df/dE)(E_b) Delta E >= 0 and Sigma the diagonal transport distribution sum_k v_k^2 tau_k delta(E - E_k)/(N_k V). The relaxation time enters only through w, so amset's state-resolved (band and k-point) rates and a constant relaxation time are both admitted; one diagonal Cartesian component (or one principal axis) at a time, since off-diagonal weights v_a v_b are not sign definite. The catalog's bte_mrta scheme is amset's momentum-relaxation-time solution, whose state weights v_k^2 tau_k are nonnegative; a self-consistent iterative BTE solution would have no state-resolved nonnegative weights and is outside these hypotheses.",
         "e > 0 is the elementary charge, so S = -(L_1/L_0)/(e T) is negative when the transport window lies above mu (n-type). A code that writes S = (L_1/L_0)/(q T) with the signed carrier charge q = -e gives the same number. kappa_e is the zero-current electronic thermal conductivity, with -L_1^2/L_0 the Peltier correction; the zero-field L_2/T is a different quantity.",
         "The Physlib material needs L_0 > 0 (some state with nonzero weight), e != 0 and T > 0 for sigma > 0, and an independently supplied lattice conductivity kappa_l > 0; kappa_e >= 0 is proved, not assumed. The figure of merit is Physlib's zT = sigma S^2 T/(kappa_l + kappa_e).",
         "The Mahan-Sofo bound needs L_0 L_2 - L_1^2 > 0, which for L_0 > 0 means that the states with nonzero weight do not all share one energy, and L_1 != 0; it is strict for every kappa_l > 0 and sharp as kappa_l -> 0. It bounds the figure of merit by the shape of the transport window alone and says nothing about which window is attainable.",
-        "The Sommerfeld statements are about the continuum kinetic integrals of an energy-independent transport distribution Sigma_0 at k_B T > 0 (Sigma_0 != 0 for the Lorenz-number quotient) (the degenerate limit with a flat Sigma), not about the finite-grid definitions; the Lorenz number (pi^2/3)(k_B/e)^2 is the Sommerfeld value 2.44e-8 W Ohm/K^2 in SI.",
+        "The Sommerfeld statements are about the continuum kinetic integrals of an energy-independent transport distribution Sigma_0 at k_B T > 0 (the degenerate limit with a flat Sigma), not about the finite-grid definitions; no condition on Sigma_0 is needed, since K_1 = 0 makes the Peltier correction K_1^2/K_0 vanish; the Lorenz number (pi^2/3)(k_B/e)^2 is the Sommerfeld value 2.44e-8 W Ohm/K^2 in SI.",
         "Energies in joules, T in kelvin, e in coulombs; sigma in S/m, S in V/K and kappa_e in W/(m K) when w carries S/(m C^2). BoltzTraP2's hartree energies and amset's unit choices (the catalog description flags its kappa unit as unconfirmed) are conversions outside the theorems."
       ],
       "conventions": {
@@ -459,7 +459,7 @@
         "frequency_convention": "Not applicable; no phonon frequency enters these statements. The phonon-frequency input of the catalog producers acts only through the scattering rates inside w.",
         "unit_embedding": "Coherent SI: energies and mu in J, T in K, e in C, sigma in S/m, S in V/K, kappa_e in W/(m K). Exact-real statements; floating-point evaluation is not certified.",
         "held_fixed": "Chemical potential, temperature, the transport window w and the lattice conductivity are fixed inputs; the Mahan-Sofo limit varies kappa_l alone.",
-        "admissibility": "w_b >= 0 for every grid point; T > 0; L_0 > 0 and e != 0 for the Physlib material; L_0 L_2 - L_1^2 > 0 and L_1 != 0 for the bound; k_B T > 0 for the Sommerfeld moments and Sigma_0 != 0 for the Lorenz-number quotient.",
+        "admissibility": "w_b >= 0 for every grid point; T > 0; L_0 > 0 and e != 0 for the Physlib material; L_0 L_2 - L_1^2 > 0 and L_1 != 0 for the bound; k_B T > 0 for the Sommerfeld moments; e != 0 and T > 0 for the Lorenz-number form, with no condition on Sigma_0.",
         "reference_energy": "Energies are measured from the chemical potential mu inside L_k; a common shift of E_b and mu leaves every coefficient unchanged.",
         "qpoint_weighting": "The k-point sum and its weights are inside the transport distribution Sigma(E); the theorems see only the resulting energy-grid weights w_b."
       },
@@ -555,13 +555,13 @@
           "formula_sha256": "e462f6823acba4718605093dd6a9c2f5b65d76e52a2f0f936f34b1d30f06d951"
         }
       ],
-      "statement": "For a binary system the interpreted equilibrium molar Gibbs energy, the least energy of any finite mixture of phases with the overall composition, is the convex envelope of the phase Gibbs curves on [0, 1]: it is convex, lies below every phase curve and lies above every convex function below them; the phase set need not be finite and the infimum need not be attained. If every phase's Gibbs function is concave in temperature on a temperature interval, the equilibrium Gibbs energy at any fixed composition is concave in temperature there, so on the interior of that interval the equilibrium entropy S = -dG/dT and, at nonnegative temperatures, the equilibrium enthalpy H = G - T dG/dT (right derivatives) are nondecreasing through every phase transition: the equilibrium heat capacity, latent heats included, is nonnegative. At a two-phase minimum with interior compositions both differentiable phase curves share the common tangent, so both phases have the same chemical potentials. Mass balance fixes the two phase fractions to the lever rule, both in [0, 1] exactly when the overall composition lies between the phase compositions. For a unary system or a congruent transformation, a Gibbs-energy difference that changes sign with a positive entropy difference has exactly one transition temperature, with phase alpha stable below it and phase beta above.",
+      "statement": "For a binary system the interpreted equilibrium molar Gibbs energy, the least energy of any finite mixture of phases with the overall composition, is the convex envelope of the phase Gibbs curves on [0, 1]: it is convex, lies below every phase curve and lies above every convex function below them; the phase set need not be finite and the infimum need not be attained. If every phase's Gibbs function is concave in temperature on a temperature interval, the equilibrium Gibbs energy at any fixed composition is concave in temperature there, so on the interior of that interval the equilibrium entropy S = -dG/dT and, at nonnegative temperatures, the equilibrium enthalpy H = G - T dG/dT (right derivatives) are nondecreasing through every phase transition: the equilibrium heat capacity, latent heats included, is nonnegative. At a two-phase local extremum with interior compositions both differentiable phase curves share the common tangent, so both phases have the same chemical potentials, and where the equilibrium envelope follows that two-phase chord its tangent intercepts, the catalog's chemical potentials, are the common-tangent intercepts. Mass balance fixes the two phase fractions to the lever rule, both in [0, 1] exactly when the overall composition lies between the phase compositions. For a unary system or a congruent transformation, a Gibbs-energy difference that changes sign with a positive entropy difference has exactly one transition temperature, with phase alpha stable below it and phase beta above.",
       "sources": [],
       "conditions": [
         "Every producer except contract_gibbs_hts is an opaque solver call in the catalog. The interpretations read molar Gibbs functions of the assessed phases per mole of atoms at fixed pressure with the SER reference, as pycalphad's GM, HM, SM, MU and NP; they are not the harmonic quantities per mole of primitive cells of the phonon bridge, and Gibbs is not Helmholtz.",
         "The equilibrium and chemical-potential results are for a binary system, composition the mole fraction x of the second component in [0, 1], at the temperature and pressure built into the phase functions. The phase Gibbs curves are bounded below on [0, 1]; ideal-mixing terms x ln x are bounded there.",
         "compute_molar_enthalpy and compute_calphad_entropy use the right temperature derivative of the equilibrium Gibbs energy at fixed composition, the values of the state stable just above T, equal to G - T G' and -G' wherever G is differentiable. The monotonicity results need every phase Gibbs function concave in temperature (nonnegative phase heat capacities) on the interval and hold on its interior; assessed functions extrapolated outside their valid range can have negative heat capacity. Within a two-phase field -T d2G_eq/dT2 is the apparent heat capacity, latent heat of the moving phase boundary included, not pycalphad's phase-local value.",
-        "compute_chemical_potentials returns the tangent intercepts mu_A = G - x G' and mu_B = G + (1 - x) G' of the equilibrium envelope G. The common-tangent theorem assumes a local minimum of the two-phase mixture energy in each phase composition with x1 < x < x2 and both phase curves differentiable there, which excludes line compounds; it does not establish that the global minimum is two-phase.",
+        "compute_chemical_potentials returns the tangent intercepts mu_A = G - x G' and mu_B = G + (1 - x) G' of the equilibrium envelope G. The common-tangent theorem assumes a local extremum of the two-phase mixture energy in each phase composition (the proof uses only the vanishing derivative) with x1 < x < x2 and both phase curves differentiable there, which excludes line compounds; it does not establish that the global minimum is two-phase. The envelope-intercept theorem assumes that the equilibrium envelope agrees with the two-phase chord on a neighbourhood of x.",
         "compute_transition_temperature is covered only for a unary system or a congruent (partitionless) transformation between two phases of one composition, bracketed in [T1, T2] by a sign change of G_beta - G_alpha with S_beta > S_alpha inside. For an alloy the temperature of equal phase Gibbs energies at one composition is the T0 temperature, not the catalog's boundary locus (liquidus, solidus or solvus, where a phase fraction reaches 0 or 1): an ideal lens at x = 0.5 has T0 = 1250.0 K, solidus 1219.5 K and liquidus 1279.1 K (T_A = 1000 K, T_B = 1500 K, equal fusion entropies of 10 J/(mol K), Delta C_p = 0), with a two-phase equilibrium across that window. Continuous transitions (order-disorder, magnetic) are excluded.",
         "contract_gibbs_hts, G = H - T S, is a definition with nothing to prove beyond these interpretations and is not a proof subject."
       ],
@@ -580,7 +580,7 @@
         "The fidelity of the assessed database to experiment and the solver's global minimization (pycalphad's grid sampling and refinement) are not verified; the theorems hold for the interpreted definitions.",
         "Multicomponent systems, sublattice site-fraction minimization inside a phase, magnetic and ordering contributions as separate terms, and pressure dependence are not covered.",
         "That the global minimum is attained by at most two phases in a binary system (Caratheodory) and that a two-phase minimum exists between the common-tangent compositions are not proved.",
-        "That the tangent intercepts of the equilibrium envelope at x equal the common-tangent intercepts of the two phases is not proved; the common-tangent theorem is about the phase curves at their stationary compositions.",
+        "That the equilibrium envelope agrees with the two-phase chord near x is not derived from the envelope definition (it needs the two-phase attainment above); given that agreement, the envelope's tangent intercepts equal the common-tangent intercepts.",
         "The catalog's boundary locus for alloys (liquidus, solidus, solvus and invariant points in composition-temperature space, extracted from a swept phase-fraction grid) is not verified; only the unary or congruent transition is.",
         "Invariance of phase fractions and transition temperatures under a reference shift linear in composition is not proved."
       ],
@@ -592,13 +592,15 @@
           "OMAI.PhyslibBridge.Calphad.equilibriumGibbsT_concaveOn",
           "OMAI.PhyslibBridge.Calphad.equilibrium_entropy_monotoneOn",
           "OMAI.PhyslibBridge.Calphad.equilibrium_enthalpy_monotoneOn",
-          "OMAI.PhyslibBridge.Calphad.commonTangent_of_isLocalMin",
+          "OMAI.PhyslibBridge.Calphad.commonTangent_of_isLocalExtr",
+          "OMAI.PhyslibBridge.Calphad.deriv_equilibriumGibbs_of_twoPhaseChord",
+          "OMAI.PhyslibBridge.Calphad.chemicalPotentials_equilibriumGibbs_of_twoPhaseChord",
           "OMAI.PhyslibBridge.Calphad.leverFractions_unique_and_bounds",
           "OMAI.PhyslibBridge.Calphad.transitionTemperature_unique"
         ],
         "source_path": "lean/bridge/OMAICalphad.lean",
         "build_record": "lean/bridge/build-evidence.json",
-        "source_sha256": "1864ba3c15e2bcd98fcbb932d6e3b6d450e2499d40b46f5537ac8cc9194d4852"
+        "source_sha256": "6b8c4f275d905a5279e4203d3b0d872211344482103810c0134cc04e92f74b8e"
       }
     },
     {
@@ -733,7 +735,7 @@
             "id": "Stress"
           }
         ],
-        "source_sha256": "7c2e02a8b5ac516416570f85ca49695d33e013a4a8cec4999d4cc7da2561c31a"
+        "source_sha256": "c0663d570244e4c53317c1c7cbb193d5acd2429766316cc79685474bc7989e3d"
       }
     },
     {
@@ -1402,6 +1404,11 @@
         },
         {
           "kind": "node",
+          "id": "ReactionEnergy",
+          "uid": "a5736aa4760c27562f9e189829763a891b6fed83fe4a030a7e306b8d909d825c"
+        },
+        {
+          "kind": "node",
           "id": "SurfaceEnergy",
           "uid": "306384aed4a1204fb7ca2347729de8d1816fa5fc32f4855a5d5f56a4d0fc1ddf"
         },
@@ -1436,21 +1443,27 @@
         },
         {
           "kind": "operator",
+          "id": "compute_reaction_energy",
+          "uid": "2204ada808d0fae7706fe31723755bcc9614f2901bff9230e163f47a7e95cdf7",
+          "formula_sha256": "c69c9c84d6d962cea6ea1f005df0612832d065d6fa4d759dfff5c9b1e08cbe1f"
+        },
+        {
+          "kind": "operator",
           "id": "compute_surface_energy",
           "uid": "c8b2e006408e3e2c08f6c71eb7cd4e1a07f72ab20034fe883c691c1cad278492",
           "formula_sha256": "c99d3c4dab85511ea00104a21376fad96e0f80ce1982fddad3ac9f531454e8eb"
         }
       ],
-      "statement": "The interpreted hull distance of per-atom formation energies is the same for every set of elemental reference energies, and more generally does not change when every competing entry's formation energy is shifted by the same affine function of composition; a supporting affine function of composition that touches an entry certifies a zero distance. The adsorption energy and the average intercalation voltage are unchanged by every per-element energy offset exactly when the cells conserve atoms. The average intercalation voltage is the mean of the open-circuit voltage profile -(E'(x) - mu)/q over the ion content, also for a convex-hull cell energy with kinks between voltage plateaus. For slab energies affine in the number of bulk units, the catalog's surface energy, and its grain-boundary energy, which is the same function (grainBoundaryEnergy_eq_surfaceEnergy), are independent of slab thickness exactly when the bulk reference equals the slab slope, equal intercept/(2A) then, and grow without bound with thickness otherwise.",
+      "statement": "The interpreted hull distance of per-atom formation energies is the same for every set of elemental reference energies, and more generally does not change when every competing entry's formation energy is shifted by the same affine function of composition; a supporting affine function of composition that touches an entry certifies a zero distance. The adsorption energy and the average intercalation voltage are unchanged by every per-element energy offset exactly when the cells conserve atoms. The average intercalation voltage is the mean of the open-circuit voltage profile -(E'(x) - mu)/q over the ion content, also for a convex-hull cell energy with kinks between voltage plateaus. For slab energies affine in the number of bulk units, the catalog's surface energy, and its grain-boundary energy, which is the same function (grainBoundaryEnergy_eq_surfaceEnergy), are independent of slab thickness exactly when the bulk reference equals the slab slope, equal intercept/(2A) then, and grow without bound with thickness otherwise. The catalog's reaction energy sum_i c_i N_i Delta H_f,i, the signed formula-unit coefficients times the atoms of each formula unit times the per-atom formation energies, is independent of the elemental reference energies exactly when the reaction is balanced.",
       "sources": [],
       "conditions": [
         "compute_energy_above_hull is opaque in the catalog and is interpreted as the per-atom distance of the entry's formation energy above the lower convex hull of the competing entries, the hull being the least weighted formation energy of nonnegative weights on the competing set that sum to one and reproduce the composition in atomic fractions. The entry belongs to the competing set. The distance is zero for every entry on the lower convex hull, not only for a unique ground state.",
         "The target and its competitors share one energy model and one correction scheme; an MLIP candidate against MP2020-corrected DFT competitors is not covered. The affine invariance covers a change of the elemental reference energies and any per-atom correction c + sum_a delta_a x_a applied to every entry alike. The MP2020 scheme is not such a shift (its correction class depends on the U value and the anion type, and elemental entries are uncorrected), so the theorem applies only within one correction class.",
         "Adding competitors can only raise the hull distance, so a value against an incomplete competing set is a lower bound of the value against a complete one, provided the entry energies do not depend on the competing set; MaterialsProjectDFTMixingScheme recomputes R2SCAN energies from the whole entry set and breaks this reading.",
         "The adsorption energy uses three cells from one energy model and one calculator setting. The three-term catalog formula cannot express fractional gas-phase references (1/2 E_O2, E_H2O - E_H2), has no per-adsorbate normalization for a coverage theta, and needs a dipole correction for one-sided slabs.",
-        "The intercalation voltage sign follows the catalog: V = -(E_full - E_empty - n mu)/(n q), positive when inserting n ions from the metal lowers the energy, with q the charge transferred per ion. The catalog's n_ion q_e hard-codes one electron per ion, which is correct for Li, Na and K; for an ion of valence z the transferred charge is n z e, so q = z e (recorded as a catalog defect). The theorems hold for any q != 0. The mean-voltage theorem needs E(x) continuous on [0, n] and differentiable off a countable set with an integrable derivative, which admits the kinks of a convex-hull energy with several plateaus.",
+        "The intercalation voltage sign follows the catalog: V = -(E_full - E_empty - n mu)/(n q), positive when inserting n ions from the metal lowers the energy, with q the charge transferred per ion. The catalog's n_ion q_e hard-codes one electron per ion, which is correct for Li, Na and K; for an ion of valence z the transferred charge is n z e, so q = z e; the catalog restricts its form to monovalent working ions and states the n z e rule for valence z. The theorems hold for any q != 0. The mean-voltage theorem needs E(x) continuous on [0, n] and differentiable off a countable set with an integrable derivative, which admits the kinks of a convex-hull energy with several plateaus.",
         "The surface-energy formula needs a stoichiometric slab with two equivalent, equally relaxed terminations; otherwise gamma depends on the chemical potentials of the excess species (pymatgen SlabEntry). The grain-boundary form with 2A holds only for a fully periodic bicrystal with two equivalent boundaries; with vacuum the cell holds one boundary and two free surfaces, and relax_cell=False biases gamma_GB high. Both thickness results assume slab energies affine in the number N of bulk units, which holds once the two surfaces or boundaries no longer interact.",
-        "compute_formation_energy is a per-atom definition with nothing to prove on its own and is not a proof subject; its reference set drops out of the hull distance. compute_reaction_energy is not covered: its catalog formula applies signed formula-unit coefficients to per-atom formation energies, a catalog defect recorded in its gap reason."
+        "compute_formation_energy is a per-atom definition with nothing to prove on its own and is not a proof subject; its reference set drops out of the hull distance. compute_reaction_energy, corrected on 2026-10-29 to sum_i c_rxn[i] N^fu[i] dH_f[i], is transcribed as catalogReactionEnergy with N^fu[i] the atoms of the formula unit whose per-atom formation energy is dH_f[i]; it is independent of the elemental references exactly when the reaction is balanced, sum_i c_rxn[i] n_{i,a} = 0 for every element a (catalogReactionEnergy_reference_independent_iff), and the balance condition is a hypothesis, not checked by the formula."
       ],
       "conventions": {
         "model_scope": "Ground-state energy differences built from cell energies of one electronic-structure or interatomic model. Physlib has no model of convex hulls, slabs or electrodes, so these are local theorems over Mathlib reals that identify no Physlib declaration.",
@@ -1468,7 +1481,7 @@
         "Only the sufficiency of a supporting affine function for a zero hull distance is proved; its necessity, which needs convex duality, is not.",
         "Finite-size slab effects beyond the affine regime (surface-surface interaction in thin slabs, dipole corrections for asymmetric or polar slabs) and non-stoichiometric slabs are not covered.",
         "Finite-temperature, vibrational, configurational and electrolyte contributions to stability, voltage and adsorption are not covered; the energies are ground-state values.",
-        "The multivalent transferred charge n z e of compute_intercalation_voltage and the reaction-energy weights nu_i N_i of compute_reaction_energy are catalog defects to fix in the catalog; the theorems here take q and the weights as stated in the conditions."
+        "The catalog's intercalation-voltage form is restricted to monovalent working ions; the theorems here take q as stated in the conditions, so a multivalent ion needs q = z e supplied. Whether a reaction is balanced, and the temperature of the rxn-network dGf(T) entries, are not checked."
       ],
       "evidence": {
         "kind": "compiled_bridge",
@@ -1480,11 +1493,12 @@
           "OMAI.PhyslibBridge.Stability.adsorptionEnergy_offset_invariant_iff",
           "OMAI.PhyslibBridge.Stability.intercalationVoltage_offset_invariant_iff",
           "OMAI.PhyslibBridge.Stability.intercalationVoltage_eq_mean_ocv",
-          "OMAI.PhyslibBridge.Stability.surfaceEnergy_thickness_independent_iff"
+          "OMAI.PhyslibBridge.Stability.surfaceEnergy_thickness_independent_iff",
+          "OMAI.PhyslibBridge.Stability.catalogReactionEnergy_reference_independent_iff"
         ],
         "source_path": "lean/bridge/OMAIStabilityEnergies.lean",
         "build_record": "lean/bridge/build-evidence.json",
-        "source_sha256": "d5da7a1eb03e27c9869c6f8f735f37c0256cc03eebaf8eba7d90a7cb221eaa34"
+        "source_sha256": "b0fd879de1d46103e675413995828b25254511988335990bb901354b6dd2ca80"
       }
     },
     {
@@ -1503,7 +1517,7 @@
         {
           "kind": "operator",
           "id": "compute_carrier_mobility",
-          "uid": "c168368c90fa77e7b76a5668757de7f74d5fbb02b07c73544307cd48aa42d8e9",
+          "uid": "8de71440c5216dc390d9e5595d6e7dcc50a672fbc2c7c36400c04602cd1d2048",
           "formula_sha256": "21573bfd16d2a71a3fe127fb2685490564e562befd3119c79c02853ff268a121"
         },
         {
@@ -1598,7 +1612,7 @@
             "id": "compute_fc2_finite_displacement"
           }
         ],
-        "source_sha256": "a2f8655c395d34f6ca60e63c36f8e0831bf5ba3d3e1ffc355f057e5b0ea2b814"
+        "source_sha256": "c4b5049d77057a88a806c759d04159c752f5aeb8e30f2eb6ac10908c5a0e41a9"
       }
     },
     {
@@ -1628,11 +1642,11 @@
           "formula_sha256": "aa562fd454620e74d58b4d9cdb0abd8076dc039e13714849f5af3d972d25e7f8"
         }
       ],
-      "statement": "For a potential of a finite set of sites invariant under rigid translations, twice continuously differentiable at the reference for Phi2 and three times for Phi3, the catalog force constants satisfy the acoustic sum rules sum_s Phi2_{k,(s,beta)} = 0 and sum_s Phi3_{k,l,(s,gamma)} = 0 for every coordinate pair and direction. For a potential three times continuously differentiable at the reference, Phi3 is symmetric under every permutation of its three indices. A compiled two-atom potential has a nonzero Phi2, so the sum rule balances nonzero terms.",
+      "statement": "For a potential of a finite set of sites invariant under rigid translations, whose first partial derivative dV/du_k is differentiable at the reference for the Phi2 rule and whose second-order force constant Phi2_{kl} is differentiable in the configuration there for the Phi3 rule (a potential twice or three times continuously differentiable at the reference qualifies), the catalog force constants satisfy the acoustic sum rules sum_s Phi2_{k,(s,beta)} = 0 and sum_s Phi3_{k,l,(s,gamma)} = 0 for every coordinate pair and direction. For a potential three times continuously differentiable at the reference, Phi3 is symmetric under every permutation of its three indices. A compiled two-atom potential has a nonzero Phi2, so the sum rule balances nonzero terms.",
       "sources": [],
       "conditions": [
         "Sites form a finite set with every image explicit (a supercell or a cluster); the catalog's lattice labels R, R' become site labels. For an infinite crystal the statement applies to a supercell large enough that no interaction wraps onto itself.",
-        "The second-order sum rule needs translation invariance and the potential twice continuously differentiable at the reference configuration, the third-order rule three times; the permutation symmetry needs three times. Without these Mathlib's derivative is zero and the statements would hold only through that zero value."
+        "The second-order sum rule needs translation invariance and the first partial derivative dV/du_k differentiable at the reference configuration, the third-order rule the second-order force constant Phi2_{kl} differentiable in the configuration there; a potential twice or three times continuously differentiable at the reference satisfies these, and the permutation symmetry needs three times. Without these Mathlib's derivative is zero and the statements would hold only through that zero value."
       ],
       "conventions": {
         "model_scope": "Exact second and third derivatives of one potential of a finite set of sites; a local theorem over Mathlib with no Physlib model.",
@@ -1641,14 +1655,14 @@
         "frequency_convention": "Not applicable; no frequencies enter these derivatives.",
         "unit_embedding": "Coherent SI: Phi2 in N/m (J/m^2), Phi3 in J/m^3; 1 eV/A^2 = 16.02176634 J/m^2.",
         "held_fixed": "The reference configuration u; no strain or temperature enters.",
-        "admissibility": "Translation invariance at every configuration; the potential twice continuously differentiable at the reference for the second-order rule, three times for the third-order rule and the permutation symmetry.",
+        "admissibility": "Translation invariance at every configuration; the first partial derivative dV/du_k differentiable at the reference for the second-order rule, the second-order force constant Phi2_{kl} differentiable there for the third-order rule, the potential three times continuously differentiable there for the permutation symmetry.",
         "reference_energy": "An additive constant in V changes no force constant.",
         "qpoint_weighting": "Not applicable; no Brillouin-zone sums enter these derivatives."
       },
       "remaining_obligations": [
         "Numerical force constants violate the sum rules through finite differences, truncation and symmetrization; the corrections codes apply are not verified.",
         "Rotational (Born-Huang) invariance conditions, needed for the quadratic flexural branch of two-dimensional materials, are not covered.",
-        "compute_gruneisen, which consumes Phi3, is a catalog defect and is not covered."
+        "compute_gruneisen, which contracts Phi3 in the Maradudin-Fein form, is not covered."
       ],
       "evidence": {
         "kind": "compiled_bridge",
@@ -1681,7 +1695,7 @@
             "id": "ForceConstants[order=3]"
           }
         ],
-        "source_sha256": "a2f8655c395d34f6ca60e63c36f8e0831bf5ba3d3e1ffc355f057e5b0ea2b814"
+        "source_sha256": "c4b5049d77057a88a806c759d04159c752f5aeb8e30f2eb6ac10908c5a0e41a9"
       }
     },
     {
@@ -3391,7 +3405,7 @@
             "id": "Forces"
           }
         ],
-        "source_sha256": "a2f8655c395d34f6ca60e63c36f8e0831bf5ba3d3e1ffc355f057e5b0ea2b814"
+        "source_sha256": "c4b5049d77057a88a806c759d04159c752f5aeb8e30f2eb6ac10908c5a0e41a9"
       }
     },
     {
@@ -3410,12 +3424,13 @@
           "formula_sha256": "266bfe9ac04cee4e494fb4002abaffafab63319c53a23218ce1196c566832d6c"
         }
       ],
-      "statement": "For a cell energy twice continuously differentiable at a stress-free reference cell and invariant under rigid rotations, the catalog elastic constants C_abcd = -d sigma_ab / d eps_cd have the major symmetry C_abcd = C_cdab and both minor symmetries C_abcd = C_bacd = C_abdc. If they also store positive energy for every nonzero symmetric strain, the catalog's Voigt bulk and shear moduli are positive and its Poisson ratio lies strictly between -1 and 1/2.",
+      "statement": "For a cell energy twice continuously differentiable at a stress-free reference cell and invariant under rigid rotations of the cells near the reference, the catalog elastic constants C_abcd = -d sigma_ab / d eps_cd have the major symmetry C_abcd = C_cdab and both minor symmetries C_abcd = C_bacd = C_abdc. If they also store positive energy for every nonzero symmetric strain, the catalog's Voigt bulk and shear moduli are positive and its Poisson ratio lies strictly between -1 and 1/2. The St Venant-Kirchhoff energy V0 (lam/2 (tr E)^2 + mu tr(E E)) of the Green-Lagrange strain E = (F^T F - 1)/2 is a compiled witness: rotation invariant, a polynomial in F (compiled as twice continuously differentiable) and stress-free at the reference, with catalog elastic constants (V0/V)(lam delta_ab delta_cd + mu (delta_ac delta_bd + delta_ad delta_bc)) at the reference, positive definite for lam >= 0, mu > 0 and V = V0 > 0, so both theorems apply to it.",
       "sources": [],
       "conditions": [
         "The elastic constants derive from the compressive-positive catalog stress of one cell energy E(F), F = 1 + eps, so C = (1/V) d^2E / d eps d eps at the reference cell.",
         "The minor symmetries need a stress-free reference. At a pre-stressed reference the minor symmetries fail by residual-stress terms, and the stress-strain coefficients a code fits there lose the major symmetry as well; only the energy second derivative keeps it.",
-        "For relaxed-ion constants E(F) must already be minimized over the internal coordinates at each strain."
+        "For relaxed-ion constants E(F) must already be minimized over the internal coordinates at each strain.",
+        "Rotation invariance is needed only on a neighbourhood of the reference cell (objectivity near F = 1), not at singular deformation gradients; the witness is invariant everywhere."
       ],
       "conventions": {
         "model_scope": "Second derivatives of one rotation-invariant cell energy at a stress-free reference; a local theorem over Mathlib with no Physlib model.",
@@ -3424,13 +3439,13 @@
         "frequency_convention": "Not applicable; no frequencies enter these derivatives.",
         "unit_embedding": "Coherent SI: elastic constants in Pa; 1 GPa = 1e9 Pa.",
         "held_fixed": "Temperature is not involved; internal coordinates as prescribed by the cell energy.",
-        "admissibility": "E twice continuously differentiable at the reference, invariant under rotations, with zero stress there; positive strain energy for the Voigt bounds.",
+        "admissibility": "E twice continuously differentiable at the reference, invariant under rotations of the cells near it, with zero stress there; positive strain energy for the Voigt bounds; lam >= 0, mu > 0 and V = V0 > 0 for the witness bounds.",
         "reference_energy": "An additive constant in E changes no elastic constant.",
         "qpoint_weighting": "Not applicable; no Brillouin-zone sums enter these derivatives."
       },
       "remaining_obligations": [
         "Finite-strain fits of stress differences (LAMMPS ELASTIC, DFT stress-strain) estimate the derivative and are not verified, nor are the strain magnitudes and symmetrization they use.",
-        "No compiled witness exhibits a specific hyperelastic energy (for example St Venant-Kirchhoff) meeting all the hypotheses.",
+        "The compiled St Venant-Kirchhoff witness is isotropic; no anisotropic hyperelastic energy is compiled, and the witness says nothing about any code's fitted constants.",
         "A relaxed DFT cell is stress-free only to its pressure threshold (QE press_conv_thr default 0.5 kbar) plus the Pulay stress of a fixed cutoff, and a cell at the experimental lattice constant carries residual stress of order GPa; the minor-symmetry violation is then of order the residual stress over C."
       ],
       "evidence": {
@@ -3438,7 +3453,10 @@
         "module": "OMAICellElasticity",
         "declarations": [
           "OMAI.PhyslibBridge.CellElasticity.elasticConstants_symmetries",
-          "OMAI.PhyslibBridge.CellElasticity.voigt_pos_of_stable_reference"
+          "OMAI.PhyslibBridge.CellElasticity.voigt_pos_of_stable_reference",
+          "OMAI.PhyslibBridge.CellElasticity.svkEnergy_elasticConstants_symmetries",
+          "OMAI.PhyslibBridge.CellElasticity.svkEnergy_elasticConstants",
+          "OMAI.PhyslibBridge.CellElasticity.svkEnergy_voigt_pos"
         ],
         "source_path": "lean/bridge/OMAICellElasticity.lean",
         "build_record": "lean/bridge/build-evidence.json",
@@ -3452,7 +3470,7 @@
             "id": "ElasticConstants"
           }
         ],
-        "source_sha256": "7c2e02a8b5ac516416570f85ca49695d33e013a4a8cec4999d4cc7da2561c31a"
+        "source_sha256": "c0663d570244e4c53317c1c7cbb193d5acd2429766316cc79685474bc7989e3d"
       }
     },
     {
@@ -3650,11 +3668,11 @@
       "sources": [],
       "conditions": [
         "compute_velocity_autocorrelation, compute_msd, autocorrelate_heat_current and contract_kappa[transport_model=green_kubo] are transcribed: origin sums over t = 1, ..., n_lag divided by N_atoms n_lag or n_lag, with the three Cartesian components summed into Cv and M, and kappa_ab = V int_0^tau_max Jcorr_ab dtau/(k_B T^2). Records are indexed by the integer sample; dt is the sampling step.",
-        "Periodicity over the origin window, v(t + n_lag) = v(t) and J(t + n_lag) = J(t), is the circular-correlation hypothesis of the FFT route (the catalog's periodic-padding assumption). A trajectory of n_lag + tau_max samples correlated linearly is not periodic; the identities are exact for the circular estimators, and the end corrections of the linear estimator are not bounded here. Nothing is claimed about ensemble averages, ergodicity, finite-trajectory bias, statistical error or convergence in n_lag.",
+        "Periodicity over the origin window, v(t + n_lag) = v(t) and J(t + n_lag) = J(t), is the circular-correlation hypothesis of an unpadded FFT of one period; the catalog's direct origin sums are linear correlations, which a zero-padded FFT reproduces. A trajectory of n_lag + tau_max samples correlated linearly is not periodic; the identities are exact for the circular estimators, and the end corrections of the linear estimator are not bounded here. Nothing is claimed about ensemble averages, ergodicity, finite-trajectory bias, statistical error or convergence in n_lag.",
         "r(t + 1) = r(t) + dt v(t) holds exactly when the stored velocity is the finite-difference velocity of unwrapped positions (the catalog's unwrap_pbc); for velocity-Verlet velocities it holds up to the dt^2 F/(2 m) term of the integrator step, which the identity does not absorb. G is the time-integrated catalog current, G(t + 1) = G(t) + dt J(t), the energy moment per unit volume (Helfand).",
         "The Green-Kubo integral from 0 to m dt is defined through the piecewise-linear interpolant of the samples Jcorr(k), k = 0, ..., m, so int = dt [Jcorr(0)/2 + sum_{k=1}^{m-1} Jcorr(k) + Jcorr(m)/2]; Simpson or rectangle rules differ at O(dt^2). The symmetrization (ab + ba)/2 is part of the identity: Jcorr_ab alone differs from the Helfand estimator by its antisymmetric part, and for a = b no symmetrization is needed. The identity holds for every real dt, k_B and T (both sides vanish at zero), so the physical ranges dt > 0, k_B > 0 and T > 0 are not hypotheses of the theorem.",
         "The FFT identity uses the samples J(1), ..., J(n_lag) of one period on Z/n_lag, F the unnormalized transform F x(k) = sum_j x_j exp(-2 pi i j k/n_lag) and F^-1 with the factor 1/n_lag; the cross spectrum is divided by n_lag again, matching the catalog's 1/n_lag.",
-        "Units: v in m/s, r in m, dt in s, J in W/m^2, Jcorr in W^2/m^4, V in m^3, k_B in J/K, T in K, kappa in W/(m K). The catalog's ps, Angstrom and THz are conversions outside the theorems. compute_heat_current is not covered; its catalog formula is recorded as a defect."
+        "Units: v in m/s, r in m, dt in s, J in W/m^2, Jcorr in W^2/m^4, V in m^3, k_B in J/K, T in K, kappa in W/(m K). The catalog's ps, Angstrom and THz are conversions outside the theorems. compute_heat_current is not covered."
       ],
       "conventions": {
         "model_scope": "Discrete time-correlation estimators of a sampled classical trajectory: origin-averaged correlations, the Einstein and Helfand moments and the trapezoid Green-Kubo integral. Physlib has no molecular-dynamics trajectory model, so these are local theorems over Mathlib that identify no Physlib declaration.",
@@ -3668,7 +3686,7 @@
         "qpoint_weighting": "Not applicable; no Brillouin-zone sum enters."
       },
       "remaining_obligations": [
-        "compute_heat_current is not covered: its catalog formula is a recorded defect, and the Irving-Kirkwood, Hardy and virial decompositions are not formalized.",
+        "compute_heat_current is not covered: the per-atom virial and the Irving-Kirkwood, Hardy and virial decompositions of the energy current are not formalized.",
         "Ensemble averaging, ergodicity, the statistical error of a finite trajectory, the choice of tau_max (the plateau), finite-size effects, quantum corrections and the end effects of the linear (zero-padded) correlator are not addressed.",
         "The diffusivity from the slope of the mean squared displacement (contract_diffusivity) is a definition and is not bound; the Einstein-Helfand estimator under periodic boundaries with wrapped coordinates is not covered."
       ],
@@ -3742,7 +3760,7 @@
             "id": "MolecularFrequency"
           }
         ],
-        "source_sha256": "17ee78d8a15e7db57d0a416d4ba2dc9f40ad8e3089fb79ded98c7bc9a03a950b"
+        "source_sha256": "eea0883585af4e1ca7d8bc19613dcbfb014bff335ec4d3c0ffc75acdbc5214ad"
       }
     },
     {
@@ -3817,15 +3835,15 @@
         {
           "kind": "operator",
           "id": "compute_static_dielectric",
-          "uid": "ea3c7c5ef2138ad5bc519a723cdd29bf4a098583fdff8f8100a4548904f64863",
-          "formula_sha256": "985333154976a88fddaf8ecdd97fb1f39e705283653ab01dd43eb8870514b326"
+          "uid": "f658f73a798370ff39c363aef9b0d2219dd68d76251a561ee42d3b41e2d84a4a",
+          "formula_sha256": "1aeb264ede74c9b48a916c554fbae4dfba2344232049591cd7231a254307fddd"
         }
       ],
       "relation": "local",
       "statement": "compute_static_dielectric is interpreted as eps_0 = eps_inf + c Z^T D^-1 Z, with D the Gamma-point dynamical matrix on the optical coordinates (positive definite once the acoustic translations are projected out of a stable crystal), Z the mass-weighted Born-charge matrix on those coordinates and c = 4 pi e^2/Omega (Gaussian; e^2/(epsilon_vac Omega) in SI, epsilon_vac the vacuum permittivity), which in the eigenbasis of D is the mode-oscillator-strength sum sum_m Z~_m Z~_m^T/omega_m^2. With D positive definite and c > 0, eps_0 - eps_inf is positive semidefinite and u (eps_0 - eps_inf) u = 0 exactly when Z u = 0, no polar mode couples to u. Along any direction u with u eps_inf u > 0, adding the Gonze-Lee long-wavelength correction c (Z u)(Z u)^T/(u eps_inf u) to D gives a Hermitian matrix whose product of eigenvalues (the longitudinal squared frequencies along u) divided by the product of the eigenvalues of D (the transverse squared frequencies) equals (u eps_0 u)/(u eps_inf u): the generalized Lyddane-Sachs-Teller relation.",
       "sources": [],
       "conditions": [
-        "compute_static_dielectric is an opaque output in the catalog, assembled by atomate2 from eps_inf, the Born charges and the Gamma-point phonons. The interpretation needs the Gamma-point dynamical matrix D (frequencies and eigenvectors together), not only the frequencies the catalog lists as input: eps_0 - eps_inf = c Z^T D^-1 Z equals the mode sum sum_m Z~_m Z~_m^T/omega_m^2 with Z~_m = Z^T e_m the mode-oscillator strength of the eigenvector e_m.",
+        "compute_static_dielectric is an opaque output in the catalog, VASP's DFPT ionic tensor, the mode-strength sum over the Born charges and the Gamma-point phonons, added to the electronic tensor by atomate2. The interpretation needs the Gamma-point dynamical matrix D, the frequencies and eigenvectors the catalog lists as inputs together: eps_0 - eps_inf = c Z^T D^-1 Z equals the mode sum sum_m Z~_m Z~_m^T/omega_m^2 with Z~_m = Z^T e_m the mode-oscillator strength of the eigenvector e_m.",
         "D is the mass-weighted force-constant matrix at Gamma restricted to the 3N - 3 optical coordinates: the three rigid translations, whose omega^2 = 0 would make D singular, are projected out, and every optical omega^2 must be positive (a stable crystal with no imaginary Gamma mode). Z u has no component along the translations when the Born charges satisfy charge neutrality, sum_kappa Z*_kappa = 0; phonopy enforces this sum rule and the acoustic sum rule on the force constants, and both are assumed.",
         "Z_{kappa alpha, beta} = Z*_{kappa, alpha beta}/sqrt(M_kappa) with Z* in units of e, and c carries e^2 and 1/Omega with Omega the primitive-cell volume, so c Z^T D^-1 Z is dimensionless: with D in s^-2, M in kg, Omega in m^3 and eps as a relative permittivity it is e^2/(eps_0 Omega) Z^T D^-1 Z.",
         "The Lyddane-Sachs-Teller statement uses the Gonze-Lee q -> 0 correction along u, D + c (Z u)(Z u)^T/(u eps_inf u), whose eigenvalues are the longitudinal squared frequencies along u; it holds for any c and any u with u eps_inf u > 0 and compares the products of all 3N - 3 optical squared frequencies, not individual LO-TO pairs. It is not the catalog's apply_nac_correction, whose q dependence cancels and which stays a recorded defect."
@@ -4261,27 +4279,27 @@
         {
           "kind": "operator",
           "id": "fourier_to_dos",
-          "uid": "d6b71066f0cef4182e1d522d30c31326ecc2504428f3c8e6b42f5189b410a6f3",
-          "formula_sha256": "ef2d7d4503ff999157b0541bf106cb3d9c843a98b70d1084009e8b638628cee1"
+          "uid": "c142a31f3e5f89612d68319b4c2186372bf15592f88b09a1f2cc1356564428c0",
+          "formula_sha256": "b4cdd53d454584e5202fb019a24ae3f4bc8ef51ba843fd0210c4e91456c43c13"
         }
       ],
       "relation": "local",
-      "statement": "For the velocity autocorrelation of lifetime-broadened modes, Cv(tau) = sum_m A_m exp(-Gamma_m tau) cos(omega_m tau) with every Gamma_m > 0, the catalog transform g(omega) = (1/pi) int_0^infinity cos(omega tau) Cv(tau) dtau equals sum_m (A_m/2)[L(Gamma_m, omega - omega_m) + L(Gamma_m, omega + omega_m)] with L(Gamma, x) = Gamma/(pi (Gamma^2 + x^2)) the normalized Lorentzian of half-width Gamma. Its integral over all frequencies is Cv(0) = sum_m A_m for every set of positive linewidths. As the linewidths s gamma_m shrink to zero, int g(omega) phi(omega) domega converges, for every integrable phi continuous at +-omega_m, to sum_m (A_m/2)(phi(omega_m) + phi(-omega_m)): the harmonic delta-sum density of states with mode weights A_m, counted at +omega_m and -omega_m with half weight each.",
+      "statement": "For the velocity autocorrelation of lifetime-broadened modes, Cv(tau) = sum_m A_m exp(-Gamma_m tau) cos(omega_m tau) with every Gamma_m > 0, the catalog transform g(omega) = (6/(pi Cv(0))) int_0^infinity cos(omega tau) Cv(tau) dtau, with Cv(0) = sum_m A_m, equals sum_m (3 A_m/Cv(0))[L(Gamma_m, omega - omega_m) + L(Gamma_m, omega + omega_m)] with L(Gamma, x) = Gamma/(pi (Gamma^2 + x^2)) the normalized Lorentzian of half-width Gamma. For Cv(0) = sum_m A_m != 0 its integral is 6 over the whole real line and 3 over omega > 0 for every set of positive linewidths. As the linewidths s gamma_m shrink to zero, int g(omega) phi(omega) domega converges, for every integrable phi continuous at +-omega_m, to sum_m (3 A_m/Cv(0))(phi(omega_m) + phi(-omega_m)): the harmonic delta-sum density of states with mode weights 3 A_m/Cv(0), counted at +omega_m and -omega_m.",
       "sources": [],
       "conditions": [
         "fourier_to_dos is transcribed as the Lebesgue integral over (0, infinity) at angular frequency omega; the damped-cosine form of Cv is a hypothesis on the input, not derived from the dynamics, and every linewidth must be positive (an undamped mode has no integrable transform).",
-        "Normalization: the catalog's g integrates to Cv(0) over the whole real line and to Cv(0)/2 over omega > 0, in the units of Cv (velocity squared per atom, summed over the three components; Cv(0) = 3 k_B T/m for one mass in equipartition). It is proportional to a density of states normalized to the number of modes, not equal to one; the (2/pi) int cos(omega tau) Cv(tau)/Cv(0) dtau convention normalizes the one-sided spectrum to 1 and differs by the factor 2/Cv(0).",
+        "Normalization: the catalog's g is the density of states per atom, normalized to 3 states per atom on omega > 0: for Cv(0) = sum_m A_m != 0 it integrates to 6 over the whole real line and to 3 over omega > 0. Cv is the per-atom velocity autocorrelation summed over the three Cartesian components, so Cv(0) = 3 k_B T/m for one mass in classical equipartition, and the prefactor 6/(pi Cv(0)) removes its units. The (2/pi) int cos(omega tau) Cv(tau)/Cv(0) dtau convention normalizes the one-sided spectrum to 1 and differs by the factor 3. At Cv(0) = 0 the transform is 0 under the Lean convention x/0 = 0 and the integral values do not apply.",
         "Equal mode weights A_m are not implied; they hold for a classical harmonic crystal of one atomic mass in equipartition, and in general A_m are the velocity weights of the modes. The zero-linewidth limit is weak convergence against integrable test functions continuous at the mode frequencies, with all linewidths scaled by one factor s -> 0+.",
         "Frequencies are angular (rad/s) with tau in s; a spectrum on linear frequency in THz needs omega = 2 pi 10^12 nu. Windows, finite trajectories, the discrete cosine transform and the dos_broadening scheme of the catalog are outside the theorems."
       ],
       "conventions": {
         "model_scope": "Cosine transform of a sum of exponentially damped cosines and its zero-linewidth limit. Physlib has no molecular-dynamics or spectral-estimation model, so these are local theorems over Mathlib that identify no Physlib declaration.",
         "component_scope": "The scalar Cv summed over components and atoms, and its scalar transform g(omega) on the whole real line.",
-        "normalization_basis": "g carries the normalization of Cv: total integral Cv(0), half of it on omega > 0; per atom when Cv is per atom.",
+        "normalization_basis": "g is normalized per atom: 3 states on omega > 0 and 6 over the real line, independent of the units of Cv.",
         "frequency_convention": "Angular frequency omega in rad/s and lag tau in s; Lorentzian half-widths Gamma_m in rad/s.",
-        "unit_embedding": "Cv in m^2/s^2 per atom and g in m^2/s per atom (velocity squared times time); exact-real statements that certify no numerical transform.",
+        "unit_embedding": "Cv in m^2/s^2 per atom and g in s per atom (states per unit angular frequency; the prefactor 6/(pi Cv(0)) cancels the velocity units); exact-real statements that certify no numerical transform.",
         "held_fixed": "Mode amplitudes A_m, frequencies omega_m and linewidths Gamma_m are fixed inputs; the limit scales the linewidths by one factor.",
-        "admissibility": "Every Gamma_m > 0 (or gamma_m > 0 with s > 0); phi integrable and continuous at +-omega_m for the limit.",
+        "admissibility": "Every Gamma_m > 0 (or gamma_m > 0 with s > 0); phi integrable and continuous at +-omega_m for the limit; Cv(0) = sum_m A_m != 0 for the integral values 6 and 3.",
         "reference_energy": "Not applicable.",
         "qpoint_weighting": "Not applicable; modes enter as a finite list with their weights A_m."
       },
@@ -4296,11 +4314,12 @@
         "declarations": [
           "OMAI.PhyslibBridge.VACFSpectrum.catalogFourierDOS_damped",
           "OMAI.PhyslibBridge.VACFSpectrum.integral_catalogFourierDOS_damped",
+          "OMAI.PhyslibBridge.VACFSpectrum.integral_Ioi_catalogFourierDOS_damped",
           "OMAI.PhyslibBridge.VACFSpectrum.tendsto_catalogFourierDOS_zero_linewidth"
         ],
         "source_path": "lean/bridge/OMAIVACFSpectrum.lean",
         "build_record": "lean/bridge/build-evidence.json",
-        "source_sha256": "d5f50026897ff1ecc38ad0b59b26deb457b461ba3d40fb29047a938dbc3bbe67"
+        "source_sha256": "88e529acc3a8f224ce2e62aa781b8176694eeee06b49daa9fdd5d517ce32661d"
       }
     }
   ],
@@ -4539,7 +4558,7 @@
         "uid": "21ba7756f45c808d3d91ed059c34c532f04845781d549b4c16573d9462bb2902",
         "binding_ids": [],
         "status": "gap",
-        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
+        "reason": "Physlib has no electronic scattering, density-of-states or dielectric model; the Boltzmann coefficients are anchored to Physlib's ThermoelectricMaterial for the coefficient axioms and the figure of merit, and the mobility, electronic DOS and static dielectric tensor carry local proofs. The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
         "id": "ElasticConstants",
@@ -5101,9 +5120,11 @@
       {
         "id": "ReactionEnergy",
         "uid": "a5736aa4760c27562f9e189829763a891b6fed83fe4a030a7e306b8d909d825c",
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "No current Physlib matching reference-state, convex-hull, surface, adsorption, reaction, or grain-boundary formula model identified."
+        "binding_ids": [
+          "dft-stability-energy-differences"
+        ],
+        "status": "local",
+        "reason": "No current Physlib matching reference-state, convex-hull, surface, adsorption, reaction, or grain-boundary formula model identified. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "RetentionTime",
@@ -5646,7 +5667,7 @@
       },
       {
         "id": "compute_carrier_mobility",
-        "uid": "c168368c90fa77e7b76a5668757de7f74d5fbb02b07c73544307cd48aa42d8e9",
+        "uid": "8de71440c5216dc390d9e5595d6e7dcc50a672fbc2c7c36400c04602cd1d2048",
         "domain": "electronic_transport",
         "formula_sha256": "21573bfd16d2a71a3fe127fb2685490564e562befd3119c79c02853ff268a121",
         "formula_latex": "\\mu_{e} = \\mu^{bte}{\\left(\\mathcal{S},\\varepsilon_{0},C,\\omega \\right)}",
@@ -5796,7 +5817,7 @@
       },
       {
         "id": "compute_electronic_conductivity",
-        "uid": "9fc03548d4ca70a6634ed22f93f7efb198f00c48c8c8b0bd94b2b37d7f73c456",
+        "uid": "9b20bb39ed27457a9f0c5655ab1001b0abdcf86c4ab4883c87e8a54847e0ab72",
         "domain": "electronic_transport",
         "formula_sha256": "2de7ab9fcfdde2fac6c5e3ab0e88316483e11a22ae90687e08aa8897908580e0",
         "formula_latex": "\\sigma_{el} = \\sigma^{bte}{\\left(\\mathcal{S},\\varepsilon_{0},C,\\omega \\right)}",
@@ -5836,7 +5857,7 @@
       },
       {
         "id": "compute_electronic_thermal_conductivity",
-        "uid": "fe7f863a4325b44bf1f15e1b1f2521d7ec03c5c3bd0efa796998b12b6975f1e3",
+        "uid": "b24757dc6349ac2bcf8429ab264385f76d6895fc52baea4eb380f7d7e063ca11",
         "domain": "electronic_transport",
         "formula_sha256": "7ffb8ea9b51164875b7f3eaa724d017c8c846b3fd22f4da0befa6169596c9586",
         "formula_latex": "\\kappa_{e} = \\kappa_e^{bte}{\\left(\\mathcal{S},\\varepsilon_{0},C,\\omega \\right)}",
@@ -6044,10 +6065,10 @@
       },
       {
         "id": "compute_gruneisen",
-        "uid": "997206477b90fdde2f7bb2874568ac8509cb3f4b5c382c757a028e94be46fc4f",
+        "uid": "990caec662f730a5b2a416aa96173e6d21c5fac35b8ad6b0f12d96ea614e4a49",
         "domain": "thermal_transport",
-        "formula_sha256": "8ad2d4fa6831a717b30da96e00b1b27e44cad721b58c51094484895d0a7e3b82",
-        "formula_latex": "{\\gamma_{G}}_{\\mathbf{q},\\nu} = - \\frac{\\sum_{\\substack{1 \\leq i \\leq 3 N\\\\1 \\leq j \\leq 3 N}} {\\Phi^{(3)}}_{i,j,k,\\mathbf{R},\\mathbf{R'}}}{6 {\\omega}_{\\mathbf{q},\\nu}^{2}}",
+        "formula_sha256": "6944abfc2f59713a961ef1b31caf81bbe7a961bfeea3c9225d96c7d352e1b0c3",
+        "formula_latex": "{\\gamma_{G}}_{\\mathbf{q},\\nu} = - \\frac{\\sum_{\\substack{1 \\leq i \\leq 3 N\\\\1 \\leq j \\leq 3 N\\\\1 \\leq k \\leq 3 N\\\\-\\infty \\leq \\mathbf{R} \\leq \\infty\\\\-\\infty \\leq \\mathbf{R'} \\leq \\infty}} \\frac{e^{i \\mathbf{R} \\mathbf{q}} \\overline{{e}_{i,\\mathbf{q},\\nu}} {\\Phi^{(3)}}_{i,j,k,\\mathbf{R},\\mathbf{R'}} {e}_{j,\\mathbf{q},\\nu} {r}_{k,\\mathbf{R'}}}{\\sqrt{{m}_{i} {m}_{j}}}}{6 {\\omega}_{\\mathbf{q},\\nu}^{2}}",
         "inputs": [
           "ForceConstants[order=2]",
           "ForceConstants[order=3]",
@@ -6059,7 +6080,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "Catalog defect. The formula -sum_{i,j} Phi3[i,j,k,R,R'] / (6 omega_{q nu}^2) contracts the third-order force constants over two Cartesian indices only, with no eigenvectors, masses, Bloch phases or atomic positions, and leaves k, R and R' free on the right-hand side while the left-hand side depends on (q, nu). The Maradudin-Fein form is gamma_{q nu} = -(1/(6 omega_{q nu}^2)) sum_{kappa kappa' kappa''} sum_{l' l''} sum_{alpha beta gamma} Phi_{alpha beta gamma}(0 kappa, l' kappa', l'' kappa'') e*_{alpha kappa}(q nu) e_{beta kappa'}(q nu) exp(i q . R_{l'}) r_gamma(l'' kappa'') / sqrt(M_kappa M_kappa'), with r the Cartesian position of atom (l'' kappa''). Not covered until the catalog formula is corrected."
+        "reason": "Not covered. The Maradudin-Fein contraction gamma_{q nu} = -(1/(6 omega_{q nu}^2)) sum_{ijk} sum_{R R'} Phi3_{ijk}(R, R') e*_i e_j exp(i q.R) r_k(R')/sqrt(m_i m_j) is not shown to equal the derivative-defined gamma_i = -(V/omega_i) d omega_i/dV of the quasiharmonic bindings; FC3 and finite-difference producers evaluated at the reference geometry differ from gammas at the selected volume."
       },
       {
         "id": "compute_heat_capacity",
@@ -6100,10 +6121,10 @@
       },
       {
         "id": "compute_heat_current",
-        "uid": "c0093343fed48c5cc30a81368be68ddd6000b7ecab4d816c2a1601a01f35163e",
+        "uid": "02678de87aa09f341bbac81cbc6b0504afe2c8f889e4eab5d0700c3fe09f7dd0",
         "domain": "thermal_transport",
-        "formula_sha256": "130597d1782cac055d0c34d2f878f182347d86457875658bbf67f32fc4c80562",
-        "formula_latex": "{J}_{\\alpha,t} = \\frac{\\sum_{i=1}^{N_{atoms}} {E}_{i,t} {v}_{i,\\alpha,t} + \\frac{\\sum_{i=1}^{N_{atoms}} {F^{md}}_{i,\\alpha,t} {r}_{i,\\alpha,t} {v}_{i,\\alpha,t}}{2}}{V_{cell}}",
+        "formula_sha256": "067539295f171de91c320f410d5b4b33b98d0769cb3bcc66208ee58eba1ed17d",
+        "formula_latex": "{J}_{\\alpha,t} = \\frac{\\sum_{i=1}^{N_{atoms}} {E}_{i,t} {v}_{i,\\alpha,t} + \\sum_{\\substack{1 \\leq i \\leq N_{atoms}\\\\1 \\leq \\beta \\leq 3}} {W}_{i,\\alpha,\\beta,t} {v}_{i,\\beta,t}}{V_{cell}}",
         "inputs": [
           "Trajectory"
         ],
@@ -6112,7 +6133,7 @@
         ],
         "binding_ids": [],
         "status": "gap",
-        "reason": "Catalog defect. The formula condenses the Irving-Kirkwood current to one atom: its virial term (1/2) sum_i r_{i,alpha} F_{i,alpha} v_{i,alpha}/V_cell multiplies the total force on atom i by the absolute position of the same atom on the same Cartesian index, so it changes with the choice of origin (shifting every position by a adds a_alpha sum_i F_{i,alpha} v_{i,alpha}/(2 V_cell), the rate of change of the kinetic energy along alpha, which is not zero) and with the periodic image, and it drops the off-diagonal stress components. The description's own pair form is right: J_alpha = (1/V_cell) [sum_i E_i v_{i,alpha} + (1/2) sum_{i != j} r_{ij,alpha} (F_ij . v_i)] with r_ij = r_i - r_j and F_ij the force on i from j, equivalently sum_i sum_beta W_{i,alpha beta} v_{i,beta} with the per-atom virial W_{i,alpha beta} = (1/2) sum_{j != i} r_{ij,alpha} F_{ij,beta}; many-body potentials use the per-atom virial of Fan et al., Phys. Rev. B 92, 094301 (2015). OMAIMDCorrelations proves nothing about this operator."
+        "reason": "Not covered. The per-atom virial W_{i,alpha beta} ((1/2) sum_{j != i} r_{ij,alpha} F_{ij,beta} for a pair potential, with r_ij = r_i - r_j and F_ij the force on i from j; the form of Fan et al., Phys. Rev. B 92, 094301 (2015), for many-body potentials) and the Irving-Kirkwood, Hardy and virial decompositions of the energy current are not formalized; OMAIMDCorrelations proves nothing about this operator."
       },
       {
         "id": "compute_homo_lumo_gap",
@@ -6534,23 +6555,25 @@
       },
       {
         "id": "compute_reaction_energy",
-        "uid": "2f0b118bbe3ef2e43e0d70c9b5d5316cc28dc4d0019ad8e7d0fc463cc6938a9c",
+        "uid": "2204ada808d0fae7706fe31723755bcc9614f2901bff9230e163f47a7e95cdf7",
         "domain": "stability",
-        "formula_sha256": "2679bf8f5cc6b11e691142dbe4eb1ed23003bf4718ef5e528a12ef488d27fc27",
-        "formula_latex": "\\Delta E_{rxn} = \\sum_{i=1}^{N_{rxn}} {\\Delta H_{f}}_{i} {c_{rxn}}_{i}",
+        "formula_sha256": "c69c9c84d6d962cea6ea1f005df0612832d065d6fa4d759dfff5c9b1e08cbe1f",
+        "formula_latex": "\\Delta E_{rxn} = \\sum_{i=1}^{N_{rxn}} {N^{fu}}_{i} {\\Delta H_{f}}_{i} {c_{rxn}}_{i}",
         "inputs": [
           "FormationEnergy"
         ],
         "outputs": [
           "ReactionEnergy"
         ],
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "Catalog defect. The formula sums signed formula-unit coefficients c_rxn[i] times per-atom formation energies (FormationEnergy is in eV/atom), which is neither the reaction energy nor independent of the elemental references: for 2 Li + 1/2 O2 -> Li2O with Delta H_f(Li2O) = -2.0616 eV/atom it gives -2.0616 eV, and -1.6616 eV with mu_Li shifted by 0.3 eV, against the true -6.1848 eV. The reaction energy is Delta E_rxn = sum_i nu_i N_i Delta H_f,i with nu_i the signed formula-unit coefficients and N_i the atoms per reduced formula unit, per reaction as balanced (divide by the atoms of the reaction for eV/atom); it is independent of the elemental references exactly when the reaction is balanced (reactionEnergy_reference_independent_iff in OMAIStabilityEnergies). The ReactionEnergy node excludes the SISSO dGf(T) cousin, but its rxn-network representation computes from GibbsComputedEntry dGf(T); the edge should state which quantity it consumes."
+        "binding_ids": [
+          "dft-stability-energy-differences"
+        ],
+        "status": "local",
+        "reason": "No current Physlib matching reference-state, convex-hull, surface, adsorption, reaction, or grain-boundary formula model identified. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "compute_seebeck",
-        "uid": "8514fb3e8586db31ec55ec353254d206a41722760541644b2b5c08f770716a81",
+        "uid": "f34ee134bfed051ae79dfece5f9ff45df4c2c202e784ccf6c3bf50035709d208",
         "domain": "electronic_transport",
         "formula_sha256": "75307432c842b2c58ffc978745dd0992e89936a44fab7dc40bb06a24a887b939",
         "formula_latex": "S = S^{bte}{\\left(\\mathcal{S},\\varepsilon_{0},C,\\omega \\right)}",
@@ -6571,14 +6594,15 @@
       },
       {
         "id": "compute_static_dielectric",
-        "uid": "ea3c7c5ef2138ad5bc519a723cdd29bf4a098583fdff8f8100a4548904f64863",
+        "uid": "f658f73a798370ff39c363aef9b0d2219dd68d76251a561ee42d3b41e2d84a4a",
         "domain": "electronic_transport",
-        "formula_sha256": "985333154976a88fddaf8ecdd97fb1f39e705283653ab01dd43eb8870514b326",
-        "formula_latex": "\\varepsilon_{0} = \\varepsilon_0^{stat}{\\left(\\varepsilon_{\\infty},Z^{*},\\omega \\right)}",
+        "formula_sha256": "1aeb264ede74c9b48a916c554fbae4dfba2344232049591cd7231a254307fddd",
+        "formula_latex": "\\varepsilon_{0} = \\varepsilon_0^{stat}{\\left(\\varepsilon_{\\infty},Z^{*},\\omega,e \\right)}",
         "inputs": [
           "DielectricTensor",
           "BornCharges",
-          "Frequency"
+          "Frequency",
+          "Eigenvectors"
         ],
         "outputs": [
           "StaticDielectricTensor"
@@ -7336,10 +7360,10 @@
       },
       {
         "id": "fourier_to_dos",
-        "uid": "d6b71066f0cef4182e1d522d30c31326ecc2504428f3c8e6b42f5189b410a6f3",
+        "uid": "c142a31f3e5f89612d68319b4c2186372bf15592f88b09a1f2cc1356564428c0",
         "domain": "thermal_transport",
-        "formula_sha256": "ef2d7d4503ff999157b0541bf106cb3d9c843a98b70d1084009e8b638628cee1",
-        "formula_latex": "{g}_{\\omega} = \\frac{\\int\\limits_{0}^{\\infty} \\cos{\\left(\\omega \\tau \\right)} {Cv}_{\\tau}\\, d\\tau}{\\pi}",
+        "formula_sha256": "b4cdd53d454584e5202fb019a24ae3f4bc8ef51ba843fd0210c4e91456c43c13",
+        "formula_latex": "{g}_{\\omega} = \\frac{6 \\int\\limits_{0}^{\\infty} \\cos{\\left(\\omega \\tau \\right)} {Cv}_{\\tau}\\, d\\tau}{\\pi {Cv}_{0}}",
         "inputs": [
           "VelocityAutocorrelation"
         ],
@@ -7845,8 +7869,8 @@
     "nodes_mapped": 35,
     "operators_total": 133,
     "operators_mapped": 29,
-    "nodes_local": 37,
-    "operators_local": 47,
+    "nodes_local": 38,
+    "operators_local": 48,
     "bindings_total": 52,
     "source_correspondences": 5,
     "compiled_bridges": 47,
@@ -7854,10 +7878,10 @@
     "nodes_compiled_outputs": 25,
     "nodes_compiled_interpretations": 1,
     "operators_compiled": 29,
-    "operators_compiled_local": 47,
-    "nodes_compiled_local": 41,
-    "operators_proved": 76,
-    "nodes_proved": 67,
+    "operators_compiled_local": 48,
+    "nodes_compiled_local": 42,
+    "operators_proved": 77,
+    "nodes_proved": 68,
     "upstream_declarations_referenced": 36,
     "upstream_modules_referenced": 10,
     "relations": {

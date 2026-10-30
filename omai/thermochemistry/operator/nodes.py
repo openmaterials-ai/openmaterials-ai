@@ -106,7 +106,8 @@ MOLAR_ENTHALPY = ObservableSpace(
     fields=(Field("H_m", ENERGY_PER_MOLE, indices=()),),
     tier="Thermochemistry",
     description=(
-        "Assessed molar enthalpy H_m = G - T dG/dT of a phase, pycalphad's "
+        "Assessed molar enthalpy H_m = G - T dG/dT of a phase (or of the "
+        "equilibrium assemblage), pycalphad's "
         "HM, derived from the Gibbs energy by the Legendre relation. PER "
         "MOLE OF ATOMS, at CONSTANT PRESSURE, SER reference; J/mol, "
         "ENERGY_PER_MOLE. The enthalpy of formation (H_m referenced to SER) "

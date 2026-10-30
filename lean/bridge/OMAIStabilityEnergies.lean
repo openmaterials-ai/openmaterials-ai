@@ -14,16 +14,19 @@ energy, an adsorption energy, an average intercalation voltage, and surface and
 grain-boundary energies from slab supercells. Physlib has no model of these
 constructions, so these results use Mathlib only and identify no Physlib declaration.
 
-The hull distance does not change when every entry's formation energy is shifted by the
-same affine function of composition; in particular the hull distance of per-atom formation
-energies does not depend on the elemental reference energies. A supporting affine function
-certifies a zero distance. A linear combination of cell energies is unchanged by every
-per-element energy offset exactly when it conserves atoms, which for the catalog's adsorption
-and voltage formulas is the balance of the cells. The average intercalation voltage is the
-mean of the open-circuit voltage profile over the ion content, also for a cell energy with
-kinks between voltage plateaus. For slab energies affine in the number of bulk units, the
-catalog's surface and grain-boundary energies are independent of slab thickness exactly when
-the bulk reference equals the slab slope, and grow without bound otherwise.
+The hull distance reads only the competing entries and does not change when every entry's
+formation energy is shifted by the same affine function of composition; in particular the
+hull distance of per-atom formation energies does not depend on the elemental reference
+energies. A supporting affine function certifies a zero distance. A linear combination of
+cell energies is unchanged by every per-element energy offset exactly when it conserves
+atoms, which for the catalog's adsorption and voltage formulas is the balance of the cells
+and for the catalog's reaction energy after its weight correction, signed coefficients times
+atoms per formula unit times per-atom formation energies, is the balance of the reaction.
+The average intercalation voltage is the mean of the open-circuit voltage profile over the
+ion content, also for a cell energy with kinks between voltage plateaus. For slab energies
+affine in the number of bulk units, the catalog's surface and grain-boundary energies agree
+at two different slab thicknesses exactly when the bulk reference equals the slab slope, and
+grow without bound otherwise.
 -/
 
 @[expose] public section
@@ -55,10 +58,16 @@ def intercalationVoltage (Efull Eempty n mu q : ℝ) : ℝ := (mu * n + Eempty -
 proof. -/
 def adsorptionEnergy (Eadslab Eslab Eadsorbate : ℝ) : ℝ := Eadslab - Eadsorbate - Eslab
 
-/-- The reviewed catalog expression of `compute_reaction_energy`,
-`dE_rxn = sum_i H_f[i] c_rxn[i]` over the reaction species. This definition alone is not
-a physical proof. -/
+/-- The weighted sum `sum_i h_i c_i` of per-species energies `h` with signed weights `c`, the
+form of the catalog's `compute_reaction_energy` before its weight correction; the corrected
+expression is `catalogReactionEnergy`. This definition alone is not a physical proof. -/
 def reactionEnergy {ι : Type*} [Fintype ι] (c h : ι → ℝ) : ℝ := ∑ i, h i * c i
+
+/-- The reviewed catalog expression of `compute_reaction_energy` after its weight correction,
+`dE_rxn = sum_i c_rxn[i] N[i] dH_f[i]`, with `c_rxn` the signed formula-unit coefficients,
+`N` the atoms per reduced formula unit and `dH_f` the per-atom formation energies. This
+definition alone is not a physical proof. -/
+def catalogReactionEnergy {ι : Type*} [Fintype ι] (c N h : ι → ℝ) : ℝ := ∑ i, c i * N i * h i
 
 /-- Per-atom formation energy `(E - sum_a n_a mu_a) / sum_a n_a` of a cell with `n_a`
 atoms of element `a`, total energy `E` and elemental reference energies `mu_a`. -/
@@ -118,6 +127,36 @@ theorem energyAboveHull_nonneg {S : Set ι} (x : ι → κ → ℝ) (h : ι → 
   sub_nonneg.mpr (csInf_le (decompositionEnergies_bddBelow S x h (x i))
     (self_mem_decompositionEnergies hi))
 
+private theorem sum_congr_of_support {S : Set ι} {w : ι → ℝ} (hwS : ∀ j, j ∉ S → w j = 0)
+    {f f' : ι → ℝ} (hf : ∀ j ∈ S, f j = f' j) : ∑ j, w j * f j = ∑ j, w j * f' j :=
+  sum_congr rfl fun j _ => by
+    by_cases hj : j ∈ S
+    · rw [hf j hj]
+    · simp [hwS j hj]
+
+omit [Fintype κ] in
+private theorem decompositionEnergies_subset_of_eqOn {S : Set ι} {x x' : ι → κ → ℝ}
+    {h h' : ι → ℝ} (hx : ∀ j ∈ S, x j = x' j) (hh : ∀ j ∈ S, h j = h' j) (y : κ → ℝ) :
+    decompositionEnergies S x h y ⊆ decompositionEnergies S x' h' y := by
+  rintro e ⟨w, ⟨hw0, hwS, hw1, hwy⟩, rfl⟩
+  refine ⟨w, ⟨hw0, hwS, hw1, fun a => ?_⟩, sum_congr_of_support hwS hh⟩
+  rw [← hwy a]
+  exact (sum_congr_of_support hwS fun j hj => congrFun (hx j hj) a).symm
+
+omit [Fintype κ] in
+/-- The hull distance of a competing entry reads only the competing entries: entry sets that
+agree on `S` in composition and formation energy give the same distance for every `i ∈ S`. -/
+theorem energyAboveHull_congr {S : Set ι} {x x' : ι → κ → ℝ} {h h' : ι → ℝ}
+    (hx : ∀ j ∈ S, x j = x' j) (hh : ∀ j ∈ S, h j = h' j) {i : ι} (hi : i ∈ S) :
+    energyAboveHull S x h i = energyAboveHull S x' h' i := by
+  have hset : decompositionEnergies S x h (x i) = decompositionEnergies S x' h' (x' i) := by
+    rw [hx i hi]
+    exact Set.Subset.antisymm (decompositionEnergies_subset_of_eqOn hx hh _)
+      (decompositionEnergies_subset_of_eqOn (fun j hj => (hx j hj).symm)
+        (fun j hj => (hh j hj).symm) _)
+  unfold energyAboveHull hullEnergy
+  rw [hset, hh i hi]
+
 private theorem decomposition_affine {S : Set ι} {x : ι → κ → ℝ} {y : κ → ℝ} {w : ι → ℝ}
     (hw : Decomposition S x y w) (h : ι → ℝ) (c : ℝ) (δ : κ → ℝ) :
     ∑ j, w j * (h j + (c + ∑ a, δ a * x j a)) = ∑ j, w j * h j + (c + ∑ a, δ a * y a) := by
@@ -170,17 +209,16 @@ theorem energyAboveHull_affine_invariant {S : Set ι} (x : ι → κ → ℝ) (h
 
 /-- The hull distance of per-atom formation energies `(E_j - sum_a n_ja mu_a) / N_j`, with
 atomic fractions `n_ja / N_j`, is the same for every set of elemental reference energies
-`mu`. -/
+`mu`, for competing entries with atoms. -/
 theorem energyAboveHull_formationEnergy_reference_independent (S : Set ι) (Ecell : ι → ℝ)
-    (n : ι → κ → ℝ) (hN : ∀ j, ∑ a, n j a ≠ 0) {i : ι} (hi : i ∈ S) (μ μ' : κ → ℝ) :
+    (n : ι → κ → ℝ) (hN : ∀ j ∈ S, ∑ a, n j a ≠ 0) {i : ι} (hi : i ∈ S) (μ μ' : κ → ℝ) :
     energyAboveHull S (fun j a => n j a / ∑ b, n j b) (fun j => formationEnergy (Ecell j) (n j) μ') i =
       energyAboveHull S (fun j a => n j a / ∑ b, n j b) (fun j => formationEnergy (Ecell j) (n j) μ) i := by
-  have hshift : (fun j => formationEnergy (Ecell j) (n j) μ') =
-      fun j => formationEnergy (Ecell j) (n j) μ +
-        (0 + ∑ a, (μ a - μ' a) * (n j a / ∑ b, n j b)) := by
-    funext j
+  have hshift : ∀ j ∈ S, formationEnergy (Ecell j) (n j) μ' =
+      formationEnergy (Ecell j) (n j) μ + (0 + ∑ a, (μ a - μ' a) * (n j a / ∑ b, n j b)) := by
+    intro j hj
     unfold formationEnergy
-    have hNj := hN j
+    have hNj := hN j hj
     rw [zero_add, div_add' _ _ _ hNj]
     congr 1
     have : (∑ a, (μ a - μ' a) * (n j a / ∑ b, n j b)) * ∑ b, n j b = ∑ a, (μ a - μ' a) * n j a := by
@@ -192,7 +230,7 @@ theorem energyAboveHull_formationEnergy_reference_independent (S : Set ι) (Ecel
     have e2 : ∑ a, μ' a * n j a = ∑ a, n j a * μ' a := sum_congr rfl fun a _ => mul_comm _ _
     rw [e1, e2]
     ring
-  rw [hshift]
+  rw [energyAboveHull_congr (fun _ _ => rfl) hshift hi]
   exact energyAboveHull_affine_invariant _ _ 0 _ hi
 
 omit [Fintype κ] in
@@ -281,6 +319,26 @@ theorem reactionEnergy_reference_independent_iff {σ E : Type*} [Fintype σ] [Fi
   · intro h μ
     rw [hred]
     exact h _
+
+/-- The corrected catalog reaction energy is the weighted sum `reactionEnergy` with weights
+`c_i N_i`. -/
+theorem catalogReactionEnergy_eq_reactionEnergy {σ : Type*} [Fintype σ] (c N h : σ → ℝ) :
+    catalogReactionEnergy c N h = reactionEnergy (fun i => c i * N i) h := by
+  unfold catalogReactionEnergy reactionEnergy
+  exact sum_congr rfl fun i _ => by ring
+
+/-- The corrected catalog reaction energy of per-atom formation energies, with `N_s` the atom
+count `sum_a n_sa` of the formula unit of species `s`, equals the reaction energy
+`sum_s c_s E_s` of the formula-unit energies for every choice of elemental reference energies
+exactly when the reaction is balanced. With unbalanced coefficients it depends on the
+references. -/
+theorem catalogReactionEnergy_reference_independent_iff {σ E : Type*} [Fintype σ] [Fintype E]
+    [DecidableEq E] (c Ecell : σ → ℝ) (n : σ → E → ℝ) (hN : ∀ s, ∑ a, n s a ≠ 0) :
+    (∀ μ : E → ℝ, catalogReactionEnergy c (fun s => ∑ a, n s a)
+        (fun s => formationEnergy (Ecell s) (n s) μ) = ∑ s, c s * Ecell s) ↔
+      ∀ a, ∑ s, c s * n s a = 0 := by
+  simp only [catalogReactionEnergy_eq_reactionEnergy]
+  exact reactionEnergy_reference_independent_iff c Ecell n hN
 
 /-- The catalog's adsorption energy is unchanged by every per-element energy offset of the
 three cells exactly when the adsorbate-on-slab cell contains the slab's atoms plus the
@@ -371,20 +429,21 @@ surface energy with bulk reference `E_bulk` is the same for two different thickn
 exactly when `E_bulk = e`, and is then `c / (2 A)`; otherwise it grows without bound with
 the slab thickness. -/
 theorem surfaceEnergy_thickness_independent_iff {e c Ebulk A : ℝ} (hA : A ≠ 0) :
-    ((∀ N M : ℝ, surfaceEnergy (N * e + c) Ebulk N A = surfaceEnergy (M * e + c) Ebulk M A) ↔
-        Ebulk = e) ∧
+    (∀ N M : ℝ, N ≠ M →
+        (surfaceEnergy (N * e + c) Ebulk N A = surfaceEnergy (M * e + c) Ebulk M A ↔ Ebulk = e)) ∧
       (Ebulk = e → ∀ N, surfaceEnergy (N * e + c) Ebulk N A = c / (2 * A)) ∧
       (Ebulk ≠ e → Tendsto (fun N : ℝ => |surfaceEnergy (N * e + c) Ebulk N A|) atTop atTop) := by
   have hform : ∀ N, surfaceEnergy (N * e + c) Ebulk N A = c / (2 * A) + N * ((e - Ebulk) / (2 * A)) := by
     intro N; unfold surfaceEnergy; field_simp; ring
-  refine ⟨⟨fun h => ?_, fun h N M => ?_⟩, fun h N => ?_, fun h => ?_⟩
-  · have := h 0 1
-    rw [hform, hform] at this
-    have h2A : (2 * A) ≠ 0 := mul_ne_zero two_ne_zero hA
-    have : (e - Ebulk) / (2 * A) = 0 := by linarith
-    rcases div_eq_zero_iff.mp this with h' | h'
-    · linarith
-    · exact absurd h' h2A
+  have h2A : (2 * A) ≠ 0 := mul_ne_zero two_ne_zero hA
+  refine ⟨fun N M hNM => ⟨fun h => ?_, fun h => ?_⟩, fun h N => ?_, fun h => ?_⟩
+  · rw [hform, hform] at h
+    have hk : (N - M) * ((e - Ebulk) / (2 * A)) = 0 := by linarith
+    rcases mul_eq_zero.mp hk with h' | h'
+    · exact absurd (sub_eq_zero.mp h') hNM
+    · rcases div_eq_zero_iff.mp h' with h'' | h''
+      · linarith
+      · exact absurd h'' h2A
   · rw [hform, hform, h]; simp
   · rw [hform, h]; simp
   · have hk : (e - Ebulk) / (2 * A) ≠ 0 := div_ne_zero (sub_ne_zero.mpr (Ne.symm h)) (mul_ne_zero two_ne_zero hA)

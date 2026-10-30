@@ -1,0 +1,152 @@
+{
+  "key": "qe",
+  "headline": "Quantum ESPRESSO: plane-wave DFT and lattice dynamics by perturbation theory",
+  "claim": "An open-source suite of plane-wave pseudopotential codes whose ph.x was, to its authors' knowledge, the first implementation of density-functional perturbation theory.",
+  "hero": {
+    "glyph": "phonon",
+    "title": "Linear response at any wavevector",
+    "text": "ph.x computes the response to a lattice distortion of any wavelength at a cost proportional to that of the unperturbed system. Long-wavelength responses are inexpensive (Giannozzi 2009)."
+  },
+  "features": [
+    {
+      "glyph": "crystal",
+      "title": "Ground state with pw.x",
+      "text": "Iterative diagonalization and Broyden mixing with norm-conserving, ultrasoft or PAW pseudopotentials. LDA, GGA, DFT+U, meta-GGA and hybrid functionals (Giannozzi 2009)."
+    },
+    {
+      "glyph": "layers",
+      "title": "Five parallelization levels",
+      "text": "Images, k-point pools, plane waves, task groups and linear algebra, each an MPI communicator. PWscf scaled to 4800 processors on 587 atoms (Giannozzi 2009)."
+    },
+    {
+      "glyph": "gpu",
+      "title": "pw.x on NVIDIA GPUs",
+      "text": "QE-GPU v6.5 ports pw.x in CUDA Fortran. The speedup on one V100 is 1.4x for a 98-atom cell and exceeds 3x as the basis set grows (Giannozzi 2020)."
+    },
+    {
+      "glyph": "workflow",
+      "title": "File-based interfaces",
+      "text": "Inputs are Fortran namelists. Output goes to a data directory with an XML-tagged head file (Giannozzi 2009). Interfaces reach LAMMPS and i-PI (Giannozzi 2017)."
+    },
+    {
+      "glyph": "fit-curve",
+      "title": "Verified pseudopotentials",
+      "text": "The SSSP protocol tests pseudopotentials with pw.x and ph.x on 85 elements. SSSP precision averages a Delta of 0.33 meV, rare-earth nitrides excluded (Prandini 2018)."
+    }
+  ],
+  "facts": [
+    {
+      "value": "4800",
+      "label": "processors in the PWscf scaling test, 587 atoms",
+      "source": "Giannozzi 2009"
+    },
+    {
+      "value": "2e-8 Ry",
+      "label": "largest CPU vs GPU total energy difference",
+      "source": "Giannozzi 2020"
+    },
+    {
+      "value": "0.3 meV",
+      "label": "Delta per atom, QE against CASTEP, GBRV 1.4 set",
+      "source": "Lejaeghere 2016"
+    }
+  ],
+  "workflow": [
+    {
+      "title": "Write the pw.x input",
+      "text": "Namelists plus CELL_PARAMETERS, ATOMIC_POSITIONS and ATOMIC_SPECIES with UPF files."
+    },
+    {
+      "title": "Run pw.x",
+      "text": "Self-consistent ground state. The output holds the total energy in Ry, forces and stress."
+    },
+    {
+      "title": "Run ph.x",
+      "text": "DFPT at the chosen q points. fildyn files hold dynamical matrices, Born charges, epsilon."
+    },
+    {
+      "title": "Run q2r.x and matdyn.x",
+      "text": "Fourier transform to real-space force constants, then frequencies and DOS on any mesh."
+    },
+    {
+      "title": "Hand off",
+      "text": "The outputs feed Wannier90, EPW, thermal2, AiiDA workflows or the i-PI driver."
+    }
+  ],
+  "applications": [
+    {
+      "glyph": "heat-flow",
+      "title": "Graphene and graphite heat conduction",
+      "text": "Exact Boltzmann solutions with DFPT inputs give 3600 W/m/K for infinite natural graphene and 2000 W/m/K for graphite at room temperature. The single-mode result for graphite is 10x lower.",
+      "source": "Fugallo 2014"
+    },
+    {
+      "glyph": "wave",
+      "title": "Second sound in two-dimensional crystals",
+      "text": "In graphene, boron nitride and graphane normal scattering dominates over Umklapp up to room temperature. In graphene at room temperature second sound travels of the order of 1 mm.",
+      "source": "Cepellotti 2015"
+    },
+    {
+      "glyph": "lattice",
+      "title": "Resonant bonding in PbTe and SnTe",
+      "text": "QE force constants for PbTe and SnTe are long-ranged along <100>. Fourth neighbours 6 Å apart couple as strongly as first neighbours 3 Å apart. Eighth neighbours act as anti-springs.",
+      "source": "Lee 2014"
+    }
+  ],
+  "sources": [
+    {
+      "label": "Giannozzi 2009",
+      "doi": "10.1088/0953-8984/21/39/395502"
+    },
+    {
+      "label": "Giannozzi 2017",
+      "doi": "10.1088/1361-648X/aa8f79"
+    },
+    {
+      "label": "Giannozzi 2020",
+      "doi": "10.1063/5.0005082"
+    },
+    {
+      "label": "Baroni 2001",
+      "doi": "10.1103/RevModPhys.73.515"
+    },
+    {
+      "label": "Lejaeghere 2016",
+      "doi": "10.1126/science.aad3000"
+    },
+    {
+      "label": "Prandini 2018",
+      "doi": "10.1038/s41524-018-0127-2"
+    },
+    {
+      "label": "Fugallo 2014",
+      "doi": "10.1021/nl502059f"
+    },
+    {
+      "label": "Cepellotti 2015",
+      "doi": "10.1038/ncomms7400"
+    },
+    {
+      "label": "Lee 2014",
+      "doi": "10.1038/ncomms4525"
+    }
+  ],
+  "detail": [
+    {
+      "heading": "Ground state and linear response",
+      "text": "The codes solve the Kohn-Sham equations in a plane-wave basis with norm-conserving, ultrasoft or PAW pseudopotentials. pw.x reaches self-consistency by iterative diagonalization and Broyden mixing, relaxes atoms and cells with BFGS and runs Born-Oppenheimer MD. cp.x performs Car-Parrinello dynamics. ph.x implements density-functional perturbation theory for second and third derivatives of the energy in displacements and electric fields. It gives phonon dispersions, dielectric tensors, Born charges, Raman tensors and electron-phonon coefficients (Giannozzi 2009). Frozen phonons need supercells larger than the force-constant range, at a cost scaling as its ninth power (Baroni 2001)."
+    },
+    {
+      "heading": "Numerics and scale",
+      "text": "Version 4.1 held about 310,000 lines of Fortran-90 and more than 100 tests (Giannozzi 2009). Parallelism is a hierarchy of MPI communicators over NEB images, k-point pools, plane waves, task groups and dense linear algebra through ScaLAPACK. PWscf scaled to 4800 processors on a gold surface with thiols and water (587 atoms, 2552 electrons), and mixed MPI and OpenMP tests reached 65536 cores (Giannozzi 2009). The GPU port uses CUDA Fortran, cuFFT and cuSOLVER. On a V100 next to an 18-core Xeon the speedup is 1.4x for a 98-atom cell and exceeds 3x as the basis grows, with total energies matching the CPU to 2e-8 Ry and forces to 3e-5 Ry/bohr (Giannozzi 2020)."
+    },
+    {
+      "heading": "Interfaces and companion codes",
+      "text": "Quantum ESPRESSO is a distribution of separate codes. Its components share the GPL and must be fully interoperable (Giannozzi 2009). XML outputs come with XSD schemas and pseudopotentials use the UPF format (Giannozzi 2020). LAMMPS supplies the classical part of QM-MM. thermo_pw, 3.q and thermal2 add quasi-harmonic and transport properties (Giannozzi 2017). The distribution acts as the quantum engine for i-PI and AiiDA and produces the input of Wannier90, EPW, Yambo, BerkeleyGW, WEST and QMCPack (Giannozzi 2020)."
+    },
+    {
+      "heading": "Validation",
+      "text": "In the Delta benchmark of 15 solid-state codes with 40 potential or basis set types on 71 elemental crystals, Quantum ESPRESSO agrees with CASTEP to 0.3 meV per atom when both use the Schlipf-Gygi ONCVPSP or the GBRV 1.4 pseudopotentials. Differences between all-electron codes are at most 1 meV per atom (Lejaeghere 2016). The SSSP protocol runs pw.x and ph.x on 85 elements and checks the Delta factor, phonon frequencies, cohesive energies, pressure and band structures. The SSSP efficiency and precision libraries average Delta factors of 0.44 and 0.33 meV, rare-earth nitrides excluded, at average wavefunction cutoffs of 44 and 56 Ry (Prandini 2018)."
+    }
+  ]
+}

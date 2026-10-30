@@ -1,0 +1,124 @@
+{
+  "key": "mp-api",
+  "headline": "mp-api: query the Materials Project database of computed properties",
+  "claim": "The client for the Materials API, the REST interface through which the Materials Project serves its DFT-computed structures, energies and electronic properties as JSON.",
+  "hero": {
+    "glyph": "database",
+    "title": "A database of computed properties",
+    "text": "Every material is a resource with its own URL, and an HTTP verb returns JSON. The database then held data for over 33 000 compounds, computed with VASP in over 15 million CPU-hours at NERSC (Jain 2013)."
+  },
+  "features": [
+    {
+      "glyph": "code",
+      "title": "REST semantics",
+      "text": "Each object, such as a material, maps to a URL of the form materialsproject.org/rest/v1/[unique-id]. A GET returns JSON. Transfer was one way, to the user (Jain 2013)."
+    },
+    {
+      "glyph": "workflow",
+      "title": "How the data are made",
+      "text": "FireWorks manages workflows at supercomputing centers and custodian repairs failed VASP runs with rule-based fixes. Structures come mainly from the ICSD (Jain 2013)."
+    },
+    {
+      "glyph": "bars",
+      "title": "Corrections and validation",
+      "text": "Reaction energies mix methods for solid-gas, d-block oxide and aqueous reactions via reference reactions. Oxidation states and bond lengths are checked (Jain 2013)."
+    },
+    {
+      "glyph": "phase-diagram",
+      "title": "Derived quantities",
+      "text": "Energy above hull from the convex hull of formation energies measures stability. Band gaps, transition type and effective masses come from band structures (Jain 2013)."
+    },
+    {
+      "glyph": "network",
+      "title": "pymatgen and the web apps",
+      "text": "pymatgen holds a high-level interface to the Materials API. The Materials Explorer, Phase Diagram App and Reaction Calculator read the same data (Jain 2013)."
+    }
+  ],
+  "facts": [
+    {
+      "value": "33 000",
+      "label": "compounds in the database at publication",
+      "source": "Jain 2013"
+    },
+    {
+      "value": "15 million",
+      "label": "CPU-hours at NERSC behind the database",
+      "source": "Jain 2013"
+    },
+    {
+      "value": "85,014",
+      "label": "formulas queried through the MP API",
+      "source": "Bartel 2020"
+    }
+  ],
+  "workflow": [
+    {
+      "title": "Choose the query",
+      "text": "A material id, a formula or a property range picks the resources to fetch."
+    },
+    {
+      "title": "Request",
+      "text": "An HTTP GET on materialsproject.org/rest/v1/[unique-id] returns JSON."
+    },
+    {
+      "title": "Load into pymatgen",
+      "text": "The pymatgen interface turns the JSON into Structure and ComputedEntry objects."
+    },
+    {
+      "title": "Analyse locally",
+      "text": "Phase diagrams, metastability statistics or training sets for models."
+    }
+  ],
+  "applications": [
+    {
+      "glyph": "bars",
+      "title": "Metastability of known inorganic crystals",
+      "text": "Of 29,902 ICSD phases retrieved through the Materials API, 50.5% are metastable, with a median of 15 meV/atom and a 90th percentile of 67 meV/atom. Nitrides sit at a median of 63 meV/atom.",
+      "source": "Sun 2016"
+    },
+    {
+      "glyph": "density",
+      "title": "Amorphous limit for synthesizable polymorphs",
+      "text": "All polymorph entries for 41 systems came from the Materials Project. Cutoffs of 0.025, 0.05 and 0.1 eV/atom would exclude 63, 39 and 26% of known polymorphs. Amorphous limits exclude none.",
+      "source": "Aykol 2018"
+    },
+    {
+      "glyph": "neural",
+      "title": "Stability from learned formation energies",
+      "text": "85,014 formulas from the MP API trained seven models. Composition models cut formation energy MAE 27 to 74%, yet four of five stay at 0.10 to 0.14 eV/atom on decomposition energy.",
+      "source": "Bartel 2020"
+    }
+  ],
+  "sources": [
+    {
+      "label": "Jain 2013",
+      "doi": "10.1063/1.4812323"
+    },
+    {
+      "label": "Sun 2016",
+      "doi": "10.1126/sciadv.1600225"
+    },
+    {
+      "label": "Aykol 2018",
+      "doi": "10.1126/sciadv.aaq0148"
+    },
+    {
+      "label": "Bartel 2020",
+      "doi": "10.1038/s41524-020-00362-y"
+    }
+  ],
+  "detail": [
+    {
+      "heading": "What the Materials Project stores and how it is made",
+      "text": "The project computes properties of known inorganic compounds, mostly ICSD structures, with VASP. FireWorks runs the workflows at supercomputing centers and custodian repairs failed runs by rule-based fixes to cluster and convergence parameters, so a metal and an insulator get different workflows without human steps. At publication the database held over 33 000 compounds from over 15 million CPU-hours. Automated checks compare oxidation states, cell volumes and bond lengths with experiment and flag outliers, van der Waals layered compounds for instance, and a Report Issues button collects user corrections (Jain 2013)."
+    },
+    {
+      "heading": "The Materials API",
+      "text": "The API follows REST principles. Each material is a URL such as materialsproject.org/rest/v1/[unique-id], an HTTP verb acts on it, and the answer is JSON. The project launched it so that users could pull large datasets for data mining or combine local data with the project's, which the web apps cannot serve efficiently. At the time transfer was one way, with two-way submission of structures and experimental data planned. pymatgen carries a high-level interface to the API, and pymatgen-db builds local Materials Project-like MongoDB databases (Jain 2013)."
+    },
+    {
+      "heading": "Studies built on the API",
+      "text": "Sun 2016 retrieved 29,902 provenance-filtered ICSD phases and found 50.5% metastable with a median of 15 meV/atom and a 90th percentile of 67 meV/atom. Aykol 2018 took every polymorph entry in the database for 41 systems and compared them with ab initio amorphous limits. Bartel 2020 queried all entries with formation enthalpy below 1 eV/atom on July 26, 2019 through the MP API, 85,014 formulas, and noted that the decomposition energies used for training and testing change as new stable materials enter the database."
+    }
+  ]
+}
