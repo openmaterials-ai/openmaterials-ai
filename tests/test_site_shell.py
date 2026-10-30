@@ -82,7 +82,8 @@ const js = require('fs').readFileSync(process.argv[1], 'utf8')
 const out = {};
 for (const p of JSON.parse(process.argv[2])) {
   let got = null;
-  new Function('location', 'document', js)({ pathname: p, replace: (u) => { got = u; } },
+  const [pathname, search] = p.split('?');
+  new Function('location', 'document', js)({ pathname, search: search ? '?' + search : '', replace: (u) => { got = u; } },
                                           { documentElement: { dataset: {} } });
   out[p] = got;
 }
@@ -101,6 +102,9 @@ def test_404_forwards_the_short_links():
         "/l/paper:qhgk-2019-isaeva": None,
         "/s/2kPq7xYzA": "/play/#s=2kPq7xYzA",
         "/s/2kPq7xYz0": None, "/l/1234567": None, "/guide/missing": None,
+        "/m/1db368b8ece9/f7fe0fde880180": "/share/#1db368b8ece9/f7fe0fde880180",
+        "/m/1db368b8ece9/40?embed=1": "/share/?embed=1#1db368b8ece9/40",
+        "/m/1db368b8ece9/4": None, "/m/1DB368B8ECE9/40": None, "/m/1db368b8ece9/40.png": None,
     }
     out = subprocess.run([node, "-e", _FORWARD, str(DOCS / "404.html"), json.dumps(list(cases))],
                          capture_output=True, text=True, timeout=60)
