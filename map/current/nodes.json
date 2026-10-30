@@ -100,7 +100,7 @@
    "quantity": "filler_volume_fraction"
   },
   "meta": {
-   "description": "The volume fraction f of the dispersed filler phase in the composite: dimensionless, the loading knob of the effective-medium mixing. Valid for the non-interacting (ideal-dispersion) EMT in roughly [0, 0.25); above that, or near a filler-filler contact network, the Nan result is a lower bound (no percolation is modeled). Zero loading returns the matrix conductivity exactly. The reference epoxy draft uses f = 0.05 (5 vol%).",
+   "description": "The volume fraction f of the dispersed filler phase in the composite: dimensionless, the loading knob of the effective-medium mixing. Valid for the non-interacting (ideal-dispersion) EMT in roughly [0, 0.25); above that, or near a filler-filler contact network, the Nan formula no longer applies (no percolation is modeled); no bound is proved. Zero loading returns the matrix conductivity exactly. The reference epoxy draft uses f = 0.05 (5 vol%).",
    "name": "FillerVolumeFraction",
    "symbol": "f",
    "tier": "Composite"
@@ -1868,7 +1868,7 @@
    "quantity": "cure_conversion"
   },
   "meta": {
-   "description": "Degree of cure alpha of a thermosetting resin, the reacted fraction of its reactive groups (in DSC practice, the released fraction of the total reaction heat); dimensionless, 0 (uncured) to 1 (fully cured). Method-neutral: a measured conversion is evidence of this node. The kamal_cure_conversion edge is the single-(1 - alpha)^n Kamal-Sourour form only; with no diffusion control and constants fit to data before vitrification, its value is an upper bound throughout the hold, loosest near and past vitrification.",
+   "description": "Degree of cure alpha of a thermosetting resin, the reacted fraction of its reactive groups (in DSC practice, the released fraction of the total reaction heat); dimensionless, 0 (uncured) to 1 (fully cured). Method-neutral: a measured conversion is evidence of this node. The kamal_cure_conversion edge is the single-(1 - alpha)^n Kamal-Sourour form only; with no diffusion control and constants fit to data before vitrification, it overestimates the rate once diffusion control sets in near and past vitrification; no bound on the conversion is proved.",
    "name": "CureConversion",
    "symbol": "\\alpha",
    "tier": "Cure kinetics"

@@ -19,8 +19,8 @@ CURE_CONVERSION = ObservableSpace(
         "Method-neutral: a measured conversion is evidence of this node. The "
         "kamal_cure_conversion edge is the single-(1 - alpha)^n Kamal-Sourour "
         "form only; with no diffusion control and constants fit to data before "
-        "vitrification, its value is an upper bound throughout the hold, "
-        "loosest near and past vitrification."
+        "vitrification, it overestimates the rate once diffusion control sets in "
+        "near and past vitrification; no bound on the conversion is proved."
     ),
 )
 

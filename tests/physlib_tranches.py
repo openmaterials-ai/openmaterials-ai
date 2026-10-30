@@ -8,6 +8,10 @@ review pins, in landing order.
 """
 from __future__ import annotations
 
+from omai.formula_bindings import catalog_inventory
+
+_INVENTORY = catalog_inventory()
+
 TRANCHES = (
     {
         "name": "qha",
@@ -194,9 +198,11 @@ TRANCHES = (
     },
 )
 
-# The one frozen global coverage ledger of the published bindings.
+# The one frozen global coverage ledger of the published bindings; the totals come from the
+# live inventory.
 GLOBAL_COVERAGE = {
-    "nodes_total": 136, "nodes_mapped": 35, "operators_total": 133, "operators_mapped": 29,
+    "nodes_total": len(_INVENTORY["nodes"]), "nodes_mapped": 35,
+    "operators_total": len(_INVENTORY["operators"]), "operators_mapped": 29,
     "nodes_local": 38, "operators_local": 48, "bindings_total": 52, "source_correspondences": 5,
     "compiled_bridges": 47, "nodes_compiled": 26, "nodes_compiled_outputs": 25,
     "nodes_compiled_interpretations": 1, "operators_compiled": 29, "operators_compiled_local": 48,
