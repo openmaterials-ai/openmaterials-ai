@@ -13,15 +13,17 @@
     "run_worker_first": ["/l/*", "/s", "/s/*", "/badge/*", "/healthz", "/m/*", "/oembed"]
   },
   // On the domain the Worker runs only for the same paths; every other
-  // request on openmaterials.ai stays with the static host.
+  // request on openmaterials.ai stays with the static host. A route without a
+  // trailing * misses the path once a query string is added (/oembed?url=...
+  // went to the static host), so the exact paths that take queries end in *.
   "routes": [
     { "pattern": "openmaterials.ai/l/*", "zone_name": "openmaterials.ai" },
     { "pattern": "openmaterials.ai/s", "zone_name": "openmaterials.ai" },
     { "pattern": "openmaterials.ai/s/*", "zone_name": "openmaterials.ai" },
     { "pattern": "openmaterials.ai/badge/*", "zone_name": "openmaterials.ai" },
-    { "pattern": "openmaterials.ai/healthz", "zone_name": "openmaterials.ai" },
+    { "pattern": "openmaterials.ai/healthz*", "zone_name": "openmaterials.ai" },
     { "pattern": "openmaterials.ai/m/*", "zone_name": "openmaterials.ai" },
-    { "pattern": "openmaterials.ai/oembed", "zone_name": "openmaterials.ai" }
+    { "pattern": "openmaterials.ai/oembed*", "zone_name": "openmaterials.ai" }
   ],
   // The workers.dev copy stays up next to the domain routes, as a staging view.
   "workers_dev": true,

@@ -38,7 +38,9 @@ def test_worker_routes_on_the_domain_match_the_dynamic_paths():
     first; everything else stays with the static host."""
     cfg = _wrangler_config()
     routes = {(r["pattern"], r["zone_name"]) for r in cfg["routes"]}
-    assert routes == {("openmaterials.ai" + p, "openmaterials.ai") for p in cfg["assets"]["run_worker_first"]}
+    # an exact route stops matching once a query is added, so paths read with a query are routed with a trailing *
+    queried = {"/healthz", "/oembed"}
+    assert routes == {("openmaterials.ai" + p + ("*" if p in queried else ""), "openmaterials.ai") for p in cfg["assets"]["run_worker_first"]}
 
 
 def test_worker_script_falls_through_to_assets():
