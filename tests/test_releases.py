@@ -62,6 +62,7 @@ def test_the_backfill_registers_each_pair_under_its_exact_string():
     assert lin.release_check(pinned) == []
     assert lin.release_check(_rows(("openmaterials-ai", "0.4.0"))) == []
     assert lin.release_check(_rows(("openmaterials-ai", "0.5.0"))) == []
+    assert lin.release_check(_rows(("openmaterials-ai", "0.5.1"))) == []
     assert lin.release_check(_rows(("gpumd", "v4.7"))) == [
         {"id": "gpumd", "version": "v4.7", "reason": "version not registered"}]
 
