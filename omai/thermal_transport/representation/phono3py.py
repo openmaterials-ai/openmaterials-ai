@@ -7,9 +7,9 @@ surface as unit factors, convention mismatches, and discretization choice
 mismatches.
 
 References to the phono3py API (https://phonopy.github.io/phono3py/):
-  * thermal_conductivity.gamma                 — Gamma_qν in linear THz
-  * thermal_conductivity.mode_heat_capacities  — c_qν(T) in eV/K
-  * Phono3py.sigmas[0]                          — Gaussian stdev, linear THz
+  * thermal_conductivity.gamma:                 Gamma_qν in linear THz
+  * thermal_conductivity.mode_heat_capacities:  c_qν(T) in eV/K
+  * Phono3py.sigmas[0]:                         Gaussian stdev, linear THz
 """
 
 from __future__ import annotations
@@ -231,7 +231,7 @@ PHONO3PY_SOLVE_BTE_DIRECT = OperatorRepresentationSpec(
 
 # ---------------------------------------------------------------------------
 # Additional state-adapter specs for states phono3py uses internally.
-# Only code_api + notes — observable_units omitted for scaffolding states.
+# Only code_api + notes: observable_units omitted for scaffolding states.
 # ---------------------------------------------------------------------------
 
 
@@ -262,7 +262,7 @@ PHONO3PY_FORCE_CONSTANTS_3 = SpaceRepresentationSpec(
     code_api={"phi": "Phono3py.fc3"},
     notes=(
         "Phono3py.fc3: ndarray of shape (n_supercell_atoms, n_supercell_atoms, "
-        "n_supercell_atoms, 3, 3, 3) numerically in eV/Å³ — matches the "
+        "n_supercell_atoms, 3, 3, 3) numerically in eV/Å³, which matches the "
         "operator-layer canonical `eV_per_A3` unit with the trivial "
         "`canonical` normalization. Built by Phono3py.produce_fc3()."
     ),
@@ -289,7 +289,7 @@ PHONO3PY_EIGENVECTORS = SpaceRepresentationSpec(
         "Eigenvectors of D(q) for each q on the BZ mesh, exposed by the "
         "thermal_conductivity object after run_thermal_conductivity() has "
         "been called. Carries the U(1) phase + degenerate-subspace rotation "
-        "freedom — per-element cross-code comparison is NOT_COMPARABLE."
+        "freedom, so per-element cross-code comparison is NOT_COMPARABLE."
     ),
 )
 
@@ -300,7 +300,7 @@ PHONO3PY_POTENTIAL = SpaceRepresentationSpec(
     code_api={"potential": "Phono3py(...) + ASE calculator or DFT force sets"},
     notes=(
         "phono3py consumes a force source: either an ASE calculator "
-        "(canonically described by the `ase` adapter — see "
+        "(canonically described by the `ase` adapter, see "
         "ASE_POTENTIAL), wired through Phono3py.run_force_calculator(), "
         "or precomputed forces from VASP/ABINIT/QE FORCE_SETS files."
     ),
@@ -493,7 +493,7 @@ PHONO3PY_COMPUTE_GRUNEISEN = OperatorRepresentationSpec(
     representation_name="phono3py",
     notes=(
         "Phono3py.run_phonon_gruneisen_parameters: Maradudin-Fein closed form "
-        "using fc2, fc3 and the harmonic eigensystem — matches the canonical "
+        "using fc2, fc3 and the harmonic eigensystem, which matches the canonical "
         "gruneisen_method=maradudin_fein."
     ),
 )
@@ -581,7 +581,7 @@ PHONO3PY_APPLY_NAC_CORRECTION = OperatorRepresentationSpec(
     representation_name="phono3py",
     scheme_overrides={"nac_scheme": "gonze_lee"},
     notes=(
-        "Polar phono3py runs apply NAC via the inherited Phonopy machinery — "
+        "Polar phono3py runs apply NAC via the inherited Phonopy machinery: "
         "the default nac_method='gonze' is what BORN-using ph3 runs do "
         "out of the box."
     ),
@@ -645,7 +645,7 @@ PHONO3PY_TOTAL_LINEWIDTH = SpaceRepresentationSpec(
         "computed by `compute_effective_gamma(aggregates)`, which adds "
         "gamma (anharmonic), gamma_isotope, gamma_boundary, and gamma_elph "
         "into a single (num_sigma, num_temp, num_gp, num_band0) array. "
-        "Not exposed as a separate output file — the sum is constructed in-"
+        "Not exposed as a separate output file: the sum is constructed in-"
         "memory during the κ solve."
     ),
 )
@@ -682,7 +682,7 @@ PHONO3PY_COMPUTE_ISOTOPE_SCATTERING = OperatorRepresentationSpec(
     notes=(
         "phono3py.other.isotope.Isotope realises the Tamura δ with the same "
         "smearing scheme (sigma / tetrahedron) selected by the parent kappa "
-        "calculation — Gaussian by default, matching the canonical "
+        "calculation. The default is Gaussian, matching the canonical "
         "delta_broadening=gaussian convention."
     ),
 )
@@ -695,7 +695,7 @@ PHONO3PY_COMPUTE_BOUNDARY_SCATTERING = OperatorRepresentationSpec(
         "phono3py.conductivity.scattering_solvers.compute_bulk_boundary_"
         "scattering: Γ_boundary = |v|·1e6·Å / (4π·L), with L the "
         "`boundary_mfp` parameter (in micrometres). The factor of 1/(4π) "
-        "is phono3py's bulk-boundary convention — distinct from kaldo's "
+        "is phono3py's bulk-boundary convention, distinct from kaldo's "
         "2|v|/L (Casimir + Matthiessen sum) and ShengBTE's |v|/L; "
         "cross-code comparison at this Γ requires the convention factor."
     ),
@@ -781,7 +781,7 @@ PHONO3PY_COMPUTE_KAPPA_WIGNER_COHERENCES = OperatorRepresentationSpec(
         "Lorentzian-weighted off-diagonal mode overlap built from the "
         "velocity operator (vm_by_vm) inside WignerRTAKappaSolver. The "
         "broadening width is the per-mode total Γ (compute_effective_gamma "
-        "output) — shared with the LBTE chain."
+        "output), shared with the LBTE chain."
     ),
 )
 
@@ -801,7 +801,7 @@ PHONO3PY_COMBINE_KAPPA_WIGNER = OperatorRepresentationSpec(
 # that post-processes the kappa-mXXXXXX.hdf5 file produced by a thermal-
 # conductivity run; it emits cumulative κ(ω) by default and cumulative κ(Λ)
 # with `--mfp`. There is no in-process array exposed on the
-# thermal_conductivity object — the output is the stdout text dump from the
+# thermal_conductivity object. The output is the stdout text dump from the
 # `phono3py-kaccum` CLI.
 # ---------------------------------------------------------------------------
 

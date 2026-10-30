@@ -7,13 +7,13 @@ surface as unit factors, convention mismatches, and discretization choice
 mismatches.
 
 References to ShengBTE (https://bitbucket.org/sousaw/shengbte):
-  * BTE.omega                 — phonon angular frequencies, rad/ps
-  * BTE.v                     — mode group velocities, km/s (= nm·THz)
-  * BTE.w_anharmonic          — three-phonon scattering rate, ps⁻¹
-  * BTE.cv                    — *volumetric* specific heat, J/(m³·K)
+  * BTE.omega:                  phonon angular frequencies, rad/ps
+  * BTE.v:                      mode group velocities, km/s (= nm·THz)
+  * BTE.w_anharmonic:           three-phonon scattering rate, ps⁻¹
+  * BTE.cv:                     *volumetric* specific heat, J/(m³·K)
                                 (NOT per-mode; no operator counterpart)
-  * BTE.KappaTensorVsT_RTA    — κ(T) tensor in RTA, W/(m·K)
-  * BTE.KappaTensorVsT_CONV   — κ(T) tensor self-consistently converged
+  * BTE.KappaTensorVsT_RTA:     κ(T) tensor in RTA, W/(m·K)
+  * BTE.KappaTensorVsT_CONV:    κ(T) tensor self-consistently converged
                                 (realizes canonical bte_solver=direct_inverse),
                                 W/(m·K)
 
@@ -116,7 +116,7 @@ SHENGBTE_LINEWIDTH = SpaceRepresentationSpec(
     observable_normalizations={
         # BTE.w_anharmonic is the three-phonon scattering rate 1/τ in ps⁻¹.
         # Under the lattice-dynamics convention where Γ is in angular
-        # frequency, 1/τ = 2 Im Σ — same factor-of-2 relative to the bare
+        # frequency, 1/τ = 2 Im Σ, the same factor of 2 relative to the bare
         # imaginary self-energy that kaldo's `bandwidth` carries. So
         # ShengBTE shares kaldo's normalization choice.
         "Gamma": "linewidth_2x_imag_self_energy",
@@ -171,7 +171,7 @@ SHENGBTE_THERMAL_CONDUCTIVITY_DIRECT = SpaceRepresentationSpec(
         "BTE.KappaTensorVsT_CONV: κ(T) tensor from the self-consistently "
         "converged BTE solver. ShengBTE iterates F = F₀ + δF until "
         "|κ_n - κ_{n-1}| < eps (default 1e-5). This realizes the operator "
-        "layer's canonical bte_solver=direct_inverse — same fixed point as "
+        "layer's canonical bte_solver=direct_inverse: same fixed point as "
         "kaldo's method='inverse' and phono3py's is_LBTE=True, different "
         "algorithm (iterative vs LAPACK pseudo-inverse). The convergence "
         "trail is in BTE.kappa within each temperature directory."
@@ -230,7 +230,7 @@ SHENGBTE_COMPUTE_LINEWIDTH = OperatorRepresentationSpec(
         # Src/config.f90:462-476:
         #   σ_base = sqrt( Σ_ν=1..3 [(rlattvec_ν · Δv) / ngrid_ν]² / 6 )
         #   σ     = scalebroad × σ_base
-        # This is the velocity-projection scheme — identical to kaldo's
+        # This is the velocity-projection scheme, identical to kaldo's
         # default (kaldo/controllers/anharmonic.py:273-290) up to the
         # `scalebroad` prefactor. With scalebroad=1.0 (the default and
         # theoretically-guaranteed value per the README), ShengBTE and
@@ -279,7 +279,7 @@ SHENGBTE_SOLVE_BTE_DIRECT = OperatorRepresentationSpec(
 
 # ---------------------------------------------------------------------------
 # Input-state adapter specs: Temperature (in CONTROL) + FC2 + FC3.
-# ShengBTE *consumes* these — it does not compute the dynamical matrix or
+# ShengBTE *consumes* these. It does not compute the dynamical matrix or
 # eigenvectors as named outputs, so those remain dashed in the diagram.
 # ---------------------------------------------------------------------------
 
@@ -470,7 +470,7 @@ SHENGBTE_COMPUTE_DOS = OperatorRepresentationSpec(
     representation_name="shengbte",
     scheme_overrides={"dos_broadening": "adaptive_scaled"},
     notes=(
-        "BTE.dos uses the same adaptive Gaussian as the linewidth δ — "
+        "BTE.dos uses the same adaptive Gaussian as the linewidth δ, which "
         "deviates from the canonical dos_broadening=gaussian."
     ),
 )
@@ -491,7 +491,7 @@ SHENGBTE_COMPUTE_PHASE_SPACE_3PH = OperatorRepresentationSpec(
     representation_name="shengbte",
     scheme_overrides={"delta_broadening": "adaptive_scaled"},
     notes=(
-        "BTE.P3 uses the same adaptive Gaussian δ as the linewidth — "
+        "BTE.P3 uses the same adaptive Gaussian δ as the linewidth, which "
         "deviates from the canonical delta_broadening=gaussian."
     ),
 )
@@ -556,7 +556,7 @@ SHENGBTE_APPLY_NAC_CORRECTION = OperatorRepresentationSpec(
     notes=(
         "Polar runs: ShengBTE applies the Wang-Ewald form of the NAC "
         "correction (per the original Wang-Tang paper). Distinct from the "
-        "Gonze-Lee scheme used by phonopy/phono3py/kaldo — this is a "
+        "Gonze-Lee scheme used by phonopy/phono3py/kaldo. This is a "
         "convention difference that will surface in cross-code comparison "
         "of NAC-corrected DMs."
     ),
@@ -623,7 +623,7 @@ SHENGBTE_COMPUTE_ISOTOPE_SCATTERING = OperatorRepresentationSpec(
     scheme_overrides={"delta_broadening": "adaptive_scaled"},
     notes=(
         "ShengBTE evaluates the Tamura δ with the same adaptive Gaussian "
-        "as the anharmonic linewidth — deviates from the canonical "
+        "as the anharmonic linewidth, which deviates from the canonical "
         "gaussian convention."
     ),
 )
@@ -652,7 +652,7 @@ SHENGBTE_SUM_LINEWIDTHS = OperatorRepresentationSpec(
     notes=(
         "Matthiessen sum is applied implicitly in the BTE solver loop: "
         "1/τ_total = 1/τ_anh + 1/τ_iso + 1/τ_boundary. No separate "
-        "BTE.w_total file is written — the total enters the kappa calculation "
+        "BTE.w_total file is written. The total enters the kappa calculation "
         "directly."
     ),
 )

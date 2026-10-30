@@ -3,16 +3,16 @@
 One test per closed-form edge in the scope listed in
 ``docs/superpowers/plans/2026-05-13-phase1-consolidation.md § Task 3D``:
 
-  * ``identity_dm`` — literal pass-through ``D[i,j,q] = D_bare[i,j,q]``.
-  * ``sum_linewidths`` — Matthiessen sum
+  * ``identity_dm``: literal pass-through ``D[i,j,q] = D_bare[i,j,q]``.
+  * ``sum_linewidths``: Matthiessen sum
     ``Γ_tot = Γ_anh + Γ_iso + Γ_bnd``.
-  * ``combine_kappa_wigner`` — sum
+  * ``combine_kappa_wigner``: sum
     ``κ^W = κ^{W,pop} + κ^{W,coh}``.
-  * ``contract_molar_heat_capacity`` — full-BZ sum × N_A / N_q.
-  * ``compute_heat_capacity`` — sinh form per mode.
-  * ``compute_free_energy`` — log form per mode.
-  * ``compute_entropy`` — ℏω/T n_BE − k_B log(1 − e^{-x}).
-  * ``compute_internal_energy`` — ℏω (1/2 + n_BE).
+  * ``contract_molar_heat_capacity``: full-BZ sum × N_A / N_q.
+  * ``compute_heat_capacity``: sinh form per mode.
+  * ``compute_free_energy``: log form per mode.
+  * ``compute_entropy``: ℏω/T n_BE − k_B log(1 − e^{-x}).
+  * ``compute_internal_energy``: ℏω (1/2 + n_BE).
 
 Plus a negative test verifying that an implicit edge
 (``solve_bte_direct``: linear system in the unknown) raises
@@ -80,7 +80,7 @@ def _make_op_rep(state, observable_name, data) -> Representation:
 
 
 # ---------------------------------------------------------------------------
-# 3D-T1: identity_dm — literal pass-through
+# 3D-T1: identity_dm (literal pass-through)
 # ---------------------------------------------------------------------------
 
 
@@ -97,7 +97,7 @@ def test_apply_edge_identity_dm_passes_data_through_unchanged() -> None:
 
 
 # ---------------------------------------------------------------------------
-# 3D-T2: sum_linewidths — three-input Matthiessen sum
+# 3D-T2: sum_linewidths (three-input Matthiessen sum)
 # ---------------------------------------------------------------------------
 
 
@@ -115,7 +115,7 @@ def test_apply_edge_sum_linewidths_is_elementwise_three_way_sum() -> None:
 
 
 # ---------------------------------------------------------------------------
-# 3D-T3: combine_kappa_wigner — two-input sum on 3×3 tensors
+# 3D-T3: combine_kappa_wigner (two-input sum on 3×3 tensors)
 # ---------------------------------------------------------------------------
 
 
@@ -136,7 +136,7 @@ def test_apply_edge_combine_kappa_wigner_is_elementwise_tensor_sum() -> None:
 
 
 # ---------------------------------------------------------------------------
-# 3D-T4: contract_molar_heat_capacity — sum-and-multiply contraction
+# 3D-T4: contract_molar_heat_capacity (sum-and-multiply contraction)
 # ---------------------------------------------------------------------------
 
 
@@ -153,7 +153,7 @@ def test_apply_edge_contract_molar_heat_capacity_matches_full_bz_sum() -> None:
 
 
 # ---------------------------------------------------------------------------
-# 3D-T5: compute_heat_capacity — closed-form per-mode sinh form
+# 3D-T5: compute_heat_capacity (closed-form per-mode sinh form)
 # ---------------------------------------------------------------------------
 
 
@@ -173,7 +173,7 @@ def test_apply_edge_compute_heat_capacity_matches_bose_einstein_closed_form() ->
 
 
 # ---------------------------------------------------------------------------
-# 3D-T6: compute_free_energy — closed-form Helmholtz f(ω,T)
+# 3D-T6: compute_free_energy (closed-form Helmholtz f(ω,T))
 # ---------------------------------------------------------------------------
 
 
@@ -191,7 +191,7 @@ def test_apply_edge_compute_free_energy_matches_closed_form() -> None:
 
 
 # ---------------------------------------------------------------------------
-# 3D-T7: compute_entropy — closed-form s(ω,T) with n_BE expansion
+# 3D-T7: compute_entropy (closed-form s(ω,T) with n_BE expansion)
 # ---------------------------------------------------------------------------
 
 
@@ -210,7 +210,7 @@ def test_apply_edge_compute_entropy_matches_bose_einstein_form() -> None:
 
 
 # ---------------------------------------------------------------------------
-# 3D-T8: compute_internal_energy — closed-form ℏω(1/2 + n_BE)
+# 3D-T8: compute_internal_energy (closed-form ℏω(1/2 + n_BE))
 # ---------------------------------------------------------------------------
 
 
@@ -229,7 +229,7 @@ def test_apply_edge_compute_internal_energy_matches_bose_einstein_form() -> None
 
 
 # ---------------------------------------------------------------------------
-# 3D-N1: implicit edge — solve_bte_direct must raise ExternalSolveRequired
+# 3D-N1: implicit edge, solve_bte_direct must raise ExternalSolveRequired
 # ---------------------------------------------------------------------------
 
 

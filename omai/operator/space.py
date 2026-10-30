@@ -2,12 +2,12 @@
 
 Two concrete kinds, both inheriting from `Space`:
 
-  ObservableSpace  — a gauge-invariant first-class node. Cross-code agreement
+  ObservableSpace:   a gauge-invariant first-class node. Cross-code agreement
                      is REQUIRED at this node (after spec-derived unit and
                      normalization conversion). The operator layer's compare()
                      returns pass/fail verdicts here.
 
-  HiddenSpace      — an adapter-internal, gauge-dependent operator node. Not
+  HiddenSpace:       an adapter-internal, gauge-dependent operator node. Not
                      cross-code comparable per-element. Useful as a name for
                      computational scaffolding (per-mode arrays in a basis-
                      dependent representation, intermediate sums) that an
@@ -17,7 +17,7 @@ Two concrete kinds, both inheriting from `Space`:
                      down. compare() on a HiddenSpace without a contraction
                      returns status=NOT_COMPARABLE.
 
-Each `Space` carries a tuple of `Field`s — typed slots declaring the named
+Each `Space` carries a tuple of `Field`s: typed slots declaring the named
 quantities (with dimension and index signature) the representation holds.
 """
 
@@ -36,10 +36,10 @@ class Field:
     """Operator index signature: which indices the field carries.
 
     Examples:
-      omega:  ("q", "nu")            — phonon frequency
-      v:      ("alpha", "q", "nu")   — group velocity component
-      Phi^2:  ("i", "j", "R")        — atomic-pair force constant
-      kappa:  ("alpha", "beta")      — Cartesian rank-2 tensor
+      omega:  ("q", "nu")            (phonon frequency)
+      v:      ("alpha", "q", "nu")   (group velocity component)
+      Phi^2:  ("i", "j", "R")        (atomic-pair force constant)
+      kappa:  ("alpha", "beta")      (Cartesian rank-2 tensor)
 
     Empty for scalar / opaque fields (Temperature, Potential).
     The indices listed here must match those used in the sympy formula
@@ -123,7 +123,7 @@ class HiddenSpace(Space):
       kind: 'scaffolding' if this HiddenSpace is consumed by a downstream
         operator that produces an ObservableSpace (so the gauge orbit is
         eventually summed away); 'approximation' if this HiddenSpace is
-        terminal — an approximation of an ObservableSpace that happens to
+        terminal: an approximation of an ObservableSpace that happens to
         break gauge invariance, with no downstream ObservableSpace to
         recover from it (e.g., κ[bte_solver=rta]).
 

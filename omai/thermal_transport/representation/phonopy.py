@@ -13,9 +13,9 @@ internally but its exposed output form is the molar contraction, so the
 adapter targets MolarHeatCapacity rather than the per-mode HeatCapacity.
 
 References to the phonopy API (https://phonopy.github.io/phonopy/):
-  * Phonopy.run_thermal_properties / get_thermal_properties_dict —
+  * Phonopy.run_thermal_properties / get_thermal_properties_dict:
       yields heat_capacity in J/(K·mol), one value per temperature.
-  * Phonopy.get_frequencies / get_band_structure / get_mesh_dict —
+  * Phonopy.get_frequencies / get_band_structure / get_mesh_dict:
       phonon frequencies in THz (linear).
 
 The QUASI-HARMONIC (constant-pressure) side of phonopy, PhonopyQHA (driven by
@@ -162,7 +162,7 @@ PHONOPY_POTENTIAL = SpaceRepresentationSpec(
     code_api={"potential": "Phonopy(...) + ASE calculator or FORCE_SETS"},
     notes=(
         "phonopy consumes either an ASE calculator (canonically "
-        "described by the `ase` adapter — ASE_POTENTIAL) wired through "
+        "described by the `ase` adapter, ASE_POTENTIAL) wired through "
         "Phonopy.set_forces_from_calculator(), or precomputed forces in "
         "FORCE_SETS / vasprun.xml format."
     ),
@@ -187,7 +187,7 @@ PHONOPY_VOLUMETRIC_HEAT_CAPACITY = SpaceRepresentationSpec(
     code_api={"C_V_vol": "get_thermal_properties_dict()['heat_capacity'] / (V_cell * N_A)"},
     notes=(
         "Derived from the molar form: divide phonopy's J/(K·mol) by "
-        "(V_cell × N_A) — i.e., per-cell volume times Avogadro — to get J/(m³·K)."
+        "(V_cell × N_A), per-cell volume times Avogadro's number, to get J/(m³·K)."
     ),
 )
 
@@ -258,7 +258,7 @@ PHONOPY_COMPUTE_DYNAMICAL_MATRIX = OperatorRepresentationSpec(
     operator=compute_dynamical_matrix,
     representation_name="phonopy",
     notes=(
-        "DynamicalMatrix.get_dynamical_matrix(q) — Bloch sum over Φ²(R) "
+        "DynamicalMatrix.get_dynamical_matrix(q): Bloch sum over Φ²(R) "
         "with the phonopy phase convention."
     ),
 )
@@ -268,7 +268,7 @@ PHONOPY_COMPUTE_DISPERSION = OperatorRepresentationSpec(
     operator=compute_dispersion,
     representation_name="phonopy",
     notes=(
-        "Eigenfrequencies / eigenvectors from numpy.linalg.eigh of D(q) — "
+        "Eigenfrequencies / eigenvectors from numpy.linalg.eigh of D(q), via "
         "Phonopy.get_band_structure / .get_mesh_dict."
     ),
 )
@@ -332,7 +332,7 @@ PHONOPY_COMPUTE_GRUNEISEN = OperatorRepresentationSpec(
     scheme_overrides={"gruneisen_method": "finite_difference"},
     notes=(
         "PhonopyGruneisen finite-differences ω(V) between three harmonic "
-        "calculations at slightly different cell volumes — deviates from "
+        "calculations at slightly different cell volumes, which deviates from "
         "the canonical Maradudin-Fein closed form."
     ),
 )

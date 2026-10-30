@@ -44,7 +44,7 @@ def _section(title):
 
 
 def example_a():
-    _section("Example A — MolarHeatCapacity via the operator DAG")
+    _section("Example A: MolarHeatCapacity via the operator DAG")
     if not (_PHONOPY / "frequencies_THz.npy").exists():
         print("  phonopy data missing; run run_phonopy.py first.")
         return
@@ -71,7 +71,7 @@ def example_a():
 
 
 def example_b():
-    _section("Example B — ThermalConductivity[direct] via the operator DAG")
+    _section("Example B: ThermalConductivity[direct] via the operator DAG")
     mfd = _KALDO / "mean_free_displacement.npy"
     if not mfd.exists():
         print("  kaldo MFD dump missing; add the np.save to run_kaldo.py and")
@@ -87,7 +87,7 @@ def example_b():
             _op_rep(MEAN_FREE_DISPLACEMENT_DIRECT, "F", np.load(mfd)),
     }
     result = compute(THERMAL_CONDUCTIVITY_DIRECT, sources, constants={"V_{cell}": v_cell})
-    # Bridge in apply_edge rescales to W/(m·K) automatically — no manual factor needed.
+    # Bridge in apply_edge rescales to W/(m·K) automatically, no manual factor needed.
     kappa = np.asarray(result.representation.data)
     gt = np.load(_KALDO / "kappa_inverse_tensor_WmK.npy")
     print("  framework kappa (tr/3)  : %.4f W/(m K)" % (np.trace(kappa) / 3.0))

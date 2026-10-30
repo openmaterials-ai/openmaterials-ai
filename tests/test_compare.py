@@ -92,7 +92,7 @@ def test_compare_status_expected_agree_for_per_element_tight_observable():
 
 def test_compare_status_unexpected_disagree_for_observable_that_disagrees():
     """HeatCapacity is an ObservableSpace; disagreeing data should yield
-    UNEXPECTED_DISAGREE — a real anomaly the operator layer flags."""
+    UNEXPECTED_DISAGREE, a real anomaly the operator layer flags."""
     a = np.array([1.0, 2.0, 3.0])
     b = np.array([2.0, 4.0, 6.0])
     ma = represent(PHONO3PY_HEAT_CAPACITY, "c", a)
@@ -133,8 +133,7 @@ def test_compare_applies_e_factor_for_heat_capacity():
     """kaldo (J/K) × 1/e = phono3py (eV/K)."""
     e = 1.602176634e-19
     phono3py_data = np.array([1.0, 2.0, 3.0])
-    kaldo_data = phono3py_data * (1 / e)  # J = (1/e) × (eV/K)? Wait — kaldo is J/K, phono3py eV/K
-    # If phono3py emits in eV/K and kaldo in J/K, kaldo_value [J/K] = phono3py_value [eV/K] × e
+    # phono3py emits eV/K and kaldo J/K, so kaldo_value [J/K] = phono3py_value [eV/K] × e
     kaldo_data = phono3py_data * e
     mk = represent(KALDO_HEAT_CAPACITY, "c", kaldo_data)
     mp = represent(PHONO3PY_HEAT_CAPACITY, "c", phono3py_data)

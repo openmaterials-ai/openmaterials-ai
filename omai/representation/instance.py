@@ -6,8 +6,8 @@ adapter produced it, and which observable on that `Space` it represents.
 
 The operator-representation substrate doc defines a representation as
 `(s, Σ, x, U, ε_disc)`; this class is the runtime representation. `Σ`
-(discretization scheme) and `ε_disc` (discretization error) are deferred
-— the representation carries the array and its adapter spec, which
+(discretization scheme) and `ε_disc` (discretization error) are deferred.
+The representation carries the array and its adapter spec, which
 together provide units and normalization via the spec layer.
 """
 
@@ -30,7 +30,7 @@ class Representation:
     representation. `to_operator(m)` removes the basis (canonical form);
     `to_representation(m_op, spec)` re-expresses in a target basis.
     `is_operator=True` flags a representation that has been
-    canonicalized — its data is already in the operator layer's
+    canonicalized: its data is already in the operator layer's
     canonical units and normalizations.
     """
 

@@ -12,7 +12,7 @@ that:
     audit" all reproduce on Ge without code changes.
 
 What's missing vs. the Si demo:
-  * No phono3py / ShengBTE runs here yet — those are easy adds once the
+  * No phono3py / ShengBTE runs here yet. Those are easy adds once the
     binaries / wrappers are available, but the unit/convention
     machinery they exercise has already been verified against Si.
 """
@@ -103,7 +103,7 @@ def main() -> None:
         if rel < 0.01:
             print("  → kaldo and phonopy agree on ω(Ge) at the operator-promise band.")
         else:
-            print(f"  → disagreement above 1% — needs investigation.")
+            print(f"  → disagreement above 1%: needs investigation.")
 
     # -------------------------------------------------------------------
     # Section 3: kaldo κ (RTA vs LBTE)

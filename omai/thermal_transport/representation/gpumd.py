@@ -9,7 +9,7 @@ decomposition of κ. Its native potential format is NEP (neuro-evolution
 potentials), trained against DFT references; classical pair / tersoff /
 EAM forms are also supported.
 
-GPUMD is not driven through ASE — it has its own input format (`run.in`)
+GPUMD is not driven through ASE. It has its own input format (`run.in`)
 and its potentials live in their own files (`nep.txt`, `eam.fs`, …). This
 adapter therefore targets the *native* GPUMD interface.
 
@@ -18,7 +18,7 @@ Scope in P1 of phase 2:
 
 Scope added in P2 of phase 2 (MD primitives):
   * Trajectory (`dump_position`, `dump_velocity`).
-  * HeatCurrent (`compute heat_current` — virial-form J(t)).
+  * HeatCurrent (`compute heat_current`, virial-form J(t)).
   * HeatCurrentACF (`compute_hac` writes hac.out directly).
   * VelocityAutocorrelation (`compute_dos`, which writes mvac.out and
     derives the DOS in one step).
@@ -26,9 +26,9 @@ Scope added in P2 of phase 2 (MD primitives):
   * All six MD-driver operations.
 
 Scope added in P3 of phase 2 (MD-based κ paths):
-  * Green-Kubo κ via `compute_hac` — GPUMD writes the integrated κ
+  * Green-Kubo κ via `compute_hac`: GPUMD writes the integrated κ
     running average to `hac.out` alongside the autocorrelation itself.
-  * HNEMD κ via `compute_hnemd` — GPUMD's signature method. Writes
+  * HNEMD κ via `compute_hnemd`, GPUMD's signature method. Writes
     `kappa.out` (running κ_xx, κ_yy, κ_zz under the homogeneous driving
     force F_e).
   * Direct NEMD: GPUMD runs direct two-reservoir NEMD (`ensemble heat_lan`,
@@ -44,11 +44,11 @@ Out of scope:
   * Spectrally-resolved phonon transport (SRP).
 
 References:
-  * GPUMD user manual — https://gpumd.org/
-  * NEP training / GPUMD inference — Fan et al., J. Chem. Phys. 157,
+  * GPUMD user manual: https://gpumd.org/
+  * NEP training / GPUMD inference: Fan et al., J. Chem. Phys. 157,
     114801 (2022).
-  * HNEMD methodology — Fan et al., Phys. Rev. B 99, 064308 (2019).
-  * Heat-flux ACF (compute_hac) — see GPUMD manual §"Compute thermal
+  * HNEMD methodology: Fan et al., Phys. Rev. B 99, 064308 (2019).
+  * Heat-flux ACF (compute_hac): see GPUMD manual §"Compute thermal
     conductivity using Green-Kubo".
 """
 
@@ -164,7 +164,7 @@ GPUMD_HEAT_CURRENT = SpaceRepresentationSpec(
         "the virial decomposition. The instantaneous J(t) is not "
         "user-exposed: it's consumed directly by `compute_hac` (HAC), "
         "`compute_hnemd`, or `compute_shc` (spectral heat current). "
-        "Users typically don't dump J(t) — they go straight to the "
+        "Users typically don't dump J(t). They go straight to the "
         "autocorrelation in `hac.out`."
     ),
 )
@@ -231,7 +231,7 @@ GPUMD_COMPUTE_HEAT_CURRENT = OperatorRepresentationSpec(
     notes=(
         "Implicit: GPUMD computes J(t) internally on every step and "
         "feeds it directly to `compute_hac` / `compute_hnemd` / "
-        "`compute_shc`. Users don't drive this separately — declaring "
+        "`compute_shc`. Users don't drive this separately: declaring "
         "`compute_hac` activates the heat-current computation."
     ),
 )
@@ -268,8 +268,8 @@ GPUMD_COMPUTE_MSD = OperatorRepresentationSpec(
     representation_name="gpumd",
     scheme_overrides={"unwrap_pbc": "true"},
     notes=(
-        "GPUMD's `compute_msd` uses unwrapped coordinates by default — "
-        "no user-side unwrap step required."
+        "GPUMD's `compute_msd` uses unwrapped coordinates by default, so "
+        "no user-side unwrap step is required."
     ),
 )
 
@@ -301,7 +301,7 @@ GPUMD_THERMAL_CONDUCTIVITY_GREEN_KUBO = SpaceRepresentationSpec(
         "GPUMD's `compute_hac` writes the *running* Green-Kubo κ "
         "alongside the autocorrelation: each row of `hac.out` carries "
         "both Jcorr(τ) and the partial integrals κ_xx(τ), κ_yy(τ), "
-        "κ_zz(τ) — the integration is done on-the-fly. Users read off "
+        "κ_zz(τ). The integration is done on-the-fly. Users read off "
         "the plateau value as the converged Green-Kubo κ."
     ),
 )

@@ -4,8 +4,8 @@ A `SpaceRepresentationSpec` declares one code's claim about a node (operator
 `Space`):
   * the unit each observable is in (within that code's natural emission)
   * the normalization each observable is in (the definitional multiplicative
-    choice — `Γ = 2 Im Σ` vs `Γ = Im Σ`, `eV/Å³` vs `eV/(Å²·nm)` — captured
-    by name in the `normalizations.NORMALIZATIONS` registry)
+    choice such as `Γ = 2 Im Σ` vs `Γ = Im Σ` or `eV/Å³` vs `eV/(Å²·nm)`,
+    captured by name in the `normalizations.NORMALIZATIONS` registry)
 
 An `OperatorRepresentationSpec` declares one code's claim about an edge
 (operator `Operator`):
@@ -35,7 +35,7 @@ they are always the composition
 
     operator_to_representation(b, obs) · representation_to_operator(a, obs)
 
-The operator layer is the unique hub of a star topology — adding adapter C
+The operator layer is the unique hub of a star topology: adding adapter C
 means declaring C ↔ operator only.
 """
 
@@ -120,12 +120,12 @@ class SpaceRepresentationSpec:
         # Canonical unit isn't declared at the operator level (the operator
         # layer is unit-free); the representation layer either declares a
         # unit or refuses to compare. Most scaffolding specs (Temperature,
-        # FC2/FC3, DM, MFD, ...) intentionally omit units — they exist to
+        # FC2/FC3, DM, MFD, ...) intentionally omit units. They exist to
         # mark coverage on the DAG, not to support numerical comparison.
         raise KeyError(
             f"adapter {self.representation_name!r} has no unit declared for "
-            f"observable {observable_name!r} of space {self.space.name!r} "
-            f"— cannot canonicalise. Add an observable_units entry "
+            f"observable {observable_name!r} of space {self.space.name!r}, "
+            f"so it cannot be canonicalised. Add an observable_units entry "
             f"({{'{observable_name}': '<unit_name>'}}) to its SpaceRepresentationSpec, "
             f"or operate on the canonical (operator-form) Representation."
         )
@@ -183,7 +183,7 @@ def representation_to_operator(
     Together with `operator_to_representation`, this is the only primitive
     cross-form mapping. Cross-adapter A→B factors are *defined* as their
     composition; there is no direct A→B primitive in the framework.
-    Adapters talk to each other only through the operator hub — a star
+    Adapters talk to each other only through the operator hub, a star
     topology, never a complete graph. Adding adapter C means declaring
     C↔operator only.
     """
@@ -207,7 +207,7 @@ def operator_to_representation(
 
 
 # ---------------------------------------------------------------------------
-# Cross-adapter helpers (operator level — diagnostic only)
+# Cross-adapter helpers (operator level, diagnostic only)
 # ---------------------------------------------------------------------------
 
 

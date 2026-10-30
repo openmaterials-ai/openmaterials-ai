@@ -2340,21 +2340,21 @@
   ],
   "example_instances": [
    {
-    "material": "CO on Cu(111) — ontop site",
+    "material": "CO on Cu(111), ontop site",
     "value": -1.12,
     "units": "eV",
     "conditions": "EquiformerV2-31M-S2EF-OC20-All+MD, fmax=0.05 eV/Å",
     "ref": "examples/CO_on_Cu111/adsorption_results.json"
    },
    {
-    "material": "CO on Cu(111) — bridge site",
+    "material": "CO on Cu(111), bridge site",
     "value": -0.89,
     "units": "eV",
     "conditions": "EquiformerV2-31M-S2EF-OC20-All+MD, fmax=0.05 eV/Å",
     "ref": "examples/CO_on_Cu111/adsorption_results.json"
    },
    {
-    "material": "CO on Cu(111) — hollow site",
+    "material": "CO on Cu(111), hollow site",
     "value": -0.67,
     "units": "eV",
     "conditions": "EquiformerV2-31M-S2EF-OC20-All+MD, fmax=0.05 eV/Å",

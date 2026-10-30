@@ -1,7 +1,7 @@
 """Lattice thermal-transport: the operator DAG.
 
-  * `nodes`  — forty-six Spaces (observables / hidden spaces in the DAG)
-  * `edges`  — forty-seven Operators (calculations in the DAG, with sympy formulas)
+  * `nodes`: forty-six Spaces (observables / hidden spaces in the DAG)
+  * `edges`: forty-seven Operators (calculations in the DAG, with sympy formulas)
 
 Spaces are pure declarations: fields, labels, indices, gauge-invariance
 kind (ObservableSpace vs HiddenSpace). No sympy, no calculation. Edges

@@ -1,5 +1,5 @@
 """compose_executable: fuse a path into one synthetic executable Operator,
-and the symbolic keystone — the composed expression equals the textbook
+and the symbolic keystone: the composed expression equals the textbook
 closed form."""
 from __future__ import annotations
 

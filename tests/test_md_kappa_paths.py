@@ -1,7 +1,7 @@
 """Smoke tests for phase-2 P3 MD-based κ paths.
 
 P3 adds three Pattern-A `transport_model` variants of
-ThermalConductivity — `green_kubo`, `nemd`, `hnemd` — and three
+ThermalConductivity (`green_kubo`, `nemd`, `hnemd`) and three
 contraction edges that close the cross-paradigm κ map.
 
 Adapter coverage extends `lammps` (green_kubo + nemd; HNEMD declared
@@ -70,7 +70,7 @@ def test_contract_kappa_green_kubo_wires_from_acf():
     assert set(contract_kappa_green_kubo.inputs) == {HEAT_CURRENT_ACF, TEMPERATURE_STATE}
     assert contract_kappa_green_kubo.outputs == (THERMAL_CONDUCTIVITY_GREEN_KUBO,)
     assert isinstance(contract_kappa_green_kubo.formula, sp.Eq)
-    # LHS is κ[α, β] — 2 indices.
+    # LHS is κ[α, β], 2 indices.
     assert len(contract_kappa_green_kubo.formula.lhs.indices) == 2
     param_names = {p.name for p in contract_kappa_green_kubo.parameters}
     assert {"tau_max", "tau_min"} <= param_names
@@ -171,7 +171,7 @@ def test_lammps_hnemd_is_documented_as_not_exposed():
 
     assert isinstance(LAMMPS_CONTRACT_KAPPA_HNEMD, OperatorRepresentationSpec)
     assert LAMMPS_CONTRACT_KAPPA_HNEMD.operator is contract_kappa_hnemd
-    # Notes mention that HNEMD is not exposed in LAMMPS — content check is light.
+    # Notes mention that HNEMD is not exposed in LAMMPS, so the content check is light.
     notes = LAMMPS_CONTRACT_KAPPA_HNEMD.notes.lower()
     assert "not exposed" in notes or "gpumd" in notes
 

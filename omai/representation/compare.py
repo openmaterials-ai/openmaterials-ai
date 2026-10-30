@@ -2,10 +2,10 @@
 
 We borrow vocabulary from quantum mechanics:
 
-  * A operator `Space` is an **abstract operator** — basis-independent,
+  * An operator `Space` is an **abstract operator**: basis-independent,
     defined by its fields, gauge group, and labels.
-  * A `Representation` is that operator in a **specific representation**
-    — a particular code's units and normalizations.
+  * A `Representation` is that operator in a **specific representation**,
+    a particular code's units and normalizations.
   * `to_operator(m)` strips the representation and returns the
     representation in operator form (canonical reference: canonical
     unit and canonical normalization).
@@ -14,7 +14,7 @@ We borrow vocabulary from quantum mechanics:
     target adapter's representation.
   * `compare_operators(spec_a, spec_b)` is a structural / type-level
     check: do the two specs claim the same operator (same operator
-    `Space`, compatible units and normalizations)? No tolerance —
+    `Space`, compatible units and normalizations)? No tolerance: a
     categorical answer.
   * `compare_representations(m_a, m_b, …, rtol, atol, contraction)` is
     the numerical check: are the actual array values equal once
@@ -22,7 +22,7 @@ We borrow vocabulary from quantum mechanics:
     RepresentationComparisonResult with residuals and the agree/disagree
     verdict.
 
-The QM analogy isn't decorative — it matches the gauge structure:
+The QM analogy isn't decorative. It matches the gauge structure:
 ObservableSpaces behave like the spectrum of an operator (basis-
 invariant, cross-code-comparable), HiddenSpaces behave like matrix
 elements in a specific basis (per-element only meaningful after a
@@ -59,7 +59,7 @@ class OperatorComparisonResult:
       * they wrap the same operator `Space`,
       * for every declared observable, their declared units have the
         same physical dimension (otherwise canonicalisation is
-        impossible — they're not even comparable).
+        impossible, so they're not even comparable).
     """
 
     same_operator: bool
@@ -76,7 +76,7 @@ def compare_operators(
 ) -> OperatorComparisonResult:
     """Structural check: do two adapter specs describe the same operator?
 
-    No tolerance — this is a categorical answer about what is being
+    No tolerance: this is a categorical answer about what is being
     claimed at the operator level, before any numbers are touched.
     Useful for verifying that two codes are talking about the same
     physical quantity before trying to compare their numerical outputs.
@@ -98,7 +98,7 @@ def compare_operators(
             u_b = spec_b.declared_unit(field.name)
         except KeyError:
             # Scaffolding spec: no unit declared. Can't structurally
-            # confirm, but also can't disprove — leave silent rather
+            # confirm, but also can't disprove, so leave silent rather
             # than flag a false mismatch.
             continue
         try:
@@ -120,7 +120,7 @@ def _spec_to_canonical_factor(
     """Factor f such that (spec's emitted value) × f = (canonical value).
 
     Composes the unit's `to_operator` multiplier with the normalization's
-    `to_operator` multiplier — see
+    `to_operator` multiplier. See
     :func:`omai.representation.adapter.representation_to_operator`.
     Raises a clear KeyError if the spec declares no unit for the named
     observable.
@@ -144,7 +144,7 @@ def to_operator(m: Representation) -> Representation:
     `to_canonical_factor`, and `is_operator=True`. The
     space_adapter_spec on the returned object is unchanged (it still
     records the *originating* adapter), but downstream consumers should
-    treat the data as basis-independent — units are the operator
+    treat the data as basis-independent: units are the operator
     layer's canonical unit, normalizations are the canonical values.
     """
     if m.is_operator:
@@ -206,16 +206,16 @@ class RepresentationComparisonResult:
                                        contraction is the gauge-
                                        invariant content).
 
-    EXPECTED_AGREE      — predicted to agree, observed agreement.
-    EXPECTED_DISAGREE   — predicted not to agree, observed disagreement
+    EXPECTED_AGREE:       predicted to agree, observed agreement.
+    EXPECTED_DISAGREE:    predicted not to agree, observed disagreement
                           (user override for partial contractions).
-    UNEXPECTED_DISAGREE — predicted to agree, observed disagreement
+    UNEXPECTED_DISAGREE:  predicted to agree, observed disagreement
                           (real anomaly: missing normalization, real
                           physics disagreement, or rtol too strict).
-    UNEXPECTED_AGREE    — predicted not to agree, observed agreement
+    UNEXPECTED_AGREE:     predicted not to agree, observed agreement
                           (rare; per-element protocol tighter than
                           declared).
-    NOT_COMPARABLE      — HiddenSpace per-element; residuals reported
+    NOT_COMPARABLE:       HiddenSpace per-element; residuals reported
                           for diagnostic inspection only.
     """
 

@@ -9,11 +9,11 @@ When extending the DAG with a new quantity or variant, follow the rules in
 checklist) and Part III § "DAG extension rules" (the canonical statement). In
 brief:
 
-  * Pattern A — labels on the space: only when the label changes the
+  * Pattern A (labels on the space): only when the label changes the
     gauge type AND the space is terminal-ish.
-  * Pattern B — sibling spaces + converging edge: variants with different
+  * Pattern B (sibling spaces + converging edge): variants with different
     input chains that combine before a downstream consumer.
-  * Pattern C — shared output, alternative producing edges (with a small
+  * Pattern C (shared output, alternative producing edges, with a small
     upstream intermediate to avoid cycles): same-typed output, different
     production formula.
 """

@@ -6,17 +6,17 @@ machinery verifies that an operator's formula is invariant under a
 declared gauge action via operator substitution.
 
 Tractable today (sympy can verify):
-  * U(1) phase on Eigenvectors — per-mode phase freedom e_{i,q,ν} → exp(iθ_{q,ν}) e_{i,q,ν}
+  * U(1) phase on Eigenvectors: per-mode phase freedom e_{i,q,ν} → exp(iθ_{q,ν}) e_{i,q,ν}
 
 Crystal symmetry is declared symbolically at the operator level
 (see omai.operator.crystal_symmetry.SymmetryGroup) but its concrete
-handling — building rotation matrices, running spglib, applying
-operations to FC tensors — lives in the materials adapters (phonopy,
-kaldo, etc.) where it belongs.
+handling lives in the materials adapters (phonopy, kaldo, etc.) where
+it belongs: building rotation matrices, running spglib, applying
+operations to FC tensors.
 
 Not tractable today even in principle (declared at Level 1 only):
-  * Degenerate-subspace U(d) rotation — data-dependent (acts only where ω is degenerate)
-  * BZ-summation choice — permutation of summands with weights, needs combinatoric proof
+  * Degenerate-subspace U(d) rotation: data-dependent (acts only where ω is degenerate)
+  * BZ-summation choice: permutation of summands with weights, needs combinatoric proof
 """
 
 from __future__ import annotations

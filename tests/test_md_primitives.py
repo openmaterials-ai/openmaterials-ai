@@ -162,7 +162,7 @@ def test_compute_msd_inputs_outputs():
 
 
 def test_fourier_to_dos_is_pattern_c_alternative_producer_of_dos():
-    """fourier_to_dos and compute_dos both produce PhononDOS — Pattern C."""
+    """fourier_to_dos and compute_dos both produce PhononDOS (Pattern C)."""
     assert fourier_to_dos.outputs == (PHONON_DOS,)
     producers = [e for e in EDGES if PHONON_DOS in e.outputs]
     assert len(producers) >= 2  # compute_dos + fourier_to_dos

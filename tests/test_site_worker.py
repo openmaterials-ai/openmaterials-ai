@@ -12,11 +12,8 @@ from __future__ import annotations
 
 import json
 import re
-import shutil
-import subprocess
 from pathlib import Path
 
-import pytest
 
 _REPO = Path(__file__).resolve().parents[1]
 _SITE = _REPO / "infra" / "site"
@@ -53,23 +50,13 @@ def test_worker_script_falls_through_to_assets():
 
 
 def test_resolver_logic_under_node():
-    node = shutil.which("node")
-    if not node:
-        pytest.skip("node not available; resolver checked where present")
-    proc = subprocess.run(
-        [node, "--test", str(_SITE / "src" / "resolve.test.mjs")],
-        capture_output=True, text=True)
-    assert proc.returncode == 0, proc.stdout + proc.stderr
+    from node_runner import run_node_test
+    run_node_test(_SITE / "src" / "resolve.test.mjs")
 
 
 def test_worker_data_source_under_node():
-    node = shutil.which("node")
-    if not node:
-        pytest.skip("node not available; data source checked where present")
-    proc = subprocess.run(
-        [node, "--test", str(_SITE / "src" / "index.test.mjs")],
-        capture_output=True, text=True)
-    assert proc.returncode == 0, proc.stdout + proc.stderr
+    from node_runner import run_node_test
+    run_node_test(_SITE / "src" / "index.test.mjs")
 
 
 def test_short_link_store_contract():
@@ -98,13 +85,8 @@ def test_short_link_store_contract():
     assert "public to anyone with the code" in play, \
         "the mint control must state the public-by-construction rule"
 
-    node = shutil.which("node")
-    if not node:
-        pytest.skip("node not available; short-link logic checked where present")
-    proc = subprocess.run(
-        [node, "--test", str(_SITE / "src" / "shortlinks.test.mjs")],
-        capture_output=True, text=True)
-    assert proc.returncode == 0, proc.stdout + proc.stderr
+    from node_runner import run_node_test
+    run_node_test(_SITE / "src" / "shortlinks.test.mjs")
 
 
 def test_source_first_identifier_routes():
@@ -124,7 +106,7 @@ def test_source_first_identifier_routes():
 _WORKER_PAGES = r"""
 import { readFileSync } from "node:fs";
 import { permalinkHTML } from __RESOLVE__;
-const entries = JSON.parse(readFileSync(__ENTRIES__, "utf8"));
+const entries = JSON.parse(readFileSync(0, "utf8"));
 console.log(JSON.stringify({
   pages: Object.fromEntries(entries.map((e) => [e.id, permalinkHTML(e, "https://openmaterials.ai")])),
   numbers: __NUMBERS__.map((v) => String(Number(v.toPrecision(6)))),
@@ -140,14 +122,12 @@ _NUMBERS = [0.0, -0.0, 6.0, 156, 0.027, -1.057843414e-05, 3.33222233511797e-10,
             1.7976931348623157e308, 123456.789e3]
 
 
-def test_value_page_matches_the_share_stub(tmp_path):
+def test_value_page_matches_the_share_stub():
     """Every committed value plus crafted ones (escaping, an apostrophe, and a
     bare record that takes every fallback): same title, OG and card tags, and
     paragraph on /l/<id> (Worker) and /i/<id>/ (static stub); numbers print as
     the datasheet's fmtSig."""
-    node = shutil.which("node")
-    if not node:
-        pytest.skip("node not available; the Worker page is checked where present")
+    from node_runner import run_module
     from omai.map_data import _card_number, build_share_stubs
     entries = json.loads((_REPO / "docs" / "data" / "instances.json").read_text())
     entries += [
@@ -156,16 +136,10 @@ def test_value_page_matches_the_share_stub(tmp_path):
          "source": {"kind": "simulation", "ref": "code&<>"}, "node_uid": "z" * 64},
         {"id": "b" * 64, "source": {}},
     ]
-    path = tmp_path / "entries.json"
-    path.write_text(json.dumps(entries))
     script = (_WORKER_PAGES
               .replace("__RESOLVE__", json.dumps((_SITE / "src" / "resolve.js").as_uri()))
-              .replace("__ENTRIES__", json.dumps(str(path)))
               .replace("__NUMBERS__", json.dumps(_NUMBERS)))
-    proc = subprocess.run([node, "--input-type=module", "-e", script],
-                          capture_output=True, text=True)
-    assert proc.returncode == 0, proc.stderr
-    out = json.loads(proc.stdout)
+    out = json.loads(run_module(script, json.dumps(entries)))
     assert out["numbers"] == [_card_number(v) for v in _NUMBERS]
     stubs = build_share_stubs(entries)
     for e in entries:

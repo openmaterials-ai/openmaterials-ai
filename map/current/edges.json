@@ -1638,7 +1638,7 @@
    }
   },
   "meta": {
-   "description": "Direct NEMD \u03ba from steady-state \u27e8J\u27e9 and dT/dz. Three method variants: `direct_two_reservoir` imposes T_hot/T_cold and measures J; `muller_plathe` imposes the swap-rate flux and measures dT/dz; `ehex` is an energy-conserving alternative to M\u00fcller-Plathe. Finite-size scaling (\u03ba vs 1/L_z) is required to extract bulk \u03ba; left to user post-processing. `imposed_gradient` and `imposed_flux` are alternatives \u2014 direct uses the former, M\u00fcller-Plathe the latter.",
+   "description": "Direct NEMD \u03ba from steady-state \u27e8J\u27e9 and dT/dz. Three method variants: `direct_two_reservoir` imposes T_hot/T_cold and measures J; `muller_plathe` imposes the swap-rate flux and measures dT/dz; `ehex` is an energy-conserving alternative to M\u00fcller-Plathe. Finite-size scaling (\u03ba vs 1/L_z) is required to extract bulk \u03ba; left to user post-processing. `imposed_gradient` and `imposed_flux` are alternatives: direct uses the former, M\u00fcller-Plathe the latter.",
    "formula_latex": "{\\kappa^{MD}}_{\\alpha,\\beta} = - \\frac{{J}_{\\alpha,t}}{{\\nabla T}_{\\beta}}",
    "formula_srepr": "Equality(Indexed(IndexedBase(Symbol('\\\\kappa^{MD}')), Symbol('\\\\alpha', integer=True), Symbol('\\\\beta', integer=True)), Mul(Integer(-1), Indexed(IndexedBase(Symbol('J')), Symbol('\\\\alpha', integer=True), Symbol('t', integer=True)), Pow(Indexed(IndexedBase(Symbol('\\\\nabla T')), Symbol('\\\\beta', integer=True)), Integer(-1))))",
    "name": "contract_kappa[transport_model=nemd]",

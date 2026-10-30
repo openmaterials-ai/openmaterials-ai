@@ -20,7 +20,7 @@ Findings (Si-Tersoff, 3×3×3 FC3 supercell, 8³ q-mesh, 300K):
 The κ_RTA agreement at the broadening-matched level (≤8%) is consistent
 with the framework's claim that the operator formula is shared.
 The κ_LBTE spread is *real* and reflects implementation differences in
-the BTE solver — kaldo's two LBTE methods (direct LU `inverse` vs
+the BTE solver: kaldo's two LBTE methods (direct LU `inverse` vs
 iterative `sc`) agree to within 1%, so the kaldo↔shengbte gap is *not*
 a kaldo numerical issue. The likely cause: BZ summation choice
 (kaldo C1 / full grid vs shengbte spglib_auto / irreducible) and the
@@ -67,14 +67,14 @@ def main() -> None:
         rtol=0.10, atol=1e-3,
     )
 
-    print("κ_RTA  (W/m/K) — broadening-aligned (both adaptive):")
+    print("κ_RTA  (W/m/K), broadening-aligned (both adaptive):")
     print(f"  shengbte tr/3   : {np.trace(k_sheng_rta) / 3:.3f}")
     print(f"  kaldo    tr/3   : {np.trace(k_kaldo_rta) / 3:.3f}")
     print(f"  status (rtol=0.10): {r_rta.status}")
     print(f"  max_rel         : {r_rta.max_relative_residual:.4f}")
     print()
 
-    # --- κ_DIRECT (LBTE) — kaldo `inverse` and `sc` methods -------------
+    # --- κ_DIRECT (LBTE): kaldo `inverse` and `sc` methods -------------
     k_sheng_dir = _parse_shengbte_kappa(HERE / "BTE.KappaTensorVsT_CONV")
     k_kaldo_inv = np.load(KALDO_DIR / "kappa_inverse_tensor_WmK.npy")
     k_kaldo_sc = np.load(KALDO_DIR / "kappa_sc_tensor_WmK.npy")

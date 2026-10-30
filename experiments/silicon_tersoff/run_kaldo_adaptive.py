@@ -2,7 +2,7 @@
 
 Companion to `run_kaldo.py`. Reuses the cached FC2/FC3 (no recomputation)
 and runs the Phonons + Conductivity chain with kaldo's default adaptive
-velocity-projection σ — the same scheme ShengBTE uses with scalebroad=1.0.
+velocity-projection σ, the same scheme ShengBTE uses with scalebroad=1.0.
 
 Purpose: align kaldo's broadening scheme with shengbte's so the cross-code
 residual reflects pure physics convergence, not a broadening-scheme
@@ -91,7 +91,7 @@ def main() -> None:
     cond_wigner = Conductivity(phonons=phonons, method="wigner")
     kappa_wigner_full = cond_wigner.conductivity  # (n_modes, 3, 3) per-mode
     kappa_wigner = kappa_wigner_full.sum(axis=0)
-    # populations / coherences split — attribute names may differ across
+    # populations / coherences split: attribute names may differ across
     # kaldo versions, so we try a few and degrade gracefully if missing.
     pop_attr = next(
         (a for a in ("populations_conductivity", "kappa_populations", "kappa_pop")

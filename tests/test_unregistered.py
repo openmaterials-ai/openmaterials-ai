@@ -10,8 +10,6 @@ which the site's JavaScript mirror must agree with.
 from __future__ import annotations
 
 import json
-import shutil
-import subprocess
 from importlib import resources
 from pathlib import Path
 
@@ -327,10 +325,5 @@ def test_the_shipped_registry_checks_the_code_not_its_release():
 
 
 def test_the_site_predicate_agrees_under_node():
-    node = shutil.which("node")
-    if not node:
-        pytest.skip("node not available; the site predicate is checked where present")
-    proc = subprocess.run(
-        [node, "--test", str(_REPO / "infra" / "site" / "src" / "private-members.test.mjs")],
-        capture_output=True, text=True)
-    assert proc.returncode == 0, proc.stdout + proc.stderr
+    from node_runner import run_node_test
+    run_node_test(_REPO / "infra" / "site" / "src" / "private-members.test.mjs")

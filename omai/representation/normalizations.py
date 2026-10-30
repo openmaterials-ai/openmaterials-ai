@@ -9,7 +9,7 @@ Both kinds of choice produce multiplicative factors when converting an
 adapter's emitted value to operator-canonical form; both live in the
 numeric world, parallel to one another. A gauge (in the strict QM
 sense) is an operator-layer automorphism with NO multiplicative effect
-on observables — it does not appear here.
+on observables, so it does not appear here.
 
 Registry shape mirrors `units.UNITS`: a flat dict keyed by name, each
 entry carrying a `to_operator` multiplier such that
@@ -32,15 +32,15 @@ class Normalization:
 
 
 # Canonical normalization for any observable that hasn't picked a non-trivial
-# convention. Most fields use this — only the entries below carry a
+# convention. Most fields use this. Only the entries below carry a
 # multiplier-different-from-one.
 CANONICAL = Normalization("canonical", 1.0)
 
 
 # FC3 normalization. Phono3py and kaldo store the natural ∂³V/∂u³ in
 # eV/Å³ (canonical). ShengBTE's reader uses a mixed-dimension form
-# documented in gruneisen.f90:44 as "nm·eV/(amu·Å³·THz²)" — nm in the
-# numerator with Å³ in the denominator; the implicit 10× factor (1 nm = 10 Å)
+# documented in gruneisen.f90:44 as "nm·eV/(amu·Å³·THz²)", with nm in the
+# numerator and Å³ in the denominator. The implicit 10× factor (1 nm = 10 Å)
 # makes ShengBTE's stored value 0.1× the canonical eV/Å³ value.
 EV_PER_A3 = Normalization("eV_per_A3", 1.0)
 EV_PER_A2_PER_NM = Normalization("eV_per_A2_per_nm", 10.0)

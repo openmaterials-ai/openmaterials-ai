@@ -2,9 +2,9 @@
 and `compare()` verifies them against real numerical data.
 
 Two sections:
-  (1) Predictions  — without running any code, the spec layer says how
+  (1) Predictions: without running any code, the spec layer says how
       kaldo's outputs map to phono3py's (4π on Linewidth, e on HeatCapacity).
-  (2) Verification — load the diagnostic .npz from a real silicon-Tersoff run,
+  (2) Verification: load the diagnostic .npz from a real silicon-Tersoff run,
       apply the predicted factors via `compare()`, report residuals against
       tolerance.
 
@@ -150,7 +150,7 @@ def main() -> None:
     r = compare(mk, mp, rtol=1e-3, atol=1e-2)
     print(f"  {r.summary()}")
 
-    section("GroupVelocity: HiddenSpace — per-element not cross-compared")
+    section("GroupVelocity: HiddenSpace, per-element not cross-compared")
     kaldo_v_norm = np.linalg.norm(data["kaldo_gv"], axis=-1)
     ph3_v_norm = np.linalg.norm(data["ph3_gv"], axis=-1)
     mk = represent(KALDO_GROUP_VELOCITY, "v", kaldo_v_norm)
@@ -174,7 +174,7 @@ def main() -> None:
     r = compare(mk, mp, rtol=1e-3)
     print(f"  {r.summary()}")
 
-    section("Linewidth: HiddenSpace — only contractions are observables")
+    section("Linewidth: HiddenSpace, only contractions are observables")
     mk = represent(KALDO_LINEWIDTH, "Gamma", data["kaldo_gamma"])
     mp = represent(PHONO3PY_LINEWIDTH, "Gamma", data["ph3_gamma"])
     # Linewidth is a HiddenSpace. Per-element compare returns NOT_COMPARABLE
@@ -482,7 +482,7 @@ def main() -> None:
     section("Cross-paradigm κ audit (phase 2 P4)")
     # The cross-paradigm κ map: BTE-side (LBTE / Wigner / QHGK from
     # kaldo) and MD-side (Green-Kubo from LAMMPS). All κ values come out
-    # of completely different algorithms — LBTE solves the linearized
+    # of completely different algorithms. LBTE solves the linearized
     # Boltzmann equation in mode-space; Green-Kubo time-integrates the
     # heat-flux autocorrelation in real-space. The fact that they should
     # agree (within MD's ~20-30% noise band for κ_GK) is the
@@ -519,8 +519,8 @@ def main() -> None:
             print(f"  κ_GK not yet produced at {kappa_gk_path}.")
             print("  to produce it: python experiments/silicon_tersoff/"
                   "run_lammps_gk.py")
-            print("  (requires LAMMPS — generates the script + data file "
-                  "and exits cleanly without it).")
+            print("  (requires LAMMPS: without it the run generates the script + data file "
+                  "and exits cleanly).")
         else:
             kappa_gk = np.load(kappa_gk_path)
             kappa_gk_iso = float(np.trace(kappa_gk)) / 3.0

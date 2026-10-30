@@ -43,10 +43,10 @@ def _substitute(prev_lhs: sp.Basic, prev_rhs: sp.Expr, into: sp.Expr) -> sp.Expr
 
     Two cases are handled:
 
-    1. ``prev_lhs`` is a plain :class:`~sympy.core.symbol.Symbol` — use
+    1. ``prev_lhs`` is a plain :class:`~sympy.core.symbol.Symbol`: use
        :meth:`xreplace`, which is safe inside binders (``Sum``, ``Integral``).
     2. ``prev_lhs`` is an :class:`~sympy.tensor.indexed.Indexed` expression
-       (e.g. ``c[q, nu]``) — match every :class:`Indexed` sharing the same
+       (e.g. ``c[q, nu]``): match every :class:`Indexed` sharing the same
        :class:`IndexedBase` in ``into``, rebinding ``prev_rhs``'s indices
        to the matched ones. This handles the common case where the source
        edge writes ``c[q, nu] = …`` and the consumer edge sums
@@ -140,7 +140,7 @@ def compose_executable(edges: tuple[Operator, ...]) -> Operator:
     """Fuse a path of explicit-equation edges into a single synthetic
     Operator that runs through the SAME apply_edge as a primitive edge.
 
-    The formula is ``sp.Eq(terminal_LHS, compose_path(edges))`` — the
+    The formula is ``sp.Eq(terminal_LHS, compose_path(edges))``: the
     terminal edge's LHS paired with the composed RHS (``compose_path``
     returns only the RHS, so we re-attach the last edge's LHS). Inputs are
     the chain's *leaf* spaces: inputs of any edge that are not produced by

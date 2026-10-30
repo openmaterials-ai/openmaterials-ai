@@ -14,10 +14,10 @@ It works cleanly for:
 It does NOT (yet) handle:
 
   * continuous Lie group actions acting non-trivially on subspaces
-    (e.g., U(d) rotation within a degenerate subspace) — needs operator
+    (e.g., U(d) rotation within a degenerate subspace), which needs operator
     Lie group theory beyond what sympy offers out of the box
   * data-dependent gauges (gauges that only act at specific data points
-    like degenerate ω) — requires runtime knowledge of degeneracies
+    like degenerate ω), which requires runtime knowledge of degeneracies
 
 For those, the operator layer falls back to Level 1 structural declarations.
 """
@@ -57,7 +57,7 @@ class GaugeAction:
         for substitution-based gauges where the transformed expression
         algebraically reduces back to the original.
 
-        Returns False if sympy can't prove invariance — which is not the
+        Returns False if sympy can't prove invariance, which is not the
         same as "expr is not invariant"; some invariances are true but
         require additional reasoning (real-valued assumptions on the
         gauge parameter, Lie-group manipulations, etc.) that sympy.simplify

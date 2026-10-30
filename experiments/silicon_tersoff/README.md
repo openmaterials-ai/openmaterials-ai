@@ -7,16 +7,16 @@ ASE seed and the same Tersoff potential. Outputs are written to
 
 ## Files
 
-- `seed.py` — single source of truth: Si Atoms (diamond, 2-atom primitive),
+- `seed.py`: single source of truth for the Si Atoms (diamond, 2-atom primitive),
   ASE-LAMMPS-Tersoff calculator, supercell / k-mesh / FD-displacement choices.
-- `run_kaldo.py` — kaldo path. FC2 + FC3 via finite difference, dispersion,
+- `run_kaldo.py`: kaldo path. FC2 + FC3 via finite difference, dispersion,
   thermal conductivity (RTA + direct inversion).
-- `run_phonopy.py` — phonopy path. Harmonic only: FC2 + dispersion.
-- `run_phono3py.py` — phono3py path. FC2 + FC3 via symmetry-reduced
+- `run_phonopy.py`: phonopy path. Harmonic only: FC2 + dispersion.
+- `run_phono3py.py`: phono3py path. FC2 + FC3 via symmetry-reduced
   displacements, RTA + LBTE thermal conductivity.
-- `compare.py` — loads kaldo/phonopy/phono3py runs, aligns q-points,
+- `compare.py`: loads kaldo/phonopy/phono3py runs, aligns q-points,
   computes dispersion frequency differences and kappa ratios.
-- `Si.tersoff` — Tersoff parameter file (copy of LAMMPS distribution's).
+- `Si.tersoff`: Tersoff parameter file (copy of LAMMPS distribution's).
 
 ## Running
 
@@ -102,7 +102,7 @@ phono3py ratios:
 
 The codes track each other monotonically (κ decreases with σ in both)
 but kaldo is systematically higher than phono3py across all σ, with the
-gap minimized near σ ≈ 0.2 THz (~7%). The residual is structural — even
+gap minimized near σ ≈ 0.2 THz (~7%). The residual is structural: even
 with the same numerical σ, the two codes use σ slightly differently in
 the energy-conservation delta function and/or the Gaussian normalization.
 

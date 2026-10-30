@@ -2,10 +2,10 @@
 
 The third material the framework touches and the first polar one:
 
-  * Si-Tersoff (non-polar diamond) — phase 1 anchor.
-  * Ge-Tersoff (non-polar diamond, different mass) — framework
+  * Si-Tersoff (non-polar diamond): phase 1 anchor.
+  * Ge-Tersoff (non-polar diamond, different mass): framework
     portability check.
-  * NaCl-rd (polar rocksalt) — exercises the BornCharges /
+  * NaCl-rd (polar rocksalt): exercises the BornCharges /
     DielectricTensor / apply_nac_correction code path that's dead on
     Si and Ge.
 
@@ -35,7 +35,7 @@ def _require(path: Path) -> None:
 
 
 def test_nacl_harmonic_thermo_identity_E_equals_F_plus_TS():
-    """E = F + T·S must hold round-off-tight on NaCl too — the identity
+    """E = F + T·S must hold round-off-tight on NaCl too: the identity
     is operator-layer, not material-specific."""
     fpath = _NACL / "free_energy_kJ_per_mol.npy"
     _require(fpath)

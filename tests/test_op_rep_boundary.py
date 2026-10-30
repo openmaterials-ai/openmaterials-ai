@@ -10,7 +10,7 @@ Four families of checks (each parametrized over discovered specs):
       ``to_representation(to_operator(m), spec).data == m.data`` for every
       spec that declares ``observable_units`` for at least one field. Specs
       that don't declare units (scaffolding states such as BareDM, TEMPERATURE,
-      FC2/FC3) are SKIPPED — they intentionally cannot be canonicalised.
+      FC2/FC3) are SKIPPED: they intentionally cannot be canonicalised.
 
   3B.2: ``compare_operators`` over every cross-adapter pair --
       For every state with >=2 adapter specs, call
@@ -176,7 +176,7 @@ def _cross_adapter_pairs_with_units() -> list[
 
     Pairs that fall outside this filter cannot be canonicalised (the
     framework raises ``KeyError`` from the unit lookup), so they're not
-    candidates for ``compare_representations`` — they would not exercise
+    candidates for ``compare_representations``: they would not exercise
     the numerical comparison the test is designed to verify.
     """
     out: list[tuple[str, _DiscoveredSpec, _DiscoveredSpec, str]] = []
@@ -204,7 +204,7 @@ def _pair_with_field_id(
 
 
 # A small synthetic array. Shape (3,) is broadly compatible with the float
-# scaling that to_operator / to_representation does — it never inspects the
+# scaling that to_operator / to_representation does. It never inspects the
 # state's index signature numerically, only the unit + convention factors.
 def _synthetic_data() -> np.ndarray:
     return np.array([1.0, 2.0, 3.0])
@@ -224,12 +224,12 @@ def test_round_trip_through_operator_form_is_identity(
     """to_representation(to_operator(m), spec).data ≈ m.data (round-trip).
 
     Specs without observable_units cannot be canonicalised; we skip those
-    rather than treat them as failures — the framework explicitly supports
+    rather than treat them as failures: the framework explicitly supports
     scaffolding specs that don't claim a unit.
 
     A handful of states have ``Dimension``s with no registered unit in the
     global ``UNITS`` registry (e.g. ENERGY, LENGTH). Adapter specs *can*
-    declare units on those fields, but the canonical-unit lookup fails — so
+    declare units on those fields, but the canonical-unit lookup fails, so
     the round trip itself is not exercisable until those dimensions get unit
     entries. Skip those too, with a reason that points at the missing entry.
     """

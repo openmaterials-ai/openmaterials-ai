@@ -1,7 +1,7 @@
 """ase adapter specs for the thermal-transport DAG.
 
 ASE (Atomic Simulation Environment, https://wiki.fysik.dtu.dk/ase/) is not
-a thermal-transport code in itself — it is the *calculator-interface
+a thermal-transport code in itself. It is the *calculator-interface
 protocol* that kaldo, phonopy, phono3py, and many other Python-driven
 materials-science codes use to evaluate forces, energies, and stresses on
 a candidate atomic configuration. Concretely, the `ase.Atoms` object
@@ -16,7 +16,7 @@ ASE calculator instance (e.g. `LAMMPSlib(pair_style=...)`), the cross-code
 operator-layer Potential is pinned at the ASE protocol level.
 
 The ASE adapter does NOT supply numerical thermal-transport observables
-(frequencies, linewidths, κ) — those belong to the downstream codes. Its
+(frequencies, linewidths, κ). Those belong to the downstream codes. Its
 sole responsibility was, at first, to declare `provide_potential` in a
 code-agnostic way, so any other adapter can cite "ASE Atoms.calc" as its
 Potential source.
@@ -46,16 +46,16 @@ CODATA-2018: three CODATA generations coexist at the matcalc boundary
 negligible but a real provenance record.
 
 References:
-  * Atoms.calc — https://wiki.fysik.dtu.dk/ase/ase/atoms.html#ase.Atoms.calc
-  * Calculator backends — https://wiki.fysik.dtu.dk/ase/ase/calculators/
+  * Atoms.calc: https://wiki.fysik.dtu.dk/ase/ase/atoms.html#ase.Atoms.calc
+  * Calculator backends: https://wiki.fysik.dtu.dk/ase/ase/calculators/
 
 Concrete backends commonly used in this project's worked examples:
-  * `ase.calculators.lammpslib.LAMMPSlib` — LAMMPS classical potentials
+  * `ase.calculators.lammpslib.LAMMPSlib`: LAMMPS classical potentials
     (Tersoff, EAM, ReaxFF, …) driven by an in-Python LAMMPS instance.
-  * `gpaw.GPAW` — DFT via GPAW, real-space grid.
-  * `ase.calculators.kim.KIM` — OpenKIM portal models (Tersoff, EAM, …
+  * `gpaw.GPAW`: DFT via GPAW, real-space grid.
+  * `ase.calculators.kim.KIM`: OpenKIM portal models (Tersoff, EAM, …
     drawn from the public KIM-API repository).
-  * MACE, NequIP, Orb, M3GNet, … — Python-wrapped ML interatomic
+  * MACE, NequIP, Orb, M3GNet, …: Python-wrapped ML interatomic
     potentials; each ships an `ase.calculators.calculator.Calculator`
     subclass.
 """

@@ -2,7 +2,7 @@
 
 Each Operator declares its inputs, output(s), parameters, schemes, and a
 sympy formula stating what it computes. The sympy symbols and IndexedBase
-used by the formulas live in this module too — they are the substantive
+used by the formulas live in this module too. They are the substantive
 content of "what is computed", and the indices they use match the index
 signatures declared on the spaces in `nodes`.
 """
@@ -369,7 +369,7 @@ _BTE_DIRECT_FORMULA_SYSTEM = sp.Eq(
 # The Operator's formula carries the linear-system equation. The full
 # definition of M is available as `_M_DEFINITION` for any consumer that
 # wants to render or symbolically substitute it. Together they fully pin
-# down the linearized BTE — modulo the BZ-summation strategy for the
+# down the linearized BTE, modulo the BZ-summation strategy for the
 # inner Σ_{ν''} and the outer Σ_{q'}, which remains a free
 # discretization choice (declared on per-code OperatorRepresentationSpecs).
 _BTE_DIRECT_FORMULA = _BTE_DIRECT_FORMULA_SYSTEM
@@ -815,8 +815,8 @@ contract_kappa_direct = Operator(
     parameters=(Parameter("V_{cell}", VOLUME),),
     formula=_KAPPA_FORMULA,
     description="Per-mode contraction with the LBTE F; result is gauge-invariant.",
-    # κ[α,β] shares the α,β index symbols across LHS/RHS — those are dummy
-    # contraction indices, not the unknown — so the default disjoint-free-
+    # κ[α,β] shares the α,β index symbols across LHS/RHS (those are dummy
+    # contraction indices, not the unknown), so the default disjoint-free-
     # symbol heuristic false-negatives. The contraction is closed-form
     # (an einsum), evaluable by the general Sum evaluator.
     is_executable_in_sympy_override=True,
@@ -1314,7 +1314,7 @@ _n_atoms_md = sp.Symbol(r"N_{atoms}", positive=True, integer=True)
 # corresponding output State's first field declaration: Trajectory r/v
 # carry (i, α, t); HeatCurrent J carries (α, t); HeatCurrentACF Jcorr
 # carries (α, β, τ); VAF Cv and MSD M carry (τ,); PhononDOS g carries
-# (ω,). These are schematic *forms* — production loops iterate time and
+# (ω,). These are schematic *forms*: production loops iterate time and
 # correlate over origins, and the formulas are not sympy-executable:
 # `is_executable_in_sympy_default` returns False for stateful / time-
 # integrated recurrences, and the executor raises ExternalSolveRequired
@@ -1331,7 +1331,7 @@ _MSD_sym = sp.IndexedBase("M")
 _g_DOS_md = sp.IndexedBase("g")
 _omega_bin_md = sp.Symbol(r"\omega")
 
-# run_md: one Velocity-Verlet step (schematic — production loop iterates
+# run_md: one Velocity-Verlet step (schematic: the production loop iterates
 # n_steps times after equilibration; thermostat applied as auxiliary).
 _RUN_MD_FORMULA = sp.Eq(
     _r_traj[_i, _alpha, _t_idx + 1],
@@ -1612,7 +1612,7 @@ contract_kappa_nemd = Operator(
         "measures dT/dz; `ehex` is an energy-conserving alternative to "
         "Müller-Plathe. Finite-size scaling (κ vs 1/L_z) is required to "
         "extract bulk κ; left to user post-processing. `imposed_gradient` "
-        "and `imposed_flux` are alternatives — direct uses the former, "
+        "and `imposed_flux` are alternatives: direct uses the former, "
         "Müller-Plathe the latter."
     ),
 )

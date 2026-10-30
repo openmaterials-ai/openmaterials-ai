@@ -1,6 +1,6 @@
 """Redundancy cross-check: compute a target several ways, compare under typing.
 
-The DAG is over-determined — more routes to a quantity than quantities.
+The DAG is over-determined: more routes to a quantity than quantities.
 ``cross_check`` runs each route via ``compute`` and pairwise-compares the
 results with ``compare_representations``. Verdicts honor the target's gauge
 typing: routes to an ObservableSpace must agree (divergence is a bug);

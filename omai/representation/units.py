@@ -137,7 +137,7 @@ KJ_PER_MOL = Unit("kJ_per_mol", ENERGY_PER_MOLE, 1000.0)
 
 
 # Canonical FC3 unit: eV/Å³ (the "physicist's" form of the third potential
-# derivative). kaldo / phono3py store FC3 numerically in eV/Å³ — this matches
+# derivative). kaldo / phono3py store FC3 numerically in eV/Å³, which matches
 # the canonical. ShengBTE's reader implicitly uses a mixed-dimension form
 # eV/(Å²·nm) (= 0.1 × eV/Å³), captured at the convention layer on the FC3
 # state, not as a separate unit here. See ForceConstants[order=3] in

@@ -5,7 +5,7 @@ parameterisation (J. Mol. Graph. Model. 72, 1-5). Mirrors
 `experiments/silicon_tersoff/seed.py` so the same run_*.py drivers and
 the framework's spec-derived audits apply with no other changes.
 
-The framework treats material identity as data — change `seed.py`, the
+The framework treats material identity as data: change `seed.py`, and the
 operator-layer code and the representation adapters stay byte-identical.
 That portability is the property this second material is here to
 exercise.
@@ -52,7 +52,7 @@ def make_tersoff_calculator() -> LAMMPSlib:
     )
 
 
-# Discretization — same supercells and q-mesh as silicon_tersoff so the
+# Discretization: same supercells and q-mesh as silicon_tersoff so the
 # diagnostics line up.
 SUPERCELL_FC2 = (4, 4, 4)
 SUPERCELL_FC3 = (3, 3, 3)

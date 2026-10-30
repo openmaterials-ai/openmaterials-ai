@@ -667,13 +667,13 @@ function applyHighlight() {
 
   if (codeB) {
     var cnt = Object.keys(overlapIds).length;
-    agree.textContent = cnt + ' shared node'+(cnt!==1?'s':'')+' — agree here';
+    agree.textContent = cnt + ' shared node'+(cnt!==1?'s':'')+': agree here';
     agree.style.display = cnt>0 ? 'block' : 'none';
-    updateHint(cnt+' overlap node'+(cnt!==1?'s':'')+' in green — cross-code agreement required');
+    updateHint(cnt+' overlap node'+(cnt!==1?'s':'')+' in green, codes must agree here');
   } else {
     agree.style.display='none';
     var cnt2=Object.keys(covA).length;
-    updateHint(codeA+' covers '+cnt2+' node'+(cnt2!==1?'s':'')+' — select a second code to see overlaps');
+    updateHint(codeA+' covers '+cnt2+' node'+(cnt2!==1?'s':'')+'. Select a second code to see overlaps');
   }
 }
 

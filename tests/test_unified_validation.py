@@ -2,7 +2,7 @@
 
 Historically validate_dag was only exercised against the thermal-transport
 domain, and its symbol vocabulary was a hard-coded table inside
-omai.operator.validate — so a new domain's edges silently escaped the
+omai.operator.validate, so a new domain's edges silently escaped the
 free-symbol discipline (the materials edges shipped with five vocabulary
 violations that nothing caught). The vocabulary is now a registry that each
 domain populates at import time, and these tests pin the invariant:
@@ -35,7 +35,7 @@ def test_unified_map_validates_clean():
 
 def test_every_domain_registers_symbol_vocabulary():
     """Each domain's edge formulas resolve entirely inside the registered
-    vocabulary — per domain, not just in the union (a domain must not
+    vocabulary, per domain and not just in the union (a domain must not
     depend on another domain's constants by accident)."""
     from omai.operator.vocabulary import SPACE_SYMBOLS
 

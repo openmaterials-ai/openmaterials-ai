@@ -61,7 +61,7 @@ def test_gauge_action_fails_invariance_when_eigenvector_appears_unpaired():
 
 
 def test_symmetry_group_is_just_a_named_declaration():
-    """SymmetryGroup carries name and order only — no concrete element data."""
+    """SymmetryGroup carries name and order only, no concrete element data."""
     from omai.operator import SymmetryGroup
     from omai.operator.crystal_symmetry import OH, CI, C1
 
