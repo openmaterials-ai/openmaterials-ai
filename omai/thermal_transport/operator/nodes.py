@@ -86,8 +86,9 @@ BORN_CHARGES = ObservableSpace(
     name="BornCharges",
     fields=(Field("Z_star", DIMENSIONLESS, indices=("i", "alpha", "beta")),),
     description=(
-        "Per-atom Born effective-charge tensor Z*_{i,αβ}, in units of the "
-        "elementary charge e. Source-tier ObservableSpace: read from a BORN "
+        "Per-atom Born effective-charge tensor Z*_{i,αβ} = (Ω/e) dP_α/du_{iβ}, "
+        "the first Cartesian index the field (polarization) direction and the "
+        "second the displacement, in units of the elementary charge e. Source-tier ObservableSpace: read from a BORN "
         "file or DFT linear-response output. Together with the macroscopic "
         "DielectricTensor ε∞ it parameterises the non-analytic correction "
         "(LO-TO splitting) for polar materials."

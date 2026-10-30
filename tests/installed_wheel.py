@@ -146,9 +146,9 @@ crystal_rows = formula_bindings_for_physlib(
     declaration="Physlib.CondensedMatter.Crystal", module="Physlib.CondensedMatter.Crystal.Basic")
 assert {"crystal-dynamical-matrix", "crystal-phonon-dispersion", "crystal-group-velocity"} <= {
     row["id"] for row in crystal_rows}
-for unbound in ("apply_nac_correction", "solve_bte[bte_solver=direct_inverse]",
+for unbound in ("solve_bte[bte_solver=direct_inverse]",
                 "contract_kappa[bte_solver=direct_inverse]", "contract_cumulative_kappa[wrt=omega]",
                 "contract_cumulative_kappa[wrt=mfp]", "identity_dm", "sum_linewidths",
                 "solve_bte[bte_solver=rta]"):
     assert formula_bindings_for(unbound, kind="operator") == []
-print("installed wheel ok: lattice dynamics on Physlib crystals, catalog transport defects unbound")
+print("installed wheel ok: lattice dynamics on Physlib crystals, the uncovered transport producers stay unbound")

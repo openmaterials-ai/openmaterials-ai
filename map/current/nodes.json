@@ -974,7 +974,7 @@
    "quantity": "born_charges"
   },
   "meta": {
-   "description": "Per-atom Born effective-charge tensor Z*_{i,\u03b1\u03b2}, in units of the elementary charge e. Source-tier ObservableSpace: read from a BORN file or DFT linear-response output. Together with the macroscopic DielectricTensor \u03b5\u221e it parameterises the non-analytic correction (LO-TO splitting) for polar materials.",
+   "description": "Per-atom Born effective-charge tensor Z*_{i,\u03b1\u03b2} = (\u03a9/e) dP_\u03b1/du_{i\u03b2}, the first Cartesian index the field (polarization) direction and the second the displacement, in units of the elementary charge e. Source-tier ObservableSpace: read from a BORN file or DFT linear-response output. Together with the macroscopic DielectricTensor \u03b5\u221e it parameterises the non-analytic correction (LO-TO splitting) for polar materials.",
    "name": "BornCharges",
    "symbol": "Z^{*}",
    "tier": "Sources"

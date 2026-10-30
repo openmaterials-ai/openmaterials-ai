@@ -55,7 +55,8 @@ CITED = {
                                       "ForceConstants.three_le_finrank_ker_gamma"}),
     "crystal-phonon-dispersion": (DISP, {"ForceConstants.dynamicalMatrix_posSemidef_of_stable",
                                          "ForceConstants.fold_dynamicalMatrix",
-                                         "ForceConstants.planeWave_dynamicalMatrix_posSemidef_of_folded_stable"}),
+                                         "ForceConstants.planeWave_dynamicalMatrix_posSemidef_of_folded_stable",
+                                         "dispersion_omega2_nonneg"}),
     "crystal-group-velocity": (GV, {"hellmann_feynman", "ForceConstants.catalogGroupVelocity_eq_deriv"}),
     "canonical-rta-thermal-conductivity": (RTA, {"rtaKappa_canonical"}),
     "participation-ratio-bounds": (PR, {"participationRatio_bounds", "participationRatio_eq_one_iff",
@@ -71,14 +72,28 @@ SOURCES = {
     "participation-ratio-bounds": set(),
 }
 KEY_THEOREMS = {
-    LD: {"fc_neg": "Φ.fc (-R) j i = Φ.fc R i j", "three_le_finrank_ker_gamma": "3 ≤ Module.finrank ℂ"},
+    LD: {"fc_neg": "Φ.fc (-R) j i = Φ.fc R i j", "three_le_finrank_ker_gamma": "3 ≤ Module.finrank ℂ",
+         "dispersion_omega2_nonneg":
+             "(hD : D.PosSemidef) (h : DispersionRelation D omega2 e) (he : e ≠ 0) :\n"
+             "    0 ≤ omega2.re ∧ omega2.im = 0"},
     DISP: {"fold_dynamicalMatrix": "(Φ.fold N).dynamicalMatrix ψbar M = Φ.dynamicalMatrix ψ M",
            "planeWave_dynamicalMatrix_posSemidef_of_folded_stable":
                "(hq : ∀ L ∈ N, planeWave pos q L = 1)"},
-    GV: {"hellmann_feynman": "HasDerivAt lam (star (e t) ⬝ᵥ A'.mulVec (e t)).re t ∧",
-         "catalogGroupVelocity_eq_deriv": "v ∧ HasDerivAt (fun s => Real.sqrt (lam s)) v 0"},
+    # The eigen-equation and the normalization are hypotheses near the point only.
+    GV: {"hellmann_feynman":
+             "(heig : ∀ᶠ s in 𝓝 t, (A s).mulVec (e s) = (lam s : ℂ) • e s)\n"
+             "    (hnorm : ∀ᶠ s in 𝓝 t, star (e s) ⬝ᵥ e s = 1)\n"
+             "    (hherm : (A t).IsHermitian) :\n"
+             "    HasDerivAt lam (star (e t) ⬝ᵥ A'.mulVec (e t)).re t ∧",
+         "catalogGroupVelocity_eq_deriv":
+             "(hnorm : ∀ᶠ s in 𝓝 0, star (e s) ⬝ᵥ e s = 1) (hpos : 0 < lam 0) :\n"
+             "    ∃ v : ℝ, catalogGroupVelocity (e 0) (Φ.dynamicalMatrixDeriv pos q M α) (Real.sqrt (lam 0)) =\n"
+             "        v ∧ HasDerivAt (fun s => Real.sqrt (lam s)) v 0"},
     WIT: {"chain_groupVelocity": "((a * Real.sqrt (K / Mass) * Real.cos (q 0 * a / 2) : ℝ) : ℂ)",
-          "einstein_stable": "(einstein K).Stable"},
+          "einstein_stable": "(einstein K).Stable",
+          "springs_fold_stable": "(N : AddSubgroup ℤ) [Fintype (ℤ ⧸ N)]\n"
+                                 "    [DecidableEq (ℤ ⧸ N)] : ((springs K).fold N).Stable",
+          "springs_fold_three_stable": "((springs K).fold threeCells).Stable"},
     RTA: {"rtaKappa_canonical": "κ.IsSymm ∧ κ.PosSemidef ∧"},
     KC: {"lbteKappa_posSemidef": "(modeContractedKappa c v F Nq V).PosSemidef",
          "cumulativeKappa_mono": "(hmodal : ∀ m (x : Fin 3 → ℝ), 0 ≤ c m * (v m ⬝ᵥ x) * (F m ⬝ᵥ x))",
@@ -102,12 +117,12 @@ NOT_CITED = {"planeWave_conj", "planeWave_zero", "planeWave_add", "neg_mem_shell
 # or replaced by the physical three-mode witness.
 REMOVED = ("dispersion_orthonormal_real", "dispersion_eigenvalue_real", "dispersion_real_frequencies_of_stable",
            "cumulativeKappa_saturates", "witnessCollision")
-CATALOG_DEFECTS = {"apply_nac_correction": "Catalog defect",
-                   "solve_bte[bte_solver=direct_inverse]": "Catalog defect",
-                   "contract_kappa[bte_solver=direct_inverse]": "defective collision matrix",
-                   "contract_cumulative_kappa[wrt=omega]": "Catalog defect",
-                   "contract_cumulative_kappa[wrt=mfp]": "Catalog defect"}
-UNBOUND = {"identity_dm", "sum_linewidths", "solve_bte[bte_solver=rta]", *CATALOG_DEFECTS}
+# Corrected on 2026-10-30; still unbound, each gap reason names the corrected form.
+CORRECTED_FORMULAS = {"solve_bte[bte_solver=direct_inverse]": "symmetric weighting",
+                      "contract_kappa[bte_solver=direct_inverse]": "positive semidefinite",
+                      "contract_cumulative_kappa[wrt=omega]": "signed partial sum",
+                      "contract_cumulative_kappa[wrt=mfp]": "signed partial sum"}
+UNBOUND = {"identity_dm", "sum_linewidths", "solve_bte[bte_solver=rta]", *CORRECTED_FORMULAS}
 
 
 def _binding(payload, binding_id):
@@ -202,18 +217,19 @@ def test_registry_entry_matches_the_payload():
         assert rows[subject]["status"] == expected, subject
 
 
-def test_catalog_defects_stay_gaps_with_their_reasons():
+def test_corrected_formulas_and_their_gap_reasons():
     from omai.map_data import DOMAINS
     op = next(e for d in DOMAINS for e in d.edges if e.name == "apply_nac_correction")
-    # The Born-charge contraction uses the free component q^alpha, not the summed q_gamma.
-    assert "Sum(q^\\alpha*Z^*[i, \\gamma, \\alpha], (\\gamma, 1, 3))" in repr(op.formula)
+    # The Born charges are contracted with the wavevector components q_gamma.
+    assert "Sum(Z^*[i, \\gamma, \\alpha]*q[\\gamma], (\\gamma, 1, 3))" in repr(op.formula)
     payload = _packaged_bindings()
     rows = {row["id"]: row for row in payload["inventory"]["operators"]}
+    assert rows["apply_nac_correction"]["status"] == "local"
+    assert rows["apply_nac_correction"]["binding_ids"] == ["static-dielectric-ionic-response"]
     for op_id in UNBOUND:
         assert rows[op_id]["binding_ids"] == [] and rows[op_id]["status"] == "gap", op_id
-    for op_id, marker in CATALOG_DEFECTS.items():
+    for op_id, marker in CORRECTED_FORMULAS.items():
         assert marker in rows[op_id]["reason"], op_id
-    assert "Gonze-Lee" in rows["apply_nac_correction"]["reason"]
     assert "C^(1/2) Omega~ C^(1/2)" in rows["solve_bte[bte_solver=direct_inverse]"]["reason"]
     assert "not monotone" in rows["contract_cumulative_kappa[wrt=mfp]"]["reason"]
 
@@ -265,7 +281,9 @@ def test_compiled_lattice_theorems_use_standard_axioms_only():
     package = _package()
     payload = _packaged_bindings()
     names = sorted({n for b in CITED for n in _binding(payload, b)["evidence"]["declarations"]}
-                   | {"OMAI.PhyslibBridge.LatticeWitness." + n for n in ("chain_groupVelocity", "einstein_stable")}
+                   | {"OMAI.PhyslibBridge.LatticeWitness." + n
+                      for n in ("chain_groupVelocity", "einstein_stable", "springs_fold_stable",
+                                "springs_fold_three_stable")}
                    | {NS + n for n in ("lbteKappa_posSemidef", "cumulativeKappa_mono",
                                        "tp_cumulative_omega_not_monotone", "tp_cumulative_mfp_not_monotone")})
     result = _probe(package, "PhononAxioms.lean",

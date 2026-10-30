@@ -87,7 +87,9 @@ register_space_symbols({
     "ForceConstants[order=3]": {r"\Phi^{(3)}", "m", "r"},
     "BornCharges": {r"Z^*", r"Z^*_{provided}"},
     "DielectricTensor": {r"\varepsilon_\infty", r"\varepsilon_{\infty,provided}"},
-    "BareDynamicalMatrix": {r"D^{bare}", "M"},
+    # q: the Cartesian components of the wavevector whose direction the non-analytic
+    # correction depends on; q_e is a registered constant.
+    "BareDynamicalMatrix": {r"D^{bare}", "M", "q"},
     "DynamicalMatrix": {"D", r"\partial D/\partial q", "M"},
     "Frequency": {r"\omega"},
     "Eigenvectors": {"e", "m"},

@@ -5,7 +5,7 @@
       "Quot.sound",
       "propext"
     ],
-    "declaration_count": 2045,
+    "declaration_count": 2051,
     "declarations": {
       "CanonicalEnsemble.heatCapacity.eq_1": [
         "Classical.choice",
@@ -3500,6 +3500,11 @@
         "Quot.sound",
         "propext"
       ],
+      "OMAI.PhyslibBridge.Lattice.dispersion_omega2_nonneg": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
       "OMAI.PhyslibBridge.Lattice.exp_three_eq": [
         "Classical.choice",
         "Quot.sound",
@@ -3990,7 +3995,25 @@
         "Quot.sound",
         "propext"
       ],
+      "OMAI.PhyslibBridge.LatticeWitness.springs_fold_stable": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.LatticeWitness.springs_fold_three_stable": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
       "OMAI.PhyslibBridge.LatticeWitness.springs_shell": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.LatticeWitness.threeCells": [
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.LatticeWitness.threeCells.fintype": [
         "Classical.choice",
         "Quot.sound",
         "propext"
@@ -8466,6 +8489,10 @@
       "_private.OMAIPhyslibLatticeWitness.0.OMAI.PhyslibBridge.LatticeWitness.springs._simp_5": [
         "propext"
       ],
+      "_private.OMAIPhyslibLatticeWitness.0.OMAI.PhyslibBridge.LatticeWitness.springs_fold_stable._simp_1_3": [
+        "Quot.sound",
+        "propext"
+      ],
       "_private.OMAIPhyslibModeGruneisen.0.OMAI.PhyslibBridge.HarmonicVolumeModel.FV_eq_modeSum._simp_1_1": [
         "propext"
       ],
@@ -9289,11 +9316,11 @@
       "OMAIVACFSpectrum"
     ],
     "status": "passed",
-    "theorem_count": 1547
+    "theorem_count": 1551
   },
   "command": "lake build --wfail",
   "contract_name_audit": {
-    "pair_count": 77,
+    "pair_count": 78,
     "pairs": [
       {
         "module": "OMAIAtomisticDerivatives",
@@ -9545,6 +9572,10 @@
       },
       {
         "module": "OMAIStaticDielectric",
+        "name": "OMAI.PhyslibBridge.StaticDielectric.nonAnalytic"
+      },
+      {
+        "module": "OMAIStaticDielectric",
         "name": "OMAI.PhyslibBridge.StaticDielectric.staticDielectric"
       },
       {
@@ -9628,7 +9659,7 @@
     "lean/bridge/OMAICellElasticity.lean": "c0663d570244e4c53317c1c7cbb193d5acd2429766316cc79685474bc7989e3d",
     "lean/bridge/OMAICompositeConductivity.lean": "e08799415b1e5345ed0cc6af0b192685f6d0f93606d3f8c0a0f91c3ed178096c",
     "lean/bridge/OMAICureKinetics.lean": "7575810b36eb5f97bdd12ef4d26e9c9b65e42f2a5e3913609e615e0d90980a2a",
-    "lean/bridge/OMAIDeviceMetrology.lean": "e4512fd4eda1c0bf64a059a05ed51f0493cfd3ca131c891a2a223ba837d79edd",
+    "lean/bridge/OMAIDeviceMetrology.lean": "d03439a60245074d824ec390bbe303cfb149d667db2281555428f6d385a36e91",
     "lean/bridge/OMAIElasticity.lean": "dbc0efc3f35bcc223d28cd60d70fa591ab5f4cf9d285fe97360be6dca0602844",
     "lean/bridge/OMAIElectronicStatistics.lean": "42647fea45250902515d99acdf1e8d2bf9d809ce1e15ff7ad0890fe59d05bfde",
     "lean/bridge/OMAIMDCorrelations.lean": "5ad1d4f7c88f8483525123b63bf7b73a15ea0ed01363b14360a009e0189fc8cc",
@@ -9639,7 +9670,7 @@
     "lean/bridge/OMAIPhyslibDimensions.lean": "19081539b9e0b1499f407b54fdc174c0ff85bff56976771de11cb386c52a461e",
     "lean/bridge/OMAIPhyslibElectronicTransport.lean": "2609b6b410cb84b120f782adf88b7204e13bcef14ddee5adbce92f5c89805f45",
     "lean/bridge/OMAIPhyslibGibbsBranch.lean": "187fcc3093e54b76aa40fb12d866cffadc01adef119f31d3bd48eaadfc1367be",
-    "lean/bridge/OMAIPhyslibGroupVelocity.lean": "3171ae35f6773c00402dbd3a2de60310a20f230858f1477e503137c483ac5c96",
+    "lean/bridge/OMAIPhyslibGroupVelocity.lean": "d9d14bdfc6c429bd5ee07f85e659bdb2a56fc208b7fc6356cbf4ac76df495dca",
     "lean/bridge/OMAIPhyslibGruneisenWitness.lean": "99c4b6ffb4d42f0513d1139b303d953264bae41926b1d5ce3363ceb56b2cbaf9",
     "lean/bridge/OMAIPhyslibHarmonicDensity.lean": "cf4d59af5b660a1fc73b079d63451f269081e1bd9a3018047e1f6f41517013ea",
     "lean/bridge/OMAIPhyslibHarmonicEnsemble.lean": "1a1f7e60f5cf4a3e468d173109b0127d7685123e6e0130b69374df687b94e172",
@@ -9649,8 +9680,8 @@
     "lean/bridge/OMAIPhyslibHarmonicVolume.lean": "23effa45ca48c083307f32391413ab30d819db78cbee14bf6c9e62fdacb9dca5",
     "lean/bridge/OMAIPhyslibJointDensity.lean": "9f5f729c3db288f9d5b7e1b285b050c40df8caeabf72df09591d6203c6e7fde7",
     "lean/bridge/OMAIPhyslibKappaContraction.lean": "36722d282f3e1c58701aef411dc4d40e976b56d884318a2403414b809a2b63c1",
-    "lean/bridge/OMAIPhyslibLatticeDynamics.lean": "25358d33a2c4e12bfc1a45440cbcee81b83eed6d5dd62592499924399f3989c6",
-    "lean/bridge/OMAIPhyslibLatticeWitness.lean": "da3f6aa74988d5a7f6adf3eb9b93311f5436cc1c9ed492f920d43e3fda29f5f5",
+    "lean/bridge/OMAIPhyslibLatticeDynamics.lean": "79095baa161d4b068e4a7cb1a5a00123dc4743b03463b6157a2bf3c906839f36",
+    "lean/bridge/OMAIPhyslibLatticeWitness.lean": "f6188bc8637b6f8004c25922da07756b90eb68011a71742b9cd454c0c1665555",
     "lean/bridge/OMAIPhyslibModeGruneisen.lean": "0ea8fbbed0fe6920dd0c712a0f2d55768c4cca218f5193a1dce1ffd29f7046b5",
     "lean/bridge/OMAIPhyslibParticipationRatio.lean": "2306537ae007125fc41ba3654b265cb1fd19cca3ab33769cf1590bad269203fa",
     "lean/bridge/OMAIPhyslibPhononDispersion.lean": "70bd052d1d32afe828a3a8f7e26e406d5ec1e121b86ad0d9b08717f8c0f87f1a",
@@ -9666,14 +9697,14 @@
     "lean/bridge/OMAIPhyslibThermalGruneisen.lean": "6669b924a8682f135cee4daeda9d2d76b5418aa1ee30117dd7975dc86dddece9",
     "lean/bridge/OMAISommerfeldTransport.lean": "453274a06cacf6d43fb7547e900ed99c643c8e7a1a2b71493b5cdf32695554ff",
     "lean/bridge/OMAIStabilityEnergies.lean": "b0fd879de1d46103e675413995828b25254511988335990bb901354b6dd2ca80",
-    "lean/bridge/OMAIStaticDielectric.lean": "e1fd2cce2adacf6a3c23ad21332c9f1ee1f0f7f8217e39f0222eedb71aa0b277",
+    "lean/bridge/OMAIStaticDielectric.lean": "16a387817543a5bc9e530f3ef6d377909d0994670788d47ab5c90596c3317da8",
     "lean/bridge/OMAIVACFSpectrum.lean": "88e529acc3a8f224ce2e62aa781b8176694eeee06b49daa9fdd5d517ce32661d",
     "lean/bridge/audit.py": "f83d181ff32e60959fb8de9e60a71454277d6acfaed7efaf28361794a947bc25",
     "lean/bridge/carrier-statistics-formula-contract.json": "7f1f9f12f63994315b9c3c952d3fd4e9802cd42bf229e5ea278960ffe9bee63c",
     "lean/bridge/composites-formula-contract.json": "734b687bf6b86e9137262d777abe60958f8452ff53f6ec6532c482d9098cba32",
     "lean/bridge/continuum-formula-contract.json": "b5fb4368abccaac9fcde8b6ccb6dfd55402f14f1a9537e898645484ba69b2e8f",
     "lean/bridge/cure-kinetics-formula-contract.json": "90ad4ee7bb1337e2281de04495f29dca50c3add88381f11f617a83c18bd9295a",
-    "lean/bridge/device-metrology-formula-contract.json": "23f6bdb8dc8466241404ce85874e677268ab3d637226c647f10de1071debec7d",
+    "lean/bridge/device-metrology-formula-contract.json": "e01688354ae22d40715090cf295c3bed0e92fdd6dd21d9a8b6cc67a1aaa9de70",
     "lean/bridge/dft-derivatives-formula-contract.json": "a769c7c2b438b55f17afa97829707b3f9e626942dc0f17335c1b8147ccf494dc",
     "lean/bridge/elastic-constants-formula-contract.json": "5b2cef70560fe49f60465f4810d78381d13dcd5fb42007a458b0eff37e039af3",
     "lean/bridge/elasticity-formula-contract.json": "4d9b230d6b4a62e45383dd03c48e34d1834d7d70e5bd1c38b191866128c000f8",
@@ -9691,12 +9722,12 @@
     "lean/bridge/md-correlations-formula-contract.json": "f5b371d9c1f4cca80226260e03890c737f39b8c686769eef65e0ce4256289066",
     "lean/bridge/molecular-modes-formula-contract.json": "60f829e6039c74c87fd57b83cb0c62d016f7f7f0ad9d7e9fa05141c33ff02fd2",
     "lean/bridge/phonon-spectrum-formula-contract.json": "6fa08f784708ceab8519f9645fa85ece878700ababe443c9bc5630b95a5aade6",
-    "lean/bridge/phonon-structure-formula-contract.json": "9d9772031ec689a7e206609f91eb38e9161f27f1dedc81c63c313066789a6e97",
+    "lean/bridge/phonon-structure-formula-contract.json": "f7d826da9d66ab97e26ddbce41c746b8766fdd42108dd33d1c7dee55b9c3f201",
     "lean/bridge/qha-formula-contract.json": "60876d432d5819f8ed568770ec7df5ed7ad64fdc1e00c2c2fd03bd061b9f83c1",
     "lean/bridge/response-formula-contract.json": "f4f446f1967c45ccf508f42232e070d468121b0967459f93fc0c496210adf353",
     "lean/bridge/semantic-formula-contract.json": "21002241bb9dae2d674df0ede26cf7f0804823591675bcb4099142e7a5d1b123",
     "lean/bridge/stability-formula-contract.json": "504e459bf61eabbb2dc3c73932a481f62ef27c34add3e8fb28985d79cf67d738",
-    "lean/bridge/static-dielectric-formula-contract.json": "e2c52ab75c423bd4d85656fe47f4bd420bf349c07fa9cbb5f56a530adddc9f06",
+    "lean/bridge/static-dielectric-formula-contract.json": "1cf418a8ab8e5ec253dab3dfc45cdb97935e5ae046462ea64677541f2c0aea11",
     "lean/bridge/thermal-gruneisen-formula-contract.json": "61759afd04057fdd607005bf49ae8ad84e2d3d916f7c331b45886a66620acdca",
     "lean/bridge/thermochemistry-formula-contract.json": "ba8cb599e33fd957fe23e2986a914c93cd5e5c38522950fc8b67882dc805dd4b",
     "lean/bridge/vacf-spectrum-formula-contract.json": "a700f07266793902464627bc1e4bc5fa249f6e8a4cf30cf7db46da1e56ba9bd5",

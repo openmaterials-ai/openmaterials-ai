@@ -2,7 +2,7 @@
   "schema_version": 1,
   "scope": "Reviewed OMAI formula endpoints and exact Lean proof source for local theorems with no Physlib physics counterpart. Hash and compiled-name checks detect drift and provenance errors; they are not automatic symbolic translation or numerical validation.",
   "source_path": "lean/bridge/OMAIDeviceMetrology.lean",
-  "source_sha256": "e4512fd4eda1c0bf64a059a05ed51f0493cfd3ca131c891a2a223ba837d79edd",
+  "source_sha256": "d03439a60245074d824ec390bbe303cfb149d667db2281555428f6d385a36e91",
   "operators": [
     {
       "id": "apply_conductance_drift",

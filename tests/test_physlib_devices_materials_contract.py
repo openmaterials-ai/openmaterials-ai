@@ -43,7 +43,13 @@ TRANCHES = {
         "key_theorems": {
             "drift_law_unique": "∃ nu : ℝ, ∀ G0 td td0 : ℝ, 0 < td → 0 < td0 →\n      G0 * phi (td / td0) = driftConductance nu G0 td td0",
             "thermionic_wrongLaw_barrier": "PhiBn - kB * (log (T2 / T1) / (1 / T1 - 1 / T2)) / 2 ∧\n    T1 < log (T2 / T1) / (1 / T1 - 1 / T2) ∧ log (T2 / T1) / (1 / T1 - 1 / T2) < T2",
-            "retention_symmetric_relaxation": "p t = 1 / 2 + (p 0 - 1 / 2) * exp (-2 * t / retentionTime Em T nu0 kB)",
+            # The rate equation is a hypothesis for t >= 0 only.
+            "retention_symmetric_relaxation":
+                "(hp : ∀ s ∈ Ici (0 : ℝ),\n"
+                "      HasDerivWithinAt p ((1 - p s) / retentionTime Em T nu0 kB - p s / retentionTime Em T nu0 kB)\n"
+                "        (Ici 0) s)\n"
+                "    {t : ℝ} (ht : t ∈ Ici (0 : ℝ)) :\n"
+                "    p t = 1 / 2 + (p 0 - 1 / 2) * exp (-2 * t / retentionTime Em T nu0 kB)",
             "ramp_meanSetVoltage": "rampSetVoltage Em T alphaF nu0 gr kB",
             "ramp_expectedHops": "gr * kB * T / (alphaF * (exp (Em / (T * kB)) / nu0))",
             "programmingError_gt": "cG / sqrt (2 * n) < programmingError cG WG n wmax (∑ i, |w i|) (∑ i, w i ^ 2)",

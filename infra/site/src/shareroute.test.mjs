@@ -14,7 +14,9 @@ const index = JSON.parse(readFileSync(new URL("data/v/index.json", DOCS)));
 const snap = JSON.parse(readFileSync(new URL(`data/v/${index.latest}.json`, DOCS)));
 const H = index.latest.slice(0, 12);
 const kaldo = encode(snap, snap.codes.kaldo.nodes);
-const get = (path) => worker.fetch(new Request(`https://openmaterials-site.example.workers.dev${path}`), env);
+// Every request goes to the workers.dev host: on openmaterials.ai the Worker reads the live site first, and
+// the test must pass before the committed snapshots are deployed.
+const get = (path, e = env) => worker.fetch(new Request(`https://openmaterials-site.example.workers.dev${path}`), e);
 
 test("a share page carries the card and oEmbed tags crawlers read", async () => {
   const r = await get(`/m/${H}/${kaldo}`);
@@ -62,19 +64,19 @@ test("oEmbed answers a rich iframe of the embed view", async () => {
 
 test("past the render limit, or when a render fails, the site card stands in", async () => {
   const limited = { ...env, CARD_LIMITER: { limit: async () => ({ success: false }) } };
-  const r = await worker.fetch(new Request(`https://openmaterials.ai/m/${H}/${kaldo}.png`), limited);
+  const r = await get(`/m/${H}/${kaldo}.png`, limited);
   assert.equal(r.status, 302);
   assert.match(r.headers.get("location"), /\/assets\/og\.png$/);
   // under node the WASM bundle cannot load, so the render fails and falls back the same way
-  const r2 = await worker.fetch(new Request(`https://openmaterials.ai/m/${H}/${kaldo}.png`), env);
+  const r2 = await get(`/m/${H}/${kaldo}.png`);
   assert.equal(r2.status, 302);
-  assert.equal((await worker.fetch(new Request(`https://openmaterials.ai/m/${H}/8000.png`), env)).status, 400);
+  assert.equal((await get(`/m/${H}/8000.png`)).status, 400);
 });
 
 test("a code the live registry no longer lists drops out of the shell", async () => {
   const reg = JSON.parse(readFileSync(new URL("data/registry.json", DOCS)));
   delete reg.code.kaldo;
   const e = { ASSETS: { fetch: async (req) => (new URL(req.url).pathname === "/data/registry.json" ? Response.json(reg) : env.ASSETS.fetch(req)) } };
-  const body = await (await worker.fetch(new Request(`https://openmaterials-site.example.workers.dev/m/${H}/${kaldo}`), e)).text();
+  const body = await (await get(`/m/${H}/${kaldo}`, e)).text();
   assert.ok(!body.includes("<title>kALDo"), "kALDo is no longer named");
 });
