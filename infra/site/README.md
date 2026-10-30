@@ -46,6 +46,10 @@ static site cannot express:
   bundled), nothing is minted and the answer is 503; the playground does not
   retry on the other origin after any JSON answer from a Worker.
 
+- `GET /m/<snapshot>/<selection>`: a share link for a set of quantities on the map. The snapshot is 8 to 64 hex characters of a hash in `data/v/index.json`; the selection is lowercase hex, one bit per quantity in the snapshot's node order (`docs/assets/share.js`). The Worker reads the snapshot and serves `docs/share/index.html` with the title, description, Open Graph and Twitter card tags and an oEmbed discovery link for that selection, so X, LinkedIn and Slack unfurl it without running JavaScript. The same page renders the selection in the browser. `?embed=1` shows the submap alone, for iframes. A malformed link gets a 400, an unknown or ambiguous snapshot a 404 naming it.
+- `GET /m/<snapshot>/<selection>.png`: the 1200 x 630 card (`src/card.js`), rendered on the first request with resvg (`src/png.js`, fonts in `fonts/`) and stored in the `SHORTLINKS` namespace under `card:<snapshot hash>:<selection>`, so every later request is a read. At most 1000 new cards per IP per day (`CARDS_PER_DAY`); past that the link redirects to the site card `/assets/og.png`. Rendering takes about a second of CPU, more than the free plan allows, so this route needs the Workers Paid plan.
+- `GET /oembed?url=<share link>`: oEmbed 1.0 JSON of type `rich`, an iframe of the embed view with the card as thumbnail. Only `format=json`.
+
 Everything else falls through to the assets, so removing the Worker returns
 the site to plain static hosting. The Worker holds no secrets and, outside
 the explicitly public short-link store, no data of its own: the permalink
@@ -69,8 +73,11 @@ npx wrangler dev --port 8971 --local-upstream localhost
 
 ```
 cd infra/site
+npm ci
 npx wrangler deploy
 ```
+
+`npm ci` installs the pinned resvg and wrangler (`package.json`). The share card bundles the resvg WASM and four fonts, about 3.6 MB before compression.
 
 Deploys to the `openmaterials-site` Worker on workers.dev. A change to the
 private-evidence rule: merging publishes `docs/data/registry.json` and the
