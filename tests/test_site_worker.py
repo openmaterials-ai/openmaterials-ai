@@ -193,3 +193,23 @@ def test_private_records_contract():
     assert "Lineage 1 of 1" in probe and "400" in probe
     readme = (_SITE / "README.md").read_text()
     assert "probe.sh" in readme and '"s:<code>"' in readme, "probe and revoke runbook documented"
+
+
+def test_share_logic_under_node():
+    from node_runner import run_node_test
+    run_node_test(_SITE / "src" / "share.test.mjs")
+
+
+def test_python_and_javascript_encode_alike():
+    import json as _json
+
+    from node_runner import run_module
+    from omai.snapshots import DATA, build_snapshot, encode
+
+    snap = build_snapshot()
+    js = (DATA.parent / "assets" / "share.js").resolve().as_uri()
+    script = (f"import {{ encode }} from {_json.dumps(js)};let s='';process.stdin.on('data',d=>s+=d).on('end',()=>{{"
+              "const snap=JSON.parse(s);const o={};for(const k in snap.codes) o[k]=encode(snap,snap.codes[k].nodes);"
+              "process.stdout.write(JSON.stringify(o));});")
+    got = _json.loads(run_module(script, _json.dumps(snap)))
+    assert got == {k: encode(snap, c["nodes"]) for k, c in snap["codes"].items()}

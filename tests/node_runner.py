@@ -31,3 +31,9 @@ def run_module(script: str, stdin: str = "") -> str:
     proc = subprocess.run(node_cmd() + ["--input-type=module", "-e", script], input=stdin, capture_output=True, text=True)
     assert proc.returncode == 0, proc.stderr
     return proc.stdout
+
+
+def run_node_test(path) -> None:
+    """Run a node:test file and fail with its output when any test fails."""
+    proc = subprocess.run(node_cmd() + ["--test", str(path)], capture_output=True, text=True)
+    assert proc.returncode == 0, proc.stdout + proc.stderr
