@@ -643,19 +643,29 @@ compute_anharmonic_linewidth = Operator(
 )
 
 
-# Tamura isotope-disorder scattering:
-#   Γ_iso(qν) = (π/2) ω_qν² Σ_i g_i (e*_iqν · e_iqν') δ(ω_qν - ω_qν')
-# summed over (q', ν') in the BZ. The 1/2 cancels the standard 2-from-Fermi-rule
-# factor so Γ_iso has the same gamma_definition convention as Γ_anharmonic.
+# Tamura isotope-disorder scattering (Tamura, PRB 27, 858 (1983)). Tamura's
+#   1/τ_iso(qν) = (π / 2N_q) ω_qν² Σ_{q'ν'} δ(ω_qν - ω_q'ν')
+#                 × Σ_b g_b |Σ_α e*_{bα,qν} e_{bα,q'ν'}|²
+# is the occupation relaxation rate, so the linewidth Γ = Im Σ = 1/(2τ)
+# carries π / 4N_q (the canonical convention of normalizations.py, where the
+# kaldo and ShengBTE isotopic arrays are 2Γ). b is the basis atom, α its
+# Cartesian component (composite mode index 3(b-1) + α) and g_b its
+# mass-variance factor. The 1/N_q makes the Brillouin-zone sum a mean, so
+# Γ_iso converges as the q-mesh refines.
+_b_atom = sp.Symbol("b", integer=True)
+_iso_mode = 3 * (_b_atom - 1) + _alpha
+_iso_overlap = sp.Sum(
+    sp.conjugate(_e[_iso_mode, _q, _nu]) * _e[_iso_mode, _qp, _nu_p],
+    (_alpha, 1, 3),
+)
+_iso_mass_sum = sp.Sum(
+    sp.IndexedBase("g")[_b_atom] * sp.Abs(_iso_overlap) ** 2,
+    (_b_atom, 1, _N_atoms),
+)
 _ISO_FORMULA = sp.Eq(
     sp.IndexedBase(r"\Gamma^{iso}")[_q, _nu],
-    sp.pi / 2 * _omega[_q, _nu] ** 2 * sp.Sum(
-        sp.IndexedBase("g")[_i]
-        * sp.Abs(sp.Sum(
-            sp.conjugate(_e[_i, _q, _nu]) * _e[_i, _qp, _nu_p],
-            (_i, 1, _N_atoms),
-        )) ** 2
-        * _delta(_omega[_q, _nu] - _omega[_qp, _nu_p]),
+    sp.pi / (4 * _N_q) * _omega[_q, _nu] ** 2 * sp.Sum(
+        _delta(_omega[_q, _nu] - _omega[_qp, _nu_p]) * _iso_mass_sum,
         (_qp, 1, _N_q), (_nu_p, 1, _N_modes),
     ),
 )
@@ -667,10 +677,13 @@ compute_isotope_scattering = Operator(
     schemes={"delta_broadening": "gaussian"},
     formula=_ISO_FORMULA,
     description=(
-        "Isotopic disorder scattering rate per mode (Tamura model). "
-        "Linear in the per-atom mass-variance factor g_i and quadratic "
-        "in ω; couples mode (q,ν) to all (q',ν') with matching frequency "
-        "through the eigenvector overlap. Gauge-dependent per-element "
+        "Isotopic linewidth Γ_iso = 1/(2τ) per mode (Tamura, PRB 27, 858 "
+        "(1983)): Γ_iso(qν) = (π/4N_q) ω² Σ_{q'ν'} δ(ω - ω') Σ_b g_b "
+        "|e_b(qν)* · e_b(q'ν')|², half of Tamura's rate 1/τ, with b the "
+        "basis atom and the overlap over its Cartesian components. Linear "
+        "in the per-atom mass-variance "
+        "factor g_b and quadratic in ω; couples mode (q,ν) to all (q',ν') "
+        "with matching frequency. Gauge-dependent per-element "
         "(inherits eigenvector basis at degenerate ω); the BZ-summed "
         "total is the observable. delta_broadening records how the "
         "energy δ is realized at finite q-mesh."
@@ -1749,8 +1762,9 @@ compute_modal_diffusivity = Operator(
 
 # sample_quantum_kinetic_energy: <E_K> = E_K^{cv}[r(t), T] via the
 # centroid-virial estimator over the ring-polymer beads,
-#   <E_K> = (3/2) N k_B T + (1/2N) <sum_i (q_i - q_c) . dV/dq_i>,
-# with q_c the bead centroid. Opaque estimator functional of the sampled
+#   <E_K> = (3/2) N k_B T + (1/(2P)) <sum_s sum_i (q_i^(s) - q_i^c) . dV/dq_i^(s)>,
+# with P the bead count and q_i^c the centroid of atom i over the beads.
+# Opaque estimator functional of the sampled
 # Trajectory and the Temperature; not sympy-executable.
 _E_K_qke = sp.Symbol("E_K")
 _E_K_cv_fn = sp.Function("E_K^{cv}")
@@ -1772,8 +1786,9 @@ sample_quantum_kinetic_energy = Operator(
     description=(
         "Nuclear quantum kinetic energy from a PIMD Trajectory via the "
         "centroid-virial estimator (scheme estimator=centroid_virial): "
-        "<E_K> = (3/2) N k_B T + (1/2N) <sum_i (q_i - q_c) . dV/dq_i>, with q_c "
-        "the ring-polymer bead centroid. An ensemble average over the beads of "
+        "<E_K> = (3/2) N k_B T + (1/(2P)) <sum_s sum_i (q_i^(s) - q_i^c) . "
+        "dV/dq_i^(s)>, with P the bead count and q_i^c the ring-polymer "
+        "centroid of atom i. An ensemble average over the beads of "
         "the sampled trajectory, opaque as a closed form (E_K^{cv}[r(t), T]), so "
         "not sympy-executable; the dimensional gate SKIPS it (i-PI fixes the "
         "output at ENERGY on the representation). PIMD (method=pimd) is the path-integral "

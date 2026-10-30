@@ -344,8 +344,10 @@ ISOTOPIC_LINEWIDTH = HiddenSpace(
     kind="scaffolding",
     gauge_invariant_contractions=("ThermalConductivity[bte_solver=direct_inverse]",),
     description=(
-        "Per-mode isotopic scattering rate from the Tamura model: "
-        "Γ_iso(qν) = (π/2) ω² Σ_i g_i |e_iqν|² δ(ω - ω'). Per-element "
+        "Per-mode isotopic linewidth Γ_iso = 1/(2τ) from the Tamura model: "
+        "Γ_iso(qν) = (π/4N_q) ω² Σ_{q'ν'} δ(ω - ω') Σ_b g_b "
+        "|e_b(qν)* · e_b(q'ν')|², summed over final modes with the per-atom "
+        "eigenvector overlap. Per-element "
         "is gauge-dependent (depends on eigenvector basis at degenerate ω); "
         "the BZ-summed total is the cross-code observable."
     ),
@@ -835,8 +837,9 @@ QUANTUM_KINETIC_ENERGY = ObservableSpace(
     description=(
         "Nuclear quantum kinetic energy from path-integral molecular dynamics, "
         "via the centroid-virial estimator over the ring-polymer beads: "
-        "<E_K> = (3/2) N k_B T + (1/2N) <sum_i (q_i - q_c) . (dV/dq_i)>, with q_c "
-        "the bead centroid. Exceeds the classical 3/2 N k_B T equipartition value "
+        "<E_K> = (3/2) N k_B T + (1/(2P)) <sum_s sum_i (q_i^(s) - q_i^c) . "
+        "(dV/dq_i^(s))>, with P the bead count and q_i^c the centroid of atom "
+        "i over the beads. Exceeds the classical 3/2 N k_B T equipartition value "
         "by the quantum-nuclear zero-point contribution, and reduces to it in the "
         "classical limit (nbeads=1). Scalar (a single number per state point); an "
         "optional 3x3 kinetic-energy tensor variant probes the anisotropy of the "

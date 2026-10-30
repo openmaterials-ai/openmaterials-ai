@@ -1321,7 +1321,7 @@
    "quantity": "linewidth"
   },
   "meta": {
-   "description": "Per-mode isotopic scattering rate from the Tamura model: \u0393_iso(q\u03bd) = (\u03c0/2) \u03c9\u00b2 \u03a3_i g_i |e_iq\u03bd|\u00b2 \u03b4(\u03c9 - \u03c9'). Per-element is gauge-dependent (depends on eigenvector basis at degenerate \u03c9); the BZ-summed total is the cross-code observable.",
+   "description": "Per-mode isotopic linewidth \u0393_iso = 1/(2\u03c4) from the Tamura model: \u0393_iso(q\u03bd) = (\u03c0/4N_q) \u03c9\u00b2 \u03a3_{q'\u03bd'} \u03b4(\u03c9 - \u03c9') \u03a3_b g_b |e_b(q\u03bd)* \u00b7 e_b(q'\u03bd')|\u00b2, summed over final modes with the per-atom eigenvector overlap. Per-element is gauge-dependent (depends on eigenvector basis at degenerate \u03c9); the BZ-summed total is the cross-code observable.",
    "name": "Linewidth[channel=isotope]",
    "symbol": "\\Gamma_{\\mathrm{iso}}",
    "tier": "Scattering"
@@ -1502,7 +1502,7 @@
    "quantity": "seebeck_coefficient"
   },
   "meta": {
-   "description": "Seebeck (thermopower) coefficient S from ab-initio scattering transport: the BoltzTraP2 Onsager thermopower over the interpolated band structure (transport.py:36-39). Dimension SEEBECK (M=1,L=2,T=-3,Theta=-1,N=0,I=-1,J=0) = V/K, built from the volt (VOLTAGE, the intercalation node's dimension) divided by a temperature; the first map dimension to carry BOTH the electric-current axis (I=-1) and the temperature axis (Theta=-1). amset serves it in microvolts per kelvin (the raw V/K multiplied by 1e6, transport.py:191; the source header unit is the micro-sign glyph muV/K, written ASCII in our notes), so the serving unit muv_per_k carries a 1e-6 factor to the canonical v_per_k. The SIGN carries the carrier type (positive for holes / p-type, negative for electrons / n-type). Served as the scalar S; the amset (n_doping, n_temperature, 3, 3) tensor is a representation-layer packing. Not part of a thermoelectric bundle here (power factor S^2 sigma and ZT are downstream contracts, deferred).",
+   "description": "Seebeck (thermopower) coefficient S from ab-initio scattering transport: the BoltzTraP2 Onsager thermopower over the interpolated band structure (transport.py:36-39). Dimension SEEBECK (M=1,L=2,T=-3,Theta=-1,N=0,I=-1,J=0) = V/K, built from the volt (VOLTAGE, the intercalation node's dimension) divided by a temperature; the first map dimension to carry BOTH the electric-current axis (I=-1) and the temperature axis (Theta=-1). amset serves it in microvolts per kelvin (the raw V/K multiplied by 1e6, transport.py:191; the source header unit is the micro-sign glyph muV/K, written ASCII in our notes), so the serving unit muv_per_k carries a 1e-6 factor to the canonical v_per_k. The SIGN carries the carrier type (positive for holes / p-type, negative for electrons / n-type). Served as the scalar S; the amset (n_doping, n_temperature, 3, 3) tensor is a representation-layer packing. The power factor S^2 sigma and the figure of merit ZT are its downstream PowerFactor and ZT nodes.",
    "name": "SeebeckCoefficient",
    "symbol": "S",
    "tier": "Electronic transport"
@@ -2045,7 +2045,7 @@
    "quantity": "quantum_kinetic_energy"
   },
   "meta": {
-   "description": "Nuclear quantum kinetic energy from path-integral molecular dynamics, via the centroid-virial estimator over the ring-polymer beads: <E_K> = (3/2) N k_B T + (1/2N) <sum_i (q_i - q_c) . (dV/dq_i)>, with q_c the bead centroid. Exceeds the classical 3/2 N k_B T equipartition value by the quantum-nuclear zero-point contribution, and reduces to it in the classical limit (nbeads=1). Scalar (a single number per state point); an optional 3x3 kinetic-energy tensor variant probes the anisotropy of the quantum effect on bonds. Distinct from the per-mode InternalEnergy (the harmonic-oscillator Bose-Einstein occupation energy) and from any classical MD kinetic energy: a PIMD ensemble estimator, kept apart by its own quantum_kinetic_energy tag. Produced by i-PI (path-integrals, heat-capacity recipes of the Atomistic Cookbook).",
+   "description": "Nuclear quantum kinetic energy from path-integral molecular dynamics, via the centroid-virial estimator over the ring-polymer beads: <E_K> = (3/2) N k_B T + (1/(2P)) <sum_s sum_i (q_i^(s) - q_i^c) . (dV/dq_i^(s))>, with P the bead count and q_i^c the centroid of atom i over the beads. Exceeds the classical 3/2 N k_B T equipartition value by the quantum-nuclear zero-point contribution, and reduces to it in the classical limit (nbeads=1). Scalar (a single number per state point); an optional 3x3 kinetic-energy tensor variant probes the anisotropy of the quantum effect on bonds. Distinct from the per-mode InternalEnergy (the harmonic-oscillator Bose-Einstein occupation energy) and from any classical MD kinetic energy: a PIMD ensemble estimator, kept apart by its own quantum_kinetic_energy tag. Produced by i-PI (path-integrals, heat-capacity recipes of the Atomistic Cookbook).",
    "name": "QuantumKineticEnergy",
    "symbol": "\\langle E_{K}\\rangle",
    "tier": "Molecular dynamics"

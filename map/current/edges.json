@@ -1310,6 +1310,9 @@
     "delta_broadening": "gaussian"
    }
   },
+  "superseded_by": [
+   "7cf53f521738578b03e17d568ddf5db3df454b0a47bd4d621390c5c9250dec73"
+  ],
   "uid": "651498262f7dfaa6d6e85d268d1a08dec851bed792ccfdde674396871acd5848"
  },
  "651c2374a726dda508bee50396ad83e8c635f98f73012f18397b319710d22846": {
@@ -1647,6 +1650,33 @@
    }
   },
   "uid": "7b9e21caad74ed2be7cf49af55b1e745bb8a2606b035bee37c46c37a09cf58fc"
+ },
+ "7cf53f521738578b03e17d568ddf5db3df454b0a47bd4d621390c5c9250dec73": {
+  "identity": {
+   "formula": "Equality(Indexed(IndexedBase(Symbol('\\\\Gamma^{iso}')), Symbol('\\\\mathbf{q}'), Symbol('\\\\nu', integer=True)), Mul(Rational(1, 4), pi, Pow(Symbol('N_q', positive=True, integer=True), Integer(-1)), Pow(Indexed(IndexedBase(Symbol('\\\\omega')), Symbol('\\\\mathbf{q}'), Symbol('\\\\nu', integer=True)), Integer(2)), Sum(Mul(Function('\\\\delta')(Add(Mul(Integer(-1), Indexed(IndexedBase(Symbol('\\\\omega')), Symbol(\"\\\\mathbf{q'}\"), Symbol(\"\\\\nu'\", integer=True))), Indexed(IndexedBase(Symbol('\\\\omega')), Symbol('\\\\mathbf{q}'), Symbol('\\\\nu', integer=True)))), Sum(Mul(Pow(Abs(Sum(Mul(conjugate(Indexed(IndexedBase(Symbol('e')), Add(Symbol('\\\\alpha', integer=True), Mul(Integer(3), Symbol('b', integer=True)), Integer(-3)), Symbol('\\\\mathbf{q}'), Symbol('\\\\nu', integer=True))), Indexed(IndexedBase(Symbol('e')), Add(Symbol('\\\\alpha', integer=True), Mul(Integer(3), Symbol('b', integer=True)), Integer(-3)), Symbol(\"\\\\mathbf{q'}\"), Symbol(\"\\\\nu'\", integer=True))), Tuple(Symbol('\\\\alpha', integer=True), Integer(1), Integer(3)))), Integer(2)), Indexed(IndexedBase(Symbol('g')), Symbol('b', integer=True))), Tuple(Symbol('b', integer=True), Integer(1), Symbol('N', positive=True, integer=True)))), Tuple(Symbol(\"\\\\mathbf{q'}\"), Integer(1), Symbol('N_q', positive=True, integer=True)), Tuple(Symbol(\"\\\\nu'\", integer=True), Integer(1), Mul(Integer(3), Symbol('N', positive=True, integer=True))))))",
+   "inputs": [
+    "21ba7756f45c808d3d91ed059c34c532f04845781d549b4c16573d9462bb2902",
+    "f8e4253dc1f218daff8e76af5b433dc230bf952f910ba163f87c6fa331aa033d",
+    "fa262448f625b62f5a8c6934518bb8ddc5d3a5a5ce69203b3e2f6b10b21cc4b8"
+   ],
+   "output": "6cbd3322c5b6eb0105f9ca22d9ddc88334206ec9c115a31e6fb87409cc374c45",
+   "outputs": [
+    "6cbd3322c5b6eb0105f9ca22d9ddc88334206ec9c115a31e6fb87409cc374c45"
+   ],
+   "schemes": {
+    "delta_broadening": "gaussian"
+   }
+  },
+  "meta": {
+   "description": "Isotopic linewidth \u0393_iso = 1/(2\u03c4) per mode (Tamura, PRB 27, 858 (1983)): \u0393_iso(q\u03bd) = (\u03c0/4N_q) \u03c9\u00b2 \u03a3_{q'\u03bd'} \u03b4(\u03c9 - \u03c9') \u03a3_b g_b |e_b(q\u03bd)* \u00b7 e_b(q'\u03bd')|\u00b2, half of Tamura's rate 1/\u03c4, with b the basis atom and the overlap over its Cartesian components. Linear in the per-atom mass-variance factor g_b and quadratic in \u03c9; couples mode (q,\u03bd) to all (q',\u03bd') with matching frequency. Gauge-dependent per-element (inherits eigenvector basis at degenerate \u03c9); the BZ-summed total is the observable. delta_broadening records how the energy \u03b4 is realized at finite q-mesh.",
+   "formula_latex": "{\\Gamma^{iso}}_{\\mathbf{q},\\nu} = \\frac{\\pi {\\omega}_{\\mathbf{q},\\nu}^{2} \\sum_{\\substack{1 \\leq \\mathbf{q'} \\leq N_{q}\\\\1 \\leq \\nu' \\leq 3 N}} \\delta{\\left(- {\\omega}_{\\mathbf{q'},\\nu'} + {\\omega}_{\\mathbf{q},\\nu} \\right)} \\sum_{b=1}^{N} \\left(\\left|{\\sum_{\\alpha=1}^{3} \\overline{{e}_{\\alpha + 3 b - 3,\\mathbf{q},\\nu}} {e}_{\\alpha + 3 b - 3,\\mathbf{q'},\\nu'}}\\right|^{2}\\right) {g}_{b}}{4 N_{q}}",
+   "formula_srepr": "Equality(Indexed(IndexedBase(Symbol('\\\\Gamma^{iso}')), Symbol('\\\\mathbf{q}'), Symbol('\\\\nu', integer=True)), Mul(Rational(1, 4), pi, Pow(Symbol('N_q', positive=True, integer=True), Integer(-1)), Pow(Indexed(IndexedBase(Symbol('\\\\omega')), Symbol('\\\\mathbf{q}'), Symbol('\\\\nu', integer=True)), Integer(2)), Sum(Mul(Function('\\\\delta')(Add(Mul(Integer(-1), Indexed(IndexedBase(Symbol('\\\\omega')), Symbol(\"\\\\mathbf{q'}\"), Symbol(\"\\\\nu'\", integer=True))), Indexed(IndexedBase(Symbol('\\\\omega')), Symbol('\\\\mathbf{q}'), Symbol('\\\\nu', integer=True)))), Sum(Mul(Pow(Abs(Sum(Mul(conjugate(Indexed(IndexedBase(Symbol('e')), Add(Symbol('\\\\alpha', integer=True), Mul(Integer(3), Symbol('b', integer=True)), Integer(-3)), Symbol('\\\\mathbf{q}'), Symbol('\\\\nu', integer=True))), Indexed(IndexedBase(Symbol('e')), Add(Symbol('\\\\alpha', integer=True), Mul(Integer(3), Symbol('b', integer=True)), Integer(-3)), Symbol(\"\\\\mathbf{q'}\"), Symbol(\"\\\\nu'\", integer=True))), Tuple(Symbol('\\\\alpha', integer=True), Integer(1), Integer(3)))), Integer(2)), Indexed(IndexedBase(Symbol('g')), Symbol('b', integer=True))), Tuple(Symbol('b', integer=True), Integer(1), Symbol('N', positive=True, integer=True)))), Tuple(Symbol(\"\\\\mathbf{q'}\"), Integer(1), Symbol('N_q', positive=True, integer=True)), Tuple(Symbol(\"\\\\nu'\", integer=True), Integer(1), Mul(Integer(3), Symbol('N', positive=True, integer=True))))))",
+   "name": "compute_isotope_scattering",
+   "schemes": {
+    "delta_broadening": "gaussian"
+   }
+  },
+  "uid": "7cf53f521738578b03e17d568ddf5db3df454b0a47bd4d621390c5c9250dec73"
  },
  "7cff61b1def5290a5fb1bcdfcbf984d8244627d0b33e996480dc9da24aba3637": {
   "identity": {
@@ -2324,7 +2354,7 @@
    }
   },
   "meta": {
-   "description": "Nuclear quantum kinetic energy from a PIMD Trajectory via the centroid-virial estimator (scheme estimator=centroid_virial): <E_K> = (3/2) N k_B T + (1/2N) <sum_i (q_i - q_c) . dV/dq_i>, with q_c the ring-polymer bead centroid. An ensemble average over the beads of the sampled trajectory, opaque as a closed form (E_K^{cv}[r(t), T]), so not sympy-executable; the dimensional gate SKIPS it (i-PI fixes the output at ENERGY on the representation). PIMD (method=pimd) is the path-integral producer variant of the classical run_md Trajectory: the same Trajectory node, sampled with ring-polymer beads instead of a single classical replica, from which the quantum estimator is read. Complementary to the classical 3/2 N k_B T equipartition kinetic energy it exceeds.",
+   "description": "Nuclear quantum kinetic energy from a PIMD Trajectory via the centroid-virial estimator (scheme estimator=centroid_virial): <E_K> = (3/2) N k_B T + (1/(2P)) <sum_s sum_i (q_i^(s) - q_i^c) . dV/dq_i^(s)>, with P the bead count and q_i^c the ring-polymer centroid of atom i. An ensemble average over the beads of the sampled trajectory, opaque as a closed form (E_K^{cv}[r(t), T]), so not sympy-executable; the dimensional gate SKIPS it (i-PI fixes the output at ENERGY on the representation). PIMD (method=pimd) is the path-integral producer variant of the classical run_md Trajectory: the same Trajectory node, sampled with ring-polymer beads instead of a single classical replica, from which the quantum estimator is read. Complementary to the classical 3/2 N k_B T equipartition kinetic energy it exceeds.",
    "formula_latex": "E_{K} = E_K^{cv}{\\left(r,T \\right)}",
    "formula_srepr": "Equality(Symbol('E_K'), Function('E_K^{cv}')(Symbol('r'), Symbol('T', positive=True)))",
    "name": "sample_quantum_kinetic_energy",
