@@ -178,9 +178,10 @@ GAMMA_SOURCES = sorted([
     ("Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas", "CanonicalEnsemble.heatCapacity", "def", 417),
     ("Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas", "CanonicalEnsemble.meanEnergyT", "def", 409),
 ])
+_LIVE_INVENTORY = catalog_inventory()
 EXPECTED_COVERAGE = {
-    "nodes_total": len(catalog_inventory()["nodes"]),
-    "operators_total": len(catalog_inventory()["operators"]),
+    "nodes_total": len(_LIVE_INVENTORY["nodes"]),
+    "operators_total": len(_LIVE_INVENTORY["operators"]),
     "operators_compiled": 15,
     "operators_mapped": 15,
     "nodes_compiled": 16,

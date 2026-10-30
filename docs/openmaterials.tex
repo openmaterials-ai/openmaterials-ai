@@ -834,8 +834,8 @@ the reviewers decide what enters the commons.
 
 \section{Status and build order}
 
-Today's map is 243 change records past v1, its frozen genesis version:
-129 typed quantities plus 3 promoted
+Today's map is 245 change records past v1, its frozen genesis version:
+133 typed quantities plus 3 promoted
 parameters, the symbolic formula on every relational edge, 33 representations
 mapped (phono3py 31 variables, kaldo 28, phonopy 22, pymatgen 22, ShengBTE 20,
 QE 14, GPUMD 13, mp-api 13, LAMMPS 12, VASP 10, pycalphad 7, i-PI 4, and a further
@@ -3256,12 +3256,12 @@ trusted). What remains, in order:
 \label{sec:status-live}
 
 The map is at store head version
-\texttt{0b86dceb1d4f7882fa289911b08180f21ada396c606d96023213333d9e37493b}
-(2026-10-30, 343 records), 243 change records past the frozen genesis hash
+\texttt{2d7cf79f7e4508d7eacce7e7b11750e941c9e70697e647978f92c05d384db459}
+(2026-10-30, 345 records), 245 change records past the frozen genesis hash
 \texttt{e6e8044e92039696417b53b220b0f3f10559a286b0eaabbe7ea4167ff510f6cd}
 (2026-07-07, the untouched 100-record prefix). Since the lineage became the one
 named artifact, the published stamp also carries the unified \emph{lineage
-version} (\texttt{adfdea23b810\ldots}): one rolling content hash over the
+version} (\texttt{80dba7fc47c8\ldots}): one rolling content hash over the
 derivation graph and the instance-format rules together, appended to a chain
 whose root is the genesis, so a change to either the physics or the record
 format moves the one version the published stamp and every page cite (records
@@ -3324,8 +3324,9 @@ numbers:
         stated tolerance.
   \item \textbf{Dimensional gate.} Of the 133 operator edges the gate walks, 59
         are ok, none is a violation (the schematic Gr\"uneisen contraction that
-        was one is now the Maradudin-Fein form, which the gate skips because the
-        eigenvector symbol carries no dimension), and 74 are
+        was one is now the Maradudin-Fein form, which the gate skips: the eigenvector
+        symbol carries no dimension and the mass square root $(m_i m_j)^{-1/2}$ is a
+        fractional power the gate does not reduce), and 74 are
         skipped (not closed-form
         \texttt{Eq} edges the gate can check, most of them the opaque solver
         edges of the newer domains, plus the composites depolarization
