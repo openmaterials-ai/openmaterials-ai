@@ -143,8 +143,8 @@ SEEBECK_COEFFICIENT = ObservableSpace(
         "carrier type (positive for holes / p-type, negative for electrons / "
         "n-type). Served as the scalar S; the amset "
         "(n_doping, n_temperature, 3, 3) tensor is a representation-layer "
-        "packing. Not part of a thermoelectric bundle here (power factor "
-        "S^2 sigma and ZT are downstream contracts, deferred)."
+        "packing. The power factor S^2 sigma and the figure of merit ZT are "
+        "its downstream PowerFactor and ZT nodes."
     ),
 )
 

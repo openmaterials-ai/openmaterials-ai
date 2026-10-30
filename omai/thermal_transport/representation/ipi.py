@@ -124,9 +124,10 @@ IPI_QUANTUM_KINETIC_ENERGY = SpaceRepresentationSpec(
     notes=(
         "i-PI-native nuclear quantum kinetic energy via the centroid-virial "
         "estimator, the 'kinetic_cv' output property: <E_K> = (3/2) N k_B T + "
-        "(1/2N) <sum_i (q_i - q_c) . dV/dq_i>, with q_c the ring-polymer bead "
-        "centroid. The centroid-virial estimator is preferred over the "
-        "thermodynamic estimator because its variance does NOT grow with the "
+        "(1/(2P)) <sum_s sum_i (q_i^(s) - q_i^c) . dV/dq_i^(s)>, with P the bead "
+        "count and q_i^c the ring-polymer centroid of atom i. The "
+        "centroid-virial estimator is preferred over the thermodynamic "
+        "estimator because its variance does NOT grow with the "
         "bead count (a load-bearing practical point for converged PIMD). Served "
         "in eV here (i-PI's native output unit is atomic / Hartree; the "
         "'{electronvolt}' output modifier requests eV). The kinetic-energy TENSOR "
