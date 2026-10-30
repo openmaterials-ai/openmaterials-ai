@@ -142,7 +142,7 @@ register_space_symbols({
     # declarations); the per-atom energy E and per-atom force F^{md} are
     # trajectory-derived auxiliary quantities (forces come from the same
     # Potential that drove the MD; per-atom energies are decomposable
-    # from the same potential energy surface) — listed here so the
+    # from the same potential energy surface), listed here so the
     # Irving-Kirkwood / Velocity-Verlet formulas can reference them.
     "Trajectory": {"r", "v", "E", r"F^{md}", "W"},
     "HeatCurrent": {"J"},

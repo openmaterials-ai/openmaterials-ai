@@ -7,9 +7,9 @@ surface as unit factors, convention mismatches, and discretization choice
 mismatches.
 
 References to the kaldo API (https://nanotheorygroup.github.io/kaldo/):
-  * Phonons.bandwidth     — the linewidth Gamma_qν, in angular THz
-  * Phonons.heat_capacity — per-mode c_qν(T), in J/K
-  * Phonons(third_bandwidth=σ) — broadening parameter, half-width-style
+  * Phonons.bandwidth:     the linewidth Gamma_qν, in angular THz
+  * Phonons.heat_capacity: per-mode c_qν(T), in J/K
+  * Phonons(third_bandwidth=σ): broadening parameter, half-width-style
 
 Run-mode parameterization
 -------------------------
@@ -183,7 +183,7 @@ def kaldo_compute_linewidth_spec(
     if broadening_param == "adaptive_velocity_projection":
         broadening_note = (
             "Default mode (third_bandwidth=None): per-channel adaptive σ "
-            "from sqrt(Σ_ν [δk_ν · Δv]² / 6) — identical to ShengBTE's "
+            "from sqrt(Σ_ν [δk_ν · Δv]² / 6), identical to ShengBTE's "
             "base_sigma with scalebroad=1.0."
         )
     elif broadening_param == "halfwidth":
@@ -285,8 +285,8 @@ KALDO_SOLVE_BTE_DIRECT = OperatorRepresentationSpec(
 # ---------------------------------------------------------------------------
 # Additional state-adapter specs covering states kaldo uses internally
 # (Temperature, FC2/FC3, dynamical matrix, eigenvectors, MFD). Most of these
-# are intermediate scaffolding — no cross-code numerical comparison is
-# expected on the raw values — so observable_units are omitted; only
+# are intermediate scaffolding (no cross-code numerical comparison is
+# expected on the raw values), so observable_units are omitted. Only
 # code_api is recorded so the diagram can show them as covered.
 # ---------------------------------------------------------------------------
 
@@ -318,7 +318,7 @@ KALDO_FORCE_CONSTANTS_3 = SpaceRepresentationSpec(
     code_api={"phi": "ForceConstants.third.value"},
     notes=(
         "kaldo stores FC3 as a sparse COO array under ForceConstants.third.value, "
-        "numerically in eV/Å³ — matches the operator-layer canonical "
+        "numerically in eV/Å³, which matches the operator-layer canonical "
         "`eV_per_A3` unit with the trivial `canonical` normalization."
     ),
 )
@@ -434,7 +434,7 @@ KALDO_PHASE_SPACE_3PH = SpaceRepresentationSpec(
     notes=(
         "Phonons.phase_space: per-mode 3-phonon phase-space density "
         "computed alongside the linewidth projection, shape (n_k_points, "
-        "n_modes). Independent of |V_3|² — pure kinematic count."
+        "n_modes). Independent of |V_3|², a pure kinematic count."
     ),
 )
 
@@ -484,7 +484,7 @@ KALDO_COMPUTE_DISPERSION = OperatorRepresentationSpec(
     notes=(
         "Phonons.frequency / Phonons.eigenvectors come from a per-q "
         "numpy.linalg.eigh of the dynamical matrix. Degenerate subspaces "
-        "inherit numpy's arbitrary basis choice — the standard reason "
+        "inherit numpy's arbitrary basis choice, the standard reason "
         "Eigenvectors and any quantity built from them are HiddenSpaces."
     ),
 )
@@ -495,7 +495,7 @@ KALDO_COMPUTE_GROUP_VELOCITY = OperatorRepresentationSpec(
     representation_name="kaldo",
     notes=(
         "Phonons.velocity uses the analytic Hellmann-Feynman form "
-        "v_qν = (1/2ω_qν) ⟨e_qν| ∂D/∂q |e_qν⟩ — matches the canonical "
+        "v_qν = (1/2ω_qν) ⟨e_qν| ∂D/∂q |e_qν⟩, which matches the canonical "
         "gv_method=hellmann_feynman."
     ),
 )
@@ -514,7 +514,7 @@ KALDO_SOLVE_BTE_RTA = OperatorRepresentationSpec(
 KALDO_CONTRACT_KAPPA_RTA = OperatorRepresentationSpec(
     operator=contract_kappa_rta,
     representation_name="kaldo",
-    notes="Conductivity(method='rta').conductivity — per-mode contraction.",
+    notes="Conductivity(method='rta').conductivity: per-mode contraction.",
 )
 
 
@@ -522,7 +522,7 @@ KALDO_CONTRACT_KAPPA_DIRECT = OperatorRepresentationSpec(
     operator=contract_kappa_direct,
     representation_name="kaldo",
     notes=(
-        "Conductivity(method='inverse'|'sc').conductivity — per-mode "
+        "Conductivity(method='inverse'|'sc').conductivity: per-mode "
         "contraction after the BTE solve."
     ),
 )
@@ -666,7 +666,7 @@ KALDO_COMPUTE_KAPPA_QHGK = OperatorRepresentationSpec(
 # ---------------------------------------------------------------------------
 # Harmonic thermodynamics. kaldo exposes only the per-mode HelmholtzFreeEnergy
 # directly (Phonons.free_energy). Entropy and InternalEnergy are not exposed
-# as separate arrays — users derive them externally — so those specs remain
+# as separate arrays (users derive them externally), so those specs remain
 # absent.
 # ---------------------------------------------------------------------------
 
@@ -703,7 +703,7 @@ KALDO_COMPUTE_FREE_ENERGY = OperatorRepresentationSpec(
 # Tamura isotopic linewidths as separate per-mode arrays; the total is
 # Phonons.bandwidth (anharmonic + isotopic when include_isotopes=True). The
 # boundary channel is added inline inside the LBTE solve when a finite
-# length is supplied to Conductivity — kaldo does not expose Γ_boundary as
+# length is supplied to Conductivity. kaldo does not expose Γ_boundary as
 # a separate array.
 # ---------------------------------------------------------------------------
 

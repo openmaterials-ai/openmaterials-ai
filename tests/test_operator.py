@@ -72,7 +72,7 @@ def test_wigner_pattern_a_terminal():
 
 
 def test_qhgk_is_hidden_state():
-    """QHGK κ inherits Linewidth's gauge dependence — modelled as a
+    """QHGK κ inherits Linewidth's gauge dependence, modelled as a
     HiddenSpace terminal node."""
     from omai.operator.space import HiddenSpace
     from omai.thermal_transport.operator import THERMAL_CONDUCTIVITY_QHGK, compute_kappa_qhgk
@@ -311,7 +311,7 @@ def test_compute_force_constants_2_carries_formula():
 
 
 def test_every_edge_has_a_sympy_formula():
-    """Every edge — sources included — carries a sympy formula."""
+    """Every edge, sources included, carries a sympy formula."""
     import sympy
 
     for op in EDGES:
@@ -382,7 +382,7 @@ def test_validate_dag_catches_lhs_index_rank_mismatch():
         POTENTIAL,
     )
 
-    # FREQUENCY_STATE's field "omega" has indices ("q", "nu") — rank 2.
+    # FREQUENCY_STATE's field "omega" has indices ("q", "nu"), rank 2.
     # Build an edge whose formula's LHS is rank 1 (single index).
     base = sp.IndexedBase(r"\omega")
     bad = Operator(
@@ -726,7 +726,7 @@ def test_compute_internal_energy_inputs():
 
 
 # (test_molar_thermo_contractions above already asserts both inputs and outputs
-# for the three molar contractions via State-object identity — strictly stronger
+# for the three molar contractions via State-object identity, which is strictly stronger
 # than a name-string output check.)
 
 

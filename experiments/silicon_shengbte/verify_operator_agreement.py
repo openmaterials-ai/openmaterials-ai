@@ -3,7 +3,7 @@
 By construction the operator layer attaches *one* sympy formula to each
 Operator; kaldo, phono3py, and shengbte all reference the same Operator
 in their adapter specs. So the formulas should be the same Python object,
-not just equal — `is` comparison suffices.
+not just equal, so `is` comparison suffices.
 
 The legitimate cross-code differences are in scheme_overrides
 and discretization_choices. This script tabulates both: identical formulas
@@ -88,7 +88,7 @@ def _collect_convention_diffs(specs: list) -> dict[str, dict[str, str]]:
             try:
                 out[k][s.representation_name] = s.declared_scheme(k)
             except KeyError:
-                out[k][s.representation_name] = "—"
+                out[k][s.representation_name] = "n/a"
     return out
 
 
@@ -98,7 +98,7 @@ def _collect_discretization(specs: list) -> dict[str, dict[str, str]]:
         keys.update(s.discretization_choices.keys())
     out: dict[str, dict[str, str]] = {}
     for k in sorted(keys):
-        out[k] = {s.representation_name: s.discretization_choices.get(k, "—") for s in specs}
+        out[k] = {s.representation_name: s.discretization_choices.get(k, "n/a") for s in specs}
     return out
 
 

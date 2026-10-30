@@ -69,7 +69,8 @@ def test_shengbte_linewidth_to_kaldo_is_unity():
     arr = np.array([0.1, 0.2, 0.5])  # Γ in angular_THz
     mk = represent(KALDO_LINEWIDTH, "Gamma", arr)
     ms = represent(SHENGBTE_LINEWIDTH, "Gamma", arr)
-    # Linewidth is a HiddenSpace — per-element is NOT_COMPARABLE; contract.
+    # Linewidth is a HiddenSpace, so per-element comparison is NOT_COMPARABLE.
+    # Compare a contraction.
     r = compare(ms, mk, contraction=np.sum, rtol=1e-9)
     assert r.agreed
     assert math.isclose(r.factor, 1.0, rel_tol=1e-9)

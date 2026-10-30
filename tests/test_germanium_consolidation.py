@@ -2,7 +2,7 @@
 
 These tests demonstrate that the operator layer's identities and the
 cross-code agreement that hold on silicon-Tersoff *also* hold on a
-different material, with no framework code changes — only
+different material, with no framework code changes: only
 `experiments/germanium_tersoff/seed.py` differs from the silicon seed.
 
 All tests skip if the relevant artefact hasn't been produced by

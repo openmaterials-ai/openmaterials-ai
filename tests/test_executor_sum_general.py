@@ -44,7 +44,7 @@ def test_apply_edge_binds_supplied_V_cell_constant():
 
 def test_general_sum_evaluates_composed_sinh_summand_scalar():
     """Σ_qν c(ω_qν,T) with the sinh kernel *inside* the Sum (composed molar Cv)
-    evaluates to N_A/N_q · Σ c — equal to executing the two edges separately."""
+    evaluates to N_A/N_q · Σ c, equal to executing the two edges separately."""
     omega = np.array([[5.0, 10.0], [15.0, 20.0]])
     fused = compose_executable((compute_heat_capacity, contract_molar_heat_capacity))
     rep_omega = _op_rep(FREQUENCY_STATE, "omega", omega)
@@ -57,7 +57,7 @@ def test_general_sum_evaluates_composed_sinh_summand_scalar():
 
 
 def test_general_sum_evaluates_cvF_tensor_contraction():
-    """κ[α,β] = (1/(N_q V)) Σ_qν c[q,ν] v[α,q,ν] F[β,q,ν] — a tensor contraction
+    """κ[α,β] = (1/(N_q V)) Σ_qν c[q,ν] v[α,q,ν] F[β,q,ν] is a tensor contraction
     (free α,β survive the sum). Compare to a hand einsum."""
     rng = np.random.default_rng(3)
     N_q, N_modes = 4, 6

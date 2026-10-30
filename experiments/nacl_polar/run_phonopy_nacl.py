@@ -1,10 +1,11 @@
 """NaCl-rd phonopy run with non-analytical correction (NAC).
 
 The first polar material the framework touches. The point is to
-demonstrate that the operator-layer's *polar branch* — BornCharges,
-DielectricTensor, the Pattern-C apply_nac_correction edge (sibling to
-identity_dm), and the LO-TO splitting at q→0 — runs end-to-end on a real
-ionic crystal, with no operator-layer or representation code changes.
+demonstrate that the operator-layer's *polar branch* runs end-to-end on a
+real ionic crystal, with no operator-layer or representation code changes.
+The branch is BornCharges, DielectricTensor, the Pattern-C
+apply_nac_correction edge (sibling to identity_dm), and the LO-TO
+splitting at q→0.
 
 Inputs (copied from phonopy/example/NaCl-rd/):
   - POSCAR-unitcell : conventional 8-atom (4 Na + 4 Cl) rocksalt cell
@@ -15,7 +16,7 @@ Inputs (copied from phonopy/example/NaCl-rd/):
 
 Output: runs/nacl_polar/phonopy/, containing the
 mesh-sampled ω(q,ν) WITH NAC and a "Γ-approach" sweep that pulls q
-toward zero along [100] and reports the LO-TO splitting — the polar
+toward zero along [100] and reports the LO-TO splitting, the polar
 fingerprint that's invisible on Si.
 """
 

@@ -40,7 +40,7 @@ def test_cross_check_observable_routes_agree():
 
 
 def test_cross_check_hidden_space_routes_are_not_comparable():
-    """For a HiddenSpace target, per-element routes are NOT_COMPARABLE — the
+    """For a HiddenSpace target, per-element routes are NOT_COMPARABLE: the
     framework predicts they need not agree (no bug flagged)."""
     g = np.array([[1.0, 2.0], [3.0, 4.0]])
     routes = {
@@ -50,7 +50,7 @@ def test_cross_check_hidden_space_routes_are_not_comparable():
     report = cross_check(ANHARMONIC_LINEWIDTH, routes)
     statuses = {(p.label_a, p.label_b): p.status for p in report.pairwise}
     assert statuses[("r1", "r2")] == "NOT_COMPARABLE"
-    # NOT_COMPARABLE does not break ok() — it carries no normative weight.
+    # NOT_COMPARABLE does not break ok(): it carries no normative weight.
     assert report.ok() is True
 
 

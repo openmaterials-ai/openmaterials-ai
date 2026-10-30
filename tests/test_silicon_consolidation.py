@@ -6,7 +6,7 @@ run and verifies one operator-layer identity. The artefacts live under
 ``runs/silicon_tersoff/{kaldo_adaptive, phonopy}`` and
 ``experiments/silicon_shengbte/T300K``.
 
-Tests skip — not fail — when the relevant ``run_*.py`` has not produced
+Tests skip, not fail, when the relevant ``run_*.py`` has not produced
 the file yet. The identities themselves (E = F + TS, the Matthiessen
 sum, the Wigner decomposition, the cumulative-κ limit) are deterministic
 once the inputs exist.
@@ -87,7 +87,7 @@ def test_wigner_decomposition_kappa_W_equals_pop_plus_coh():
     k_pop = np.load(pop_path)
     k_coh = np.load(coh_path)
     residual = float(np.max(np.abs(k_wig - (k_pop + k_coh))))
-    # 1e-6 W/(m·K) absolute tolerance — generous, since κ is O(100) W/(m·K)
+    # 1e-6 W/(m·K) absolute tolerance. Generous, since κ is O(100) W/(m·K)
     # and the decomposition is exact by construction up to float64 round-off.
     assert residual < 1e-6, (
         f"κ_W ≠ κ_pop + κ_coh: residual {residual:.3e} W/(m·K)"
@@ -121,7 +121,7 @@ def test_cumulative_kappa_is_monotone():
 
 
 # ---------------------------------------------------------------------------
-# Phase 2 P4: cross-paradigm κ — LAMMPS Green-Kubo vs kaldo LBTE
+# Phase 2 P4: cross-paradigm κ, LAMMPS Green-Kubo vs kaldo LBTE
 # ---------------------------------------------------------------------------
 
 

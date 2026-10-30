@@ -79,7 +79,7 @@ class NoSourceError(RuntimeError):
 #   ℏ_eff = h · 1e12 [J / (linear THz)]
 # where h = 6.62607015e-34 J·s. Equivalently ℏω_lin = h · ω_THz_lin.
 _h_PLANCK = 6.62607015e-34  # J·s
-_HBAR_LINEAR_THZ_FACTOR = _h_PLANCK * 1.0e12  # J per (linear THz) — matches ℏω
+_HBAR_LINEAR_THZ_FACTOR = _h_PLANCK * 1.0e12  # J per (linear THz), matches ℏω
 _KB = 1.380649e-23  # J / K
 _N_A_VALUE = 6.02214076e23  # 1 / mol
 _Q_E = 1.602176634e-19  # C
@@ -106,7 +106,7 @@ class _OperatorFormSpaceAdapterSpec(SpaceRepresentationSpec):
     """Synthetic SpaceRepresentationSpec representing operator (canonical) form.
 
     Used as the ``space_adapter_spec`` on Representations produced by the
-    executor. Carries no unit / normalization overrides — values are in
+    executor. Carries no unit / normalization overrides: values are in
     canonical units by definition (``is_operator=True``).
     """
 
@@ -260,7 +260,7 @@ def apply_edge(
     for rep, expected_space in zip(inputs, op.inputs):
         if rep.space != expected_space:
             raise ValueError(
-                f"operator {op.name!r}: input space mismatch — expected "
+                f"operator {op.name!r}: input space mismatch, expected "
                 f"{expected_space.name!r}, got {rep.space.name!r}"
             )
         if not rep.is_operator:
@@ -366,12 +366,12 @@ def apply_edge(
                 input_dummies.append((scalar_sym, data))
 
     # 6a. Evaluate full-range BZ Sums. A Sum's summand can be:
-    #       * a single bare Indexed (c[q,ν]) — np.sum(array), scalar;
+    #       * a single bare Indexed (c[q,ν]): np.sum(array), scalar;
     #       * an elementwise scalar kernel over one Indexed (the composed
-    #         molar-Cv sinh form Σ_qν c(ω_qν,T)) — np.sum of the kernel
+    #         molar-Cv sinh form Σ_qν c(ω_qν,T)): np.sum of the kernel
     #         evaluated per mode, scalar;
     #       * a product of several Indexed with free indices surviving the
-    #         sum (κ[α,β] = Σ_qν c v F) — an einsum, tensor result.
+    #         sum (κ[α,β] = Σ_qν c v F): an einsum, tensor result.
     #     The unified algorithm broadcasts every summand-input array into a
     #     common (free… , bound…) layout, evaluates the elementwise kernel
     #     via lambdify, and np.sum's over the trailing bound axes. The result
@@ -434,7 +434,7 @@ def apply_edge(
             indexed_subs[atom] = base_to_dummy[base]
 
         # 6a.iii. Numeric physics constants inside the summand (ℏ, k_B,
-        #         V_cell, …) — substitute before lambdify, since after the
+        #         V_cell, …): substitute before lambdify, since after the
         #         Sum atom is replaced the outer physics_subs pass won't
         #         reach inside.
         kernel = summand.xreplace(indexed_subs)
@@ -502,7 +502,7 @@ def apply_edge(
     bound_symbols = {sym for sym, _ in input_dummies}
     leftover = set(rhs.free_symbols) - bound_symbols
     # Strip out anything that's an integer dummy index (q, nu, alpha, beta,
-    # i, j, k, gamma, delta) — those should have been absorbed by the
+    # i, j, k, gamma, delta). Those should have been absorbed by the
     # Indexed → dummy substitution, but if the formula references the bare
     # index outside an Indexed expression we leave it alone (and let
     # lambdify complain).
@@ -523,7 +523,7 @@ def apply_edge(
     arg_values = [val for _, val in input_dummies]
     try:
         fn = sp.lambdify(arg_symbols, rhs, modules="numpy")
-    except Exception as exc:  # pragma: no cover — sympy lambdify failure
+    except Exception as exc:  # pragma: no cover, sympy lambdify failure
         raise NotImplementedError(
             f"operator {op.name!r}: sympy.lambdify failed on the simplified "
             f"RHS ({rhs!r}): {exc}"
@@ -533,7 +533,7 @@ def apply_edge(
 
     # Dimensional reconciliation: rescale the raw canonical-unit contraction
     # into the output space's declared canonical unit (no-op for closed-form,
-    # identity, and additive edges — see _dimensional_bridge).
+    # identity, and additive edges, see _dimensional_bridge).
     result_arr = result_arr * _dimensional_bridge(op)
 
     # 10. Wrap as an operator-form Representation.
@@ -555,8 +555,8 @@ def apply_edge(
 def _dimensional_bridge(op: Operator) -> float:
     """Unit-bridge factor for a pure-monomial contraction edge; 1.0 otherwise.
 
-    Applies iff the operator's formula RHS — with each Sum made transparent to
-    its summand (summation over a dimensionless index does not change units) —
+    Applies iff the operator's formula RHS, with each Sum made transparent to
+    its summand (summation over a dimensionless index does not change units),
     is a monomial in the input Indexed-bases and declared-Parameter symbols:
     a product/quotient of those factors at integer powers, with no factor
     wrapped in a transcendental function and no additive structure. Counters
@@ -782,7 +782,7 @@ def compute(
             )
         # Nullary operators (no inputs) are "provider" edges that inject an
         # external parameter (e.g. provide_temperature). They cannot be derived
-        # automatically — a Source must be registered for the space.
+        # automatically: a Source must be registered for the space.
         if op.is_nullary():
             raise NoSourceError(
                 f"space {space.name!r} is produced by nullary operator "

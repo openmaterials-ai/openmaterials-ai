@@ -76,7 +76,7 @@ def _allowed_symbols_for_edge(op: Operator) -> set[str]:
       - `vocabulary.SPACE_SYMBOLS[input.name]` for each input space
       - `vocabulary.SPACE_SYMBOLS[output.name]` for each output space
       - the edge's parameter names
-    Spaces not present in the registry contribute nothing — they're
+    Spaces not present in the registry contribute nothing. They're
     treated as not yet registered, which means the check will flag
     unregistered symbols. Register via the domain's vocabulary module
     when growing the DAG.

@@ -13,8 +13,8 @@ the Green-Kubo / NEMD / HNEMD κ paths.
 
 Gauge policy in brief: a quantity whose per-element values depend on
 eigenvector phase / degenerate-subspace rotation, BZ-summation choice, or
-MD ensemble noise is a HiddenSpace declaring its gauge_group and — when it
-is scaffolding — the ObservableSpace contractions that capture its
+MD ensemble noise is a HiddenSpace declaring its gauge_group and, when it
+is scaffolding, the ObservableSpace contractions that capture its
 invariant content. MeanFreeDisplacement and ThermalConductivity are
 parameterized by the upstream `bte_solver` choice: the RTA variants (like
 κ_QHGK) are terminal `approximation` HiddenSpaces because the 1/Γ
@@ -111,7 +111,7 @@ BARE_DYNAMICAL_MATRIX = ObservableSpace(
     name="BareDynamicalMatrix",
     fields=(Field("D_bare", FREQUENCY_SQUARED, indices=("i", "j", "q")),),
     description=(
-        "Analytic Bloch sum of Φ²(R) — the dynamical matrix before any "
+        "Analytic Bloch sum of Φ²(R), the dynamical matrix before any "
         "non-analytic correction is applied. Always produced by "
         "compute_dynamical_matrix(FC2). For non-polar materials the "
         "downstream DynamicalMatrix is identical to this (via identity_dm); "
@@ -379,9 +379,9 @@ TOTAL_LINEWIDTH = HiddenSpace(
     gauge_invariant_contractions=("ThermalConductivity[bte_solver=direct_inverse]",),
     description=(
         "Sum of all enabled scattering channels (anharmonic + isotope + "
-        "boundary + ...). The BTE solver consumes this — Matthiessen's "
-        "rule applies under the linearized BTE. Channels a given run does "
-        "not model contribute zero."
+        "boundary + ...). The BTE solver consumes this. Matthiessen's rule "
+        "holds under the linearized BTE, so the channels add. Channels a "
+        "given run does not model contribute zero."
     ),
     tier="Scattering",
 )
@@ -479,7 +479,7 @@ THERMAL_CONDUCTIVITY_RTA = HiddenSpace(
 # by `transport_model` (Pattern A). The existing LBTE branch is implicitly
 # transport_model=lbte; only the new branches carry the parameter in their
 # space names. Wigner decomposes into populations + coherences sub-results
-# that combine into the total — each carried as its own sibling space so
+# that combine into the total, each carried as its own sibling space so
 # that codes which emit one or the other independently can spec them.
 
 THERMAL_CONDUCTIVITY_WIGNER_POPULATIONS = ObservableSpace(
@@ -542,7 +542,7 @@ CUMULATIVE_KAPPA_MFP = ObservableSpace(
     description=(
         "Cumulative thermal conductivity vs mean free path: κ_cum(Λ_c) "
         "= (1/(V N_q)) Σ_{|F_qν| ≤ Λ_c} c_qν v^α_qν F^β_qν. Heavily used "
-        "for nanoscale design — the Λ at which κ_cum is 50% of κ_total "
+        "for nanoscale design: the Λ at which κ_cum is 50% of κ_total "
         "is the median mean free path."
     ),
     tier="Transport",
@@ -690,7 +690,7 @@ TRAJECTORY = HiddenSpace(
         "(NVE/NVT/NPT), the thermostat (Berendsen / Langevin / Nose-Hoover "
         "/ CSVR / none), and the initial conditions. Cross-code "
         "comparability lives entirely in the time-averaged contractions "
-        "below — HeatCurrentACF, VelocityAutocorrelation, and "
+        "below: HeatCurrentACF, VelocityAutocorrelation, and "
         "MeanSquaredDisplacement are the gauge-invariant content."
     ),
     tier="Molecular dynamics",
@@ -719,8 +719,8 @@ HEAT_CURRENT_ACF = ObservableSpace(
         "Time-correlation tensor ⟨J_α(0) J_β(τ)⟩ of the MD heat current. "
         "Computed by averaging J(t)·J(t+τ) over the production trajectory "
         "and ensemble repeats; gauge-invariant in the τ→∞ limit. "
-        "The Green-Kubo κ integrand: κ_αβ ∝ ∫₀^∞ Jcorr_αβ(τ) dτ — "
-        "added in P3 as contract_kappa_green_kubo."
+        "The Green-Kubo κ integrand: κ_αβ ∝ ∫₀^∞ Jcorr_αβ(τ) dτ "
+        "(added in P3 as contract_kappa_green_kubo)."
     ),
     tier="Molecular dynamics",
 )
@@ -732,7 +732,7 @@ VELOCITY_AUTOCORRELATION = ObservableSpace(
         "Velocity autocorrelation function ⟨v(0)·v(τ)⟩ averaged over atoms "
         "and time origins. Gauge-invariant (a time-correlation of "
         "ensemble-averaged quantities). The Fourier transform gives the "
-        "phonon density of states via the Wiener-Khinchin theorem — see "
+        "phonon density of states via the Wiener-Khinchin theorem. See "
         "the `fourier_to_dos` edge, which makes this a Pattern-C "
         "alternative-producer of PhononDOS alongside compute_dos."
     ),

@@ -101,7 +101,7 @@ def test_real_omega_shape_and_range():
     # Acoustic Γ has ω = 0 (first three modes of first q-point); optical
     # frequencies are ~41 rad/ps for InAs LO at Γ.
     assert np.all(omega >= 0.0)
-    assert omega.max() < 100.0  # rad/ps — sanity bound
+    assert omega.max() < 100.0  # rad/ps, sanity bound
     assert omega[0, 0] == 0.0  # acoustic Γ
 
 

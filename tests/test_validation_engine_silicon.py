@@ -100,7 +100,7 @@ def test_example_b_kappa_direct_matches_kaldo():
             data=np.load(_KALDO / "mean_free_displacement.npy"), is_operator=True),
     }
     result = compute(THERMAL_CONDUCTIVITY_DIRECT, sources, constants={"V_{cell}": v_cell})
-    # Bridge in apply_edge already rescaled to W/(m·K) — use data directly.
+    # Bridge in apply_edge already rescaled to W/(m·K), so use the data directly.
     kappa = np.asarray(result.representation.data)
     gt = np.load(_KALDO / "kappa_inverse_tensor_WmK.npy")
     rel = abs(np.trace(kappa) / 3.0 - np.trace(gt) / 3.0) / abs(np.trace(gt) / 3.0)

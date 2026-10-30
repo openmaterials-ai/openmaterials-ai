@@ -61,7 +61,7 @@ def test_compose_chain_substitutes_rhs_into_lhs() -> None:
     )
 
     # The downstream IndexedBase used by the producer (\omega) should now
-    # appear in the result — confirming the substitution actually moved
+    # appear in the result, confirming the substitution actually moved
     # content from the producer's RHS into the consumer's RHS.
     omega_base = sp.IndexedBase(r"\omega")
     assert omega_base in bases
@@ -86,7 +86,7 @@ def test_compose_halts_at_implicit_edge_with_partial() -> None:
     err = exc_info.value
     assert err.edge is solve_bte_direct
     # Partial should be the accumulated expression up to (but not through)
-    # the implicit edge — i.e. the heat-capacity RHS.
+    # the implicit edge, i.e. the heat-capacity RHS.
     assert err.partial is not None
     assert err.partial == compute_heat_capacity.formula.rhs
 

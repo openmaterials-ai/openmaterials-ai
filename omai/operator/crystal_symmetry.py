@@ -3,9 +3,9 @@
 A `SymmetryGroup` is the operator layer's *operator* declaration of a crystal
 symmetry: a name, an order, and (optionally) a description. The operator layer
 does **not** enumerate group elements or store concrete rotation matrices.
-That work — extracting symmetries from a crystal structure, applying them
-to tensors, building irreducible-BZ reductions — belongs to the materials
-codes (phonopy, kaldo, ShengBTE, …), typically via spglib.
+Extracting symmetries from a crystal structure, applying them to tensors
+and building irreducible-BZ reductions belong to the materials codes
+(phonopy, kaldo, ShengBTE, …), typically via spglib.
 
 The operator layer's role here is to *name* the group so that:
 
