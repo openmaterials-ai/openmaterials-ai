@@ -24,3 +24,16 @@ def test_js_submap_matches_python():
     got = json.loads(run_module(script, json.dumps({"snap": snap, "cases": cases})))
     for k, ids in cases.items():
         assert got[k] == submap.svg(graph, set(ids), map_href="/map/", fit_under=760), k
+
+
+def test_every_edge_stays_inside_the_view_box():
+    # a cubic reaches 0.75 of the way to its control points; a loop in the last column must not be clipped
+    import re
+    snap = build_snapshot()
+    graph = json.loads((DATA / "graph.json").read_text())
+    for k, c in snap["codes"].items():
+        out = submap.svg(graph, set(c["nodes"]))
+        width = int(re.search(r'viewBox="0 0 (\d+)', out)[1])
+        for d in re.findall(r'class="sm-edge" d="([^"]+)"', out):
+            x = [float(v) for v in re.findall(r"-?\d+(?:\.\d+)?", d)[0::2]]
+            assert x[0] + 0.75 * (max(x[1], x[2]) - x[0]) <= width, (k, d)

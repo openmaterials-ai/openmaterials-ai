@@ -6,7 +6,7 @@
 import { PREFIX, SITE, codesOf, encode, describe, parseShare, title } from "../../../docs/assets/share.js";
 
 // Bump when the card drawing changes, so cached cards of the old drawing are not served.
-export const CARD_VERSION = 1;
+export const CARD_VERSION = 2;
 
 const PATH_RE = /^\/m\/([^/]+)\/([^/]+?)(\.png)?$/;
 

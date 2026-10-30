@@ -60,11 +60,17 @@ export function layout(snap, ids) {
     const x = PAD + ci * (COL_W + COL_GAP) + (COL_W - BOX_W) / 2;
     columns.get(t).forEach((i, ri) => pos.set(i, { x, y: PAD + HEAD_H + ri * (BOX_H + ROW_GAP), col: ci, row: ri }));
   });
-  const width = PAD * 2 + tiers.length * COL_W + Math.max(0, tiers.length - 1) * COL_GAP;
+  let width = PAD * 2 + tiers.length * COL_W + Math.max(0, tiers.length - 1) * COL_GAP;
+  // a loop within a column bows right to x0 + 0.75 * bow; in the last column that can pass the right edge
+  for (const [s, t] of edges) {
+    if (pos.get(s).col === pos.get(t).col) width = Math.max(width, Math.ceil(pos.get(s).x + BOX_W + 0.75 * bow(pos.get(s), pos.get(t)) + 2));
+  }
   const tallest = Math.max(0, ...[...columns.values()].map((c) => c.length));
   const height = PAD * 2 + HEAD_H + tallest * (BOX_H + ROW_GAP) - ROW_GAP;
   return { tiers, columns, pos, edges, ctx, nodes, width, height: Math.max(height, 80) };
 }
+
+const bow = (a, b) => 28 + 6 * Math.abs(b.row - a.row);
 
 function edgePath(a, b) {
   if (b.col > a.col) {
@@ -74,8 +80,8 @@ function edgePath(a, b) {
   }
   if (b.col === a.col) {
     const x0 = a.x + BOX_W, y0 = a.y + BOX_H / 2, x1 = b.x + BOX_W, y1 = b.y + BOX_H / 2;
-    const bow = 28 + 6 * Math.abs(b.row - a.row);
-    return `M${f0(x0)} ${f0(y0)} C${f0(x0 + bow)} ${f0(y0)} ${f0(x1 + bow)} ${f0(y1)} ${f0(x1)} ${f0(y1)}`;
+    const w = bow(a, b);
+    return `M${f0(x0)} ${f0(y0)} C${f0(x0 + w)} ${f0(y0)} ${f0(x1 + w)} ${f0(y1)} ${f0(x1)} ${f0(y1)}`;
   }
   const x0 = a.x + BOX_W / 2, y0 = a.y, x1 = b.x + BOX_W / 2, y1 = b.y;
   const top = Math.min(y0, y1) - 40;
