@@ -96,15 +96,15 @@
   <section class="share-map">
     <figure class="share-fig">
       <div class="submap" id="submap"><noscript><p class="notice">This page draws the selection with JavaScript. The data is plain JSON under <a href="/data/v/index.json">data/v/</a>.</p></noscript></div>
-      <figcaption>The selected quantities in their tiers on the map, with the data flow between them. Each box opens the quantity on the full map. When fewer than four are selected, their direct inputs and outputs are drawn hollow.</figcaption>
+      <figcaption>The submap places the selected quantities in their map tiers and draws the data flow between them. Each box opens its quantity on the full map. A selection of fewer than four quantities also shows their direct inputs and outputs, drawn hollow.</figcaption>
       <a class="embed-out" id="embedOut" href="/map/" target="_top">Open on OpenMaterials</a>
     </figure>
   </section>
 
-  <section class="share-section" id="quantities" hidden><h2>The quantities</h2><p>Each with its dimension, its definition on the map, and whether a Lean declaration checks its dimension or physlib names it.</p><ul class="qty" id="qty"></ul></section>
+  <section class="share-section" id="quantities" hidden><h2>The quantities</h2><p>Each entry gives the dimension and the map definition of a quantity. It also says whether a Lean declaration checks the dimension and whether physlib names the quantity.</p><ul class="qty" id="qty"></ul></section>
   <section class="share-section" id="codes" hidden><h2>Codes that compute them</h2><p id="codesLede"></p><ul class="bars" id="bars"></ul></section>
-  <section class="share-section" id="related" hidden><h2>Related codes</h2><p>Other codes ranked by the overlap of the quantities they compute with this selection (shared quantities over all quantities of either).</p><ul class="chips" id="relatedList"></ul></section>
-  <section class="share-section" id="next" hidden><h2>One step further on the map</h2><p>Quantities one edge from the selection. Each link opens this selection with that quantity added.</p><div id="nextList"></div></section>
+  <section class="share-section" id="related" hidden><h2>Related codes</h2><p>The score of another code is the number of quantities it shares with this selection divided by the number in either of the two (the Jaccard index).</p><ul class="chips" id="relatedList"></ul></section>
+  <section class="share-section" id="next" hidden><h2>Quantities one edge away</h2><p>These quantities lie one edge from the selection on the map. Each link opens the selection with that quantity added.</p><div id="nextList"></div></section>
   <section class="share-section" id="about" hidden><h2>About this link</h2><p class="provenance" id="provenance"></p></section>
 </main>
 <div data-site-footer></div>
@@ -150,12 +150,12 @@ async function main() {
   const ref = parseShare(VIA_WORKER ? location.pathname : location.hash);
   if (!ref) return fail("The link is not a share link of the form /m/<snapshot>/<selection>.");
   let index;
-  try { index = await getJSON("/data/v/index.json"); } catch (e) { return fail("The list of map snapshots could not be read."); }
+  try { index = await getJSON("/data/v/index.json"); } catch (e) { return fail("This page could not read the list of map snapshots."); }
   const found = resolveSnapshot(index, ref.snapshot);
-  if (!found.ok) return fail(found.reason === "ambiguous" ? `The snapshot ${ref.snapshot} matches more than one snapshot; the link needs a longer prefix.` : `No snapshot of the map is named ${ref.snapshot}.`);
+  if (!found.ok) return fail(found.reason === "ambiguous" ? `The prefix ${ref.snapshot} matches more than one snapshot. The link needs a longer prefix.` : `No snapshot of the map is named ${ref.snapshot}.`);
   const hash = found.hash;
   let snap;
-  try { snap = await getJSON(`/data/v/${hash}.json`); } catch (e) { return fail(`Snapshot ${hash.slice(0, PREFIX)} could not be read.`); }
+  try { snap = await getJSON(`/data/v/${hash}.json`); } catch (e) { return fail(`This page could not read snapshot ${hash.slice(0, PREFIX)}.`); }
   const sel = decode(snap, ref.selection);
   if (!sel.ok) return fail(`The selection does not fit this snapshot: ${sel.reason}.`);
   const ids = sel.ids, nodes = new Map(snap.nodes.map((n) => [n.id, n]));
@@ -187,13 +187,13 @@ async function main() {
       const m = toLatest(snap, latest, ids);
       const name = (s, id) => (s.nodes.find((n) => n.id === id) || { name: id }).name;
       const parts = [];
-      if (m.renamed.length) parts.push("Renamed since: " + m.renamed.map(([a, b]) => `${esc(name(snap, a))} is now ${esc(name(latest, b))}`).join("; ") + ".");
-      if (m.superseded.length) parts.push("Redefined since: " + m.superseded.map(([a, b]) => `${esc(name(snap, a))}, now ${esc(name(latest, b))}`).join("; ") + ".");
+      if (m.renamed.length) parts.push("Renamed since: " + m.renamed.map(([a, b]) => `${esc(name(snap, a))} is now ${esc(name(latest, b))}`).join(", ") + ".");
+      if (m.superseded.length) parts.push("Redefined since: " + m.superseded.map(([a, b]) => `${esc(name(latest, b))} replaces ${esc(name(snap, a))}`).join(", ") + ".");
       if (m.removed.length) parts.push("Not on the latest map: " + m.removed.map((a) => esc(name(snap, a))).join(", ") + ".");
       const there = m.ids.length ? ` <a href="${esc(here(index.latest, encode(latest, m.ids)))}">Open the same selection on the latest map</a>.` : "";
       $("banner").innerHTML = `<p class="notice">This link shows the map as it was when the link was made.${there} ${parts.join(" ")}</p>`;
     } catch (e) {
-      $("banner").innerHTML = `<p class="notice">This link shows the map as it was when the link was made. The latest snapshot could not be read.</p>`;
+      $("banner").innerHTML = `<p class="notice">This link shows the map as it was when the link was made. This page could not read the latest snapshot.</p>`;
     }
   }
 
@@ -208,7 +208,7 @@ async function main() {
   $("quantities").hidden = false;
 
   if (cover.length) {
-    $("codesLede").textContent = `How many of the ${plural(ids.length, "selected quantity", "selected quantities")} each code computes, as the commons records it.`;
+    $("codesLede").textContent = `Each bar counts how many of the ${plural(ids.length, "selected quantity", "selected quantities")} a code computes, as the commons records it.`;
     $("bars").innerHTML = cover.map((c) => `<li><a href="/codes/${encodeURIComponent(c.key)}/">${esc(c.name)}</a>` +
       `<span class="bar" aria-hidden="true"><span style="width:${(100 * c.count / ids.length).toFixed(1)}%"></span></span><span class="n">${c.count} of ${ids.length}</span></li>`).join("");
     $("codes").hidden = false;
@@ -228,8 +228,8 @@ async function main() {
       ss.map((s) => `<li><a href="${esc(here(hash, encode(snap, ids.concat([s.id]))))}">${esc(s.name)}<span class="n">${s.via === "input" ? "feeds it" : "follows from it"}</span></a></li>`).join("") + "</ul>").join("");
     $("next").hidden = false;
   }
-  $("provenance").innerHTML = `This page is drawn from snapshot <a href="/data/v/${hash}.json">${hash}</a> of the OpenMaterials commons, frozen when it was published, so the link shows the same page for as long as the site exists. ` +
-    `Map version ${esc(snap.map_version)}. The selection is the hex code at the end of the link, one bit per quantity in the snapshot's order.`;
+  $("provenance").innerHTML = `Snapshot <a href="/data/v/${hash}.json">${hash}</a> of the OpenMaterials commons supplies this page. The snapshot was frozen when it was published, so the link shows the same page for as long as the site exists. ` +
+    `The snapshot carries map version ${esc(snap.map_version)}. The hex code at the end of the link encodes the selection, one bit per quantity in snapshot order.`;
   $("about").hidden = false;
 }
 main();

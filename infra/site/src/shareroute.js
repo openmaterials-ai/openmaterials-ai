@@ -45,7 +45,7 @@ export function shellHTML(template, meta, origin) {
     `<meta property="og:url" content="${esc(meta.url)}">`,
     `<meta property="og:image" content="${esc(meta.image)}">`,
     `<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">`,
-    `<meta property="og:image:alt" content="${esc(meta.name)}: the selected quantities of the OpenMaterials map in their tiers.">`,
+    `<meta property="og:image:alt" content="Submap of ${esc(meta.name)} on the OpenMaterials map, with the selected quantities in their tiers.">`,
     `<meta name="twitter:card" content="summary_large_image">`,
     `<link rel="alternate" type="application/json+oembed" href="${esc(`${origin}/oembed?url=${encodeURIComponent(meta.url)}&format=json`)}" title="${esc(meta.title)}">`,
   ].join("\n");

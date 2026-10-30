@@ -20,11 +20,11 @@ export function encode(snap, ids) {
 
 // {ok: true, ids} in snapshot order, or {ok: false, reason}
 export function decode(snap, hex) {
-  if (!SEL_RE.test(hex || "") || hex.endsWith("00")) return { ok: false, reason: "malformed selection" };
+  if (!SEL_RE.test(hex || "") || hex.endsWith("00")) return { ok: false, reason: "it is malformed" };
   const ids = [];
   for (let i = 0; i < hex.length * 4; i++) {
     if (parseInt(hex.slice((i >> 3) * 2, (i >> 3) * 2 + 2), 16) & (0x80 >> (i & 7))) {
-      if (i >= snap.nodes.length) return { ok: false, reason: `selection names quantity ${i + 1} of a map with ${snap.nodes.length}` };
+      if (i >= snap.nodes.length) return { ok: false, reason: `it names quantity ${i + 1}, but the snapshot has ${snap.nodes.length}` };
       ids.push(snap.nodes[i].id);
     }
   }

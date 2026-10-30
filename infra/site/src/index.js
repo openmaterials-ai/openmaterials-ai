@@ -289,7 +289,7 @@ async function loadShare(request, env, prefix, selection) {
   const found = resolveSnapshot(index, prefix);
   if (!found.ok) {
     return { ok: false, response: html(errorHTML(found.reason === "ambiguous"
-      ? `The snapshot prefix ${prefix} matches more than one snapshot.` : `No map snapshot is named ${prefix}.`), 404) };
+      ? `The prefix ${prefix} matches more than one snapshot. The link needs a longer prefix.` : `No map snapshot is named ${prefix}.`), 404) };
   }
   try {
     snap = await assetJSON(env, request, `/data/v/${found.hash}.json`);
