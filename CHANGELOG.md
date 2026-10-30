@@ -5,6 +5,10 @@ mints, for consumers. Versioning follows README.md ("Versioning"): before 1.0
 an identity change takes the minor version, and this file lists every re-keyed
 id.
 
+## 0.5.1
+
+The code of 0.5.0, republished. Every openmaterials-ai release file was removed from PyPI on 2026-10-29, and PyPI never accepts a removed filename again, so 0.5.0 cannot be uploaded a second time. Consumers pin `openmaterials-ai==0.5.1`. Against 0.5.0 only the version string changes: no code, record format, vector or id differs. No earlier version is on PyPI any more. Each keeps its git tag.
+
 ## 0.5.0
 
 Every consumer pins `openmaterials-ai==0.5.0`. The minor version follows README "Versioning": public names are removed (`omai.lean_identities`, `omai.lean_units`, twelve `KALDO_*` specs, four names of `omai.physlean_export`, one `omai.thermal_transport.representation` module and one `CODE_CREDITS` key) and added (the external-solve snapshot API, `omai.formula_bindings`, `omai.physlib_dimensions`, the code-page generators), and the `ngspice` representation is added. The map moves from graph_version `baf99346621b` to `02b3fc768e66` and the lineage version from `61a981c02604` to `f5a7cb57594f` through append-only contributions: no node, edge or evidence uid is re-keyed. The packaged kaldo external-solve request is re-minted, so its `request_id` moves from `9c65fd692c45` to `1a88760844bd` (three steps, below); its `lineage_id` is unchanged.
