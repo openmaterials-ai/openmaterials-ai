@@ -24,8 +24,8 @@ import {
   shortlinkHTML, shortlinkNotFoundHTML,
 } from "./shortlinks.js";
 import { badgeSVG, statBadgeSVG, BADGE_PATH_RE, STAT_BADGE_PATH_RE } from "./badge.js";
-import { parseMPath, shareMeta, shellHTML, oembedJSON, errorHTML } from "./shareroute.js";
-import { PREFIX, decode, resolveSnapshot } from "../../../docs/assets/share.js";
+import { CARDS_PER_DAY, parseMPath, shareMeta, shellHTML, oembedJSON, errorHTML } from "./shareroute.js";
+import { PREFIX, decode, encode, resolveSnapshot } from "../../../docs/assets/share.js";
 
 // Origins allowed to mint (the read side is public by design). localhost
 // covers wrangler dev and the docs http.server used by tests.
@@ -306,7 +306,7 @@ async function handleShare(request, env, url) {
   if (!ref) return html(errorHTML("A share link is /m/<snapshot>/<selection>, with 8 to 64 hex characters of the snapshot and the selection in lowercase hex."), 400);
   const s = await loadShare(request, env, ref.prefix, ref.selection);
   if (!s.ok) return s.response;
-  if (ref.png) return sharePNG(env, s);
+  if (ref.png) return sharePNG(request, env, s);
   let template;
   try {
     template = await assetText(env, request, "/share/index.html");
@@ -322,7 +322,7 @@ async function handleOembed(request, env, url) {
   if ((url.searchParams.get("format") || "json") !== "json") return new Response("only format=json", { status: 501, headers: cors });
   let target;
   try { target = new URL(url.searchParams.get("url") || ""); } catch (e) { target = null; }
-  const ref = target && target.host === url.host ? parseMPath(target.pathname) : null;
+  const ref = target && (target.host === url.host || target.hostname === "openmaterials.ai") ? parseMPath(target.pathname) : null;
   if (!ref || ref.png) return Response.json({ error: "not a share link of this site" }, { status: 404, headers: cors });
   const s = await loadShare(request, env, ref.prefix, ref.selection);
   if (!s.ok) return Response.json({ error: "share link not found" }, { status: 404, headers: cors });
@@ -330,7 +330,19 @@ async function handleOembed(request, env, url) {
     url.searchParams.get("maxwidth"), url.searchParams.get("maxheight")), { headers: { ...cors, "cache-control": "public, max-age=3600" } });
 }
 
-// The card: drawn once per link with resvg and kept in KV, so later requests are a read.
-async function sharePNG(env, s) {
-  return new Response("card rendering is not deployed", { status: 501 });
+// The card: drawn once per link with resvg and kept in KV under card:, so later requests are a read.
+async function sharePNG(request, env, s) {
+  const hex = encode(s.snap, s.ids);
+  const key = `card:${s.hash}:${hex}`;
+  const headers = { "content-type": "image/png", "cache-control": "public, max-age=31536000, immutable", "access-control-allow-origin": "*" };
+  const kept = await env.SHORTLINKS.get(key, "arrayBuffer");
+  if (kept) return new Response(kept, { headers });
+  const rlKey = `rl:card:${new Date().toISOString().slice(0, 10)}:${request.headers.get("cf-connecting-ip") || "unknown"}`;
+  const used = parseInt((await env.SHORTLINKS.get(rlKey)) || "0", 10);
+  if (used >= CARDS_PER_DAY) return Response.redirect(new URL("/assets/og.png", request.url).href, 302);
+  await env.SHORTLINKS.put(rlKey, String(used + 1), { expirationTtl: 172800 });
+  const [{ cardSVG }, { renderPNG }, { PNG_ASSETS }] = await Promise.all([import("./card.js"), import("./png.js"), import("./pngassets.js")]);
+  const png = await renderPNG(cardSVG(s.snap, s.hash, s.ids), PNG_ASSETS);
+  await env.SHORTLINKS.put(key, png);
+  return new Response(png, { headers });
 }

@@ -5,6 +5,10 @@
 
 import { PREFIX, encode, describe, parseShare, title } from "../../../docs/assets/share.js";
 
+// New cards per IP per day; past it a link unfurls with the site's own card, so a flood of
+// made-up selections cannot fill the store.
+export const CARDS_PER_DAY = 1000;
+
 const PATH_RE = /^\/m\/([^/]+)\/([^/]+?)(\.png)?$/;
 
 // {prefix, selection, png} for /m/<prefix>/<hex>[.png], else null (the prefix is checked by parseShare)

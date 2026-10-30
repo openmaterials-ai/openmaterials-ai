@@ -56,3 +56,22 @@ test("oEmbed answers a rich iframe of the embed view", async () => {
   assert.equal((await get(`/oembed?url=${encodeURIComponent("https://example.com/m/" + H + "/80")}`)).status, 404);
   assert.equal((await get(`/oembed?url=${u}&format=xml`)).status, 501);
 });
+
+test("a stored card is served from KV; past the daily limit the site card stands in", async () => {
+  const store = new Map();
+  const kv = { get: async (k, type) => (store.has(k) ? store.get(k) : null), put: async (k, v) => { store.set(k, v); } };
+  const e = { ...env, SHORTLINKS: kv };
+  const key = `card:${index.latest}:${kaldo}`;
+  store.set(key, new Uint8Array([137, 80, 78, 71]).buffer);
+  const r = await worker.fetch(new Request(`https://openmaterials.ai/m/${H}/${kaldo}.png`), e);
+  assert.equal(r.status, 200);
+  assert.equal(r.headers.get("content-type"), "image/png");
+  assert.match(r.headers.get("cache-control"), /immutable/);
+  const { CARDS_PER_DAY } = await import("./shareroute.js");
+  store.set(`rl:card:${new Date().toISOString().slice(0, 10)}:unknown`, String(CARDS_PER_DAY));
+  const other = encode(snap, ["Temperature"]);
+  const r2 = await worker.fetch(new Request(`https://openmaterials.ai/m/${H}/${other}.png`), e);
+  assert.equal(r2.status, 302);
+  assert.match(r2.headers.get("location"), /\/assets\/og\.png$/);
+  assert.equal((await worker.fetch(new Request(`https://openmaterials.ai/m/${H}/8000.png`), e)).status, 400);
+});

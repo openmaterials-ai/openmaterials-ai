@@ -170,7 +170,9 @@ async function main() {
 
   $("eyebrow").textContent = `Shared map selection · snapshot ${hash.slice(0, PREFIX)} · map ${snap.map_version.slice(0, 8)}`;
   $("title").textContent = named;
-  $("lede").textContent = `${plural(ids.length, "quantity", "quantities")} in ${plural(tiers.length, "tier", "tiers")}, computed by ${plural(cover.length, "code", "codes")} on the map.`;
+  const computed = `computed by ${plural(cover.length, "code", "codes")} on the map.`;
+  $("lede").textContent = named.startsWith(`${ids.length} quantities`) ? `Quantities ${computed}`
+    : `${plural(ids.length, "quantity", "quantities")} in ${plural(tiers.length, "tier", "tiers")}, ${computed}`;
   $("open").href = openHref;
   $("actions").hidden = false;
   $("copy").addEventListener("click", function () { copy(link, this, "Copy link"); if (VIA_WORKER) fetch(`${location.pathname}.png`, { mode: "no-cors" }).catch(() => {}); });

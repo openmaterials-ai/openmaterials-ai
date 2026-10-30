@@ -26,7 +26,10 @@
   // The workers.dev copy stays up next to the domain routes, as a staging view.
   "workers_dev": true,
   "kv_namespaces": [
+    // short links (s:<code>, rl:<day>:<ip>) and share cards (card:<snapshot hash>:<selection>, a PNG written once per link)
     { "binding": "SHORTLINKS", "id": "a234499878ab4e558c00ed9209012ed0" }
   ],
+  // the card renderer's fonts travel in the bundle as bytes; .wasm imports compile by default
+  "rules": [{ "type": "Data", "globs": ["**/*.ttf"], "fallthrough": true }],
   "observability": { "enabled": true }
 }

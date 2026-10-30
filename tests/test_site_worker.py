@@ -218,3 +218,8 @@ def test_python_and_javascript_encode_alike():
 def test_share_routes_under_node():
     from node_runner import run_node_test
     run_node_test(_SITE / "src" / "shareroute.test.mjs")
+
+
+def test_share_card_under_node():
+    from node_runner import run_node_test
+    run_node_test(_SITE / "src" / "card.test.mjs")

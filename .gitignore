@@ -85,3 +85,4 @@ infra/site/.wrangler/
 
 # the code landing pages are generated under docs/codes/<key>/ for every key, including the names ignored above as vendored checkouts
 !docs/codes/*/
+infra/site/node_modules/
