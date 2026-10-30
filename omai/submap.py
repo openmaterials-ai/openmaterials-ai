@@ -13,6 +13,7 @@ superscripts; one the converter cannot read falls back to the name alone.
 from __future__ import annotations
 
 import html
+import math
 import json
 import re
 from pathlib import Path
@@ -219,8 +220,16 @@ def layout(graph: dict, lit: set[str]) -> dict:
             y = PAD + HEAD_H + ri * (BOX_H + ROW_GAP)
             pos[i] = {"x": x, "y": y, "col": ci, "row": ri}
     width = PAD * 2 + len(tiers) * COL_W + max(0, len(tiers) - 1) * COL_GAP
+    # a loop within a column bows right to x0 + 0.75 * bow; in the last column that can pass the right edge
+    for s, t in edges:
+        if pos[s]["col"] == pos[t]["col"]:
+            width = max(width, math.ceil(pos[s]["x"] + BOX_W + 0.75 * _bow(pos[s], pos[t]) + 2))
     height = PAD * 2 + HEAD_H + max((len(c) for c in columns.values()), default=0) * (BOX_H + ROW_GAP) - ROW_GAP
     return {"tiers": tiers, "columns": columns, "pos": pos, "edges": edges, "ctx": ctx, "nodes": nodes, "width": width, "height": max(height, 80)}
+
+
+def _bow(a: dict, b: dict) -> int:
+    return 28 + 6 * abs(b["row"] - a["row"])
 
 
 def _edge_path(a: dict, b: dict) -> str:
@@ -232,7 +241,7 @@ def _edge_path(a: dict, b: dict) -> str:
     if b["col"] == a["col"]:
         x0, y0 = a["x"] + BOX_W, a["y"] + BOX_H / 2
         x1, y1 = b["x"] + BOX_W, b["y"] + BOX_H / 2
-        bow = 28 + 6 * abs(b["row"] - a["row"])
+        bow = _bow(a, b)
         return f"M{x0:.0f} {y0:.0f} C{x0 + bow:.0f} {y0:.0f} {x1 + bow:.0f} {y1:.0f} {x1:.0f} {y1:.0f}"
     x0, y0 = a["x"] + BOX_W / 2, a["y"]
     x1, y1 = b["x"] + BOX_W / 2, b["y"]
