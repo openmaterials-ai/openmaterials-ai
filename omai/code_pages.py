@@ -34,7 +34,7 @@ import shutil
 import subprocess
 from pathlib import Path
 
-from omai import briefs, infographic, submap
+from omai import briefs, infographic, snapshots, submap
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "docs" / "data"
@@ -112,7 +112,7 @@ def rasterize(svg_path: Path, png_path: Path) -> None:
 
 
 def page(key: str, rep: dict, reg: dict, refs: dict | None, text: dict, has_card: bool, brief: dict | None = None,
-         graph: dict | None = None, has_poster: bool = False) -> str:
+         graph: dict | None = None, has_poster: bool = False, share: str = "") -> str:
     name = display_name(key, rep)
     nodes = sorted(rep)
     tagline = text.get("tagline") or f"{quantities(len(nodes))} on the OpenMaterials map."
@@ -126,7 +126,7 @@ def page(key: str, rep: dict, reg: dict, refs: dict | None, text: dict, has_card
     license_ = next((e.get("license") for e in rep.values() if e.get("license")), "")
     releases = sorted(reg.get("releases") or [], key=lambda r: r.get("released") or "", reverse=True)
     canonical = f"{SITE}/codes/{key}/"
-    embed_abs = f"{SITE}/map/?embed=1#code={key}"
+    embed_abs = f"{share}?embed=1" if share else f"{SITE}/map/?embed=1#code={key}"
     snippet = f'<iframe src="{embed_abs}" title="{name} on the OpenMaterials map" width="100%" height="480" loading="lazy" style="border:1px solid #EBEBEB;border-radius:6px"></iframe>'
     og_image = f"{SITE}/assets/og/codes/{key}.png" if has_card else f"{SITE}/assets/og.png"
     description = tagline if tagline.endswith(".") else tagline + "."
@@ -298,7 +298,7 @@ def page(key: str, rep: dict, reg: dict, refs: dict | None, text: dict, has_card
         <figure class="submap-figure">
           <div class="submap">{submap_html}</div>
           <figcaption>
-            <a href="../../map/#code={esc(key)}">Open the full map</a>
+            <a href="../../map/#code={esc(key)}">Open the full map</a>{f'<a href="{esc(share)}">Share this submap</a>' if share else ""}
             <details><summary>Embed this submap</summary><pre>{esc(snippet)}</pre></details>
           </figcaption>
         </figure>
@@ -332,6 +332,8 @@ def build(write_cards: bool = True) -> list[str]:
     registry = load("registry.json").get("code", {})
     texts = load("code_pages.json")
     graph = load("graph.json")
+    latest = load("v/index.json")["latest"]
+    snap = load(f"v/{latest}.json")
     built = []
     for key in sorted(codes):
         if not KEY.fullmatch(key):
@@ -357,7 +359,8 @@ def build(write_cards: bool = True) -> list[str]:
                 raise ValueError(f"brief {key}: " + "; ".join(problems))
         out = OUT / key / "index.html"
         out.parent.mkdir(parents=True, exist_ok=True)
-        out.write_text(page(key, rep, reg, refs, text, has_card, brief, graph, has_poster), encoding="utf-8")
+        share = f"{SITE}/m/{latest[:12]}/{snapshots.encode(snap, snap['codes'][key]['nodes'])}" if key in snap["codes"] else ""
+        out.write_text(page(key, rep, reg, refs, text, has_card, brief, graph, has_poster, share), encoding="utf-8")
         poster = OUT / key / "infographic" / "index.html"
         if brief:
             poster.parent.mkdir(parents=True, exist_ok=True)

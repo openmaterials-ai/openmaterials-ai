@@ -57,7 +57,7 @@ def test_the_infographic_comes_first_and_the_record_follows():
         assert article.lstrip().startswith('<figure class="gsec info-figure" id="infographic">'), key
         assert '<svg class="submap-svg' in article, key + ": the submap is drawn inline"
         assert f'href="../../map/#code={key}"' in article, key
-        assert f"&lt;iframe src=&quot;https://openmaterials.ai/map/?embed=1#code={key}&quot;" in html, "the embed snippet is on the page"
+        assert "&lt;iframe src=&quot;https://openmaterials.ai/m/" in html, "the embed snippet is on the page"
         for anchor in ("about", "detail", "serves", "references", "cite"):
             assert f'id="{anchor}"' in article, (key, anchor)
         assert f'<link rel="canonical" href="https://openmaterials.ai/codes/{key}/">' in html
@@ -198,3 +198,16 @@ def test_submap_names_match_the_javascript(tmp_path):
     )
     js = json.loads(subprocess.run(["node", str(probe)], capture_output=True, text=True, check=True).stdout)
     assert [submap.node_name(i) for i in ids] == js
+
+
+def test_the_embed_snippet_is_the_permanent_share_link():
+    from omai.snapshots import decode
+
+    index = json.loads((DOCS / "data" / "v" / "index.json").read_text())
+    snap = json.loads((DOCS / "data" / "v" / f"{index['latest']}.json").read_text())
+    for key, code in snap["codes"].items():
+        page = (DOCS / "codes" / key / "index.html").read_text()
+        m = re.search(r"iframe src=&quot;https://openmaterials\.ai/m/([0-9a-f]{12})/([0-9a-f]+)\?embed=1&quot;", page)
+        assert m and index["latest"].startswith(m.group(1)), key
+        assert set(decode(snap, m.group(2))) == set(code["nodes"]), key
+        assert f'<a href="https://openmaterials.ai/m/{m.group(1)}/{m.group(2)}">Share this submap</a>' in page, key
