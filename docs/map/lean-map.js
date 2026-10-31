@@ -7,8 +7,9 @@
   const LAYERS = ['omai', 'lean'];
   const TAG = /^(paper|code|project):\S+$/;
   const R = 7, STACK = 14, LANE = 14;
-  const RUNG_WORDS = {none: 'not in Lean', stated: 'stated in Lean, not proved',
-    local: 'proved by a local Lean proof', physlib: 'proved, citing Physlib'};
+  // A theorem may state a property of a formula rather than the formula; the binding's statement says which.
+  const RUNG_WORDS = {none: 'no reviewed Lean theorem', stated: 'Lean statement, no theorem',
+    local: 'Lean theorem over Mathlib', physlib: 'Lean theorem citing Physlib'};
   const n = (v) => Math.round(v * 10) / 10;
 
   function marks(graph, layers) {
