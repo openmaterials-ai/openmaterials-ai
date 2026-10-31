@@ -3609,6 +3609,92 @@
       }
     },
     {
+      "id": "linearized-bte-conductivity",
+      "relation": "local",
+      "targets": [
+        {
+          "kind": "node",
+          "id": "MeanFreeDisplacement[bte_solver=direct_inverse]",
+          "uid": "b24a26725f5641ffb16720514a7fdb23bf03304ce0d51c9f39501d1c8c009b6c"
+        },
+        {
+          "kind": "node",
+          "id": "ThermalConductivity[bte_solver=direct_inverse]",
+          "uid": "a369d33e9643b9f8766b111cde72c44fbf34a13ae46dfab31e1afab1c2129ca9"
+        },
+        {
+          "kind": "operator",
+          "id": "contract_kappa[bte_solver=direct_inverse]",
+          "uid": "8bd0005f31f01cd5d358f7cc58b21f7c7bb12abda8f11140d1b18c2b9b2e1e70",
+          "formula_sha256": "2e54bbf0cc370a56c0ffd43f2ca8cdefa185eb02d8d2388124e6586960adac5c"
+        },
+        {
+          "kind": "operator",
+          "id": "solve_bte[bte_solver=direct_inverse]",
+          "uid": "dee3e5f2230cae44c646c62985260fc103745cc44d0b1c2a87fe0a72ca675a97",
+          "formula_sha256": "8ee139deb4c747f5b98fc57ede932ac9471296bb7fce4f9d04cd4d6dc0feafcc"
+        }
+      ],
+      "statement": "The catalog's collision matrix Omega~ for the direct linearized BTE is symmetric for an even smearing kernel and a |V_3|^2 symmetric under exchange of its first two modes on the momentum-conserving triples (q, q', -q - q') the matrix reads, and so is its weighting M = C^(1/2) Omega~ C^(1/2). Without the in-scattering kernel the catalog's linear system M F = c v is solved exactly by the relaxation-time F = v/(2 Gamma), for nonzero linewidths and positive heat capacities. For a symmetric collision matrix the conductivity kappa^{alpha beta} = Sum c v^alpha F^beta / (V N_q) of any solution is a symmetric tensor. If Chaput's Omega~ is positive semidefinite and every mode heat capacity is nonnegative, the conductivity is positive semidefinite. The positive semidefiniteness of Omega~ is a hypothesis here, not a result.",
+      "sources": [],
+      "conditions": [
+        "Every linewidth is the canonical Gamma = Im Sigma = 1/(2 tau). The Kronecker term of Omega~ is the scattering rate 2 Gamma = 1/tau, and its kernel carries pi/(N_q hbar^2), the constant of 2 Gamma.",
+        "The mesh is a finite Gamma-centred grid of N_q points closed under q + q' + q'' = 0, and the smearing kernel is even, delta(-x) = delta(x). The exchange symmetry |V_3|^2(q nu, q' nu', -q - q' nu'') = |V_3|^2(q' nu', q nu, -q - q' nu'') holds in the collision labeling, where |V_3|^2(q, q', -q - q') is the catalog's decay-labeled kernel at (q, -q', q + q'). It follows from the translational invariance of the third-order force constants, momentum conservation and the time-reversal gauge e(-q) = e(q)*. The catalog's decay-labeled symbol is symmetric in its second and third modes instead.",
+        "Chaput's positive semidefiniteness of Omega~ (Phys. Rev. Lett. 110, 265506 (2013)) needs exact energy conservation, under which the Bose-Einstein occupations satisfy detailed balance, and a Gamma computed from the same |V_3|^2 and delta as the kernel. With Gaussian smearing Omega~ can have negative eigenvalues. Here Gamma and |V_3|^2 are independent inputs, and positive semidefiniteness enters as a hypothesis.",
+        "The three positive channels in the q + q' + q'' = 0 labeling equal the physical collision operator on deviations odd under q -> -q, where the drive c v lies. On even deviations they differ.",
+        "The relaxation-time limit drops the in-scattering kernel, |V_3|^2 = 0 on the triples Omega~ reads, and keeps Gamma as an independent input, the total linewidth, with Gamma != 0 and c > 0 for every mode. The positivity result needs V_cell N_q > 0 and c >= 0, and no sign of the individual modal contributions c v F."
+      ],
+      "conventions": {
+        "model_scope": "The direct linearized phonon BTE and its conductivity contraction on a finite mesh. Physlib has no phonon-transport model, so these are local theorems about the OMAI formulas over Mathlib reals and matrices. No Physlib declaration is identified.",
+        "component_scope": "The matrices Omega~ and M over all modes of the mesh, the three Cartesian components of F, and the full 3 x 3 conductivity tensor.",
+        "normalization_basis": "Per mode on a mesh of N_q points with 1/N_q on the Brillouin-zone sums, and kappa per cell volume V_cell.",
+        "frequency_convention": "Angular frequencies and linewidths, Gamma = Im Sigma = 1/(2 tau). A code reporting linear THz or the rate 1/tau needs the factor 2 pi or 1/2 before comparison.",
+        "unit_embedding": "Coherent SI: omega and Gamma in rad/s, Omega~ in 1/s, c in J/K per mode, v in m/s, F in m, V_cell in m^3 and kappa in W/(m K). The occupations are dimensionless.",
+        "held_fixed": "The mesh, the frequencies, |V_3|^2, the linewidths, the heat capacities and the velocities are fixed inputs. No convergence in the mesh is asserted.",
+        "admissibility": "An even smearing kernel and an exchange-symmetric |V_3|^2 on momentum-conserving triples for the symmetry results, Gamma != 0 and c > 0 for the relaxation-time limit, c >= 0, V_cell N_q > 0 and a positive semidefinite Omega~ for the positivity result.",
+        "reference_energy": "Not applicable.",
+        "qpoint_weighting": "Uniform 1/N_q over the mesh. Irreducible-wedge weights and the unfolding by crystal symmetry are not modeled."
+      },
+      "remaining_obligations": [
+        "The positive semidefiniteness of the catalog's Omega~ under exact energy conservation is not proved here. An exact sum-of-squares identity that proves it and certifies the kernel constant pi/(N_q hbar^2) and the weight 2 sqrt(n''(n'' + 1)) relative to Gamma is issue 221. The symmetry holds for any symmetric scalar factor and the relaxation-time limit removes the kernel, so neither certifies them.",
+        "The relabeling between the decay-labeled and the collision-labeled kernels is assumed, not proved.",
+        "The kernel |V_3|^2, the linewidths, the heat capacities and the velocities come from external codes and are not verified, nor is the convergence of the mesh sums. The edge declares no |V_3|^2 input although Omega~ needs one (issue 222).",
+        "The existence and uniqueness of a solution of M F = c v and the numerical linear solver are not covered."
+      ],
+      "evidence": {
+        "kind": "compiled_bridge",
+        "module": "OMAILinearizedBTE",
+        "declarations": [
+          "OMAI.PhyslibBridge.LinearizedBTE.chaputCollision_isSymm",
+          "OMAI.PhyslibBridge.LinearizedBTE.lbteMatrix_isSymm",
+          "OMAI.PhyslibBridge.LinearizedBTE.lbteSolves_rta_limit",
+          "OMAI.PhyslibBridge.LinearizedBTE.lbteKappa_isSymm",
+          "OMAI.PhyslibBridge.LinearizedBTE.lbteKappa_posSemidef"
+        ],
+        "source_path": "lean/bridge/OMAILinearizedBTE.lean",
+        "build_record": "lean/bridge/build-evidence.json",
+        "proved_targets": [
+          {
+            "kind": "operator",
+            "id": "contract_kappa[bte_solver=direct_inverse]"
+          },
+          {
+            "kind": "operator",
+            "id": "solve_bte[bte_solver=direct_inverse]"
+          },
+          {
+            "kind": "node",
+            "id": "MeanFreeDisplacement[bte_solver=direct_inverse]"
+          },
+          {
+            "kind": "node",
+            "id": "ThermalConductivity[bte_solver=direct_inverse]"
+          }
+        ],
+        "source_sha256": "f1c0def32805bd85ca98a90bd1c2d7bf6e20245af3c6ec29c8877bee5534e04e"
+      }
+    },
+    {
       "id": "md-correlation-estimators",
       "targets": [
         {
@@ -5007,9 +5093,11 @@
       {
         "id": "MeanFreeDisplacement[bte_solver=direct_inverse]",
         "uid": "b24a26725f5641ffb16720514a7fdb23bf03304ce0d51c9f39501d1c8c009b6c",
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
+        "binding_ids": [
+          "linearized-bte-conductivity"
+        ],
+        "status": "local",
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "MeanFreeDisplacement[bte_solver=rta]",
@@ -5396,6 +5484,7 @@
         "id": "ThermalConductivity[bte_solver=direct_inverse]",
         "uid": "a369d33e9643b9f8766b111cde72c44fbf34a13ae46dfab31e1afab1c2129ca9",
         "binding_ids": [
+          "linearized-bte-conductivity",
           "thermoelectric-total-conductivity"
         ],
         "status": "mapped",
@@ -7058,9 +7147,11 @@
         "outputs": [
           "ThermalConductivity[bte_solver=direct_inverse]"
         ],
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "Not covered. OMAIPhyslibKappaContraction proves, over Mathlib, that the contraction is symmetric and positive semidefinite whenever the collision matrix is symmetric positive semidefinite, which the corrected catalog form M = C^(1/2) Omega~ C^(1/2) satisfies whenever Chaput's Omega~ does; binding that theorem to the catalog is the next step."
+        "binding_ids": [
+          "linearized-bte-conductivity"
+        ],
+        "status": "local",
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "contract_kappa[bte_solver=rta]",
@@ -7890,9 +7981,11 @@
         "outputs": [
           "MeanFreeDisplacement[bte_solver=direct_inverse]"
         ],
-        "binding_ids": [],
-        "status": "gap",
-        "reason": "Not covered. The collision matrix is the symmetric weighting M = C^(1/2) Omega~ C^(1/2) of Chaput's symmetric collision matrix (Phys. Rev. Lett. 110, 265506 (2013)), corrected on 2026-10-30 from a form that was not symmetric and had the relaxation-time limit F = hbar c v/(2 Gamma); no theorem binds the three-phonon matrix elements, the energy-conserving deltas or the Brillouin-zone sums."
+        "binding_ids": [
+          "linearized-bte-conductivity"
+        ],
+        "status": "local",
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
         "id": "solve_bte[bte_solver=rta]",
@@ -8033,26 +8126,26 @@
     "nodes_mapped": 35,
     "operators_total": 133,
     "operators_mapped": 29,
-    "nodes_local": 43,
-    "operators_local": 54,
-    "bindings_total": 53,
+    "nodes_local": 44,
+    "operators_local": 56,
+    "bindings_total": 54,
     "source_correspondences": 5,
-    "compiled_bridges": 48,
+    "compiled_bridges": 49,
     "nodes_compiled": 26,
     "nodes_compiled_outputs": 25,
     "nodes_compiled_interpretations": 1,
     "operators_compiled": 29,
-    "operators_compiled_local": 54,
-    "nodes_compiled_local": 47,
-    "operators_proved": 83,
-    "nodes_proved": 73,
+    "operators_compiled_local": 56,
+    "nodes_compiled_local": 49,
+    "operators_proved": 85,
+    "nodes_proved": 75,
     "upstream_declarations_referenced": 36,
     "upstream_modules_referenced": 10,
     "relations": {
       "exact_definition": 1,
       "conditional": 29,
       "conceptual": 4,
-      "local": 19
+      "local": 20
     }
   }
 }

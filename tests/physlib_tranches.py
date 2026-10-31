@@ -167,6 +167,17 @@ TRANCHES = (
             ("operator", "sum_linewidths")}),
         "modules": ("OMAIPhononScattering",),
     },
+    {
+        "name": "linearized-bte",
+        "contracts": ("linearized-bte-formula-contract.json",),
+        "bindings": frozenset({"linearized-bte-conductivity"}),
+        "subjects": frozenset({
+            ("node", "MeanFreeDisplacement[bte_solver=direct_inverse]"),
+            ("node", "ThermalConductivity[bte_solver=direct_inverse]"),
+            ("operator", "contract_kappa[bte_solver=direct_inverse]"),
+            ("operator", "solve_bte[bte_solver=direct_inverse]")}),
+        "modules": ("OMAILinearizedBTE",),
+    },
 )
 
 _BRIDGE = Path(__file__).resolve().parent.parent / "lean" / "bridge"
@@ -200,12 +211,12 @@ for _tranche in TRANCHES:
 GLOBAL_COVERAGE = {
     "nodes_total": len(_INVENTORY["nodes"]), "nodes_mapped": 35,
     "operators_total": len(_INVENTORY["operators"]), "operators_mapped": 29,
-    "nodes_local": 43, "operators_local": 54, "bindings_total": 53, "source_correspondences": 5,
-    "compiled_bridges": 48, "nodes_compiled": 26, "nodes_compiled_outputs": 25,
-    "nodes_compiled_interpretations": 1, "operators_compiled": 29, "operators_compiled_local": 54,
-    "nodes_compiled_local": 47, "operators_proved": 83, "nodes_proved": 73,
+    "nodes_local": 44, "operators_local": 56, "bindings_total": 54, "source_correspondences": 5,
+    "compiled_bridges": 49, "nodes_compiled": 26, "nodes_compiled_outputs": 25,
+    "nodes_compiled_interpretations": 1, "operators_compiled": 29, "operators_compiled_local": 56,
+    "nodes_compiled_local": 49, "operators_proved": 85, "nodes_proved": 75,
     "upstream_declarations_referenced": 36, "upstream_modules_referenced": 10,
-    "relations": {"exact_definition": 1, "conditional": 29, "conceptual": 4, "local": 19},
+    "relations": {"exact_definition": 1, "conditional": 29, "conceptual": 4, "local": 20},
 }
 
 

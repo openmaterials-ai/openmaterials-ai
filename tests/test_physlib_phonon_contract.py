@@ -117,10 +117,9 @@ NOT_CITED = {"planeWave_conj", "planeWave_zero", "planeWave_add", "neg_mem_shell
 # or replaced by the physical three-mode witness.
 REMOVED = ("dispersion_orthonormal_real", "dispersion_eigenvalue_real", "dispersion_real_frequencies_of_stable",
            "cumulativeKappa_saturates", "witnessCollision")
-# Corrected on 2026-10-30; still unbound, each gap reason names the corrected form.
-CORRECTED_FORMULAS = {"solve_bte[bte_solver=direct_inverse]": "symmetric weighting",
-                      "contract_kappa[bte_solver=direct_inverse]": "positive semidefinite",
-                      "contract_cumulative_kappa[wrt=omega]": "signed partial sum",
+# Corrected on 2026-10-30 and still unbound. Each gap reason names the corrected form. The direct
+# solve and its contraction are bound by the linearized-bte tranche.
+CORRECTED_FORMULAS = {"contract_cumulative_kappa[wrt=omega]": "signed partial sum",
                       "contract_cumulative_kappa[wrt=mfp]": "signed partial sum"}
 # sum_linewidths and solve_bte[bte_solver=rta] are bound by the phonon-scattering tranche.
 UNBOUND = {"identity_dm", *CORRECTED_FORMULAS}
@@ -231,7 +230,6 @@ def test_corrected_formulas_and_their_gap_reasons():
         assert rows[op_id]["binding_ids"] == [] and rows[op_id]["status"] == "gap", op_id
     for op_id, marker in CORRECTED_FORMULAS.items():
         assert marker in rows[op_id]["reason"], op_id
-    assert "C^(1/2) Omega~ C^(1/2)" in rows["solve_bte[bte_solver=direct_inverse]"]["reason"]
     assert "not monotone" in rows["contract_cumulative_kappa[wrt=mfp]"]["reason"]
 
 
