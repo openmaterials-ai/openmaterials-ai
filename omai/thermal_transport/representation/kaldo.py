@@ -261,25 +261,42 @@ KALDO_COMPUTE_FORCE_CONSTANTS_3 = OperatorRepresentationSpec(
 )
 
 
-KALDO_SOLVE_BTE_DIRECT = OperatorRepresentationSpec(
-    operator=solve_bte_direct,
-    representation_name="kaldo",
-    scheme_overrides={
-        # Conductivity(method='inverse') assembles M on the full BZ grid
-        # and calls scipy.linalg.solve. No irreducible-wedge reduction.
-        "symmetry_group": "C1",
-    },
-    discretization_choices={
-        "collision_matrix_assembly": "full_grid",
-        "linear_solver": "scipy.linalg.solve",
-    },
-    notes=(
-        "Conductivity(method='inverse'): the collision matrix M is "
-        "(N_q·N_modes)² in size and inverted directly with scipy. "
-        "method='sc' is an alternative realization of the same canonical "
-        "direct_inverse, with iterative refinement instead."
-    ),
-)
+def kaldo_solve_bte_direct_spec(
+    *,
+    broadening_param: str = "adaptive_velocity_projection",
+) -> OperatorRepresentationSpec:
+    """Build a kaldo solve_bte[direct_inverse] spec for a broadening mode.
+
+    Phonons builds the bandwidth and the gamma tensor of
+    Conductivity(method='inverse') under one third_bandwidth and
+    broadening_shape, so pass the broadening_param of the run's
+    kaldo_compute_linewidth_spec.
+    """
+    return OperatorRepresentationSpec(
+        operator=solve_bte_direct,
+        representation_name="kaldo",
+        parameter_units={"broadening_sigma": "linear_THz"},
+        scheme_overrides={
+            "broadening_param": broadening_param,
+            # Conductivity(method='inverse') assembles M on the full BZ grid
+            # and calls scipy.linalg.solve. No irreducible-wedge reduction.
+            "symmetry_group": "C1",
+        },
+        discretization_choices={
+            "collision_matrix_assembly": "full_grid",
+            "linear_solver": "scipy.linalg.solve",
+        },
+        notes=(
+            "Conductivity(method='inverse'): the collision matrix M is "
+            "(N_q·N_modes)² in size and inverted directly with scipy. "
+            "method='sc' is an alternative realization of the same canonical "
+            "direct_inverse, with iterative refinement instead. Isotope and "
+            "boundary scattering enter only the bandwidth on the diagonal."
+        ),
+    )
+
+
+KALDO_SOLVE_BTE_DIRECT = kaldo_solve_bte_direct_spec()
 
 
 # ---------------------------------------------------------------------------

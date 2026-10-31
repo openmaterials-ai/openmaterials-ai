@@ -211,6 +211,8 @@ PHONO3PY_COMPUTE_FORCE_CONSTANTS_3 = OperatorRepresentationSpec(
 PHONO3PY_SOLVE_BTE_DIRECT = OperatorRepresentationSpec(
     operator=solve_bte_direct,
     representation_name="phono3py",
+    # One set_sigma call per sigma fixes the width of Gamma and Omega~ alike.
+    parameter_units={"broadening_sigma": "linear_THz"},
     scheme_overrides={
         # is_LBTE=True builds and inverts the collision matrix on the
         # irreducible q-grid; the symmetry-unfolded F is then used to
@@ -224,7 +226,8 @@ PHONO3PY_SOLVE_BTE_DIRECT = OperatorRepresentationSpec(
     notes=(
         "run_thermal_conductivity(is_LBTE=True, pinv_solver='dsyevd'): "
         "M is built on BZ/G and pseudo-inverted via LAPACK. The output F "
-        "is unfolded back to the full grid using the spglib star map."
+        "is unfolded back to the full grid using the spglib star map. "
+        "Isotope scattering enters only the diagonal."
     ),
 )
 

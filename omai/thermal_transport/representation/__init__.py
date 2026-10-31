@@ -23,6 +23,7 @@ from omai.thermal_transport.representation.kaldo import (
     KALDO_THERMAL_CONDUCTIVITY_DIRECT,
     KALDO_THERMAL_CONDUCTIVITY_RTA,
     kaldo_compute_linewidth_spec,
+    kaldo_solve_bte_direct_spec,
 )
 from omai.thermal_transport.representation.phono3py import (
     PHONO3PY_COMPUTE_FORCE_CONSTANTS_2,
@@ -115,6 +116,7 @@ __all__ = [
     "KALDO_THERMAL_CONDUCTIVITY_DIRECT",
     "KALDO_THERMAL_CONDUCTIVITY_RTA",
     "kaldo_compute_linewidth_spec",
+    "kaldo_solve_bte_direct_spec",
     "PHONO3PY_COMPUTE_FORCE_CONSTANTS_2",
     "PHONO3PY_COMPUTE_FORCE_CONSTANTS_3",
     "PHONO3PY_COMPUTE_HEAT_CAPACITY",

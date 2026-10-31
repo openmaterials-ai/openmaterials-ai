@@ -38,8 +38,8 @@ KEY_THEOREMS = {
     'lbteKappa_posSemidef': '[DecidableEq κ] {Ω : Matrix κ κ ℝ} (hΩ : Ω.PosSemidef) {c : κ → ℝ}\n    (hc : ∀ m, 0 ≤ c m) {v F : κ → Fin 3 → ℝ} (h : lbteSolves (lbteMatrix c Ω) c v F) {V Nq : ℝ}\n    (hVN : 0 < V * Nq) : (lbteKappa c v F V Nq).PosSemidef',
 }
 NOT_CITED = {NS + "lbteKappa_eq_sum", NS + "lbteMatrix_eq_conj", NS + "chaputCollision_isSymm_of_all"}
-# The digest of solve_bte[bte_solver=direct_inverse]'s auxiliary formulas (the M and Omega~ that
-# lbteMatrix and chaputCollision transcribe), computed as tests/test_auxiliary_formula_pins.py does.
+# The digest of solve_bte[bte_solver=direct_inverse]'s auxiliary_formulas[0], the M and Omega~ that
+# lbteMatrix and chaputCollision transcribe.
 # An edit to Omega~ moves it, so this binding is re-reviewed rather than left on the old matrix.
 AUXILIARY_SHA256 = "78c67a3e7822bfbe8d1fb087a0f0f589cd0b0cf40027d606f665e25b2131e6ea"
 
@@ -81,7 +81,7 @@ def test_transcribed_auxiliary_formula_is_the_reviewed_one():
     from omai.map_data import DOMAINS
     from omai.operator.identity import formula_fingerprint
     op = next(e for d in DOMAINS for e in d.edges if e.name == "solve_bte[bte_solver=direct_inverse]")
-    text = "\n".join(formula_fingerprint(f) for f in op.auxiliary_formulas)
+    text = formula_fingerprint(op.auxiliary_formulas[0])
     assert hashlib.sha256(text.encode()).hexdigest() == AUXILIARY_SHA256
 
 

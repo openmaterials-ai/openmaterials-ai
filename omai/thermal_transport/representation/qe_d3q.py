@@ -208,6 +208,14 @@ QE_D3Q_COMPUTE_LINEWIDTH = OperatorRepresentationSpec(
 QE_D3Q_SOLVE_BTE_DIRECT = OperatorRepresentationSpec(
     operator=solve_bte_direct,
     representation_name="qe-d3q",
+    parameter_units={"broadening_sigma": "inverse_cm"},
+    scheme_overrides={
+        # cgp always smears with f_gauss, as in QE_D3Q_COMPUTE_LINEWIDTH.
+        "broadening_param": "halfwidth",
+        # The scattering matrix A carries P^isot off the diagonal too
+        # (Fugallo, Lazzeri, Paulatto, Mauri, PRB 88, 045430 (2013), Eq. 13).
+        "isotope_scattering": "full",
+    },
     discretization_choices={
         "collision_matrix_assembly": "full_grid",
         "linear_solver": "preconditioned conjugate gradient on the variational functional (calculation='cgp'), matrix-free",

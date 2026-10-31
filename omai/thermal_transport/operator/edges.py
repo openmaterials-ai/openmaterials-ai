@@ -793,39 +793,47 @@ solve_bte_rta = Operator(
 
 solve_bte_direct = Operator(
     name="solve_bte[bte_solver=direct_inverse]",
-    inputs=(FREQUENCY_STATE, GROUP_VELOCITY, HEAT_CAPACITY, TOTAL_LINEWIDTH, TEMPERATURE_STATE),
+    inputs=(
+        FREQUENCY_STATE, EIGENVECTORS, FORCE_CONSTANTS_3, GROUP_VELOCITY, HEAT_CAPACITY,
+        TOTAL_LINEWIDTH, TEMPERATURE_STATE,
+    ),
     outputs=(MEAN_FREE_DISPLACEMENT_DIRECT,),
+    parameters=(Parameter("broadening_sigma", FREQUENCY),),
     schemes={
         "bte_solver": "direct_inverse",
+        "broadening_param": "stdev",
+        "isotope_scattering": "diagonal",
         "symmetry_group": "C1",
     },
     formula=_BTE_DIRECT_FORMULA,
     auxiliary_formulas=(_M_DEFINITION,),
     description=(
-        "Full linearized BTE: solve M F = c v for the mean free displacement F, "
-        "with M = C^(1/2) Omega~ C^(1/2) the symmetric weighting of Chaput's "
-        "symmetric collision matrix Omega~ (Phys. Rev. Lett. 110, 265506 "
-        "(2013)) and C = diag(c) the per-mode heat capacities (see "
-        "auxiliary_formulas[0]). Omega~ has the scattering rate 2 Gamma of "
-        "compute_linewidth on its diagonal and off-diagonal elements built "
-        "from the same |V_3|^2 with the constant of 2 Gamma (twice "
-        "compute_linewidth's), weighted by 2 sqrt(n''(n''+1)) of the third "
-        "mode, with q + q' + q'' = G and the three energy channels; its "
-        "relaxation-time limit gives F = v/(2 Gamma), and kappa from this F is "
-        "the quadratic form sqrt(c) v . Omega~^-1 . sqrt(c) v over N_q V_cell, "
-        "positive "
-        "semidefinite whenever Omega~ is. Off-diagonals capture inter-mode "
-        "redistribution that RTA drops; kappa obtained from this F is "
-        "gauge-invariant. SUPERSEDES the form (2 Gamma/hbar) delta - Xi, which "
-        "had the relaxation-time limit F = hbar c v/(2 Gamma), was not "
-        "symmetric and placed the absorption channel at q'' = q - q'. Under "
-        "crystal symmetry G the matrix M "
-        "block-diagonalizes on the irreducible q-set BZ/G, so the linear "
-        "system can be solved on the reduced space and unfolded by G; "
-        "symmetry_group=G asserts this. symmetry_group=C1 means M is "
-        "inverted on the full grid. At finite q-grid, the BZ-summation "
-        "strategy (full vs irreducible) leaks into κ; convergence study "
-        "in supercell+q-mesh is the resolution."
+        "Full linearized BTE: solve M F = c v for the mean free displacement F. "
+        "M = C^(1/2) Omega~ C^(1/2) weights Chaput's symmetric collision matrix "
+        "Omega~ (Phys. Rev. Lett. 110, 265506 (2013)) by the per-mode heat "
+        "capacities C = diag(c) (auxiliary_formulas[0]). The diagonal of Omega~ "
+        "is the total scattering rate 2 Gamma, isotope and boundary scattering "
+        "included. Off the diagonal only three-phonon scattering enters "
+        "(isotope_scattering=diagonal), as in kaldo, phono3py and ShengBTE. The "
+        "off-diagonal elements carry the kernel |V_3|^2, defined once on "
+        "compute_linewidth[channel=anharmonic_3ph] from ForceConstants[order=3] "
+        "and Eigenvectors and read in the labeling q + q' + q'' = G as the "
+        "decay-labeled kernel at (q, -q', q + q'). They share that edge's smeared delta "
+        "(broadening_sigma, broadening_param) and carry the constant "
+        "pi/(N_q hbar^2), twice its prefactor, the weight 2 sqrt(n''(n''+1)) of "
+        "the third mode and the three energy channels. The relaxation-time "
+        "limit is F = v/(2 Gamma). kappa from this F is the quadratic form "
+        "sqrt(c) v . Omega~^-1 . sqrt(c) v over N_q V_cell, positive "
+        "semidefinite whenever Omega~ is, and gauge-invariant. This form "
+        "supersedes (2 Gamma/hbar) delta - Xi, which had the relaxation-time "
+        "limit F = hbar c v/(2 Gamma), was not symmetric and placed the "
+        "absorption channel at q'' = q - q'. Under crystal symmetry G the matrix "
+        "M block-diagonalizes on the irreducible q-set BZ/G, so the linear "
+        "system can be solved on the reduced space and unfolded by G. "
+        "symmetry_group=G asserts this, and symmetry_group=C1 means M is "
+        "inverted on the full grid. At a finite q-grid the BZ-summation "
+        "strategy (full or irreducible) leaks into kappa. A convergence study "
+        "in supercell and q-mesh is the resolution."
     ),
 )
 
