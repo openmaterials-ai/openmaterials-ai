@@ -43,3 +43,4 @@ public import OMAIStaticDielectric
 public import OMAIMDCorrelations
 public import OMAIVACFSpectrum
 public import OMAIPhyslibPhononSpectrum
+public import OMAIPhononScattering

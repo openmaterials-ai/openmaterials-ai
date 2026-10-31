@@ -4230,6 +4230,149 @@
         "build_record": "lean/bridge/build-evidence.json",
         "source_sha256": "ccc6127cddcc1efcf6c24516648dfff1dd801d9b099000c9a0f1ce55305fde3b"
       }
+    },
+    {
+      "id": "phonon-scattering-channels",
+      "relation": "local",
+      "targets": [
+        {
+          "kind": "operator",
+          "id": "compute_boundary_scattering",
+          "uid": "1326da3355b506b5142329e3b074a09589b95e4e18d1819c4c44ad579c1fd41e",
+          "formula_sha256": "4710be932ea5cc929dedfe2bb5cf1b7e240e1781fa12cc45f9dcdd33c6c8c78e"
+        },
+        {
+          "kind": "operator",
+          "id": "compute_isotope_scattering",
+          "uid": "7cf53f521738578b03e17d568ddf5db3df454b0a47bd4d621390c5c9250dec73",
+          "formula_sha256": "bbcc0cd3146146e003b4319f36af2916f769fadd9449a39309e565afc2b97b21"
+        },
+        {
+          "kind": "operator",
+          "id": "compute_linewidth[channel=anharmonic_3ph]",
+          "uid": "bed23822fc14b9f811e9d35b8361d56e0e38a34327b9e5b2c4e7f5aad6eebb72",
+          "formula_sha256": "c5b1c700e285f83bade4999b264e709ae736be2f329f4eabb6ab45a86980b7e4"
+        },
+        {
+          "kind": "operator",
+          "id": "solve_bte[bte_solver=rta]",
+          "uid": "d1c7da072f801890c5b4d17bff8f196b38823ae46102eb308c2c50438edf8b19",
+          "formula_sha256": "0b94f07d722c2b4c036e62b1790aa56e7427ffdd433bb5458e23219e6d9b923c"
+        },
+        {
+          "kind": "operator",
+          "id": "sum_linewidths",
+          "uid": "895d9e39c50870b6929c98b38c37b813f0688f3ade6b09e72c1bf1fad683ab7c",
+          "formula_sha256": "be92953f056d5d9606396776a4b777bcf1806a44aea1dcf0e82ea7527dcbf85b"
+        },
+        {
+          "kind": "node",
+          "id": "Linewidth[channel=anharmonic_3ph]",
+          "uid": "f52d161ad0be284c121c6fd10fe403c922aaa59646746c12719622004da5fa3a"
+        },
+        {
+          "kind": "node",
+          "id": "Linewidth[channel=boundary]",
+          "uid": "81288248a2b40f0abfe78b058ffa4025a0312324e8af26b801017b9a0971961e"
+        },
+        {
+          "kind": "node",
+          "id": "Linewidth[channel=isotope]",
+          "uid": "6cbd3322c5b6eb0105f9ca22d9ddc88334206ec9c115a31e6fb87409cc374c45"
+        },
+        {
+          "kind": "node",
+          "id": "Linewidth[channel=total]",
+          "uid": "50c33a1edd60bff6fb74124af1a8847a4c8a2c58d39554b4661e6a2cddb62f30"
+        },
+        {
+          "kind": "node",
+          "id": "MeanFreeDisplacement[bte_solver=rta]",
+          "uid": "ad1373f31b9dbb8bd24ea16e1f90f1d92a39d309f2dc22583fad4fd82eca6f59"
+        }
+      ],
+      "statement": "The catalog's Tamura isotope linewidth (pi/4N_q) omega^2 Sum_{q'nu'} delta(omega - omega') Sum_b g_b |e_b(q nu)* . e_b(q' nu')|^2 is nonnegative for nonnegative mass variances and smearing kernel, and for normalized eigenvectors it is at most (pi/4) omega^2 g_max D(omega), with D(omega) = (1/N_q) Sum_{q'nu'} delta(omega - omega') the density of states smeared with the isotope kernel. The catalog's three-phonon linewidth (pi/2N_q hbar^2) Sum_{q'nu'nu''} |V_3|^2 [(1 + n' + n'') delta(omega - omega' - omega'') + 2(n' - n'') delta(omega + omega' - omega'')] is nonnegative for a |V_3|^2 symmetric under exchange of the two partner phonons, as the Maradudin-Fein form is, and an even smearing kernel that does not increase with |x|, which covers the catalog's Gaussian. For an arbitrary |V_3|^2 it is nonnegative when the kernel vanishes at signed offsets above omega_q nu. A compiled example shows that an even kernel that is not monotone in |x| can make it negative even with the exchange symmetry. With the Casimir boundary linewidth |v|/(2L) in Matthiessen's sum and the other channels nonnegative, the relaxation-time mean free displacement F = v/(2 Gamma_total) of a moving mode has |F| <= L, with equality exactly when the anharmonic and isotope channels vanish. The bound holds because the boundary linewidth and the relaxation time carry the same factor 2 of Gamma = 1/(2 tau). A boundary rate written as |v|/L in a linewidth slot would cap |F| at L/2.",
+      "sources": [],
+      "conditions": [
+        "Every linewidth is the canonical Gamma = Im Sigma = 1/(2 tau) in angular units. The rates 1/tau that ShengBTE and kALDo report are twice it.",
+        "The mesh is a Gamma-centred grid of N_q points closed under q - q', and every Brillouin-zone sum carries 1/N_q. The isotope bound uses eigenvectors normalized over the basis atoms and Cartesian axes of the cell, Sum_b Sum_alpha |e|^2 = 1, and mass-variance factors g_b in [0, g_max]. D(omega) integrates to the number of branches, 3N, not to 1.",
+        "The three-phonon results need the mode's own frequency positive and a positive frequency for every partner that |V_3|^2 couples to. The acoustic modes at Gamma, where the occupation diverges, are admissible where |V_3|^2 vanishes on them, which the translational invariance of the force constants gives in the limit and codes impose by skipping zero frequencies.",
+        "The exchange symmetry |V_3|^2(q nu, q' nu', q - q' nu'') = |V_3|^2(q nu, q - q' nu'', q' nu') follows from the permutation symmetry of the third-order force constants. Without it, or for a kernel that is not monotone in |x|, a negative absorption term needs kernel weight at a signed offset omega + omega' - omega'' above omega_q nu.",
+        "The Casimir bound needs L > 0 and a nonzero group velocity, and holds for any nonnegative anharmonic and isotope linewidths, not only the catalog's."
+      ],
+      "conventions": {
+        "model_scope": "Phonon scattering channels and the relaxation-time mean free path on a finite Brillouin-zone mesh. Physlib has no phonon-scattering model, so these are local theorems about the OMAI formulas over Mathlib reals and complex numbers. No Physlib declaration is identified.",
+        "component_scope": "Per mode (q, nu): the three linewidth channels and their Matthiessen sum, and the three Cartesian components of the mean free displacement.",
+        "normalization_basis": "Per mode on a mesh of N_q points with 1/N_q on every Brillouin-zone sum. Eigenvectors are normalized per cell over basis atoms and Cartesian axes.",
+        "frequency_convention": "Angular frequencies and linewidths, Gamma = Im Sigma = 1/(2 tau). A code reporting linear THz or the rate 1/tau needs the factor 2 pi or 1/2 before comparison.",
+        "unit_embedding": "Coherent SI: omega and Gamma in rad/s, hbar in J s, k_B in J/K, T in K, |V_3|^2 in J^2, v in m/s, L and F in m. g_b, the occupations and the eigenvector components are dimensionless.",
+        "held_fixed": "The mesh, the frequencies, eigenvectors, |V_3|^2, temperature and boundary length are fixed inputs. No convergence in the mesh is asserted.",
+        "admissibility": "g_b >= 0, |V_3|^2 >= 0, a nonnegative smearing kernel, positive frequencies for the three-phonon result, L > 0 and a nonzero velocity for the Casimir bound.",
+        "reference_energy": "Not applicable.",
+        "qpoint_weighting": "Uniform 1/N_q over the mesh. Irreducible-wedge weights are not modeled."
+      },
+      "remaining_obligations": [
+        "The kernel |V_3|^2, the frequencies and eigenvectors and the mass variances come from external codes and are not verified, nor is the exchange symmetry of a code's |V_3|^2 after symmetrization and interpolation.",
+        "Tetrahedron weights, which are not an even kernel in the offset, and the convergence of the mesh sums are not covered.",
+        "The linearized-BTE solution, the collision matrix and the anharmonic and isotope in-scattering terms are not covered by this binding."
+      ],
+      "evidence": {
+        "kind": "compiled_bridge",
+        "module": "OMAIPhononScattering",
+        "declarations": [
+          "OMAI.PhyslibBridge.PhononScattering.isotopeLinewidth_nonneg",
+          "OMAI.PhyslibBridge.PhononScattering.isotopeLinewidth_le_dos",
+          "OMAI.PhyslibBridge.PhononScattering.anharmonicLinewidth_nonneg",
+          "OMAI.PhyslibBridge.PhononScattering.anharmonicLinewidth_nonneg_of_support",
+          "OMAI.PhyslibBridge.PhononScattering.anharmonicLinewidth_neg_of_nonmonotone",
+          "OMAI.PhyslibBridge.PhononScattering.rta_casimir_bound"
+        ],
+        "source_path": "lean/bridge/OMAIPhononScattering.lean",
+        "build_record": "lean/bridge/build-evidence.json",
+        "proved_targets": [
+          {
+            "kind": "operator",
+            "id": "compute_boundary_scattering"
+          },
+          {
+            "kind": "operator",
+            "id": "compute_isotope_scattering"
+          },
+          {
+            "kind": "operator",
+            "id": "compute_linewidth[channel=anharmonic_3ph]"
+          },
+          {
+            "kind": "operator",
+            "id": "solve_bte[bte_solver=rta]"
+          },
+          {
+            "kind": "operator",
+            "id": "sum_linewidths"
+          },
+          {
+            "kind": "node",
+            "id": "Linewidth[channel=anharmonic_3ph]"
+          },
+          {
+            "kind": "node",
+            "id": "Linewidth[channel=boundary]"
+          },
+          {
+            "kind": "node",
+            "id": "Linewidth[channel=isotope]"
+          },
+          {
+            "kind": "node",
+            "id": "Linewidth[channel=total]"
+          },
+          {
+            "kind": "node",
+            "id": "MeanFreeDisplacement[bte_solver=rta]"
+          }
+        ],
+        "source_sha256": "a3fe99ec9df1ae2432a92534361bca2989b6ea8341b3d3f81648d41b28ec6860"
+      }
     }
   ],
   "gap_reasons": {

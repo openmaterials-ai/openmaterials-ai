@@ -154,6 +154,19 @@ TRANCHES = (
             ("operator", "contract_kappa[transport_model=green_kubo]"), ("operator", "fourier_to_dos")}),
         "modules": ("OMAIMDCorrelations", "OMAIVACFSpectrum", "OMAIPhyslibPhononSpectrum"),
     },
+    {
+        "name": "phonon-scattering",
+        "contracts": ("phonon-scattering-formula-contract.json",),
+        "bindings": frozenset({"phonon-scattering-channels"}),
+        "subjects": frozenset({
+            ("node", "Linewidth[channel=anharmonic_3ph]"), ("node", "Linewidth[channel=boundary]"),
+            ("node", "Linewidth[channel=isotope]"), ("node", "Linewidth[channel=total]"),
+            ("node", "MeanFreeDisplacement[bte_solver=rta]"),
+            ("operator", "compute_boundary_scattering"), ("operator", "compute_isotope_scattering"),
+            ("operator", "compute_linewidth[channel=anharmonic_3ph]"), ("operator", "solve_bte[bte_solver=rta]"),
+            ("operator", "sum_linewidths")}),
+        "modules": ("OMAIPhononScattering",),
+    },
 )
 
 _BRIDGE = Path(__file__).resolve().parent.parent / "lean" / "bridge"
@@ -187,12 +200,12 @@ for _tranche in TRANCHES:
 GLOBAL_COVERAGE = {
     "nodes_total": len(_INVENTORY["nodes"]), "nodes_mapped": 35,
     "operators_total": len(_INVENTORY["operators"]), "operators_mapped": 29,
-    "nodes_local": 38, "operators_local": 49, "bindings_total": 52, "source_correspondences": 5,
-    "compiled_bridges": 47, "nodes_compiled": 26, "nodes_compiled_outputs": 25,
-    "nodes_compiled_interpretations": 1, "operators_compiled": 29, "operators_compiled_local": 49,
-    "nodes_compiled_local": 42, "operators_proved": 78, "nodes_proved": 68,
+    "nodes_local": 43, "operators_local": 54, "bindings_total": 53, "source_correspondences": 5,
+    "compiled_bridges": 48, "nodes_compiled": 26, "nodes_compiled_outputs": 25,
+    "nodes_compiled_interpretations": 1, "operators_compiled": 29, "operators_compiled_local": 54,
+    "nodes_compiled_local": 47, "operators_proved": 83, "nodes_proved": 73,
     "upstream_declarations_referenced": 36, "upstream_modules_referenced": 10,
-    "relations": {"exact_definition": 1, "conditional": 29, "conceptual": 4, "local": 18},
+    "relations": {"exact_definition": 1, "conditional": 29, "conceptual": 4, "local": 19},
 }
 
 

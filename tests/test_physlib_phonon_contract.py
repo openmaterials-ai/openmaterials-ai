@@ -122,7 +122,8 @@ CORRECTED_FORMULAS = {"solve_bte[bte_solver=direct_inverse]": "symmetric weighti
                       "contract_kappa[bte_solver=direct_inverse]": "positive semidefinite",
                       "contract_cumulative_kappa[wrt=omega]": "signed partial sum",
                       "contract_cumulative_kappa[wrt=mfp]": "signed partial sum"}
-UNBOUND = {"identity_dm", "sum_linewidths", "solve_bte[bte_solver=rta]", *CORRECTED_FORMULAS}
+# sum_linewidths and solve_bte[bte_solver=rta] are bound by the phonon-scattering tranche.
+UNBOUND = {"identity_dm", *CORRECTED_FORMULAS}
 
 
 def _binding(payload, binding_id):
