@@ -410,8 +410,8 @@ def test_cure_conversion_renders_the_kamal_sourour_hold():
                                "hold_time": "3600 s", "alpha_0": 0.0,
                                "kinetics_params_sha256": digest}
     assert "uncertainty" not in inst.to_json_dict()
-    assert ("(Kamal-Sourour, 0.9123; vitrification at 2711 s, past which it is an "
-            "upper bound for constants fit before vitrification)") in inst.source.detail
+    assert ("(Kamal-Sourour, 0.9123; vitrification at 2711 s, past which the rate law "
+            "overestimates the rate for constants fit before vitrification)") in inst.source.detail
     assert "vitrification" not in render_cure_conversion(
         cure(vitrification_time_s=None)).source.detail
 

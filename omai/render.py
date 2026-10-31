@@ -526,8 +526,8 @@ def render_cure_conversion(result, *, run_ref: str | None = None,
     x = _conversion(result)
     t_vit = _get(result, "vitrification_time_s")
     vit_text = ("" if t_vit is None else
-                f"; vitrification at {_sig4(t_vit)} s, past which it is an upper "
-                "bound for constants fit before vitrification")
+                f"; vitrification at {_sig4(t_vit)} s, past which the rate law "
+                "overestimates the rate for constants fit before vitrification")
     return Instance(
         variable="CureConversion",
         material=name,

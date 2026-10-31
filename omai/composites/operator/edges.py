@@ -183,7 +183,7 @@ nan_effective_kappa = Operator(
         "A filler whose Kapitza-corrected conductivities both fall below km lowers "
         "kappa_c; for a sphere of conductivity k > km that is every radius below "
         "a_c = a_K k/(k - km), a_K = km/G (Every, Tzou, Hasselman and Raj, Acta "
-        "Metall. Mater. 38, 3105 (1990)), which exceeds a_K itself. "
+        "Metall. Mater. 40, 123 (1992)), which exceeds a_K itself. "
         "The reference DGEBA epoxy + 5 vol% GNP (km=0.2, k11=1200, k33=6, d1=5um, "
         "d3=0.02um, G=25 MW/m2K, f=0.05) gives kappa_c = 1.2452 W/(m K)."
     ),
