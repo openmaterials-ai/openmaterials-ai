@@ -156,7 +156,7 @@ PRESERVED_HASHES = {
     "omai/vectors/private.json": "42995cae634ce5631dbb654e853239e5357f3f66c3dcd924ffd2b3c2c3b5e279",
     "omai/vectors/records.json": "d9aff626f7153b4b0b1b4db40d886b09ac4af8bc354048c221dae79dfa3f777f",
     "omai/vectors/releases.json": "e14c995a44f307fcfce04ea701cb59ad933a7f41239085a9799e6d3ed2c81bd3",
-    "omai/vectors/render.json": "e01c9344751de35c5862da063da0ae27c8549aaed035d5117c6fcdb748446e76",
+    "omai/vectors/render.json": "4a35e7cd6de890f9ad07435a0c236ce8c6b0aca4df7223d317b99d2ea3ec6d26",
     "lean/bridge/OMAIPhyslibSemantics.lean": "9ce9bbe14c751333465a9f08bdb5319f369361e136f2f8233e8e72e6614797a5",
     "lean/bridge/OMAIPhyslibContinuum.lean": "e8bff3cb5d44cd78885d8c5f200d8761e8c568cd0d101fc0c2110f521bdca7ff",
     "lean/bridge/OMAIPhyslibHarmonicEnsemble.lean": "1a1f7e60f5cf4a3e468d173109b0127d7685123e6e0130b69374df687b94e172",
