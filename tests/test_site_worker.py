@@ -199,3 +199,11 @@ def test_share_routes_under_node():
 def test_share_card_under_node():
     from node_runner import run_node_test
     run_node_test(_SITE / "src" / "card.test.mjs")
+
+
+def test_worker_deploys_after_green_ci_on_main():
+    wf = (_SITE.parents[1] / ".github" / "workflows" / "deploy-site.yml").read_text()
+    assert "workflow_run:\n    workflows: [ci]\n    types: [completed]\n    branches: [main]" in wf
+    assert "if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push'" in wf
+    assert "ref: ${{ github.event.workflow_run.head_sha }}" in wf
+    assert "CLOUDFLARE_ACCOUNT_ID: 5219ec03b38a883ca6919581402272fd" in wf

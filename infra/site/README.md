@@ -81,6 +81,8 @@ npx wrangler deploy
 
 `npm ci` installs the pinned resvg and wrangler (`package.json`). The share card bundles the resvg WASM and four fonts, about 3.6 MB before compression.
 
+On main these steps run by themselves: `.github/workflows/deploy-site.yml` deploys every push to main once `ci` passes on it, with the repository secret `CLOUDFLARE_API_TOKEN` (an API token of the account that holds openmaterials.ai, with Edit Cloudflare Workers on that zone). Deploy by hand only when that job fails.
+
 Deploys to the `openmaterials-site` Worker on workers.dev. A change to the
 private-evidence rule: merging publishes `docs/data/registry.json` and the
 playground on Pages; deploy the Worker from the merge commit right after,

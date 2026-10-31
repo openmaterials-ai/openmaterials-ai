@@ -1,0 +1,39 @@
+# Deploys the site Worker (infra/site) after ci passes on main. The Worker bundles docs/ as its static
+# fallback, so every merge changes it, not only edits under infra/site. The token is an API token of the
+# Cloudflare account that holds openmaterials.ai (Edit Cloudflare Workers, zone openmaterials.ai).
+name: deploy-site
+
+on:
+  workflow_run:
+    workflows: [ci]
+    types: [completed]
+    branches: [main]
+
+concurrency:
+  group: deploy-site
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push'
+    runs-on: ubuntu-latest
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: 5219ec03b38a883ca6919581402272fd
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: infra/site/package-lock.json
+      - name: Install
+        working-directory: infra/site
+        run: npm ci
+      - name: Deploy
+        working-directory: infra/site
+        run: npx wrangler deploy
+      - name: Check
+        run: curl -fsS https://openmaterials.ai/healthz
