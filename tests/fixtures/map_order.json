@@ -1,0 +1,682 @@
+{
+ "ActivationEnergy": [
+  13,
+  3,
+  0
+ ],
+ "AdsorptionEnergy": [
+  8,
+  0,
+  1
+ ],
+ "AssessedDatabase": [
+  9,
+  0,
+  6
+ ],
+ "AtomCount": [
+  0,
+  0,
+  11
+ ],
+ "AtomicMass": [
+  0,
+  0,
+  9
+ ],
+ "BandGap": [
+  6,
+  0,
+  2
+ ],
+ "BareDynamicalMatrix": [
+  1,
+  0,
+  6
+ ],
+ "BondDissociationEnergy": [
+  11,
+  1,
+  2
+ ],
+ "BornCharges": [
+  0,
+  2,
+  1
+ ],
+ "BulkModulus": [
+  7,
+  3,
+  0
+ ],
+ "CalphadMolarEntropy": [
+  9,
+  1,
+  1
+ ],
+ "CarrierDensity": [
+  13,
+  2,
+  5
+ ],
+ "CarrierMobility": [
+  12,
+  1,
+  1
+ ],
+ "CellVolume": [
+  0,
+  0,
+  8
+ ],
+ "ChemicalPotential": [
+  9,
+  3,
+  3
+ ],
+ "ClassificationAccuracy": [
+  16,
+  3,
+  6
+ ],
+ "ConductanceDriftExponent": [
+  16,
+  1,
+  5
+ ],
+ "ConductanceRelaxationTime": [
+  16,
+  3,
+  11
+ ],
+ "ConductanceState": [
+  16,
+  2,
+  7
+ ],
+ "ConductanceWindow": [
+  16,
+  3,
+  12
+ ],
+ "ConfigurationalEnergy": [
+  13,
+  0,
+  1
+ ],
+ "CumulativeKappa[wrt=mfp]": [
+  4,
+  3,
+  3
+ ],
+ "CumulativeKappa[wrt=omega]": [
+  4,
+  3,
+  8
+ ],
+ "CureConversion": [
+  17,
+  0,
+  0
+ ],
+ "DepolarizationFactor": [
+  15,
+  0,
+  6
+ ],
+ "DielectricTensor": [
+  0,
+  2,
+  2
+ ],
+ "Diffusivity": [
+  13,
+  2,
+  2
+ ],
+ "DotProductError": [
+  16,
+  4,
+  10
+ ],
+ "DynamicalMatrix": [
+  1,
+  1,
+  2
+ ],
+ "Eigenvectors": [
+  1,
+  2,
+  1
+ ],
+ "ElasticConstants": [
+  7,
+  2,
+  3
+ ],
+ "ElectricalConductivity[carrier=electronic]": [
+  12,
+  1,
+  4
+ ],
+ "ElectricalConductivity[carrier=ionic]": [
+  13,
+  3,
+  4
+ ],
+ "ElectronAffinity": [
+  16,
+  0,
+  4
+ ],
+ "ElectronicDOS": [
+  12,
+  0,
+  0
+ ],
+ "ElectronicThermalConductivity": [
+  12,
+  1,
+  2
+ ],
+ "EnergyAboveHull": [
+  8,
+  1,
+  6
+ ],
+ "Entropy": [
+  2,
+  0,
+  2
+ ],
+ "FillerVolumeFraction": [
+  15,
+  0,
+  5
+ ],
+ "ForceConstants[order=2]": [
+  0,
+  1,
+  10
+ ],
+ "ForceConstants[order=3]": [
+  0,
+  3,
+  6
+ ],
+ "Forces": [
+  6,
+  1,
+  7
+ ],
+ "FormationEnergy": [
+  8,
+  0,
+  5
+ ],
+ "Frequency": [
+  1,
+  2,
+  5
+ ],
+ "GlassTransitionTemperature": [
+  17,
+  1,
+  1
+ ],
+ "GrainBoundaryEnergy": [
+  8,
+  0,
+  0
+ ],
+ "GroupVelocity": [
+  1,
+  3,
+  4
+ ],
+ "Gruneisen": [
+  3,
+  0,
+  3
+ ],
+ "HOMOLUMOGap": [
+  11,
+  0,
+  1
+ ],
+ "HeatCapacity": [
+  2,
+  0,
+  8
+ ],
+ "HeatCapacityConstantP": [
+  10,
+  2,
+  0
+ ],
+ "HeatCapacity[method=pimd]": [
+  5,
+  1,
+  3
+ ],
+ "HeatCurrent": [
+  5,
+  1,
+  11
+ ],
+ "HeatCurrentACF": [
+  5,
+  2,
+  12
+ ],
+ "HelmholtzFreeEnergy": [
+  2,
+  0,
+  4
+ ],
+ "InterfaceConductance": [
+  15,
+  0,
+  3
+ ],
+ "InterfaceConductance[transport_model=nemd]": [
+  5,
+  2,
+  2
+ ],
+ "InterfaceTrapRelaxationTime": [
+  16,
+  2,
+  13
+ ],
+ "InternalEnergy": [
+  2,
+  0,
+  0
+ ],
+ "IsotopeAbundances": [
+  0,
+  3,
+  4
+ ],
+ "Linewidth[channel=anharmonic_3ph]": [
+  3,
+  0,
+  0
+ ],
+ "Linewidth[channel=boundary]": [
+  3,
+  1,
+  5
+ ],
+ "Linewidth[channel=isotope]": [
+  3,
+  0,
+  1
+ ],
+ "Linewidth[channel=total]": [
+  3,
+  2,
+  2
+ ],
+ "MagneticMoment": [
+  6,
+  0,
+  4
+ ],
+ "MassDensity": [
+  7,
+  0,
+  2
+ ],
+ "MeanFreeDisplacement[bte_solver=direct_inverse]": [
+  4,
+  2,
+  7
+ ],
+ "MeanFreeDisplacement[bte_solver=rta]": [
+  4,
+  2,
+  11
+ ],
+ "MeanSquaredDisplacement": [
+  5,
+  1,
+  8
+ ],
+ "MigrationBarrier": [
+  13,
+  1,
+  3
+ ],
+ "ModalDiffusivity": [
+  4,
+  2,
+  9
+ ],
+ "MolarEnthalpy": [
+  9,
+  1,
+  5
+ ],
+ "MolarEntropy": [
+  2,
+  1,
+  3
+ ],
+ "MolarGibbsEnergy": [
+  9,
+  2,
+  2
+ ],
+ "MolarHeatCapacity": [
+  2,
+  1,
+  6
+ ],
+ "MolarHelmholtzFreeEnergy": [
+  2,
+  1,
+  5
+ ],
+ "MolarInternalEnergy": [
+  2,
+  1,
+  1
+ ],
+ "MolarVolume": [
+  14,
+  0,
+  0
+ ],
+ "MolecularFrequency": [
+  11,
+  0,
+  0
+ ],
+ "ParticipationRatio": [
+  1,
+  3,
+  0
+ ],
+ "PhaseFraction": [
+  9,
+  1,
+  4
+ ],
+ "PhaseSpace3Phonon": [
+  3,
+  0,
+  4
+ ],
+ "PhononDOS": [
+  1,
+  4,
+  3
+ ],
+ "PhononTransmission": [
+  4,
+  0,
+  0
+ ],
+ "PoissonRatio": [
+  7,
+  4,
+  4
+ ],
+ "Potential": [
+  0,
+  0,
+  3
+ ],
+ "PotentialEnergyFitError": [
+  6,
+  1,
+  1
+ ],
+ "PotentialForceFitError": [
+  6,
+  2,
+  3
+ ],
+ "PotentialOfMeanForce": [
+  5,
+  1,
+  1
+ ],
+ "PotentialUncertaintyExceedance[method=committee_force_spread]": [
+  5,
+  1,
+  6
+ ],
+ "PotentialVirialFitError": [
+  6,
+  2,
+  0
+ ],
+ "PowerFactor": [
+  14,
+  1,
+  3
+ ],
+ "Pressure": [
+  7,
+  1,
+  1
+ ],
+ "ProgrammingPulseEnergy": [
+  16,
+  3,
+  8
+ ],
+ "QHAGibbsEnergy": [
+  10,
+  0,
+  2
+ ],
+ "QuantumKineticEnergy": [
+  5,
+  1,
+  4
+ ],
+ "ReactionBarrier[construction=neb_mep]": [
+  11,
+  1,
+  3
+ ],
+ "ReactionEnergy": [
+  8,
+  1,
+  4
+ ],
+ "RetentionTime": [
+  16,
+  0,
+  0
+ ],
+ "SchottkyBarrierHeight[band_carrier=electron]": [
+  16,
+  1,
+  3
+ ],
+ "SeebeckCoefficient": [
+  12,
+  1,
+  3
+ ],
+ "SetVoltage": [
+  16,
+  0,
+  1
+ ],
+ "ShearModulus": [
+  7,
+  3,
+  6
+ ],
+ "StateCoefficientOfVariation": [
+  16,
+  3,
+  9
+ ],
+ "StaticDielectricTensor": [
+  0,
+  4,
+  5
+ ],
+ "Stress": [
+  6,
+  1,
+  6
+ ],
+ "Structure": [
+  0,
+  0,
+  7
+ ],
+ "SurfaceEnergy": [
+  8,
+  0,
+  3
+ ],
+ "Temperature": [
+  0,
+  3,
+  0
+ ],
+ "ThermalConductance[transport_model=landauer]": [
+  4,
+  1,
+  1
+ ],
+ "ThermalConductivity": [
+  4,
+  4,
+  2
+ ],
+ "ThermalConductivity[bte_solver=direct_inverse]": [
+  4,
+  3,
+  6
+ ],
+ "ThermalConductivity[bte_solver=rta]": [
+  4,
+  3,
+  12
+ ],
+ "ThermalConductivity[contribution=total]": [
+  14,
+  2,
+  1
+ ],
+ "ThermalConductivity[effective_medium=nan,orientation=aligned]": [
+  15,
+  1,
+  2
+ ],
+ "ThermalConductivity[effective_medium=nan,orientation=random]": [
+  15,
+  1,
+  4
+ ],
+ "ThermalConductivity[role=filler]": [
+  15,
+  0,
+  1
+ ],
+ "ThermalConductivity[role=matrix]": [
+  15,
+  0,
+  0
+ ],
+ "ThermalConductivity[transport_model=green_kubo]": [
+  5,
+  3,
+  0
+ ],
+ "ThermalConductivity[transport_model=hnemd]": [
+  5,
+  2,
+  5
+ ],
+ "ThermalConductivity[transport_model=nemd]": [
+  5,
+  2,
+  10
+ ],
+ "ThermalConductivity[transport_model=qhgk]": [
+  4,
+  2,
+  5
+ ],
+ "ThermalConductivity[transport_model=wigner]": [
+  4,
+  4,
+  10
+ ],
+ "ThermalConductivity[transport_model=wigner_coherences]": [
+  4,
+  2,
+  13
+ ],
+ "ThermalConductivity[transport_model=wigner_populations]": [
+  4,
+  3,
+  4
+ ],
+ "ThermalExpansion": [
+  10,
+  1,
+  3
+ ],
+ "ThermalGruneisen": [
+  10,
+  2,
+  1
+ ],
+ "TotalEnergy": [
+  6,
+  0,
+  5
+ ],
+ "Trajectory": [
+  5,
+  0,
+  7
+ ],
+ "TransitionTemperature": [
+  9,
+  2,
+  0
+ ],
+ "VelocityAutocorrelation": [
+  5,
+  1,
+  9
+ ],
+ "Voltage": [
+  8,
+  0,
+  2
+ ],
+ "VolumetricHeatCapacity": [
+  2,
+  1,
+  7
+ ],
+ "WorkFunction": [
+  16,
+  0,
+  2
+ ],
+ "YoungsModulus": [
+  7,
+  4,
+  5
+ ],
+ "ZT": [
+  14,
+  3,
+  2
+ ]
+}
