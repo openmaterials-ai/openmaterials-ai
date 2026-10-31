@@ -177,3 +177,50 @@ test('a quantity with a tier the map does not list sits under Other in the table
   g.nodes[0].tier = 'Nowhere';
   assert.equal(L.tableRows(g, layers).find((r) => r.id === g.nodes[0].id).tier, 'Other');
 });
+
+const codes = JSON.parse(fs.readFileSync(__dirname + '/../data/codes.json', 'utf8'));
+
+test('a paper area is its reported quantities, its formulas\' results, and only the inputs its formulas produce', () => {
+  const lay = structuredClone(layers);
+  const kappa = 'contract_kappa[bte_solver=rta]', solve = 'solve_bte[bte_solver=rta]';
+  lay.tags['paper:x'] = {label: 'X', values: 1, quantities: ['ThermalConductivity'], formulas: [kappa, solve]};
+  const a = L.area('paper:x', lay, codes, graph);
+  assert.deepEqual([...a.formulas].sort(), [kappa, solve]);
+  for (const o of lay.formulas[kappa].outputs.concat(lay.formulas[solve].outputs)) assert.ok(a.quantities.has(o), o);
+  for (const i of lay.formulas[kappa].inputs) assert.equal(a.quantities.has(i), lay.formulas[solve].outputs.includes(i) || i === 'ThermalConductivity', i);
+  const pt = L.area('paper:ptse2-2021-donadio', layers, codes, graph);
+  assert.ok(!pt.quantities.has('Linewidth[channel=isotope]') && !pt.quantities.has('Linewidth[channel=boundary]'));
+});
+
+test('a code area keeps the formulas whose results and inputs the code all represents', () => {
+  const a = L.area('code:kaldo', layers, codes, graph);
+  assert.equal(a.quantities.size, Object.keys(codes.kaldo).filter((id) => graph.nodes.some((n) => n.id === id)).length);
+  assert.ok(a.formulas.size > 0);
+  for (const op of a.formulas) {
+    const f = layers.formulas[op];
+    assert.ok(f.outputs.every((o) => a.quantities.has(o)) && f.inputs.every((i) => a.quantities.has(i)), op);
+  }
+});
+
+test('an unknown tag has no area', () => {
+  assert.equal(L.area('paper:nope', layers, codes, graph), null);
+  assert.equal(L.area('code:nope', layers, codes, graph), null);
+  assert.equal(L.area('bogus', layers, codes, graph), null);
+});
+
+test('the frame encloses the area with 24 units of margin', () => {
+  const s = L.slots(fixture.formulas, pos);
+  const f = L.frame({quantities: new Set(['S', 'Q']), formulas: new Set(['q_a'])}, pos, s);
+  assert.deepEqual(f, {x: 100 - 40 - 24, y: 100 - 22 - 24, w: (400 + 40) - (100 - 40) + 48, h: 44 + 48});
+  assert.equal(L.frame({quantities: new Set(['nowhere']), formulas: new Set()}, pos, s), null);
+});
+
+test('the tab names the tag, its values and its Lean theorems on OMAI formulas; a code tab counts no theorems', () => {
+  const f = new Map([['f1', {rung: 'local'}], ['f2', {rung: 'none'}]]);
+  assert.equal(L.tabText('paper:x', {label: 'Short title', values: 3}, {quantities: new Set(['A']), formulas: new Set(['f1', 'f2'])}, f),
+    'paper · Short title · 3 values · Lean theorems on 1 / 2 OMAI formulas');
+  assert.equal(L.tabText('code:k', {label: 'kALDo'}, {quantities: new Set(['A', 'B']), formulas: new Set(['f1'])}, f), 'code · kALDo · 2 quantities');
+  const t = 'Phonon dynamics and thermal conductivity of PtSe2 thin films: Impact of crystallinity and film thickness';
+  const long = L.tabText('paper:y', {label: t, values: 1}, {quantities: new Set(['A']), formulas: new Set()}, f);
+  assert.ok(long.includes('PtSe2') && long.length < 90 && !long.includes('\u2014'), long);
+});

@@ -33,6 +33,8 @@ ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "docs" / "data"
 BRIDGE = ROOT / "lean" / "bridge"
 OUT = DATA / "map_layers.json"
+PAPERS = ROOT / "index" / "papers"
+PROJECTS = ROOT / "omai" / "data" / "projects.json"
 REPOSITORY = "https://github.com/openmaterials-ai/openmaterials-ai"
 RUNGS = ("none", "stated", "local", "physlib")
 FORMAT = 1
@@ -174,6 +176,33 @@ def _binding_entry(b: dict, index: dict, audit: dict) -> dict:
             "bridge": bridge}
 
 
+def _tags(quantities: set[str], formulas: set[str]) -> dict:
+    """Named areas of the map. A paper in index/papers covers the quantities its values sit on and the
+    formulas in its curated "formulas" list, never a closure. A cleared project comes from
+    omai/data/projects.json. The map page takes codes from codes.json. An empty area is left out."""
+    out = {}
+    for path in sorted(PAPERS.glob("*.json")):
+        rec, slug = _load(path), path.stem
+        paper, values = rec.get("paper", {}), rec.get("values", [])
+        used = sorted(rec.get("formulas", []))
+        if set(used) - formulas:
+            raise ValueError(f"paper {slug} lists formulas outside the catalog: {sorted(set(used) - formulas)}")
+        qs = sorted({v["node_id"] for v in values} & quantities)
+        if not qs and not used:
+            continue
+        url = (f"https://doi.org/{paper['doi']}" if paper.get("doi")
+               else f"https://arxiv.org/abs/{paper['arxiv']}" if paper.get("arxiv") else None)
+        out[f"paper:{slug}"] = {"label": paper.get("title") or slug, "url": url, "values": len(values),
+                                "quantities": qs, "formulas": used}
+    for pr in _load(PROJECTS)["projects"]:
+        if set(pr["quantities"]) - quantities or set(pr["formulas"]) - formulas:
+            raise ValueError(f"project {pr['id']} names marks outside the catalog")
+        if pr["quantities"] or pr["formulas"]:
+            out[f"project:{pr['id']}"] = {"label": pr["title"], "url": pr.get("url"), "owner": pr.get("owner"), "values": None,
+                                          "quantities": sorted(pr["quantities"]), "formulas": sorted(pr["formulas"])}
+    return out
+
+
 def build_map_layers() -> dict:
     payload = _load(DATA / "formula_bindings.json")
     graph = _load(DATA / "graph.json")
@@ -210,13 +239,27 @@ def build_map_layers() -> dict:
         "quantities": quantities,
         "formulas": formulas,
         "bindings": {b["id"]: _binding_entry(b, index, audit["declarations"]) for b in payload["bindings"]},
+        "tags": _tags(set(quantities), set(formulas)),
         "counts": {kind: {r: sum(m["rung"] == r for m in marks.values()) for r in RUNGS}
                    for kind, marks in (("quantities", quantities), ("formulas", formulas))},
     }
 
 
+def lean_badge(layers: dict) -> tuple[str, str]:
+    """Label and message of /badge/stat/lean.svg, which counts the operators with a Lean theorem out of all operators."""
+    f = layers["counts"]["formulas"]
+    return "Lean theorems", f"{f['local'] + f['physlib']}/{sum(f.values())} operators"
+
+
 def write_map_layers(out: Path = OUT) -> Path:
-    out.write_text(json.dumps(build_map_layers(), indent=1, sort_keys=True, ensure_ascii=False) + "\n", encoding="utf-8")
+    """Write map_layers.json and the Lean stat badge that counts from it (the Worker serves the same bytes)."""
+    from omai.badge import labeled_badge_svg
+
+    layers = build_map_layers()
+    out.write_text(json.dumps(layers, indent=1, sort_keys=True, ensure_ascii=False) + "\n", encoding="utf-8")
+    stat = ROOT / "docs" / "badge" / "stat"
+    stat.mkdir(parents=True, exist_ok=True)
+    (stat / "lean.svg").write_text(labeled_badge_svg(*lean_badge(layers)) + "\n", encoding="utf-8")
     return out
 
 

@@ -228,7 +228,59 @@
     return h;
   }
 
-  const api = {RUNG_WORDS, marks, slots, wires, lit, inLayer, state, fragment, leanIndex, searchLean, tableRows, leanPanel};
+  // A tag's area: a paper's or project's reported quantities, its curated formulas and their results, and
+  // the inputs those formulas produce among themselves (never an input from outside the list); or a code's
+  // represented quantities with the formulas whose results and inputs it all represents.
+  // null for an unknown tag or an empty area.
+  function area(key, layers, codes, graph) {
+    const m = /^(paper|project|code):(.+)$/.exec(key || ''), ids = new Set(graph.nodes.map((n) => n.id));
+    if (!m) return null;
+    const quantities = new Set(), formulas = new Set();
+    if (m[1] === 'code') {
+      if (!codes[m[2]]) return null;
+      Object.keys(codes[m[2]]).filter((id) => ids.has(id)).forEach((id) => quantities.add(id));
+      for (const [op, f] of Object.entries(layers.formulas))
+        if (f.outputs.every((o) => quantities.has(o)) && f.inputs.every((i) => quantities.has(i))) formulas.add(op);
+    } else {
+      const t = (layers.tags || {})[key];
+      if (!t) return null;
+      t.quantities.filter((id) => ids.has(id)).forEach((id) => quantities.add(id));
+      const listed = t.formulas.filter((op) => layers.formulas[op]);
+      const made = new Set(listed.flatMap((op) => layers.formulas[op].outputs));
+      for (const op of listed) {
+        formulas.add(op);
+        layers.formulas[op].outputs.filter((id) => ids.has(id)).forEach((id) => quantities.add(id));
+        layers.formulas[op].inputs.filter((id) => ids.has(id) && made.has(id)).forEach((id) => quantities.add(id));
+      }
+    }
+    return quantities.size || formulas.size ? {quantities, formulas} : null;
+  }
+
+  // The box around an area's quantity boxes and formula circles, with 24 units of margin; null when none is placed.
+  function frame(a, pos, slot) {
+    let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+    for (const id of a.quantities) { const p = pos[id]; if (!p) continue;
+      x0 = Math.min(x0, p.x - p.w / 2); y0 = Math.min(y0, p.y - p.h / 2); x1 = Math.max(x1, p.x + p.w / 2); y1 = Math.max(y1, p.y + p.h / 2); }
+    for (const op of a.formulas) { const c = slot.get(op); if (!c) continue;
+      x0 = Math.min(x0, c.x - R); y0 = Math.min(y0, c.y - R); x1 = Math.max(x1, c.x + R); y1 = Math.max(y1, c.y + R); }
+    return x1 < x0 ? null : {x: x0 - 24, y: y0 - 24, w: x1 - x0 + 48, h: y1 - y0 + 48};
+  }
+
+  // The words on the frame's tab: kind, name, what the tag reports, and for a paper or project the Lean
+  // theorems on its OMAI formulas. A code tab counts none: the theorems are about OMAI's formulas, not the code.
+  function tabText(key, tag, a, formulas) {
+    const kind = key.split(':')[0], label = Array.from(tag.label || key);
+    const parts = [kind, label.length > 64 ? label.slice(0, 63).join('').trimEnd() + '…' : label.join('')];
+    if (tag.values != null) parts.push(tag.values + (tag.values === 1 ? ' value' : ' values'));
+    else if (kind === 'code') parts.push(a.quantities.size + (a.quantities.size === 1 ? ' quantity' : ' quantities'));
+    if (a.formulas.size && kind !== 'code') {
+      const with_ = [...a.formulas].filter((op) => ['local', 'physlib'].includes((formulas.get(op) || {}).rung)).length;
+      parts.push('Lean theorems on ' + with_ + ' / ' + a.formulas.size + ' OMAI formulas');
+    }
+    return parts.join(' · ');
+  }
+
+  const api = {RUNG_WORDS, marks, slots, wires, lit, inLayer, state, fragment, leanIndex, searchLean, tableRows, leanPanel, area, frame, tabText};
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.LeanMap = api;
 })(typeof self !== 'undefined' ? self : this);

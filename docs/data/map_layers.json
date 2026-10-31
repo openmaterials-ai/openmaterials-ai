@@ -4646,6 +4646,130 @@
    "via": "formulas"
   }
  },
+ "tags": {
+  "paper:amorphous-alloys-2020-lundgren": {
+   "formulas": [],
+   "label": "Mode Localization and Suppressed Heat Transport in Amorphous Alloys",
+   "quantities": [
+    "MassDensity",
+    "ThermalConductivity[transport_model=qhgk]"
+   ],
+   "url": "https://doi.org/10.1103/PhysRevB.103.024204",
+   "values": 2
+  },
+  "paper:cnt-2021-barbalinardo": {
+   "formulas": [],
+   "label": "Ultrahigh convergent thermal conductivity of carbon nanotubes from comprehensive atomistic modeling",
+   "quantities": [
+    "MeanFreeDisplacement[bte_solver=direct_inverse]",
+    "ThermalConductivity[bte_solver=direct_inverse]"
+   ],
+   "url": "https://doi.org/10.1103/PhysRevLett.127.025902",
+   "values": 3
+  },
+  "paper:esfarjani-2011": {
+   "formulas": [],
+   "label": "Heat transport in silicon from first-principles calculations",
+   "quantities": [
+    "ThermalConductivity[bte_solver=rta]"
+   ],
+   "url": "https://doi.org/10.1103/PhysRevB.84.085204",
+   "values": 3
+  },
+  "paper:graphene-kappa-2008-balandin": {
+   "formulas": [],
+   "label": "Extremely High Thermal Conductivity of Graphene: Experimental Study",
+   "quantities": [
+    "ThermalConductivity"
+   ],
+   "url": "https://doi.org/10.1021/nl0731872",
+   "values": 1
+  },
+  "paper:kaldo-2020-barbalinardo": {
+   "formulas": [],
+   "label": "Efficient anharmonic lattice dynamics calculations of thermal transport in crystalline and disordered solids",
+   "quantities": [
+    "ThermalConductivity[bte_solver=direct_inverse]",
+    "ThermalConductivity[bte_solver=rta]",
+    "ThermalConductivity[transport_model=qhgk]"
+   ],
+   "url": "https://doi.org/10.1063/5.0020443",
+   "values": 8
+  },
+  "paper:kappa-limit-2025-donadio": {
+   "formulas": [],
+   "label": "Probing the Limit of Heat Transfer in Inorganic Crystals with Deep Learning",
+   "quantities": [
+    "BandGap",
+    "ThermalConductivity"
+   ],
+   "url": "https://arxiv.org/abs/2503.11568",
+   "values": 5
+  },
+  "paper:memtransistor-2025-hou": {
+   "formulas": [],
+   "label": "Scalable transition metal dichalcogenide memtransistor arrays with Schottky-barrier control for energy-efficient artificial neural networks",
+   "quantities": [
+    "WorkFunction"
+   ],
+   "url": "https://doi.org/10.1038/s41467-025-64579-5",
+   "values": 2
+  },
+  "paper:ptse2-2021-donadio": {
+   "formulas": [
+    "compute_dispersion",
+    "compute_dynamical_matrix",
+    "compute_force_constants[order=2]",
+    "compute_force_constants[order=3]",
+    "compute_group_velocity",
+    "compute_heat_capacity",
+    "compute_linewidth[channel=anharmonic_3ph]",
+    "contract_kappa[bte_solver=direct_inverse]",
+    "identity_dm",
+    "provide_potential",
+    "provide_temperature",
+    "resolve_thermal_conductivity",
+    "solve_bte[bte_solver=direct_inverse]",
+    "sum_linewidths"
+   ],
+   "label": "Phonon dynamics and thermal conductivity of PtSe2 thin films: Impact of crystallinity and film thickness",
+   "quantities": [
+    "ThermalConductivity"
+   ],
+   "url": "https://arxiv.org/abs/2111.13395",
+   "values": 3
+  },
+  "paper:qhgk-2019-isaeva": {
+   "formulas": [],
+   "label": "Modeling heat transport in crystals and glasses from a unified lattice-dynamical approach",
+   "quantities": [
+    "MassDensity",
+    "ThermalConductivity[transport_model=green_kubo]"
+   ],
+   "url": "https://doi.org/10.1038/s41467-019-11572-4",
+   "values": 3
+  },
+  "paper:quantum-elastic-2024-folkner": {
+   "formulas": [],
+   "label": "Elastic moduli and thermal conductivity of quantum materials at finite temperature",
+   "quantities": [
+    "BulkModulus",
+    "ElasticConstants"
+   ],
+   "url": null,
+   "values": 4
+  },
+  "paper:sige-disorder-2024-donadio": {
+   "formulas": [],
+   "label": "Effects of colored disorder on the heat conductivity of SiGe alloys from first principles",
+   "quantities": [
+    "ThermalConductivity[transport_model=qhgk]",
+    "ZT"
+   ],
+   "url": null,
+   "values": 3
+  }
+ },
  "tiers": [
   {
    "formulas": 9,

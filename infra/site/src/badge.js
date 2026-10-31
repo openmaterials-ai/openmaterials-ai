@@ -115,5 +115,5 @@ export function statBadgeSVG(label, message) {
   );
 }
 
-export const STAT_BADGE_PATH_RE = /^\/badge\/stat\/(nodes|operators|codes|values)\.svg$/;
+export const STAT_BADGE_PATH_RE = /^\/badge\/stat\/(nodes|operators|codes|values|lean)\.svg$/;
 

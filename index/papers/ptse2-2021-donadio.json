@@ -1,4 +1,20 @@
 {
+ "formulas": [
+  "compute_dispersion",
+  "compute_dynamical_matrix",
+  "compute_force_constants[order=2]",
+  "compute_force_constants[order=3]",
+  "compute_group_velocity",
+  "compute_heat_capacity",
+  "compute_linewidth[channel=anharmonic_3ph]",
+  "contract_kappa[bte_solver=direct_inverse]",
+  "identity_dm",
+  "provide_potential",
+  "provide_temperature",
+  "resolve_thermal_conductivity",
+  "solve_bte[bte_solver=direct_inverse]",
+  "sum_linewidths"
+ ],
  "map_version": "8aea09f90c24ae29137be4860452b9085d5b1e1a502493bffd8f956a9c382a8f",
  "paper": {
   "arxiv": "2111.13395",

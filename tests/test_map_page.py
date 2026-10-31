@@ -31,8 +31,10 @@ f.onload = async () => {
   await wait(400);
   let result;
   try { result = await (async () => { %(body)s })(); } catch (e) { result = {error: String(e && e.stack || e)}; }
-  const err = d.getElementById('err');
-  document.getElementById('out').textContent = 'RESULT ' + JSON.stringify({result, err: err && err.style.display === 'block' ? err.textContent : null});
+  const err = d.getElementById('err'), failed = err && err.style.display === 'block';
+  // on an error, what each script request returned, to tell a server failure from a page bug
+  const scripts = failed ? w.performance.getEntriesByType('resource').filter(r => r.initiatorType === 'script').map(r => [r.name.split('/').pop(), r.responseStatus, r.transferSize]) : null;
+  document.getElementById('out').textContent = 'RESULT ' + JSON.stringify({result, err: failed ? err.textContent + ' ' + JSON.stringify(scripts) : null});
 };
 </script>"""
 
@@ -116,7 +118,7 @@ def test_link_formats_still_open(server):
     checks = {
         "#node=Temperature": "return !!d.querySelector('.node.sel[data-id=\"Temperature\"]') && d.getElementById('panel').style.display === 'block';",
         "#operator=apply_conductance_drift": "return d.getElementById('panel').textContent.includes('apply_conductance_drift');",
-        "#code=kaldo": "return d.getElementById('codeFilter').value === 'kaldo' && d.querySelectorAll('.node:not(.dim)').length > 0;",
+        "#code=kaldo": "return d.getElementById('tagPick').value === 'code:kaldo' && d.querySelectorAll('.node:not(.dim)').length > 0;",
         "#physlib=1": "return !!d.getElementById('formal-search');",
         "?embed=1#node=Temperature": "return d.body.classList.contains('embed') && !!d.querySelector('.node.sel[data-id=\"Temperature\"]');",
     }
@@ -318,3 +320,102 @@ def test_escape_closes_the_table(server):
 def test_the_omai_layer_counts_theorems(server):
     got = run(server, "", "d.querySelector('input[name=layer][value=lean]').click(); d.querySelector('input[name=layer][value=omai]').click(); await wait(50); return d.getElementById('mapStatus').textContent;")
     assert f"{THEOREMS} formulas have a Lean theorem" in got
+
+
+PTSE2 = "paper:ptse2-2021-donadio"
+LIT = "return [...d.querySelectorAll('.node:not(.dim)')].map(el => el.dataset.id).sort();"
+
+
+def test_a_paper_tag_frames_its_area(server):
+    got = run(server, "#tag=" + PTSE2, """const f = d.querySelector('#tagFrame .tag-box'), k = d.querySelector('.node[data-id="ThermalConductivity"] rect');
+      const fb = f.getBBox(), kb = k.getBBox();
+      return {frames: d.querySelectorAll('#tagFrame .tag-box').length, tab: d.querySelector('#tagFrame .tab-text').textContent,
+              inside: fb.x <= kb.x && fb.y <= kb.y && fb.x + fb.width >= kb.x + kb.width && fb.y + fb.height >= kb.y + kb.height,
+              pick: d.getElementById('tagPick').value, hash: w.location.hash};""")
+    assert got["frames"] == 1 and got["inside"] and got["pick"] == PTSE2 and got["hash"] == "#tag=" + PTSE2
+    assert got["tab"].startswith("paper · ") and "\u2014" not in got["tab"] and "Lean theorems on" in got["tab"]
+
+
+def test_the_code_hash_is_the_code_tag(server):
+    assert run(server, "#code=kaldo", LIT) == run(server, "#tag=code:kaldo", LIT)
+    assert run(server, "#code=kaldo", "return d.querySelectorAll('#tagFrame .tag-box').length;") == 1
+
+
+def test_an_unknown_tag_says_so(server):
+    got = run(server, "#tag=paper:nope", "return {note: d.getElementById('panel').textContent.includes('tag=paper:nope'), frames: d.querySelectorAll('#tagFrame .tag-box').length};")
+    assert got == {"note": True, "frames": 0}
+
+
+def test_an_embed_keeps_layer_and_tag(server):
+    got = run(server, "?embed=1#layer=lean&tag=" + PTSE2, """return {embed: d.body.classList.contains('embed'),
+      lean: d.querySelector('input[name=layer][value=lean]').checked, frames: d.querySelectorAll('#tagFrame .tag-box').length,
+      out: d.getElementById('embedOut').getAttribute('href')};""", 800, 480)
+    assert got["embed"] and got["lean"] and got["frames"] == 1 and got["out"].endswith("#layer=lean&tag=" + PTSE2)
+
+
+def test_a_mark_lists_its_papers(server):
+    got = run(server, "#node=ThermalConductivity", "return d.getElementById('panel').textContent;")
+    assert "Values here" in got and LAYERS["tags"][PTSE2]["label"] in got
+
+
+def test_clearing_the_tag_clears_its_frame(server):
+    got = run(server, "#tag=" + PTSE2, """const p = d.getElementById('tagPick'); p.value = ''; p.dispatchEvent(new w.Event('change')); await wait(50);
+      return {frames: d.querySelectorAll('#tagFrame .tag-box').length, hash: w.location.hash, dim: d.querySelectorAll('.node.dim').length};""")
+    assert got == {"frames": 0, "hash": "", "dim": 0}
+
+
+def test_the_legend_and_the_caption_do_not_overlap(server):
+    for w_, h_ in ((1400, 900), (1100, 800)):
+        got = run(server, "#layer=lean", """const a = d.querySelector('.legend').getBoundingClientRect(), b = d.getElementById('caption').getBoundingClientRect();
+          return a.right <= b.left || b.right <= a.left || a.bottom <= b.top || b.bottom <= a.top;""", w_, h_)
+        assert got is True, (w_, h_)
+
+
+def test_escape_returns_from_a_mark_to_the_tag_view(server):
+    got = run(server, "#tag=" + PTSE2, """w.navTo('ThermalConductivity'); await wait(50);
+      const esc = () => w.dispatchEvent(new w.KeyboardEvent('keydown', {key: 'Escape', bubbles: true}));
+      esc(); await wait(50);
+      const first = {frames: d.querySelectorAll('#tagFrame .tag-box').length, hash: w.location.hash, panel: d.getElementById('panel').style.display};
+      esc(); await wait(50);
+      return {first, second: d.querySelectorAll('#tagFrame .tag-box').length, hash: w.location.hash};""")
+    assert got == {"first": {"frames": 1, "hash": "#tag=" + PTSE2, "panel": "none"}, "second": 0, "hash": ""}
+
+
+def test_a_tag_the_layer_hides_returns_to_the_omai_layer(server):
+    hidden = run(server, "#layer=lean&tag=paper:graphene-kappa-2008-balandin", "return d.querySelector('input[name=layer][value=omai]').checked;")
+    kept = run(server, "#layer=lean&tag=" + PTSE2, "return d.querySelector('input[name=layer][value=lean]').checked;")
+    assert hidden is True and kept is True
+
+
+def test_hashes_keep_the_tag_and_drop_what_it_replaces(server):
+    pick = run(server, "#tag=" + PTSE2, """d.querySelector('.node[data-id="Temperature"]').dispatchEvent(new w.MouseEvent('click', {bubbles: true, shiftKey: true})); await wait(50);
+      return w.location.hash;""")
+    assert pick == ""
+    links = run(server, "#tag=" + PTSE2 + "&node=ThermalConductivity", """return [...d.querySelectorAll('#panel a[href*="operator="]')].map(a => a.getAttribute('href'));""")
+    assert links and all("tag=" + PTSE2 in h for h in links)
+    code = run(server, "#code=kaldo", "d.querySelector('input[name=layer][value=lean]').click(); await wait(50); return w.location.hash;")
+    assert code == "#layer=lean&tag=code:kaldo"
+
+
+def test_the_tab_stays_readable_at_any_zoom(server):
+    got = run(server, "#tag=code:kaldo", """for (let i = 0; i < 6; i++) d.getElementById('zoomOut').click(); await wait(50);
+      const t = d.querySelector('#tagFrame .tab-text'); return +t.getAttribute('font-size') * w.eval('scaleOf()');""")
+    assert got >= 11
+
+
+def test_papers_on_a_panel_separate_values_from_curated_paths(server):
+    got = run(server, "#node=ForceConstants%5Border%3D3%5D", "return d.getElementById('panel').textContent;")
+    assert "On a paper's curated path" in got and "Values here" not in got and LAYERS["tags"][PTSE2]["label"] in got
+    got = run(server, "#node=ThermalConductivity", "return d.getElementById('panel').textContent;")
+    assert "Values here" in got
+
+
+def test_a_tag_says_what_the_dimmed_marks_are(server):
+    got = run(server, "#tag=" + PTSE2, "return d.getElementById('mapStatus').textContent + ' ' + d.getElementById('layerCount').textContent;")
+    assert "Dimmed marks inside the frame are outside the area" in got and "its conditions need not hold" in got.lower()
+
+
+def test_code_options_count_quantities(server):
+    got = run(server, "", "return d.querySelector('#tagPick option[value=\\'code:kaldo\\']').textContent;")
+    codes = json.loads((DOCS / "data" / "codes.json").read_text())
+    assert got.endswith(f"({len([q for q in codes['kaldo'] if any(n['id'] == q for n in GRAPH['nodes'])])})"), got
