@@ -37,7 +37,7 @@
   "facts": [
     {
       "value": "136",
-      "label": "typed quantities at map version 45be98afae7c",
+      "label": "typed quantities at map version 3f08dcf2117b",
       "source": "openmaterials-ai README"
     },
     {
@@ -62,7 +62,7 @@
     },
     {
       "title": "Evaluate a closed form",
-      "text": "omai.composites.evaluate.nan_kappa_random(params) from km, k11, k33, d1, d3, G and f."
+      "text": "nan_kappa_random(params) in omai.composites.evaluate takes km, k11, k33, d1, d3, G and f."
     },
     {
       "title": "Render a record",
@@ -102,7 +102,7 @@
   "detail": [
     {
       "heading": "What the kernel holds",
-      "text": "At map version 45be98afae7c the map has 136 typed quantities (122 observable, 11 hidden, 3 parameter), 307 links (265 formula, 42 parameter) and 133 operators in 18 tiers, with representations for 34 codes and 93 committed values, 87 from simulations and 6 from measurements (openmaterials-ai README). The database is plain files. map/ is an append-only log of content-addressed records, and docs/data/ holds the generated graph.json, catalog.json, codes.json, the instances, configurations, models and releases (openmaterials-ai README). The kernel is Apache 2.0 and the map data CC BY 4.0 (openmaterials-ai README)."
+      "text": "At map version 3f08dcf2117b the map has 136 typed quantities (122 observable, 11 hidden, 3 parameter), 310 links (268 formula, 42 parameter) and 133 operators in 18 tiers, with representations for 33 codes and 90 committed values, 84 from simulations and 6 from measurements (openmaterials-ai README). The database is plain files. map/ is an append-only log of content-addressed records, and docs/data/ holds the generated graph.json, catalog.json, codes.json, the instances, configurations, models and releases (openmaterials-ai README). The kernel is Apache 2.0 and the map data CC BY 4.0 (openmaterials-ai README)."
     },
     {
       "heading": "Closed forms and the dimensional gate",

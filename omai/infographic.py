@@ -137,7 +137,7 @@ CSS = """
   .info-flow li::before { content: counter(step, decimal-leading-zero); position: absolute; top: 0; left: 0; font: 500 11px/16px var(--font-mono); color: var(--accent); }
   .info-flow li::after { content: ""; position: absolute; top: 7px; left: 26px; right: 0; border-top: 1px solid var(--line); }
   .info-flow h4 { margin: 0 0 2px; font: 500 14px/20px var(--font-serif); }
-  .info-flow p { margin: 0; font-size: 12.5px; line-height: 17px; color: var(--ink-2); max-width: none; }
+  .info-flow p { margin: 0; font-size: 12.5px; line-height: 17px; color: var(--ink-2); max-width: none; overflow-wrap: anywhere; }
   .info-foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 16px; padding: 12px var(--info-pad); border-top: 1px solid var(--line); font-size: 12px; line-height: 18px; color: var(--ink-2); }
   .info-url { font-family: var(--font-mono); }
   @media (min-width: 700px) { .info-zones { grid-template-columns: 3fr 2fr; } .info-zone-b { border-top: 0; border-left: 1px solid var(--line); } }
