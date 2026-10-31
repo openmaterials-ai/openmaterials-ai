@@ -1,63 +1,38 @@
 {
+ "axioms": [
+  "Classical.choice",
+  "Quot.sound",
+  "propext"
+ ],
  "bindings": {
   "absolute-temperature": {
    "bridge": [
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibContinuum",
      "name": "OMAI.PhyslibBridge.absoluteTemperature_toReal",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibContinuum.lean#L20"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibContinuum",
      "name": "OMAI.PhyslibBridge.absoluteTemperature_roundtrip",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibContinuum.lean#L23"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibContinuum",
      "name": "OMAI.PhyslibBridge.absoluteTemperature_beta_eq",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibContinuum.lean#L31"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibContinuum",
      "name": "OMAI.PhyslibBridge.absoluteTemperature_beta_pos",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibContinuum.lean#L35"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibContinuum",
      "name": "OMAI.PhyslibBridge.inverseTemperature_unit_scaling",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibContinuum.lean#L43"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibContinuum",
      "name": "OMAI.PhyslibBridge.absoluteTemperature_beta_unit_scaling",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibContinuum.lean#L53"
@@ -108,81 +83,41 @@
   "analog-device-metrology": {
    "bridge": [
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIDeviceMetrology",
      "name": "OMAI.PhyslibBridge.DeviceMetrology.drift_law_unique",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIDeviceMetrology.lean#L121"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIDeviceMetrology",
      "name": "OMAI.PhyslibBridge.DeviceMetrology.thermionic_wrongLaw_barrier",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIDeviceMetrology.lean#L212"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIDeviceMetrology",
      "name": "OMAI.PhyslibBridge.DeviceMetrology.retention_symmetric_relaxation",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIDeviceMetrology.lean#L324"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIDeviceMetrology",
      "name": "OMAI.PhyslibBridge.DeviceMetrology.ramp_expectedHops",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIDeviceMetrology.lean#L386"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIDeviceMetrology",
      "name": "OMAI.PhyslibBridge.DeviceMetrology.ramp_meanSetVoltage",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIDeviceMetrology.lean#L484"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIDeviceMetrology",
      "name": "OMAI.PhyslibBridge.DeviceMetrology.programmingError_gt",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIDeviceMetrology.lean#L626"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIDeviceMetrology",
      "name": "OMAI.PhyslibBridge.DeviceMetrology.pulseEnergy_bracket",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIDeviceMetrology.lean#L662"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIDeviceMetrology",
      "name": "OMAI.PhyslibBridge.DeviceMetrology.deviceConductance_series_le",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIDeviceMetrology.lean#L701"
@@ -195,31 +130,16 @@
   "arrhenius-ionic-transport": {
    "bridge": [
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIMaterialsTransport",
      "name": "OMAI.PhyslibBridge.MaterialsTransport.wlsSlope_minimizes",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIMaterialsTransport.lean#L66"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIMaterialsTransport",
      "name": "OMAI.PhyslibBridge.MaterialsTransport.arrhenius_wls_recovers_activation",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIMaterialsTransport.lean#L109"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIMaterialsTransport",
      "name": "OMAI.PhyslibBridge.MaterialsTransport.ionic_wls_apparent_activation",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIMaterialsTransport.lean#L270"
@@ -232,52 +152,27 @@
   "boltzmann-electronic-transport": {
    "bridge": [
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibElectronicTransport",
      "name": "OMAI.PhyslibBridge.ElectronicTransport.boltzmannKappaE_nonneg_and_eq_zero_iff",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibElectronicTransport.lean#L84"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibElectronicTransport",
      "name": "OMAI.PhyslibBridge.ElectronicTransport.exists_boltzmann_thermoelectricMaterial",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibElectronicTransport.lean#L135"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibElectronicTransport",
      "name": "OMAI.PhyslibBridge.ElectronicTransport.figureOfMerit_lt_mahanSofo",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibElectronicTransport.lean#L166"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
-     "module": "OMAIPhyslibElectronicTransport",
+     "module": "OMAISommerfeldTransport",
      "name": "OMAI.PhyslibBridge.Sommerfeld.sommerfeld_moments",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAISommerfeldTransport.lean#L219"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
-     "module": "OMAIPhyslibElectronicTransport",
+     "module": "OMAISommerfeldTransport",
      "name": "OMAI.PhyslibBridge.Sommerfeld.wiedemannFranz_constantTransport",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAISommerfeldTransport.lean#L232"
     }
@@ -308,91 +203,46 @@
   "calphad-binary-equilibrium": {
    "bridge": [
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAICalphad",
      "name": "OMAI.PhyslibBridge.Calphad.equilibriumGibbs_isConvexEnvelope",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICalphad.lean#L195"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAICalphad",
      "name": "OMAI.PhyslibBridge.Calphad.equilibriumGibbsT_concaveOn",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICalphad.lean#L208"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAICalphad",
      "name": "OMAI.PhyslibBridge.Calphad.equilibrium_entropy_monotoneOn",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICalphad.lean#L276"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAICalphad",
      "name": "OMAI.PhyslibBridge.Calphad.equilibrium_enthalpy_monotoneOn",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICalphad.lean#L285"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAICalphad",
      "name": "OMAI.PhyslibBridge.Calphad.commonTangent_of_isLocalExtr",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICalphad.lean#L303"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAICalphad",
      "name": "OMAI.PhyslibBridge.Calphad.deriv_equilibriumGibbs_of_twoPhaseChord",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICalphad.lean#L354"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAICalphad",
      "name": "OMAI.PhyslibBridge.Calphad.chemicalPotentials_equilibriumGibbs_of_twoPhaseChord",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICalphad.lean#L370"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAICalphad",
      "name": "OMAI.PhyslibBridge.Calphad.leverFractions_unique_and_bounds",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICalphad.lean#L388"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAICalphad",
      "name": "OMAI.PhyslibBridge.Calphad.transitionTemperature_unique",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICalphad.lean#L421"
@@ -405,11 +255,6 @@
   "canonical-rta-thermal-conductivity": {
    "bridge": [
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibRTAConductivity",
      "name": "OMAI.PhyslibBridge.Lattice.rtaKappa_canonical",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibRTAConductivity.lean#L49"
@@ -435,11 +280,6 @@
   "cell-stress-rotation-balance": {
    "bridge": [
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAICellElasticity",
      "name": "OMAI.PhyslibBridge.CellElasticity.cellStress_rotation_balance",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICellElasticity.lean#L109"
@@ -496,181 +336,91 @@
   "composite-effective-medium": {
    "bridge": [
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAICompositeConductivity",
      "name": "OMAI.PhyslibBridge.Composites.depolarization_eq_integral",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICompositeConductivity.lean#L177"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAICompositeConductivity",
      "name": "OMAI.PhyslibBridge.Composites.depolarization_mem_Ioo",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICompositeConductivity.lean#L283"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAICompositeConductivity",
      "name": "OMAI.PhyslibBridge.Composites.depolarization_strictAntiOn",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICompositeConductivity.lean#L297"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAICompositeConductivity",
      "name": "OMAI.PhyslibBridge.Composites.depolarization_continuousOn",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICompositeConductivity.lean#L343"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAICompositeConductivity",
      "name": "OMAI.PhyslibBridge.Composites.tendsto_depolarization_atTop",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICompositeConductivity.lean#L367"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAICompositeConductivity",
      "name": "OMAI.PhyslibBridge.Composites.tendsto_depolarization_zero",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICompositeConductivity.lean#L381"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAICompositeConductivity",
      "name": "OMAI.PhyslibBridge.Composites.nanRandom_sub_matrix",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICompositeConductivity.lean#L522"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAICompositeConductivity",
      "name": "OMAI.PhyslibBridge.Composites.nanRandom_gt_iff",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICompositeConductivity.lean#L550"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAICompositeConductivity",
      "name": "OMAI.PhyslibBridge.Composites.nanRandom_sign",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICompositeConductivity.lean#L562"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAICompositeConductivity",
      "name": "OMAI.PhyslibBridge.Composites.nanRandom_sphere",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICompositeConductivity.lean#L596"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAICompositeConductivity",
      "name": "OMAI.PhyslibBridge.Composites.nanAligned_sphere",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICompositeConductivity.lean#L617"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAICompositeConductivity",
      "name": "OMAI.PhyslibBridge.Composites.nanRandom_sphere_between",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICompositeConductivity.lean#L635"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAICompositeConductivity",
      "name": "OMAI.PhyslibBridge.Composites.tendsto_nanRandom_sphere",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICompositeConductivity.lean#L668"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAICompositeConductivity",
      "name": "OMAI.PhyslibBridge.Composites.hasselmanJohnson_eq_maxwellGarnett",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICompositeConductivity.lean#L684"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAICompositeConductivity",
      "name": "OMAI.PhyslibBridge.Composites.hasselmanJohnson_critical_radius",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICompositeConductivity.lean#L715"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAICompositeConductivity",
      "name": "OMAI.PhyslibBridge.Composites.nanAligned_strictAntiOn",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICompositeConductivity.lean#L798"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAICompositeConductivity",
      "name": "OMAI.PhyslibBridge.Composites.nanAligned_strict_wiener",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICompositeConductivity.lean#L825"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAICompositeConductivity",
      "name": "OMAI.PhyslibBridge.Composites.nanAligned_strictMonoOn_aspect",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICompositeConductivity.lean#L842"
@@ -683,41 +433,21 @@
   "continuum-stress-sign": {
    "bridge": [
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibContinuum",
      "name": "OMAI.PhyslibBridge.compressiveStress_roundtrip",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibContinuum.lean#L75"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibContinuum",
      "name": "OMAI.PhyslibBridge.compressiveStress_eq_pressure_identity",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibContinuum.lean#L79"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibContinuum",
      "name": "OMAI.PhyslibBridge.compressiveStress_diagonal_of_isInviscid",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibContinuum.lean#L86"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibContinuum",
      "name": "OMAI.PhyslibBridge.pressureFromStress_eq_physlib_pressure",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibContinuum.lean#L95"
@@ -737,41 +467,21 @@
   "crystal-dos-landauer-conductance": {
    "bridge": [
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibPhononSpectrum",
      "name": "OMAI.PhyslibBridge.PhononSpectrum.crystalDOS_sum_rules",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibPhononSpectrum.lean#L88"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibPhononSpectrum",
      "name": "OMAI.PhyslibBridge.PhononSpectrum.landauerWeight_eq_heatCapacity",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibPhononSpectrum.lean#L148"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibPhononSpectrum",
      "name": "OMAI.PhyslibBridge.PhononSpectrum.catalogLandauer_eq_heatCapacity",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibPhononSpectrum.lean#L160"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibPhononSpectrum",
      "name": "OMAI.PhyslibBridge.PhononSpectrum.catalogLandauer_unit_transmission",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibPhononSpectrum.lean#L250"
@@ -809,31 +519,16 @@
   "crystal-dynamical-matrix": {
    "bridge": [
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibLatticeDynamics",
      "name": "OMAI.PhyslibBridge.Lattice.ForceConstants.fc_neg",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibLatticeDynamics.lean#L105"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibLatticeDynamics",
      "name": "OMAI.PhyslibBridge.Lattice.ForceConstants.dynamicalMatrix_isHermitian",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibLatticeDynamics.lean#L139"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibLatticeDynamics",
      "name": "OMAI.PhyslibBridge.Lattice.ForceConstants.three_le_finrank_ker_gamma",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibLatticeDynamics.lean#L218"
@@ -859,21 +554,11 @@
   "crystal-group-velocity": {
    "bridge": [
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibGroupVelocity",
      "name": "OMAI.PhyslibBridge.Lattice.hellmann_feynman",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibGroupVelocity.lean#L40"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibGroupVelocity",
      "name": "OMAI.PhyslibBridge.Lattice.ForceConstants.catalogGroupVelocity_eq_deriv",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibGroupVelocity.lean#L183"
@@ -899,42 +584,22 @@
   "crystal-phonon-dispersion": {
    "bridge": [
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibPhononDispersion",
      "name": "OMAI.PhyslibBridge.Lattice.ForceConstants.dynamicalMatrix_posSemidef_of_stable",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibPhononDispersion.lean#L126"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibPhononDispersion",
      "name": "OMAI.PhyslibBridge.Lattice.ForceConstants.fold_dynamicalMatrix",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibPhononDispersion.lean#L227"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibPhononDispersion",
      "name": "OMAI.PhyslibBridge.Lattice.ForceConstants.planeWave_dynamicalMatrix_posSemidef_of_folded_stable",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibPhononDispersion.lean#L247"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
-     "module": "OMAIPhyslibPhononDispersion",
+     "module": "OMAIPhyslibLatticeDynamics",
      "name": "OMAI.PhyslibBridge.Lattice.dispersion_omega2_nonneg",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibLatticeDynamics.lean#L65"
     }
@@ -965,81 +630,41 @@
   "dft-stability-energy-differences": {
    "bridge": [
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIStabilityEnergies",
      "name": "OMAI.PhyslibBridge.Stability.energyAboveHull_formationEnergy_reference_independent",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIStabilityEnergies.lean#L213"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIStabilityEnergies",
      "name": "OMAI.PhyslibBridge.Stability.energyAboveHull_affine_invariant",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIStabilityEnergies.lean#L177"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIStabilityEnergies",
      "name": "OMAI.PhyslibBridge.Stability.energyAboveHull_eq_zero_of_supporting",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIStabilityEnergies.lean#L252"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIStabilityEnergies",
      "name": "OMAI.PhyslibBridge.Stability.adsorptionEnergy_offset_invariant_iff",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIStabilityEnergies.lean#L346"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIStabilityEnergies",
      "name": "OMAI.PhyslibBridge.Stability.intercalationVoltage_offset_invariant_iff",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIStabilityEnergies.lean#L369"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIStabilityEnergies",
      "name": "OMAI.PhyslibBridge.Stability.intercalationVoltage_eq_mean_ocv",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIStabilityEnergies.lean#L406"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIStabilityEnergies",
      "name": "OMAI.PhyslibBridge.Stability.surfaceEnergy_thickness_independent_iff",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIStabilityEnergies.lean#L431"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIStabilityEnergies",
      "name": "OMAI.PhyslibBridge.Stability.catalogReactionEnergy_reference_independent_iff",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIStabilityEnergies.lean#L335"
@@ -1052,21 +677,11 @@
   "electronic-carrier-statistics": {
    "bridge": [
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIElectronicStatistics",
      "name": "OMAI.PhyslibBridge.ElectronicStatistics.boltzmannMobility_le_matthiessen",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIElectronicStatistics.lean#L66"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIElectronicStatistics",
      "name": "OMAI.PhyslibBridge.ElectronicStatistics.exists_unique_fermiLevel",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIElectronicStatistics.lean#L127"
@@ -1079,11 +694,6 @@
   "finite-displacement-force-constants": {
    "bridge": [
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIAtomisticDerivatives",
      "name": "OMAI.PhyslibBridge.Atomistic.centralDifference_error",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIAtomisticDerivatives.lean#L426"
@@ -1096,61 +706,31 @@
   "force-constant-sum-rules": {
    "bridge": [
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIAtomisticDerivatives",
      "name": "OMAI.PhyslibBridge.Atomistic.forceConstant2_sum_eq_zero",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIAtomisticDerivatives.lean#L251"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIAtomisticDerivatives",
      "name": "OMAI.PhyslibBridge.Atomistic.forceConstant3_sum_eq_zero",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIAtomisticDerivatives.lean#L261"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIAtomisticDerivatives",
      "name": "OMAI.PhyslibBridge.Atomistic.forceConstant3_symm",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIAtomisticDerivatives.lean#L280"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIAtomisticDerivatives",
      "name": "OMAI.PhyslibBridge.Atomistic.pairEnergy_forceConstant2",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIAtomisticDerivatives.lean#L501"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIAtomisticDerivatives",
      "name": "OMAI.PhyslibBridge.Atomistic.pairEnergy_translate",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIAtomisticDerivatives.lean#L460"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIAtomisticDerivatives",
      "name": "OMAI.PhyslibBridge.Atomistic.pairEnergy_contDiff",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIAtomisticDerivatives.lean#L469"
@@ -1163,71 +743,36 @@
   "harmonic-joint-molar-ensemble": {
    "bridge": [
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibHarmonicProduct",
      "name": "OMAI.PhyslibBridge.harmonicProduct_partitionFunction",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibHarmonicProduct.lean#L93"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibHarmonicProduct",
      "name": "OMAI.PhyslibBridge.harmonicGridOccupation_measurePreserving",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibHarmonicProduct.lean#L205"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibHarmonicProduct",
      "name": "OMAI.PhyslibBridge.harmonicGridEnsemble_energy",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibHarmonicProduct.lean#L221"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibHarmonicProduct",
      "name": "OMAI.PhyslibBridge.harmonic_joint_molar_helmholtzFreeEnergy_eq_omai",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibHarmonicProduct.lean#L268"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibHarmonicProduct",
      "name": "OMAI.PhyslibBridge.harmonic_joint_molar_meanEnergy_eq_omai",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibHarmonicProduct.lean#L276"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibHarmonicProduct",
      "name": "OMAI.PhyslibBridge.harmonic_joint_molar_thermodynamicEntropy_eq_omai",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibHarmonicProduct.lean#L284"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibHarmonicProduct",
      "name": "OMAI.PhyslibBridge.harmonic_joint_molar_heatCapacity_eq_omai",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibHarmonicProduct.lean#L292"
@@ -1301,11 +846,6 @@
   "harmonic-joint-volumetric-heat-capacity": {
    "bridge": [
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibJointDensity",
      "name": "OMAI.PhyslibBridge.harmonic_joint_volumetric_heatCapacity_eq_omai",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibJointDensity.lean#L14"
@@ -1331,11 +871,6 @@
   "harmonic-mode-entropy": {
    "bridge": [
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibHarmonicEnsemble",
      "name": "OMAI.PhyslibBridge.harmonic_thermodynamicEntropy_eq_omai",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibHarmonicEnsemble.lean#L200"
@@ -1367,21 +902,11 @@
   "harmonic-mode-free-energy": {
    "bridge": [
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibHarmonicEnsemble",
      "name": "OMAI.PhyslibBridge.harmonic_helmholtzFreeEnergy_eq_omai",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibHarmonicEnsemble.lean#L141"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibHarmonicEnsemble",
      "name": "OMAI.PhyslibBridge.harmonicFreeEnergy_hasDerivAt",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibHarmonicEnsemble.lean#L313"
@@ -1413,31 +938,16 @@
   "harmonic-mode-heat-capacity": {
    "bridge": [
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibHarmonicEnsemble",
      "name": "OMAI.PhyslibBridge.harmonic_heatCapacity_eq_omai",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibHarmonicEnsemble.lean#L299"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibHarmonicEnsemble",
      "name": "OMAI.PhyslibBridge.harmonicInternalEnergy_hasDerivAt",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibHarmonicEnsemble.lean#L280"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibHarmonicEnsemble",
      "name": "OMAI.PhyslibBridge.harmonicHeatCapacity_eq_exp",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibHarmonicEnsemble.lean#L264"
@@ -1463,11 +973,6 @@
   "harmonic-mode-internal-energy": {
    "bridge": [
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibHarmonicEnsemble",
      "name": "OMAI.PhyslibBridge.harmonic_meanEnergy_eq_omai",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibHarmonicEnsemble.lean#L174"
@@ -1499,11 +1004,6 @@
   "harmonic-molar-entropy": {
    "bridge": [
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibHarmonicSums",
      "name": "OMAI.PhyslibBridge.harmonic_molar_thermodynamicEntropy_eq_omai",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibHarmonicSums.lean#L89"
@@ -1529,11 +1029,6 @@
   "harmonic-molar-free-energy": {
    "bridge": [
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibHarmonicSums",
      "name": "OMAI.PhyslibBridge.harmonic_molar_helmholtzFreeEnergy_eq_omai",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibHarmonicSums.lean#L69"
@@ -1559,11 +1054,6 @@
   "harmonic-molar-heat-capacity": {
    "bridge": [
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibHarmonicSums",
      "name": "OMAI.PhyslibBridge.harmonic_molar_heatCapacity_eq_omai",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibHarmonicSums.lean#L100"
@@ -1589,11 +1079,6 @@
   "harmonic-molar-internal-energy": {
    "bridge": [
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibHarmonicSums",
      "name": "OMAI.PhyslibBridge.harmonic_molar_meanEnergy_eq_omai",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibHarmonicSums.lean#L79"
@@ -1619,22 +1104,12 @@
   "harmonic-qha-bulk-modulus": {
    "bridge": [
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibQHA",
      "name": "OMAI.PhyslibBridge.Response.harmonic_static_qhaBulkModulus_eq_omai",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibQHA.lean#L333"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
-     "module": "OMAIPhyslibQHA",
+     "module": "OMAIPhyslibHarmonicVolume",
      "name": "OMAI.PhyslibBridge.HarmonicVolumeModel.freeEnergy_eq_actual",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibHarmonicVolume.lean#L119"
     }
@@ -1653,31 +1128,16 @@
   "harmonic-qha-gibbs-energy": {
    "bridge": [
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibQHA",
      "name": "OMAI.PhyslibBridge.Response.harmonic_static_qhaGibbs_convex_window",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibQHA.lean#L259"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibQHA",
      "name": "OMAI.PhyslibBridge.Response.harmonic_static_qhaGibbs_entropy",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibQHA.lean#L272"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibQHA",
      "name": "OMAI.PhyslibBridge.Response.harmonic_static_qhaGibbs_volume",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibQHA.lean#L285"
@@ -1703,31 +1163,16 @@
   "harmonic-qha-heat-capacity-p": {
    "bridge": [
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibQHA",
      "name": "OMAI.PhyslibBridge.Response.harmonic_static_qhaHeatCapacityP_eq_omai",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibQHA.lean#L345"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibQHA",
      "name": "OMAI.PhyslibBridge.Response.harmonic_static_qhaHeatCapacityP_eq_entropy_slope",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibQHA.lean#L369"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibQHA",
      "name": "OMAI.PhyslibBridge.Response.harmonic_static_qhaHeatCapacityP_gt_iff",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibQHA.lean#L415"
@@ -1759,32 +1204,17 @@
   "harmonic-qha-thermal-expansion": {
    "bridge": [
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibQHA",
      "name": "OMAI.PhyslibBridge.Response.harmonic_static_qhaThermalExpansion_eq_omai",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibQHA.lean#L293"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibQHA",
      "name": "OMAI.PhyslibBridge.Response.harmonic_static_qhaThermalExpansion_pos_iff",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibQHA.lean#L322"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
-     "module": "OMAIPhyslibQHA",
+     "module": "OMAIPhyslibHarmonicVolume",
      "name": "OMAI.PhyslibBridge.HarmonicVolumeModel.freeEnergy_eq_actual",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibHarmonicVolume.lean#L119"
     }
@@ -1809,11 +1239,6 @@
   "harmonic-qha-thermal-gruneisen-contraction": {
    "bridge": [
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibQHA",
      "name": "OMAI.PhyslibBridge.Response.harmonic_static_qhaThermalGruneisen_eq_omai",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibQHA.lean#L444"
@@ -1845,21 +1270,11 @@
   "harmonic-static-cp-identity": {
    "bridge": [
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibHarmonicResponse",
      "name": "OMAI.PhyslibBridge.Response.harmonic_static_heatCapacityP_eq_omai",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibHarmonicResponse.lean#L22"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibHarmonicResponse",
      "name": "OMAI.PhyslibBridge.Response.harmonic_static_heatCapacityP_ge_heatCapacityV",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibHarmonicResponse.lean#L33"
@@ -1903,11 +1318,6 @@
   "harmonic-static-thermal-gruneisen-identity": {
    "bridge": [
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibThermalGruneisen",
      "name": "OMAI.PhyslibBridge.Response.harmonic_static_thermalGruneisen_eq_omai",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibThermalGruneisen.lean#L25"
@@ -1945,41 +1355,21 @@
   "harmonic-volumetric-heat-capacity": {
    "bridge": [
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibHarmonicDensity",
      "name": "OMAI.PhyslibBridge.harmonic_volumetric_heatCapacity_eq_omai",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibHarmonicDensity.lean#L53"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibHarmonicDensity",
      "name": "OMAI.PhyslibBridge.harmonicVolumetricHeatCapacity_eq_molar_div",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibHarmonicDensity.lean#L76"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibHarmonicDensity",
      "name": "OMAI.PhyslibBridge.uniformVolumetricContraction_ofAngstromCubed",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibHarmonicDensity.lean#L96"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibHarmonicDensity",
      "name": "OMAI.PhyslibBridge.harmonicHeatCapacity_angularSI_eq_linearTHz",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibHarmonicDensity.lean#L131"
@@ -2005,51 +1395,26 @@
   "hellmann-feynman-force-balance": {
    "bridge": [
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIAtomisticDerivatives",
      "name": "OMAI.PhyslibBridge.Atomistic.hfForce_sum_eq_zero",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIAtomisticDerivatives.lean#L159"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIAtomisticDerivatives",
      "name": "OMAI.PhyslibBridge.Atomistic.hfForce_torque_eq_zero",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIAtomisticDerivatives.lean#L206"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIAtomisticDerivatives",
      "name": "OMAI.PhyslibBridge.Atomistic.pairEnergy_force",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIAtomisticDerivatives.lean#L489"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIAtomisticDerivatives",
      "name": "OMAI.PhyslibBridge.Atomistic.pairEnergy_translate",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIAtomisticDerivatives.lean#L460"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIAtomisticDerivatives",
      "name": "OMAI.PhyslibBridge.Atomistic.pairEnergy_rotatePlane",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIAtomisticDerivatives.lean#L464"
@@ -2062,51 +1427,26 @@
   "hyperelastic-elastic-constants": {
    "bridge": [
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAICellElasticity",
      "name": "OMAI.PhyslibBridge.CellElasticity.elasticConstants_symmetries",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICellElasticity.lean#L164"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAICellElasticity",
      "name": "OMAI.PhyslibBridge.CellElasticity.voigt_pos_of_stable_reference",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICellElasticity.lean#L228"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAICellElasticity",
      "name": "OMAI.PhyslibBridge.CellElasticity.svkEnergy_elasticConstants_symmetries",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICellElasticity.lean#L359"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAICellElasticity",
      "name": "OMAI.PhyslibBridge.CellElasticity.svkEnergy_elasticConstants",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICellElasticity.lean#L466"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAICellElasticity",
      "name": "OMAI.PhyslibBridge.CellElasticity.svkEnergy_voigt_pos",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICellElasticity.lean#L527"
@@ -2119,51 +1459,26 @@
   "linear-elasticity-voigt-moduli": {
    "bridge": [
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIElasticity",
      "name": "OMAI.PhyslibBridge.Elasticity.voigt_pos_of_posDef",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIElasticity.lean#L131"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIElasticity",
      "name": "OMAI.PhyslibBridge.Elasticity.poissonRatio_bounds_of_posDef",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIElasticity.lean#L148"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIElasticity",
      "name": "OMAI.PhyslibBridge.Elasticity.isotropic_stable_iff",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIElasticity.lean#L214"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIElasticity",
      "name": "OMAI.PhyslibBridge.Elasticity.cubic_relaxed_eosBulk_eq_voigtBulk",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIElasticity.lean#L417"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIElasticity",
      "name": "OMAI.PhyslibBridge.Elasticity.uniformScaling_eosBulk_eq_voigtBulk",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIElasticity.lean#L391"
@@ -2176,101 +1491,51 @@
   "linearized-bte-conductivity": {
    "bridge": [
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAILinearizedBTE",
      "name": "OMAI.PhyslibBridge.LinearizedBTE.chaputCollision_isSymm",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAILinearizedBTE.lean#L122"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAILinearizedBTE",
      "name": "OMAI.PhyslibBridge.LinearizedBTE.lbteMatrix_isSymm",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAILinearizedBTE.lean#L136"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAILinearizedBTE",
      "name": "OMAI.PhyslibBridge.LinearizedBTE.lbteSolves_rta_limit",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAILinearizedBTE.lean#L149"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAILinearizedBTE",
      "name": "OMAI.PhyslibBridge.LinearizedBTE.lbteKappa_isSymm",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAILinearizedBTE.lean#L201"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAILinearizedBTE",
      "name": "OMAI.PhyslibBridge.LinearizedBTE.lbteKappa_posSemidef",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAILinearizedBTE.lean#L223"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAILinearizedBTE",
      "name": "OMAI.PhyslibBridge.LinearizedBTE.chaputCollision_quadratic",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAILinearizedBTE.lean#L529"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAILinearizedBTE",
      "name": "OMAI.PhyslibBridge.LinearizedBTE.chaputCollision_posSemidef",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAILinearizedBTE.lean#L603"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAILinearizedBTE",
      "name": "OMAI.PhyslibBridge.LinearizedBTE.anharmonicLinewidth_eq_detailedBalance",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAILinearizedBTE.lean#L659"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAILinearizedBTE",
      "name": "OMAI.PhyslibBridge.LinearizedBTE.chaputCollision_posSemidef_onShell",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAILinearizedBTE.lean#L700"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAILinearizedBTE",
      "name": "OMAI.PhyslibBridge.LinearizedBTE.lbteKappa_posSemidef_onShell",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAILinearizedBTE.lean#L742"
@@ -2283,31 +1548,16 @@
   "md-correlation-estimators": {
    "bridge": [
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIMDCorrelations",
      "name": "OMAI.PhyslibBridge.MDCorrelations.catalogMSD_eq_vacf",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIMDCorrelations.lean#L206"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIMDCorrelations",
      "name": "OMAI.PhyslibBridge.MDCorrelations.greenKubo_symm_eq_helfand",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIMDCorrelations.lean#L395"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIMDCorrelations",
      "name": "OMAI.PhyslibBridge.MDCorrelations.catalogHeatACF_eq_invDFT",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIMDCorrelations.lean#L454"
@@ -2320,21 +1570,11 @@
   "molecular-normal-modes": {
    "bridge": [
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIMolecularModes",
      "name": "OMAI.PhyslibBridge.MolecularModes.molecularFrequencies_of_isLocalMin",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIMolecularModes.lean#L144"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIMolecularModes",
      "name": "OMAI.PhyslibBridge.MolecularModes.massWeightedHessian_translation",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIMolecularModes.lean#L158"
@@ -2347,31 +1587,16 @@
   "participation-ratio-bounds": {
    "bridge": [
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibParticipationRatio",
      "name": "OMAI.PhyslibBridge.Lattice.participationRatio_bounds",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibParticipationRatio.lean#L44"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibParticipationRatio",
      "name": "OMAI.PhyslibBridge.Lattice.participationRatio_eq_one_iff",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibParticipationRatio.lean#L62"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibParticipationRatio",
      "name": "OMAI.PhyslibBridge.Lattice.participationRatio_eq_inv_iff",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibParticipationRatio.lean#L97"
@@ -2384,61 +1609,31 @@
   "phonon-scattering-channels": {
    "bridge": [
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhononScattering",
      "name": "OMAI.PhyslibBridge.PhononScattering.isotopeLinewidth_nonneg",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhononScattering.lean#L107"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhononScattering",
      "name": "OMAI.PhyslibBridge.PhononScattering.isotopeLinewidth_le_dos",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhononScattering.lean#L142"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhononScattering",
      "name": "OMAI.PhyslibBridge.PhononScattering.anharmonicLinewidth_nonneg",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhononScattering.lean#L236"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhononScattering",
      "name": "OMAI.PhyslibBridge.PhononScattering.anharmonicLinewidth_nonneg_of_support",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhononScattering.lean#L265"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhononScattering",
      "name": "OMAI.PhyslibBridge.PhononScattering.anharmonicLinewidth_neg_of_nonmonotone",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhononScattering.lean#L301"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhononScattering",
      "name": "OMAI.PhyslibBridge.PhononScattering.rta_casimir_bound",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhononScattering.lean#L342"
@@ -2451,21 +1646,11 @@
   "static-dielectric-ionic-response": {
    "bridge": [
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIStaticDielectric",
      "name": "OMAI.PhyslibBridge.StaticDielectric.staticDielectric_sub_posSemidef",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIStaticDielectric.lean#L70"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIStaticDielectric",
      "name": "OMAI.PhyslibBridge.StaticDielectric.lyddaneSachsTeller",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIStaticDielectric.lean#L99"
@@ -2491,41 +1676,21 @@
   "thermoelectric-figure-of-merit": {
    "bridge": [
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibSemantics",
      "name": "OMAI.PhyslibBridge.figureOfMerit_eq_physlib",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibSemantics.lean#L38"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibSemantics",
      "name": "OMAI.PhyslibBridge.figureOfMerit_pos",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibSemantics.lean#L43"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibSemantics",
      "name": "OMAI.PhyslibBridge.figureOfMerit_le_of_lattice_le",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibSemantics.lean#L50"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibSemantics",
      "name": "OMAI.PhyslibBridge.isotropic_figureOfMerit_eq_physlib",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibSemantics.lean#L71"
@@ -2576,21 +1741,11 @@
   "thermoelectric-power-factor": {
    "bridge": [
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibSemantics",
      "name": "OMAI.PhyslibBridge.powerFactor_eq_physlib",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibSemantics.lean#L24"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibSemantics",
      "name": "OMAI.PhyslibBridge.powerFactor_pos",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibSemantics.lean#L27"
@@ -2616,31 +1771,16 @@
   "thermoelectric-total-conductivity": {
    "bridge": [
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibSemantics",
      "name": "OMAI.PhyslibBridge.totalThermalConductivity_eq_physlib",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibSemantics.lean#L30"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibSemantics",
      "name": "OMAI.PhyslibBridge.totalThermalConductivity_pos",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibSemantics.lean#L34"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIPhyslibSemantics",
      "name": "OMAI.PhyslibBridge.isotropic_total_conductivity",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibSemantics.lean#L65"
@@ -2666,71 +1806,36 @@
   "thermoset-cure-kinetics": {
    "bridge": [
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAICureKinetics",
      "name": "OMAI.PhyslibBridge.CureKinetics.kamalCureTime_strictMonoOn",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICureKinetics.lean#L116"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAICureKinetics",
      "name": "OMAI.PhyslibBridge.CureKinetics.kamalCureTime_hasDerivAt",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICureKinetics.lean#L153"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAICureKinetics",
      "name": "OMAI.PhyslibBridge.CureKinetics.kamal_inverse_exists",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICureKinetics.lean#L175"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAICureKinetics",
      "name": "OMAI.PhyslibBridge.CureKinetics.kamal_inverse_solves_rate_law",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICureKinetics.lean#L161"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAICureKinetics",
      "name": "OMAI.PhyslibBridge.CureKinetics.diBenedetto_strictMonoOn",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICureKinetics.lean#L224"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAICureKinetics",
      "name": "OMAI.PhyslibBridge.CureKinetics.diBenedetto_bijOn",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICureKinetics.lean#L240"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAICureKinetics",
      "name": "OMAI.PhyslibBridge.CureKinetics.diBenedetto_lt_linear",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICureKinetics.lean#L266"
@@ -2743,41 +1848,21 @@
   "vacf-spectrum-lorentzian-limit": {
    "bridge": [
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIVACFSpectrum",
      "name": "OMAI.PhyslibBridge.VACFSpectrum.catalogFourierDOS_damped",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIVACFSpectrum.lean#L129"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIVACFSpectrum",
      "name": "OMAI.PhyslibBridge.VACFSpectrum.integral_catalogFourierDOS_damped",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIVACFSpectrum.lean#L172"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIVACFSpectrum",
      "name": "OMAI.PhyslibBridge.VACFSpectrum.integral_Ioi_catalogFourierDOS_damped",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIVACFSpectrum.lean#L200"
     },
     {
-     "axioms": [
-      "Classical.choice",
-      "Quot.sound",
-      "propext"
-     ],
      "module": "OMAIVACFSpectrum",
      "name": "OMAI.PhyslibBridge.VACFSpectrum.tendsto_catalogFourierDOS_zero_linewidth",
      "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIVACFSpectrum.lean#L253"
@@ -2796,10 +1881,10 @@
    "stated": 0
   },
   "quantities": {
-   "local": 49,
-   "none": 58,
-   "physlib": 26,
-   "stated": 3
+   "local": 47,
+   "none": 64,
+   "physlib": 25,
+   "stated": 0
   }
  },
  "format": 1,
@@ -4575,807 +3660,1082 @@
    "bindings": [
     "arrhenius-ionic-transport"
    ],
-   "rung": "local"
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
   },
   "AdsorptionEnergy": {
    "bindings": [
     "dft-stability-energy-differences"
    ],
-   "rung": "local"
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
   },
   "AssessedDatabase": {
    "bindings": [],
-   "rung": "none"
+   "related": [],
+   "rung": "none",
+   "via": null
   },
   "AtomCount": {
    "bindings": [],
-   "rung": "none"
+   "related": [],
+   "rung": "none",
+   "via": null
   },
   "AtomicMass": {
    "bindings": [],
-   "rung": "none"
+   "related": [],
+   "rung": "none",
+   "via": null
   },
   "BandGap": {
    "bindings": [],
-   "rung": "none"
+   "related": [],
+   "rung": "none",
+   "via": null
   },
   "BareDynamicalMatrix": {
    "bindings": [
     "crystal-dynamical-matrix"
    ],
-   "rung": "physlib"
+   "related": [],
+   "rung": "physlib",
+   "via": "formulas"
   },
   "BondDissociationEnergy": {
    "bindings": [],
-   "rung": "none"
+   "related": [],
+   "rung": "none",
+   "via": null
   },
   "BornCharges": {
    "bindings": [],
-   "rung": "none"
+   "related": [],
+   "rung": "none",
+   "via": null
   },
   "BulkModulus": {
    "bindings": [
     "linear-elasticity-voigt-moduli"
    ],
-   "rung": "local"
+   "related": [],
+   "rung": "none",
+   "via": null
   },
   "CalphadMolarEntropy": {
    "bindings": [
     "calphad-binary-equilibrium"
    ],
-   "rung": "local"
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
   },
   "CarrierDensity": {
    "bindings": [],
-   "rung": "none"
+   "related": [],
+   "rung": "none",
+   "via": null
   },
   "CarrierMobility": {
    "bindings": [
     "electronic-carrier-statistics"
    ],
-   "rung": "local"
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
   },
   "CellVolume": {
    "bindings": [],
-   "rung": "none"
+   "related": [],
+   "rung": "none",
+   "via": null
   },
   "ChemicalPotential": {
    "bindings": [
     "calphad-binary-equilibrium"
    ],
-   "rung": "local"
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
   },
   "ClassificationAccuracy": {
    "bindings": [],
-   "rung": "none"
+   "related": [],
+   "rung": "none",
+   "via": null
   },
   "ConductanceDriftExponent": {
    "bindings": [],
-   "rung": "none"
+   "related": [],
+   "rung": "none",
+   "via": null
   },
   "ConductanceRelaxationTime": {
    "bindings": [],
-   "rung": "none"
+   "related": [],
+   "rung": "none",
+   "via": null
   },
   "ConductanceState": {
    "bindings": [
     "analog-device-metrology"
    ],
-   "rung": "local"
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
   },
   "ConductanceWindow": {
    "bindings": [],
-   "rung": "none"
+   "related": [],
+   "rung": "none",
+   "via": null
   },
   "ConfigurationalEnergy": {
    "bindings": [],
-   "rung": "none"
+   "related": [],
+   "rung": "none",
+   "via": null
   },
   "CumulativeKappa[wrt=mfp]": {
    "bindings": [],
-   "rung": "none"
+   "related": [],
+   "rung": "none",
+   "via": null
   },
   "CumulativeKappa[wrt=omega]": {
    "bindings": [],
-   "rung": "none"
+   "related": [],
+   "rung": "none",
+   "via": null
   },
   "CureConversion": {
    "bindings": [
     "thermoset-cure-kinetics"
    ],
-   "rung": "local"
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
   },
   "DepolarizationFactor": {
    "bindings": [
     "composite-effective-medium"
    ],
-   "rung": "local"
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
   },
   "DielectricTensor": {
    "bindings": [],
-   "rung": "none"
+   "related": [],
+   "rung": "none",
+   "via": null
   },
   "Diffusivity": {
    "bindings": [],
-   "rung": "none"
+   "related": [],
+   "rung": "none",
+   "via": null
   },
   "DotProductError": {
    "bindings": [
     "analog-device-metrology"
    ],
-   "rung": "local"
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
   },
   "DynamicalMatrix": {
    "bindings": [],
-   "rung": "none"
+   "related": [],
+   "rung": "none",
+   "via": null
   },
   "Eigenvectors": {
    "bindings": [],
-   "rung": "none"
+   "related": [],
+   "rung": "none",
+   "via": null
   },
   "ElasticConstants": {
    "bindings": [
     "hyperelastic-elastic-constants"
    ],
-   "rung": "local"
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
   },
   "ElectricalConductivity[carrier=electronic]": {
    "bindings": [
     "boltzmann-electronic-transport",
     "thermoelectric-input-coefficients"
    ],
-   "rung": "physlib"
+   "related": [],
+   "rung": "physlib",
+   "via": "formulas"
   },
   "ElectricalConductivity[carrier=ionic]": {
    "bindings": [
     "arrhenius-ionic-transport"
    ],
-   "rung": "local"
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
   },
   "ElectronAffinity": {
    "bindings": [],
-   "rung": "none"
+   "related": [],
+   "rung": "none",
+   "via": null
   },
   "ElectronicDOS": {
    "bindings": [
     "electronic-carrier-statistics"
    ],
-   "rung": "local"
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
   },
   "ElectronicThermalConductivity": {
    "bindings": [
     "boltzmann-electronic-transport",
     "thermoelectric-input-coefficients"
    ],
-   "rung": "physlib"
+   "related": [],
+   "rung": "physlib",
+   "via": "formulas"
   },
   "EnergyAboveHull": {
    "bindings": [
     "dft-stability-energy-differences"
    ],
-   "rung": "local"
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
   },
   "Entropy": {
    "bindings": [
     "harmonic-mode-entropy"
    ],
-   "rung": "physlib"
+   "related": [],
+   "rung": "physlib",
+   "via": "formulas"
   },
   "FillerVolumeFraction": {
    "bindings": [],
-   "rung": "none"
+   "related": [],
+   "rung": "none",
+   "via": null
   },
   "ForceConstants[order=2]": {
    "bindings": [
     "force-constant-sum-rules"
    ],
-   "rung": "local"
+   "related": [],
+   "rung": "none",
+   "via": null
   },
   "ForceConstants[order=3]": {
    "bindings": [
     "force-constant-sum-rules"
    ],
-   "rung": "local"
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
   },
   "Forces": {
    "bindings": [
-    "classical-harmonic-potential-force",
     "hellmann-feynman-force-balance"
    ],
-   "rung": "local"
+   "related": [
+    "classical-harmonic-potential-force"
+   ],
+   "rung": "local",
+   "via": "formulas"
   },
   "FormationEnergy": {
    "bindings": [],
-   "rung": "none"
+   "related": [],
+   "rung": "none",
+   "via": null
   },
   "Frequency": {
-   "bindings": [
+   "bindings": [],
+   "related": [
     "classical-harmonic-frequency"
    ],
-   "rung": "stated"
+   "rung": "none",
+   "via": null
   },
   "GlassTransitionTemperature": {
    "bindings": [
     "thermoset-cure-kinetics"
    ],
-   "rung": "local"
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
   },
   "GrainBoundaryEnergy": {
    "bindings": [
     "dft-stability-energy-differences"
    ],
-   "rung": "local"
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
   },
   "GroupVelocity": {
    "bindings": [
     "crystal-group-velocity"
    ],
-   "rung": "physlib"
+   "related": [],
+   "rung": "physlib",
+   "via": "formulas"
   },
   "Gruneisen": {
    "bindings": [],
-   "rung": "none"
+   "related": [],
+   "rung": "none",
+   "via": null
   },
   "HOMOLUMOGap": {
    "bindings": [],
-   "rung": "none"
+   "related": [],
+   "rung": "none",
+   "via": null
   },
   "HeatCapacity": {
    "bindings": [
     "harmonic-mode-heat-capacity"
    ],
-   "rung": "physlib"
+   "related": [],
+   "rung": "physlib",
+   "via": "formulas"
   },
   "HeatCapacityConstantP": {
    "bindings": [
     "harmonic-qha-heat-capacity-p",
     "harmonic-static-cp-identity"
    ],
-   "rung": "physlib"
+   "related": [],
+   "rung": "physlib",
+   "via": "formulas"
   },
   "HeatCapacity[method=pimd]": {
    "bindings": [],
-   "rung": "none"
+   "related": [],
+   "rung": "none",
+   "via": null
   },
   "HeatCurrent": {
    "bindings": [],
-   "rung": "none"
+   "related": [],
+   "rung": "none",
+   "via": null
   },
   "HeatCurrentACF": {
    "bindings": [
     "md-correlation-estimators"
    ],
-   "rung": "local"
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
   },
   "HelmholtzFreeEnergy": {
    "bindings": [
     "harmonic-mode-free-energy"
    ],
-   "rung": "physlib"
+   "related": [],
+   "rung": "physlib",
+   "via": "formulas"
   },
   "InterfaceConductance": {
    "bindings": [],
-   "rung": "none"
+   "related": [],
+   "rung": "none",
+   "via": null
   },
   "InterfaceConductance[transport_model=nemd]": {
    "bindings": [],
-   "rung": "none"
+   "related": [],
+   "rung": "none",
+   "via": null
   },
   "InterfaceTrapRelaxationTime": {
    "bindings": [],
-   "rung": "none"
+   "related": [],
+   "rung": "none",
+   "via": null
   },
   "InternalEnergy": {
    "bindings": [
     "harmonic-mode-internal-energy"
    ],
-   "rung": "physlib"
+   "related": [],
+   "rung": "physlib",
+   "via": "formulas"
   },
   "IsotopeAbundances": {
    "bindings": [],
-   "rung": "none"
+   "related": [],
+   "rung": "none",
+   "via": null
   },
   "Linewidth[channel=anharmonic_3ph]": {
    "bindings": [
     "phonon-scattering-channels"
    ],
-   "rung": "local"
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
   },
   "Linewidth[channel=boundary]": {
    "bindings": [
     "phonon-scattering-channels"
    ],
-   "rung": "local"
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
   },
   "Linewidth[channel=isotope]": {
    "bindings": [
     "phonon-scattering-channels"
    ],
-   "rung": "local"
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
   },
   "Linewidth[channel=total]": {
    "bindings": [
     "phonon-scattering-channels"
    ],
-   "rung": "local"
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
   },
   "MagneticMoment": {
    "bindings": [],
-   "rung": "none"
+   "related": [],
+   "rung": "none",
+   "via": null
   },
   "MassDensity": {
    "bindings": [],
-   "rung": "none"
+   "related": [],
+   "rung": "none",
+   "via": null
   },
   "MeanFreeDisplacement[bte_solver=direct_inverse]": {
    "bindings": [
     "linearized-bte-conductivity"
    ],
-   "rung": "local"
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
   },
   "MeanFreeDisplacement[bte_solver=rta]": {
    "bindings": [
     "phonon-scattering-channels"
    ],
-   "rung": "local"
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
   },
   "MeanSquaredDisplacement": {
    "bindings": [
     "md-correlation-estimators"
    ],
-   "rung": "local"
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
   },
   "MigrationBarrier": {
    "bindings": [],
-   "rung": "none"
+   "related": [],
+   "rung": "none",
+   "via": null
   },
   "ModalDiffusivity": {
    "bindings": [],
-   "rung": "none"
+   "related": [],
+   "rung": "none",
+   "via": null
   },
   "MolarEnthalpy": {
    "bindings": [
     "calphad-binary-equilibrium"
    ],
-   "rung": "local"
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
   },
   "MolarEntropy": {
    "bindings": [
     "harmonic-joint-molar-ensemble",
     "harmonic-molar-entropy"
    ],
-   "rung": "physlib"
+   "related": [],
+   "rung": "physlib",
+   "via": "formulas"
   },
   "MolarGibbsEnergy": {
    "bindings": [
     "calphad-binary-equilibrium"
    ],
-   "rung": "local"
+   "related": [],
+   "rung": "none",
+   "via": null
   },
   "MolarHeatCapacity": {
    "bindings": [
     "harmonic-joint-molar-ensemble",
     "harmonic-molar-heat-capacity"
    ],
-   "rung": "physlib"
+   "related": [],
+   "rung": "physlib",
+   "via": "formulas"
   },
   "MolarHelmholtzFreeEnergy": {
    "bindings": [
     "harmonic-joint-molar-ensemble",
     "harmonic-molar-free-energy"
    ],
-   "rung": "physlib"
+   "related": [],
+   "rung": "physlib",
+   "via": "formulas"
   },
   "MolarInternalEnergy": {
    "bindings": [
     "harmonic-joint-molar-ensemble",
     "harmonic-molar-internal-energy"
    ],
-   "rung": "physlib"
+   "related": [],
+   "rung": "physlib",
+   "via": "formulas"
   },
   "MolarVolume": {
    "bindings": [],
-   "rung": "none"
+   "related": [],
+   "rung": "none",
+   "via": null
   },
   "MolecularFrequency": {
    "bindings": [
-    "classical-harmonic-frequency",
     "molecular-normal-modes"
    ],
-   "rung": "local"
+   "related": [
+    "classical-harmonic-frequency"
+   ],
+   "rung": "local",
+   "via": "formulas"
   },
   "ParticipationRatio": {
    "bindings": [
     "participation-ratio-bounds"
    ],
-   "rung": "local"
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
   },
   "PhaseFraction": {
    "bindings": [
     "calphad-binary-equilibrium"
    ],
-   "rung": "local"
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
   },
   "PhaseSpace3Phonon": {
    "bindings": [],
-   "rung": "none"
+   "related": [],
+   "rung": "none",
+   "via": null
   },
   "PhononDOS": {
    "bindings": [
     "crystal-dos-landauer-conductance",
     "vacf-spectrum-lorentzian-limit"
    ],
-   "rung": "physlib"
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
   },
   "PhononTransmission": {
    "bindings": [],
-   "rung": "none"
+   "related": [],
+   "rung": "none",
+   "via": null
   },
   "PoissonRatio": {
    "bindings": [
     "linear-elasticity-voigt-moduli"
    ],
-   "rung": "local"
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
   },
   "Potential": {
-   "bindings": [
+   "bindings": [],
+   "related": [
     "classical-harmonic-potential-force"
    ],
-   "rung": "stated"
+   "rung": "none",
+   "via": null
   },
   "PotentialEnergyFitError": {
    "bindings": [],
-   "rung": "none"
+   "related": [],
+   "rung": "none",
+   "via": null
   },
   "PotentialForceFitError": {
    "bindings": [],
-   "rung": "none"
+   "related": [],
+   "rung": "none",
+   "via": null
   },
   "PotentialOfMeanForce": {
    "bindings": [],
-   "rung": "none"
+   "related": [],
+   "rung": "none",
+   "via": null
   },
   "PotentialUncertaintyExceedance[method=committee_force_spread]": {
    "bindings": [],
-   "rung": "none"
+   "related": [],
+   "rung": "none",
+   "via": null
   },
   "PotentialVirialFitError": {
    "bindings": [],
-   "rung": "none"
+   "related": [],
+   "rung": "none",
+   "via": null
   },
   "PowerFactor": {
    "bindings": [
     "thermoelectric-power-factor"
    ],
-   "rung": "physlib"
+   "related": [],
+   "rung": "physlib",
+   "via": "formulas"
   },
   "Pressure": {
    "bindings": [
-    "continuum-stress-sign",
+    "continuum-stress-sign"
+   ],
+   "related": [
     "thermodynamic-pressure"
    ],
-   "rung": "physlib"
+   "rung": "physlib",
+   "via": "formulas"
   },
   "ProgrammingPulseEnergy": {
    "bindings": [
     "analog-device-metrology"
    ],
-   "rung": "local"
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
   },
   "QHAGibbsEnergy": {
    "bindings": [
     "harmonic-qha-gibbs-energy"
    ],
-   "rung": "physlib"
+   "related": [],
+   "rung": "physlib",
+   "via": "formulas"
   },
   "QuantumKineticEnergy": {
    "bindings": [],
-   "rung": "none"
+   "related": [],
+   "rung": "none",
+   "via": null
   },
   "ReactionBarrier[construction=neb_mep]": {
    "bindings": [],
-   "rung": "none"
+   "related": [],
+   "rung": "none",
+   "via": null
   },
   "ReactionEnergy": {
    "bindings": [
     "dft-stability-energy-differences"
    ],
-   "rung": "local"
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
   },
   "RetentionTime": {
    "bindings": [
     "analog-device-metrology"
    ],
-   "rung": "local"
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
   },
   "SchottkyBarrierHeight[band_carrier=electron]": {
    "bindings": [],
-   "rung": "none"
+   "related": [],
+   "rung": "none",
+   "via": null
   },
   "SeebeckCoefficient": {
    "bindings": [
     "boltzmann-electronic-transport",
     "thermoelectric-input-coefficients"
    ],
-   "rung": "physlib"
+   "related": [],
+   "rung": "physlib",
+   "via": "formulas"
   },
   "SetVoltage": {
    "bindings": [
     "analog-device-metrology"
    ],
-   "rung": "local"
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
   },
   "ShearModulus": {
    "bindings": [
     "linear-elasticity-voigt-moduli"
    ],
-   "rung": "local"
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
   },
   "StateCoefficientOfVariation": {
    "bindings": [],
-   "rung": "none"
+   "related": [],
+   "rung": "none",
+   "via": null
   },
   "StaticDielectricTensor": {
    "bindings": [
     "static-dielectric-ionic-response"
    ],
-   "rung": "local"
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
   },
   "Stress": {
    "bindings": [
     "cell-stress-rotation-balance"
    ],
-   "rung": "local"
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
   },
   "Structure": {
-   "bindings": [
+   "bindings": [],
+   "related": [
     "abstract-crystal-structure"
    ],
-   "rung": "stated"
+   "rung": "none",
+   "via": null
   },
   "SurfaceEnergy": {
    "bindings": [
     "dft-stability-energy-differences"
    ],
-   "rung": "local"
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
   },
   "Temperature": {
    "bindings": [
     "absolute-temperature"
    ],
-   "rung": "physlib"
+   "related": [],
+   "rung": "physlib",
+   "via": "quantity"
   },
   "ThermalConductance[transport_model=landauer]": {
    "bindings": [
     "crystal-dos-landauer-conductance"
    ],
-   "rung": "physlib"
+   "related": [],
+   "rung": "physlib",
+   "via": "formulas"
   },
   "ThermalConductivity": {
    "bindings": [],
-   "rung": "none"
+   "related": [],
+   "rung": "none",
+   "via": null
   },
   "ThermalConductivity[bte_solver=direct_inverse]": {
    "bindings": [
     "linearized-bte-conductivity"
    ],
-   "rung": "local"
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
   },
   "ThermalConductivity[bte_solver=rta]": {
    "bindings": [
     "canonical-rta-thermal-conductivity"
    ],
-   "rung": "physlib"
+   "related": [],
+   "rung": "physlib",
+   "via": "formulas"
   },
   "ThermalConductivity[contribution=total]": {
    "bindings": [
     "thermoelectric-total-conductivity"
    ],
-   "rung": "physlib"
+   "related": [],
+   "rung": "physlib",
+   "via": "formulas"
   },
   "ThermalConductivity[effective_medium=nan,orientation=aligned]": {
    "bindings": [
     "composite-effective-medium"
    ],
-   "rung": "local"
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
   },
   "ThermalConductivity[effective_medium=nan,orientation=random]": {
    "bindings": [
     "composite-effective-medium"
    ],
-   "rung": "local"
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
   },
   "ThermalConductivity[role=filler]": {
    "bindings": [],
-   "rung": "none"
+   "related": [],
+   "rung": "none",
+   "via": null
   },
   "ThermalConductivity[role=matrix]": {
    "bindings": [],
-   "rung": "none"
+   "related": [],
+   "rung": "none",
+   "via": null
   },
   "ThermalConductivity[transport_model=green_kubo]": {
    "bindings": [
     "md-correlation-estimators"
    ],
-   "rung": "local"
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
   },
   "ThermalConductivity[transport_model=hnemd]": {
    "bindings": [],
-   "rung": "none"
+   "related": [],
+   "rung": "none",
+   "via": null
   },
   "ThermalConductivity[transport_model=nemd]": {
    "bindings": [],
-   "rung": "none"
+   "related": [],
+   "rung": "none",
+   "via": null
   },
   "ThermalConductivity[transport_model=qhgk]": {
    "bindings": [],
-   "rung": "none"
+   "related": [],
+   "rung": "none",
+   "via": null
   },
   "ThermalConductivity[transport_model=wigner]": {
    "bindings": [],
-   "rung": "none"
+   "related": [],
+   "rung": "none",
+   "via": null
   },
   "ThermalConductivity[transport_model=wigner_coherences]": {
    "bindings": [],
-   "rung": "none"
+   "related": [],
+   "rung": "none",
+   "via": null
   },
   "ThermalConductivity[transport_model=wigner_populations]": {
    "bindings": [],
-   "rung": "none"
+   "related": [],
+   "rung": "none",
+   "via": null
   },
   "ThermalExpansion": {
    "bindings": [
     "harmonic-qha-thermal-expansion"
    ],
-   "rung": "physlib"
+   "related": [],
+   "rung": "physlib",
+   "via": "formulas"
   },
   "ThermalGruneisen": {
    "bindings": [
     "harmonic-qha-thermal-gruneisen-contraction",
     "harmonic-static-thermal-gruneisen-identity"
    ],
-   "rung": "physlib"
+   "related": [],
+   "rung": "physlib",
+   "via": "formulas"
   },
   "TotalEnergy": {
    "bindings": [],
-   "rung": "none"
+   "related": [],
+   "rung": "none",
+   "via": null
   },
   "Trajectory": {
    "bindings": [],
-   "rung": "none"
+   "related": [],
+   "rung": "none",
+   "via": null
   },
   "TransitionTemperature": {
    "bindings": [
     "calphad-binary-equilibrium"
    ],
-   "rung": "local"
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
   },
   "VelocityAutocorrelation": {
    "bindings": [
     "md-correlation-estimators"
    ],
-   "rung": "local"
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
   },
   "Voltage": {
    "bindings": [
     "dft-stability-energy-differences"
    ],
-   "rung": "local"
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
   },
   "VolumetricHeatCapacity": {
    "bindings": [
     "harmonic-joint-volumetric-heat-capacity",
     "harmonic-volumetric-heat-capacity"
    ],
-   "rung": "physlib"
+   "related": [],
+   "rung": "physlib",
+   "via": "formulas"
   },
   "WorkFunction": {
    "bindings": [],
-   "rung": "none"
+   "related": [],
+   "rung": "none",
+   "via": null
   },
   "YoungsModulus": {
    "bindings": [
     "linear-elasticity-voigt-moduli"
    ],
-   "rung": "local"
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
   },
   "ZT": {
    "bindings": [
     "thermoelectric-figure-of-merit"
    ],
-   "rung": "physlib"
+   "related": [],
+   "rung": "physlib",
+   "via": "formulas"
   }
  },
  "tiers": [
   {
    "formulas": 9,
    "name": "Sources",
-   "proved": 4
+   "theorems": 4
   },
   {
    "formulas": 8,
    "name": "Harmonic",
-   "proved": 7
+   "theorems": 7
   },
   {
    "formulas": 9,
    "name": "Thermodynamics",
-   "proved": 9
+   "theorems": 9
   },
   {
    "formulas": 6,
    "name": "Scattering",
-   "proved": 4
+   "theorems": 4
   },
   {
    "formulas": 15,
    "name": "Transport",
-   "proved": 5
+   "theorems": 5
   },
   {
    "formulas": 13,
    "name": "Molecular dynamics",
-   "proved": 4
+   "theorems": 4
   },
   {
    "formulas": 8,
    "name": "Ground state",
-   "proved": 2
+   "theorems": 2
   },
   {
    "formulas": 9,
    "name": "Mechanics",
-   "proved": 8
+   "theorems": 8
   },
   {
    "formulas": 7,
    "name": "Stability",
-   "proved": 6
+   "theorems": 6
   },
   {
    "formulas": 7,
    "name": "Thermochemistry",
-   "proved": 6
+   "theorems": 6
   },
   {
    "formulas": 6,
    "name": "Quasi-harmonic",
-   "proved": 6
+   "theorems": 6
   },
   {
    "formulas": 4,
    "name": "Molecular",
-   "proved": 1
+   "theorems": 1
   },
   {
    "formulas": 5,
    "name": "Electronic transport",
-   "proved": 5
+   "theorems": 5
   },
   {
    "formulas": 5,
    "name": "Diffusion",
-   "proved": 2
+   "theorems": 2
   },
   {
    "formulas": 4,
    "name": "Thermoelectric",
-   "proved": 3
+   "theorems": 3
   },
   {
    "formulas": 4,
    "name": "Composite",
-   "proved": 4
+   "theorems": 4
   },
   {
    "formulas": 12,
    "name": "Analog device metrology",
-   "proved": 7
+   "theorems": 7
   },
   {
    "formulas": 2,
    "name": "Cure kinetics",
-   "proved": 2
+   "theorems": 2
   }
  ],
  "upstream": {
