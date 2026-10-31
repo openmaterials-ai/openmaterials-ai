@@ -140,6 +140,20 @@ def test_linewidth_channels_converge_through_sum():
     assert ANHARMONIC_LINEWIDTH not in solve_bte_direct.inputs
 
 
+def test_direct_solve_declares_the_kernel_inputs():
+    """Omega~ of the direct solve reads the |V_3|^2 that compute_linewidth defines,
+    so the solve declares every input that definition reads."""
+    from omai.thermal_transport.operator import compute_anharmonic_linewidth, solve_bte_direct
+
+    (definition,) = compute_anharmonic_linewidth.auxiliary_formulas
+    kernel = definition.lhs.func
+    assert solve_bte_direct.auxiliary_formulas[0].rhs.atoms(kernel)
+    assert set(compute_anharmonic_linewidth.inputs) <= set(solve_bte_direct.inputs)
+    assert solve_bte_direct.parameters == compute_anharmonic_linewidth.parameters
+    assert (solve_bte_direct.schemes["broadening_param"]
+            == compute_anharmonic_linewidth.schemes["broadening_param"])
+
+
 def test_harmonic_thermo_sibling_states():
     """F, S, E are sibling Observables off (Frequency, Temperature),
     paralleling HeatCapacity."""

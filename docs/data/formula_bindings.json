@@ -3631,7 +3631,7 @@
         {
           "kind": "operator",
           "id": "solve_bte[bte_solver=direct_inverse]",
-          "uid": "dee3e5f2230cae44c646c62985260fc103745cc44d0b1c2a87fe0a72ca675a97",
+          "uid": "3e5e0cdbda5333384f4df3d6b4e517854038fea4377f64e7fed212b9d995d2ea",
           "formula_sha256": "8ee139deb4c747f5b98fc57ede932ac9471296bb7fce4f9d04cd4d6dc0feafcc"
         }
       ],
@@ -3658,7 +3658,7 @@
       "remaining_obligations": [
         "The positive semidefiniteness of the catalog's Omega~ under exact energy conservation is not proved here. An exact sum-of-squares identity that proves it and certifies the kernel constant pi/(N_q hbar^2) and the weight 2 sqrt(n''(n'' + 1)) relative to Gamma is issue 221. The symmetry holds for any symmetric scalar factor and the relaxation-time limit removes the kernel, so neither certifies them.",
         "The relabeling between the decay-labeled and the collision-labeled kernels is assumed, not proved.",
-        "The kernel |V_3|^2, the linewidths, the heat capacities and the velocities come from external codes and are not verified, nor is the convergence of the mesh sums. The edge declares no |V_3|^2 input although Omega~ needs one (issue 222).",
+        "The kernel |V_3|^2, built from the edge's ForceConstants[order=3] and Eigenvectors inputs by the definition on compute_linewidth[channel=anharmonic_3ph], the linewidths, the heat capacities and the velocities come from external codes and are not verified, nor is the convergence of the mesh sums.",
         "The existence and uniqueness of a solution of M F = c v and the numerical linear solver are not covered."
       ],
       "evidence": {
@@ -7967,12 +7967,14 @@
       },
       {
         "id": "solve_bte[bte_solver=direct_inverse]",
-        "uid": "dee3e5f2230cae44c646c62985260fc103745cc44d0b1c2a87fe0a72ca675a97",
+        "uid": "3e5e0cdbda5333384f4df3d6b4e517854038fea4377f64e7fed212b9d995d2ea",
         "domain": "thermal_transport",
         "formula_sha256": "8ee139deb4c747f5b98fc57ede932ac9471296bb7fce4f9d04cd4d6dc0feafcc",
         "formula_latex": "\\sum_{\\substack{1 \\leq \\mathbf{q'} \\leq N_{q}\\\\1 \\leq \\nu' \\leq 3 N}} {F}_{\\alpha,\\mathbf{q'},\\nu'} {\\mathcal{M}}_{\\mathbf{q},\\nu,\\mathbf{q'},\\nu'} = {c}_{\\mathbf{q},\\nu} {v}_{\\alpha,\\mathbf{q},\\nu}",
         "inputs": [
           "Frequency",
+          "Eigenvectors",
+          "ForceConstants[order=3]",
           "GroupVelocity",
           "HeatCapacity",
           "Linewidth[channel=total]",

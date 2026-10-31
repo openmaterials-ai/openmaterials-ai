@@ -3,6 +3,10 @@
   "name": "nan_effective_kappa",
   "auxiliary_sha256": "6e14ff5ba08bdd8d7994b182cb34206ca1ef048edea04430cbae4f996f01f517"
  },
+ "3e5e0cdbda5333384f4df3d6b4e517854038fea4377f64e7fed212b9d995d2ea": {
+  "name": "solve_bte[bte_solver=direct_inverse]",
+  "auxiliary_sha256": "78c67a3e7822bfbe8d1fb087a0f0f589cd0b0cf40027d606f665e25b2131e6ea"
+ },
  "557f968b85bdc45e519be10b1f5648d2d50005c4b18092f0435a0c74768a797a": {
   "name": "evaluate_reservoir_classification",
   "auxiliary_sha256": "1dea24cf1aa1dc6a30d5fee3b525fb333faa29380f709e9aab5d4cb7e875186d"
@@ -14,10 +18,6 @@
  "bed23822fc14b9f811e9d35b8361d56e0e38a34327b9e5b2c4e7f5aad6eebb72": {
   "name": "compute_linewidth[channel=anharmonic_3ph]",
   "auxiliary_sha256": "e56e875ba60e9972c84b2de830c3e6520b786af202ead1d33d5421b9f673d04d"
- },
- "dee3e5f2230cae44c646c62985260fc103745cc44d0b1c2a87fe0a72ca675a97": {
-  "name": "solve_bte[bte_solver=direct_inverse]",
-  "auxiliary_sha256": "78c67a3e7822bfbe8d1fb087a0f0f589cd0b0cf40027d606f665e25b2131e6ea"
  },
  "e86ac8a4b69dbb670dbe3f8ec7fda7ff0309670bac4713851ced64a061cd7962": {
   "name": "nan_effective_kappa_aligned",

@@ -6,7 +6,7 @@
   "operators": [
     {
       "id": "solve_bte[bte_solver=direct_inverse]",
-      "uid": "dee3e5f2230cae44c646c62985260fc103745cc44d0b1c2a87fe0a72ca675a97",
+      "uid": "3e5e0cdbda5333384f4df3d6b4e517854038fea4377f64e7fed212b9d995d2ea",
       "formula_sha256": "8ee139deb4c747f5b98fc57ede932ac9471296bb7fce4f9d04cd4d6dc0feafcc",
       "formula_latex": "\\sum_{\\substack{1 \\leq \\mathbf{q'} \\leq N_{q}\\\\1 \\leq \\nu' \\leq 3 N}} {F}_{\\alpha,\\mathbf{q'},\\nu'} {\\mathcal{M}}_{\\mathbf{q},\\nu,\\mathbf{q'},\\nu'} = {c}_{\\mathbf{q},\\nu} {v}_{\\alpha,\\mathbf{q},\\nu}",
       "lean_definition": "OMAI.PhyslibBridge.LinearizedBTE.lbteSolves"

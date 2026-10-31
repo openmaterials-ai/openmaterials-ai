@@ -27,7 +27,7 @@
 {"@context": "https://schema.org", "@graph": [
  {"@type": "Dataset", "@id": "https://openmaterials.ai/#map", "name": "OpenMaterials",
   "description": "OpenMaterials is a versioned, content-addressed map of physical quantities and formulas. Simulated and measured values attach to it with their provenance. Data is CC BY 4.0 and code is Apache 2.0.",
-  "url": "https://openmaterials.ai/", "version": "1feeefc2b1d64a151e2353d44f6061790bf2bf32716af8960df455fe8529ea09",
+  "url": "https://openmaterials.ai/", "version": "3f08dcf2117bffa00a794bd626918e5e67483434eee4ac59841ebadbea67ee9c",
   "license": "https://creativecommons.org/licenses/by/4.0/", "isAccessibleForFree": true,
   "creator": {"@id": "https://openmaterials.ai/#steward"}, "maintainer": {"@id": "https://openmaterials.ai/#steward"},
   "distribution": [
@@ -59,7 +59,7 @@
         <a class="btn btn--secondary" href="#contribute">Contribute a value</a>
       </div>
       <dl class="ledger stamp">
-        <div><dt>Map version</dt><dd class="mono"><span data-bind="version12">1feeefc2b1d6</span></dd></div>
+        <div><dt>Map version</dt><dd class="mono"><span data-bind="version12">3f08dcf2117b</span></dd></div>
         <div><dt>Quantities</dt><dd class="mono"><span data-bind="n-nodes">136</span></dd></div>
         <div><dt>Codes</dt><dd class="mono"><span data-bind="codes">33</span></dd></div>
         <div><dt>Values</dt><dd class="mono"><span data-bind="n-values">90</span>, <span data-bind="n-meas">6</span> of them measured</dd></div>
@@ -74,7 +74,7 @@
         <div><dt>Recorded runs</dt><dd>16.7 to 380</dd></div>
       </dl>
       <figcaption id="fig-1-cap">Every thermal conductivity value for crystalline silicon between 270 and 310 K on the map, in W/(m K), on a log axis. One measurement, by Glassbrenner and Slack (1964). The published calculations differ in statistics (quantum or classical) and solver (direct inversion or RTA), and Esfarjani et al. (2011) also in force constants and temperature (277 K). The recorded runs use the Tersoff potential to test codes, not to predict silicon. Four of them, 17 to 27 W/(m K), sit an order of magnitude below the other four and below published Tersoff values, for a cause their records do not yet establish; within those four, kALDo runs 11 to 16% above phono3py with the same solver. Each value keeps its conditions, and an incomplete record says so.
-        <span class="src">Source: <a href="data/instances.json">instances.json</a>, map version <span data-bind="version12">1feeefc2b1d6</span>.</span></figcaption>
+        <span class="src">Source: <a href="data/instances.json">instances.json</a>, map version <span data-bind="version12">3f08dcf2117b</span>.</span></figcaption>
       <div class="cta-row">
         <a class="btn btn--secondary btn--sm" href="https://materialscodegraph.com/?ref=omai-home#hero-connect">Price a calculation on MaterialsCodeGraph</a>
         <a class="btn btn--secondary btn--sm" href="agreement/">Compare codes on one quantity</a>
@@ -151,7 +151,7 @@
       <div class="facts">
         <dl class="ledger">
           <div><dt>Quantities</dt><dd><span id="s-nodes">136 (122 observable, 11 hidden, 3 parameter)</span></dd></div>
-          <div><dt>Links</dt><dd><span id="s-links">308 (266 formula, 42 parameter)</span></dd></div>
+          <div><dt>Links</dt><dd><span id="s-links">310 (268 formula, 42 parameter)</span></dd></div>
           <div><dt>Operators</dt><dd><span id="s-ops">133</span></dd></div>
           <div><dt>Tiers</dt><dd><span id="s-tiers">18</span></dd></div>
         </dl>
@@ -230,15 +230,15 @@
   </section>
 
   <section class="close" id="cite">
-    <h2>Cite the map version you use: <span class="hash" data-bind="version12">1feeefc2b1d6</span>.</h2>
-    <p class="cite-text">Barbalinardo, G. openmaterials.ai: a versioned, content-addressed map of physics. Map version <span data-bind="version12">1feeefc2b1d6</span>. https://openmaterials.ai, accessed <span data-bind="today">2026-10-04</span>.</p>
+    <h2>Cite the map version you use: <span class="hash" data-bind="version12">3f08dcf2117b</span>.</h2>
+    <p class="cite-text">Barbalinardo, G. openmaterials.ai: a versioned, content-addressed map of physics. Map version <span data-bind="version12">3f08dcf2117b</span>. https://openmaterials.ai, accessed <span data-bind="today">2026-10-04</span>.</p>
     <figure class="code">
       <figcaption>BibTeX</figcaption>
-<pre>@misc{openmaterials-<span data-bind="version12">1feeefc2b1d6</span>,
+<pre>@misc{openmaterials-<span data-bind="version12">3f08dcf2117b</span>,
   author = {Barbalinardo, Giuseppe},
   title  = {{openmaterials.ai}: a versioned, content-addressed map of physics},
   url    = {https://openmaterials.ai},
-  note   = {Map version <span data-bind="version12">1feeefc2b1d6</span>, accessed <span data-bind="today">2026-10-04</span>}
+  note   = {Map version <span data-bind="version12">3f08dcf2117b</span>, accessed <span data-bind="today">2026-10-04</span>}
 }</pre>
     </figure>
     <div class="cta-row">
@@ -252,7 +252,7 @@
 <script src="assets/site.js"></script>
 <script>
 /* Each count and the map version are refreshed at load from the published files. The static text is
-   the value at map version 1feeefc2b1d6 and stays in place if a file cannot be read. */
+   the value at map version 3f08dcf2117b and stays in place if a file cannot be read. */
 (function () {
   function get(p) { return fetch(p).then(function (r) { if (!r.ok) throw new Error(p); return r.json(); }); }
   function put(sel, text) {

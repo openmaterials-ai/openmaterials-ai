@@ -258,12 +258,17 @@ SHENGBTE_COMPUTE_LINEWIDTH = OperatorRepresentationSpec(
 SHENGBTE_SOLVE_BTE_DIRECT = OperatorRepresentationSpec(
     operator=solve_bte_direct,
     representation_name="shengbte",
+    parameter_units={"broadening_sigma": "angular_THz"},
     scheme_overrides={
+        # The iteration reuses the per-process Gamma_plus/Gamma_minus of
+        # processes.f90, so Omega~ shares the linewidth's sigma.
+        "broadening_param": "adaptive_velocity_projection",
         "symmetry_group": "spglib_auto",
     },
     discretization_choices={
         "collision_matrix_assembly": "irreducible_grid",
         "linear_solver": "shengbte_self_consistent_iteration",
+        "scalebroad_default": "1.0",
         "convergence_eps_default": "1e-5",
         "max_iterations_default": "1000",
     },
@@ -272,7 +277,8 @@ SHENGBTE_SOLVE_BTE_DIRECT = OperatorRepresentationSpec(
         "F = F_RTA + collision-correction terms until ||κ_n - κ_{n-1}|| "
         "< eps. The fixed point coincides with the linearized BTE "
         "solution (the canonical direct_inverse). The convergence trail "
-        "is preserved in BTE.kappa within each temperature directory."
+        "is preserved in BTE.kappa within each temperature directory. "
+        "Isotope scattering enters only the diagonal, through tau_zero."
     ),
 )
 
