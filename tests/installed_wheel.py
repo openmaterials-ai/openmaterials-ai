@@ -3,8 +3,11 @@ pytest does not collect it): with no docs/data/ beside the package, the
 registry the wheel ships resolves the committed Si configuration uid and its
 former uid, and the binding model check refuses an unlisted private uid on
 both writers, a SetVoltage calibration included. The wheel ships the site's
-private-evidence predicate, docs/assets/private-members.js, byte for byte."""
+private-evidence predicate, docs/assets/private-members.js, byte for byte,
+and every omai module imports without docs/."""
+import importlib
 import json
+import pkgutil
 import tempfile
 from importlib import resources
 from pathlib import Path
@@ -38,6 +41,15 @@ predicate = resources.files("omai").joinpath("data", "private-members.js")
 site = Path(__file__).resolve().parents[1] / "docs" / "assets" / "private-members.js"
 assert predicate.read_bytes() == site.read_bytes(), predicate
 print("installed wheel ok:", ev.REGISTRY)
+import omai
+unimportable = []
+for info in pkgutil.walk_packages(omai.__path__, "omai."):
+    try:
+        importlib.import_module(info.name)
+    except Exception as exc:  # a module that reads docs/ at import time fails here, not on a user's machine
+        unimportable.append(f"{info.name}: {type(exc).__name__}: {exc}")
+assert not unimportable, unimportable
+print("installed wheel ok: every omai module imports")
 
 # The strict writer, on the live map the wheel builds: a SetVoltage record
 # citing a calibration no registry holds is refused unless it is listed.

@@ -5,13 +5,14 @@ the quantity on the interactive map. Labels are 13 px at natural size; a wide su
 sideways inside its figure instead of shrinking under the floor. A code that serves fewer than
 four quantities also shows their direct inputs and outputs on the map, hollow, as context.
 
-Plain names mirror ``nodeName`` in docs/assets/map-words.js: WORDS and HUMAN_PROP are read from that
-file, PHRASES is a copy, and a test compares every name on the map with the JavaScript under Node. Symbols are the map's LaTeX turned into text with sub and
+Plain names mirror ``nodeName`` in docs/assets/map-words.js: its WORDS and HUMAN_PROP tables are read from
+that file on first use, so the module imports from a wheel, which ships no docs/. PHRASES is a copy, and a test compares every name on the map with the JavaScript under Node. Symbols are the map's LaTeX turned into text with sub and
 superscripts; one the converter cannot read falls back to the name alone.
 """
 
 from __future__ import annotations
 
+import functools
 import html
 import math
 import json
@@ -47,8 +48,7 @@ def _js_table(name: str) -> dict[str, str]:
     return out
 
 
-WORDS = _js_table("WORDS")
-HUMAN_PROP = _js_table("HUMAN_PROP")
+_table = functools.cache(_js_table)
 PHRASES = [
     (re.compile(r"\bGreen Kubo\b"), "Green-Kubo"), (re.compile(r"\bHOMO LUMO\b"), "HOMO-LUMO"),
     (re.compile(r"\bHasselman Johnson\b"), "Hasselman-Johnson"), (re.compile(r"\bNan effective kappa\b"), "Nan effective-medium kappa"),
@@ -60,7 +60,7 @@ PHRASES = [
 
 
 def plain_words(s: str) -> str:
-    s = re.sub(r"[A-Za-z0-9]+", lambda m: WORDS.get(m.group(0).lower(), m.group(0)), s)
+    s = re.sub(r"[A-Za-z0-9]+", lambda m: _table("WORDS").get(m.group(0).lower(), m.group(0)), s)
     for rx, rep in PHRASES:
         s = rx.sub(rep, s)
     return s
@@ -82,7 +82,7 @@ def humanize_id(ident: str) -> str:
 def node_name(ident: str) -> str:
     base = re.sub(r"\[.*$", "", ident)
     q = re.search(r"\[(.*)\]$", ident)
-    name = HUMAN_PROP.get(base) or humanize_id(base)
+    name = _table("HUMAN_PROP").get(base) or humanize_id(base)
     if q:
         name += " (" + plain_words(re.sub(r"\w+=", "", q.group(1)).replace("_", " ").replace(",", ", ")) + ")"
     return name
