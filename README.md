@@ -21,7 +21,7 @@ citations, and the values attached to it with their provenance. OpenMaterials is
 stewarded by OpenMaterials-AI, a foundation in formation.
 
 At map version 3f08dcf2117b the map has 136 typed quantities (122 observable, 11
-hidden, 3 parameter), 308 links (266 formula, 42 parameter), and 133 operators
+hidden, 3 parameter), 310 links (268 formula, 42 parameter), and 133 operators
 in 18 tiers. It holds representations for 33 codes and 90 committed values (84
 from simulations, 6 from measurements). The [codes
 bibliography](https://openmaterials.ai/codes/) lists each code with its
