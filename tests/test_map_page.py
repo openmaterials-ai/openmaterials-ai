@@ -55,7 +55,10 @@ def serve(extra=None):
                 return
             super().do_GET()
 
-    httpd = http.server.ThreadingHTTPServer(("127.0.0.1", 0), functools.partial(Handler, directory=str(DOCS)))
+    class Server(http.server.ThreadingHTTPServer):
+        request_queue_size = 64   # the page asks for about fifteen files at once; the default backlog of 5 drops some
+
+    httpd = Server(("127.0.0.1", 0), functools.partial(Handler, directory=str(DOCS)))
     threading.Thread(target=httpd.serve_forever, daemon=True).start()
     try:
         yield f"http://127.0.0.1:{httpd.server_address[1]}", pages
