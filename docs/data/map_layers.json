@@ -1,0 +1,4746 @@
+{
+ "axioms": [
+  "Classical.choice",
+  "Quot.sound",
+  "propext"
+ ],
+ "bindings": {
+  "absolute-temperature": {
+   "bridge": [
+    {
+     "module": "OMAIPhyslibContinuum",
+     "name": "OMAI.PhyslibBridge.absoluteTemperature_toReal",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibContinuum.lean#L20"
+    },
+    {
+     "module": "OMAIPhyslibContinuum",
+     "name": "OMAI.PhyslibBridge.absoluteTemperature_roundtrip",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibContinuum.lean#L23"
+    },
+    {
+     "module": "OMAIPhyslibContinuum",
+     "name": "OMAI.PhyslibBridge.absoluteTemperature_beta_eq",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibContinuum.lean#L31"
+    },
+    {
+     "module": "OMAIPhyslibContinuum",
+     "name": "OMAI.PhyslibBridge.absoluteTemperature_beta_pos",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibContinuum.lean#L35"
+    },
+    {
+     "module": "OMAIPhyslibContinuum",
+     "name": "OMAI.PhyslibBridge.inverseTemperature_unit_scaling",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibContinuum.lean#L43"
+    },
+    {
+     "module": "OMAIPhyslibContinuum",
+     "name": "OMAI.PhyslibBridge.absoluteTemperature_beta_unit_scaling",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibContinuum.lean#L53"
+    }
+   ],
+   "evidence": "compiled_bridge",
+   "physlib": [
+    {
+     "kind": "structure",
+     "module": "Physlib.Thermodynamics.Temperature.Basic",
+     "name": "Temperature",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/Thermodynamics/Temperature/Basic.lean#L32"
+    },
+    {
+     "kind": "def",
+     "module": "Physlib.Thermodynamics.Temperature.Basic",
+     "name": "Temperature.β",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/Thermodynamics/Temperature/Basic.lean#L59"
+    },
+    {
+     "kind": "def",
+     "module": "Physlib.Thermodynamics.Temperature.Basic",
+     "name": "Temperature.ofRealNonneg",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/Thermodynamics/Temperature/Basic.lean#L172"
+    },
+    {
+     "kind": "lemma",
+     "module": "Physlib.Thermodynamics.Temperature.Basic",
+     "name": "Temperature.beta_pos",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/Thermodynamics/Temperature/Basic.lean#L92"
+    }
+   ],
+   "relation": "conditional"
+  },
+  "abstract-crystal-structure": {
+   "bridge": [],
+   "evidence": "source_correspondence",
+   "physlib": [
+    {
+     "kind": "structure",
+     "module": "Physlib.CondensedMatter.Crystal.Basic",
+     "name": "Physlib.CondensedMatter.Crystal",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Crystal/Basic.lean#L65"
+    }
+   ],
+   "relation": "conceptual"
+  },
+  "analog-device-metrology": {
+   "bridge": [
+    {
+     "module": "OMAIDeviceMetrology",
+     "name": "OMAI.PhyslibBridge.DeviceMetrology.drift_law_unique",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIDeviceMetrology.lean#L121"
+    },
+    {
+     "module": "OMAIDeviceMetrology",
+     "name": "OMAI.PhyslibBridge.DeviceMetrology.thermionic_wrongLaw_barrier",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIDeviceMetrology.lean#L212"
+    },
+    {
+     "module": "OMAIDeviceMetrology",
+     "name": "OMAI.PhyslibBridge.DeviceMetrology.retention_symmetric_relaxation",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIDeviceMetrology.lean#L324"
+    },
+    {
+     "module": "OMAIDeviceMetrology",
+     "name": "OMAI.PhyslibBridge.DeviceMetrology.ramp_expectedHops",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIDeviceMetrology.lean#L386"
+    },
+    {
+     "module": "OMAIDeviceMetrology",
+     "name": "OMAI.PhyslibBridge.DeviceMetrology.ramp_meanSetVoltage",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIDeviceMetrology.lean#L484"
+    },
+    {
+     "module": "OMAIDeviceMetrology",
+     "name": "OMAI.PhyslibBridge.DeviceMetrology.programmingError_gt",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIDeviceMetrology.lean#L626"
+    },
+    {
+     "module": "OMAIDeviceMetrology",
+     "name": "OMAI.PhyslibBridge.DeviceMetrology.pulseEnergy_bracket",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIDeviceMetrology.lean#L662"
+    },
+    {
+     "module": "OMAIDeviceMetrology",
+     "name": "OMAI.PhyslibBridge.DeviceMetrology.deviceConductance_series_le",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIDeviceMetrology.lean#L701"
+    }
+   ],
+   "evidence": "compiled_bridge",
+   "physlib": [],
+   "relation": "local"
+  },
+  "arrhenius-ionic-transport": {
+   "bridge": [
+    {
+     "module": "OMAIMaterialsTransport",
+     "name": "OMAI.PhyslibBridge.MaterialsTransport.wlsSlope_minimizes",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIMaterialsTransport.lean#L66"
+    },
+    {
+     "module": "OMAIMaterialsTransport",
+     "name": "OMAI.PhyslibBridge.MaterialsTransport.arrhenius_wls_recovers_activation",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIMaterialsTransport.lean#L109"
+    },
+    {
+     "module": "OMAIMaterialsTransport",
+     "name": "OMAI.PhyslibBridge.MaterialsTransport.ionic_wls_apparent_activation",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIMaterialsTransport.lean#L270"
+    }
+   ],
+   "evidence": "compiled_bridge",
+   "physlib": [],
+   "relation": "local"
+  },
+  "boltzmann-electronic-transport": {
+   "bridge": [
+    {
+     "module": "OMAIPhyslibElectronicTransport",
+     "name": "OMAI.PhyslibBridge.ElectronicTransport.boltzmannKappaE_nonneg_and_eq_zero_iff",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibElectronicTransport.lean#L84"
+    },
+    {
+     "module": "OMAIPhyslibElectronicTransport",
+     "name": "OMAI.PhyslibBridge.ElectronicTransport.exists_boltzmann_thermoelectricMaterial",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibElectronicTransport.lean#L135"
+    },
+    {
+     "module": "OMAIPhyslibElectronicTransport",
+     "name": "OMAI.PhyslibBridge.ElectronicTransport.figureOfMerit_lt_mahanSofo",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibElectronicTransport.lean#L166"
+    },
+    {
+     "module": "OMAISommerfeldTransport",
+     "name": "OMAI.PhyslibBridge.Sommerfeld.sommerfeld_moments",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAISommerfeldTransport.lean#L219"
+    },
+    {
+     "module": "OMAISommerfeldTransport",
+     "name": "OMAI.PhyslibBridge.Sommerfeld.wiedemannFranz_constantTransport",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAISommerfeldTransport.lean#L232"
+    }
+   ],
+   "evidence": "compiled_bridge",
+   "physlib": [
+    {
+     "kind": "structure",
+     "module": "Physlib.CondensedMatter.Thermoelectric.Basic",
+     "name": "CondensedMatter.ThermoelectricMaterial",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L102"
+    },
+    {
+     "kind": "def",
+     "module": "Physlib.CondensedMatter.Thermoelectric.Basic",
+     "name": "CondensedMatter.ThermoelectricMaterial.figureOfMerit",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L158"
+    },
+    {
+     "kind": "lemma",
+     "module": "Physlib.CondensedMatter.Thermoelectric.Basic",
+     "name": "CondensedMatter.ThermoelectricMaterial.figureOfMerit_eq",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L169"
+    }
+   ],
+   "relation": "conditional"
+  },
+  "calphad-binary-equilibrium": {
+   "bridge": [
+    {
+     "module": "OMAICalphad",
+     "name": "OMAI.PhyslibBridge.Calphad.equilibriumGibbs_isConvexEnvelope",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICalphad.lean#L195"
+    },
+    {
+     "module": "OMAICalphad",
+     "name": "OMAI.PhyslibBridge.Calphad.equilibriumGibbsT_concaveOn",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICalphad.lean#L208"
+    },
+    {
+     "module": "OMAICalphad",
+     "name": "OMAI.PhyslibBridge.Calphad.equilibrium_entropy_monotoneOn",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICalphad.lean#L276"
+    },
+    {
+     "module": "OMAICalphad",
+     "name": "OMAI.PhyslibBridge.Calphad.equilibrium_enthalpy_monotoneOn",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICalphad.lean#L285"
+    },
+    {
+     "module": "OMAICalphad",
+     "name": "OMAI.PhyslibBridge.Calphad.commonTangent_of_isLocalExtr",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICalphad.lean#L303"
+    },
+    {
+     "module": "OMAICalphad",
+     "name": "OMAI.PhyslibBridge.Calphad.deriv_equilibriumGibbs_of_twoPhaseChord",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICalphad.lean#L354"
+    },
+    {
+     "module": "OMAICalphad",
+     "name": "OMAI.PhyslibBridge.Calphad.chemicalPotentials_equilibriumGibbs_of_twoPhaseChord",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICalphad.lean#L370"
+    },
+    {
+     "module": "OMAICalphad",
+     "name": "OMAI.PhyslibBridge.Calphad.leverFractions_unique_and_bounds",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICalphad.lean#L388"
+    },
+    {
+     "module": "OMAICalphad",
+     "name": "OMAI.PhyslibBridge.Calphad.transitionTemperature_unique",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICalphad.lean#L421"
+    }
+   ],
+   "evidence": "compiled_bridge",
+   "physlib": [],
+   "relation": "local"
+  },
+  "canonical-rta-thermal-conductivity": {
+   "bridge": [
+    {
+     "module": "OMAIPhyslibRTAConductivity",
+     "name": "OMAI.PhyslibBridge.Lattice.rtaKappa_canonical",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibRTAConductivity.lean#L49"
+    }
+   ],
+   "evidence": "compiled_bridge",
+   "physlib": [
+    {
+     "kind": "def",
+     "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
+     "name": "CanonicalEnsemble.heatCapacity",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L417"
+    },
+    {
+     "kind": "structure",
+     "module": "Physlib.QuantumMechanics.HarmonicOscillator.OneDimension.Basic",
+     "name": "QuantumMechanics.OneDimension.HarmonicOscillator",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/Basic.lean#L63"
+    }
+   ],
+   "relation": "conditional"
+  },
+  "cell-stress-rotation-balance": {
+   "bridge": [
+    {
+     "module": "OMAICellElasticity",
+     "name": "OMAI.PhyslibBridge.CellElasticity.cellStress_rotation_balance",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICellElasticity.lean#L109"
+    }
+   ],
+   "evidence": "compiled_bridge",
+   "physlib": [],
+   "relation": "local"
+  },
+  "classical-harmonic-frequency": {
+   "bridge": [],
+   "evidence": "source_correspondence",
+   "physlib": [
+    {
+     "kind": "def",
+     "module": "Physlib.ClassicalMechanics.HarmonicOscillator.Basic",
+     "name": "ClassicalMechanics.HarmonicOscillator.ω",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/ClassicalMechanics/HarmonicOscillator/Basic.lean#L156"
+    },
+    {
+     "kind": "lemma",
+     "module": "Physlib.ClassicalMechanics.HarmonicOscillator.Basic",
+     "name": "ClassicalMechanics.HarmonicOscillator.ω_sq",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/ClassicalMechanics/HarmonicOscillator/Basic.lean#L163"
+    }
+   ],
+   "relation": "conceptual"
+  },
+  "classical-harmonic-potential-force": {
+   "bridge": [],
+   "evidence": "source_correspondence",
+   "physlib": [
+    {
+     "kind": "def",
+     "module": "Physlib.ClassicalMechanics.HarmonicOscillator.Basic",
+     "name": "ClassicalMechanics.HarmonicOscillator.potentialEnergy",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/ClassicalMechanics/HarmonicOscillator/Basic.lean#L200"
+    },
+    {
+     "kind": "def",
+     "module": "Physlib.ClassicalMechanics.HarmonicOscillator.Basic",
+     "name": "ClassicalMechanics.HarmonicOscillator.force",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/ClassicalMechanics/HarmonicOscillator/Basic.lean#L451"
+    },
+    {
+     "kind": "lemma",
+     "module": "Physlib.ClassicalMechanics.HarmonicOscillator.Basic",
+     "name": "ClassicalMechanics.HarmonicOscillator.force_eq_linear",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/ClassicalMechanics/HarmonicOscillator/Basic.lean#L464"
+    }
+   ],
+   "relation": "conceptual"
+  },
+  "composite-effective-medium": {
+   "bridge": [
+    {
+     "module": "OMAICompositeConductivity",
+     "name": "OMAI.PhyslibBridge.Composites.depolarization_eq_integral",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICompositeConductivity.lean#L177"
+    },
+    {
+     "module": "OMAICompositeConductivity",
+     "name": "OMAI.PhyslibBridge.Composites.depolarization_mem_Ioo",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICompositeConductivity.lean#L283"
+    },
+    {
+     "module": "OMAICompositeConductivity",
+     "name": "OMAI.PhyslibBridge.Composites.depolarization_strictAntiOn",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICompositeConductivity.lean#L297"
+    },
+    {
+     "module": "OMAICompositeConductivity",
+     "name": "OMAI.PhyslibBridge.Composites.depolarization_continuousOn",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICompositeConductivity.lean#L343"
+    },
+    {
+     "module": "OMAICompositeConductivity",
+     "name": "OMAI.PhyslibBridge.Composites.tendsto_depolarization_atTop",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICompositeConductivity.lean#L367"
+    },
+    {
+     "module": "OMAICompositeConductivity",
+     "name": "OMAI.PhyslibBridge.Composites.tendsto_depolarization_zero",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICompositeConductivity.lean#L381"
+    },
+    {
+     "module": "OMAICompositeConductivity",
+     "name": "OMAI.PhyslibBridge.Composites.nanRandom_sub_matrix",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICompositeConductivity.lean#L522"
+    },
+    {
+     "module": "OMAICompositeConductivity",
+     "name": "OMAI.PhyslibBridge.Composites.nanRandom_gt_iff",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICompositeConductivity.lean#L550"
+    },
+    {
+     "module": "OMAICompositeConductivity",
+     "name": "OMAI.PhyslibBridge.Composites.nanRandom_sign",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICompositeConductivity.lean#L562"
+    },
+    {
+     "module": "OMAICompositeConductivity",
+     "name": "OMAI.PhyslibBridge.Composites.nanRandom_sphere",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICompositeConductivity.lean#L596"
+    },
+    {
+     "module": "OMAICompositeConductivity",
+     "name": "OMAI.PhyslibBridge.Composites.nanAligned_sphere",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICompositeConductivity.lean#L617"
+    },
+    {
+     "module": "OMAICompositeConductivity",
+     "name": "OMAI.PhyslibBridge.Composites.nanRandom_sphere_between",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICompositeConductivity.lean#L635"
+    },
+    {
+     "module": "OMAICompositeConductivity",
+     "name": "OMAI.PhyslibBridge.Composites.tendsto_nanRandom_sphere",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICompositeConductivity.lean#L668"
+    },
+    {
+     "module": "OMAICompositeConductivity",
+     "name": "OMAI.PhyslibBridge.Composites.hasselmanJohnson_eq_maxwellGarnett",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICompositeConductivity.lean#L684"
+    },
+    {
+     "module": "OMAICompositeConductivity",
+     "name": "OMAI.PhyslibBridge.Composites.hasselmanJohnson_critical_radius",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICompositeConductivity.lean#L715"
+    },
+    {
+     "module": "OMAICompositeConductivity",
+     "name": "OMAI.PhyslibBridge.Composites.nanAligned_strictAntiOn",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICompositeConductivity.lean#L798"
+    },
+    {
+     "module": "OMAICompositeConductivity",
+     "name": "OMAI.PhyslibBridge.Composites.nanAligned_strict_wiener",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICompositeConductivity.lean#L825"
+    },
+    {
+     "module": "OMAICompositeConductivity",
+     "name": "OMAI.PhyslibBridge.Composites.nanAligned_strictMonoOn_aspect",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICompositeConductivity.lean#L842"
+    }
+   ],
+   "evidence": "compiled_bridge",
+   "physlib": [],
+   "relation": "local"
+  },
+  "continuum-stress-sign": {
+   "bridge": [
+    {
+     "module": "OMAIPhyslibContinuum",
+     "name": "OMAI.PhyslibBridge.compressiveStress_roundtrip",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibContinuum.lean#L75"
+    },
+    {
+     "module": "OMAIPhyslibContinuum",
+     "name": "OMAI.PhyslibBridge.compressiveStress_eq_pressure_identity",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibContinuum.lean#L79"
+    },
+    {
+     "module": "OMAIPhyslibContinuum",
+     "name": "OMAI.PhyslibBridge.compressiveStress_diagonal_of_isInviscid",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibContinuum.lean#L86"
+    },
+    {
+     "module": "OMAIPhyslibContinuum",
+     "name": "OMAI.PhyslibBridge.pressureFromStress_eq_physlib_pressure",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibContinuum.lean#L95"
+    }
+   ],
+   "evidence": "compiled_bridge",
+   "physlib": [
+    {
+     "kind": "def",
+     "module": "Physlib.FluidDynamics.CauchyFlow.Inviscid",
+     "name": "FluidDynamics.CauchyFlow.IsInviscid",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/FluidDynamics/CauchyFlow/Inviscid.lean#L54"
+    }
+   ],
+   "relation": "conditional"
+  },
+  "crystal-dos-landauer-conductance": {
+   "bridge": [
+    {
+     "module": "OMAIPhyslibPhononSpectrum",
+     "name": "OMAI.PhyslibBridge.PhononSpectrum.crystalDOS_sum_rules",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibPhononSpectrum.lean#L88"
+    },
+    {
+     "module": "OMAIPhyslibPhononSpectrum",
+     "name": "OMAI.PhyslibBridge.PhononSpectrum.landauerWeight_eq_heatCapacity",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibPhononSpectrum.lean#L148"
+    },
+    {
+     "module": "OMAIPhyslibPhononSpectrum",
+     "name": "OMAI.PhyslibBridge.PhononSpectrum.catalogLandauer_eq_heatCapacity",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibPhononSpectrum.lean#L160"
+    },
+    {
+     "module": "OMAIPhyslibPhononSpectrum",
+     "name": "OMAI.PhyslibBridge.PhononSpectrum.catalogLandauer_unit_transmission",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibPhononSpectrum.lean#L250"
+    }
+   ],
+   "evidence": "compiled_bridge",
+   "physlib": [
+    {
+     "kind": "structure",
+     "module": "Physlib.CondensedMatter.Crystal.Basic",
+     "name": "Physlib.CondensedMatter.Crystal",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Crystal/Basic.lean#L65"
+    },
+    {
+     "kind": "def",
+     "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
+     "name": "CanonicalEnsemble.heatCapacity",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L417"
+    },
+    {
+     "kind": "structure",
+     "module": "Physlib.QuantumMechanics.HarmonicOscillator.OneDimension.Basic",
+     "name": "QuantumMechanics.OneDimension.HarmonicOscillator",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/Basic.lean#L63"
+    },
+    {
+     "kind": "structure",
+     "module": "Physlib.Thermodynamics.Temperature.Basic",
+     "name": "Temperature",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/Thermodynamics/Temperature/Basic.lean#L32"
+    }
+   ],
+   "relation": "conditional"
+  },
+  "crystal-dynamical-matrix": {
+   "bridge": [
+    {
+     "module": "OMAIPhyslibLatticeDynamics",
+     "name": "OMAI.PhyslibBridge.Lattice.ForceConstants.fc_neg",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibLatticeDynamics.lean#L105"
+    },
+    {
+     "module": "OMAIPhyslibLatticeDynamics",
+     "name": "OMAI.PhyslibBridge.Lattice.ForceConstants.dynamicalMatrix_isHermitian",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibLatticeDynamics.lean#L139"
+    },
+    {
+     "module": "OMAIPhyslibLatticeDynamics",
+     "name": "OMAI.PhyslibBridge.Lattice.ForceConstants.three_le_finrank_ker_gamma",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibLatticeDynamics.lean#L218"
+    }
+   ],
+   "evidence": "compiled_bridge",
+   "physlib": [
+    {
+     "kind": "structure",
+     "module": "Physlib.CondensedMatter.Crystal.Basic",
+     "name": "Physlib.CondensedMatter.Crystal",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Crystal/Basic.lean#L65"
+    },
+    {
+     "kind": "structure",
+     "module": "Physlib.CondensedMatter.Crystal.Basic",
+     "name": "Physlib.CondensedMatter.Crystal.Site",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Crystal/Basic.lean#L90"
+    }
+   ],
+   "relation": "conditional"
+  },
+  "crystal-group-velocity": {
+   "bridge": [
+    {
+     "module": "OMAIPhyslibGroupVelocity",
+     "name": "OMAI.PhyslibBridge.Lattice.hellmann_feynman",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibGroupVelocity.lean#L40"
+    },
+    {
+     "module": "OMAIPhyslibGroupVelocity",
+     "name": "OMAI.PhyslibBridge.Lattice.ForceConstants.catalogGroupVelocity_eq_deriv",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibGroupVelocity.lean#L183"
+    }
+   ],
+   "evidence": "compiled_bridge",
+   "physlib": [
+    {
+     "kind": "structure",
+     "module": "Physlib.CondensedMatter.Crystal.Basic",
+     "name": "Physlib.CondensedMatter.Crystal",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Crystal/Basic.lean#L65"
+    },
+    {
+     "kind": "structure",
+     "module": "Physlib.CondensedMatter.Crystal.Basic",
+     "name": "Physlib.CondensedMatter.Crystal.Site",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Crystal/Basic.lean#L90"
+    }
+   ],
+   "relation": "conditional"
+  },
+  "crystal-phonon-dispersion": {
+   "bridge": [
+    {
+     "module": "OMAIPhyslibPhononDispersion",
+     "name": "OMAI.PhyslibBridge.Lattice.ForceConstants.dynamicalMatrix_posSemidef_of_stable",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibPhononDispersion.lean#L126"
+    },
+    {
+     "module": "OMAIPhyslibPhononDispersion",
+     "name": "OMAI.PhyslibBridge.Lattice.ForceConstants.fold_dynamicalMatrix",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibPhononDispersion.lean#L227"
+    },
+    {
+     "module": "OMAIPhyslibPhononDispersion",
+     "name": "OMAI.PhyslibBridge.Lattice.ForceConstants.planeWave_dynamicalMatrix_posSemidef_of_folded_stable",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibPhononDispersion.lean#L247"
+    },
+    {
+     "module": "OMAIPhyslibLatticeDynamics",
+     "name": "OMAI.PhyslibBridge.Lattice.dispersion_omega2_nonneg",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibLatticeDynamics.lean#L65"
+    }
+   ],
+   "evidence": "compiled_bridge",
+   "physlib": [
+    {
+     "kind": "structure",
+     "module": "Physlib.CondensedMatter.Crystal.Basic",
+     "name": "Physlib.CondensedMatter.Crystal",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Crystal/Basic.lean#L65"
+    },
+    {
+     "kind": "structure",
+     "module": "Physlib.CondensedMatter.Crystal.Basic",
+     "name": "Physlib.CondensedMatter.Crystal.Site",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Crystal/Basic.lean#L90"
+    },
+    {
+     "kind": "def",
+     "module": "Physlib.CondensedMatter.Crystal.Basic",
+     "name": "Physlib.CondensedMatter.Crystal.siteEquiv",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Crystal/Basic.lean#L97"
+    }
+   ],
+   "relation": "conditional"
+  },
+  "dft-stability-energy-differences": {
+   "bridge": [
+    {
+     "module": "OMAIStabilityEnergies",
+     "name": "OMAI.PhyslibBridge.Stability.energyAboveHull_formationEnergy_reference_independent",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIStabilityEnergies.lean#L213"
+    },
+    {
+     "module": "OMAIStabilityEnergies",
+     "name": "OMAI.PhyslibBridge.Stability.energyAboveHull_affine_invariant",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIStabilityEnergies.lean#L177"
+    },
+    {
+     "module": "OMAIStabilityEnergies",
+     "name": "OMAI.PhyslibBridge.Stability.energyAboveHull_eq_zero_of_supporting",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIStabilityEnergies.lean#L252"
+    },
+    {
+     "module": "OMAIStabilityEnergies",
+     "name": "OMAI.PhyslibBridge.Stability.adsorptionEnergy_offset_invariant_iff",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIStabilityEnergies.lean#L346"
+    },
+    {
+     "module": "OMAIStabilityEnergies",
+     "name": "OMAI.PhyslibBridge.Stability.intercalationVoltage_offset_invariant_iff",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIStabilityEnergies.lean#L369"
+    },
+    {
+     "module": "OMAIStabilityEnergies",
+     "name": "OMAI.PhyslibBridge.Stability.intercalationVoltage_eq_mean_ocv",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIStabilityEnergies.lean#L406"
+    },
+    {
+     "module": "OMAIStabilityEnergies",
+     "name": "OMAI.PhyslibBridge.Stability.surfaceEnergy_thickness_independent_iff",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIStabilityEnergies.lean#L431"
+    },
+    {
+     "module": "OMAIStabilityEnergies",
+     "name": "OMAI.PhyslibBridge.Stability.catalogReactionEnergy_reference_independent_iff",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIStabilityEnergies.lean#L335"
+    }
+   ],
+   "evidence": "compiled_bridge",
+   "physlib": [],
+   "relation": "local"
+  },
+  "electronic-carrier-statistics": {
+   "bridge": [
+    {
+     "module": "OMAIElectronicStatistics",
+     "name": "OMAI.PhyslibBridge.ElectronicStatistics.boltzmannMobility_le_matthiessen",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIElectronicStatistics.lean#L66"
+    },
+    {
+     "module": "OMAIElectronicStatistics",
+     "name": "OMAI.PhyslibBridge.ElectronicStatistics.exists_unique_fermiLevel",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIElectronicStatistics.lean#L127"
+    }
+   ],
+   "evidence": "compiled_bridge",
+   "physlib": [],
+   "relation": "local"
+  },
+  "finite-displacement-force-constants": {
+   "bridge": [
+    {
+     "module": "OMAIAtomisticDerivatives",
+     "name": "OMAI.PhyslibBridge.Atomistic.centralDifference_error",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIAtomisticDerivatives.lean#L426"
+    }
+   ],
+   "evidence": "compiled_bridge",
+   "physlib": [],
+   "relation": "local"
+  },
+  "force-constant-sum-rules": {
+   "bridge": [
+    {
+     "module": "OMAIAtomisticDerivatives",
+     "name": "OMAI.PhyslibBridge.Atomistic.forceConstant2_sum_eq_zero",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIAtomisticDerivatives.lean#L251"
+    },
+    {
+     "module": "OMAIAtomisticDerivatives",
+     "name": "OMAI.PhyslibBridge.Atomistic.forceConstant3_sum_eq_zero",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIAtomisticDerivatives.lean#L261"
+    },
+    {
+     "module": "OMAIAtomisticDerivatives",
+     "name": "OMAI.PhyslibBridge.Atomistic.forceConstant3_symm",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIAtomisticDerivatives.lean#L280"
+    },
+    {
+     "module": "OMAIAtomisticDerivatives",
+     "name": "OMAI.PhyslibBridge.Atomistic.pairEnergy_forceConstant2",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIAtomisticDerivatives.lean#L501"
+    },
+    {
+     "module": "OMAIAtomisticDerivatives",
+     "name": "OMAI.PhyslibBridge.Atomistic.pairEnergy_translate",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIAtomisticDerivatives.lean#L460"
+    },
+    {
+     "module": "OMAIAtomisticDerivatives",
+     "name": "OMAI.PhyslibBridge.Atomistic.pairEnergy_contDiff",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIAtomisticDerivatives.lean#L469"
+    }
+   ],
+   "evidence": "compiled_bridge",
+   "physlib": [],
+   "relation": "local"
+  },
+  "harmonic-joint-molar-ensemble": {
+   "bridge": [
+    {
+     "module": "OMAIPhyslibHarmonicProduct",
+     "name": "OMAI.PhyslibBridge.harmonicProduct_partitionFunction",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibHarmonicProduct.lean#L93"
+    },
+    {
+     "module": "OMAIPhyslibHarmonicProduct",
+     "name": "OMAI.PhyslibBridge.harmonicGridOccupation_measurePreserving",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibHarmonicProduct.lean#L205"
+    },
+    {
+     "module": "OMAIPhyslibHarmonicProduct",
+     "name": "OMAI.PhyslibBridge.harmonicGridEnsemble_energy",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibHarmonicProduct.lean#L221"
+    },
+    {
+     "module": "OMAIPhyslibHarmonicProduct",
+     "name": "OMAI.PhyslibBridge.harmonic_joint_molar_helmholtzFreeEnergy_eq_omai",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibHarmonicProduct.lean#L268"
+    },
+    {
+     "module": "OMAIPhyslibHarmonicProduct",
+     "name": "OMAI.PhyslibBridge.harmonic_joint_molar_meanEnergy_eq_omai",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibHarmonicProduct.lean#L276"
+    },
+    {
+     "module": "OMAIPhyslibHarmonicProduct",
+     "name": "OMAI.PhyslibBridge.harmonic_joint_molar_thermodynamicEntropy_eq_omai",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibHarmonicProduct.lean#L284"
+    },
+    {
+     "module": "OMAIPhyslibHarmonicProduct",
+     "name": "OMAI.PhyslibBridge.harmonic_joint_molar_heatCapacity_eq_omai",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibHarmonicProduct.lean#L292"
+    }
+   ],
+   "evidence": "compiled_bridge",
+   "physlib": [
+    {
+     "kind": "def",
+     "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+     "name": "CanonicalEnsemble.helmholtzFreeEnergy",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L680"
+    },
+    {
+     "kind": "def",
+     "module": "Physlib.QuantumMechanics.HarmonicOscillator.OneDimension.TISE",
+     "name": "QuantumMechanics.OneDimension.HarmonicOscillator.eigenValue",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29"
+    },
+    {
+     "kind": "def",
+     "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+     "name": "CanonicalEnsemble.meanEnergy",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L519"
+    },
+    {
+     "kind": "def",
+     "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+     "name": "CanonicalEnsemble.thermodynamicEntropy",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L800"
+    },
+    {
+     "kind": "def",
+     "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
+     "name": "CanonicalEnsemble.heatCapacity",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L417"
+    },
+    {
+     "kind": "lemma",
+     "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+     "name": "CanonicalEnsemble.mathematicalPartitionFunction_add",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L369"
+    },
+    {
+     "kind": "lemma",
+     "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+     "name": "CanonicalEnsemble.integrable_energy_add",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L487"
+    },
+    {
+     "kind": "lemma",
+     "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+     "name": "CanonicalEnsemble.meanEnergy_add",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L529"
+    },
+    {
+     "kind": "lemma",
+     "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+     "name": "CanonicalEnsemble.partitionFunction_add",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L628"
+    },
+    {
+     "kind": "lemma",
+     "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+     "name": "CanonicalEnsemble.helmholtzFreeEnergy_add",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L705"
+    }
+   ],
+   "relation": "conditional"
+  },
+  "harmonic-joint-volumetric-heat-capacity": {
+   "bridge": [
+    {
+     "module": "OMAIPhyslibJointDensity",
+     "name": "OMAI.PhyslibBridge.harmonic_joint_volumetric_heatCapacity_eq_omai",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibJointDensity.lean#L14"
+    }
+   ],
+   "evidence": "compiled_bridge",
+   "physlib": [
+    {
+     "kind": "def",
+     "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
+     "name": "CanonicalEnsemble.heatCapacity",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L417"
+    },
+    {
+     "kind": "def",
+     "module": "Physlib.QuantumMechanics.HarmonicOscillator.OneDimension.TISE",
+     "name": "QuantumMechanics.OneDimension.HarmonicOscillator.eigenValue",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29"
+    }
+   ],
+   "relation": "conditional"
+  },
+  "harmonic-mode-entropy": {
+   "bridge": [
+    {
+     "module": "OMAIPhyslibHarmonicEnsemble",
+     "name": "OMAI.PhyslibBridge.harmonic_thermodynamicEntropy_eq_omai",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibHarmonicEnsemble.lean#L200"
+    }
+   ],
+   "evidence": "compiled_bridge",
+   "physlib": [
+    {
+     "kind": "def",
+     "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+     "name": "CanonicalEnsemble.thermodynamicEntropy",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L800"
+    },
+    {
+     "kind": "def",
+     "module": "Physlib.QuantumMechanics.HarmonicOscillator.OneDimension.TISE",
+     "name": "QuantumMechanics.OneDimension.HarmonicOscillator.eigenValue",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29"
+    },
+    {
+     "kind": "theorem",
+     "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
+     "name": "CanonicalEnsemble.helmholtzFreeEnergy_eq_meanEnergy_sub_temp_mul_thermodynamicEntropy",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L173"
+    }
+   ],
+   "relation": "conditional"
+  },
+  "harmonic-mode-free-energy": {
+   "bridge": [
+    {
+     "module": "OMAIPhyslibHarmonicEnsemble",
+     "name": "OMAI.PhyslibBridge.harmonic_helmholtzFreeEnergy_eq_omai",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibHarmonicEnsemble.lean#L141"
+    },
+    {
+     "module": "OMAIPhyslibHarmonicEnsemble",
+     "name": "OMAI.PhyslibBridge.harmonicFreeEnergy_hasDerivAt",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibHarmonicEnsemble.lean#L313"
+    }
+   ],
+   "evidence": "compiled_bridge",
+   "physlib": [
+    {
+     "kind": "def",
+     "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+     "name": "CanonicalEnsemble.helmholtzFreeEnergy",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L680"
+    },
+    {
+     "kind": "def",
+     "module": "Physlib.QuantumMechanics.HarmonicOscillator.OneDimension.TISE",
+     "name": "QuantumMechanics.OneDimension.HarmonicOscillator.eigenValue",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29"
+    },
+    {
+     "kind": "theorem",
+     "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
+     "name": "CanonicalEnsemble.helmholtzFreeEnergy_eq_meanEnergy_sub_temp_mul_thermodynamicEntropy",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L173"
+    }
+   ],
+   "relation": "conditional"
+  },
+  "harmonic-mode-heat-capacity": {
+   "bridge": [
+    {
+     "module": "OMAIPhyslibHarmonicEnsemble",
+     "name": "OMAI.PhyslibBridge.harmonic_heatCapacity_eq_omai",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibHarmonicEnsemble.lean#L299"
+    },
+    {
+     "module": "OMAIPhyslibHarmonicEnsemble",
+     "name": "OMAI.PhyslibBridge.harmonicInternalEnergy_hasDerivAt",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibHarmonicEnsemble.lean#L280"
+    },
+    {
+     "module": "OMAIPhyslibHarmonicEnsemble",
+     "name": "OMAI.PhyslibBridge.harmonicHeatCapacity_eq_exp",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibHarmonicEnsemble.lean#L264"
+    }
+   ],
+   "evidence": "compiled_bridge",
+   "physlib": [
+    {
+     "kind": "def",
+     "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
+     "name": "CanonicalEnsemble.heatCapacity",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L417"
+    },
+    {
+     "kind": "def",
+     "module": "Physlib.QuantumMechanics.HarmonicOscillator.OneDimension.TISE",
+     "name": "QuantumMechanics.OneDimension.HarmonicOscillator.eigenValue",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29"
+    }
+   ],
+   "relation": "conditional"
+  },
+  "harmonic-mode-internal-energy": {
+   "bridge": [
+    {
+     "module": "OMAIPhyslibHarmonicEnsemble",
+     "name": "OMAI.PhyslibBridge.harmonic_meanEnergy_eq_omai",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibHarmonicEnsemble.lean#L174"
+    }
+   ],
+   "evidence": "compiled_bridge",
+   "physlib": [
+    {
+     "kind": "def",
+     "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+     "name": "CanonicalEnsemble.meanEnergy",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L519"
+    },
+    {
+     "kind": "def",
+     "module": "Physlib.QuantumMechanics.HarmonicOscillator.OneDimension.TISE",
+     "name": "QuantumMechanics.OneDimension.HarmonicOscillator.eigenValue",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29"
+    },
+    {
+     "kind": "theorem",
+     "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
+     "name": "CanonicalEnsemble.helmholtzFreeEnergy_eq_meanEnergy_sub_temp_mul_thermodynamicEntropy",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L173"
+    }
+   ],
+   "relation": "conditional"
+  },
+  "harmonic-molar-entropy": {
+   "bridge": [
+    {
+     "module": "OMAIPhyslibHarmonicSums",
+     "name": "OMAI.PhyslibBridge.harmonic_molar_thermodynamicEntropy_eq_omai",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibHarmonicSums.lean#L89"
+    }
+   ],
+   "evidence": "compiled_bridge",
+   "physlib": [
+    {
+     "kind": "def",
+     "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+     "name": "CanonicalEnsemble.thermodynamicEntropy",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L800"
+    },
+    {
+     "kind": "def",
+     "module": "Physlib.QuantumMechanics.HarmonicOscillator.OneDimension.TISE",
+     "name": "QuantumMechanics.OneDimension.HarmonicOscillator.eigenValue",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29"
+    }
+   ],
+   "relation": "conditional"
+  },
+  "harmonic-molar-free-energy": {
+   "bridge": [
+    {
+     "module": "OMAIPhyslibHarmonicSums",
+     "name": "OMAI.PhyslibBridge.harmonic_molar_helmholtzFreeEnergy_eq_omai",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibHarmonicSums.lean#L69"
+    }
+   ],
+   "evidence": "compiled_bridge",
+   "physlib": [
+    {
+     "kind": "def",
+     "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+     "name": "CanonicalEnsemble.helmholtzFreeEnergy",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L680"
+    },
+    {
+     "kind": "def",
+     "module": "Physlib.QuantumMechanics.HarmonicOscillator.OneDimension.TISE",
+     "name": "QuantumMechanics.OneDimension.HarmonicOscillator.eigenValue",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29"
+    }
+   ],
+   "relation": "conditional"
+  },
+  "harmonic-molar-heat-capacity": {
+   "bridge": [
+    {
+     "module": "OMAIPhyslibHarmonicSums",
+     "name": "OMAI.PhyslibBridge.harmonic_molar_heatCapacity_eq_omai",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibHarmonicSums.lean#L100"
+    }
+   ],
+   "evidence": "compiled_bridge",
+   "physlib": [
+    {
+     "kind": "def",
+     "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
+     "name": "CanonicalEnsemble.heatCapacity",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L417"
+    },
+    {
+     "kind": "def",
+     "module": "Physlib.QuantumMechanics.HarmonicOscillator.OneDimension.TISE",
+     "name": "QuantumMechanics.OneDimension.HarmonicOscillator.eigenValue",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29"
+    }
+   ],
+   "relation": "conditional"
+  },
+  "harmonic-molar-internal-energy": {
+   "bridge": [
+    {
+     "module": "OMAIPhyslibHarmonicSums",
+     "name": "OMAI.PhyslibBridge.harmonic_molar_meanEnergy_eq_omai",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibHarmonicSums.lean#L79"
+    }
+   ],
+   "evidence": "compiled_bridge",
+   "physlib": [
+    {
+     "kind": "def",
+     "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+     "name": "CanonicalEnsemble.meanEnergy",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L519"
+    },
+    {
+     "kind": "def",
+     "module": "Physlib.QuantumMechanics.HarmonicOscillator.OneDimension.TISE",
+     "name": "QuantumMechanics.OneDimension.HarmonicOscillator.eigenValue",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29"
+    }
+   ],
+   "relation": "conditional"
+  },
+  "harmonic-qha-bulk-modulus": {
+   "bridge": [
+    {
+     "module": "OMAIPhyslibQHA",
+     "name": "OMAI.PhyslibBridge.Response.harmonic_static_qhaBulkModulus_eq_omai",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibQHA.lean#L333"
+    },
+    {
+     "module": "OMAIPhyslibHarmonicVolume",
+     "name": "OMAI.PhyslibBridge.HarmonicVolumeModel.freeEnergy_eq_actual",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibHarmonicVolume.lean#L119"
+    }
+   ],
+   "evidence": "compiled_bridge",
+   "physlib": [
+    {
+     "kind": "def",
+     "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+     "name": "CanonicalEnsemble.helmholtzFreeEnergy",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L680"
+    }
+   ],
+   "relation": "conditional"
+  },
+  "harmonic-qha-gibbs-energy": {
+   "bridge": [
+    {
+     "module": "OMAIPhyslibQHA",
+     "name": "OMAI.PhyslibBridge.Response.harmonic_static_qhaGibbs_convex_window",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibQHA.lean#L259"
+    },
+    {
+     "module": "OMAIPhyslibQHA",
+     "name": "OMAI.PhyslibBridge.Response.harmonic_static_qhaGibbs_entropy",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibQHA.lean#L272"
+    },
+    {
+     "module": "OMAIPhyslibQHA",
+     "name": "OMAI.PhyslibBridge.Response.harmonic_static_qhaGibbs_volume",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibQHA.lean#L285"
+    }
+   ],
+   "evidence": "compiled_bridge",
+   "physlib": [
+    {
+     "kind": "def",
+     "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+     "name": "CanonicalEnsemble.helmholtzFreeEnergy",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L680"
+    },
+    {
+     "kind": "def",
+     "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+     "name": "CanonicalEnsemble.thermodynamicEntropy",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L800"
+    }
+   ],
+   "relation": "conditional"
+  },
+  "harmonic-qha-heat-capacity-p": {
+   "bridge": [
+    {
+     "module": "OMAIPhyslibQHA",
+     "name": "OMAI.PhyslibBridge.Response.harmonic_static_qhaHeatCapacityP_eq_omai",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibQHA.lean#L345"
+    },
+    {
+     "module": "OMAIPhyslibQHA",
+     "name": "OMAI.PhyslibBridge.Response.harmonic_static_qhaHeatCapacityP_eq_entropy_slope",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibQHA.lean#L369"
+    },
+    {
+     "module": "OMAIPhyslibQHA",
+     "name": "OMAI.PhyslibBridge.Response.harmonic_static_qhaHeatCapacityP_gt_iff",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibQHA.lean#L415"
+    }
+   ],
+   "evidence": "compiled_bridge",
+   "physlib": [
+    {
+     "kind": "def",
+     "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+     "name": "CanonicalEnsemble.helmholtzFreeEnergy",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L680"
+    },
+    {
+     "kind": "def",
+     "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
+     "name": "CanonicalEnsemble.meanEnergyT",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L409"
+    },
+    {
+     "kind": "def",
+     "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
+     "name": "CanonicalEnsemble.heatCapacity",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L417"
+    }
+   ],
+   "relation": "conditional"
+  },
+  "harmonic-qha-thermal-expansion": {
+   "bridge": [
+    {
+     "module": "OMAIPhyslibQHA",
+     "name": "OMAI.PhyslibBridge.Response.harmonic_static_qhaThermalExpansion_eq_omai",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibQHA.lean#L293"
+    },
+    {
+     "module": "OMAIPhyslibQHA",
+     "name": "OMAI.PhyslibBridge.Response.harmonic_static_qhaThermalExpansion_pos_iff",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibQHA.lean#L322"
+    },
+    {
+     "module": "OMAIPhyslibHarmonicVolume",
+     "name": "OMAI.PhyslibBridge.HarmonicVolumeModel.freeEnergy_eq_actual",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibHarmonicVolume.lean#L119"
+    }
+   ],
+   "evidence": "compiled_bridge",
+   "physlib": [
+    {
+     "kind": "def",
+     "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+     "name": "CanonicalEnsemble.helmholtzFreeEnergy",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L680"
+    },
+    {
+     "kind": "def",
+     "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
+     "name": "CanonicalEnsemble.heatCapacity",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L417"
+    }
+   ],
+   "relation": "conditional"
+  },
+  "harmonic-qha-thermal-gruneisen-contraction": {
+   "bridge": [
+    {
+     "module": "OMAIPhyslibQHA",
+     "name": "OMAI.PhyslibBridge.Response.harmonic_static_qhaThermalGruneisen_eq_omai",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibQHA.lean#L444"
+    }
+   ],
+   "evidence": "compiled_bridge",
+   "physlib": [
+    {
+     "kind": "def",
+     "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
+     "name": "CanonicalEnsemble.heatCapacity",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L417"
+    },
+    {
+     "kind": "def",
+     "module": "Physlib.QuantumMechanics.HarmonicOscillator.OneDimension.TISE",
+     "name": "QuantumMechanics.OneDimension.HarmonicOscillator.eigenValue",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29"
+    },
+    {
+     "kind": "def",
+     "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+     "name": "CanonicalEnsemble.helmholtzFreeEnergy",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L680"
+    }
+   ],
+   "relation": "conditional"
+  },
+  "harmonic-static-cp-identity": {
+   "bridge": [
+    {
+     "module": "OMAIPhyslibHarmonicResponse",
+     "name": "OMAI.PhyslibBridge.Response.harmonic_static_heatCapacityP_eq_omai",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibHarmonicResponse.lean#L22"
+    },
+    {
+     "module": "OMAIPhyslibHarmonicResponse",
+     "name": "OMAI.PhyslibBridge.Response.harmonic_static_heatCapacityP_ge_heatCapacityV",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibHarmonicResponse.lean#L33"
+    }
+   ],
+   "evidence": "compiled_bridge",
+   "physlib": [
+    {
+     "kind": "def",
+     "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+     "name": "CanonicalEnsemble.helmholtzFreeEnergy",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L680"
+    },
+    {
+     "kind": "def",
+     "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+     "name": "CanonicalEnsemble.meanEnergy",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L519"
+    },
+    {
+     "kind": "def",
+     "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+     "name": "CanonicalEnsemble.thermodynamicEntropy",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L800"
+    },
+    {
+     "kind": "def",
+     "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
+     "name": "CanonicalEnsemble.heatCapacity",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L417"
+    },
+    {
+     "kind": "def",
+     "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
+     "name": "CanonicalEnsemble.meanEnergyT",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L409"
+    }
+   ],
+   "relation": "conditional"
+  },
+  "harmonic-static-thermal-gruneisen-identity": {
+   "bridge": [
+    {
+     "module": "OMAIPhyslibThermalGruneisen",
+     "name": "OMAI.PhyslibBridge.Response.harmonic_static_thermalGruneisen_eq_omai",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibThermalGruneisen.lean#L25"
+    }
+   ],
+   "evidence": "compiled_bridge",
+   "physlib": [
+    {
+     "kind": "def",
+     "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+     "name": "CanonicalEnsemble.helmholtzFreeEnergy",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L680"
+    },
+    {
+     "kind": "def",
+     "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+     "name": "CanonicalEnsemble.meanEnergy",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L519"
+    },
+    {
+     "kind": "def",
+     "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
+     "name": "CanonicalEnsemble.meanEnergyT",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L409"
+    },
+    {
+     "kind": "def",
+     "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
+     "name": "CanonicalEnsemble.heatCapacity",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L417"
+    }
+   ],
+   "relation": "conditional"
+  },
+  "harmonic-volumetric-heat-capacity": {
+   "bridge": [
+    {
+     "module": "OMAIPhyslibHarmonicDensity",
+     "name": "OMAI.PhyslibBridge.harmonic_volumetric_heatCapacity_eq_omai",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibHarmonicDensity.lean#L53"
+    },
+    {
+     "module": "OMAIPhyslibHarmonicDensity",
+     "name": "OMAI.PhyslibBridge.harmonicVolumetricHeatCapacity_eq_molar_div",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibHarmonicDensity.lean#L76"
+    },
+    {
+     "module": "OMAIPhyslibHarmonicDensity",
+     "name": "OMAI.PhyslibBridge.uniformVolumetricContraction_ofAngstromCubed",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibHarmonicDensity.lean#L96"
+    },
+    {
+     "module": "OMAIPhyslibHarmonicDensity",
+     "name": "OMAI.PhyslibBridge.harmonicHeatCapacity_angularSI_eq_linearTHz",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibHarmonicDensity.lean#L131"
+    }
+   ],
+   "evidence": "compiled_bridge",
+   "physlib": [
+    {
+     "kind": "def",
+     "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
+     "name": "CanonicalEnsemble.heatCapacity",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L417"
+    },
+    {
+     "kind": "def",
+     "module": "Physlib.QuantumMechanics.HarmonicOscillator.OneDimension.TISE",
+     "name": "QuantumMechanics.OneDimension.HarmonicOscillator.eigenValue",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/QuantumMechanics/HarmonicOscillator/OneDimension/TISE.lean#L29"
+    }
+   ],
+   "relation": "conditional"
+  },
+  "hellmann-feynman-force-balance": {
+   "bridge": [
+    {
+     "module": "OMAIAtomisticDerivatives",
+     "name": "OMAI.PhyslibBridge.Atomistic.hfForce_sum_eq_zero",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIAtomisticDerivatives.lean#L159"
+    },
+    {
+     "module": "OMAIAtomisticDerivatives",
+     "name": "OMAI.PhyslibBridge.Atomistic.hfForce_torque_eq_zero",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIAtomisticDerivatives.lean#L206"
+    },
+    {
+     "module": "OMAIAtomisticDerivatives",
+     "name": "OMAI.PhyslibBridge.Atomistic.pairEnergy_force",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIAtomisticDerivatives.lean#L489"
+    },
+    {
+     "module": "OMAIAtomisticDerivatives",
+     "name": "OMAI.PhyslibBridge.Atomistic.pairEnergy_translate",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIAtomisticDerivatives.lean#L460"
+    },
+    {
+     "module": "OMAIAtomisticDerivatives",
+     "name": "OMAI.PhyslibBridge.Atomistic.pairEnergy_rotatePlane",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIAtomisticDerivatives.lean#L464"
+    }
+   ],
+   "evidence": "compiled_bridge",
+   "physlib": [],
+   "relation": "local"
+  },
+  "hyperelastic-elastic-constants": {
+   "bridge": [
+    {
+     "module": "OMAICellElasticity",
+     "name": "OMAI.PhyslibBridge.CellElasticity.elasticConstants_symmetries",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICellElasticity.lean#L164"
+    },
+    {
+     "module": "OMAICellElasticity",
+     "name": "OMAI.PhyslibBridge.CellElasticity.voigt_pos_of_stable_reference",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICellElasticity.lean#L228"
+    },
+    {
+     "module": "OMAICellElasticity",
+     "name": "OMAI.PhyslibBridge.CellElasticity.svkEnergy_elasticConstants_symmetries",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICellElasticity.lean#L359"
+    },
+    {
+     "module": "OMAICellElasticity",
+     "name": "OMAI.PhyslibBridge.CellElasticity.svkEnergy_elasticConstants",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICellElasticity.lean#L466"
+    },
+    {
+     "module": "OMAICellElasticity",
+     "name": "OMAI.PhyslibBridge.CellElasticity.svkEnergy_voigt_pos",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICellElasticity.lean#L527"
+    }
+   ],
+   "evidence": "compiled_bridge",
+   "physlib": [],
+   "relation": "local"
+  },
+  "linear-elasticity-voigt-moduli": {
+   "bridge": [
+    {
+     "module": "OMAIElasticity",
+     "name": "OMAI.PhyslibBridge.Elasticity.voigt_pos_of_posDef",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIElasticity.lean#L131"
+    },
+    {
+     "module": "OMAIElasticity",
+     "name": "OMAI.PhyslibBridge.Elasticity.poissonRatio_bounds_of_posDef",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIElasticity.lean#L148"
+    },
+    {
+     "module": "OMAIElasticity",
+     "name": "OMAI.PhyslibBridge.Elasticity.isotropic_stable_iff",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIElasticity.lean#L214"
+    },
+    {
+     "module": "OMAIElasticity",
+     "name": "OMAI.PhyslibBridge.Elasticity.cubic_relaxed_eosBulk_eq_voigtBulk",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIElasticity.lean#L417"
+    },
+    {
+     "module": "OMAIElasticity",
+     "name": "OMAI.PhyslibBridge.Elasticity.uniformScaling_eosBulk_eq_voigtBulk",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIElasticity.lean#L391"
+    }
+   ],
+   "evidence": "compiled_bridge",
+   "physlib": [],
+   "relation": "local"
+  },
+  "linearized-bte-conductivity": {
+   "bridge": [
+    {
+     "module": "OMAILinearizedBTE",
+     "name": "OMAI.PhyslibBridge.LinearizedBTE.chaputCollision_isSymm",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAILinearizedBTE.lean#L122"
+    },
+    {
+     "module": "OMAILinearizedBTE",
+     "name": "OMAI.PhyslibBridge.LinearizedBTE.lbteMatrix_isSymm",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAILinearizedBTE.lean#L136"
+    },
+    {
+     "module": "OMAILinearizedBTE",
+     "name": "OMAI.PhyslibBridge.LinearizedBTE.lbteSolves_rta_limit",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAILinearizedBTE.lean#L149"
+    },
+    {
+     "module": "OMAILinearizedBTE",
+     "name": "OMAI.PhyslibBridge.LinearizedBTE.lbteKappa_isSymm",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAILinearizedBTE.lean#L201"
+    },
+    {
+     "module": "OMAILinearizedBTE",
+     "name": "OMAI.PhyslibBridge.LinearizedBTE.lbteKappa_posSemidef",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAILinearizedBTE.lean#L223"
+    },
+    {
+     "module": "OMAILinearizedBTE",
+     "name": "OMAI.PhyslibBridge.LinearizedBTE.chaputCollision_quadratic",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAILinearizedBTE.lean#L529"
+    },
+    {
+     "module": "OMAILinearizedBTE",
+     "name": "OMAI.PhyslibBridge.LinearizedBTE.chaputCollision_posSemidef",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAILinearizedBTE.lean#L603"
+    },
+    {
+     "module": "OMAILinearizedBTE",
+     "name": "OMAI.PhyslibBridge.LinearizedBTE.anharmonicLinewidth_eq_detailedBalance",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAILinearizedBTE.lean#L659"
+    },
+    {
+     "module": "OMAILinearizedBTE",
+     "name": "OMAI.PhyslibBridge.LinearizedBTE.chaputCollision_posSemidef_onShell",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAILinearizedBTE.lean#L700"
+    },
+    {
+     "module": "OMAILinearizedBTE",
+     "name": "OMAI.PhyslibBridge.LinearizedBTE.lbteKappa_posSemidef_onShell",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAILinearizedBTE.lean#L742"
+    }
+   ],
+   "evidence": "compiled_bridge",
+   "physlib": [],
+   "relation": "local"
+  },
+  "md-correlation-estimators": {
+   "bridge": [
+    {
+     "module": "OMAIMDCorrelations",
+     "name": "OMAI.PhyslibBridge.MDCorrelations.catalogMSD_eq_vacf",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIMDCorrelations.lean#L206"
+    },
+    {
+     "module": "OMAIMDCorrelations",
+     "name": "OMAI.PhyslibBridge.MDCorrelations.greenKubo_symm_eq_helfand",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIMDCorrelations.lean#L395"
+    },
+    {
+     "module": "OMAIMDCorrelations",
+     "name": "OMAI.PhyslibBridge.MDCorrelations.catalogHeatACF_eq_invDFT",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIMDCorrelations.lean#L454"
+    }
+   ],
+   "evidence": "compiled_bridge",
+   "physlib": [],
+   "relation": "local"
+  },
+  "molecular-normal-modes": {
+   "bridge": [
+    {
+     "module": "OMAIMolecularModes",
+     "name": "OMAI.PhyslibBridge.MolecularModes.molecularFrequencies_of_isLocalMin",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIMolecularModes.lean#L144"
+    },
+    {
+     "module": "OMAIMolecularModes",
+     "name": "OMAI.PhyslibBridge.MolecularModes.massWeightedHessian_translation",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIMolecularModes.lean#L158"
+    }
+   ],
+   "evidence": "compiled_bridge",
+   "physlib": [],
+   "relation": "local"
+  },
+  "participation-ratio-bounds": {
+   "bridge": [
+    {
+     "module": "OMAIPhyslibParticipationRatio",
+     "name": "OMAI.PhyslibBridge.Lattice.participationRatio_bounds",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibParticipationRatio.lean#L44"
+    },
+    {
+     "module": "OMAIPhyslibParticipationRatio",
+     "name": "OMAI.PhyslibBridge.Lattice.participationRatio_eq_one_iff",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibParticipationRatio.lean#L62"
+    },
+    {
+     "module": "OMAIPhyslibParticipationRatio",
+     "name": "OMAI.PhyslibBridge.Lattice.participationRatio_eq_inv_iff",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibParticipationRatio.lean#L97"
+    }
+   ],
+   "evidence": "compiled_bridge",
+   "physlib": [],
+   "relation": "local"
+  },
+  "phonon-scattering-channels": {
+   "bridge": [
+    {
+     "module": "OMAIPhononScattering",
+     "name": "OMAI.PhyslibBridge.PhononScattering.isotopeLinewidth_nonneg",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhononScattering.lean#L107"
+    },
+    {
+     "module": "OMAIPhononScattering",
+     "name": "OMAI.PhyslibBridge.PhononScattering.isotopeLinewidth_le_dos",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhononScattering.lean#L142"
+    },
+    {
+     "module": "OMAIPhononScattering",
+     "name": "OMAI.PhyslibBridge.PhononScattering.anharmonicLinewidth_nonneg",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhononScattering.lean#L236"
+    },
+    {
+     "module": "OMAIPhononScattering",
+     "name": "OMAI.PhyslibBridge.PhononScattering.anharmonicLinewidth_nonneg_of_support",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhononScattering.lean#L265"
+    },
+    {
+     "module": "OMAIPhononScattering",
+     "name": "OMAI.PhyslibBridge.PhononScattering.anharmonicLinewidth_neg_of_nonmonotone",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhononScattering.lean#L301"
+    },
+    {
+     "module": "OMAIPhononScattering",
+     "name": "OMAI.PhyslibBridge.PhononScattering.rta_casimir_bound",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhononScattering.lean#L342"
+    }
+   ],
+   "evidence": "compiled_bridge",
+   "physlib": [],
+   "relation": "local"
+  },
+  "static-dielectric-ionic-response": {
+   "bridge": [
+    {
+     "module": "OMAIStaticDielectric",
+     "name": "OMAI.PhyslibBridge.StaticDielectric.staticDielectric_sub_posSemidef",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIStaticDielectric.lean#L70"
+    },
+    {
+     "module": "OMAIStaticDielectric",
+     "name": "OMAI.PhyslibBridge.StaticDielectric.lyddaneSachsTeller",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIStaticDielectric.lean#L99"
+    }
+   ],
+   "evidence": "compiled_bridge",
+   "physlib": [],
+   "relation": "local"
+  },
+  "thermodynamic-pressure": {
+   "bridge": [],
+   "evidence": "source_correspondence",
+   "physlib": [
+    {
+     "kind": "def",
+     "module": "Physlib.StatisticalMechanics.MicroCanonicalEnsemble.ThermoQuantities",
+     "name": "NVEHamiltonian.pressure",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/MicroCanonicalEnsemble/ThermoQuantities.lean#L219"
+    }
+   ],
+   "relation": "conceptual"
+  },
+  "thermoelectric-figure-of-merit": {
+   "bridge": [
+    {
+     "module": "OMAIPhyslibSemantics",
+     "name": "OMAI.PhyslibBridge.figureOfMerit_eq_physlib",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibSemantics.lean#L38"
+    },
+    {
+     "module": "OMAIPhyslibSemantics",
+     "name": "OMAI.PhyslibBridge.figureOfMerit_pos",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibSemantics.lean#L43"
+    },
+    {
+     "module": "OMAIPhyslibSemantics",
+     "name": "OMAI.PhyslibBridge.figureOfMerit_le_of_lattice_le",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibSemantics.lean#L50"
+    },
+    {
+     "module": "OMAIPhyslibSemantics",
+     "name": "OMAI.PhyslibBridge.isotropic_figureOfMerit_eq_physlib",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibSemantics.lean#L71"
+    }
+   ],
+   "evidence": "compiled_bridge",
+   "physlib": [
+    {
+     "kind": "def",
+     "module": "Physlib.CondensedMatter.Thermoelectric.Basic",
+     "name": "CondensedMatter.ThermoelectricMaterial.figureOfMerit",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L158"
+    },
+    {
+     "kind": "lemma",
+     "module": "Physlib.CondensedMatter.Thermoelectric.Basic",
+     "name": "CondensedMatter.ThermoelectricMaterial.figureOfMerit_eq",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L169"
+    },
+    {
+     "kind": "lemma",
+     "module": "Physlib.CondensedMatter.Thermoelectric.Basic",
+     "name": "CondensedMatter.ThermoelectricMaterial.figureOfMerit_pos",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L182"
+    },
+    {
+     "kind": "lemma",
+     "module": "Physlib.CondensedMatter.Thermoelectric.Basic",
+     "name": "CondensedMatter.ThermoelectricMaterial.figureOfMerit_le_of_le",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L200"
+    }
+   ],
+   "relation": "conditional"
+  },
+  "thermoelectric-input-coefficients": {
+   "bridge": [],
+   "evidence": "source_correspondence",
+   "physlib": [
+    {
+     "kind": "structure",
+     "module": "Physlib.CondensedMatter.Thermoelectric.Basic",
+     "name": "CondensedMatter.ThermoelectricMaterial",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L102"
+    }
+   ],
+   "relation": "conditional"
+  },
+  "thermoelectric-power-factor": {
+   "bridge": [
+    {
+     "module": "OMAIPhyslibSemantics",
+     "name": "OMAI.PhyslibBridge.powerFactor_eq_physlib",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibSemantics.lean#L24"
+    },
+    {
+     "module": "OMAIPhyslibSemantics",
+     "name": "OMAI.PhyslibBridge.powerFactor_pos",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibSemantics.lean#L27"
+    }
+   ],
+   "evidence": "compiled_bridge",
+   "physlib": [
+    {
+     "kind": "def",
+     "module": "Physlib.CondensedMatter.Thermoelectric.Basic",
+     "name": "CondensedMatter.ThermoelectricMaterial.powerFactor",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L125"
+    },
+    {
+     "kind": "lemma",
+     "module": "Physlib.CondensedMatter.Thermoelectric.Basic",
+     "name": "CondensedMatter.ThermoelectricMaterial.powerFactor_pos",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L128"
+    }
+   ],
+   "relation": "exact_definition"
+  },
+  "thermoelectric-total-conductivity": {
+   "bridge": [
+    {
+     "module": "OMAIPhyslibSemantics",
+     "name": "OMAI.PhyslibBridge.totalThermalConductivity_eq_physlib",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibSemantics.lean#L30"
+    },
+    {
+     "module": "OMAIPhyslibSemantics",
+     "name": "OMAI.PhyslibBridge.totalThermalConductivity_pos",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibSemantics.lean#L34"
+    },
+    {
+     "module": "OMAIPhyslibSemantics",
+     "name": "OMAI.PhyslibBridge.isotropic_total_conductivity",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIPhyslibSemantics.lean#L65"
+    }
+   ],
+   "evidence": "compiled_bridge",
+   "physlib": [
+    {
+     "kind": "def",
+     "module": "Physlib.CondensedMatter.Thermoelectric.Basic",
+     "name": "CondensedMatter.ThermoelectricMaterial.totalThermalConductivity",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L143"
+    },
+    {
+     "kind": "lemma",
+     "module": "Physlib.CondensedMatter.Thermoelectric.Basic",
+     "name": "CondensedMatter.ThermoelectricMaterial.totalThermalConductivity_pos",
+     "url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/CondensedMatter/Thermoelectric/Basic.lean#L146"
+    }
+   ],
+   "relation": "conditional"
+  },
+  "thermoset-cure-kinetics": {
+   "bridge": [
+    {
+     "module": "OMAICureKinetics",
+     "name": "OMAI.PhyslibBridge.CureKinetics.kamalCureTime_strictMonoOn",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICureKinetics.lean#L116"
+    },
+    {
+     "module": "OMAICureKinetics",
+     "name": "OMAI.PhyslibBridge.CureKinetics.kamalCureTime_hasDerivAt",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICureKinetics.lean#L153"
+    },
+    {
+     "module": "OMAICureKinetics",
+     "name": "OMAI.PhyslibBridge.CureKinetics.kamal_inverse_exists",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICureKinetics.lean#L175"
+    },
+    {
+     "module": "OMAICureKinetics",
+     "name": "OMAI.PhyslibBridge.CureKinetics.kamal_inverse_solves_rate_law",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICureKinetics.lean#L161"
+    },
+    {
+     "module": "OMAICureKinetics",
+     "name": "OMAI.PhyslibBridge.CureKinetics.diBenedetto_strictMonoOn",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICureKinetics.lean#L224"
+    },
+    {
+     "module": "OMAICureKinetics",
+     "name": "OMAI.PhyslibBridge.CureKinetics.diBenedetto_bijOn",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICureKinetics.lean#L240"
+    },
+    {
+     "module": "OMAICureKinetics",
+     "name": "OMAI.PhyslibBridge.CureKinetics.diBenedetto_lt_linear",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAICureKinetics.lean#L266"
+    }
+   ],
+   "evidence": "compiled_bridge",
+   "physlib": [],
+   "relation": "local"
+  },
+  "vacf-spectrum-lorentzian-limit": {
+   "bridge": [
+    {
+     "module": "OMAIVACFSpectrum",
+     "name": "OMAI.PhyslibBridge.VACFSpectrum.catalogFourierDOS_damped",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIVACFSpectrum.lean#L129"
+    },
+    {
+     "module": "OMAIVACFSpectrum",
+     "name": "OMAI.PhyslibBridge.VACFSpectrum.integral_catalogFourierDOS_damped",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIVACFSpectrum.lean#L172"
+    },
+    {
+     "module": "OMAIVACFSpectrum",
+     "name": "OMAI.PhyslibBridge.VACFSpectrum.integral_Ioi_catalogFourierDOS_damped",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIVACFSpectrum.lean#L200"
+    },
+    {
+     "module": "OMAIVACFSpectrum",
+     "name": "OMAI.PhyslibBridge.VACFSpectrum.tendsto_catalogFourierDOS_zero_linewidth",
+     "url": "https://github.com/openmaterials-ai/openmaterials-ai/blob/main/lean/bridge/OMAIVACFSpectrum.lean#L253"
+    }
+   ],
+   "evidence": "compiled_bridge",
+   "physlib": [],
+   "relation": "local"
+  }
+ },
+ "counts": {
+  "formulas": {
+   "local": 56,
+   "none": 48,
+   "physlib": 29,
+   "stated": 0
+  },
+  "quantities": {
+   "local": 47,
+   "none": 64,
+   "physlib": 25,
+   "stated": 0
+  }
+ },
+ "format": 1,
+ "formulas": {
+  "apply_conductance_drift": {
+   "bindings": [
+    "analog-device-metrology"
+   ],
+   "inputs": [
+    "ConductanceDriftExponent"
+   ],
+   "outputs": [
+    "ConductanceState"
+   ],
+   "rung": "local",
+   "tier": "Analog device metrology"
+  },
+  "apply_nac_correction": {
+   "bindings": [
+    "static-dielectric-ionic-response"
+   ],
+   "inputs": [
+    "BareDynamicalMatrix",
+    "BornCharges",
+    "DielectricTensor"
+   ],
+   "outputs": [
+    "DynamicalMatrix"
+   ],
+   "rung": "local",
+   "tier": "Harmonic"
+  },
+  "autocorrelate_heat_current": {
+   "bindings": [
+    "md-correlation-estimators"
+   ],
+   "inputs": [
+    "HeatCurrent"
+   ],
+   "outputs": [
+    "HeatCurrentACF"
+   ],
+   "rung": "local",
+   "tier": "Molecular dynamics"
+  },
+  "combine_kappa_wigner": {
+   "bindings": [],
+   "inputs": [
+    "ThermalConductivity[transport_model=wigner_populations]",
+    "ThermalConductivity[transport_model=wigner_coherences]"
+   ],
+   "outputs": [
+    "ThermalConductivity[transport_model=wigner]"
+   ],
+   "rung": "none",
+   "tier": "Transport"
+  },
+  "compute_adsorption_energy": {
+   "bindings": [
+    "dft-stability-energy-differences"
+   ],
+   "inputs": [
+    "TotalEnergy",
+    "Structure"
+   ],
+   "outputs": [
+    "AdsorptionEnergy"
+   ],
+   "rung": "local",
+   "tier": "Stability"
+  },
+  "compute_band_gap": {
+   "bindings": [],
+   "inputs": [
+    "Structure",
+    "Potential"
+   ],
+   "outputs": [
+    "BandGap"
+   ],
+   "rung": "none",
+   "tier": "Ground state"
+  },
+  "compute_bond_dissociation": {
+   "bindings": [],
+   "inputs": [
+    "TotalEnergy",
+    "Structure"
+   ],
+   "outputs": [
+    "BondDissociationEnergy"
+   ],
+   "rung": "none",
+   "tier": "Molecular"
+  },
+  "compute_boundary_scattering": {
+   "bindings": [
+    "phonon-scattering-channels"
+   ],
+   "inputs": [
+    "Frequency",
+    "GroupVelocity"
+   ],
+   "outputs": [
+    "Linewidth[channel=boundary]"
+   ],
+   "rung": "local",
+   "tier": "Scattering"
+  },
+  "compute_bulk_modulus_eos": {
+   "bindings": [
+    "linear-elasticity-voigt-moduli"
+   ],
+   "inputs": [
+    "TotalEnergy",
+    "Structure"
+   ],
+   "outputs": [
+    "BulkModulus"
+   ],
+   "rung": "local",
+   "tier": "Mechanics"
+  },
+  "compute_bulk_modulus_qha": {
+   "bindings": [
+    "harmonic-qha-bulk-modulus"
+   ],
+   "inputs": [
+    "TotalEnergy",
+    "Structure",
+    "Frequency"
+   ],
+   "outputs": [
+    "BulkModulus"
+   ],
+   "rung": "physlib",
+   "tier": "Mechanics"
+  },
+  "compute_calphad_entropy": {
+   "bindings": [
+    "calphad-binary-equilibrium"
+   ],
+   "inputs": [
+    "AssessedDatabase",
+    "Temperature"
+   ],
+   "outputs": [
+    "CalphadMolarEntropy"
+   ],
+   "rung": "local",
+   "tier": "Thermochemistry"
+  },
+  "compute_carrier_density": {
+   "bindings": [],
+   "inputs": [
+    "Structure"
+   ],
+   "outputs": [
+    "CarrierDensity"
+   ],
+   "rung": "none",
+   "tier": "Diffusion"
+  },
+  "compute_carrier_mobility": {
+   "bindings": [
+    "electronic-carrier-statistics"
+   ],
+   "inputs": [
+    "Structure",
+    "StaticDielectricTensor",
+    "ElasticConstants",
+    "Frequency"
+   ],
+   "outputs": [
+    "CarrierMobility"
+   ],
+   "rung": "local",
+   "tier": "Electronic transport"
+  },
+  "compute_chemical_potentials": {
+   "bindings": [
+    "calphad-binary-equilibrium"
+   ],
+   "inputs": [
+    "MolarGibbsEnergy"
+   ],
+   "outputs": [
+    "ChemicalPotential"
+   ],
+   "rung": "local",
+   "tier": "Thermochemistry"
+  },
+  "compute_conductance[transport_model=landauer]": {
+   "bindings": [
+    "crystal-dos-landauer-conductance"
+   ],
+   "inputs": [
+    "PhononTransmission",
+    "Frequency",
+    "Temperature"
+   ],
+   "outputs": [
+    "ThermalConductance[transport_model=landauer]"
+   ],
+   "rung": "physlib",
+   "tier": "Transport"
+  },
+  "compute_configurational_energy": {
+   "bindings": [],
+   "inputs": [
+    "Potential",
+    "Structure"
+   ],
+   "outputs": [
+    "ConfigurationalEnergy"
+   ],
+   "rung": "none",
+   "tier": "Diffusion"
+  },
+  "compute_dispersion": {
+   "bindings": [
+    "crystal-phonon-dispersion"
+   ],
+   "inputs": [
+    "DynamicalMatrix"
+   ],
+   "outputs": [
+    "Frequency",
+    "Eigenvectors"
+   ],
+   "rung": "physlib",
+   "tier": "Harmonic"
+  },
+  "compute_dos": {
+   "bindings": [
+    "crystal-dos-landauer-conductance"
+   ],
+   "inputs": [
+    "Frequency"
+   ],
+   "outputs": [
+    "PhononDOS"
+   ],
+   "rung": "physlib",
+   "tier": "Harmonic"
+  },
+  "compute_dynamical_matrix": {
+   "bindings": [
+    "crystal-dynamical-matrix"
+   ],
+   "inputs": [
+    "ForceConstants[order=2]"
+   ],
+   "outputs": [
+    "BareDynamicalMatrix"
+   ],
+   "rung": "physlib",
+   "tier": "Harmonic"
+  },
+  "compute_elastic_constants": {
+   "bindings": [
+    "hyperelastic-elastic-constants"
+   ],
+   "inputs": [
+    "Stress",
+    "Structure"
+   ],
+   "outputs": [
+    "ElasticConstants"
+   ],
+   "rung": "local",
+   "tier": "Mechanics"
+  },
+  "compute_electronic_conductivity": {
+   "bindings": [
+    "boltzmann-electronic-transport"
+   ],
+   "inputs": [
+    "Structure",
+    "StaticDielectricTensor",
+    "ElasticConstants",
+    "Frequency"
+   ],
+   "outputs": [
+    "ElectricalConductivity[carrier=electronic]"
+   ],
+   "rung": "physlib",
+   "tier": "Electronic transport"
+  },
+  "compute_electronic_dos": {
+   "bindings": [
+    "electronic-carrier-statistics"
+   ],
+   "inputs": [
+    "Structure",
+    "Potential"
+   ],
+   "outputs": [
+    "ElectronicDOS"
+   ],
+   "rung": "local",
+   "tier": "Electronic transport"
+  },
+  "compute_electronic_thermal_conductivity": {
+   "bindings": [
+    "boltzmann-electronic-transport"
+   ],
+   "inputs": [
+    "Structure",
+    "StaticDielectricTensor",
+    "ElasticConstants",
+    "Frequency"
+   ],
+   "outputs": [
+    "ElectronicThermalConductivity"
+   ],
+   "rung": "physlib",
+   "tier": "Electronic transport"
+  },
+  "compute_energy_above_hull": {
+   "bindings": [
+    "dft-stability-energy-differences"
+   ],
+   "inputs": [
+    "FormationEnergy",
+    "Structure"
+   ],
+   "outputs": [
+    "EnergyAboveHull"
+   ],
+   "rung": "local",
+   "tier": "Stability"
+  },
+  "compute_entropy": {
+   "bindings": [
+    "harmonic-mode-entropy"
+   ],
+   "inputs": [
+    "Frequency",
+    "Temperature"
+   ],
+   "outputs": [
+    "Entropy"
+   ],
+   "rung": "physlib",
+   "tier": "Thermodynamics"
+  },
+  "compute_fc2_finite_displacement": {
+   "bindings": [
+    "finite-displacement-force-constants"
+   ],
+   "inputs": [
+    "Forces",
+    "Structure"
+   ],
+   "outputs": [
+    "ForceConstants[order=2]"
+   ],
+   "rung": "local",
+   "tier": "Sources"
+  },
+  "compute_force_constants[order=2]": {
+   "bindings": [
+    "force-constant-sum-rules"
+   ],
+   "inputs": [
+    "Potential"
+   ],
+   "outputs": [
+    "ForceConstants[order=2]"
+   ],
+   "rung": "local",
+   "tier": "Sources"
+  },
+  "compute_force_constants[order=3]": {
+   "bindings": [
+    "force-constant-sum-rules"
+   ],
+   "inputs": [
+    "Potential"
+   ],
+   "outputs": [
+    "ForceConstants[order=3]"
+   ],
+   "rung": "local",
+   "tier": "Sources"
+  },
+  "compute_forces_hf": {
+   "bindings": [
+    "hellmann-feynman-force-balance"
+   ],
+   "inputs": [
+    "TotalEnergy",
+    "Structure"
+   ],
+   "outputs": [
+    "Forces"
+   ],
+   "rung": "local",
+   "tier": "Ground state"
+  },
+  "compute_formation_energy": {
+   "bindings": [],
+   "inputs": [
+    "TotalEnergy",
+    "Structure"
+   ],
+   "outputs": [
+    "FormationEnergy"
+   ],
+   "rung": "none",
+   "tier": "Stability"
+  },
+  "compute_free_energy": {
+   "bindings": [
+    "harmonic-mode-free-energy"
+   ],
+   "inputs": [
+    "Frequency",
+    "Temperature"
+   ],
+   "outputs": [
+    "HelmholtzFreeEnergy"
+   ],
+   "rung": "physlib",
+   "tier": "Thermodynamics"
+  },
+  "compute_grain_boundary_energy": {
+   "bindings": [
+    "dft-stability-energy-differences"
+   ],
+   "inputs": [
+    "TotalEnergy",
+    "Structure"
+   ],
+   "outputs": [
+    "GrainBoundaryEnergy"
+   ],
+   "rung": "local",
+   "tier": "Stability"
+  },
+  "compute_group_velocity": {
+   "bindings": [
+    "crystal-group-velocity"
+   ],
+   "inputs": [
+    "DynamicalMatrix",
+    "Frequency",
+    "Eigenvectors"
+   ],
+   "outputs": [
+    "GroupVelocity"
+   ],
+   "rung": "physlib",
+   "tier": "Harmonic"
+  },
+  "compute_gruneisen": {
+   "bindings": [],
+   "inputs": [
+    "ForceConstants[order=2]",
+    "ForceConstants[order=3]",
+    "Frequency",
+    "Eigenvectors"
+   ],
+   "outputs": [
+    "Gruneisen"
+   ],
+   "rung": "none",
+   "tier": "Scattering"
+  },
+  "compute_heat_capacity": {
+   "bindings": [
+    "harmonic-mode-heat-capacity"
+   ],
+   "inputs": [
+    "Frequency",
+    "Temperature"
+   ],
+   "outputs": [
+    "HeatCapacity"
+   ],
+   "rung": "physlib",
+   "tier": "Thermodynamics"
+  },
+  "compute_heat_capacity_p": {
+   "bindings": [
+    "harmonic-qha-heat-capacity-p"
+   ],
+   "inputs": [
+    "QHAGibbsEnergy"
+   ],
+   "outputs": [
+    "HeatCapacityConstantP"
+   ],
+   "rung": "physlib",
+   "tier": "Quasi-harmonic"
+  },
+  "compute_heat_current": {
+   "bindings": [],
+   "inputs": [
+    "Trajectory"
+   ],
+   "outputs": [
+    "HeatCurrent"
+   ],
+   "rung": "none",
+   "tier": "Molecular dynamics"
+  },
+  "compute_homo_lumo_gap": {
+   "bindings": [],
+   "inputs": [
+    "Structure",
+    "Potential"
+   ],
+   "outputs": [
+    "HOMOLUMOGap"
+   ],
+   "rung": "none",
+   "tier": "Molecular"
+  },
+  "compute_intercalation_voltage": {
+   "bindings": [
+    "dft-stability-energy-differences"
+   ],
+   "inputs": [
+    "TotalEnergy",
+    "Structure"
+   ],
+   "outputs": [
+    "Voltage"
+   ],
+   "rung": "local",
+   "tier": "Stability"
+  },
+  "compute_internal_energy": {
+   "bindings": [
+    "harmonic-mode-internal-energy"
+   ],
+   "inputs": [
+    "Frequency",
+    "Temperature"
+   ],
+   "outputs": [
+    "InternalEnergy"
+   ],
+   "rung": "physlib",
+   "tier": "Thermodynamics"
+  },
+  "compute_ionic_conductivity": {
+   "bindings": [
+    "arrhenius-ionic-transport"
+   ],
+   "inputs": [
+    "CarrierDensity",
+    "Diffusivity",
+    "Temperature"
+   ],
+   "outputs": [
+    "ElectricalConductivity[carrier=ionic]"
+   ],
+   "rung": "local",
+   "tier": "Diffusion"
+  },
+  "compute_isotope_scattering": {
+   "bindings": [
+    "phonon-scattering-channels"
+   ],
+   "inputs": [
+    "Frequency",
+    "Eigenvectors",
+    "IsotopeAbundances"
+   ],
+   "outputs": [
+    "Linewidth[channel=isotope]"
+   ],
+   "rung": "local",
+   "tier": "Scattering"
+  },
+  "compute_kappa[transport_model=qhgk]": {
+   "bindings": [],
+   "inputs": [
+    "HeatCapacity",
+    "Frequency",
+    "GroupVelocity",
+    "Linewidth[channel=total]",
+    "Temperature"
+   ],
+   "outputs": [
+    "ThermalConductivity[transport_model=qhgk]"
+   ],
+   "rung": "none",
+   "tier": "Transport"
+  },
+  "compute_kappa[transport_model=wigner_coherences]": {
+   "bindings": [],
+   "inputs": [
+    "HeatCapacity",
+    "Frequency",
+    "GroupVelocity",
+    "Linewidth[channel=total]"
+   ],
+   "outputs": [
+    "ThermalConductivity[transport_model=wigner_coherences]"
+   ],
+   "rung": "none",
+   "tier": "Transport"
+  },
+  "compute_kappa[transport_model=wigner_populations]": {
+   "bindings": [],
+   "inputs": [
+    "HeatCapacity",
+    "GroupVelocity",
+    "MeanFreeDisplacement[bte_solver=direct_inverse]"
+   ],
+   "outputs": [
+    "ThermalConductivity[transport_model=wigner_populations]"
+   ],
+   "rung": "none",
+   "tier": "Transport"
+  },
+  "compute_linewidth[channel=anharmonic_3ph]": {
+   "bindings": [
+    "phonon-scattering-channels"
+   ],
+   "inputs": [
+    "Frequency",
+    "Eigenvectors",
+    "ForceConstants[order=3]",
+    "Temperature"
+   ],
+   "outputs": [
+    "Linewidth[channel=anharmonic_3ph]"
+   ],
+   "rung": "local",
+   "tier": "Scattering"
+  },
+  "compute_magnetic_moments": {
+   "bindings": [],
+   "inputs": [
+    "Structure",
+    "Potential"
+   ],
+   "outputs": [
+    "MagneticMoment"
+   ],
+   "rung": "none",
+   "tier": "Ground state"
+  },
+  "compute_modal_diffusivity": {
+   "bindings": [],
+   "inputs": [
+    "Frequency",
+    "Eigenvectors",
+    "Linewidth[channel=total]"
+   ],
+   "outputs": [
+    "ModalDiffusivity"
+   ],
+   "rung": "none",
+   "tier": "Transport"
+  },
+  "compute_molar_enthalpy": {
+   "bindings": [
+    "calphad-binary-equilibrium"
+   ],
+   "inputs": [
+    "AssessedDatabase",
+    "Temperature"
+   ],
+   "outputs": [
+    "MolarEnthalpy"
+   ],
+   "rung": "local",
+   "tier": "Thermochemistry"
+  },
+  "compute_molecular_frequencies": {
+   "bindings": [
+    "molecular-normal-modes"
+   ],
+   "inputs": [
+    "Structure",
+    "Potential"
+   ],
+   "outputs": [
+    "MolecularFrequency"
+   ],
+   "rung": "local",
+   "tier": "Molecular"
+  },
+  "compute_msd": {
+   "bindings": [
+    "md-correlation-estimators"
+   ],
+   "inputs": [
+    "Trajectory"
+   ],
+   "outputs": [
+    "MeanSquaredDisplacement"
+   ],
+   "rung": "local",
+   "tier": "Molecular dynamics"
+  },
+  "compute_participation_ratio": {
+   "bindings": [
+    "participation-ratio-bounds"
+   ],
+   "inputs": [
+    "Eigenvectors"
+   ],
+   "outputs": [
+    "ParticipationRatio"
+   ],
+   "rung": "local",
+   "tier": "Harmonic"
+  },
+  "compute_phase_fractions": {
+   "bindings": [
+    "calphad-binary-equilibrium"
+   ],
+   "inputs": [
+    "AssessedDatabase",
+    "Temperature"
+   ],
+   "outputs": [
+    "PhaseFraction"
+   ],
+   "rung": "local",
+   "tier": "Thermochemistry"
+  },
+  "compute_phase_space_3phonon": {
+   "bindings": [],
+   "inputs": [
+    "Frequency"
+   ],
+   "outputs": [
+    "PhaseSpace3Phonon"
+   ],
+   "rung": "none",
+   "tier": "Scattering"
+  },
+  "compute_potential_energy_fit_error": {
+   "bindings": [],
+   "inputs": [
+    "Potential",
+    "TotalEnergy"
+   ],
+   "outputs": [
+    "PotentialEnergyFitError"
+   ],
+   "rung": "none",
+   "tier": "Ground state"
+  },
+  "compute_potential_force_fit_error": {
+   "bindings": [],
+   "inputs": [
+    "Potential",
+    "Forces"
+   ],
+   "outputs": [
+    "PotentialForceFitError"
+   ],
+   "rung": "none",
+   "tier": "Ground state"
+  },
+  "compute_potential_uncertainty_exceedance": {
+   "bindings": [],
+   "inputs": [
+    "Potential",
+    "Trajectory"
+   ],
+   "outputs": [
+    "PotentialUncertaintyExceedance[method=committee_force_spread]"
+   ],
+   "rung": "none",
+   "tier": "Molecular dynamics"
+  },
+  "compute_potential_virial_fit_error": {
+   "bindings": [],
+   "inputs": [
+    "Potential",
+    "Stress"
+   ],
+   "outputs": [
+    "PotentialVirialFitError"
+   ],
+   "rung": "none",
+   "tier": "Ground state"
+  },
+  "compute_qha_gibbs": {
+   "bindings": [
+    "harmonic-qha-gibbs-energy"
+   ],
+   "inputs": [
+    "TotalEnergy",
+    "Structure",
+    "Frequency"
+   ],
+   "outputs": [
+    "QHAGibbsEnergy"
+   ],
+   "rung": "physlib",
+   "tier": "Quasi-harmonic"
+  },
+  "compute_reaction_barrier": {
+   "bindings": [],
+   "inputs": [
+    "TotalEnergy",
+    "Structure"
+   ],
+   "outputs": [
+    "ReactionBarrier[construction=neb_mep]"
+   ],
+   "rung": "none",
+   "tier": "Molecular"
+  },
+  "compute_reaction_energy": {
+   "bindings": [
+    "dft-stability-energy-differences"
+   ],
+   "inputs": [
+    "FormationEnergy"
+   ],
+   "outputs": [
+    "ReactionEnergy"
+   ],
+   "rung": "local",
+   "tier": "Stability"
+  },
+  "compute_seebeck": {
+   "bindings": [
+    "boltzmann-electronic-transport"
+   ],
+   "inputs": [
+    "Structure",
+    "StaticDielectricTensor",
+    "ElasticConstants",
+    "Frequency"
+   ],
+   "outputs": [
+    "SeebeckCoefficient"
+   ],
+   "rung": "physlib",
+   "tier": "Electronic transport"
+  },
+  "compute_static_dielectric": {
+   "bindings": [
+    "static-dielectric-ionic-response"
+   ],
+   "inputs": [
+    "DielectricTensor",
+    "BornCharges",
+    "Frequency",
+    "Eigenvectors"
+   ],
+   "outputs": [
+    "StaticDielectricTensor"
+   ],
+   "rung": "local",
+   "tier": "Sources"
+  },
+  "compute_stress_cell": {
+   "bindings": [
+    "cell-stress-rotation-balance"
+   ],
+   "inputs": [
+    "TotalEnergy",
+    "Structure"
+   ],
+   "outputs": [
+    "Stress"
+   ],
+   "rung": "local",
+   "tier": "Ground state"
+  },
+  "compute_surface_energy": {
+   "bindings": [
+    "dft-stability-energy-differences"
+   ],
+   "inputs": [
+    "TotalEnergy",
+    "Structure"
+   ],
+   "outputs": [
+    "SurfaceEnergy"
+   ],
+   "rung": "local",
+   "tier": "Stability"
+  },
+  "compute_thermal_expansion": {
+   "bindings": [
+    "harmonic-qha-thermal-expansion"
+   ],
+   "inputs": [
+    "QHAGibbsEnergy"
+   ],
+   "outputs": [
+    "ThermalExpansion"
+   ],
+   "rung": "physlib",
+   "tier": "Quasi-harmonic"
+  },
+  "compute_transition_temperature": {
+   "bindings": [
+    "calphad-binary-equilibrium"
+   ],
+   "inputs": [
+    "PhaseFraction",
+    "Temperature"
+   ],
+   "outputs": [
+    "TransitionTemperature"
+   ],
+   "rung": "local",
+   "tier": "Thermochemistry"
+  },
+  "compute_velocity_autocorrelation": {
+   "bindings": [
+    "md-correlation-estimators"
+   ],
+   "inputs": [
+    "Trajectory"
+   ],
+   "outputs": [
+    "VelocityAutocorrelation"
+   ],
+   "rung": "local",
+   "tier": "Molecular dynamics"
+  },
+  "contract_bulk_modulus": {
+   "bindings": [
+    "linear-elasticity-voigt-moduli"
+   ],
+   "inputs": [
+    "ElasticConstants"
+   ],
+   "outputs": [
+    "BulkModulus"
+   ],
+   "rung": "local",
+   "tier": "Mechanics"
+  },
+  "contract_conductance_window": {
+   "bindings": [],
+   "inputs": [
+    "ConductanceState"
+   ],
+   "outputs": [
+    "ConductanceWindow"
+   ],
+   "rung": "none",
+   "tier": "Analog device metrology"
+  },
+  "contract_cumulative_kappa[wrt=mfp]": {
+   "bindings": [],
+   "inputs": [
+    "HeatCapacity",
+    "GroupVelocity",
+    "MeanFreeDisplacement[bte_solver=direct_inverse]"
+   ],
+   "outputs": [
+    "CumulativeKappa[wrt=mfp]"
+   ],
+   "rung": "none",
+   "tier": "Transport"
+  },
+  "contract_cumulative_kappa[wrt=omega]": {
+   "bindings": [],
+   "inputs": [
+    "HeatCapacity",
+    "Frequency",
+    "GroupVelocity",
+    "MeanFreeDisplacement[bte_solver=direct_inverse]"
+   ],
+   "outputs": [
+    "CumulativeKappa[wrt=omega]"
+   ],
+   "rung": "none",
+   "tier": "Transport"
+  },
+  "contract_density": {
+   "bindings": [],
+   "inputs": [
+    "Structure"
+   ],
+   "outputs": [
+    "MassDensity"
+   ],
+   "rung": "none",
+   "tier": "Mechanics"
+  },
+  "contract_device_conductance": {
+   "bindings": [
+    "analog-device-metrology"
+   ],
+   "inputs": [
+    "ElectricalConductivity[carrier=electronic]"
+   ],
+   "outputs": [
+    "ConductanceState"
+   ],
+   "rung": "local",
+   "tier": "Analog device metrology"
+  },
+  "contract_diffusivity": {
+   "bindings": [],
+   "inputs": [
+    "MeanSquaredDisplacement"
+   ],
+   "outputs": [
+    "Diffusivity"
+   ],
+   "rung": "none",
+   "tier": "Diffusion"
+  },
+  "contract_gibbs_hts": {
+   "bindings": [],
+   "inputs": [
+    "MolarEnthalpy",
+    "Temperature",
+    "CalphadMolarEntropy"
+   ],
+   "outputs": [
+    "MolarGibbsEnergy"
+   ],
+   "rung": "none",
+   "tier": "Thermochemistry"
+  },
+  "contract_heat_capacity_p_identity": {
+   "bindings": [
+    "harmonic-static-cp-identity"
+   ],
+   "inputs": [
+    "MolarHeatCapacity",
+    "Temperature",
+    "MolarVolume",
+    "ThermalExpansion",
+    "BulkModulus"
+   ],
+   "outputs": [
+    "HeatCapacityConstantP"
+   ],
+   "rung": "physlib",
+   "tier": "Quasi-harmonic"
+  },
+  "contract_interface_conductance[transport_model=nemd]": {
+   "bindings": [],
+   "inputs": [
+    "HeatCurrent",
+    "Temperature"
+   ],
+   "outputs": [
+    "InterfaceConductance[transport_model=nemd]"
+   ],
+   "rung": "none",
+   "tier": "Molecular dynamics"
+  },
+  "contract_kappa[bte_solver=direct_inverse]": {
+   "bindings": [
+    "linearized-bte-conductivity"
+   ],
+   "inputs": [
+    "HeatCapacity",
+    "GroupVelocity",
+    "MeanFreeDisplacement[bte_solver=direct_inverse]"
+   ],
+   "outputs": [
+    "ThermalConductivity[bte_solver=direct_inverse]"
+   ],
+   "rung": "local",
+   "tier": "Transport"
+  },
+  "contract_kappa[bte_solver=rta]": {
+   "bindings": [
+    "canonical-rta-thermal-conductivity"
+   ],
+   "inputs": [
+    "HeatCapacity",
+    "GroupVelocity",
+    "MeanFreeDisplacement[bte_solver=rta]"
+   ],
+   "outputs": [
+    "ThermalConductivity[bte_solver=rta]"
+   ],
+   "rung": "physlib",
+   "tier": "Transport"
+  },
+  "contract_kappa[transport_model=green_kubo]": {
+   "bindings": [
+    "md-correlation-estimators"
+   ],
+   "inputs": [
+    "HeatCurrentACF",
+    "Temperature"
+   ],
+   "outputs": [
+    "ThermalConductivity[transport_model=green_kubo]"
+   ],
+   "rung": "local",
+   "tier": "Molecular dynamics"
+  },
+  "contract_kappa[transport_model=hnemd]": {
+   "bindings": [],
+   "inputs": [
+    "HeatCurrent",
+    "Temperature"
+   ],
+   "outputs": [
+    "ThermalConductivity[transport_model=hnemd]"
+   ],
+   "rung": "none",
+   "tier": "Molecular dynamics"
+  },
+  "contract_kappa[transport_model=nemd]": {
+   "bindings": [],
+   "inputs": [
+    "HeatCurrent",
+    "Temperature"
+   ],
+   "outputs": [
+    "ThermalConductivity[transport_model=nemd]"
+   ],
+   "rung": "none",
+   "tier": "Molecular dynamics"
+  },
+  "contract_molar_entropy": {
+   "bindings": [
+    "harmonic-joint-molar-ensemble",
+    "harmonic-molar-entropy"
+   ],
+   "inputs": [
+    "Entropy"
+   ],
+   "outputs": [
+    "MolarEntropy"
+   ],
+   "rung": "physlib",
+   "tier": "Thermodynamics"
+  },
+  "contract_molar_free_energy": {
+   "bindings": [
+    "harmonic-joint-molar-ensemble",
+    "harmonic-molar-free-energy"
+   ],
+   "inputs": [
+    "HelmholtzFreeEnergy"
+   ],
+   "outputs": [
+    "MolarHelmholtzFreeEnergy"
+   ],
+   "rung": "physlib",
+   "tier": "Thermodynamics"
+  },
+  "contract_molar_heat_capacity": {
+   "bindings": [
+    "harmonic-joint-molar-ensemble",
+    "harmonic-molar-heat-capacity"
+   ],
+   "inputs": [
+    "HeatCapacity"
+   ],
+   "outputs": [
+    "MolarHeatCapacity"
+   ],
+   "rung": "physlib",
+   "tier": "Thermodynamics"
+  },
+  "contract_molar_internal_energy": {
+   "bindings": [
+    "harmonic-joint-molar-ensemble",
+    "harmonic-molar-internal-energy"
+   ],
+   "inputs": [
+    "InternalEnergy"
+   ],
+   "outputs": [
+    "MolarInternalEnergy"
+   ],
+   "rung": "physlib",
+   "tier": "Thermodynamics"
+  },
+  "contract_molar_volume": {
+   "bindings": [],
+   "inputs": [],
+   "outputs": [
+    "MolarVolume"
+   ],
+   "rung": "none",
+   "tier": "Thermoelectric"
+  },
+  "contract_poisson_ratio": {
+   "bindings": [
+    "linear-elasticity-voigt-moduli"
+   ],
+   "inputs": [
+    "BulkModulus",
+    "ShearModulus"
+   ],
+   "outputs": [
+    "PoissonRatio"
+   ],
+   "rung": "local",
+   "tier": "Mechanics"
+  },
+  "contract_power_factor": {
+   "bindings": [
+    "thermoelectric-power-factor"
+   ],
+   "inputs": [
+    "ElectricalConductivity[carrier=electronic]",
+    "SeebeckCoefficient"
+   ],
+   "outputs": [
+    "PowerFactor"
+   ],
+   "rung": "physlib",
+   "tier": "Thermoelectric"
+  },
+  "contract_pressure": {
+   "bindings": [
+    "continuum-stress-sign"
+   ],
+   "inputs": [
+    "Stress"
+   ],
+   "outputs": [
+    "Pressure"
+   ],
+   "rung": "physlib",
+   "tier": "Mechanics"
+  },
+  "contract_shear_modulus": {
+   "bindings": [
+    "linear-elasticity-voigt-moduli"
+   ],
+   "inputs": [
+    "ElasticConstants"
+   ],
+   "outputs": [
+    "ShearModulus"
+   ],
+   "rung": "local",
+   "tier": "Mechanics"
+  },
+  "contract_state_coefficient_of_variation": {
+   "bindings": [],
+   "inputs": [
+    "ConductanceState"
+   ],
+   "outputs": [
+    "StateCoefficientOfVariation"
+   ],
+   "rung": "none",
+   "tier": "Analog device metrology"
+  },
+  "contract_thermal_gruneisen": {
+   "bindings": [
+    "harmonic-qha-thermal-gruneisen-contraction"
+   ],
+   "inputs": [
+    "Gruneisen",
+    "Frequency"
+   ],
+   "outputs": [
+    "ThermalGruneisen"
+   ],
+   "rung": "physlib",
+   "tier": "Quasi-harmonic"
+  },
+  "contract_thermal_gruneisen_identity": {
+   "bindings": [
+    "harmonic-static-thermal-gruneisen-identity"
+   ],
+   "inputs": [
+    "ThermalExpansion",
+    "BulkModulus",
+    "VolumetricHeatCapacity"
+   ],
+   "outputs": [
+    "ThermalGruneisen"
+   ],
+   "rung": "physlib",
+   "tier": "Quasi-harmonic"
+  },
+  "contract_volumetric_heat_capacity": {
+   "bindings": [
+    "harmonic-joint-volumetric-heat-capacity",
+    "harmonic-volumetric-heat-capacity"
+   ],
+   "inputs": [
+    "HeatCapacity"
+   ],
+   "outputs": [
+    "VolumetricHeatCapacity"
+   ],
+   "rung": "physlib",
+   "tier": "Thermodynamics"
+  },
+  "contract_youngs_modulus": {
+   "bindings": [
+    "linear-elasticity-voigt-moduli"
+   ],
+   "inputs": [
+    "BulkModulus",
+    "ShearModulus"
+   ],
+   "outputs": [
+    "YoungsModulus"
+   ],
+   "rung": "local",
+   "tier": "Mechanics"
+  },
+  "contract_zt": {
+   "bindings": [
+    "thermoelectric-figure-of-merit"
+   ],
+   "inputs": [
+    "PowerFactor",
+    "Temperature",
+    "ThermalConductivity[contribution=total]"
+   ],
+   "outputs": [
+    "ZT"
+   ],
+   "rung": "physlib",
+   "tier": "Thermoelectric"
+  },
+  "depolarization_factors": {
+   "bindings": [
+    "composite-effective-medium"
+   ],
+   "inputs": [],
+   "outputs": [
+    "DepolarizationFactor"
+   ],
+   "rung": "local",
+   "tier": "Composite"
+  },
+  "dibenedetto_glass_transition": {
+   "bindings": [
+    "thermoset-cure-kinetics"
+   ],
+   "inputs": [
+    "CureConversion"
+   ],
+   "outputs": [
+    "GlassTransitionTemperature"
+   ],
+   "rung": "local",
+   "tier": "Cure kinetics"
+  },
+  "dissipate_pulse_energy": {
+   "bindings": [
+    "analog-device-metrology"
+   ],
+   "inputs": [
+    "ConductanceState"
+   ],
+   "outputs": [
+    "ProgrammingPulseEnergy"
+   ],
+   "rung": "local",
+   "tier": "Analog device metrology"
+  },
+  "emit_thermionic_conductance": {
+   "bindings": [
+    "analog-device-metrology"
+   ],
+   "inputs": [
+    "SchottkyBarrierHeight[band_carrier=electron]",
+    "Temperature"
+   ],
+   "outputs": [
+    "ConductanceState"
+   ],
+   "rung": "local",
+   "tier": "Analog device metrology"
+  },
+  "evaluate_reservoir_classification": {
+   "bindings": [],
+   "inputs": [
+    "ConductanceState"
+   ],
+   "outputs": [
+    "ClassificationAccuracy"
+   ],
+   "rung": "none",
+   "tier": "Analog device metrology"
+  },
+  "fit_arrhenius": {
+   "bindings": [
+    "arrhenius-ionic-transport"
+   ],
+   "inputs": [
+    "Diffusivity",
+    "Temperature"
+   ],
+   "outputs": [
+    "ActivationEnergy"
+   ],
+   "rung": "local",
+   "tier": "Diffusion"
+  },
+  "fourier_to_dos": {
+   "bindings": [
+    "vacf-spectrum-lorentzian-limit"
+   ],
+   "inputs": [
+    "VelocityAutocorrelation"
+   ],
+   "outputs": [
+    "PhononDOS"
+   ],
+   "rung": "local",
+   "tier": "Harmonic"
+  },
+  "hasselman_johnson": {
+   "bindings": [
+    "composite-effective-medium"
+   ],
+   "inputs": [
+    "ThermalConductivity[role=matrix]",
+    "ThermalConductivity[role=filler]",
+    "InterfaceConductance",
+    "FillerVolumeFraction"
+   ],
+   "outputs": [
+    "ThermalConductivity[effective_medium=nan,orientation=random]"
+   ],
+   "rung": "local",
+   "tier": "Composite"
+  },
+  "identity_dm": {
+   "bindings": [],
+   "inputs": [
+    "BareDynamicalMatrix"
+   ],
+   "outputs": [
+    "DynamicalMatrix"
+   ],
+   "rung": "none",
+   "tier": "Harmonic"
+  },
+  "kamal_cure_conversion": {
+   "bindings": [
+    "thermoset-cure-kinetics"
+   ],
+   "inputs": [
+    "Temperature"
+   ],
+   "outputs": [
+    "CureConversion"
+   ],
+   "rung": "local",
+   "tier": "Cure kinetics"
+  },
+  "nan_effective_kappa": {
+   "bindings": [
+    "composite-effective-medium"
+   ],
+   "inputs": [
+    "ThermalConductivity[role=matrix]",
+    "ThermalConductivity[role=filler]",
+    "InterfaceConductance",
+    "FillerVolumeFraction",
+    "DepolarizationFactor"
+   ],
+   "outputs": [
+    "ThermalConductivity[effective_medium=nan,orientation=random]"
+   ],
+   "rung": "local",
+   "tier": "Composite"
+  },
+  "nan_effective_kappa_aligned": {
+   "bindings": [
+    "composite-effective-medium"
+   ],
+   "inputs": [
+    "ThermalConductivity[role=matrix]",
+    "ThermalConductivity[role=filler]",
+    "InterfaceConductance",
+    "FillerVolumeFraction",
+    "DepolarizationFactor"
+   ],
+   "outputs": [
+    "ThermalConductivity[effective_medium=nan,orientation=aligned]"
+   ],
+   "rung": "local",
+   "tier": "Composite"
+  },
+  "propagate_programming_error": {
+   "bindings": [
+    "analog-device-metrology"
+   ],
+   "inputs": [
+    "StateCoefficientOfVariation",
+    "ConductanceWindow"
+   ],
+   "outputs": [
+    "DotProductError"
+   ],
+   "rung": "local",
+   "tier": "Analog device metrology"
+  },
+  "provide_born_charges": {
+   "bindings": [],
+   "inputs": [],
+   "outputs": [
+    "BornCharges"
+   ],
+   "rung": "none",
+   "tier": "Sources"
+  },
+  "provide_dielectric_tensor": {
+   "bindings": [],
+   "inputs": [],
+   "outputs": [
+    "DielectricTensor"
+   ],
+   "rung": "none",
+   "tier": "Sources"
+  },
+  "provide_isotope_abundances": {
+   "bindings": [],
+   "inputs": [],
+   "outputs": [
+    "IsotopeAbundances"
+   ],
+   "rung": "none",
+   "tier": "Sources"
+  },
+  "provide_potential": {
+   "bindings": [],
+   "inputs": [],
+   "outputs": [
+    "Potential"
+   ],
+   "rung": "none",
+   "tier": "Sources"
+  },
+  "provide_temperature": {
+   "bindings": [],
+   "inputs": [],
+   "outputs": [
+    "Temperature"
+   ],
+   "rung": "none",
+   "tier": "Sources"
+  },
+  "provide_transmission": {
+   "bindings": [],
+   "inputs": [],
+   "outputs": [
+    "PhononTransmission"
+   ],
+   "rung": "none",
+   "tier": "Transport"
+  },
+  "ramp_set_voltage": {
+   "bindings": [
+    "analog-device-metrology"
+   ],
+   "inputs": [
+    "MigrationBarrier",
+    "Temperature"
+   ],
+   "outputs": [
+    "SetVoltage"
+   ],
+   "rung": "local",
+   "tier": "Analog device metrology"
+  },
+  "resolve_effective_conductivity": {
+   "bindings": [],
+   "inputs": [
+    "ThermalConductivity[effective_medium=nan,orientation=random]"
+   ],
+   "outputs": [
+    "ThermalConductivity"
+   ],
+   "rung": "none",
+   "tier": "Transport"
+  },
+  "resolve_thermal_conductivity": {
+   "bindings": [],
+   "inputs": [
+    "ThermalConductivity[bte_solver=direct_inverse]"
+   ],
+   "outputs": [
+    "ThermalConductivity"
+   ],
+   "rung": "none",
+   "tier": "Transport"
+  },
+  "run_md": {
+   "bindings": [],
+   "inputs": [
+    "Potential",
+    "Temperature"
+   ],
+   "outputs": [
+    "Trajectory"
+   ],
+   "rung": "none",
+   "tier": "Molecular dynamics"
+  },
+  "sample_pmf": {
+   "bindings": [],
+   "inputs": [
+    "Trajectory",
+    "Temperature"
+   ],
+   "outputs": [
+    "PotentialOfMeanForce"
+   ],
+   "rung": "none",
+   "tier": "Molecular dynamics"
+  },
+  "sample_quantum_heat_capacity": {
+   "bindings": [],
+   "inputs": [
+    "Trajectory",
+    "Temperature"
+   ],
+   "outputs": [
+    "HeatCapacity[method=pimd]"
+   ],
+   "rung": "none",
+   "tier": "Molecular dynamics"
+  },
+  "sample_quantum_kinetic_energy": {
+   "bindings": [],
+   "inputs": [
+    "Trajectory",
+    "Temperature"
+   ],
+   "outputs": [
+    "QuantumKineticEnergy"
+   ],
+   "rung": "none",
+   "tier": "Molecular dynamics"
+  },
+  "schottky_mott_barrier": {
+   "bindings": [],
+   "inputs": [
+    "WorkFunction",
+    "ElectronAffinity"
+   ],
+   "outputs": [
+    "SchottkyBarrierHeight[band_carrier=electron]"
+   ],
+   "rung": "none",
+   "tier": "Analog device metrology"
+  },
+  "solve_bte[bte_solver=direct_inverse]": {
+   "bindings": [
+    "linearized-bte-conductivity"
+   ],
+   "inputs": [
+    "Frequency",
+    "Eigenvectors",
+    "ForceConstants[order=3]",
+    "GroupVelocity",
+    "HeatCapacity",
+    "Linewidth[channel=total]",
+    "Temperature"
+   ],
+   "outputs": [
+    "MeanFreeDisplacement[bte_solver=direct_inverse]"
+   ],
+   "rung": "local",
+   "tier": "Transport"
+  },
+  "solve_bte[bte_solver=rta]": {
+   "bindings": [
+    "phonon-scattering-channels"
+   ],
+   "inputs": [
+    "Frequency",
+    "GroupVelocity",
+    "Linewidth[channel=total]",
+    "Temperature"
+   ],
+   "outputs": [
+    "MeanFreeDisplacement[bte_solver=rta]"
+   ],
+   "rung": "local",
+   "tier": "Transport"
+  },
+  "solve_equilibrium": {
+   "bindings": [
+    "calphad-binary-equilibrium"
+   ],
+   "inputs": [
+    "AssessedDatabase",
+    "Temperature"
+   ],
+   "outputs": [
+    "MolarGibbsEnergy"
+   ],
+   "rung": "local",
+   "tier": "Thermochemistry"
+  },
+  "solve_ground_state": {
+   "bindings": [],
+   "inputs": [
+    "Structure",
+    "Potential"
+   ],
+   "outputs": [
+    "TotalEnergy"
+   ],
+   "rung": "none",
+   "tier": "Ground state"
+  },
+  "subthreshold_conductance_tangent_time": {
+   "bindings": [],
+   "inputs": [
+    "InterfaceTrapRelaxationTime",
+    "ConductanceState"
+   ],
+   "outputs": [
+    "ConductanceRelaxationTime"
+   ],
+   "rung": "none",
+   "tier": "Analog device metrology"
+  },
+  "sum_linewidths": {
+   "bindings": [
+    "phonon-scattering-channels"
+   ],
+   "inputs": [
+    "Linewidth[channel=anharmonic_3ph]",
+    "Linewidth[channel=isotope]",
+    "Linewidth[channel=boundary]"
+   ],
+   "outputs": [
+    "Linewidth[channel=total]"
+   ],
+   "rung": "local",
+   "tier": "Scattering"
+  },
+  "sum_thermal_conductivity": {
+   "bindings": [
+    "thermoelectric-total-conductivity"
+   ],
+   "inputs": [
+    "ThermalConductivity[bte_solver=direct_inverse]",
+    "ElectronicThermalConductivity"
+   ],
+   "outputs": [
+    "ThermalConductivity[contribution=total]"
+   ],
+   "rung": "physlib",
+   "tier": "Thermoelectric"
+  },
+  "zero_bias_retention": {
+   "bindings": [
+    "analog-device-metrology"
+   ],
+   "inputs": [
+    "MigrationBarrier",
+    "Temperature"
+   ],
+   "outputs": [
+    "RetentionTime"
+   ],
+   "rung": "local",
+   "tier": "Analog device metrology"
+  }
+ },
+ "quantities": {
+  "ActivationEnergy": {
+   "bindings": [
+    "arrhenius-ionic-transport"
+   ],
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
+  },
+  "AdsorptionEnergy": {
+   "bindings": [
+    "dft-stability-energy-differences"
+   ],
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
+  },
+  "AssessedDatabase": {
+   "bindings": [],
+   "related": [],
+   "rung": "none",
+   "via": null
+  },
+  "AtomCount": {
+   "bindings": [],
+   "related": [],
+   "rung": "none",
+   "via": null
+  },
+  "AtomicMass": {
+   "bindings": [],
+   "related": [],
+   "rung": "none",
+   "via": null
+  },
+  "BandGap": {
+   "bindings": [],
+   "related": [],
+   "rung": "none",
+   "via": null
+  },
+  "BareDynamicalMatrix": {
+   "bindings": [
+    "crystal-dynamical-matrix"
+   ],
+   "related": [],
+   "rung": "physlib",
+   "via": "formulas"
+  },
+  "BondDissociationEnergy": {
+   "bindings": [],
+   "related": [],
+   "rung": "none",
+   "via": null
+  },
+  "BornCharges": {
+   "bindings": [],
+   "related": [],
+   "rung": "none",
+   "via": null
+  },
+  "BulkModulus": {
+   "bindings": [
+    "linear-elasticity-voigt-moduli"
+   ],
+   "related": [],
+   "rung": "none",
+   "via": null
+  },
+  "CalphadMolarEntropy": {
+   "bindings": [
+    "calphad-binary-equilibrium"
+   ],
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
+  },
+  "CarrierDensity": {
+   "bindings": [],
+   "related": [],
+   "rung": "none",
+   "via": null
+  },
+  "CarrierMobility": {
+   "bindings": [
+    "electronic-carrier-statistics"
+   ],
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
+  },
+  "CellVolume": {
+   "bindings": [],
+   "related": [],
+   "rung": "none",
+   "via": null
+  },
+  "ChemicalPotential": {
+   "bindings": [
+    "calphad-binary-equilibrium"
+   ],
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
+  },
+  "ClassificationAccuracy": {
+   "bindings": [],
+   "related": [],
+   "rung": "none",
+   "via": null
+  },
+  "ConductanceDriftExponent": {
+   "bindings": [],
+   "related": [],
+   "rung": "none",
+   "via": null
+  },
+  "ConductanceRelaxationTime": {
+   "bindings": [],
+   "related": [],
+   "rung": "none",
+   "via": null
+  },
+  "ConductanceState": {
+   "bindings": [
+    "analog-device-metrology"
+   ],
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
+  },
+  "ConductanceWindow": {
+   "bindings": [],
+   "related": [],
+   "rung": "none",
+   "via": null
+  },
+  "ConfigurationalEnergy": {
+   "bindings": [],
+   "related": [],
+   "rung": "none",
+   "via": null
+  },
+  "CumulativeKappa[wrt=mfp]": {
+   "bindings": [],
+   "related": [],
+   "rung": "none",
+   "via": null
+  },
+  "CumulativeKappa[wrt=omega]": {
+   "bindings": [],
+   "related": [],
+   "rung": "none",
+   "via": null
+  },
+  "CureConversion": {
+   "bindings": [
+    "thermoset-cure-kinetics"
+   ],
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
+  },
+  "DepolarizationFactor": {
+   "bindings": [
+    "composite-effective-medium"
+   ],
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
+  },
+  "DielectricTensor": {
+   "bindings": [],
+   "related": [],
+   "rung": "none",
+   "via": null
+  },
+  "Diffusivity": {
+   "bindings": [],
+   "related": [],
+   "rung": "none",
+   "via": null
+  },
+  "DotProductError": {
+   "bindings": [
+    "analog-device-metrology"
+   ],
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
+  },
+  "DynamicalMatrix": {
+   "bindings": [],
+   "related": [],
+   "rung": "none",
+   "via": null
+  },
+  "Eigenvectors": {
+   "bindings": [],
+   "related": [],
+   "rung": "none",
+   "via": null
+  },
+  "ElasticConstants": {
+   "bindings": [
+    "hyperelastic-elastic-constants"
+   ],
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
+  },
+  "ElectricalConductivity[carrier=electronic]": {
+   "bindings": [
+    "boltzmann-electronic-transport",
+    "thermoelectric-input-coefficients"
+   ],
+   "related": [],
+   "rung": "physlib",
+   "via": "formulas"
+  },
+  "ElectricalConductivity[carrier=ionic]": {
+   "bindings": [
+    "arrhenius-ionic-transport"
+   ],
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
+  },
+  "ElectronAffinity": {
+   "bindings": [],
+   "related": [],
+   "rung": "none",
+   "via": null
+  },
+  "ElectronicDOS": {
+   "bindings": [
+    "electronic-carrier-statistics"
+   ],
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
+  },
+  "ElectronicThermalConductivity": {
+   "bindings": [
+    "boltzmann-electronic-transport",
+    "thermoelectric-input-coefficients"
+   ],
+   "related": [],
+   "rung": "physlib",
+   "via": "formulas"
+  },
+  "EnergyAboveHull": {
+   "bindings": [
+    "dft-stability-energy-differences"
+   ],
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
+  },
+  "Entropy": {
+   "bindings": [
+    "harmonic-mode-entropy"
+   ],
+   "related": [],
+   "rung": "physlib",
+   "via": "formulas"
+  },
+  "FillerVolumeFraction": {
+   "bindings": [],
+   "related": [],
+   "rung": "none",
+   "via": null
+  },
+  "ForceConstants[order=2]": {
+   "bindings": [
+    "force-constant-sum-rules"
+   ],
+   "related": [],
+   "rung": "none",
+   "via": null
+  },
+  "ForceConstants[order=3]": {
+   "bindings": [
+    "force-constant-sum-rules"
+   ],
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
+  },
+  "Forces": {
+   "bindings": [
+    "hellmann-feynman-force-balance"
+   ],
+   "related": [
+    "classical-harmonic-potential-force"
+   ],
+   "rung": "local",
+   "via": "formulas"
+  },
+  "FormationEnergy": {
+   "bindings": [],
+   "related": [],
+   "rung": "none",
+   "via": null
+  },
+  "Frequency": {
+   "bindings": [],
+   "related": [
+    "classical-harmonic-frequency"
+   ],
+   "rung": "none",
+   "via": null
+  },
+  "GlassTransitionTemperature": {
+   "bindings": [
+    "thermoset-cure-kinetics"
+   ],
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
+  },
+  "GrainBoundaryEnergy": {
+   "bindings": [
+    "dft-stability-energy-differences"
+   ],
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
+  },
+  "GroupVelocity": {
+   "bindings": [
+    "crystal-group-velocity"
+   ],
+   "related": [],
+   "rung": "physlib",
+   "via": "formulas"
+  },
+  "Gruneisen": {
+   "bindings": [],
+   "related": [],
+   "rung": "none",
+   "via": null
+  },
+  "HOMOLUMOGap": {
+   "bindings": [],
+   "related": [],
+   "rung": "none",
+   "via": null
+  },
+  "HeatCapacity": {
+   "bindings": [
+    "harmonic-mode-heat-capacity"
+   ],
+   "related": [],
+   "rung": "physlib",
+   "via": "formulas"
+  },
+  "HeatCapacityConstantP": {
+   "bindings": [
+    "harmonic-qha-heat-capacity-p",
+    "harmonic-static-cp-identity"
+   ],
+   "related": [],
+   "rung": "physlib",
+   "via": "formulas"
+  },
+  "HeatCapacity[method=pimd]": {
+   "bindings": [],
+   "related": [],
+   "rung": "none",
+   "via": null
+  },
+  "HeatCurrent": {
+   "bindings": [],
+   "related": [],
+   "rung": "none",
+   "via": null
+  },
+  "HeatCurrentACF": {
+   "bindings": [
+    "md-correlation-estimators"
+   ],
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
+  },
+  "HelmholtzFreeEnergy": {
+   "bindings": [
+    "harmonic-mode-free-energy"
+   ],
+   "related": [],
+   "rung": "physlib",
+   "via": "formulas"
+  },
+  "InterfaceConductance": {
+   "bindings": [],
+   "related": [],
+   "rung": "none",
+   "via": null
+  },
+  "InterfaceConductance[transport_model=nemd]": {
+   "bindings": [],
+   "related": [],
+   "rung": "none",
+   "via": null
+  },
+  "InterfaceTrapRelaxationTime": {
+   "bindings": [],
+   "related": [],
+   "rung": "none",
+   "via": null
+  },
+  "InternalEnergy": {
+   "bindings": [
+    "harmonic-mode-internal-energy"
+   ],
+   "related": [],
+   "rung": "physlib",
+   "via": "formulas"
+  },
+  "IsotopeAbundances": {
+   "bindings": [],
+   "related": [],
+   "rung": "none",
+   "via": null
+  },
+  "Linewidth[channel=anharmonic_3ph]": {
+   "bindings": [
+    "phonon-scattering-channels"
+   ],
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
+  },
+  "Linewidth[channel=boundary]": {
+   "bindings": [
+    "phonon-scattering-channels"
+   ],
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
+  },
+  "Linewidth[channel=isotope]": {
+   "bindings": [
+    "phonon-scattering-channels"
+   ],
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
+  },
+  "Linewidth[channel=total]": {
+   "bindings": [
+    "phonon-scattering-channels"
+   ],
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
+  },
+  "MagneticMoment": {
+   "bindings": [],
+   "related": [],
+   "rung": "none",
+   "via": null
+  },
+  "MassDensity": {
+   "bindings": [],
+   "related": [],
+   "rung": "none",
+   "via": null
+  },
+  "MeanFreeDisplacement[bte_solver=direct_inverse]": {
+   "bindings": [
+    "linearized-bte-conductivity"
+   ],
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
+  },
+  "MeanFreeDisplacement[bte_solver=rta]": {
+   "bindings": [
+    "phonon-scattering-channels"
+   ],
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
+  },
+  "MeanSquaredDisplacement": {
+   "bindings": [
+    "md-correlation-estimators"
+   ],
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
+  },
+  "MigrationBarrier": {
+   "bindings": [],
+   "related": [],
+   "rung": "none",
+   "via": null
+  },
+  "ModalDiffusivity": {
+   "bindings": [],
+   "related": [],
+   "rung": "none",
+   "via": null
+  },
+  "MolarEnthalpy": {
+   "bindings": [
+    "calphad-binary-equilibrium"
+   ],
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
+  },
+  "MolarEntropy": {
+   "bindings": [
+    "harmonic-joint-molar-ensemble",
+    "harmonic-molar-entropy"
+   ],
+   "related": [],
+   "rung": "physlib",
+   "via": "formulas"
+  },
+  "MolarGibbsEnergy": {
+   "bindings": [
+    "calphad-binary-equilibrium"
+   ],
+   "related": [],
+   "rung": "none",
+   "via": null
+  },
+  "MolarHeatCapacity": {
+   "bindings": [
+    "harmonic-joint-molar-ensemble",
+    "harmonic-molar-heat-capacity"
+   ],
+   "related": [],
+   "rung": "physlib",
+   "via": "formulas"
+  },
+  "MolarHelmholtzFreeEnergy": {
+   "bindings": [
+    "harmonic-joint-molar-ensemble",
+    "harmonic-molar-free-energy"
+   ],
+   "related": [],
+   "rung": "physlib",
+   "via": "formulas"
+  },
+  "MolarInternalEnergy": {
+   "bindings": [
+    "harmonic-joint-molar-ensemble",
+    "harmonic-molar-internal-energy"
+   ],
+   "related": [],
+   "rung": "physlib",
+   "via": "formulas"
+  },
+  "MolarVolume": {
+   "bindings": [],
+   "related": [],
+   "rung": "none",
+   "via": null
+  },
+  "MolecularFrequency": {
+   "bindings": [
+    "molecular-normal-modes"
+   ],
+   "related": [
+    "classical-harmonic-frequency"
+   ],
+   "rung": "local",
+   "via": "formulas"
+  },
+  "ParticipationRatio": {
+   "bindings": [
+    "participation-ratio-bounds"
+   ],
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
+  },
+  "PhaseFraction": {
+   "bindings": [
+    "calphad-binary-equilibrium"
+   ],
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
+  },
+  "PhaseSpace3Phonon": {
+   "bindings": [],
+   "related": [],
+   "rung": "none",
+   "via": null
+  },
+  "PhononDOS": {
+   "bindings": [
+    "crystal-dos-landauer-conductance",
+    "vacf-spectrum-lorentzian-limit"
+   ],
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
+  },
+  "PhononTransmission": {
+   "bindings": [],
+   "related": [],
+   "rung": "none",
+   "via": null
+  },
+  "PoissonRatio": {
+   "bindings": [
+    "linear-elasticity-voigt-moduli"
+   ],
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
+  },
+  "Potential": {
+   "bindings": [],
+   "related": [
+    "classical-harmonic-potential-force"
+   ],
+   "rung": "none",
+   "via": null
+  },
+  "PotentialEnergyFitError": {
+   "bindings": [],
+   "related": [],
+   "rung": "none",
+   "via": null
+  },
+  "PotentialForceFitError": {
+   "bindings": [],
+   "related": [],
+   "rung": "none",
+   "via": null
+  },
+  "PotentialOfMeanForce": {
+   "bindings": [],
+   "related": [],
+   "rung": "none",
+   "via": null
+  },
+  "PotentialUncertaintyExceedance[method=committee_force_spread]": {
+   "bindings": [],
+   "related": [],
+   "rung": "none",
+   "via": null
+  },
+  "PotentialVirialFitError": {
+   "bindings": [],
+   "related": [],
+   "rung": "none",
+   "via": null
+  },
+  "PowerFactor": {
+   "bindings": [
+    "thermoelectric-power-factor"
+   ],
+   "related": [],
+   "rung": "physlib",
+   "via": "formulas"
+  },
+  "Pressure": {
+   "bindings": [
+    "continuum-stress-sign"
+   ],
+   "related": [
+    "thermodynamic-pressure"
+   ],
+   "rung": "physlib",
+   "via": "formulas"
+  },
+  "ProgrammingPulseEnergy": {
+   "bindings": [
+    "analog-device-metrology"
+   ],
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
+  },
+  "QHAGibbsEnergy": {
+   "bindings": [
+    "harmonic-qha-gibbs-energy"
+   ],
+   "related": [],
+   "rung": "physlib",
+   "via": "formulas"
+  },
+  "QuantumKineticEnergy": {
+   "bindings": [],
+   "related": [],
+   "rung": "none",
+   "via": null
+  },
+  "ReactionBarrier[construction=neb_mep]": {
+   "bindings": [],
+   "related": [],
+   "rung": "none",
+   "via": null
+  },
+  "ReactionEnergy": {
+   "bindings": [
+    "dft-stability-energy-differences"
+   ],
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
+  },
+  "RetentionTime": {
+   "bindings": [
+    "analog-device-metrology"
+   ],
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
+  },
+  "SchottkyBarrierHeight[band_carrier=electron]": {
+   "bindings": [],
+   "related": [],
+   "rung": "none",
+   "via": null
+  },
+  "SeebeckCoefficient": {
+   "bindings": [
+    "boltzmann-electronic-transport",
+    "thermoelectric-input-coefficients"
+   ],
+   "related": [],
+   "rung": "physlib",
+   "via": "formulas"
+  },
+  "SetVoltage": {
+   "bindings": [
+    "analog-device-metrology"
+   ],
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
+  },
+  "ShearModulus": {
+   "bindings": [
+    "linear-elasticity-voigt-moduli"
+   ],
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
+  },
+  "StateCoefficientOfVariation": {
+   "bindings": [],
+   "related": [],
+   "rung": "none",
+   "via": null
+  },
+  "StaticDielectricTensor": {
+   "bindings": [
+    "static-dielectric-ionic-response"
+   ],
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
+  },
+  "Stress": {
+   "bindings": [
+    "cell-stress-rotation-balance"
+   ],
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
+  },
+  "Structure": {
+   "bindings": [],
+   "related": [
+    "abstract-crystal-structure"
+   ],
+   "rung": "none",
+   "via": null
+  },
+  "SurfaceEnergy": {
+   "bindings": [
+    "dft-stability-energy-differences"
+   ],
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
+  },
+  "Temperature": {
+   "bindings": [
+    "absolute-temperature"
+   ],
+   "related": [],
+   "rung": "physlib",
+   "via": "quantity"
+  },
+  "ThermalConductance[transport_model=landauer]": {
+   "bindings": [
+    "crystal-dos-landauer-conductance"
+   ],
+   "related": [],
+   "rung": "physlib",
+   "via": "formulas"
+  },
+  "ThermalConductivity": {
+   "bindings": [],
+   "related": [],
+   "rung": "none",
+   "via": null
+  },
+  "ThermalConductivity[bte_solver=direct_inverse]": {
+   "bindings": [
+    "linearized-bte-conductivity"
+   ],
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
+  },
+  "ThermalConductivity[bte_solver=rta]": {
+   "bindings": [
+    "canonical-rta-thermal-conductivity"
+   ],
+   "related": [],
+   "rung": "physlib",
+   "via": "formulas"
+  },
+  "ThermalConductivity[contribution=total]": {
+   "bindings": [
+    "thermoelectric-total-conductivity"
+   ],
+   "related": [],
+   "rung": "physlib",
+   "via": "formulas"
+  },
+  "ThermalConductivity[effective_medium=nan,orientation=aligned]": {
+   "bindings": [
+    "composite-effective-medium"
+   ],
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
+  },
+  "ThermalConductivity[effective_medium=nan,orientation=random]": {
+   "bindings": [
+    "composite-effective-medium"
+   ],
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
+  },
+  "ThermalConductivity[role=filler]": {
+   "bindings": [],
+   "related": [],
+   "rung": "none",
+   "via": null
+  },
+  "ThermalConductivity[role=matrix]": {
+   "bindings": [],
+   "related": [],
+   "rung": "none",
+   "via": null
+  },
+  "ThermalConductivity[transport_model=green_kubo]": {
+   "bindings": [
+    "md-correlation-estimators"
+   ],
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
+  },
+  "ThermalConductivity[transport_model=hnemd]": {
+   "bindings": [],
+   "related": [],
+   "rung": "none",
+   "via": null
+  },
+  "ThermalConductivity[transport_model=nemd]": {
+   "bindings": [],
+   "related": [],
+   "rung": "none",
+   "via": null
+  },
+  "ThermalConductivity[transport_model=qhgk]": {
+   "bindings": [],
+   "related": [],
+   "rung": "none",
+   "via": null
+  },
+  "ThermalConductivity[transport_model=wigner]": {
+   "bindings": [],
+   "related": [],
+   "rung": "none",
+   "via": null
+  },
+  "ThermalConductivity[transport_model=wigner_coherences]": {
+   "bindings": [],
+   "related": [],
+   "rung": "none",
+   "via": null
+  },
+  "ThermalConductivity[transport_model=wigner_populations]": {
+   "bindings": [],
+   "related": [],
+   "rung": "none",
+   "via": null
+  },
+  "ThermalExpansion": {
+   "bindings": [
+    "harmonic-qha-thermal-expansion"
+   ],
+   "related": [],
+   "rung": "physlib",
+   "via": "formulas"
+  },
+  "ThermalGruneisen": {
+   "bindings": [
+    "harmonic-qha-thermal-gruneisen-contraction",
+    "harmonic-static-thermal-gruneisen-identity"
+   ],
+   "related": [],
+   "rung": "physlib",
+   "via": "formulas"
+  },
+  "TotalEnergy": {
+   "bindings": [],
+   "related": [],
+   "rung": "none",
+   "via": null
+  },
+  "Trajectory": {
+   "bindings": [],
+   "related": [],
+   "rung": "none",
+   "via": null
+  },
+  "TransitionTemperature": {
+   "bindings": [
+    "calphad-binary-equilibrium"
+   ],
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
+  },
+  "VelocityAutocorrelation": {
+   "bindings": [
+    "md-correlation-estimators"
+   ],
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
+  },
+  "Voltage": {
+   "bindings": [
+    "dft-stability-energy-differences"
+   ],
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
+  },
+  "VolumetricHeatCapacity": {
+   "bindings": [
+    "harmonic-joint-volumetric-heat-capacity",
+    "harmonic-volumetric-heat-capacity"
+   ],
+   "related": [],
+   "rung": "physlib",
+   "via": "formulas"
+  },
+  "WorkFunction": {
+   "bindings": [],
+   "related": [],
+   "rung": "none",
+   "via": null
+  },
+  "YoungsModulus": {
+   "bindings": [
+    "linear-elasticity-voigt-moduli"
+   ],
+   "related": [],
+   "rung": "local",
+   "via": "formulas"
+  },
+  "ZT": {
+   "bindings": [
+    "thermoelectric-figure-of-merit"
+   ],
+   "related": [],
+   "rung": "physlib",
+   "via": "formulas"
+  }
+ },
+ "tiers": [
+  {
+   "formulas": 9,
+   "name": "Sources",
+   "theorems": 4
+  },
+  {
+   "formulas": 8,
+   "name": "Harmonic",
+   "theorems": 7
+  },
+  {
+   "formulas": 9,
+   "name": "Thermodynamics",
+   "theorems": 9
+  },
+  {
+   "formulas": 6,
+   "name": "Scattering",
+   "theorems": 4
+  },
+  {
+   "formulas": 15,
+   "name": "Transport",
+   "theorems": 5
+  },
+  {
+   "formulas": 13,
+   "name": "Molecular dynamics",
+   "theorems": 4
+  },
+  {
+   "formulas": 8,
+   "name": "Ground state",
+   "theorems": 2
+  },
+  {
+   "formulas": 9,
+   "name": "Mechanics",
+   "theorems": 8
+  },
+  {
+   "formulas": 7,
+   "name": "Stability",
+   "theorems": 6
+  },
+  {
+   "formulas": 7,
+   "name": "Thermochemistry",
+   "theorems": 6
+  },
+  {
+   "formulas": 6,
+   "name": "Quasi-harmonic",
+   "theorems": 6
+  },
+  {
+   "formulas": 4,
+   "name": "Molecular",
+   "theorems": 1
+  },
+  {
+   "formulas": 5,
+   "name": "Electronic transport",
+   "theorems": 5
+  },
+  {
+   "formulas": 5,
+   "name": "Diffusion",
+   "theorems": 2
+  },
+  {
+   "formulas": 4,
+   "name": "Thermoelectric",
+   "theorems": 3
+  },
+  {
+   "formulas": 4,
+   "name": "Composite",
+   "theorems": 4
+  },
+  {
+   "formulas": 12,
+   "name": "Analog device metrology",
+   "theorems": 7
+  },
+  {
+   "formulas": 2,
+   "name": "Cure kinetics",
+   "theorems": 2
+  }
+ ],
+ "upstream": {
+  "lean_toolchain": "leanprover/lean4:v4.35.0",
+  "repository": "https://github.com/leanprover-community/physlib",
+  "revision": "9b583cb6ef6e9cc537c4d4b786b508de1abbcf42"
+ }
+}
