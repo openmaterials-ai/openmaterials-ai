@@ -46,12 +46,12 @@ def test_auxiliary_formulas_match_their_pins():
     ]
     assert not moved, (
         "auxiliary formula changed under an unchanged uid: " + ", ".join(moved)
-        + "; regenerate the pins and name the edge and the change in CHANGELOG.md"
+        + "; run python tests/test_auxiliary_formula_pins.py --write and name the edge and the change in CHANGELOG.md"
     )
     assert set(current) == set(pinned), (
         "edges with auxiliary formulas differ from the pins (added, re-minted or removed): "
         + ", ".join(sorted(f"{u[:12]}" for u in set(current) ^ set(pinned)))
-        + "; regenerate the pins"
+        + "; run python tests/test_auxiliary_formula_pins.py --write"
     )
 
 
