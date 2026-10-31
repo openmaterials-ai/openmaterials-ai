@@ -192,8 +192,8 @@ def build_map_layers() -> dict:
                               "bindings": sorted(named.get(("node", row["id"]), ())),
                               "related": sorted(related.get(row["id"], ()))}
                   for row in payload["inventory"]["nodes"]}
-    # a formula's tier is that of its first output in id order, the output the map draws it before
-    formulas = {row["id"]: {"inputs": row["inputs"], "outputs": row["outputs"], "tier": tier_of[min(row["outputs"])],
+    # a formula's tier is that of its first output in catalog order, the output the map draws it before
+    formulas = {row["id"]: {"inputs": row["inputs"], "outputs": row["outputs"], "tier": tier_of[row["outputs"][0]],
                             "rung": rung[("operator", row["id"])],
                             "bindings": sorted(named.get(("operator", row["id"]), ()))}
                 for row in payload["inventory"]["operators"]}

@@ -8,20 +8,31 @@
   const TAG = /^(paper|code|project):\S+$/;
   const R = 7, STACK = 14, LANE = 14;
   // A theorem may state a property of a formula rather than the formula; the binding's statement says which.
-  const RUNG_WORDS = {none: 'no reviewed Lean theorem', stated: 'Lean statement, no theorem',
-    local: 'Lean theorem over Mathlib', physlib: 'Lean theorem citing Physlib'};
+  const RUNG_WORDS = {none: 'no Lean theorem covers it', stated: 'Physlib identification, no theorem',
+    local: 'Lean theorem on OMAI definitions', physlib: 'Lean theorem on Physlib definitions'};
+  const rungOf = (r) => (r && Object.prototype.hasOwnProperty.call(RUNG_WORDS, r) ? r : 'none');
   const n = (v) => Math.round(v * 10) / 10;
 
+  // Quantities from graph.json with their Lean rungs; formulas from map_layers.json, or, when that file is
+  // missing, from the graph's computation links grouped by operator, all at rung none.
   function marks(graph, layers) {
-    const none = {rung: 'none', bindings: []};
-    return {
-      quantities: new Map(graph.nodes.map((q) => [q.id, layers.quantities[q.id] || none])),
-      formulas: new Map(Object.keys(layers.formulas).sort().map((op) => [op, layers.formulas[op]])),
-    };
+    const q = (id) => { const r = layers.quantities[id] || {}; return Object.assign({bindings: [], related: []}, r, {rung: rungOf(r.rung)}); };
+    let formulas = Object.keys(layers.formulas).sort().map((op) => [op, Object.assign({}, layers.formulas[op], {rung: rungOf(layers.formulas[op].rung)})]);
+    if (!formulas.length) {
+      const by = new Map(), tier = new Map(graph.nodes.map((n) => [n.id, n.tier || 'Other']));
+      for (const l of graph.links) {
+        if (l.kind === 'param' || !l.op) continue;
+        const f = by.get(l.op) || by.set(l.op, {inputs: [], outputs: [], rung: 'none', bindings: []}).get(l.op);
+        if (!f.inputs.includes(l.source)) f.inputs.push(l.source);
+        if (!f.outputs.includes(l.target)) f.outputs.push(l.target);
+      }
+      formulas = [...by.keys()].sort().map((op) => [op, Object.assign(by.get(op), {tier: tier.get(by.get(op).outputs[0])})]);
+    }
+    return {quantities: new Map(graph.nodes.map((n) => [n.id, q(n.id)])), formulas: new Map(formulas)};
   }
 
-  // The output a formula sits before: its first output, in id order, that has a position.
-  function anchor(f, pos) { return f.outputs.slice().sort().find((o) => pos[o]); }
+  // The output a formula sits before: its first output, in catalog order, that has a position.
+  function anchor(f, pos) { return f.outputs.find((o) => pos[o]); }
 
   // Formula i of the k that produce one quantity sits LANE left of its box, the k stacked about its center.
   function slots(formulas, pos) {
@@ -141,25 +152,27 @@
   // One row per quantity and formula, by tier in map order, quantities first within a tier.
   function tableRows(graph, layers) {
     const order = graph.tiers.slice().sort((a, b) => a.order - b.order).map((t) => t.name);
-    const tierOf = (q) => q.tier || 'Other';
-    graph.nodes.forEach((q) => { if (!order.includes(tierOf(q))) order.push(tierOf(q)); });
+    const known = new Set(order), tierOf = (q) => (known.has(q.tier) ? q.tier : 'Other');
+    if (graph.nodes.some((q) => tierOf(q) === 'Other') && !known.has('Other')) order.push('Other');
     const rows = [];
     for (const tier of order) {
       graph.nodes.filter((q) => tierOf(q) === tier).forEach((q) =>
-        rows.push({tier, kind: 'quantity', id: q.id, rung: (layers.quantities[q.id] || {rung: 'none'}).rung}));
-      Object.keys(layers.formulas).sort().filter((op) => layers.formulas[op].tier === tier).forEach((op) =>
-        rows.push({tier, kind: 'formula', id: op, rung: layers.formulas[op].rung}));
+        rows.push({tier, kind: 'quantity', id: q.id, rung: rungOf((layers.quantities[q.id] || {}).rung)}));
+      Object.keys(layers.formulas).sort().filter((op) => (known.has(layers.formulas[op].tier) ? layers.formulas[op].tier : 'Other') === tier).forEach((op) =>
+        rows.push({tier, kind: 'formula', id: op, rung: rungOf(layers.formulas[op].rung)}));
     }
     return rows;
   }
 
   const esc = (v) => String(v == null ? '' : v).replace(/[&<>"']/g, (c) => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
-  const safeHref = (u) => (/^https:\/\//.test(u || '') ? esc(u) : '');
+  const link = (u, inner) => (/^https:\/\//.test(u || '') ? '<a href="' + esc(u) + '">' + inner + '</a>' : inner);
   const items = (xs) => (xs && xs.length ? '<ul>' + xs.map((x) => '<li>' + x + '</li>').join('') + '</ul>' : '');
-  const VIA = {formulas: 'Every formula that produces it has a Lean theorem that covers it.',
-    quantity: 'A Lean theorem is about the quantity itself.'};
-  const ROLE = {stated: 'Source-only: identifies a Physlib declaration, no theorem',
-    reads: 'Reads it as an input and proves something else', related: 'Source-only: a related Physlib concept'};
+  const VIA = {formulas: 'Every formula that produces it has a Lean theorem whose binding includes this quantity. ' +
+      'Each statement below says whether the theorem is about the formula itself or a property of it.',
+    quantity: 'A Lean theorem is about this quantity.',
+    partial: 'Not every formula that produces it has a Lean theorem that includes this quantity.'};
+  const ROLE = {stated: 'Identifies a Physlib declaration, no theorem', output: 'Theorem about a formula that produces it, not about this quantity',
+    reads: 'Uses it as an input', related: 'Related Physlib concept, no theorem'};
   function joinAnd(xs) { return xs.length < 2 ? xs.join('') : xs.slice(0, -1).join(', ') + ' and ' + xs[xs.length - 1]; }
 
   // The Lean block of a quantity's or formula's panel: its rung, then every binding that names it, each
@@ -167,7 +180,9 @@
   // open, then the audited axioms. Statements and conditions come from formula_bindings.json (formal);
   // without it the rung and the declarations still show. FB is docs/lean/bridge/lib.js.
   function leanPanel({kind, id, layers, formal, FB, bridgeBase = '../lean/bridge/'}) {
-    const mark = (kind === 'node' ? layers.quantities : layers.formulas)[id] || {rung: 'none', bindings: [], related: []};
+    const m0 = (kind === 'node' ? layers.quantities : layers.formulas)[id] || {};
+    const mark = Object.assign({bindings: [], related: []}, m0, {rung: rungOf(m0.rung)});
+    const makes = (op) => kind === 'node' && ((layers.formulas[op] || {}).outputs || []).includes(id);
     const own = new Set(mark.bindings || []), related = new Set(mark.related || []);
     const byId = new Map(((formal && formal.bindings) || []).map((b) => [b.id, b]));
     const named = formal ? formal.bindings.filter((b) => b.targets.some((t) => t.kind === kind && t.id === id)).map((b) => b.id)
@@ -178,32 +193,35 @@
       if (related.has(b) || (ev === 'source_correspondence' && rel === 'conceptual')) return 'related';
       if (ev === 'source_correspondence') return 'stated';
       if (own.has(b)) return rel === 'local' ? 'local' : 'physlib';
+      if (f && FB.provedTargets(f, formal).some((t) => t.kind === 'operator' && makes(t.id))) return 'output';
       return 'reads';
     };
-    const rank = {physlib: 0, local: 1, stated: 2, reads: 3, related: 4};
+    const rank = {physlib: 0, local: 1, stated: 2, output: 3, reads: 4, related: 5};
+    const partial = kind === 'node' && mark.rung === 'none' &&
+      Object.keys(layers.formulas).some((op) => makes(op) && ['local', 'physlib'].includes(rungOf(layers.formulas[op].rung)));
     const ids = [...new Set(named)].sort((a, b) => rank[role(a)] - rank[role(b)] || (a < b ? -1 : 1));
-    let h = '<div class="om-panel-label">Lean</div><p class="lean-rung"><i class="sw rung-' + esc(mark.rung) + '"></i> ' +
+    let h = '<div class="om-panel-label">Lean</div><p class="lean-rung"><i class="sw rung-' + mark.rung + '"></i> ' +
       esc(RUNG_WORDS[mark.rung].charAt(0).toUpperCase() + RUNG_WORDS[mark.rung].slice(1)) + '.' +
-      (kind === 'node' && VIA[mark.via] ? ' ' + VIA[mark.via] : '') + '</p>';
-    if (!formal) h += '<p class="muted">The statements and their conditions did not load (formula_bindings.json).</p>';
+      (kind === 'node' && VIA[partial ? 'partial' : mark.via] ? ' ' + VIA[partial ? 'partial' : mark.via] : '') + '</p>';
+    if (!formal) h += '<p class="muted">Statements and conditions did not load (formula_bindings.json).</p>';
     for (const b of ids) {
       const e = layers.bindings[b] || {physlib: [], bridge: []}, f = byId.get(b), r = role(b);
       h += '<section class="lean-binding"><p><strong>' + esc(b) + '</strong><br><span class="formal-badge">' +
         esc(ROLE[r] || RUNG_WORDS[r].charAt(0).toUpperCase() + RUNG_WORDS[r].slice(1)) + '</span></p>';
       if (f) h += '<p>' + esc(f.statement) + '</p>';
-      const bridge = e.bridge.length ? e.bridge.map((d) => '<a href="' + safeHref(d.url) + '"><code>' + esc(d.name) + '</code></a> <span class="muted">' + esc(d.module) + '</span>')
+      const bridge = e.bridge.length ? e.bridge.map((d) => link(d.url, '<code>' + esc(d.name) + '</code>') + ' <span class="muted">' + esc(d.module) + '</span>')
         : ((f && f.evidence.declarations) || []).map((n) => '<code>' + esc(n) + '</code>');
       if (bridge.length) h += '<div class="om-panel-label">Lean declarations</div>' + items(bridge);
       const cited = (e.physlib.length ? e.physlib : ((f && f.sources) || []).map((x) => ({name: x.name, module: x.module, url: x.source_url})))
-        .map((d) => '<a href="' + esc(FB.fragment({declaration: d.name, module: d.module})) + '"><code>' + esc(d.name) + '</code></a> · <a href="' +
-          safeHref(d.url) + '">source</a> <span class="muted">' + esc(d.module) + '</span>');
-      if (cited.length) h += '<div class="om-panel-label">Physlib declarations cited</div>' + items(cited);
+        .map((d) => '<a href="' + esc(FB.fragment({declaration: d.name, module: d.module})) + '"><code>' + esc(d.name) + '</code></a> · ' +
+          link(d.url, 'source') + ' <span class="muted">' + esc(d.module) + '</span>');
+      if (cited.length) h += '<div class="om-panel-label">' + (r === 'stated' || r === 'related' ? 'Related Physlib declarations' : 'Physlib declarations cited') + '</div>' + items(cited);
       if (f) h += (items((f.conditions || []).map(esc)) ? '<div class="om-panel-label">Conditions</div>' + items(f.conditions.map(esc)) : '') +
         (items((f.remaining_obligations || []).map(esc)) ? '<div class="om-panel-label">Not covered</div>' + items(f.remaining_obligations.map(esc)) : '');
       h += '</section>';
     }
     if (ids.some((b) => (layers.bindings[b] || {bridge: []}).bridge.length) && layers.axioms)
-      h += '<p class="muted">Every bridge declaration rests only on the axioms ' + joinAnd(layers.axioms.map((a) => '<code>' + esc(a) + '</code>')) + ', by the bridge audit.</p>';
+      h += '<p class="muted">The bridge axiom audit finds no axiom beyond ' + joinAnd(layers.axioms.map((a) => '<code>' + esc(a) + '</code>')) + ' in the Lean declarations above, and no sorry.</p>';
     if (!ids.length) h += '<p class="muted">No reviewed Lean binding names it.</p>';
     const params = {}; params[kind] = id;
     h += '<p><a href="' + esc(bridgeBase + FB.fragment(params)) + '">Conditions and coverage</a> · <a href="#physlib=1">Browse upstream declarations</a></p>';

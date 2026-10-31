@@ -24,7 +24,7 @@ function harness() {
   const edgeElements=[];
   const location={hash:'',pathname:'/map/',search:''};
   const calls=[];
-  const context={URLSearchParams,FB,LW,formalData,formalLoaded:true,layersData:{quantities:{},formulas:{},bindings:{},axioms:[]},formalDeclarations:FB.declarationIndex(formalData),
+  const context={URLSearchParams,FB,LW,formalData,formalLoaded:true,layersData:{quantities:{},formulas:{},bindings:{},axioms:[]},LM:{quantities:new Map(),formulas:new Map()},formalDeclarations:FB.declarationIndex(formalData),
     formulaBindings:{operators:{source_formula:formalData.inventory.operators[0]}},document,location,
     history:{replaceState:(_,__,hash)=>{location.hash=hash.startsWith('#')?hash:'';}},
     panelEl:new Element(),captionEl:{hidden:false},mapStatus:new Element(),depth:'overview',
@@ -67,7 +67,7 @@ test('reverse operator links select a real zero-input operator and frame its out
   h.context.location.hash='#operator=source_formula';h.context.applyHash();
   assert.equal(h.context.location.hash,'#operator=source_formula');
   assert.match(h.context.panelEl.innerHTML,/No input quantities/);
-  assert.match(h.context.panelEl.innerHTML,/Source-only/);
+  assert.match(h.context.panelEl.innerHTML,/Identifies a Physlib declaration, no theorem/);
   assert.match(h.context.panelEl.innerHTML,/#declaration=Model.formula&amp;module=Physlib.Model/);
   assert.equal(h.nodeElements[0].classes.dim,true);
   assert.equal(h.nodeElements[1].classes.sel,true);

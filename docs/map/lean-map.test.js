@@ -28,13 +28,14 @@ test('a formula sits left of its first output, inside that output row', () => {
   const s = L.slots(fixture.formulas, pos);
   assert.equal(s.size, fixture.formulas.size);
   for (const [op, f] of fixture.formulas) {
-    const o = pos[[...f.outputs].sort()[0]], p = s.get(op);
+    const o = pos[f.outputs[0]], p = s.get(op);
     assert.ok(p.x + 7 < o.x - o.w / 2, op);
     assert.ok(Math.abs(p.y - o.y) + 7 <= o.h / 2, op);
   }
   const q = ['q_a', 'q_b', 'q_c'].map((op) => s.get(op).y);
   assert.equal(new Set(q).size, 3);
-  assert.equal(s.get('pr').y, pos.P.y);
+  assert.equal(s.get('pr').output, 'R');   // the first output in catalog order
+  assert.equal(s.get('pr').y, pos.R.y);
 });
 
 test('wires join existing marks and a self-input draws none', () => {
@@ -112,24 +113,27 @@ const inOrder = (h, parts) => {
 
 test('the Lean panel reads rung, statement, declarations, conditions, what is not covered, axioms', () => {
   inOrder(L.leanPanel({kind: 'node', id: 'Temperature', layers, formal, FB}),
-    ['Lean theorem citing Physlib', 'A nonnegative OMAI', '>Lean declarations<', '>Physlib declarations cited<',
-      '>Conditions<', '>Not covered<', 'axioms']);
+    ['Lean theorem on Physlib definitions', 'A nonnegative OMAI', '>Lean declarations<', '>Physlib declarations cited<',
+      '>Conditions<', '>Not covered<', 'axiom audit']);
   inOrder(L.leanPanel({kind: 'operator', id: 'solve_bte[bte_solver=direct_inverse]', layers, formal, FB}),
-    ['Lean theorem over Mathlib', '>Lean declarations<', '>Conditions<', '>Not covered<', 'axioms']);
+    ['Lean theorem on OMAI definitions', '>Lean declarations<', '>Conditions<', '>Not covered<', 'axiom audit']);
 });
 
 test('without the bindings file the panel still names the rung and the declarations', () => {
   const h = L.leanPanel({kind: 'node', id: 'Temperature', layers, formal: null, FB});
-  assert.match(h, /Lean theorem citing Physlib/);
+  assert.match(h, /Lean theorem on Physlib definitions/);
   assert.match(h, /absoluteTemperature_roundtrip/);
   assert.match(h, /did not load/);
 });
 
 test('a binding that only reads a quantity says so, and a conceptual one is a related concept', () => {
   const mv = L.leanPanel({kind: 'node', id: 'MolarVolume', layers, formal, FB});
-  assert.match(mv, /no reviewed Lean theorem/i);
-  assert.match(mv, /Reads it as an input/);
-  assert.match(L.leanPanel({kind: 'node', id: 'Structure', layers, formal, FB}), /Source-only: a related Physlib concept/);
+  assert.match(mv, /No Lean theorem covers it/);
+  assert.match(mv, /Uses it as an input/);
+  const st = L.leanPanel({kind: 'node', id: 'Structure', layers, formal, FB});
+  assert.match(st, /Related Physlib concept, no theorem/);
+  assert.match(st, />Related Physlib declarations</);
+  assert.doesNotMatch(st, />Physlib declarations cited</);
 });
 
 test('panel text from the data is escaped', () => {
@@ -138,4 +142,38 @@ test('panel text from the data is escaped', () => {
   const h = L.leanPanel({kind: 'node', id: 'Temperature', layers, formal: f, FB});
   assert.doesNotMatch(h, /<img/);
   assert.match(h, /&lt;img/);
+});
+
+test('a quantity outside its formulas\' theorems says why, and an excluded output is named as such', () => {
+  const bm = L.leanPanel({kind: 'node', id: 'BulkModulus', layers, formal, FB});
+  assert.match(bm, /No Lean theorem covers it\. Not every formula that produces it has a Lean theorem that includes this quantity\./);
+  assert.match(bm, /Theorem about a formula that produces it, not about this quantity/);
+  assert.match(L.leanPanel({kind: 'node', id: 'Frequency', layers, formal, FB}), /Not every formula that produces it/);
+  const k = L.leanPanel({kind: 'node', id: 'ThermalConductivity[bte_solver=rta]', layers, formal, FB});
+  assert.match(k, /whose binding includes this quantity\. Each statement below says whether the theorem is about the formula itself or a property of it\./);
+  assert.match(L.leanPanel({kind: 'node', id: 'Temperature', layers, formal, FB}), /The bridge axiom audit finds no axiom beyond/);
+});
+
+test('the words never say proved and name the rungs by what the theorem rests on', () => {
+  for (const v of Object.values(L.RUNG_WORDS)) assert.doesNotMatch(v, /prove/i);
+  assert.deepEqual(L.RUNG_WORDS, {none: 'no Lean theorem covers it', stated: 'Physlib identification, no theorem',
+    local: 'Lean theorem on OMAI definitions', physlib: 'Lean theorem on Physlib definitions'});
+  const all = Object.keys(layers.quantities).map((id) => L.leanPanel({kind: 'node', id, layers, formal: null, FB})).join('');
+  assert.doesNotMatch(all, /\bprove[sd]?\b/i);
+});
+
+test('an unknown rung reads as none, and without map_layers the formulas come from the graph', () => {
+  const bad = structuredClone(layers);
+  bad.quantities.Temperature.rung = 'bogus';
+  assert.equal(L.marks(graph, bad).quantities.get('Temperature').rung, 'none');
+  const bare = L.marks(graph, {quantities: {}, formulas: {}, tiers: [], bindings: {}});
+  const ops = new Set(graph.links.filter((l) => l.kind !== 'param').map((l) => l.op));
+  assert.equal(bare.formulas.size, ops.size);
+  assert.ok([...bare.formulas.values()].every((f) => f.rung === 'none' && f.outputs.length && f.tier));
+});
+
+test('a quantity with a tier the map does not list sits under Other in the table', () => {
+  const g = structuredClone(graph);
+  g.nodes[0].tier = 'Nowhere';
+  assert.equal(L.tableRows(g, layers).find((r) => r.id === g.nodes[0].id).tier, 'Other');
 });

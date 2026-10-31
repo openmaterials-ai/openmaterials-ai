@@ -103,7 +103,7 @@ ORDER = """const pos = w.eval('pos'), out = {};
 
 
 def test_every_formula_is_a_circle(server):
-    got = run(server, "", "return {formulas: d.querySelectorAll('.formula').length, circles: d.querySelectorAll('.formula circle').length};")
+    got = run(server, "#node=Temperature", "return {formulas: d.querySelectorAll('.fmark').length, circles: d.querySelectorAll('.fmark circle').length};")
     assert got == {"formulas": len(LAYERS["formulas"]), "circles": len(LAYERS["formulas"])}
 
 
@@ -132,7 +132,7 @@ def test_ledgers_equal_the_data(server):
 
 def test_rungs_color_quantities_and_formulas(server):
     got = run(server, "", """const r = {};
-      for (const el of d.querySelectorAll('.node, .formula')) { const c = [...el.classList].find(c => c.startsWith('rung-')); r[(el.dataset.id ? 'q:' + el.dataset.id : 'f:' + el.dataset.op)] = c; }
+      for (const el of d.querySelectorAll('.node, .fmark')) { const c = [...el.classList].find(c => c.startsWith('rung-')); r[(el.dataset.id ? 'q:' + el.dataset.id : 'f:' + el.dataset.op)] = c; }
       return r;""")
     want = {f"q:{i}": f"rung-{r['rung']}" for i, r in LAYERS["quantities"].items()}
     want.update({f"f:{i}": f"rung-{r['rung']}" for i, r in LAYERS["formulas"].items()})
@@ -160,7 +160,7 @@ NONE_F = sum(r["rung"] == "none" for r in LAYERS["formulas"].values())
 def test_layer_hides_without_moving(server):
     fixture = json.loads((ROOT / "tests" / "fixtures" / "map_order.json").read_text())
     got = run(server, "#layer=lean", "return {order: (() => { " + ORDER + " })(), "
-              "q: d.querySelectorAll('.node.out').length, f: d.querySelectorAll('.formula.out').length, "
+              "q: d.querySelectorAll('.node.out').length, f: d.querySelectorAll('.fmark.out').length, "
               "lean: d.querySelector('input[name=layer][value=lean]').checked};")
     assert got == {"order": fixture, "q": NONE_Q, "f": NONE_F, "lean": True}
 
@@ -192,15 +192,15 @@ def test_reduced_motion_has_no_transition(server):
 
 def test_panel_reads_the_proof(server):
     got = run(server, "#node=Temperature", "return d.getElementById('panel').textContent;")
-    assert "Lean theorem citing Physlib" in got and "Not covered" in got and "absoluteTemperature_roundtrip" in got
+    assert "Lean theorem on Physlib definitions" in got and "Not covered" in got and "absoluteTemperature_roundtrip" in got
     op = run(server, "#operator=solve_bte%5Bbte_solver%3Ddirect_inverse%5D", "return d.getElementById('panel').textContent;")
-    assert "Lean theorem over Mathlib" in op
+    assert "Lean theorem on OMAI definitions" in op
 
 
 def test_panel_without_bindings():
     with serve(blocked={"/data/formula_bindings.json"}) as s:
         got = run(s, "#node=Temperature", "return d.getElementById('panel').textContent;")
-    assert "Lean theorem citing Physlib" in got and "absoluteTemperature_roundtrip" in got and "did not load" in got
+    assert "Lean theorem on Physlib definitions" in got and "absoluteTemperature_roundtrip" in got and "did not load" in got
 
 
 def test_search_finds_lean_names(server):
@@ -238,3 +238,83 @@ def test_the_toolbar_keeps_one_row_on_a_laptop(server):
     # one row of 32 px controls with 8 px padding above and below and a 1 px rule; a second row adds 40
     got = run(server, "", "return d.querySelector('.toolbar').getBoundingClientRect().height;", 1400, 900)
     assert got < 60, got
+
+
+GRAPH = json.loads((DOCS / "data" / "graph.json").read_text())
+THEOREMS = sum(r["rung"] in ("local", "physlib") for r in LAYERS["formulas"].values())
+OVER = "return d.getElementById('svg').classList.contains('overview');"
+
+
+def test_search_and_code_links_keep_labels_readable(server):
+    assert run(server, "", "const q = d.getElementById('q'); q.value = 'frequency'; q.dispatchEvent(new w.Event('input')); await wait(100); " + OVER) is False
+    assert run(server, "#code=phonopy", OVER) is False
+    assert run(server, "?embed=1#code=kaldo", OVER, 800, 480) is False
+
+
+def test_without_map_layers_the_formulas_still_draw():
+    with serve(blocked={"/data/map_layers.json"}) as s:
+        got = run(s, "", "return {f: d.querySelectorAll('.fmark').length, ledgers: d.querySelectorAll('#bands .ledger').length};")
+    assert got == {"f": len({l["op"] for l in GRAPH["links"] if l.get("kind") != "param"}), "ledgers": 0}
+
+
+def test_a_link_without_layer_keeps_the_layer(server):
+    got = run(server, "#layer=lean&node=Temperature", """w.location.hash = '#physlib=1'; await wait(200);
+      const lean = d.querySelector('input[name=layer][value=lean]').checked;
+      d.getElementById('tableBtn').click(); await wait(50);
+      d.querySelector('input[name=layer][value=omai]').click(); await wait(50);
+      return {lean, href: d.querySelector('#table tbody a').getAttribute('href')};""")
+    assert got["lean"] is True and got["href"].startswith("#node=")
+
+
+def test_hidden_wires_do_not_catch_the_mouse(server):
+    assert run(server, "#layer=lean", "return getComputedStyle(d.querySelector('.wire.out')).pointerEvents;") == "none"
+
+
+def test_operator_links_work_without_bindings():
+    with serve(blocked={"/data/formula_bindings.json"}) as s:
+        got = run(s, "#operator=compute_dispersion", "return {text: d.getElementById('panel').textContent, hash: w.location.hash};")
+    assert "compute_dispersion" in got["text"] and "No such" not in got["text"] and got["hash"] == "#operator=compute_dispersion"
+
+
+def test_selecting_a_hidden_mark_shows_the_omai_layer(server):
+    got = run(server, "#layer=lean&node=AtomCount", "return {omai: d.querySelector('input[name=layer][value=omai]').checked, hash: w.location.hash};")
+    assert got == {"omai": True, "hash": "#node=AtomCount"}
+    hidden = run(server, "#layer=lean&code=kaldo", """return w.eval('litIds()').filter(id => d.querySelector('.node[data-id="' + id + '"]').classList.contains('out')).length;""")
+    assert hidden == 0
+
+
+def test_overview_heads_stay_inside_their_bands_on_a_phone(server):
+    got = run(server, "", """for (let i = 0; i < 60; i++) d.getElementById('zoomOut').click(); await wait(50);
+      return [...d.querySelectorAll('#bands .far-head')].filter(t => getComputedStyle(t).display !== 'none' && t.getAttribute('visibility') !== 'hidden')
+        .map(t => { const b = t.getBBox(), left = +t.getAttribute('x') - 26; return b.x + b.width <= left + 360 && b.y + b.height <= +t.dataset.top + 184; });""", 390, 844)
+    assert all(got), got
+
+
+def test_a_parameter_link_dims_the_formulas(server):
+    got = run(server, "", """d.querySelector('.edge.param').dispatchEvent(new w.MouseEvent('click', {bubbles: true})); await wait(50);
+      return [...d.querySelectorAll('.fmark')].every(el => el.classList.contains('dim'));""")
+    assert got is True
+
+
+def test_a_declaration_of_formulas_only_is_found(server):
+    got = run(server, "", """const q = d.getElementById('q'); q.value = 'fold_dynamicalMatrix'; q.dispatchEvent(new w.Event('input')); await wait(100);
+      return {status: d.getElementById('mapStatus').textContent, lit: d.querySelectorAll('.fmark:not(.dim)').length};""")
+    assert "0 match" not in got["status"] and got["lit"] > 0
+
+
+def test_lean_search_waits_for_a_lean_name(server):
+    got = run(server, "", """const q = d.getElementById('q'); q.value = 'Temperature'; q.dispatchEvent(new w.Event('input')); await wait(100);
+      return [...d.querySelectorAll('.node:not(.dim)')].map(el => el.dataset.id);""")
+    assert "PhononDOS" not in got
+
+
+def test_escape_closes_the_table(server):
+    got = run(server, "", """d.getElementById('tableBtn').click(); await wait(50);
+      w.dispatchEvent(new w.KeyboardEvent('keydown', {key: 'Escape', bubbles: true})); await wait(50);
+      return d.getElementById('table').hidden;""")
+    assert got is True
+
+
+def test_the_omai_layer_counts_theorems(server):
+    got = run(server, "", "d.querySelector('input[name=layer][value=lean]').click(); d.querySelector('input[name=layer][value=omai]').click(); await wait(50); return d.getElementById('mapStatus').textContent;")
+    assert f"{THEOREMS} formulas have a Lean theorem" in got

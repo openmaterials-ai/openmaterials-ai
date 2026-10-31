@@ -158,3 +158,9 @@ def test_a_binding_that_only_reads_a_mark_is_not_listed_on_it():
              for i in [t["id"]]} - _proved("node") - _source_correspondence_targets("node")
     for i in reads:
         assert m["quantities"][i]["bindings"] == [], i
+
+
+def test_a_formula_sits_in_the_tier_of_its_first_output():
+    m, g = map_layers.build_map_layers(), json.loads((DATA / "graph.json").read_text())
+    tier = {n["id"]: n.get("tier") or "Other" for n in g["nodes"]}
+    assert all(f["tier"] == tier[f["outputs"][0]] for f in m["formulas"].values())
