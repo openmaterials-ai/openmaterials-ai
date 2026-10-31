@@ -98,10 +98,10 @@ export default {
           const name = sm[1];
           let count, label = name;
           if (name === "lean") {
-            // formulas with a Lean theorem, of all formulas: omai.map_layers.lean_badge on the same file
+            // the operators with a Lean theorem out of all operators, as omai.map_layers.lean_badge counts them
             const f = (await assetJSON(env, request, "/data/map_layers.json")).counts.formulas;
-            label = "lean theorems";
-            count = `${f.local + f.physlib}/${Object.values(f).reduce((a, b) => a + b, 0)} formulas`;
+            label = "Lean theorems";
+            count = `${f.local + f.physlib}/${Object.values(f).reduce((a, b) => a + b, 0)} operators`;
           } else if (name === "nodes") {
             const graph = await assetJSON(env, request, "/data/graph.json");
             count = (graph.nodes || []).length;

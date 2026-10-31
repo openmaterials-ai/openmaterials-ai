@@ -177,9 +177,9 @@ def _binding_entry(b: dict, index: dict, audit: dict) -> dict:
 
 
 def _tags(quantities: set[str], formulas: set[str]) -> dict:
-    """Named areas of the map: each paper of index/papers by the quantities its values sit on and the
-    formulas it lists as used (a curated "formulas" list, never a closure), and each cleared project
-    of omai/data/projects.json. Codes are the map page's own, from codes.json. An empty area is left out."""
+    """Named areas of the map. A paper in index/papers covers the quantities its values sit on and the
+    formulas in its curated "formulas" list, never a closure. A cleared project comes from
+    omai/data/projects.json. The map page takes codes from codes.json. An empty area is left out."""
     out = {}
     for path in sorted(PAPERS.glob("*.json")):
         rec, slug = _load(path), path.stem
@@ -246,9 +246,9 @@ def build_map_layers() -> dict:
 
 
 def lean_badge(layers: dict) -> tuple[str, str]:
-    """Label and message of /badge/stat/lean.svg: the formulas with a Lean theorem, of all formulas."""
+    """Label and message of /badge/stat/lean.svg, which counts the operators with a Lean theorem out of all operators."""
     f = layers["counts"]["formulas"]
-    return "lean theorems", f"{f['local'] + f['physlib']}/{sum(f.values())} formulas"
+    return "Lean theorems", f"{f['local'] + f['physlib']}/{sum(f.values())} operators"
 
 
 def write_map_layers(out: Path = OUT) -> Path:

@@ -44,5 +44,5 @@ test("the Lean badge counts the formulas with a Lean theorem", async () => {
   const e = { ASSETS: { fetch: async (req) => (new URL(req.url).pathname === "/data/map_layers.json" ? Response.json(layers) : new Response("", { status: 404 })) } };
   const res = await worker.fetch(new Request("https://openmaterials-site.example.workers.dev/badge/stat/lean.svg"), e);
   assert.equal(res.status, 200);
-  assert.equal(await res.text(), statBadgeSVG("lean theorems", `${f.local + f.physlib}/${total} formulas`));
+  assert.equal(await res.text(), statBadgeSVG("Lean theorems", `${f.local + f.physlib}/${total} operators`));
 });

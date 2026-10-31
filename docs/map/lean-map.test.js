@@ -180,13 +180,16 @@ test('a quantity with a tier the map does not list sits under Other in the table
 
 const codes = JSON.parse(fs.readFileSync(__dirname + '/../data/codes.json', 'utf8'));
 
-test('a paper area is its reported quantities and the quantities its curated formulas touch', () => {
+test('a paper area is its reported quantities, its formulas\' results, and only the inputs its formulas produce', () => {
   const lay = structuredClone(layers);
-  lay.tags['paper:x'] = {label: 'X', values: 1, quantities: ['ThermalConductivity'], formulas: ['contract_kappa[bte_solver=rta]']};
+  const kappa = 'contract_kappa[bte_solver=rta]', solve = 'solve_bte[bte_solver=rta]';
+  lay.tags['paper:x'] = {label: 'X', values: 1, quantities: ['ThermalConductivity'], formulas: [kappa, solve]};
   const a = L.area('paper:x', lay, codes, graph);
-  assert.ok(a.quantities.has('ThermalConductivity'));
-  for (const i of lay.formulas['contract_kappa[bte_solver=rta]'].inputs) assert.ok(a.quantities.has(i), i);
-  assert.deepEqual([...a.formulas], ['contract_kappa[bte_solver=rta]']);
+  assert.deepEqual([...a.formulas].sort(), [kappa, solve]);
+  for (const o of lay.formulas[kappa].outputs.concat(lay.formulas[solve].outputs)) assert.ok(a.quantities.has(o), o);
+  for (const i of lay.formulas[kappa].inputs) assert.equal(a.quantities.has(i), lay.formulas[solve].outputs.includes(i) || i === 'ThermalConductivity', i);
+  const pt = L.area('paper:ptse2-2021-donadio', layers, codes, graph);
+  assert.ok(!pt.quantities.has('Linewidth[channel=isotope]') && !pt.quantities.has('Linewidth[channel=boundary]'));
 });
 
 test('a code area keeps the formulas whose results and inputs the code all represents', () => {
@@ -212,11 +215,12 @@ test('the frame encloses the area with 24 units of margin', () => {
   assert.equal(L.frame({quantities: new Set(['nowhere']), formulas: new Set()}, pos, s), null);
 });
 
-test('the tab names the tag, its values and its share of formulas with a Lean theorem', () => {
+test('the tab names the tag, its values and its Lean theorems on OMAI formulas; a code tab counts no theorems', () => {
   const f = new Map([['f1', {rung: 'local'}], ['f2', {rung: 'none'}]]);
   assert.equal(L.tabText('paper:x', {label: 'Short title', values: 3}, {quantities: new Set(['A']), formulas: new Set(['f1', 'f2'])}, f),
-    'paper · Short title · 3 values · 1 / 2 formulas with a Lean theorem');
-  assert.equal(L.tabText('code:k', {label: 'kALDo'}, {quantities: new Set(['A', 'B']), formulas: new Set()}, f), 'code · kALDo · 2 quantities');
-  const long = L.tabText('paper:y', {label: 'x'.repeat(80), values: 1}, {quantities: new Set(['A']), formulas: new Set()}, f);
-  assert.ok(long.length < 80 && !long.includes('—'));
+    'paper · Short title · 3 values · Lean theorems on 1 / 2 OMAI formulas');
+  assert.equal(L.tabText('code:k', {label: 'kALDo'}, {quantities: new Set(['A', 'B']), formulas: new Set(['f1'])}, f), 'code · kALDo · 2 quantities');
+  const t = 'Phonon dynamics and thermal conductivity of PtSe2 thin films: Impact of crystallinity and film thickness';
+  const long = L.tabText('paper:y', {label: t, values: 1}, {quantities: new Set(['A']), formulas: new Set()}, f);
+  assert.ok(long.includes('PtSe2') && long.length < 90 && !long.includes('\u2014'), long);
 });

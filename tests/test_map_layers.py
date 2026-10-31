@@ -214,5 +214,5 @@ def test_projects_wait_for_clearance():
 def test_the_lean_badge_is_written_with_the_map_layers():
     from omai.badge import labeled_badge_svg
     f = json.loads((DATA / "map_layers.json").read_text())["counts"]["formulas"]
-    want = labeled_badge_svg("lean theorems", f"{f['local'] + f['physlib']}/{sum(f.values())} formulas") + "\n"
+    want = labeled_badge_svg("Lean theorems", f"{f['local'] + f['physlib']}/{sum(f.values())} operators") + "\n"
     assert (ROOT / "docs" / "badge" / "stat" / "lean.svg").read_text() == want, "stale: run python -m omai.map_layers"

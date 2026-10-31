@@ -37,8 +37,8 @@
   .toolbar .push{margin-left:auto;}
   .toolbar .select{max-width:140px;}   /* the open list shows full names */
   @media (max-width:960px){.toolbar .om-search{flex:1 1 100%;max-width:none;}}
-  /* phones: every control stays, in three rows: search; view switch, zoom and Fit; Tier, Code and
-     Copy link (the zoom buttons are the one-finger alternative to a pinch) */
+  /* phones: every control stays, in three rows: search; view switch, zoom and Fit; Tier, Tag and
+     Share (the zoom buttons are the one-finger alternative to a pinch) */
   @media (max-width:600px){.toolbar > *{order:2;} .toolbar .om-search{order:0;} .toolbar .view-switch,.toolbar .layer-switch,#zoomOut,#zoomIn,#fitBtn{order:1;}
     .toolbar .push{display:none;} #tierJump,#tagPick{flex:1 1 88px;}}
   /* canvas */
@@ -198,7 +198,7 @@
   <nav class="view-switch" aria-label="Map view"><a href="../map/" aria-current="page">2D</a><a href="../map-3d/">3D</a><a href="../map-trace/">Trace</a></nav>
   <fieldset class="layer-switch" aria-label="Layer"><label><input type="radio" name="layer" value="omai" checked>OMAI</label><label><input type="radio" name="layer" value="lean">Lean</label></fieldset>
   <select class="select" id="tierJump" aria-label="Jump to a tier"><option value="">Tier</option></select>
-  <select class="select" id="tagPick" aria-label="Tag: frame a paper's or a code's area of the map"><option value="">Tag</option></select>
+  <select class="select" id="tagPick" aria-label="Frame a paper's or code's area of the map"><option value="">Tag</option></select>
   <button class="btn btn--secondary btn--sm" id="physlibBtn" type="button" aria-controls="panel">PhysLean / Physlib</button>
   <button class="btn btn--secondary btn--sm" id="tableBtn" type="button" aria-pressed="false" aria-controls="table">Table</button>
   <span class="push"></span>
@@ -309,6 +309,7 @@ function setVB(){
     bandsG.querySelectorAll('.far-head').forEach(t=>{ const r=+t.dataset.row, fits=t.textContent.length*0.62*fs<=BAND_W-2*BAND_PADX && fs*(1.5+1.3*r)<=HEAD_SPACE-8;
       t.setAttribute('font-size', fs.toFixed(1)); t.setAttribute('y', (+t.dataset.top+fs*(1.2+1.3*r)).toFixed(1));
       if(fits) t.removeAttribute('visibility'); else t.setAttribute('visibility','hidden'); }); }
+  sizeTab(sc);
   syncLabels();
 }
 // A zoom-out factor capped at the floor, for zooms anchored off center (wheel, pinch).
@@ -529,9 +530,13 @@ function labelFloor(vb){ const r=svg.getBoundingClientRect(); return r.width&&r.
 function fitTo(ids, anchor){ let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;
   ids.forEach(id=>{ const q=pos[id]; if(!q)return; x0=Math.min(x0,q.x-q.w/2); y0=Math.min(y0,q.y-q.h/2); x1=Math.max(x1,q.x+q.w/2); y1=Math.max(y1,q.y+q.h/2); });
   if(x1<x0)return; lastFocus=ids; lastAnchor=anchor||null;
-  const pad=110; VB={x:x0-pad,y:y0-pad,w:(x1-x0)+2*pad,h:(y1-y0)+2*pad};
+  const pad=110, a=anchor&&pos[anchor];
+  fitBox({x:x0-pad,y:y0-pad,w:(x1-x0)+2*pad,h:(y1-y0)+2*pad}, a?a.x:(x0+x1)/2, a?a.y:(y0+y1)/2);
+}
+function fitBox(b, cx, cy){
+  VB={x:b.x,y:b.y,w:b.w,h:b.h};
   const k=labelFloor(VB);
-  if(k>1){ const a=anchor&&pos[anchor], cx=a?a.x:VB.x+VB.w/2, cy=a?a.y:VB.y+VB.h/2; VB.w/=k; VB.h/=k; VB.x=cx-VB.w/2; VB.y=cy-VB.h/2; }
+  if(k>1){ VB.w/=k; VB.h/=k; VB.x=cx-VB.w/2; VB.y=cy-VB.h/2; }
   setVB();
 }
 function neighborhood(id){ return [id].concat(parents[id]||[]).concat(children[id]||[]); }
@@ -641,6 +646,8 @@ function focusNode(id){
   vp.querySelectorAll('.edge').forEach(el=>{ const ab=el.dataset.edge.split('>>'), inc=(ab[0]===id||ab[1]===id); el.classList.toggle('dim', !inc); el.classList.toggle('hot', inc); });
 }
 function clearSel(){
+  // with a tag on, closing a mark returns to the tag's view; closing again clears the tag
+  if(tagKey&&panelEl.style.display==='block'){ const k=tagKey; picked.clear(); panelEl.style.display='none'; setTag(k); writeHash({}); return; }
   picked.clear();
   depth='expanded'; panelEl.style.display='none';
   setTag(null); lastFocus=null; lastAnchor=null;
@@ -652,7 +659,8 @@ const picked=new Set();
 function togglePick(id){
   if(picked.has(id)) picked.delete(id); else picked.add(id);
   if(!picked.size){ clearSel(); return; }
-  setTag(null); panelEl.style.display='none'; captionEl.hidden=true;
+  if(tagKey){ setTag(null); writeHash({}); }
+  panelEl.style.display='none'; captionEl.hidden=true;
   depth='focused'; clearDim();
   lightSet(picked, true);
   vp.querySelectorAll('.node').forEach(el=> el.classList.toggle('sel', picked.has(el.dataset.id)));
@@ -705,7 +713,7 @@ function selectNode(node){
   }
   h+=LW.leanPanel({kind:'node', id:id, layers:layersData, formal:formalLoaded?formalData:null, FB:FB});
   const ops=[...new Set(fl.map(f=>f.op).filter(o=> LM.formulas.has(o)))];
-  if(ops.length){ h+='<div class="om-panel-label">Formulas that produce it</div>'+ops.map(op=>'<p><a href="'+attr(LW.fragment({operator:op},{layer:layer}))+'">'+esc(opName(op))+'</a>: '+esc(LW.RUNG_WORDS[LM.formulas.get(op).rung])+'</p>').join(''); }
+  if(ops.length){ h+='<div class="om-panel-label">Formulas that produce it</div>'+ops.map(op=>'<p><a href="'+attr(LW.fragment({operator:op},{layer:layer,tag:tagKey}))+'">'+esc(opName(op))+'</a>: '+esc(LW.RUNG_WORDS[LM.formulas.get(op).rung])+'</p>').join(''); }
   const lv=leanData.nodes&&leanData.nodes[node.id];
   if(lv){ h+='<div class="om-panel-label"><span class="lean-badge">Lean dimension</span></div><pre class="lean-line">'+esc(lv.lean)+'</pre><p class="muted">This checks the quantity\'s dimension. It is not a theorem and leaves the Lean rung unchanged.</p>'; }
   if(ins.length){ h+='<div class="om-panel-label">Built from</div><div class="chips">'+ins.map(chip).join('')+'</div>'; }
@@ -740,7 +748,7 @@ function selectEdge(key, op){
 }
 
 // the layer switch (setLayer and writeHash live with the hash handlers below)
-document.querySelectorAll('input[name=layer]').forEach(r=> r.addEventListener('change', ()=>{ setLayer(r.value); writeHash(LW.state(location.hash).rest); }));
+document.querySelectorAll('input[name=layer]').forEach(r=> r.addEventListener('change', ()=>{ setLayer(r.value); const rest=LW.state(location.hash).rest; if(tagKey) rest.delete('code'); writeHash(rest); }));
 // A formula mark opens its operator; without the bindings file it shows its formula.
 function selectFormula(op){
   if(formulaBindings.operators[op]){ selectOperator(op); return; }
@@ -787,6 +795,10 @@ function layerWords(l){
   return l==='lean' ? 'Lean layer: '+f+' of '+LM.formulas.size+' formulas and '+q+' of '+LM.quantities.size+' quantities with a Lean theorem or a Physlib identification. Each theorem stands alone, and a wire shows data flow, not a proof step.'
     : 'OMAI layer: '+LM.formulas.size+' formulas and '+LM.quantities.size+' quantities. '+[...LM.formulas.values()].filter(theorem).length+' formulas have a Lean theorem.';
 }
+function legendCount(){
+  document.getElementById('layerCount').textContent=(layer==='lean' ? 'Each theorem stands alone. Wires show data flow.'
+    : [...LM.formulas.values()].filter(theorem).length+' of '+LM.formulas.size+' formulas have a Lean theorem.')+(tagKey?' Dimmed marks inside the frame are outside the area.':'');
+}
 // A selection never hides: selecting a mark outside the layer returns the map to the OMAI layer.
 function reveal(rung){ if(!LW.inLayer(rung||'none', layer)) setLayer('omai'); }
 function setLayer(l, quiet){
@@ -797,38 +809,55 @@ function setLayer(l, quiet){
   vp.querySelectorAll('.fmark').forEach(el=>{ const o=!LW.inLayer(LM.formulas.get(el.dataset.op).rung,l); el.classList.toggle('out',o); el.setAttribute('tabindex',o?'-1':'0'); if(o) out.add(el.dataset.op); });
   vp.querySelectorAll('.wire').forEach(el=> el.classList.toggle('out', out.has(el.dataset.op)||out.has(el.dataset.q)));
   vp.querySelectorAll('.edge').forEach(el=>{ const ab=el.dataset.edge.split('>>'); el.classList.toggle('out', out.has(ab[0])||out.has(ab[1])); });
-  document.getElementById('layerCount').textContent=l==='lean' ? 'Each theorem stands alone. Wires show data flow.'
-    : [...LM.formulas.values()].filter(theorem).length+' of '+LM.formulas.size+' formulas have a Lean theorem';
+  legendCount();
   if(!tableEl.hidden) tableEl.innerHTML=tableHtml();
   if(!quiet) mapStatus.textContent=layerWords(l);
 }
-// Every hash the page writes goes through here, so the layer rides along with selections and the Physlib browser.
 // ---- tags: a paper's, project's or code's area of the map, framed and zoomed to
 let tagKey=null, tagAreas=new Map();
 function setTag(key){
   const a=key?tagAreas.get(key):null, g=document.getElementById('tagFrame');
   tagKey=a?key:null; tagPick.value=tagKey||''; g.innerHTML='';
+  legendCount();
   if(!a) return;
+  // a tag never hides: an area with no mark in the layer returns the map to the OMAI layer
+  const shown=(r)=> LW.inLayer(r.rung, layer);
+  if(![...a.quantities].some(id=> shown(LM.quantities.get(id)||{rung:'none'}))&&![...a.formulas].some(op=> shown(LM.formulas.get(op)))) setLayer('omai');
   picked.clear(); depth='focused'; clearDim(); panelEl.style.display='none'; captionEl.hidden=true;
   lightSet(a.quantities);
   vp.querySelectorAll('.fmark').forEach(el=> el.classList.toggle('dim', !a.formulas.has(el.dataset.op)));
   vp.querySelectorAll('.wire').forEach(el=> el.classList.toggle('dim', !(a.formulas.has(el.dataset.op)&&a.quantities.has(el.dataset.q))));
   const fr=LW.frame(a, pos, slotOf); if(!fr) return;
   const k=tagKey.split(':'), tag=k[0]==='code' ? {label:codeName(k.slice(1).join(':'))} : layersData.tags[tagKey];
-  const words=LW.tabText(tagKey, tag, a, LM.formulas), tw=words.length*7.9+20;
+  const words=LW.tabText(tagKey, tag, a, LM.formulas);
   g.innerHTML='<rect class="tag-box" x="'+fr.x+'" y="'+fr.y+'" width="'+fr.w+'" height="'+fr.h+'" rx="2"></rect>'+
-    '<rect class="tab" x="'+fr.x+'" y="'+(fr.y+fr.h)+'" width="'+tw.toFixed(1)+'" height="26"></rect>'+
-    '<text class="tab-text" x="'+(fr.x+10)+'" y="'+(fr.y+fr.h+18)+'" font-size="13">'+esc(words)+'</text>';
-  fitTo([...a.quantities].filter(id=> pos[id]));
-  mapStatus.textContent=words;
+    '<rect class="tab" data-x="'+fr.x+'" data-y="'+(fr.y+fr.h)+'" data-chars="'+words.length+'"></rect><text class="tab-text">'+esc(words)+'</text>';
+  // the frame and its tab, with room under them for the legend
+  fitBox({x:fr.x-60, y:fr.y-60, w:fr.w+120, h:fr.h+26+150}, fr.x+fr.w/2, fr.y+fr.h/2);
+  lastFocus=[...a.quantities]; lastAnchor=null;
+  mapStatus.textContent=words+'. Dimmed marks inside the frame are outside the area.'+
+    (tagKey.startsWith('code:')?'':' A theorem may state a property of a formula, and its conditions need not hold in this paper\'s runs.');
+}
+// The tab's words stay at 11 px or more on screen, at 13 units when the view is that close.
+function sizeTab(sc){
+  const r=document.querySelector('#tagFrame .tab'), t=document.querySelector('#tagFrame .tab-text'); if(!r||!t) return;
+  const fs=Math.max(13, Math.ceil(110/sc)/10), x=+r.dataset.x, y=+r.dataset.y;
+  r.setAttribute('x', x); r.setAttribute('y', y); r.setAttribute('height', (2*fs).toFixed(1)); r.setAttribute('width', (+r.dataset.chars*0.61*fs+1.54*fs).toFixed(1));
+  t.setAttribute('font-size', fs.toFixed(1)); t.setAttribute('x', (x+0.77*fs).toFixed(1)); t.setAttribute('y', (y+1.38*fs).toFixed(1));
 }
 function tagsOf(kind, id){
   return [...tagAreas].filter(([k,a])=> !k.startsWith('code:') && (kind==='node'?a.quantities:a.formulas).has(id)).map(([k])=>k);
 }
+// A quantity's papers: those with values on it, and those whose curated path of formulas passes through it.
 function tagLinks(kind, id){
   const ks=tagsOf(kind, id); if(!ks.length) return '';
-  return '<div class="om-panel-label">Papers</div>'+ks.map(k=>'<p><a href="'+attr(LW.fragment({},{layer:layer,tag:k}))+'">'+esc(layersData.tags[k].label)+'</a></p>').join('');
+  const link=(k)=> '<p><a href="'+attr(LW.fragment({},{layer:layer,tag:k}))+'">'+esc(layersData.tags[k].label)+'</a></p>';
+  const here=ks.filter(k=> kind==='node'&&(layersData.tags[k].quantities||[]).includes(id)), path=ks.filter(k=> !here.includes(k));
+  const tags=Object.values(layersData.tags||{}), listed=tags.filter(t=> t.formulas.length).length;
+  return (here.length?'<div class="om-panel-label">Values here</div>'+here.map(link).join(''):'')+
+    (path.length?'<div class="om-panel-label">On a paper\'s curated path</div><p class="muted">'+listed+' of '+tags.length+' papers list the formulas they used.</p>'+path.map(link).join(''):'');
 }
+// Every hash the page writes goes through here, so the layer and the tag ride along with selections and the Physlib browser.
 function writeHash(base){
   const h=LW.fragment(base, {layer:layer, tag:tagKey});
   if(location.hash===h||(!h&&!location.hash)) return;
@@ -886,7 +915,9 @@ function applySelection(){
   const codeRef=codeFromHash();
   if(codeRef && codesData[codeRef]){ if(tagKey!=='code:'+codeRef) setTag('code:'+codeRef); return; }
   const st=LW.state(location.hash);
-  if(st.tag&&tagAreas.has(st.tag)){ if(tagKey!==st.tag) setTag(st.tag); } else if(tagKey) setTag(null);
+  // a link that names a tag and nothing else returns to the tag's view, even from a mark inside it
+  const named=new URLSearchParams(location.hash.slice(1)), bare=!['node','operator','physlib','declaration','module'].some(k=> named.has(k));
+  if(st.tag&&tagAreas.has(st.tag)){ if(tagKey!==st.tag||bare) setTag(st.tag); } else if(tagKey) setTag(null);
   const state=FB.mapSelection(location.hash,formalData);
   if(state.view==='physlib'){ showFormalNavigator(state); return; }
   if(state.kind==='operator'){
@@ -963,7 +994,7 @@ svg.addEventListener('mouseleave', ()=>{ tip.style.display='none'; });
 // ---- interaction: the tag picker -------------------------------------------
 function codeName(code){ return Sources.codeName(code, codesData); }
 function codeCredit(code){ const sp=codesData[code]||{}; const any=Object.values(sp).find(e=>e && (e.citation||e.license)); if(!any) return ''; const cit=(any.citation||'').trim().replace(/\.$/,''); const lic=(any.license||'').trim(); return cit&&lic?(cit+'. License: '+lic+'.'):(cit||lic); }
-// Papers (and projects, once cleared) from map_layers.json, codes from codes.json; each with its count of marks.
+// Papers (and projects, once cleared) come from map_layers.json and codes from codes.json. Each option shows its count of quantities.
 function renderTagPick(){
   const groups=[['Papers',Object.keys(layersData.tags||{}).filter(k=>k.startsWith('paper:'))],
     ['Projects',Object.keys(layersData.tags||{}).filter(k=>k.startsWith('project:'))],
@@ -972,12 +1003,12 @@ function renderTagPick(){
     const og=document.createElement('optgroup'); og.label=label;
     keys.forEach(k=>{ const a=LW.area(k, layersData, codesData, graphData); if(!a) return; tagAreas.set(k,a);
       const o=document.createElement('option'), code=k.startsWith('code:')?k.slice(5):null;
-      o.value=k; o.textContent=(code?codeName(code):layersData.tags[k].label)+' ('+(a.quantities.size+a.formulas.size)+')';
+      o.value=k; o.textContent=(code?codeName(code):layersData.tags[k].label)+' ('+a.quantities.size+')';
       const cr=code&&codeCredit(code); if(cr) o.title=cr; og.appendChild(o); });
     if(og.children.length) tagPick.appendChild(og);
   });
 }
-tagPick.addEventListener('change', function(){ if(this.value){ setTag(this.value); writeHash({}); } else clearSel(); });
+tagPick.addEventListener('change', function(){ if(this.value){ setTag(this.value); writeHash({}); } else { setTag(null); clearSel(); } });
 
 // ---- interaction: search ---------------------------------------------------
 const qInput=document.getElementById('q'), mapStatus=document.getElementById('mapStatus');
@@ -1043,7 +1074,7 @@ function tableHtml(){
       cur=r.tier; const t=tierList[tierIndex[r.tier]];
       h+='<table><caption>'+(t&&t.order!==1e6?String(t.order+1).padStart(2,'0')+' ':'')+esc(r.tier)+'</caption><thead><tr><th scope="col">Kind</th><th scope="col">Name</th><th scope="col">Lean</th></tr></thead><tbody>';
     }
-    const q=r.kind==='quantity', href=LW.fragment(q?{node:r.id}:{operator:r.id},{layer:layer});
+    const q=r.kind==='quantity', href=LW.fragment(q?{node:r.id}:{operator:r.id},{layer:layer,tag:tagKey});
     h+='<tr'+(LW.inLayer(r.rung,layer)?'':' data-out')+'><td>'+(q?'Quantity':'Formula')+'</td><td><a href="'+attr(href)+'">'+(q?(symHtml[r.id]||esc(r.id)):esc(opName(r.id)))+'</a> <code>'+esc(r.id)+'</code></td><td><i class="sw rung-'+r.rung+'"></i> '+esc(LW.RUNG_WORDS[r.rung])+'</td></tr>';
   });
   return h+(cur!==null?'</tbody></table>':'');
