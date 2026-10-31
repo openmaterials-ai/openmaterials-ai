@@ -2,7 +2,7 @@
   "schema_version": 1,
   "scope": "Reviewed OMAI formula endpoints and exact Lean proof source for local theorems with no Physlib physics counterpart. Hash and compiled-name checks detect drift and provenance errors. They are not automatic symbolic translation or numerical validation.",
   "source_path": "lean/bridge/OMAILinearizedBTE.lean",
-  "source_sha256": "f1c0def32805bd85ca98a90bd1c2d7bf6e20245af3c6ec29c8877bee5534e04e",
+  "source_sha256": "5a3b595bd4894900071ef71ccf6d74a5b3ce1c2d2d5ff6782b10ee9276e87e23",
   "operators": [
     {
       "id": "solve_bte[bte_solver=direct_inverse]",
@@ -32,6 +32,7 @@
   "interpretations": [
     "solve_bte[bte_solver=direct_inverse] is the linear system Sum_{q'nu'} M_{q nu, q' nu'} F^alpha_{q' nu'} = c_{q nu} v^alpha_{q nu} over the modes (q, nu) of a finite Gamma-centred mesh. Its auxiliary formulas give M = C^(1/2) Omega~ C^(1/2) with C = diag(c), transcribed as lbteMatrix, and Chaput's Omega~ in the collision labeling q + q' + q'' = 0, transcribed as chaputCollision.",
     "Omega~ has the Kronecker term 2 Gamma of the canonical linewidth Gamma = Im Sigma = 1/(2 tau), and a kernel enters every element, the diagonal included: (pi/(N_q hbar^2)) Sum_{nu''} |V_3|^2(q nu, q' nu', -q - q' nu'') 2 sqrt(n''(n'' + 1)) [delta(omega' - omega + omega'') + delta(omega' - omega - omega'') + delta(omega' + omega - omega'')]. The kernel |V_3|^2 and the linewidths Gamma are independent opaque inputs.",
-    "contract_kappa[bte_solver=direct_inverse] is kappa^{alpha beta} = Sum_{q nu} c v^alpha F^beta / (V_cell N_q)."
+    "contract_kappa[bte_solver=direct_inverse] is kappa^{alpha beta} = Sum_{q nu} c v^alpha F^beta / (V_cell N_q).",
+    "boseRoot, channelSum, detailedBalanceLinewidth and collisionSquares are auxiliary definitions of the positivity proofs, not transcriptions of catalog formulas."
   ]
 }

@@ -1,4 +1,4 @@
-"""Local linearized-BTE proofs: Chaput's collision matrix, the RTA limit and the conductivity.
+"""Local linearized-BTE proofs: Chaput's collision matrix, its positivity, the RTA limit and kappa.
 
 Frozen literals are reviewed pins. The compiler probe consumes an already-built
 package selected with PHYSLIB_BRIDGE_PACKAGE and never writes build evidence.
@@ -28,7 +28,7 @@ DEFINITIONS = {
     "solve_bte[bte_solver=direct_inverse]": ("lbteSolves", "def lbteSolves {κ : Type*} [Fintype κ] (M : Matrix κ κ ℝ) (c : κ → ℝ) (v F : κ → Fin 3 → ℝ) :\n    Prop :=\n  ∀ m α, ∑ m', M m m' * F m' α = c m * v m α"),
     "contract_kappa[bte_solver=direct_inverse]": ("lbteKappa", 'def lbteKappa {κ : Type*} [Fintype κ] (c : κ → ℝ) (v F : κ → Fin 3 → ℝ) (V Nq : ℝ) :\n    Matrix (Fin 3) (Fin 3) ℝ :=\n  fun α β => (∑ m, c m * v m α * F m β) / (V * Nq)'),
 }
-HELPERS = ['def bose (x : ℝ) : ℝ := 1 / (exp x - 1)', "def chaputCollision {Q ι : Type*} [Fintype Q] [AddCommGroup Q] [DecidableEq Q] [Fintype ι]\n    [DecidableEq ι] (hbar kB T : ℝ) (delta : ℝ → ℝ) (omega Gamma : Q → ι → ℝ)\n    (V3 : Q → ι → Q → ι → Q → ι → ℝ) : Matrix (Q × ι) (Q × ι) ℝ :=\n  fun m m' =>\n    2 * Gamma m.1 m.2 * (if m = m' then 1 else 0) +\n      π / (Fintype.card Q * hbar ^ 2) *\n        ∑ ν'', V3 m.1 m.2 m'.1 m'.2 (-m.1 - m'.1) ν'' *\n          (2 * √(bose (hbar * omega (-m.1 - m'.1) ν'' / (kB * T)) *\n            (1 + bose (hbar * omega (-m.1 - m'.1) ν'' / (kB * T))))) *\n          (delta (omega m'.1 m'.2 - omega m.1 m.2 + omega (-m.1 - m'.1) ν'') +\n            delta (omega m'.1 m'.2 - omega m.1 m.2 - omega (-m.1 - m'.1) ν'') +\n            delta (omega m'.1 m'.2 + omega m.1 m.2 - omega (-m.1 - m'.1) ν''))", "def lbteMatrix {κ : Type*} (c : κ → ℝ) (Ω : Matrix κ κ ℝ) : Matrix κ κ ℝ :=\n  fun m m' => √(c m * c m') * Ω m m'"]
+HELPERS = ['def bose (x : ℝ) : ℝ := 1 / (exp x - 1)', "def chaputCollision {Q ι : Type*} [Fintype Q] [AddCommGroup Q] [DecidableEq Q] [Fintype ι]\n    [DecidableEq ι] (hbar kB T : ℝ) (delta : ℝ → ℝ) (omega Gamma : Q → ι → ℝ)\n    (V3 : Q → ι → Q → ι → Q → ι → ℝ) : Matrix (Q × ι) (Q × ι) ℝ :=\n  fun m m' =>\n    2 * Gamma m.1 m.2 * (if m = m' then 1 else 0) +\n      π / (Fintype.card Q * hbar ^ 2) *\n        ∑ ν'', V3 m.1 m.2 m'.1 m'.2 (-m.1 - m'.1) ν'' *\n          (2 * √(bose (hbar * omega (-m.1 - m'.1) ν'' / (kB * T)) *\n            (1 + bose (hbar * omega (-m.1 - m'.1) ν'' / (kB * T))))) *\n          (delta (omega m'.1 m'.2 - omega m.1 m.2 + omega (-m.1 - m'.1) ν'') +\n            delta (omega m'.1 m'.2 - omega m.1 m.2 - omega (-m.1 - m'.1) ν'') +\n            delta (omega m'.1 m'.2 + omega m.1 m.2 - omega (-m.1 - m'.1) ν''))", "def lbteMatrix {κ : Type*} (c : κ → ℝ) (Ω : Matrix κ κ ℝ) : Matrix κ κ ℝ :=\n  fun m m' => √(c m * c m') * Ω m m'", 'def boseRoot (hbar kB T ω : ℝ) : ℝ :=\n  √(bose (hbar * ω / (kB * T)) * (1 + bose (hbar * ω / (kB * T))))', "def channelSum (delta : ℝ → ℝ) (ω ω' ω'' : ℝ) : ℝ :=\n  delta (ω' - ω + ω'') + delta (ω' - ω - ω'') + delta (ω' + ω - ω'')", "def detailedBalanceLinewidth {Q ι : Type*} [Fintype Q] [AddCommGroup Q] [Fintype ι]\n    (hbar kB T : ℝ) (delta : ℝ → ℝ) (omega : Q → ι → ℝ) (V3 : Q → ι → Q → ι → Q → ι → ℝ)\n    (q : Q) (ν : ι) : ℝ :=\n  π / (2 * Fintype.card Q * hbar ^ 2) *\n    ∑ q', ∑ ν', ∑ ν'', V3 q ν q' ν' (-q - q') ν'' *\n      (boseRoot hbar kB T (omega q' ν') * boseRoot hbar kB T (omega (-q - q') ν'') /\n        boseRoot hbar kB T (omega q ν)) *\n      channelSum delta (omega q ν) (omega q' ν') (omega (-q - q') ν'')", "def collisionSquares {Q ι : Type*} [Fintype Q] [AddCommGroup Q] [Fintype ι]\n    (hbar kB T : ℝ) (delta : ℝ → ℝ) (omega : Q → ι → ℝ) (V3 : Q → ι → Q → ι → Q → ι → ℝ)\n    (x : Q × ι → ℝ) : ℝ :=\n  ∑ a, ∑ b, ∑ ν'', V3 a.1 a.2 b.1 b.2 (-a.1 - b.1) ν'' *\n    channelSum delta (omega a.1 a.2) (omega b.1 b.2) (omega (-a.1 - b.1) ν'') *\n    (boseRoot hbar kB T (omega a.1 a.2) * boseRoot hbar kB T (omega b.1 b.2) *\n      boseRoot hbar kB T (omega (-a.1 - b.1) ν'')) *\n    (x a / boseRoot hbar kB T (omega a.1 a.2) + x b / boseRoot hbar kB T (omega b.1 b.2) +\n      x (-a.1 - b.1, ν'') / boseRoot hbar kB T (omega (-a.1 - b.1) ν'')) ^ 2"]
 OUTPUTS = {"MeanFreeDisplacement[bte_solver=direct_inverse]", "ThermalConductivity[bte_solver=direct_inverse]"}
 KEY_THEOREMS = {
     'chaputCollision_isSymm': "{hbar kB T : ℝ} (delta : ℝ → ℝ) (omega Gamma : Q → ι → ℝ)\n    (V3 : Q → ι → Q → ι → Q → ι → ℝ) (heven : ∀ x, delta (-x) = delta x)\n    (hV3 : ∀ q ν q' ν' ν'', V3 q ν q' ν' (-q - q') ν'' = V3 q' ν' q ν (-q - q') ν'') :\n    (chaputCollision hbar kB T delta omega Gamma V3).IsSymm",
@@ -36,8 +36,17 @@ KEY_THEOREMS = {
     'lbteSolves_rta_limit': "{Q ι : Type*} [Fintype Q] [AddCommGroup Q] [DecidableEq Q]\n    [Fintype ι] [DecidableEq ι] {hbar kB T : ℝ} (delta : ℝ → ℝ) (omega Gamma : Q → ι → ℝ)\n    (V3 : Q → ι → Q → ι → Q → ι → ℝ) (c : Q × ι → ℝ) (v F : Q × ι → Fin 3 → ℝ)\n    (hV3 : ∀ q ν q' ν' ν'', V3 q ν q' ν' (-q - q') ν'' = 0) (hGamma : ∀ q ν, Gamma q ν ≠ 0)\n    (hc : ∀ m, 0 < c m) :\n    lbteSolves (lbteMatrix c (chaputCollision hbar kB T delta omega Gamma V3)) c v F ↔\n      ∀ m α, F m α = v m α / (2 * Gamma m.1 m.2)",
     'lbteKappa_isSymm': '{M : Matrix κ κ ℝ} (hM : M.IsSymm) {c : κ → ℝ} {v F : κ → Fin 3 → ℝ}\n    (h : lbteSolves M c v F) (V Nq : ℝ) : (lbteKappa c v F V Nq).IsSymm',
     'lbteKappa_posSemidef': '[DecidableEq κ] {Ω : Matrix κ κ ℝ} (hΩ : Ω.PosSemidef) {c : κ → ℝ}\n    (hc : ∀ m, 0 ≤ c m) {v F : κ → Fin 3 → ℝ} (h : lbteSolves (lbteMatrix c Ω) c v F) {V Nq : ℝ}\n    (hVN : 0 < V * Nq) : (lbteKappa c v F V Nq).PosSemidef',
+    'chaputCollision_quadratic': "{hbar kB T : ℝ} (hh : 0 < hbar) (hk : 0 < kB) (hT : 0 < T)\n    (delta : ℝ → ℝ) (heven : ∀ x, delta (-x) = delta x) (omega Gamma : Q → ι → ℝ)\n    (V3 : Q → ι → Q → ι → Q → ι → ℝ)\n    (h12 : ∀ q ν q' ν' ν'', V3 q ν q' ν' (-q - q') ν'' = V3 q' ν' q ν (-q - q') ν'')\n    (h23 : ∀ q ν q' ν' ν'', V3 q ν q' ν' (-q - q') ν'' = V3 q ν (-q - q') ν'' q' ν')\n    (hzero : ∀ q ν q' ν' ν'', V3 q ν q' ν' (-q - q') ν'' ≠ 0 →\n      0 < omega q ν ∧ 0 < omega q' ν' ∧ 0 < omega (-q - q') ν'')\n    (x : Q × ι → ℝ) :\n    ∑ a, ∑ b, x a * chaputCollision hbar kB T delta omega Gamma V3 a b * x b =\n      ∑ a, 2 * (Gamma a.1 a.2 - detailedBalanceLinewidth hbar kB T delta omega V3 a.1 a.2) *\n          x a ^ 2 +\n        π / (3 * Fintype.card Q * hbar ^ 2) * collisionSquares hbar kB T delta omega V3 x",
+    'chaputCollision_posSemidef': "{hbar kB T : ℝ} (hh : 0 < hbar) (hk : 0 < kB) (hT : 0 < T)\n    (delta : ℝ → ℝ) (hdelta : ∀ x, 0 ≤ delta x) (heven : ∀ x, delta (-x) = delta x)\n    (omega Gamma : Q → ι → ℝ) (V3 : Q → ι → Q → ι → Q → ι → ℝ)\n    (hV3 : ∀ q ν q' ν' ν'', 0 ≤ V3 q ν q' ν' (-q - q') ν'')\n    (h12 : ∀ q ν q' ν' ν'', V3 q ν q' ν' (-q - q') ν'' = V3 q' ν' q ν (-q - q') ν'')\n    (h23 : ∀ q ν q' ν' ν'', V3 q ν q' ν' (-q - q') ν'' = V3 q ν (-q - q') ν'' q' ν')\n    (hzero : ∀ q ν q' ν' ν'', V3 q ν q' ν' (-q - q') ν'' ≠ 0 →\n      0 < omega q ν ∧ 0 < omega q' ν' ∧ 0 < omega (-q - q') ν'')\n    (hGamma : ∀ q ν, detailedBalanceLinewidth hbar kB T delta omega V3 q ν ≤ Gamma q ν) :\n    (chaputCollision hbar kB T delta omega Gamma V3).PosSemidef",
+    'anharmonicLinewidth_eq_detailedBalance': "{hbar kB T : ℝ} (hh : 0 < hbar) (hk : 0 < kB)\n    (hT : 0 < T) (delta : ℝ → ℝ) (hshell : ∀ x, x ≠ 0 → delta x = 0) (omega : Q → ι → ℝ)\n    (homega : ∀ q ν, omega (-q) ν = omega q ν) (V3 Vd : Q → ι → Q → ι → Q → ι → ℝ)\n    (hrel : ∀ q ν q' ν' ν'', V3 q ν q' ν' (-q - q') ν'' = Vd q ν (-q') ν' (q + q') ν'')\n    (q : Q) (ν : ι) (hω : 0 < omega q ν)\n    (hzero : ∀ q' ν' ν'', Vd q ν q' ν' (q - q') ν'' ≠ 0 →\n      0 < omega q' ν' ∧ 0 < omega (q - q') ν'')\n    (hswap : ∀ q' ν' ν'', Vd q ν q' ν' (q - q') ν'' = Vd q ν (q - q') ν'' q' ν') :\n    PhononScattering.anharmonicLinewidth hbar kB T delta omega Vd q ν =\n      detailedBalanceLinewidth hbar kB T delta omega V3 q ν",
+    'chaputCollision_posSemidef_onShell': "{hbar kB T : ℝ} (hh : 0 < hbar) (hk : 0 < kB)\n    (hT : 0 < T) (delta : ℝ → ℝ) (hdelta : ∀ x, 0 ≤ delta x) (hshell : ∀ x, x ≠ 0 → delta x = 0)\n    (omega Gamma : Q → ι → ℝ) (homega : ∀ q ν, omega (-q) ν = omega q ν)\n    (V3 Vd : Q → ι → Q → ι → Q → ι → ℝ) (hV3 : ∀ q ν q' ν' ν'', 0 ≤ V3 q ν q' ν' (-q - q') ν'')\n    (h12 : ∀ q ν q' ν' ν'', V3 q ν q' ν' (-q - q') ν'' = V3 q' ν' q ν (-q - q') ν'')\n    (h23 : ∀ q ν q' ν' ν'', V3 q ν q' ν' (-q - q') ν'' = V3 q ν (-q - q') ν'' q' ν')\n    (hzero : ∀ q ν q' ν' ν'', V3 q ν q' ν' (-q - q') ν'' ≠ 0 →\n      0 < omega q ν ∧ 0 < omega q' ν' ∧ 0 < omega (-q - q') ν'')\n    (hrel : ∀ q ν q' ν' ν'', V3 q ν q' ν' (-q - q') ν'' = Vd q ν (-q') ν' (q + q') ν'')\n    (hGamma : ∀ q ν,\n      PhononScattering.anharmonicLinewidth hbar kB T delta omega Vd q ν ≤ Gamma q ν) :\n    (chaputCollision hbar kB T delta omega Gamma V3).PosSemidef",
+    'lbteKappa_posSemidef_onShell': "{B : Type*} [Fintype B] {hbar kB T : ℝ} (hh : 0 < hbar)\n    (hk : 0 < kB) (hT : 0 < T) (delta : ℝ → ℝ) (hdelta : ∀ x, 0 ≤ delta x)\n    (hshell : ∀ x, x ≠ 0 → delta x = 0) (omega : Q → ι → ℝ)\n    (homega : ∀ q ν, omega (-q) ν = omega q ν) (V3 Vd : Q → ι → Q → ι → Q → ι → ℝ)\n    (hV3 : ∀ q ν q' ν' ν'', 0 ≤ V3 q ν q' ν' (-q - q') ν'')\n    (h12 : ∀ q ν q' ν' ν'', V3 q ν q' ν' (-q - q') ν'' = V3 q' ν' q ν (-q - q') ν'')\n    (h23 : ∀ q ν q' ν' ν'', V3 q ν q' ν' (-q - q') ν'' = V3 q ν (-q - q') ν'' q' ν')\n    (hzero : ∀ q ν q' ν' ν'', V3 q ν q' ν' (-q - q') ν'' ≠ 0 →\n      0 < omega q ν ∧ 0 < omega q' ν' ∧ 0 < omega (-q - q') ν'')\n    (hrel : ∀ q ν q' ν' ν'', V3 q ν q' ν' (-q - q') ν'' = Vd q ν (-q') ν' (q + q') ν'')\n    (deltaIso : ℝ → ℝ) (hdeltaIso : ∀ x, 0 ≤ deltaIso x) (g : B → ℝ) (hg : ∀ b, 0 ≤ g b)\n    (e : Q → ι → B → Fin 3 → ℂ) {L : ℝ} (hL : 0 ≤ L) {c : Q × ι → ℝ} (hc : ∀ m, 0 ≤ c m)\n    {v F : Q × ι → Fin 3 → ℝ}\n    (h : lbteSolves (lbteMatrix c (chaputCollision hbar kB T delta omega\n      (fun q ν => PhononScattering.totalLinewidth\n        (PhononScattering.anharmonicLinewidth hbar kB T delta omega Vd q ν)\n        (PhononScattering.isotopeLinewidth deltaIso omega g e q ν)\n        (PhononScattering.boundaryLinewidth (v (q, ν)) L)) V3)) c v F)\n    {V Nq : ℝ} (hVN : 0 < V * Nq) : (lbteKappa c v F V Nq).PosSemidef",
 }
-NOT_CITED = {NS + "lbteKappa_eq_sum", NS + "lbteMatrix_eq_conj", NS + "chaputCollision_isSymm_of_all"}
+NOT_CITED = {NS + name for name in (
+    "lbteKappa_eq_sum", "lbteMatrix_eq_conj", "chaputCollision_isSymm_of_all", "bose_pos'", "sqrt_bose",
+    "bose_decay", "bose_absorb", "pair_onShell", "tripleSum_swap12", "tripleSum_swap23", "sos_identity",
+    "sum_partner_swap", "sum_eq_of_pair", "boseRoot_nonneg", "boseRoot_pos", "channelSum_nonneg",
+    "channelSum_swap12", "channelSum_swap23", "even_of_shell")}
 # The digest of solve_bte[bte_solver=direct_inverse]'s auxiliary_formulas[0], the M and Omega~ that
 # lbteMatrix and chaputCollision transcribe.
 # An edit to Omega~ moves it, so this binding is re-reviewed rather than left on the old matrix.
@@ -93,13 +102,14 @@ def test_collision_matrix_carries_the_catalog_constants():
         assert text in source, text
 
 
-def test_module_uses_mathlib_and_the_local_contraction_only():
+def test_module_uses_mathlib_and_local_modules_only():
     source = (ROOT / SOURCE).read_text()
     imports = re.findall(r"^public import (\S+)", source, re.M)
-    assert imports and all(name.startswith("Mathlib.") or name == "OMAIPhyslibKappaContraction"
-                           for name in imports)
-    dep = (ROOT / "lean/bridge/OMAIPhyslibKappaContraction.lean").read_text()
-    assert all(name.startswith("Mathlib.") for name in re.findall(r"^public import (\S+)", dep, re.M))
+    local = {"OMAIPhyslibKappaContraction", "OMAIPhononScattering"}
+    assert imports and all(name.startswith("Mathlib.") or name in local for name in imports)
+    for name in local:
+        dep = (ROOT / "lean/bridge" / f"{name}.lean").read_text()
+        assert all(n.startswith("Mathlib.") for n in re.findall(r"^public import (\S+)", dep, re.M))
     for word in ("sorry", "admit", "axiom", "native_decide", "unsafe", "set_option"):
         assert not re.search(r"\b" + word + r"\b", source), word
 
@@ -136,9 +146,11 @@ def test_conventions_a_user_could_get_wrong_are_stated():
     conditions = " ".join(binding["conditions"])
     for phrase in ("Gamma = Im Sigma = 1/(2 tau)", "the constant of 2 Gamma", "closed under q + q' + q'' = 0",
                    "delta(-x) = delta(x)", "time-reversal gauge", "exact energy conservation",
-                   "enters as a hypothesis", "odd under q -> -q", "Gamma != 0"):
+                   "every permutation of its three modes", "physical_mode", "cutoff_frequency", "pinv_method=1",
+                   "odd under q -> -q", "Gamma != 0"):
         assert phrase in conditions, phrase
-    assert "is a hypothesis here, not a result" in binding["statement"]
+    assert "with no positivity hypothesis" in binding["statement"]
+    assert "Gamma >= Gamma^db" in binding["statement"]
     assert "momentum-conserving triples" in binding["statement"]
     assert "not proved here" in " ".join(binding["remaining_obligations"])
 
