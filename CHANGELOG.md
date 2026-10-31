@@ -7,6 +7,8 @@ id.
 
 ## Unreleased
 
+- `docs/data/releases/openmaterials-ai.json` registers 0.6.0 (tag v0.6.0, commit e6c4e35), so `release_check` resolves an `execution.registry` row naming `openmaterials-ai` 0.6.0. No id changes.
+
 ## 0.6.0
 
 Every consumer pins `openmaterials-ai==0.6.0`. The minor version follows README "Versioning": fourteen edges are re-keyed, each by an `add_edge` plus a `supersede` record, and two published value ids move (below). Records 308-376 hold them with 41 `edit_meta` records. Public names are added (`omai.snapshots`, `omai.submap`, `omai.infographic`, `omai.glyphs`, `omai.briefs`, `POSTERS` in `omai.code_pages` and `omai.code_cards`, `kaldo_solve_bte_direct_spec`) and none is removed. The site generators among them (`omai.snapshots`, `omai.submap`, `omai.briefs`), like `omai.code_pages` before them, import from the wheel but read docs/ and run only from a checkout of this repository. The map moves from graph_version `02b3fc768e66` to `5124100905c0` and the lineage version from `f5a7cb57594f` to `3f08dcf2117b`. The packaged kaldo external-solve request moves from `1a88760844bd` to `f1d96253c786` (seven input nodes); its `lineage_id` `f64affbf549a` is unchanged.
