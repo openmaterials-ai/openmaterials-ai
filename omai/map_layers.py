@@ -245,8 +245,21 @@ def build_map_layers() -> dict:
     }
 
 
+def lean_badge(layers: dict) -> tuple[str, str]:
+    """Label and message of /badge/stat/lean.svg: the formulas with a Lean theorem, of all formulas."""
+    f = layers["counts"]["formulas"]
+    return "lean theorems", f"{f['local'] + f['physlib']}/{sum(f.values())} formulas"
+
+
 def write_map_layers(out: Path = OUT) -> Path:
-    out.write_text(json.dumps(build_map_layers(), indent=1, sort_keys=True, ensure_ascii=False) + "\n", encoding="utf-8")
+    """Write map_layers.json and the Lean stat badge that counts from it (the Worker serves the same bytes)."""
+    from omai.badge import labeled_badge_svg
+
+    layers = build_map_layers()
+    out.write_text(json.dumps(layers, indent=1, sort_keys=True, ensure_ascii=False) + "\n", encoding="utf-8")
+    stat = ROOT / "docs" / "badge" / "stat"
+    stat.mkdir(parents=True, exist_ok=True)
+    (stat / "lean.svg").write_text(labeled_badge_svg(*lean_badge(layers)) + "\n", encoding="utf-8")
     return out
 
 

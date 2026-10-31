@@ -96,8 +96,13 @@ export default {
       if (sm) {
         try {
           const name = sm[1];
-          let count;
-          if (name === "nodes") {
+          let count, label = name;
+          if (name === "lean") {
+            // formulas with a Lean theorem, of all formulas: omai.map_layers.lean_badge on the same file
+            const f = (await assetJSON(env, request, "/data/map_layers.json")).counts.formulas;
+            label = "lean theorems";
+            count = `${f.local + f.physlib}/${Object.values(f).reduce((a, b) => a + b, 0)} formulas`;
+          } else if (name === "nodes") {
             const graph = await assetJSON(env, request, "/data/graph.json");
             count = (graph.nodes || []).length;
           } else if (name === "operators") {
@@ -111,7 +116,7 @@ export default {
             const insts = await assetJSON(env, request, "/data/instances.json");
             count = (Array.isArray(insts) ? insts : insts.instances || []).length;
           }
-          return new Response(statBadgeSVG(name, count), {
+          return new Response(statBadgeSVG(label, count), {
             headers: {
               "content-type": "image/svg+xml; charset=utf-8",
               "cache-control": "public, max-age=300",
