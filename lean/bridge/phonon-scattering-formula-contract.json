@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "scope": "Reviewed OMAI formula endpoints and exact Lean proof source for local theorems with no Physlib physics counterpart. Hash and compiled-name checks detect drift and provenance errors; they are not automatic symbolic translation or numerical validation.",
+  "source_path": "lean/bridge/OMAIPhononScattering.lean",
+  "source_sha256": "a3fe99ec9df1ae2432a92534361bca2989b6ea8341b3d3f81648d41b28ec6860",
+  "operators": [
+    {
+      "id": "compute_isotope_scattering",
+      "uid": "7cf53f521738578b03e17d568ddf5db3df454b0a47bd4d621390c5c9250dec73",
+      "formula_sha256": "bbcc0cd3146146e003b4319f36af2916f769fadd9449a39309e565afc2b97b21",
+      "formula_latex": "{\\Gamma^{iso}}_{\\mathbf{q},\\nu} = \\frac{\\pi {\\omega}_{\\mathbf{q},\\nu}^{2} \\sum_{\\substack{1 \\leq \\mathbf{q'} \\leq N_{q}\\\\1 \\leq \\nu' \\leq 3 N}} \\delta{\\left(- {\\omega}_{\\mathbf{q'},\\nu'} + {\\omega}_{\\mathbf{q},\\nu} \\right)} \\sum_{b=1}^{N} \\left(\\left|{\\sum_{\\alpha=1}^{3} \\overline{{e}_{\\alpha + 3 b - 3,\\mathbf{q},\\nu}} {e}_{\\alpha + 3 b - 3,\\mathbf{q'},\\nu'}}\\right|^{2}\\right) {g}_{b}}{4 N_{q}}",
+      "lean_definition": "OMAI.PhyslibBridge.PhononScattering.isotopeLinewidth"
+    },
+    {
+      "id": "compute_linewidth[channel=anharmonic_3ph]",
+      "uid": "bed23822fc14b9f811e9d35b8361d56e0e38a34327b9e5b2c4e7f5aad6eebb72",
+      "formula_sha256": "c5b1c700e285f83bade4999b264e709ae736be2f329f4eabb6ab45a86980b7e4",
+      "formula_latex": "{\\Gamma}_{\\mathbf{q},\\nu} = \\frac{\\pi \\sum_{\\substack{1 \\leq \\mathbf{q'} \\leq N_{q}\\\\1 \\leq \\nu' \\leq 3 N\\\\1 \\leq \\nu'' \\leq 3 N}} \\left(\\left(- 2 n_{BE}{\\left(\\frac{\\bar{\\h} {\\omega}_{- \\mathbf{q'} + \\mathbf{q},\\nu''}}{T k_{B}} \\right)} + 2 n_{BE}{\\left(\\frac{\\bar{\\h} {\\omega}_{\\mathbf{q'},\\nu'}}{T k_{B}} \\right)}\\right) \\delta{\\left(- {\\omega}_{- \\mathbf{q'} + \\mathbf{q},\\nu''} + {\\omega}_{\\mathbf{q'},\\nu'} + {\\omega}_{\\mathbf{q},\\nu} \\right)} + \\left(n_{BE}{\\left(\\frac{\\bar{\\h} {\\omega}_{- \\mathbf{q'} + \\mathbf{q},\\nu''}}{T k_{B}} \\right)} + n_{BE}{\\left(\\frac{\\bar{\\h} {\\omega}_{\\mathbf{q'},\\nu'}}{T k_{B}} \\right)} + 1\\right) \\delta{\\left(- {\\omega}_{- \\mathbf{q'} + \\mathbf{q},\\nu''} - {\\omega}_{\\mathbf{q'},\\nu'} + {\\omega}_{\\mathbf{q},\\nu} \\right)}\\right) \\operatorname{|V}^{2}_{3|}{\\left(\\mathbf{q},\\nu,\\mathbf{q'},\\nu',- \\mathbf{q'} + \\mathbf{q},\\nu'' \\right)}}{2 N_{q} \\bar{\\h}^{2}}",
+      "lean_definition": "OMAI.PhyslibBridge.PhononScattering.anharmonicLinewidth"
+    },
+    {
+      "id": "compute_boundary_scattering",
+      "uid": "1326da3355b506b5142329e3b074a09589b95e4e18d1819c4c44ad579c1fd41e",
+      "formula_sha256": "4710be932ea5cc929dedfe2bb5cf1b7e240e1781fa12cc45f9dcdd33c6c8c78e",
+      "formula_latex": "{\\Gamma^{bnd}}_{\\mathbf{q},\\nu} = \\frac{\\sqrt{\\sum_{\\alpha=1}^{3} {v}_{\\alpha,\\mathbf{q},\\nu}^{2}}}{2 L}",
+      "lean_definition": "OMAI.PhyslibBridge.PhononScattering.boundaryLinewidth"
+    },
+    {
+      "id": "sum_linewidths",
+      "uid": "895d9e39c50870b6929c98b38c37b813f0688f3ade6b09e72c1bf1fad683ab7c",
+      "formula_sha256": "be92953f056d5d9606396776a4b777bcf1806a44aea1dcf0e82ea7527dcbf85b",
+      "formula_latex": "{\\Gamma^{tot}}_{\\mathbf{q},\\nu} = {\\Gamma^{anh}}_{\\mathbf{q},\\nu} + {\\Gamma^{bnd}}_{\\mathbf{q},\\nu} + {\\Gamma^{iso}}_{\\mathbf{q},\\nu}",
+      "lean_definition": "OMAI.PhyslibBridge.PhononScattering.totalLinewidth"
+    },
+    {
+      "id": "solve_bte[bte_solver=rta]",
+      "uid": "d1c7da072f801890c5b4d17bff8f196b38823ae46102eb308c2c50438edf8b19",
+      "formula_sha256": "0b94f07d722c2b4c036e62b1790aa56e7427ffdd433bb5458e23219e6d9b923c",
+      "formula_latex": "{F}_{\\alpha,\\mathbf{q},\\nu} = \\frac{{v}_{\\alpha,\\mathbf{q},\\nu}}{2 {\\Gamma}_{\\mathbf{q},\\nu}}",
+      "lean_definition": "OMAI.PhyslibBridge.PhononScattering.rtaDisplacement"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "Linewidth[channel=isotope]",
+      "uid": "6cbd3322c5b6eb0105f9ca22d9ddc88334206ec9c115a31e6fb87409cc374c45"
+    },
+    {
+      "id": "Linewidth[channel=anharmonic_3ph]",
+      "uid": "f52d161ad0be284c121c6fd10fe403c922aaa59646746c12719622004da5fa3a"
+    },
+    {
+      "id": "Linewidth[channel=boundary]",
+      "uid": "81288248a2b40f0abfe78b058ffa4025a0312324e8af26b801017b9a0971961e"
+    },
+    {
+      "id": "Linewidth[channel=total]",
+      "uid": "50c33a1edd60bff6fb74124af1a8847a4c8a2c58d39554b4661e6a2cddb62f30"
+    },
+    {
+      "id": "MeanFreeDisplacement[bte_solver=rta]",
+      "uid": "ad1373f31b9dbb8bd24ea16e1f90f1d92a39d309f2dc22583fad4fd82eca6f59"
+    }
+  ],
+  "interpretations": [
+    "Every linewidth is the canonical Gamma = Im Sigma = 1/(2 tau) in angular units, on a finite Brillouin-zone mesh Q of N_q points with branch set iota and basis atoms B. The catalog's composite mode index 3(b-1) + alpha is the pair (b, alpha) of basis atom and Cartesian axis.",
+    "compute_isotope_scattering reads frequencies omega, eigenvector components e(q, nu, b, alpha), per-atom mass-variance factors g_b >= 0 and a smearing kernel delta for the energy delta function. The Brillouin-zone sum carries 1/N_q.",
+    "compute_linewidth[channel=anharmonic_3ph] reads the kernel |V_3|^2(q nu, q' nu', q - q' nu'') >= 0 as an opaque function, the frequencies, the Bose-Einstein occupation n = 1/(exp(hbar omega/(k_B T)) - 1) and a smearing kernel delta. The third mode is q'' = q - q', so the mesh is a Gamma-centred grid closed under q - q'. The opaque kernel drops the Maradudin-Fein structure, so its exchange symmetry under (q' nu') <-> (q - q' nu'') is a stated hypothesis of the main theorem, not a property of the transcription.",
+    "The branch set iota is any finite type and is not tied to three branches per basis atom.",
+    "compute_boundary_scattering is the Casimir linewidth |v|/(2L) of a mode with group velocity v and boundary length L > 0. The Casimir rate 1/tau = |v|/L is twice it.",
+    "sum_linewidths is Matthiessen's rule Gamma_total = Gamma_anh + Gamma_iso + Gamma_bnd, and solve_bte[bte_solver=rta] is the relaxation-time mean free displacement F = v/(2 Gamma_total)."
+  ]
+}
