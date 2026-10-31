@@ -1,0 +1,30 @@
+{
+ "04d65e9f7a2f612eb94d018ebde08e8a1b39c1c5754d03e785ad92991a909fda": {
+  "name": "nan_effective_kappa",
+  "auxiliary_sha256": "6e14ff5ba08bdd8d7994b182cb34206ca1ef048edea04430cbae4f996f01f517"
+ },
+ "557f968b85bdc45e519be10b1f5648d2d50005c4b18092f0435a0c74768a797a": {
+  "name": "evaluate_reservoir_classification",
+  "auxiliary_sha256": "1dea24cf1aa1dc6a30d5fee3b525fb333faa29380f709e9aab5d4cb7e875186d"
+ },
+ "93c6afe349f877656a16d18074e195ac4257226ce9d863d7f5d10ce96b679715": {
+  "name": "compute_participation_ratio",
+  "auxiliary_sha256": "b10d97b494bd2128fddaa730a929ea881962935573ca34ad7d682b66c060afaf"
+ },
+ "bed23822fc14b9f811e9d35b8361d56e0e38a34327b9e5b2c4e7f5aad6eebb72": {
+  "name": "compute_linewidth[channel=anharmonic_3ph]",
+  "auxiliary_sha256": "e56e875ba60e9972c84b2de830c3e6520b786af202ead1d33d5421b9f673d04d"
+ },
+ "dee3e5f2230cae44c646c62985260fc103745cc44d0b1c2a87fe0a72ca675a97": {
+  "name": "solve_bte[bte_solver=direct_inverse]",
+  "auxiliary_sha256": "78c67a3e7822bfbe8d1fb087a0f0f589cd0b0cf40027d606f665e25b2131e6ea"
+ },
+ "e86ac8a4b69dbb670dbe3f8ec7fda7ff0309670bac4713851ced64a061cd7962": {
+  "name": "nan_effective_kappa_aligned",
+  "auxiliary_sha256": "fd71a64a9dbd7a23dd9b525eb54ed2abc920386faefa619e808b869b5df2b30e"
+ },
+ "e8bd01e04d39ccad6f7046883bfa8e955e67c23fcc2f8868be045f327b18482f": {
+  "name": "depolarization_factors",
+  "auxiliary_sha256": "bdbb2b9a16265aab5ee1d34eb03dba0dcbe86bd59c119bb65328854674a81b9f"
+ }
+}
