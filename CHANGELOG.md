@@ -7,6 +7,7 @@ id.
 
 ## Unreleased
 
+- `omai.map_layers` writes `docs/data/map_layers.json`, the Lean layer of the map. Every quantity and formula gets a rung: proved citing Physlib (29 formulas, 26 quantities), proved by a local Lean proof (56, 49), stated in Lean without a proof (0, 3) or not in Lean (48, 58). A quantity that a compiled bridge only reads as an input is not in Lean. Each mark lists the bindings that prove or name it, each binding its Physlib declarations at the pinned revision and its bridge declarations with their source line and audited axioms, and each tier its count of proved formulas. No id changes.
 - The workflow strip of a code infographic wraps a token wider than its column (`overflow-wrap: anywhere` in `omai.infographic`): the openmaterials-ai poster's step 03 ran into step 04. The openmaterials-ai brief states the current map (version 3f08dcf2117b, 310 links, 33 codes, 90 values), and README.md and the OpenMaterials document correct 308 links to 310 (268 formula), the count since `solve_bte[bte_solver=direct_inverse]` gained two inputs. No id changes.
 - `docs/data/releases/openmaterials-ai.json` registers 0.6.0 (tag v0.6.0, commit e6c4e35), so `release_check` resolves an `execution.registry` row naming `openmaterials-ai` 0.6.0. No id changes.
 
