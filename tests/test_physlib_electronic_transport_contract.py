@@ -116,8 +116,8 @@ SOMMERFELD = {
     "not_cited": {"fermiWindow_neg", "integral_fermiWindow", "integral_mul_fermiWindow",
                   "integral_sq_mul_fermiWindow", "kineticIntegral_eq"},
 }
-UNBOUND_DEFECTS = ("solve_bte[bte_solver=direct_inverse]", "contract_kappa[bte_solver=direct_inverse]",
-                   "contract_cumulative_kappa[wrt=omega]", "contract_cumulative_kappa[wrt=mfp]")
+# The direct solve and its contraction are bound by the linearized-bte tranche.
+UNBOUND_DEFECTS = ("contract_cumulative_kappa[wrt=omega]", "contract_cumulative_kappa[wrt=mfp]")
 
 
 def _binding(binding_id):

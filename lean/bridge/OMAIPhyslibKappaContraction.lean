@@ -1,6 +1,7 @@
 /- The catalog's per-mode thermal-conductivity contractions, over Mathlib only. The
-linearized-BTE conductivity is symmetric and positive semidefinite when the collision matrix is,
-but no catalog collision matrix is known to satisfy that hypothesis, so the result is not bound.
+linearized-BTE conductivity is symmetric and positive semidefinite when the collision matrix is.
+OMAILinearizedBTE applies this to the catalog's weighted Chaput collision matrix, with the positive
+semidefiniteness of Chaput's matrix as a hypothesis.
 The cumulative distribution is monotone in the cutoff when every modal contribution is
 nonnegative, as in the relaxation-time approximation. A three-mode linearized BTE with one
 three-phonon process, Casimir boundary scattering and Bose-Einstein weights has a negative modal

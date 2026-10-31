@@ -146,13 +146,14 @@ crystal_rows = formula_bindings_for_physlib(
     declaration="Physlib.CondensedMatter.Crystal", module="Physlib.CondensedMatter.Crystal.Basic")
 assert {"crystal-dynamical-matrix", "crystal-phonon-dispersion", "crystal-group-velocity"} <= {
     row["id"] for row in crystal_rows}
-for unbound in ("solve_bte[bte_solver=direct_inverse]",
-                "contract_kappa[bte_solver=direct_inverse]", "contract_cumulative_kappa[wrt=omega]",
-                "contract_cumulative_kappa[wrt=mfp]", "identity_dm"):
+for unbound in ("contract_cumulative_kappa[wrt=omega]", "contract_cumulative_kappa[wrt=mfp]", "identity_dm"):
     assert formula_bindings_for(unbound, kind="operator") == []
 for scattering in ("compute_isotope_scattering", "compute_linewidth[channel=anharmonic_3ph]",
                    "compute_boundary_scattering", "sum_linewidths", "solve_bte[bte_solver=rta]"):
     rows = formula_bindings_for(scattering, kind="operator")
     assert [row["id"] for row in rows] == ["phonon-scattering-channels"], scattering
     assert rows[0]["relation"] == "local" and rows[0]["sources"] == []
+for lbte in ("solve_bte[bte_solver=direct_inverse]", "contract_kappa[bte_solver=direct_inverse]"):
+    rows = formula_bindings_for(lbte, kind="operator")
+    assert [row["id"] for row in rows] == ["linearized-bte-conductivity"], lbte
 print("installed wheel ok: lattice dynamics on Physlib crystals, the uncovered transport producers stay unbound")
