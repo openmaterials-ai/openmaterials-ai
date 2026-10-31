@@ -27,7 +27,7 @@ HARNESS = """<!doctype html><meta charset="utf-8"><body style="margin:0"><pre id
 const f = document.getElementById('f'), wait = (ms) => new Promise(r => setTimeout(r, ms));
 f.onload = async () => {
   const w = f.contentWindow, d = w.document;
-  for (let i = 0; i < 300 && !d.querySelector('.node'); i++) await wait(100);
+  for (let i = 0; i < 300 && !d.querySelector('%(ready)s'); i++) await wait(100);
   await wait(400);
   let result;
   try { result = await (async () => { %(body)s })(); } catch (e) { result = {error: String(e && e.stack || e)}; }
@@ -38,7 +38,8 @@ f.onload = async () => {
 
 
 @contextlib.contextmanager
-def serve(extra=None):
+def serve(extra=None, blocked=()):
+    """docs/ on a local port, with harness pages added and the paths in blocked answering 404."""
     pages = dict(extra or {})
 
     class Handler(http.server.SimpleHTTPRequestHandler):
@@ -46,6 +47,9 @@ def serve(extra=None):
             pass
 
         def do_GET(self):
+            if self.path.split("?")[0] in blocked:
+                self.send_error(404)
+                return
             if self.path in pages:
                 body = pages[self.path].encode()
                 self.send_response(200)
@@ -72,13 +76,13 @@ def server():
         yield s
 
 
-def run(server, src, body, w=1400, h=900, flags=()):
+def run(server, src, body, w=1400, h=900, flags=(), ready=".node"):
     """Frame /map/<src> at w x h, run body (an async function body with w, d and wait in scope), return its result."""
     if not CHROME:
         pytest.skip("Chrome not available")
     base, pages = server
     name = f"/__harness{len(pages)}.html"
-    pages[name] = HARNESS % {"src": src, "w": w, "h": h, "body": body}
+    pages[name] = HARNESS % {"src": src, "w": w, "h": h, "body": body, "ready": ready}
     out = subprocess.run([CHROME, "--headless=new", "--no-sandbox", "--disable-gpu", "--virtual-time-budget=60000",
                           f"--window-size={w + 40},{h + 120}", *flags, "--dump-dom", base + name],
                          capture_output=True, text=True, timeout=120).stdout
@@ -184,3 +188,53 @@ def test_reduced_motion_has_no_transition(server):
     got = run(server, "", "return getComputedStyle(d.querySelector('.node rect')).transitionDuration;",
               flags=("--force-prefers-reduced-motion",))
     assert set(got.split(", ")) == {"0s"}
+
+
+def test_panel_reads_the_proof(server):
+    got = run(server, "#node=Temperature", "return d.getElementById('panel').textContent;")
+    assert "Lean theorem citing Physlib" in got and "Not covered" in got and "absoluteTemperature_roundtrip" in got
+    op = run(server, "#operator=solve_bte%5Bbte_solver%3Ddirect_inverse%5D", "return d.getElementById('panel').textContent;")
+    assert "Lean theorem over Mathlib" in op
+
+
+def test_panel_without_bindings():
+    with serve(blocked={"/data/formula_bindings.json"}) as s:
+        got = run(s, "#node=Temperature", "return d.getElementById('panel').textContent;")
+    assert "Lean theorem citing Physlib" in got and "absoluteTemperature_roundtrip" in got and "did not load" in got
+
+
+def test_search_finds_lean_names(server):
+    got = run(server, "", """const q = d.getElementById('q'); q.value = 'absoluteTemperature_roundtrip';
+      q.dispatchEvent(new w.Event('input')); await wait(100);
+      return [...d.querySelectorAll('.node:not(.dim)')].map(el => el.dataset.id);""")
+    assert got == ["Temperature"]
+
+
+def test_table_lists_every_mark(server):
+    got = run(server, "#layer=lean", """d.getElementById('tableBtn').click(); await wait(100);
+      const rows = [...d.querySelectorAll('#table tbody tr')];
+      return {rows: rows.length, visible: !d.getElementById('table').hidden,
+              href: rows[0].querySelector('a').getAttribute('href'), pressed: d.getElementById('tableBtn').getAttribute('aria-pressed')};""")
+    assert got["rows"] == len(LAYERS["quantities"]) + len(LAYERS["formulas"]) and got["visible"] and got["pressed"] == "true"
+    assert got["href"].startswith("#layer=lean&node=")
+
+
+def test_without_dagre_the_table_stands_in():
+    with serve(blocked={"/assets/vendor/dagre.min.js"}) as s:
+        got = run(s, "", "return d.querySelectorAll('#fallback tbody tr').length;", ready="#fallback tbody tr")
+    assert got == len(LAYERS["quantities"]) + len(LAYERS["formulas"])
+
+
+def test_escape_returns_focus_to_the_mark(server):
+    got = run(server, "", """const g = d.querySelector('.node[data-id="Temperature"]'); g.focus();
+      g.dispatchEvent(new w.KeyboardEvent('keydown', {key: 'Enter', bubbles: true})); await wait(100);
+      const open = d.getElementById('panel').style.display === 'block';
+      w.dispatchEvent(new w.KeyboardEvent('keydown', {key: 'Escape', bubbles: true})); await wait(100);
+      return {open, closed: d.getElementById('panel').style.display === 'none', focus: d.activeElement === g};""")
+    assert got == {"open": True, "closed": True, "focus": True}
+
+
+def test_the_toolbar_keeps_one_row_on_a_laptop(server):
+    # one row of 32 px controls with 8 px padding above and below and a 1 px rule; a second row adds 40
+    got = run(server, "", "return d.querySelector('.toolbar').getBoundingClientRect().height;", 1400, 900)
+    assert got < 60, got

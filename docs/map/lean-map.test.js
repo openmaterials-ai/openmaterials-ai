@@ -101,3 +101,41 @@ test('the table lists every mark once, in tier order, with its rung in words', (
   assert.deepEqual(seen, seen.slice().sort((a, b) => a - b));
   assert.deepEqual(Object.keys(L.RUNG_WORDS), ['none', 'stated', 'local', 'physlib']);
 });
+
+const FB = require('../lean/bridge/lib.js');
+const formal = JSON.parse(fs.readFileSync(__dirname + '/../data/formula_bindings.json', 'utf8'));
+const inOrder = (h, parts) => {
+  const at = parts.map((s) => h.indexOf(s));
+  assert.ok(at.every((i) => i >= 0), JSON.stringify(parts.filter((s, i) => at[i] < 0)));
+  assert.deepEqual(at, at.slice().sort((a, b) => a - b));
+};
+
+test('the Lean panel reads rung, statement, declarations, conditions, what is not covered, axioms', () => {
+  inOrder(L.leanPanel({kind: 'node', id: 'Temperature', layers, formal, FB}),
+    ['Lean theorem citing Physlib', 'A nonnegative OMAI', '>Lean declarations<', '>Physlib declarations cited<',
+      '>Conditions<', '>Not covered<', 'axioms']);
+  inOrder(L.leanPanel({kind: 'operator', id: 'solve_bte[bte_solver=direct_inverse]', layers, formal, FB}),
+    ['Lean theorem over Mathlib', '>Lean declarations<', '>Conditions<', '>Not covered<', 'axioms']);
+});
+
+test('without the bindings file the panel still names the rung and the declarations', () => {
+  const h = L.leanPanel({kind: 'node', id: 'Temperature', layers, formal: null, FB});
+  assert.match(h, /Lean theorem citing Physlib/);
+  assert.match(h, /absoluteTemperature_roundtrip/);
+  assert.match(h, /did not load/);
+});
+
+test('a binding that only reads a quantity says so, and a conceptual one is a related concept', () => {
+  const mv = L.leanPanel({kind: 'node', id: 'MolarVolume', layers, formal, FB});
+  assert.match(mv, /no reviewed Lean theorem/i);
+  assert.match(mv, /Reads it as an input/);
+  assert.match(L.leanPanel({kind: 'node', id: 'Structure', layers, formal, FB}), /Source-only: a related Physlib concept/);
+});
+
+test('panel text from the data is escaped', () => {
+  const f = structuredClone(formal);
+  f.bindings.find((b) => b.id === 'absolute-temperature').statement = '<img src=x onerror=alert(1)>';
+  const h = L.leanPanel({kind: 'node', id: 'Temperature', layers, formal: f, FB});
+  assert.doesNotMatch(h, /<img/);
+  assert.match(h, /&lt;img/);
+});

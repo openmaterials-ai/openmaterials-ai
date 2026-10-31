@@ -153,7 +153,64 @@
     return rows;
   }
 
-  const api = {RUNG_WORDS, marks, slots, wires, lit, inLayer, state, fragment, leanIndex, searchLean, tableRows};
+  const esc = (v) => String(v == null ? '' : v).replace(/[&<>"']/g, (c) => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
+  const safeHref = (u) => (/^https:\/\//.test(u || '') ? esc(u) : '');
+  const items = (xs) => (xs && xs.length ? '<ul>' + xs.map((x) => '<li>' + x + '</li>').join('') + '</ul>' : '');
+  const VIA = {formulas: 'Every formula that produces it has a Lean theorem that covers it.',
+    quantity: 'A Lean theorem is about the quantity itself.'};
+  const ROLE = {stated: 'Source-only: identifies a Physlib declaration, no theorem',
+    reads: 'Reads it as an input and proves something else', related: 'Source-only: a related Physlib concept'};
+  function joinAnd(xs) { return xs.length < 2 ? xs.join('') : xs.slice(0, -1).join(', ') + ' and ' + xs[xs.length - 1]; }
+
+  // The Lean block of a quantity's or formula's panel: its rung, then every binding that names it, each
+  // with its statement, Lean declarations, cited Physlib declarations, conditions and what it leaves
+  // open, then the audited axioms. Statements and conditions come from formula_bindings.json (formal);
+  // without it the rung and the declarations still show. FB is docs/lean/bridge/lib.js.
+  function leanPanel({kind, id, layers, formal, FB, bridgeBase = '../lean/bridge/'}) {
+    const mark = (kind === 'node' ? layers.quantities : layers.formulas)[id] || {rung: 'none', bindings: [], related: []};
+    const own = new Set(mark.bindings || []), related = new Set(mark.related || []);
+    const byId = new Map(((formal && formal.bindings) || []).map((b) => [b.id, b]));
+    const named = formal ? formal.bindings.filter((b) => b.targets.some((t) => t.kind === kind && t.id === id)).map((b) => b.id)
+      : [...own, ...related];
+    const role = (b) => {
+      const e = layers.bindings[b] || {}, f = byId.get(b);
+      const ev = e.evidence || (f && f.evidence.kind), rel = e.relation || (f && f.relation);
+      if (related.has(b) || (ev === 'source_correspondence' && rel === 'conceptual')) return 'related';
+      if (ev === 'source_correspondence') return 'stated';
+      if (own.has(b)) return rel === 'local' ? 'local' : 'physlib';
+      return 'reads';
+    };
+    const rank = {physlib: 0, local: 1, stated: 2, reads: 3, related: 4};
+    const ids = [...new Set(named)].sort((a, b) => rank[role(a)] - rank[role(b)] || (a < b ? -1 : 1));
+    let h = '<div class="om-panel-label">Lean</div><p class="lean-rung"><i class="sw rung-' + esc(mark.rung) + '"></i> ' +
+      esc(RUNG_WORDS[mark.rung].charAt(0).toUpperCase() + RUNG_WORDS[mark.rung].slice(1)) + '.' +
+      (kind === 'node' && VIA[mark.via] ? ' ' + VIA[mark.via] : '') + '</p>';
+    if (!formal) h += '<p class="muted">The statements and their conditions did not load (formula_bindings.json).</p>';
+    for (const b of ids) {
+      const e = layers.bindings[b] || {physlib: [], bridge: []}, f = byId.get(b), r = role(b);
+      h += '<section class="lean-binding"><p><strong>' + esc(b) + '</strong><br><span class="formal-badge">' +
+        esc(ROLE[r] || RUNG_WORDS[r].charAt(0).toUpperCase() + RUNG_WORDS[r].slice(1)) + '</span></p>';
+      if (f) h += '<p>' + esc(f.statement) + '</p>';
+      const bridge = e.bridge.length ? e.bridge.map((d) => '<a href="' + safeHref(d.url) + '"><code>' + esc(d.name) + '</code></a> <span class="muted">' + esc(d.module) + '</span>')
+        : ((f && f.evidence.declarations) || []).map((n) => '<code>' + esc(n) + '</code>');
+      if (bridge.length) h += '<div class="om-panel-label">Lean declarations</div>' + items(bridge);
+      const cited = (e.physlib.length ? e.physlib : ((f && f.sources) || []).map((x) => ({name: x.name, module: x.module, url: x.source_url})))
+        .map((d) => '<a href="' + esc(FB.fragment({declaration: d.name, module: d.module})) + '"><code>' + esc(d.name) + '</code></a> · <a href="' +
+          safeHref(d.url) + '">source</a> <span class="muted">' + esc(d.module) + '</span>');
+      if (cited.length) h += '<div class="om-panel-label">Physlib declarations cited</div>' + items(cited);
+      if (f) h += (items((f.conditions || []).map(esc)) ? '<div class="om-panel-label">Conditions</div>' + items(f.conditions.map(esc)) : '') +
+        (items((f.remaining_obligations || []).map(esc)) ? '<div class="om-panel-label">Not covered</div>' + items(f.remaining_obligations.map(esc)) : '');
+      h += '</section>';
+    }
+    if (ids.some((b) => (layers.bindings[b] || {bridge: []}).bridge.length) && layers.axioms)
+      h += '<p class="muted">Every bridge declaration rests only on the axioms ' + joinAnd(layers.axioms.map((a) => '<code>' + esc(a) + '</code>')) + ', by the bridge audit.</p>';
+    if (!ids.length) h += '<p class="muted">No reviewed Lean binding names it.</p>';
+    const params = {}; params[kind] = id;
+    h += '<p><a href="' + esc(bridgeBase + FB.fragment(params)) + '">Conditions and coverage</a> · <a href="#physlib=1">Browse upstream declarations</a></p>';
+    return h;
+  }
+
+  const api = {RUNG_WORDS, marks, slots, wires, lit, inLayer, state, fragment, leanIndex, searchLean, tableRows, leanPanel};
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.LeanMap = api;
 })(typeof self !== 'undefined' ? self : this);

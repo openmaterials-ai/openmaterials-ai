@@ -24,7 +24,7 @@ function harness() {
   const edgeElements=[];
   const location={hash:'',pathname:'/map/',search:''};
   const calls=[];
-  const context={URLSearchParams,FB,LW,formalData,formalDeclarations:FB.declarationIndex(formalData),
+  const context={URLSearchParams,FB,LW,formalData,formalLoaded:true,layersData:{quantities:{},formulas:{},bindings:{},axioms:[]},formalDeclarations:FB.declarationIndex(formalData),
     formulaBindings:{operators:{source_formula:formalData.inventory.operators[0]}},document,location,
     history:{replaceState:(_,__,hash)=>{location.hash=hash.startsWith('#')?hash:'';}},
     panelEl:new Element(),captionEl:{hidden:false},mapStatus:new Element(),depth:'overview',

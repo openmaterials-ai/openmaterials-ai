@@ -33,9 +33,9 @@
   :focus-visible{outline:2px solid var(--ink,#171717);outline-offset:2px;}
   /* toolbar */
   .toolbar{flex:none;display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:8px var(--inset,16px);border-bottom:1px solid var(--line,#EBEBEB);background:var(--page,#FFFFFF);}
-  .toolbar .om-search{flex:1 1 200px;max-width:360px;min-width:0;}
+  .toolbar .om-search{flex:1 1 160px;max-width:320px;min-width:0;}
   .toolbar .push{margin-left:auto;}
-  .toolbar .select{max-width:160px;}   /* the open list shows full names */
+  .toolbar .select{max-width:140px;}   /* the open list shows full names */
   @media (max-width:960px){.toolbar .om-search{flex:1 1 100%;max-width:none;}}
   /* phones: every control stays, in three rows: search; view switch, zoom and Fit; Tier, Code and
      Copy link (the zoom buttons are the one-finger alternative to a pinch) */
@@ -93,6 +93,19 @@
   .layer-switch label:has(input:checked){color:var(--ink,#171717);background:var(--surface-2,#F2F2F2);}
   .layer-switch label:has(input:focus-visible){outline:2px solid var(--focus,#171717);outline-offset:1px;}
   .layer-switch input{position:absolute;opacity:0;width:1px;height:1px;margin:0;}
+  /* the Lean block of a panel */
+  .lean-rung{display:flex;gap:8px;align-items:baseline;margin:0 0 8px;} .lean-rung .sw{flex:none;transform:translateY(1px);}
+  .lean-binding{border-top:1px solid var(--line,#EBEBEB);padding:12px 0;overflow-wrap:anywhere;}
+  .lean-binding ul{padding-left:18px;margin:4px 0;} .lean-binding code,.om-panel p code{font-family:var(--font-mono,ui-monospace,monospace);font-size:12px;}
+  /* the table view: every quantity and formula with its Lean rung, by tier */
+  .map-table{position:absolute;inset:0;z-index:7;overflow:auto;padding:16px var(--inset,16px) 48px;background:var(--page,#FFFFFF);}
+  .map-table[hidden]{display:none;}
+  .map-table table,#fallback table{width:100%;max-width:960px;border-collapse:collapse;margin:0 0 28px;font-size:14px;line-height:20px;}
+  .map-table caption,#fallback caption{text-align:left;font-size:20px;line-height:28px;padding:0 0 8px;color:var(--ink,#171717);}
+  .map-table th,.map-table td,#fallback th,#fallback td{text-align:left;vertical-align:top;padding:6px 8px;border-bottom:1px solid var(--line,#EBEBEB);}
+  .map-table th,#fallback th{font-weight:500;color:var(--ink-2,#4D4D4D);font-size:12px;}
+  .map-table td code,#fallback td code{font-family:var(--font-mono,ui-monospace,monospace);font-size:12px;color:var(--ink-2,#4D4D4D);overflow-wrap:anywhere;}
+  .map-table tr[data-out] td{color:var(--ink-2,#4D4D4D);}
   .node.sel rect{stroke:var(--ink,#171717);stroke-width:3;}
   /* dimmed: a neutral fill and ink-2 labels, never low opacity, so labels keep their contrast */
   .node.dim rect{fill:var(--surface-2,#F2F2F2);stroke:var(--line,#EBEBEB);}
@@ -163,13 +176,6 @@
   #err{position:fixed;left:16px;right:16px;bottom:16px;z-index:60;display:none;white-space:pre-wrap;}
   /* static outline, shown only when the layout library is missing */
   #fallback{flex:1 1 auto;min-height:0;overflow:auto;padding:24px var(--inset,16px) 48px;display:none;}
-  #fallback .ft{font-size:20px;line-height:28px;font-weight:450;color:var(--ink,#171717);margin:24px 0 4px;}
-  #fallback .fd{color:var(--ink-2,#4D4D4D);margin-bottom:12px;}
-  #fallback .fn{border:1px solid var(--line,#EBEBEB);border-radius:var(--radius,6px);padding:12px 16px;margin:8px 0;background:var(--surface,#FAFAFA);}
-  #fallback .fn .fs{font-weight:500;color:var(--ink,#171717);}
-  #fallback .fn .fs code{font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);}
-  #fallback .fn .fk{display:inline-flex;align-items:center;height:24px;padding:0 10px;margin-left:8px;border-radius:9999px;background:var(--surface-2,#F2F2F2);color:var(--ink,#171717);font-size:12px;font-weight:500;vertical-align:middle;}
-  #fallback .fn .fe{color:var(--ink-2,#4D4D4D);margin-top:6px;}
   /* embed mode (?embed=1): the canvas alone, for iframes on the code pages and elsewhere; the hash still picks a code or a node */
   body.embed [data-site-header],body.embed .toolbar,body.embed .legend,body.embed .caption,body.embed #banner{display:none;}
   .embed-out{position:absolute;right:12px;bottom:12px;z-index:6;display:none;padding:6px 10px;border-radius:var(--radius,6px);background:var(--page,#FFFFFF);box-shadow:var(--shadow-float,0 0 0 1px #EBEBEB,0 4px 8px -4px rgb(0 0 0 / .04),0 16px 24px -8px rgb(0 0 0 / .06));font-size:12px;line-height:16px;color:var(--ink,#171717);text-decoration:none;}
@@ -187,6 +193,7 @@
   <select class="select" id="tierJump" aria-label="Jump to a tier"><option value="">Tier</option></select>
   <select class="select" id="codeFilter" aria-label="Codes"><option value="">All codes</option></select>
   <button class="btn btn--secondary btn--sm" id="physlibBtn" type="button" aria-controls="panel">PhysLean / Physlib</button>
+  <button class="btn btn--secondary btn--sm" id="tableBtn" type="button" aria-pressed="false" aria-controls="table">Table</button>
   <span class="push"></span>
   <button class="btn btn--ghost btn--sm" id="zoomOut" type="button" aria-label="Zoom out">&minus;</button>
   <button class="btn btn--ghost btn--sm" id="zoomIn" type="button" aria-label="Zoom in">+</button>
@@ -215,6 +222,7 @@
 <p class="caption" id="caption">Select a quantity to see its formula, what it is built from, what it feeds, and the codes that compute it. Shift-click to pick several quantities, then press Share for a link to them.</p>
 <a class="embed-out" id="embedOut" href="../map/" target="_top">Open the full map</a>
 <div class="om-panel" id="panel" role="complementary" aria-label="Map selection and formal references" tabindex="-1"></div>
+<div class="map-table" id="table" role="region" aria-label="Every quantity and formula with its Lean rung" tabindex="-1" hidden></div>
 </div>
 <div id="fallback"></div>
 <div id="measure"></div>
@@ -239,7 +247,7 @@
 //    - layout    : dagre for vertical order, tier-band x-override for columns
 //    - render    : bands, nodes (structure only)
 //    - interaction: pan/zoom, depth levels, provenance panel, code filter, search, keys
-//    - fallback  : static readable outline when dagre is missing
+//    - fallback  : the table view when dagre is missing
 //  KaTeX and dagre both degrade: no code path throws when either is undefined.
 // ============================================================================
 
@@ -263,7 +271,7 @@ let formulaBindings={nodes:{},operators:{}};
 let formalData={bindings:[],inventory:{nodes:[],operators:[]}}, formalDeclarations=[];
 // the Lean layer: rungs, counterparts and tier ledgers (map_layers.json), the formula marks and their wires
 let layersData={quantities:{},formulas:{},tiers:[],bindings:{}}, LM={quantities:new Map(),formulas:new Map()},
-    slotOf=new Map(), wireList=[];
+    slotOf=new Map(), wireList=[], leanIx=[], formalLoaded=false, graphData={nodes:[],tiers:[]};
 const LW=window.LeanMap;
 const FB=window.FormulaBridge;
 let nodeById={}, parents={}, children={}, symHtml={}, pos={},
@@ -336,8 +344,8 @@ let semById={};
 function build([graph, codes, semantics, lean, bindings, layers]){
   leanData = lean || {nodes:{}};
   if(layers) layersData=layers;
-  LM=LW.marks(graph, layersData);
-  if(bindings){ formalData=bindings; formalDeclarations=FB.declarationIndex(bindings); }
+  LM=LW.marks(graph, layersData); leanIx=LW.leanIndex(layersData); graphData=graph;
+  if(bindings){ formalData=bindings; formalDeclarations=FB.declarationIndex(bindings); formalLoaded=true; }
   ['nodes','operators'].forEach(kind=>{
     ((bindings&&bindings.inventory&&bindings.inventory[kind])||[]).forEach(row=>{ formulaBindings[kind][row.id]=row; });
   });
@@ -677,18 +685,11 @@ function selectNode(node){
     h+='<div class="om-panel-label">'+(fl.length===1?'Formula on the producing edge':fl.length+' producing edges (alternative routes)')+'</div>';
     fl.forEach(f=>{ h+=(f.op?'<div class="fop">'+esc(opName(f.op))+'</div>':'')+'<div class="formula">'+tex(f.latex,true)+'</div>'; });
   }
+  h+=LW.leanPanel({kind:'node', id:id, layers:layersData, formal:formalLoaded?formalData:null, FB:FB});
+  const ops=[...new Set(fl.map(f=>f.op).filter(o=> LM.formulas.has(o)))];
+  if(ops.length){ h+='<div class="om-panel-label">Producing formulas in Lean</div>'+ops.map(op=>'<p><a href="'+attr(LW.fragment({operator:op},{layer:layer}))+'">'+esc(opName(op))+'</a>: '+esc(LW.RUNG_WORDS[LM.formulas.get(op).rung])+'</p>').join(''); }
   const lv=leanData.nodes&&leanData.nodes[node.id];
-  if(lv){ h+='<div class="om-panel-label"><span class="lean-badge">Lean dimension</span></div><pre class="lean-line">'+esc(lv.lean)+'</pre>'; }
-  const bindingRow=formulaBindings.nodes[id];
-  if(bindingRow){
-    h+='<div class="om-panel-label">PhysLean / Physlib references</div>';
-    h+=FB.targetReferencesHtml(formalData,'node',id,'../lean/bridge/') || '<p class="muted">No reviewed correspondence for this quantity.</p>';
-    h+='<p><a href="../lean/bridge/#node='+encodeURIComponent(id)+'">Quantity conditions and coverage</a> · <a href="#physlib=1">Browse upstream declarations</a></p>';
-    [...new Set(fl.map(f=>f.op).filter(Boolean))].forEach(op=>{
-      const row=formulaBindings.operators[op];
-      if(row) h+='<p><a href="#operator='+encodeURIComponent(op)+'">'+esc(opName(op))+'</a>: '+(row.binding_ids.length?row.binding_ids.length+' correspondence'+(row.binding_ids.length===1?'':'s'):'gap')+'</p>';
-    });
-  }
+  if(lv){ h+='<div class="om-panel-label"><span class="lean-badge">Lean dimension</span></div><pre class="lean-line">'+esc(lv.lean)+'</pre><p class="muted">A dimension check of the quantity, not a theorem about it: it leaves the Lean rung unchanged.</p>'; }
   if(ins.length){ h+='<div class="om-panel-label">Built from</div><div class="chips">'+ins.map(chip).join('')+'</div>'; }
   if(outs.length){ h+='<div class="om-panel-label">Feeds</div><div class="chips">'+outs.map(chip).join('')+'</div>'; }
   h+=mappedByHtml(id);
@@ -748,9 +749,7 @@ function selectOperator(id){
   h+='<div class="om-panel-label">Formula</div><div class="formula">'+tex(row.formula_latex,true)+'</div>';
   h+='<div class="om-panel-label">Inputs</div><div class="chips">'+(row.inputs.length?row.inputs.map(chip).join(''):'No input quantities')+'</div>';
   h+='<div class="om-panel-label">Outputs</div><div class="chips">'+row.outputs.map(chip).join('')+'</div>';
-  h+='<div class="om-panel-label">PhysLean / Physlib references</div>';
-  h+=FB.targetReferencesHtml(formalData,'operator',id,'../lean/bridge/') || '<p class="muted">No reviewed correspondence for this formula.</p>';
-  h+='<p><a href="../lean/bridge/#operator='+encodeURIComponent(id)+'">Conditions and coverage</a> · <a href="#physlib=1">Browse upstream declarations</a></p>';
+  h+=LW.leanPanel({kind:'operator', id:id, layers:layersData, formal:formalLoaded?formalData:null, FB:FB});
   panelEl.innerHTML=h; panelEl.style.display='block';
   writeHash({operator:id});
   const visible=[...related].filter(name=>pos[name]); if(visible.length) fitTo(visible,row.outputs[0]);
@@ -935,6 +934,10 @@ qInput.addEventListener('input', function(){
     nodeHits=Object.values(nodeById).filter(n=> (n.id+' '+(n.symbol||'')).toLowerCase().includes(lv)).map(n=>n.id);
     edgeOps=new Set();
   }
+  // Lean declaration names (Physlib's and the bridge's) find the marks their bindings prove or name
+  const leanHits=LW.searchLean(leanIx, v);
+  leanHits.quantities.forEach(id=>{ if(nodeById[id]&&!nodeHits.includes(id)) nodeHits.push(id); });
+  leanHits.formulas.forEach(op=> edgeOps.add(op));
   const set=new Set(nodeHits); depth='focused'; clearDim(); panelEl.style.display='none';
   lightSet(set);
   // a formula whose operator the words name lights with its wires
@@ -964,30 +967,31 @@ window.addEventListener('keydown', e=>{
   else if(PAN[e.key]){ e.preventDefault(); VB.x+=PAN[e.key][0]*VB.w*0.1; VB.y+=PAN[e.key][1]*VB.h*0.1; setVB(); }
 });
 
-// ---- fallback: static readable outline (dagre missing) ---------------------
-// Each tier heading + its nodes listed (symbol-or-name) with outgoing edges
-// named by op, so the page communicates structure without a layout engine.
+// ---- table: every quantity and formula with its Lean rung, by tier; rows outside the layer stay listed
+function tableHtml(){
+  let h='', cur=null;
+  LW.tableRows(graphData, layersData).forEach(r=>{
+    if(r.tier!==cur){
+      if(cur!==null) h+='</tbody></table>';
+      cur=r.tier; const t=tierList[tierIndex[r.tier]];
+      h+='<table><caption>'+(t&&t.order!==1e6?String(t.order+1).padStart(2,'0')+' ':'')+esc(r.tier)+'</caption><thead><tr><th scope="col">Mark</th><th scope="col">Name</th><th scope="col">Lean</th></tr></thead><tbody>';
+    }
+    const q=r.kind==='quantity', href=LW.fragment(q?{node:r.id}:{operator:r.id},{layer:layer});
+    h+='<tr'+(LW.inLayer(r.rung,layer)?'':' data-out')+'><td>'+(q?'Quantity':'Formula')+'</td><td><a href="'+attr(href)+'">'+(q?(symHtml[r.id]||esc(r.id)):esc(opName(r.id)))+'</a> <code>'+esc(r.id)+'</code></td><td><i class="sw rung-'+r.rung+'"></i> '+esc(LW.RUNG_WORDS[r.rung])+'</td></tr>';
+  });
+  return h+(cur!==null?'</tbody></table>':'');
+}
+const tableEl=document.getElementById('table'), tableBtn=document.getElementById('tableBtn');
+function showTable(on){ tableEl.hidden=!on; tableBtn.setAttribute('aria-pressed', on?'true':'false'); if(on){ tableEl.innerHTML=tableHtml(); tableEl.focus({preventScroll:true}); } }
+tableBtn.addEventListener('click', ()=> showTable(tableEl.hidden));
+tableEl.addEventListener('click', e=>{ if(e.target.closest('a')) showTable(false); });
+
+// ---- fallback: the table, when the layout library is missing ---------------
 function renderFallback(graph, bandOf){
-  banner('The layout library did not load, so the tiers are listed as text.');
+  banner('The layout library did not load, so the map is listed as a table.');
   document.getElementById('cy').style.display='none';
   const fb=document.getElementById('fallback'); fb.style.display='block';
-  const byBand={};
-  graph.nodes.forEach(n=>{ const b=bandOf(n); (byBand[b]=byBand[b]||[]).push(n); });
-  let s='';
-  tierList.forEach((t,i)=>{
-    const list=byBand[i]||[];
-    s+='<div class="ft">'+esc(t.name)+'</div><div class="fd">'+esc(t.description||'')+'</div>';
-    list.forEach(n=>{
-      const outs=(children[n.id]||[]);
-      s+='<div class="fn"><span class="fs">'+(symHtml[n.id]||'')+' '+esc(n.id)+'</span><span class="fk '+n.type+'">'+esc(n.type)+'</span>';
-      if(outs.length){
-        const edg=outs.map(t2=>{ const e=edgeList.find(x=> x.source===n.id && x.target===t2); return '<span>&rarr;</span> '+esc(t2)+(e&&e.op?(' ('+esc(opName(e.op))+')'):''); });
-        s+='<div class="fe">'+edg.join('<br>')+'</div>';
-      }
-      s+='</div>';
-    });
-  });
-  fb.innerHTML=s;
+  fb.innerHTML=tableHtml();
 }
 </script>
 <script src="../assets/site.js"></script>
