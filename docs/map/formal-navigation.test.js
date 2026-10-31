@@ -5,6 +5,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const vm = require('node:vm');
 const FB = require('../lean/bridge/lib.js');
+const LW = require('./lean-map.js');
 const page = fs.readFileSync(__dirname + '/index.html','utf8');
 const handlers = page.slice(page.indexOf('function selectOperator(id){'),page.indexOf("window.addEventListener('hashchange', applyHash);"));
 function harness() {
@@ -23,7 +24,7 @@ function harness() {
   const edgeElements=[];
   const location={hash:'',pathname:'/map/',search:''};
   const calls=[];
-  const context={URLSearchParams,FB,formalData,formalDeclarations:FB.declarationIndex(formalData),
+  const context={URLSearchParams,FB,LW,formalData,formalDeclarations:FB.declarationIndex(formalData),
     formulaBindings:{operators:{source_formula:formalData.inventory.operators[0]}},document,location,
     history:{replaceState:(_,__,hash)=>{location.hash=hash.startsWith('#')?hash:'';}},
     panelEl:new Element(),captionEl:{hidden:false},mapStatus:new Element(),depth:'overview',

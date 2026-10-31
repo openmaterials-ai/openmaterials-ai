@@ -39,7 +39,7 @@
   @media (max-width:960px){.toolbar .om-search{flex:1 1 100%;max-width:none;}}
   /* phones: every control stays, in three rows: search; view switch, zoom and Fit; Tier, Code and
      Copy link (the zoom buttons are the one-finger alternative to a pinch) */
-  @media (max-width:600px){.toolbar > *{order:2;} .toolbar .om-search{order:0;} .toolbar .view-switch,#zoomOut,#zoomIn,#fitBtn{order:1;}
+  @media (max-width:600px){.toolbar > *{order:2;} .toolbar .om-search{order:0;} .toolbar .view-switch,.toolbar .layer-switch,#zoomOut,#zoomIn,#fitBtn{order:1;}
     .toolbar .push{display:none;} #tierJump,#codeFilter{flex:1 1 88px;}}
   /* canvas */
   .canvas{position:relative;flex:1 1 auto;min-height:0;overflow:hidden;background:var(--canvas-dots,radial-gradient(circle at 1px 1px,var(--line,#EBEBEB) 1px,transparent 0) 0 0/24px 24px),var(--page,#FFFFFF);}
@@ -82,6 +82,17 @@
   .wire{fill:none;stroke:var(--edge,#8F8F8F);stroke-width:1;vector-effect:non-scaling-stroke;opacity:.45;transition:opacity var(--dur,150ms) var(--ease,ease);}
   .wire.hot{stroke:var(--data-obs-line,#4F46E5);stroke-width:2;opacity:1;}
   .wire.dim,.formula.dim{opacity:.12;}
+  /* a layer hides the marks outside it: each leaves a hairline ghost on its place, and its wires go */
+  .node rect,.formula circle,.wire,.edge,.nlab{transition:opacity .3s var(--ease,ease),fill-opacity .3s var(--ease,ease),stroke .3s var(--ease,ease);}
+  .node.out,.formula.out{pointer-events:none;}
+  .node.out rect,.formula.out circle{fill-opacity:0;stroke:var(--line,#EBEBEB);stroke-width:1;stroke-dasharray:none;}
+  .nlab.out,.wire.out,.edge.out{opacity:0;}
+  .layer-switch{display:inline-flex;gap:2px;height:32px;margin:0;padding:2px;border:0;border-radius:var(--radius,2px);box-shadow:0 0 0 1px var(--line,#EBEBEB);}
+  .layer-switch label{display:inline-flex;align-items:center;padding:0 10px;border-radius:4px;font:500 14px/20px var(--font-sans,serif);color:var(--ink-2,#4D4D4D);cursor:pointer;}
+  .layer-switch label:hover{color:var(--ink,#171717);}
+  .layer-switch label:has(input:checked){color:var(--ink,#171717);background:var(--surface-2,#F2F2F2);}
+  .layer-switch label:has(input:focus-visible){outline:2px solid var(--focus,#171717);outline-offset:1px;}
+  .layer-switch input{position:absolute;opacity:0;width:1px;height:1px;margin:0;}
   .node.sel rect{stroke:var(--ink,#171717);stroke-width:3;}
   /* dimmed: a neutral fill and ink-2 labels, never low opacity, so labels keep their contrast */
   .node.dim rect{fill:var(--surface-2,#F2F2F2);stroke:var(--line,#EBEBEB);}
@@ -172,6 +183,7 @@
 <div class="toolbar">
   <span class="om-search"><svg class="om-search-ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.5" y2="16.5"></line></svg><input class="om-input" id="q" placeholder="Find a quantity" aria-label="Find a quantity" autocomplete="off"></span>
   <nav class="view-switch" aria-label="Map view"><a href="../map/" aria-current="page">2D</a><a href="../map-3d/">3D</a><a href="../map-trace/">Trace</a></nav>
+  <fieldset class="layer-switch" aria-label="Layer"><label><input type="radio" name="layer" value="omai" checked>OMAI</label><label><input type="radio" name="layer" value="lean">Lean</label></fieldset>
   <select class="select" id="tierJump" aria-label="Jump to a tier"><option value="">Tier</option></select>
   <select class="select" id="codeFilter" aria-label="Codes"><option value="">All codes</option></select>
   <button class="btn btn--secondary btn--sm" id="physlibBtn" type="button" aria-controls="panel">PhysLean / Physlib</button>
@@ -198,6 +210,7 @@
   <span><i class="sw rung-local"></i>Theorem over Mathlib</span>
   <span><i class="sw rung-stated"></i>Statement only</span>
   <span><i class="sw rung-none"></i>None reviewed</span>
+  <span id="layerCount"></span>
 </div>
 <p class="caption" id="caption">Select a quantity to see its formula, what it is built from, what it feeds, and the codes that compute it. Shift-click to pick several quantities, then press Share for a link to them.</p>
 <a class="embed-out" id="embedOut" href="../map/" target="_top">Open the full map</a>
@@ -397,6 +410,7 @@ function layoutAndRender(graph, bandOf){
   renderGraph(graph);
   fitDefault();
   applyDepth();
+  setLayer(layer, true);
   applyHash();
 }
 
@@ -705,6 +719,8 @@ function selectEdge(key, op){
   panelEl.innerHTML=h; panelEl.style.display='block';
 }
 
+// the layer switch (setLayer and writeHash live with the hash handlers below)
+document.querySelectorAll('input[name=layer]').forEach(r=> r.addEventListener('change', ()=>{ setLayer(r.value); writeHash(LW.state(location.hash).rest); }));
 // A formula mark opens its operator; without the bindings file it shows its formula.
 function selectFormula(op){
   if(formulaBindings.operators[op]){ selectOperator(op); return; }
@@ -736,9 +752,33 @@ function selectOperator(id){
   h+=FB.targetReferencesHtml(formalData,'operator',id,'../lean/bridge/') || '<p class="muted">No reviewed correspondence for this formula.</p>';
   h+='<p><a href="../lean/bridge/#operator='+encodeURIComponent(id)+'">Conditions and coverage</a> · <a href="#physlib=1">Browse upstream declarations</a></p>';
   panelEl.innerHTML=h; panelEl.style.display='block';
-  history.replaceState(null,'',FB.fragment({operator:id}));
+  writeHash({operator:id});
   const visible=[...related].filter(name=>pos[name]); if(visible.length) fitTo(visible,row.outputs[0]);
   mapStatus.textContent='Operator '+id+' selected; Physlib references do not change the scientific graph.';
+}
+// ---- layers: OMAI shows every mark, Lean the marks with a reviewed Lean theorem or statement.
+let layer='omai';
+function layerWords(l){
+  const q=[...LM.quantities.values()].filter(r=>LW.inLayer(r.rung,'lean')).length, f=[...LM.formulas.values()].filter(r=>LW.inLayer(r.rung,'lean')).length;
+  return l==='lean' ? 'Lean layer: '+f+' of '+LM.formulas.size+' formulas and '+q+' of '+LM.quantities.size+' quantities with a Lean theorem or statement.'
+    : 'OMAI layer: '+LM.formulas.size+' formulas and '+LM.quantities.size+' quantities; '+f+' formulas have a Lean theorem.';
+}
+function setLayer(l, quiet){
+  layer=l;
+  document.querySelectorAll('input[name=layer]').forEach(r=>{ r.checked=(r.value===l); });
+  const out=new Set();
+  vp.querySelectorAll('.node').forEach(el=>{ const o=!LW.inLayer((LM.quantities.get(el.dataset.id)||{rung:'none'}).rung,l); el.classList.toggle('out',o); el.setAttribute('tabindex',o?'-1':'0'); if(o) out.add(el.dataset.id); const lab=labelById[el.dataset.id]; if(lab) lab.classList.toggle('out',o); });
+  vp.querySelectorAll('.formula').forEach(el=>{ const o=!LW.inLayer(LM.formulas.get(el.dataset.op).rung,l); el.classList.toggle('out',o); el.setAttribute('tabindex',o?'-1':'0'); if(o) out.add(el.dataset.op); });
+  vp.querySelectorAll('.wire').forEach(el=> el.classList.toggle('out', out.has(el.dataset.op)||out.has(el.dataset.q)));
+  vp.querySelectorAll('.edge').forEach(el=>{ const ab=el.dataset.edge.split('>>'); el.classList.toggle('out', out.has(ab[0])||out.has(ab[1])); });
+  document.getElementById('layerCount').textContent=layerWords(l);
+  if(!quiet) mapStatus.textContent=layerWords(l);
+}
+// Every hash the page writes goes through here, so the layer rides along with selections and the Physlib browser.
+function writeHash(base){
+  const h=LW.fragment(base, {layer:layer, tag:null});
+  if(location.hash===h||(!h&&!location.hash)) return;
+  history.replaceState(null,'',h||location.pathname+location.search);
 }
 function showFormalNavigator(state){
   state=state||{}; captionEl.hidden=true;
@@ -759,10 +799,10 @@ function showFormalNavigator(state){
     if(rows.length===1) document.querySelector('#formal-results details').open=true;
   }
   [input,module,evidence].forEach(control=>control.addEventListener('input',()=>{
-    exactDeclaration=''; exactModule=''; render(); history.replaceState(null,'',FB.fragment({physlib:'1',module:module.value}));
+    exactDeclaration=''; exactModule=''; render(); writeHash({physlib:'1',module:module.value});
   }));
   render();
-  history.replaceState(null,'',FB.fragment({physlib:'1',declaration:exactDeclaration,module:exactModule}));
+  writeHash({physlib:'1',declaration:exactDeclaration,module:exactModule});
   panelEl.focus();
 }
 document.getElementById('physlibBtn').addEventListener('click',()=>showFormalNavigator());
@@ -770,16 +810,23 @@ document.getElementById('physlibBtn').addEventListener('click',()=>showFormalNav
 // ---- deep links: quantities, real operators, and formal-reference navigation
 function nodeFromHash(){ return new URLSearchParams(location.hash.slice(1)).get('node'); }
 function codeFromHash(){ return new URLSearchParams(location.hash.slice(1)).get('code'); }
-function syncHash(id){
-  const h=id?('#node='+encodeURIComponent(id)):'';
-  if(location.hash===h||(!h&&!location.hash)) return;
-  history.replaceState(null,'',h||location.pathname+location.search);
-}
+function syncHash(id){ writeHash(id?{node:id}:{}); }
 function missingFormalTarget(state){
   clearDim(); panelEl.innerHTML=closeBtn()+'<p>No such OMAI '+esc(state.kind)+': '+esc(state.id)+'</p><p><a href="#physlib=1">Browse reviewed Physlib references</a></p>'; panelEl.style.display='block';
   mapStatus.textContent='No such OMAI '+state.kind+': '+state.id;
 }
 function applyHash(){
+  const st=LW.state(location.hash);
+  if(st.layer!==layer) setLayer(st.layer, true);
+  applySelection();
+  // what the link named that the map does not have, said in the panel
+  if(st.unknown.length){
+    const note='<p class="muted">This link names '+st.unknown.map(esc).join(' and ')+', which the map does not have, so it shows the '+(layer==='lean'?'Lean':'OMAI')+' layer.</p>';
+    if(panelEl.style.display==='block') panelEl.querySelector('.x').insertAdjacentHTML('afterend', note);
+    else { panelEl.innerHTML=closeBtn()+note; panelEl.style.display='block'; }
+  }
+}
+function applySelection(){
   const codeRef=codeFromHash();
   if(codeRef && codesData[codeRef]){ if(activeCode!==codeRef) toggleCode(codeRef); return; }
   if(activeCode) toggleCode(activeCode);

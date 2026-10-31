@@ -69,7 +69,7 @@ def server():
         yield s
 
 
-def run(server, src, body, w=1400, h=900):
+def run(server, src, body, w=1400, h=900, flags=()):
     """Frame /map/<src> at w x h, run body (an async function body with w, d and wait in scope), return its result."""
     if not CHROME:
         pytest.skip("Chrome not available")
@@ -77,7 +77,7 @@ def run(server, src, body, w=1400, h=900):
     name = f"/__harness{len(pages)}.html"
     pages[name] = HARNESS % {"src": src, "w": w, "h": h, "body": body}
     out = subprocess.run([CHROME, "--headless=new", "--no-sandbox", "--disable-gpu", "--virtual-time-budget=60000",
-                          f"--window-size={w + 40},{h + 120}", "--dump-dom", base + name],
+                          f"--window-size={w + 40},{h + 120}", *flags, "--dump-dom", base + name],
                          capture_output=True, text=True, timeout=120).stdout
     m = re.search(r"RESULT (\{.*\})", out)
     assert m, out[-2000:]
@@ -144,3 +144,40 @@ def test_zoom_out_reaches_the_whole_map(server):
 def test_no_horizontal_scroll(server):
     for w, h in ((360, 640), (768, 1024), (1400, 900)):
         assert run(server, "#node=Temperature", "return d.documentElement.scrollWidth <= w.innerWidth;", w, h) is True, (w, h)
+
+
+NONE_Q = sum(r["rung"] == "none" for r in LAYERS["quantities"].values())
+NONE_F = sum(r["rung"] == "none" for r in LAYERS["formulas"].values())
+
+
+def test_layer_hides_without_moving(server):
+    fixture = json.loads((ROOT / "tests" / "fixtures" / "map_order.json").read_text())
+    got = run(server, "#layer=lean", "return {order: (() => { " + ORDER + " })(), "
+              "q: d.querySelectorAll('.node.out').length, f: d.querySelectorAll('.formula.out').length, "
+              "lean: d.querySelector('input[name=layer][value=lean]').checked};")
+    assert got == {"order": fixture, "q": NONE_Q, "f": NONE_F, "lean": True}
+
+
+def test_layer_survives_selection(server):
+    got = run(server, "#layer=lean", "w.navTo('Temperature'); await wait(100); return w.location.hash;")
+    assert got == "#layer=lean&node=Temperature"
+
+
+def test_unknown_links_fall_back(server):
+    got = run(server, "#layer=bogus", """return {omai: d.querySelector('input[name=layer][value=omai]').checked,
+      note: d.getElementById('panel').style.display === 'block' && d.getElementById('panel').textContent.includes('layer=bogus'),
+      marks: d.querySelectorAll('.node').length};""")
+    assert got == {"omai": True, "note": True, "marks": len(LAYERS["quantities"])}
+    assert run(server, "#node=Nope", "return d.getElementById('panel').textContent.includes('Nope');") is True
+
+
+def test_layer_is_announced(server):
+    got = run(server, "", """const r = d.querySelector('input[name=layer][value=lean]'); r.click(); await wait(100);
+      return {status: d.getElementById('mapStatus').textContent, hash: w.location.hash};""")
+    assert got["status"].startswith("Lean layer:") and got["hash"] == "#layer=lean"
+
+
+def test_reduced_motion_has_no_transition(server):
+    got = run(server, "", "return getComputedStyle(d.querySelector('.node rect')).transitionDuration;",
+              flags=("--force-prefers-reduced-motion",))
+    assert set(got.split(", ")) == {"0s"}
