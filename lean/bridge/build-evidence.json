@@ -5,7 +5,7 @@
       "Quot.sound",
       "propext"
     ],
-    "declaration_count": 2103,
+    "declaration_count": 2141,
     "declarations": {
       "CanonicalEnsemble.heatCapacity.eq_1": [
         "Classical.choice",
@@ -4018,7 +4018,47 @@
         "Quot.sound",
         "propext"
       ],
+      "OMAI.PhyslibBridge.LinearizedBTE.anharmonicLinewidth_eq_detailedBalance": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
       "OMAI.PhyslibBridge.LinearizedBTE.bose": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.LinearizedBTE.boseRoot": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.LinearizedBTE.boseRoot_nonneg": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.LinearizedBTE.boseRoot_pos": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.LinearizedBTE.channelSum": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.LinearizedBTE.channelSum_nonneg": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.LinearizedBTE.channelSum_swap12": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.LinearizedBTE.channelSum_swap23": [
         "Classical.choice",
         "Quot.sound",
         "propext"
@@ -4046,6 +4086,36 @@
         "Quot.sound",
         "propext"
       ],
+      "OMAI.PhyslibBridge.LinearizedBTE.chaputCollision_posSemidef": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.LinearizedBTE.chaputCollision_posSemidef_onShell": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.LinearizedBTE.chaputCollision_quadratic": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.LinearizedBTE.collisionSquares": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.LinearizedBTE.detailedBalanceLinewidth": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.LinearizedBTE.detailedBalanceLinewidth.eq_1": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
       "OMAI.PhyslibBridge.LinearizedBTE.lbteKappa": [
         "Classical.choice",
         "Quot.sound",
@@ -4062,6 +4132,11 @@
         "propext"
       ],
       "OMAI.PhyslibBridge.LinearizedBTE.lbteKappa_posSemidef": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.LinearizedBTE.lbteKappa_posSemidef_onShell": [
         "Classical.choice",
         "Quot.sound",
         "propext"
@@ -7834,6 +7909,25 @@
         "Quot.sound",
         "propext"
       ],
+      "_private.OMAILinearizedBTE.0.OMAI.PhyslibBridge.LinearizedBTE.anharmonicLinewidth_eq_detailedBalance._abel_1_1": [
+        "propext"
+      ],
+      "_private.OMAILinearizedBTE.0.OMAI.PhyslibBridge.LinearizedBTE.anharmonicLinewidth_eq_detailedBalance._simp_1_2": [],
+      "_private.OMAILinearizedBTE.0.OMAI.PhyslibBridge.LinearizedBTE.bose_absorb": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "_private.OMAILinearizedBTE.0.OMAI.PhyslibBridge.LinearizedBTE.bose_decay": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "_private.OMAILinearizedBTE.0.OMAI.PhyslibBridge.LinearizedBTE.bose_pos'": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
       "_private.OMAILinearizedBTE.0.OMAI.PhyslibBridge.LinearizedBTE.chaputCollision_isSymm._abel_1_1": [
         "propext"
       ],
@@ -7843,6 +7937,29 @@
         "propext"
       ],
       "_private.OMAILinearizedBTE.0.OMAI.PhyslibBridge.LinearizedBTE.chaputCollision_isSymm_of_all._abel_1_3": [
+        "propext"
+      ],
+      "_private.OMAILinearizedBTE.0.OMAI.PhyslibBridge.LinearizedBTE.chaputCollision_posSemidef_onShell._abel_1_1": [
+        "propext"
+      ],
+      "_private.OMAILinearizedBTE.0.OMAI.PhyslibBridge.LinearizedBTE.chaputCollision_posSemidef_onShell._abel_1_2": [
+        "propext"
+      ],
+      "_private.OMAILinearizedBTE.0.OMAI.PhyslibBridge.LinearizedBTE.chaputCollision_posSemidef_onShell._abel_1_3": [
+        "propext"
+      ],
+      "_private.OMAILinearizedBTE.0.OMAI.PhyslibBridge.LinearizedBTE.chaputCollision_quadratic._simp_1_1": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "_private.OMAILinearizedBTE.0.OMAI.PhyslibBridge.LinearizedBTE.chaputCollision_quadratic._simp_1_2": [
+        "Quot.sound",
+        "propext"
+      ],
+      "_private.OMAILinearizedBTE.0.OMAI.PhyslibBridge.LinearizedBTE.even_of_shell": [
+        "Classical.choice",
+        "Quot.sound",
         "propext"
       ],
       "_private.OMAILinearizedBTE.0.OMAI.PhyslibBridge.LinearizedBTE.lbteKappa_eq_sum": [
@@ -7881,6 +7998,58 @@
         "propext"
       ],
       "_private.OMAILinearizedBTE.0.OMAI.PhyslibBridge.LinearizedBTE.lbteSolves_rta_limit._simp_1_9": [
+        "propext"
+      ],
+      "_private.OMAILinearizedBTE.0.OMAI.PhyslibBridge.LinearizedBTE.pair_onShell": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "_private.OMAILinearizedBTE.0.OMAI.PhyslibBridge.LinearizedBTE.sos_identity": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "_private.OMAILinearizedBTE.0.OMAI.PhyslibBridge.LinearizedBTE.sos_identity._simp_1_1": [
+        "Quot.sound",
+        "propext"
+      ],
+      "_private.OMAILinearizedBTE.0.OMAI.PhyslibBridge.LinearizedBTE.sqrt_bose": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "_private.OMAILinearizedBTE.0.OMAI.PhyslibBridge.LinearizedBTE.sum_eq_of_pair": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "_private.OMAILinearizedBTE.0.OMAI.PhyslibBridge.LinearizedBTE.sum_eq_of_pair._simp_1_1": [
+        "Quot.sound",
+        "propext"
+      ],
+      "_private.OMAILinearizedBTE.0.OMAI.PhyslibBridge.LinearizedBTE.sum_partner_swap": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "_private.OMAILinearizedBTE.0.OMAI.PhyslibBridge.LinearizedBTE.tripleSum_swap12": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "_private.OMAILinearizedBTE.0.OMAI.PhyslibBridge.LinearizedBTE.tripleSum_swap12._abel_1_1": [
+        "propext"
+      ],
+      "_private.OMAILinearizedBTE.0.OMAI.PhyslibBridge.LinearizedBTE.tripleSum_swap23": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "_private.OMAILinearizedBTE.0.OMAI.PhyslibBridge.LinearizedBTE.tripleSum_swap23._abel_1_1": [
+        "propext"
+      ],
+      "_private.OMAILinearizedBTE.0.OMAI.PhyslibBridge.LinearizedBTE.tripleSum_swap23._abel_1_2": [
         "propext"
       ],
       "_private.OMAIMDCorrelations.0.OMAI.PhyslibBridge.MDCorrelations.catalogHeatACF_eq_invDFT._proof_1_1": [
@@ -9554,7 +9723,7 @@
       "OMAIVACFSpectrum"
     ],
     "status": "passed",
-    "theorem_count": 1591
+    "theorem_count": 1625
   },
   "command": "lake build --wfail",
   "contract_name_audit": {
@@ -9928,7 +10097,7 @@
     "lean/bridge/OMAIDeviceMetrology.lean": "d03439a60245074d824ec390bbe303cfb149d667db2281555428f6d385a36e91",
     "lean/bridge/OMAIElasticity.lean": "dbc0efc3f35bcc223d28cd60d70fa591ab5f4cf9d285fe97360be6dca0602844",
     "lean/bridge/OMAIElectronicStatistics.lean": "42647fea45250902515d99acdf1e8d2bf9d809ce1e15ff7ad0890fe59d05bfde",
-    "lean/bridge/OMAILinearizedBTE.lean": "f1c0def32805bd85ca98a90bd1c2d7bf6e20245af3c6ec29c8877bee5534e04e",
+    "lean/bridge/OMAILinearizedBTE.lean": "5a3b595bd4894900071ef71ccf6d74a5b3ce1c2d2d5ff6782b10ee9276e87e23",
     "lean/bridge/OMAIMDCorrelations.lean": "5ad1d4f7c88f8483525123b63bf7b73a15ea0ed01363b14360a009e0189fc8cc",
     "lean/bridge/OMAIMaterialsTransport.lean": "2aa396f9e92d7b2a52b7d8cceb05c7834dee771777c23c47094dd2b2ed82d379",
     "lean/bridge/OMAIMolecularModes.lean": "eea0883585af4e1ca7d8bc19613dcbfb014bff335ec4d3c0ffc75acdbc5214ad",
@@ -9986,7 +10155,7 @@
     "lean/bridge/lake-manifest.json": "d4f51a8aa0ee98c0c8a34a7f9cc00accf43ee3a67571f571c0e35318d0956e53",
     "lean/bridge/lakefile.toml": "85b8c6a4fe9aa4765b0fa2070a1478f57256da3c32975911caf22d0627a64704",
     "lean/bridge/lean-toolchain": "ca5f1f601d34c49079e38d7e7041eb0f2a9c227fbc1df0f404820069a052330c",
-    "lean/bridge/linearized-bte-formula-contract.json": "6a16639d7e8eba49c5cdd541cf569e0a6758412fb95ec0c6488d28b391794895",
+    "lean/bridge/linearized-bte-formula-contract.json": "a9373e9665dc33fe2af1486cc878871b7772648386decf5d7af2205d91c2becf",
     "lean/bridge/materials-transport-formula-contract.json": "4e345358c5fa3f5c81fdfffe451736c573d12aeed7555f6e8aa82be9d1c53c2d",
     "lean/bridge/md-correlations-formula-contract.json": "f5b371d9c1f4cca80226260e03890c737f39b8c686769eef65e0ce4256289066",
     "lean/bridge/molecular-modes-formula-contract.json": "60f829e6039c74c87fd57b83cb0c62d016f7f7f0ad9d7e9fa05141c33ff02fd2",
