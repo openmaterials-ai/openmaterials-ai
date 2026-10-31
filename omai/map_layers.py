@@ -33,6 +33,8 @@ ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "docs" / "data"
 BRIDGE = ROOT / "lean" / "bridge"
 OUT = DATA / "map_layers.json"
+PAPERS = ROOT / "index" / "papers"
+PROJECTS = ROOT / "omai" / "data" / "projects.json"
 REPOSITORY = "https://github.com/openmaterials-ai/openmaterials-ai"
 RUNGS = ("none", "stated", "local", "physlib")
 FORMAT = 1
@@ -174,6 +176,33 @@ def _binding_entry(b: dict, index: dict, audit: dict) -> dict:
             "bridge": bridge}
 
 
+def _tags(quantities: set[str], formulas: set[str]) -> dict:
+    """Named areas of the map: each paper of index/papers by the quantities its values sit on and the
+    formulas it lists as used (a curated "formulas" list, never a closure), and each cleared project
+    of omai/data/projects.json. Codes are the map page's own, from codes.json. An empty area is left out."""
+    out = {}
+    for path in sorted(PAPERS.glob("*.json")):
+        rec, slug = _load(path), path.stem
+        paper, values = rec.get("paper", {}), rec.get("values", [])
+        used = sorted(rec.get("formulas", []))
+        if set(used) - formulas:
+            raise ValueError(f"paper {slug} lists formulas outside the catalog: {sorted(set(used) - formulas)}")
+        qs = sorted({v["node_id"] for v in values} & quantities)
+        if not qs and not used:
+            continue
+        url = (f"https://doi.org/{paper['doi']}" if paper.get("doi")
+               else f"https://arxiv.org/abs/{paper['arxiv']}" if paper.get("arxiv") else None)
+        out[f"paper:{slug}"] = {"label": paper.get("title") or slug, "url": url, "values": len(values),
+                                "quantities": qs, "formulas": used}
+    for pr in _load(PROJECTS)["projects"]:
+        if set(pr["quantities"]) - quantities or set(pr["formulas"]) - formulas:
+            raise ValueError(f"project {pr['id']} names marks outside the catalog")
+        if pr["quantities"] or pr["formulas"]:
+            out[f"project:{pr['id']}"] = {"label": pr["title"], "url": pr.get("url"), "owner": pr.get("owner"), "values": None,
+                                          "quantities": sorted(pr["quantities"]), "formulas": sorted(pr["formulas"])}
+    return out
+
+
 def build_map_layers() -> dict:
     payload = _load(DATA / "formula_bindings.json")
     graph = _load(DATA / "graph.json")
@@ -210,6 +239,7 @@ def build_map_layers() -> dict:
         "quantities": quantities,
         "formulas": formulas,
         "bindings": {b["id"]: _binding_entry(b, index, audit["declarations"]) for b in payload["bindings"]},
+        "tags": _tags(set(quantities), set(formulas)),
         "counts": {kind: {r: sum(m["rung"] == r for m in marks.values()) for r in RUNGS}
                    for kind, marks in (("quantities", quantities), ("formulas", formulas))},
     }

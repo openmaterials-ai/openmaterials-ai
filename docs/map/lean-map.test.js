@@ -177,3 +177,46 @@ test('a quantity with a tier the map does not list sits under Other in the table
   g.nodes[0].tier = 'Nowhere';
   assert.equal(L.tableRows(g, layers).find((r) => r.id === g.nodes[0].id).tier, 'Other');
 });
+
+const codes = JSON.parse(fs.readFileSync(__dirname + '/../data/codes.json', 'utf8'));
+
+test('a paper area is its reported quantities and the quantities its curated formulas touch', () => {
+  const lay = structuredClone(layers);
+  lay.tags['paper:x'] = {label: 'X', values: 1, quantities: ['ThermalConductivity'], formulas: ['contract_kappa[bte_solver=rta]']};
+  const a = L.area('paper:x', lay, codes, graph);
+  assert.ok(a.quantities.has('ThermalConductivity'));
+  for (const i of lay.formulas['contract_kappa[bte_solver=rta]'].inputs) assert.ok(a.quantities.has(i), i);
+  assert.deepEqual([...a.formulas], ['contract_kappa[bte_solver=rta]']);
+});
+
+test('a code area keeps the formulas whose results and inputs the code all represents', () => {
+  const a = L.area('code:kaldo', layers, codes, graph);
+  assert.equal(a.quantities.size, Object.keys(codes.kaldo).filter((id) => graph.nodes.some((n) => n.id === id)).length);
+  assert.ok(a.formulas.size > 0);
+  for (const op of a.formulas) {
+    const f = layers.formulas[op];
+    assert.ok(f.outputs.every((o) => a.quantities.has(o)) && f.inputs.every((i) => a.quantities.has(i)), op);
+  }
+});
+
+test('an unknown tag has no area', () => {
+  assert.equal(L.area('paper:nope', layers, codes, graph), null);
+  assert.equal(L.area('code:nope', layers, codes, graph), null);
+  assert.equal(L.area('bogus', layers, codes, graph), null);
+});
+
+test('the frame encloses the area with 24 units of margin', () => {
+  const s = L.slots(fixture.formulas, pos);
+  const f = L.frame({quantities: new Set(['S', 'Q']), formulas: new Set(['q_a'])}, pos, s);
+  assert.deepEqual(f, {x: 100 - 40 - 24, y: 100 - 22 - 24, w: (400 + 40) - (100 - 40) + 48, h: 44 + 48});
+  assert.equal(L.frame({quantities: new Set(['nowhere']), formulas: new Set()}, pos, s), null);
+});
+
+test('the tab names the tag, its values and its share of formulas with a Lean theorem', () => {
+  const f = new Map([['f1', {rung: 'local'}], ['f2', {rung: 'none'}]]);
+  assert.equal(L.tabText('paper:x', {label: 'Short title', values: 3}, {quantities: new Set(['A']), formulas: new Set(['f1', 'f2'])}, f),
+    'paper · Short title · 3 values · 1 / 2 formulas with a Lean theorem');
+  assert.equal(L.tabText('code:k', {label: 'kALDo'}, {quantities: new Set(['A', 'B']), formulas: new Set()}, f), 'code · kALDo · 2 quantities');
+  const long = L.tabText('paper:y', {label: 'x'.repeat(80), values: 1}, {quantities: new Set(['A']), formulas: new Set()}, f);
+  assert.ok(long.length < 80 && !long.includes('—'));
+});

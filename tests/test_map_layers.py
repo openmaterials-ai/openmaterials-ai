@@ -164,3 +164,48 @@ def test_a_formula_sits_in_the_tier_of_its_first_output():
     m, g = map_layers.build_map_layers(), json.loads((DATA / "graph.json").read_text())
     tier = {n["id"]: n.get("tier") or "Other" for n in g["nodes"]}
     assert all(f["tier"] == tier[f["outputs"][0]] for f in m["formulas"].values())
+
+
+def _paper_records() -> dict:
+    return {p.stem: json.loads(p.read_text()) for p in sorted((ROOT / "index" / "papers").glob("*.json"))}
+
+
+def test_tags_are_papers_and_projects_only():
+    tags = map_layers.build_map_layers()["tags"]
+    assert tags and {k.split(":")[0] for k in tags} <= {"paper", "project"}
+    papers = {k for k in tags if k.startswith("paper:")}
+    assert papers == {f"paper:{s}" for s, r in _paper_records().items() if r.get("values") or r.get("formulas")}
+
+
+def test_a_paper_area_is_its_values_plus_its_curated_formulas():
+    tags, recs = map_layers.build_map_layers()["tags"], _paper_records()
+    for slug, rec in recs.items():
+        t = tags[f"paper:{slug}"]
+        assert set(t["quantities"]) == {v["node_id"] for v in rec["values"]}, slug
+        assert t["formulas"] == sorted(rec.get("formulas", [])), slug
+        assert t["values"] == len(rec["values"]) and t["label"] == rec["paper"]["title"], slug
+
+
+def test_curated_formulas_are_catalog_formulas(tmp_path, monkeypatch):
+    ops = set(map_layers.build_map_layers()["formulas"])
+    for slug, rec in _paper_records().items():
+        assert set(rec.get("formulas", [])) <= ops, slug
+    (tmp_path / "p.json").write_text(json.dumps({"paper": {"title": "T"}, "values": [], "formulas": ["no_such_formula"]}))
+    monkeypatch.setattr(map_layers, "PAPERS", tmp_path)
+    try:
+        map_layers.build_map_layers()
+    except ValueError as e:
+        assert "no_such_formula" in str(e)
+    else:
+        raise AssertionError("an unknown curated formula was accepted")
+
+
+def test_a_tag_with_an_empty_area_is_left_out(tmp_path, monkeypatch):
+    (tmp_path / "empty.json").write_text(json.dumps({"paper": {"title": "Empty"}, "values": []}))
+    monkeypatch.setattr(map_layers, "PAPERS", tmp_path)
+    assert "paper:empty" not in map_layers.build_map_layers()["tags"]
+
+
+def test_projects_wait_for_clearance():
+    rec = json.loads((ROOT / "omai" / "data" / "projects.json").read_text())
+    assert rec == {"schema_version": 1, "projects": []}
