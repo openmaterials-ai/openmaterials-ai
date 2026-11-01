@@ -7,6 +7,8 @@ id.
 
 ## Unreleased
 
+- `omai.map_layers` writes `docs/data/map_layers.json`, the Lean layer of the map. A formula takes the rung of its bindings: a Lean theorem that cites Physlib (29 formulas), a Lean theorem over Mathlib alone (56), a Lean declaration that identifies it without a theorem (0), or no reviewed Lean theorem (48). A theorem may state a property of the formula, such as a sign, a symmetry or a bound, rather than the formula itself, and the binding's statement says which. A quantity takes the weakest rung among its producing formulas, counting a formula only when its binding covers that output, or the rung of a theorem about the quantity itself (Temperature): 25 quantities cite Physlib, 47 rest on Mathlib alone and 64 have no reviewed Lean theorem. Conceptual Physlib correspondences, such as the classical harmonic oscillator frequency for Frequency, are listed as related declarations, not as statements. Each binding lists its Physlib declarations at the pinned revision and its bridge declarations with their source line, all within the three axioms the bridge audit allows, and each tier counts its formulas with a Lean theorem. No id changes.
+
 ## 0.6.1
 
 Every consumer pins `openmaterials-ai==0.6.1`. A patch release: no id is re-keyed and no public name is added or removed. The map moves from graph_version `5124100905c0` to `b5d3f4502be2` by one `edit_meta` record, which corrects a citation. `omai.map_layers` and `omai/data/projects.json`, merged after 0.6.0, are not in this release: a new public name takes the next minor version.

@@ -34,3 +34,15 @@ test("minting answers at /s and /s/, with or without the publish_private query",
     assert.equal(pre.status, 403, path);
   }
 });
+
+// The Lean badge reads the map's own counts (docs/data/map_layers.json), as the static file does.
+test("the Lean badge counts the formulas with a Lean theorem", async () => {
+  const { readFileSync } = await import("node:fs");
+  const { statBadgeSVG } = await import("./badge.js");
+  const layers = JSON.parse(readFileSync(new URL("../../../docs/data/map_layers.json", import.meta.url), "utf8"));
+  const f = layers.counts.formulas, total = Object.values(f).reduce((a, b) => a + b, 0);
+  const e = { ASSETS: { fetch: async (req) => (new URL(req.url).pathname === "/data/map_layers.json" ? Response.json(layers) : new Response("", { status: 404 })) } };
+  const res = await worker.fetch(new Request("https://openmaterials-site.example.workers.dev/badge/stat/lean.svg"), e);
+  assert.equal(res.status, 200);
+  assert.equal(await res.text(), statBadgeSVG("Lean theorems", `${f.local + f.physlib}/${total} operators`));
+});

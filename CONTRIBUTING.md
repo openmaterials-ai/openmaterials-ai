@@ -40,6 +40,8 @@ Changes to the map are recorded by appending to `map/log.jsonl` and pass through
 the review gates described in [GOVERNANCE.md](GOVERNANCE.md). Please read that
 document before proposing map changes.
 
+The map page draws Lean status from `docs/data/map_layers.json`, which `python -m omai.map_layers` writes, together with `docs/badge/stat/lean.svg`, from `docs/data/formula_bindings.json`, `docs/data/graph.json`, the bridge sources `lean/bridge/*.lean`, `lean/bridge/build-evidence.json`, the paper records `index/papers/*.json` and `omai/data/projects.json`. Run it after `python -m omai.formula_bindings` and `python -m omai.map_data` whenever the catalog, a binding, a bridge file or a paper record changes, including an edit that only moves lines in a bridge file, since the map links each bridge declaration to its line. `tests/test_map_layers.py` fails while the committed file is stale.
+
 ## Code of Conduct
 
 Participation in this project is governed by our

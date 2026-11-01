@@ -100,7 +100,7 @@ def test_stat_badge_parity_with_the_worker():
     if node is None:
         pytest.skip("node not available")
     from omai.badge import labeled_badge_svg
-    for label, msg in [("nodes", "114"), ("operators", "109"), ("values", "9999")]:
+    for label, msg in [("nodes", "114"), ("operators", "109"), ("values", "9999"), ("Lean theorems", "85/133 operators")]:
         js = subprocess.run(
             [node, "--input-type=module", "-e",
              "import {statBadgeSVG} from '" + _BADGE_JS.resolve().as_uri() + "';"

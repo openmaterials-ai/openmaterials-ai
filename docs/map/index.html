@@ -33,14 +33,14 @@
   :focus-visible{outline:2px solid var(--ink,#171717);outline-offset:2px;}
   /* toolbar */
   .toolbar{flex:none;display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:8px var(--inset,16px);border-bottom:1px solid var(--line,#EBEBEB);background:var(--page,#FFFFFF);}
-  .toolbar .om-search{flex:1 1 200px;max-width:360px;min-width:0;}
+  .toolbar .om-search{flex:1 1 160px;max-width:320px;min-width:0;}
   .toolbar .push{margin-left:auto;}
-  .toolbar .select{max-width:160px;}   /* the open list shows full names */
+  .toolbar .select{max-width:140px;}   /* the open list shows full names */
   @media (max-width:960px){.toolbar .om-search{flex:1 1 100%;max-width:none;}}
-  /* phones: every control stays, in three rows: search; view switch, zoom and Fit; Tier, Code and
-     Copy link (the zoom buttons are the one-finger alternative to a pinch) */
-  @media (max-width:600px){.toolbar > *{order:2;} .toolbar .om-search{order:0;} .toolbar .view-switch,#zoomOut,#zoomIn,#fitBtn{order:1;}
-    .toolbar .push{display:none;} #tierJump,#codeFilter{flex:1 1 88px;}}
+  /* phones: every control stays, in three rows: search; view switch, zoom and Fit; Tier, Tag and
+     Share (the zoom buttons are the one-finger alternative to a pinch) */
+  @media (max-width:600px){.toolbar > *{order:2;} .toolbar .om-search{order:0;} .toolbar .view-switch,.toolbar .layer-switch,#zoomOut,#zoomIn,#fitBtn{order:1;}
+    .toolbar .push{display:none;} #tierJump,#tagPick{flex:1 1 88px;}}
   /* canvas */
   .canvas{position:relative;flex:1 1 auto;min-height:0;overflow:hidden;background:var(--canvas-dots,radial-gradient(circle at 1px 1px,var(--line,#EBEBEB) 1px,transparent 0) 0 0/24px 24px),var(--page,#FFFFFF);}
   #svg{width:100%;height:100%;display:block;cursor:grab;touch-action:none;} #svg.drag{cursor:grabbing;}
@@ -52,6 +52,13 @@
   .band .sh{fill:var(--ink-2,#4D4D4D);}
   .band .bh{fill:transparent;cursor:pointer;}   /* the band head opens the tier's full text */
   #svg.far .band .sh,#svg.far .band .ord{display:none;}   /* 16-unit text hides below 12 px */
+  .band .ledger{font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);fill:var(--ink-2,#4D4D4D);}
+  .band .rule{fill:var(--line,#EBEBEB);} .band .rule-on{fill:var(--accent,#4F46E5);}
+  /* the overview: symbols under 12 px hide, and each tier keeps its ordinal and its count at 12 px */
+  .far-head{display:none;font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);fill:var(--ink,#171717);}
+  #svg.overview .far-head{display:inline;}
+  #svg.overview .band .h,#svg.overview .band .ledger,#svg.overview .band .rule,#svg.overview .band .rule-on{display:none;}
+  #cy.overview #labels{display:none;}
   /* edges: 1px base; parameter links dashed (data encoding); hot edges observable indigo */
   .edge{fill:none;stroke:var(--edge,#8F8F8F);stroke-width:1;vector-effect:non-scaling-stroke;transition:opacity var(--dur,150ms) var(--ease,ease);}
   .edge.param{stroke-dasharray:3 3;opacity:.6;}
@@ -61,10 +68,51 @@
   .node{cursor:pointer;}
   .node:focus{outline:none;} .node:focus-visible{outline:2px solid var(--ink,#171717);outline-offset:2px;}
   .node:focus-visible rect{stroke:var(--ink,#171717);stroke-width:3;}   /* WebKit paints no outline on SVG */
-  .node rect{stroke-width:1;vector-effect:non-scaling-stroke;}
-  .node.obs rect{fill:var(--data-obs,#4F46E5);stroke:var(--data-obs,#4F46E5);}
-  .node.hid rect{fill:var(--surface-2,#F2F2F2);stroke:var(--edge,#8F8F8F);}
-  .node.param rect{fill:var(--page,#FFFFFF);stroke:var(--edge,#8F8F8F);stroke-dasharray:4 3;}
+  /* the Lean ladder (docs/data/map_layers.json), one accent in four rungs, on quantity boxes and formula circles */
+  :root{--rung-tint:light-dark(#E3E1FA,#2A2752);}
+  .node rect,.fmark circle{stroke-width:1;vector-effect:non-scaling-stroke;}
+  .rung-none rect,.rung-none circle{fill:var(--surface,#FBFAF6);stroke:var(--edge,#8E877B);}
+  .rung-stated rect,.rung-stated circle{fill:var(--surface,#FBFAF6);stroke:var(--accent,#4F46E5);stroke-width:1.5;}
+  .rung-local rect,.rung-local circle{fill:var(--rung-tint);stroke:var(--accent,#4F46E5);stroke-width:1.5;}
+  .rung-physlib rect,.rung-physlib circle{fill:var(--accent,#4F46E5);stroke:var(--accent,#4F46E5);}
+  .node.param rect{stroke-dasharray:4 3;}
+  /* formulas: a circle just before the quantity it produces, wired from its inputs */
+  .fmark{cursor:pointer;} .fmark:focus{outline:none;}
+  .fmark:focus-visible circle,.fmark.sel circle{stroke:var(--ink,#171717);stroke-width:3;}
+  .wire{fill:none;stroke:var(--edge,#8F8F8F);stroke-width:1;vector-effect:non-scaling-stroke;opacity:.45;transition:opacity var(--dur,150ms) var(--ease,ease);}
+  .wire.hot{stroke:var(--data-obs-line,#4F46E5);stroke-width:2;opacity:1;}
+  .wire.dim,.fmark.dim{opacity:.12;}
+  /* a layer hides the marks outside it: each leaves a hairline ghost on its place, and its wires go */
+  .node rect,.fmark circle,.wire,.edge,.nlab{transition:opacity .3s var(--ease,ease),fill-opacity .3s var(--ease,ease),stroke .3s var(--ease,ease);}
+  .node.out,.fmark.out{pointer-events:none;}
+  .node.out rect,.fmark.out circle{fill-opacity:0;stroke:var(--line,#EBEBEB);stroke-width:1;stroke-dasharray:none;}
+  .nlab.out,.wire.out,.edge.out{opacity:0;}
+  .wire.out,.edge.out{pointer-events:none;}
+  /* a tag frames its area: a hairline in the accent, with a tab of words anchored under it */
+  .tag-frame{pointer-events:none;}
+  .tag-frame .tag-box{fill:none;stroke:var(--accent,#4F46E5);stroke-width:1.2;vector-effect:non-scaling-stroke;}
+  .tag-frame .tab{fill:var(--accent,#4F46E5);}
+  .tag-frame .tab-text{font-family:var(--font-mono,ui-monospace,monospace);fill:var(--on-accent,#FFFFFF);}
+  .map-table .intro,#fallback .intro{max-width:720px;margin:0 0 20px;color:var(--ink-2,#4D4D4D);}
+  .layer-switch{display:inline-flex;gap:2px;height:32px;margin:0;padding:2px;border:0;border-radius:var(--radius,2px);box-shadow:0 0 0 1px var(--line,#EBEBEB);}
+  .layer-switch label{display:inline-flex;align-items:center;padding:0 10px;border-radius:4px;font:500 14px/20px var(--font-sans,serif);color:var(--ink-2,#4D4D4D);cursor:pointer;}
+  .layer-switch label:hover{color:var(--ink,#171717);}
+  .layer-switch label:has(input:checked){color:var(--ink,#171717);background:var(--surface-2,#F2F2F2);}
+  .layer-switch label:has(input:focus-visible){outline:2px solid var(--focus,#171717);outline-offset:1px;}
+  .layer-switch input{position:absolute;opacity:0;width:1px;height:1px;margin:0;}
+  /* the Lean block of a panel */
+  .lean-rung{display:flex;gap:8px;align-items:baseline;margin:0 0 8px;} .lean-rung .sw{flex:none;transform:translateY(1px);}
+  .lean-binding{border-top:1px solid var(--line,#EBEBEB);padding:12px 0;overflow-wrap:anywhere;}
+  .lean-binding ul{padding-left:18px;margin:4px 0;} .lean-binding code,.om-panel p code{font-family:var(--font-mono,ui-monospace,monospace);font-size:12px;}
+  /* the table view: every quantity and formula with its Lean rung, by tier */
+  .map-table{position:absolute;inset:0;z-index:7;overflow:auto;padding:16px var(--inset,16px) 48px;background:var(--page,#FFFFFF);}
+  .map-table[hidden]{display:none;}
+  .map-table table,#fallback table{width:100%;max-width:960px;border-collapse:collapse;margin:0 0 28px;font-size:14px;line-height:20px;}
+  .map-table caption,#fallback caption{text-align:left;font-size:20px;line-height:28px;padding:0 0 8px;color:var(--ink,#171717);}
+  .map-table th,.map-table td,#fallback th,#fallback td{text-align:left;vertical-align:top;padding:6px 8px;border-bottom:1px solid var(--line,#EBEBEB);}
+  .map-table th,#fallback th{font-weight:500;color:var(--ink-2,#4D4D4D);font-size:12px;}
+  .map-table td code,#fallback td code{font-family:var(--font-mono,ui-monospace,monospace);font-size:12px;color:var(--ink-2,#4D4D4D);overflow-wrap:anywhere;}
+  .map-table tr[data-out] td{color:var(--ink-2,#4D4D4D);}
   .node.sel rect{stroke:var(--ink,#171717);stroke-width:3;}
   /* dimmed: a neutral fill and ink-2 labels, never low opacity, so labels keep their contrast */
   .node.dim rect{fill:var(--surface-2,#F2F2F2);stroke:var(--line,#EBEBEB);}
@@ -73,18 +121,21 @@
   #labels{position:absolute;inset:0;overflow:hidden;pointer-events:none;}
   #labelsInner{position:absolute;left:0;top:0;transform-origin:0 0;will-change:transform;}
   .nlab{position:absolute;display:flex;align-items:center;justify-content:center;font-size:22px;line-height:1;pointer-events:none;}
-  .nlab.obs{color:#FFFFFF;} .nlab.hid{color:var(--ink,#171717);} .nlab.param{color:var(--ink-2,#4D4D4D);}
+  .nlab{color:var(--ink,#171717);} .nlab.rung-physlib{color:var(--on-accent,#FFFFFF);}
   .nlab.dim{color:var(--ink-2,#4D4D4D);}
   .nlab code,#measure code{font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);font-size:14px;}
   #measure{position:absolute;left:-9999px;top:-9999px;font-size:22px;visibility:hidden;}
   /* legend, floating over the canvas */
-  .legend{position:absolute;left:16px;bottom:16px;z-index:4;display:flex;gap:12px;align-items:center;padding:8px 12px;border-radius:var(--radius,6px);background:var(--page,#FFFFFF);box-shadow:var(--shadow-float,0 0 0 1px #EBEBEB,0 4px 8px -4px rgb(0 0 0 / .04),0 16px 24px -8px rgb(0 0 0 / .06));font-size:12px;line-height:16px;color:var(--ink-2,#4D4D4D);}
+  .legend{position:absolute;left:16px;bottom:16px;z-index:4;display:flex;flex-wrap:wrap;max-width:calc(100% - 470px);gap:4px 12px;align-items:center;padding:8px 12px;border-radius:var(--radius,6px);background:var(--page,#FFFFFF);box-shadow:var(--shadow-float,0 0 0 1px #EBEBEB,0 4px 8px -4px rgb(0 0 0 / .04),0 16px 24px -8px rgb(0 0 0 / .06));font-size:12px;line-height:16px;color:var(--ink-2,#4D4D4D);}
   .legend span{display:inline-flex;align-items:center;gap:6px;}
   .legend .g{color:var(--ink,#171717);font-weight:500;}
-  .sw{width:12px;height:12px;border-radius:3px;display:inline-block;}
-  .sw.obs{background:var(--data-obs,#4F46E5);}
-  .sw.hid{background:var(--surface-2,#F2F2F2);box-shadow:inset 0 0 0 1px var(--edge,#8F8F8F);}
-  .sw.param{background:var(--page,#FFFFFF);border:1px dashed var(--edge,#8F8F8F);}
+  .sw{width:12px;height:12px;border-radius:2px;display:inline-block;}
+  .sw.box{width:16px;height:11px;box-shadow:inset 0 0 0 1px var(--edge,#8E877B);}
+  .sw.dot{border-radius:50%;box-shadow:inset 0 0 0 1px var(--edge,#8E877B);}
+  .sw.rung-none{background:var(--surface,#FBFAF6);box-shadow:inset 0 0 0 1px var(--edge,#8E877B);}
+  .sw.rung-stated{background:var(--surface,#FBFAF6);box-shadow:inset 0 0 0 1.5px var(--accent,#4F46E5);}
+  .sw.rung-local{background:var(--rung-tint);box-shadow:inset 0 0 0 1.5px var(--accent,#4F46E5);}
+  .sw.rung-physlib{background:var(--accent,#4F46E5);}
   @media (max-width:960px){.legend{display:none;}}
   /* the canvas caption, until the first selection */
   .caption{position:absolute;right:16px;bottom:16px;z-index:3;max-width:min(420px,calc(100% - 32px));margin:0;padding:8px 12px;border-radius:var(--radius,6px);background:var(--page,#FFFFFF);box-shadow:var(--shadow-float,0 0 0 1px #EBEBEB,0 4px 8px -4px rgb(0 0 0 / .04),0 16px 24px -8px rgb(0 0 0 / .06));font-size:14px;line-height:20px;color:var(--ink-2,#4D4D4D);pointer-events:none;}
@@ -132,13 +183,6 @@
   #err{position:fixed;left:16px;right:16px;bottom:16px;z-index:60;display:none;white-space:pre-wrap;}
   /* static outline, shown only when the layout library is missing */
   #fallback{flex:1 1 auto;min-height:0;overflow:auto;padding:24px var(--inset,16px) 48px;display:none;}
-  #fallback .ft{font-size:20px;line-height:28px;font-weight:450;color:var(--ink,#171717);margin:24px 0 4px;}
-  #fallback .fd{color:var(--ink-2,#4D4D4D);margin-bottom:12px;}
-  #fallback .fn{border:1px solid var(--line,#EBEBEB);border-radius:var(--radius,6px);padding:12px 16px;margin:8px 0;background:var(--surface,#FAFAFA);}
-  #fallback .fn .fs{font-weight:500;color:var(--ink,#171717);}
-  #fallback .fn .fs code{font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);}
-  #fallback .fn .fk{display:inline-flex;align-items:center;height:24px;padding:0 10px;margin-left:8px;border-radius:9999px;background:var(--surface-2,#F2F2F2);color:var(--ink,#171717);font-size:12px;font-weight:500;vertical-align:middle;}
-  #fallback .fn .fe{color:var(--ink-2,#4D4D4D);margin-top:6px;}
   /* embed mode (?embed=1): the canvas alone, for iframes on the code pages and elsewhere; the hash still picks a code or a node */
   body.embed [data-site-header],body.embed .toolbar,body.embed .legend,body.embed .caption,body.embed #banner{display:none;}
   .embed-out{position:absolute;right:12px;bottom:12px;z-index:6;display:none;padding:6px 10px;border-radius:var(--radius,6px);background:var(--page,#FFFFFF);box-shadow:var(--shadow-float,0 0 0 1px #EBEBEB,0 4px 8px -4px rgb(0 0 0 / .04),0 16px 24px -8px rgb(0 0 0 / .06));font-size:12px;line-height:16px;color:var(--ink,#171717);text-decoration:none;}
@@ -152,9 +196,11 @@
 <div class="toolbar">
   <span class="om-search"><svg class="om-search-ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.5" y2="16.5"></line></svg><input class="om-input" id="q" placeholder="Find a quantity" aria-label="Find a quantity" autocomplete="off"></span>
   <nav class="view-switch" aria-label="Map view"><a href="../map/" aria-current="page">2D</a><a href="../map-3d/">3D</a><a href="../map-trace/">Trace</a></nav>
+  <fieldset class="layer-switch" aria-label="Layer"><label><input type="radio" name="layer" value="omai" checked>OMAI</label><label><input type="radio" name="layer" value="lean">Lean</label></fieldset>
   <select class="select" id="tierJump" aria-label="Jump to a tier"><option value="">Tier</option></select>
-  <select class="select" id="codeFilter" aria-label="Codes"><option value="">All codes</option></select>
+  <select class="select" id="tagPick" aria-label="Frame a paper's or code's area of the map"><option value="">Tag</option></select>
   <button class="btn btn--secondary btn--sm" id="physlibBtn" type="button" aria-controls="panel">PhysLean / Physlib</button>
+  <button class="btn btn--secondary btn--sm" id="tableBtn" type="button" aria-pressed="false" aria-controls="table">Table</button>
   <span class="push"></span>
   <button class="btn btn--ghost btn--sm" id="zoomOut" type="button" aria-label="Zoom out">&minus;</button>
   <button class="btn btn--ghost btn--sm" id="zoomIn" type="button" aria-label="Zoom in">+</button>
@@ -169,16 +215,22 @@
   <marker id="arrowhot" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--data-obs-line,#4F46E5)"></path></marker></defs>
   <g id="bands"></g>
   <g id="vp"></g>
+  <g id="tagFrame" class="tag-frame"></g>
 </svg><div id="labels" aria-hidden="true"><div id="labelsInner"></div></div>
 <div class="legend">
-  <span class="g">Type</span>
-  <span><i class="sw obs"></i>Observable</span>
-  <span><i class="sw hid"></i>Hidden</span>
-  <span><i class="sw param"></i>Parameter</span>
+  <span><i class="sw box"></i>Quantity</span>
+  <span><i class="sw dot"></i>Formula</span>
+  <span class="g">Lean</span>
+  <span><i class="sw rung-physlib"></i>Theorem on Physlib definitions</span>
+  <span><i class="sw rung-local"></i>Theorem on OMAI definitions</span>
+  <span><i class="sw rung-stated"></i>Physlib identification</span>
+  <span><i class="sw rung-none"></i>Not covered</span>
+  <span id="layerCount"></span>
 </div>
 <p class="caption" id="caption">Select a quantity to see its formula, what it is built from, what it feeds, and the codes that compute it. Shift-click to pick several quantities, then press Share for a link to them.</p>
 <a class="embed-out" id="embedOut" href="../map/" target="_top">Open the full map</a>
 <div class="om-panel" id="panel" role="complementary" aria-label="Map selection and formal references" tabindex="-1"></div>
+<div class="map-table" id="table" role="region" aria-label="Quantities and formulas with their Lean rungs" tabindex="-1" hidden></div>
 </div>
 <div id="fallback"></div>
 <div id="measure"></div>
@@ -192,6 +244,7 @@
 <script src="../assets/map-words.js"></script>
 <script src="../assets/sources.js"></script>
 <script src="../lean/bridge/lib.js"></script>
+<script src="lean-map.js"></script>
 <script>
 "use strict";
 // ============================================================================
@@ -202,7 +255,7 @@
 //    - layout    : dagre for vertical order, tier-band x-override for columns
 //    - render    : bands, nodes (structure only)
 //    - interaction: pan/zoom, depth levels, provenance panel, code filter, search, keys
-//    - fallback  : static readable outline when dagre is missing
+//    - fallback  : the table view when dagre is missing
 //  KaTeX and dagre both degrade: no code path throws when either is undefined.
 // ============================================================================
 
@@ -210,36 +263,53 @@
 const svg=document.getElementById('svg'), vp=document.getElementById('vp'),
       bandsG=document.getElementById('bands'), measure=document.getElementById('measure'),
       tip=document.getElementById('tip'), panelEl=document.getElementById('panel'),
-      codeFilter=document.getElementById('codeFilter'), tierJump=document.getElementById('tierJump'),
+      tagPick=document.getElementById('tagPick'), tierJump=document.getElementById('tierJump'),
       captionEl=document.getElementById('caption');
 const HAS_KATEX = (typeof katex!=='undefined');
 const HAS_DAGRE = (typeof dagre!=='undefined');
 
 let VB={x:0,y:0,w:1000,h:1000}, GW=1000, GH=1000;
-// Node labels are LABEL_UNITS tall; no view scales them under 12 px.
 // ?embed=1 draws the canvas alone (the code pages frame it); the hash still picks the code or node
 const EMBED=new URLSearchParams(location.search).get('embed')==='1';
-// Node labels are LABEL_UNITS tall; no view scales them under 12 px, or 7 px in an embed, where the whole lit subgraph has to fit a 480 px frame
-const LABEL_UNITS=22, MIN_SCALE=(EMBED?7:12)/LABEL_UNITS, DEFAULT_SCALE=0.75;   // 16.5 px labels at rest
+const LABEL_UNITS=22, DEFAULT_SCALE=0.75;   // 16.5 px labels at rest
+// A selection is framed with labels at 12 px or more (7 px in an embed, where a whole lit subgraph has to
+// fit a 480 px frame). Under that size the overview replaces the labels.
+const MIN_PX=EMBED?7:12, MIN_SCALE=MIN_PX/LABEL_UNITS;
 let BANDS_TOP=0, lastFocus=null, lastAnchor=null, lastHits=[];
 let leanData={nodes:{}};
 let formulaBindings={nodes:{},operators:{}};
 let formalData={bindings:[],inventory:{nodes:[],operators:[]}}, formalDeclarations=[];
+// the Lean layer: rungs, counterparts and tier ledgers (map_layers.json), the formula marks and their wires
+let layersData={quantities:{},formulas:{},tiers:[],bindings:{}}, LM={quantities:new Map(),formulas:new Map()},
+    slotOf=new Map(), wireList=[], leanIx=[], formalLoaded=false, graphData={nodes:[],tiers:[]};
+const LW=window.LeanMap;
 const FB=window.FormulaBridge;
 let nodeById={}, parents={}, children={}, symHtml={}, pos={},
-    codesData={}, activeCode=null, tierList=[], tierIndex={}, edgeList=[],
+    codesData={}, tierList=[], tierIndex={}, edgeList=[],
     depth='overview';   // 'overview' | 'expanded' | 'focused'
 
 function err(m){ const e=document.getElementById('err'); e.style.display='block'; e.textContent='Error: '+m; }
 function banner(m){ const b=document.getElementById('banner'); b.style.display='block'; b.textContent=m; }
 function scaleOf(){ const r=svg.getBoundingClientRect(); return Math.min(r.width/VB.w, r.height/VB.h); }
-// Above 1, a view box is larger than the 12 px label floor allows.
-function overFloor(vb){ const r=svg.getBoundingClientRect(); return r.width&&r.height ? Math.max(vb.w*MIN_SCALE/r.width, vb.h*MIN_SCALE/r.height) : 0; }
+// The whole map with a margin: the farthest a view zooms out.
+let farFs=0;
+function wholeMap(){ return {x:-48, y:BANDS_TOP-48, w:GW+96, h:GH-BANDS_TOP+96}; }
+// Above 1, a view box is zoomed out past the whole map.
+function overFloor(vb){ const r=svg.getBoundingClientRect(), m=wholeMap(); if(!r.width||!r.height) return 0;
+  return Math.min(r.width/m.w, r.height/m.h)/Math.min(r.width/vb.w, r.height/vb.h); }
 function setVB(){
-  const k=overFloor(VB);
-  if(k>1){ const cx=VB.x+VB.w/2, cy=VB.y+VB.h/2; VB.w/=k; VB.h/=k; VB.x=cx-VB.w/2; VB.y=cy-VB.h/2; }
+  if(overFloor(VB)>1) VB=wholeMap();
   svg.setAttribute('viewBox', VB.x+' '+VB.y+' '+VB.w+' '+VB.h);
-  svg.classList.toggle('far', 16*scaleOf()<11.99);   // 16-unit band text hides below 12 px (11.99 absorbs rounding)
+  const sc=scaleOf(), over=LABEL_UNITS*sc<MIN_PX;
+  svg.classList.toggle('far', 16*sc<11.99);   // 16-unit band text hides below 12 px (11.99 absorbs rounding)
+  svg.classList.toggle('overview', over); document.getElementById('cy').classList.toggle('overview', over);
+  // overview heads stay 12 px on screen: the tier ordinal and its count of formulas with a Lean theorem,
+  // each shown only while it fits its band's head
+  if(over&&Math.abs(12/sc-farFs)>1e-6){ farFs=12/sc; const fs=farFs;
+    bandsG.querySelectorAll('.far-head').forEach(t=>{ const r=+t.dataset.row, fits=t.textContent.length*0.62*fs<=BAND_W-2*BAND_PADX && fs*(1.5+1.3*r)<=HEAD_SPACE-8;
+      t.setAttribute('font-size', fs.toFixed(1)); t.setAttribute('y', (+t.dataset.top+fs*(1.2+1.3*r)).toFixed(1));
+      if(fits) t.removeAttribute('visibility'); else t.setAttribute('visibility','hidden'); }); }
+  sizeTab(sc);
   syncLabels();
 }
 // A zoom-out factor capped at the floor, for zooms anchored off center (wheel, pinch).
@@ -278,7 +348,8 @@ Promise.all([
   fetch('../data/codes.json').then(r=>r.json()).catch(()=>({})),
   fetch('../data/semantics.json').then(r=>r.json()).catch(()=>[]),
   fetch('../data/lean.json').then(r=>r.json()).catch(()=>({nodes:{}})),
-  fetch('../data/formula_bindings.json').then(r=>r.ok?r.json():null).catch(()=>null)
+  fetch('../data/formula_bindings.json').then(r=>r.ok?r.json():null).catch(()=>null),
+  fetch('../data/map_layers.json').then(r=>r.ok?r.json():null).catch(()=>null)
 ]).then(build).catch(e=> err('The map data did not load: '+e));
 
 // The semantic index: a node/edge's surface labels (auto + curated), keyed by
@@ -286,9 +357,11 @@ Promise.all([
 // stays MVC-pure; resolveLabels (map-words.js) mirrors omai/semantics.resolve.
 let semById={};
 
-function build([graph, codes, semantics, lean, bindings]){
+function build([graph, codes, semantics, lean, bindings, layers]){
   leanData = lean || {nodes:{}};
-  if(bindings){ formalData=bindings; formalDeclarations=FB.declarationIndex(bindings); }
+  if(layers) layersData=layers;
+  LM=LW.marks(graph, layersData); leanIx=LW.leanIndex(layersData); graphData=graph;
+  if(bindings){ formalData=bindings; formalDeclarations=FB.declarationIndex(bindings); formalLoaded=true; }
   ['nodes','operators'].forEach(kind=>{
     ((bindings&&bindings.inventory&&bindings.inventory[kind])||[]).forEach(row=>{ formulaBindings[kind][row.id]=row; });
   });
@@ -315,15 +388,15 @@ function build([graph, codes, semantics, lean, bindings]){
   graph.nodes.forEach(n=>{ measure.innerHTML=symHtml[n.id]||''; n._w=Math.max(56, measure.offsetWidth+30); n._h=Math.max(44, measure.offsetHeight+20); });
 
   // both selects are filled before the hash is applied, so a #code= link shows its code
-  renderCodeBar();
+  renderTagPick();
   tierList.forEach((t,i)=>{ const o=document.createElement('option'); o.value=i; o.textContent=t.name; tierJump.appendChild(o); });
 
   if(HAS_DAGRE) layoutAndRender(graph, bandOf);
-  else renderFallback(graph, bandOf);
+  else renderFallback();
 }
 
 // ---- layout ----------------------------------------------------------------
-const BAND_W=360, BAND_GAP=54, BAND_PADX=26, HEAD_H=118, HEAD_SPACE=160, NODE_GAP=22;
+const BAND_W=360, BAND_GAP=54, BAND_PADX=26, HEAD_H=118, HEAD_SPACE=184, NODE_GAP=22;
 function layoutAndRender(graph, bandOf){
   const g=new dagre.graphlib.Graph();
   g.setGraph({rankdir:'LR', nodesep:NODE_GAP, ranksep:120, marginx:24, marginy:HEAD_H});
@@ -361,6 +434,7 @@ function layoutAndRender(graph, bandOf){
   renderGraph(graph);
   fitDefault();
   applyDepth();
+  setLayer(layer, true);
   applyHash();
 }
 
@@ -378,7 +452,13 @@ function renderBands(minY, maxY){
     s+='<text class="ord" x="'+(x+BAND_PADX)+'" y="'+(top+34)+'" font-size="16">'+(t.order===1e6?'*':(t.order+1).toString().padStart(2,'0'))+'</text>';
     s+='<text class="h" x="'+(x+BAND_PADX)+'" y="'+(top+66)+'" font-size="24">'+esc(t.name)+'</text>';
     // the caption is the description's lead clause; the panel holds the full text
-    s+=wrapText((t.description||'').split(/[:,]/)[0], x+BAND_PADX, top+96, BAND_W-2*BAND_PADX-6, 16, 'sh', 3);
+    s+=wrapText((t.description||'').split(/[:,]/)[0], x+BAND_PADX, top+96, BAND_W-2*BAND_PADX-6, 16, 'sh', 2);
+    // the ledger: formulas of this tier with a Lean theorem, and a 3-unit rule of their share
+    const lg=layersData.tiers.find(r=>r.name===t.name), rw=BAND_W-2*BAND_PADX;
+    if(lg) s+='<text class="ledger" x="'+(x+BAND_PADX)+'" y="'+(top+146)+'" font-size="15">'+(lg.formulas?lg.theorems+' / '+lg.formulas+' formulas with a Lean theorem':'no formulas')+'</text>';
+    if(lg&&lg.formulas) s+='<rect class="rule" x="'+(x+BAND_PADX)+'" y="'+(top+156)+'" width="'+rw+'" height="3"></rect><rect class="rule-on" x="'+(x+BAND_PADX)+'" y="'+(top+156)+'" width="'+(rw*lg.theorems/lg.formulas).toFixed(1)+'" height="3"></rect>';
+    s+='<text class="far-head" data-top="'+top+'" data-row="0" x="'+(x+BAND_PADX)+'" y="'+(top+34)+'" font-size="16">'+(t.order===1e6?'*':(t.order+1).toString().padStart(2,'0'))+'</text>';
+    s+='<text class="far-head" data-top="'+top+'" data-row="1" x="'+(x+BAND_PADX)+'" y="'+(top+56)+'" font-size="16">'+(lg&&lg.formulas?lg.theorems+'/'+lg.formulas:'')+'</text>';
     s+='<rect class="bh" x="'+(x+4)+'" y="'+top+'" width="'+(BAND_W-8)+'" height="'+(HEAD_SPACE-12)+'"></rect>';
     s+='</g>';
   });
@@ -397,16 +477,23 @@ function wrapText(str, x, y, maxW, size, cls, maxLines){
 
 function renderGraph(graph){
   let s='', lhtml='';
-  edgeList.forEach(e=>{ const a=pos[e.source], b=pos[e.target]; if(!a||!b) return;
-    s+='<path class="edge'+(e.kind==='param'?' param':'')+'" data-edge="'+attr(e.source+'>>'+e.target)+'" data-op="'+attr(e.op||'')+'" d="'+edgePath(a,b)+'" marker-end="url(#arrow)"></path>';
+  // parameter links stay dashed box to box; every formula is a circle wired from its inputs to its results
+  edgeList.filter(e=> e.kind==='param').forEach(e=>{ const a=pos[e.source], b=pos[e.target]; if(!a||!b) return;
+    s+='<path class="edge param" data-edge="'+attr(e.source+'>>'+e.target)+'" data-op="'+attr(e.op||'')+'" d="'+edgePath(a,b)+'" marker-end="url(#arrow)"></path>';
   });
+  slotOf=LW.slots(LM.formulas, pos); wireList=LW.wires(LM.formulas, pos, slotOf);
+  wireList.forEach(w=>{ s+='<path class="wire '+w.kind+'" data-op="'+attr(w.op)+'" data-q="'+attr(w.kind==='in'?w.from:w.to)+'" d="'+w.d+'"></path>'; });
   graph.nodes.forEach(n=>{ const p=pos[n.id]; if(!p) return;
     const x=p.x-p.w/2, y=p.y-p.h/2;
     const cls=(n.type==='observable'?'obs':(n.type==='parameter'?'param':'hid'));
-    s+='<g class="node '+cls+'" data-id="'+attr(n.id)+'" data-type="'+n.type+'" tabindex="0" role="button" aria-label="'+attr(n.id)+'">';
-    s+='<rect x="'+x+'" y="'+y+'" width="'+p.w+'" height="'+p.h+'" rx="8"></rect>';
-    lhtml+='<div class="nlab '+(n.type==='observable'?'obs':(n.type==='parameter'?'param':'hid'))+'" data-id="'+attr(n.id)+'" style="left:'+x+'px;top:'+y+'px;width:'+p.w+'px;height:'+p.h+'px">'+(symHtml[n.id]||'')+'</div>';
+    const rung=(LM.quantities.get(n.id)||{rung:'none'}).rung;
+    s+='<g class="node '+cls+' rung-'+rung+'" data-id="'+attr(n.id)+'" data-type="'+n.type+'" tabindex="0" role="button" aria-label="'+attr(n.id+', '+LW.RUNG_WORDS[rung])+'">';
+    s+='<rect x="'+x+'" y="'+y+'" width="'+p.w+'" height="'+p.h+'" rx="2"></rect>';
+    lhtml+='<div class="nlab '+cls+' rung-'+rung+'" data-id="'+attr(n.id)+'" style="left:'+x+'px;top:'+y+'px;width:'+p.w+'px;height:'+p.h+'px">'+(symHtml[n.id]||'')+'</div>';
     s+='</g>';
+  });
+  slotOf.forEach((c,op)=>{ const f=LM.formulas.get(op);
+    s+='<g class="fmark rung-'+f.rung+'" data-op="'+attr(op)+'" tabindex="0" role="button" aria-label="'+attr(opName(op)+', '+LW.RUNG_WORDS[f.rung])+'"><circle cx="'+c.x+'" cy="'+c.y+'" r="7"></circle></g>';
   });
   vp.innerHTML=s;
   const inner=document.getElementById('labelsInner');
@@ -437,13 +524,19 @@ function edgePath(a,b){
 }
 
 // ---- interaction: pan / zoom -----------------------------------------------
-// Frames ids; when the box is larger than the label floor allows, it centers on
-// `anchor` (a node id) before setVB shrinks it, so the anchor stays in view.
+// Frames ids; when the box is larger than the label floor allows, it shrinks to the floor around
+// `anchor` (a node id) or the box's center, so the anchor stays in view with readable labels.
+function labelFloor(vb){ const r=svg.getBoundingClientRect(); return r.width&&r.height ? Math.max(vb.w*MIN_SCALE/r.width, vb.h*MIN_SCALE/r.height) : 0; }
 function fitTo(ids, anchor){ let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;
   ids.forEach(id=>{ const q=pos[id]; if(!q)return; x0=Math.min(x0,q.x-q.w/2); y0=Math.min(y0,q.y-q.h/2); x1=Math.max(x1,q.x+q.w/2); y1=Math.max(y1,q.y+q.h/2); });
   if(x1<x0)return; lastFocus=ids; lastAnchor=anchor||null;
-  const pad=110; VB={x:x0-pad,y:y0-pad,w:(x1-x0)+2*pad,h:(y1-y0)+2*pad};
-  const a=anchor&&pos[anchor]; if(a&&overFloor(VB)>1){ VB.x=a.x-VB.w/2; VB.y=a.y-VB.h/2; }
+  const pad=110, a=anchor&&pos[anchor];
+  fitBox({x:x0-pad,y:y0-pad,w:(x1-x0)+2*pad,h:(y1-y0)+2*pad}, a?a.x:(x0+x1)/2, a?a.y:(y0+y1)/2);
+}
+function fitBox(b, cx, cy){
+  VB={x:b.x,y:b.y,w:b.w,h:b.h};
+  const k=labelFloor(VB);
+  if(k>1){ VB.w/=k; VB.h/=k; VB.x=cx-VB.w/2; VB.y=cy-VB.h/2; }
   setVB();
 }
 function neighborhood(id){ return [id].concat(parents[id]||[]).concat(children[id]||[]); }
@@ -510,9 +603,11 @@ svg.addEventListener('touchend', e=>{
   if(e.touches.length===0){
     if(tPan && !tMoved && tStart){
       const nd=tStart.target.closest && tStart.target.closest('.node');
+      const fm=tStart.target.closest && tStart.target.closest('.fmark,.wire');
       const ed=tStart.target.closest && tStart.target.closest('.edge');
       const bh=tStart.target.closest && tStart.target.closest('.bh');
       if(nd){ selectNode(nodeById[nd.dataset.id]); }
+      else if(fm){ selectFormula(fm.dataset.op); }
       else if(ed){ selectEdge(ed.dataset.edge, ed.dataset.op); }
       else if(bh){ showTier(+bh.parentNode.dataset.band); }
       else { clearSel(); }
@@ -524,6 +619,17 @@ svg.addEventListener('touchend', e=>{
 // ---- interaction: dimming --------------------------------------------------
 // expanded: full DAG at strength. focused: node select dims all but the
 // node's closed neighborhood.
+// Light a set of quantities: every other quantity dims, a formula lights with its result and one of its
+// inputs (LeanMap.lit), a wire with its formula and its quantity, a parameter link with both ends.
+function lightSet(ids, hot){
+  const set=ids instanceof Set?ids:new Set(ids), on=new Set();
+  LM.formulas.forEach((f,op)=>{ if(LW.lit(f,set)) on.add(op); });
+  vp.querySelectorAll('.node').forEach(el=> el.classList.toggle('dim', !set.has(el.dataset.id)));
+  vp.querySelectorAll('.fmark').forEach(el=> el.classList.toggle('dim', !on.has(el.dataset.op)));
+  vp.querySelectorAll('.wire').forEach(el=>{ const ok=on.has(el.dataset.op)&&set.has(el.dataset.q); el.classList.toggle('dim',!ok); el.classList.toggle('hot',!!hot&&ok); });
+  vp.querySelectorAll('.edge').forEach(el=>{ const ab=el.dataset.edge.split('>>'), ok=set.has(ab[0])&&set.has(ab[1]); el.classList.toggle('dim',!ok); el.classList.toggle('hot',!!hot&&ok); });
+  return on;
+}
 function clearDim(){ vp.querySelectorAll('.dim').forEach(el=>el.classList.remove('dim')); vp.querySelectorAll('.hot').forEach(el=>el.classList.remove('hot')); vp.querySelectorAll('.sel').forEach(el=>el.classList.remove('sel')); }
 function applyDepth(){ clearDim(); }
 
@@ -532,13 +638,19 @@ function focusNode(id){
   depth='focused';
   const keep=new Set([id].concat(parents[id]||[]).concat(children[id]||[]));
   clearDim();
-  vp.querySelectorAll('.node').forEach(el=>{ el.classList.toggle('dim', !keep.has(el.dataset.id)); el.classList.toggle('sel', el.dataset.id===id); });
-  vp.querySelectorAll('.edge').forEach(el=>{ const ab=el.dataset.edge.split('>>'); const inc=(ab[0]===id||ab[1]===id); el.classList.toggle('dim', !inc); el.classList.toggle('hot', inc); });
+  const on=lightSet(keep);
+  vp.querySelectorAll('.node').forEach(el=> el.classList.toggle('sel', el.dataset.id===id));
+  // the wires of the formulas that make the quantity or read it
+  vp.querySelectorAll('.wire').forEach(el=>{ const f=LM.formulas.get(el.dataset.op);
+    el.classList.toggle('hot', on.has(el.dataset.op)&&(f.outputs.includes(id)||el.dataset.q===id)); });
+  vp.querySelectorAll('.edge').forEach(el=>{ const ab=el.dataset.edge.split('>>'), inc=(ab[0]===id||ab[1]===id); el.classList.toggle('dim', !inc); el.classList.toggle('hot', inc); });
 }
 function clearSel(){
+  // with a tag on, closing a mark returns to the tag's view; closing again clears the tag
+  if(tagKey&&panelEl.style.display==='block'){ const k=tagKey; picked.clear(); panelEl.style.display='none'; setTag(k); writeHash({}); return; }
   picked.clear();
   depth='expanded'; panelEl.style.display='none';
-  activeCode=null; codeFilter.value=''; lastFocus=null; lastAnchor=null;
+  setTag(null); lastFocus=null; lastAnchor=null;
   applyDepth();
   syncHash(null);
 }
@@ -547,14 +659,15 @@ const picked=new Set();
 function togglePick(id){
   if(picked.has(id)) picked.delete(id); else picked.add(id);
   if(!picked.size){ clearSel(); return; }
-  activeCode=null; codeFilter.value=''; panelEl.style.display='none'; captionEl.hidden=true;
+  if(tagKey){ setTag(null); writeHash({}); }
+  panelEl.style.display='none'; captionEl.hidden=true;
   depth='focused'; clearDim();
-  vp.querySelectorAll('.node').forEach(el=>{ el.classList.toggle('dim', !picked.has(el.dataset.id)); el.classList.toggle('sel', picked.has(el.dataset.id)); });
-  vp.querySelectorAll('.edge').forEach(el=>{ const ab=el.dataset.edge.split('>>'); const on=picked.has(ab[0])&&picked.has(ab[1]); el.classList.toggle('dim', !on); el.classList.toggle('hot', on); });
+  lightSet(picked, true);
+  vp.querySelectorAll('.node').forEach(el=> el.classList.toggle('sel', picked.has(el.dataset.id)));
   mapStatus.textContent=picked.size+(picked.size===1?' quantity':' quantities')+' picked. Share copies a link to them.';
 }
 // What Share links to: every quantity lit on the map now (a code, a quantity and its neighbors, an operator, a pick)
-function litIds(){ return depth==='focused' ? [...new Set([...vp.querySelectorAll('.node:not(.dim)')].map(el=>el.dataset.id))] : []; }
+function litIds(){ return depth==='focused' ? [...new Set([...vp.querySelectorAll('.node:not(.dim):not(.out)')].map(el=>el.dataset.id))] : []; }
 // share.js and the latest snapshot load once, in the background, so Share can write the clipboard inside
 // the click (WebKit drops the user gesture across awaits).
 let shareKit=null, shareKitLoading=null;
@@ -584,6 +697,7 @@ function mappedByHtml(id){
 }
 function selectNode(node){
   if(!node) return;
+  reveal((LM.quantities.get(node.id)||{}).rung);
   picked.clear();
   captionEl.hidden=true;
   const id=node.id; focusNode(id);
@@ -597,20 +711,14 @@ function selectNode(node){
     h+='<div class="om-panel-label">'+(fl.length===1?'Formula on the producing edge':fl.length+' producing edges (alternative routes)')+'</div>';
     fl.forEach(f=>{ h+=(f.op?'<div class="fop">'+esc(opName(f.op))+'</div>':'')+'<div class="formula">'+tex(f.latex,true)+'</div>'; });
   }
+  h+=LW.leanPanel({kind:'node', id:id, layers:layersData, formal:formalLoaded?formalData:null, FB:FB});
+  const ops=[...new Set(fl.map(f=>f.op).filter(o=> LM.formulas.has(o)))];
+  if(ops.length){ h+='<div class="om-panel-label">Formulas that produce it</div>'+ops.map(op=>'<p><a href="'+attr(LW.fragment({operator:op},{layer:layer,tag:tagKey}))+'">'+esc(opName(op))+'</a>: '+esc(LW.RUNG_WORDS[LM.formulas.get(op).rung])+'</p>').join(''); }
   const lv=leanData.nodes&&leanData.nodes[node.id];
-  if(lv){ h+='<div class="om-panel-label"><span class="lean-badge">Lean dimension</span></div><pre class="lean-line">'+esc(lv.lean)+'</pre>'; }
-  const bindingRow=formulaBindings.nodes[id];
-  if(bindingRow){
-    h+='<div class="om-panel-label">PhysLean / Physlib references</div>';
-    h+=FB.targetReferencesHtml(formalData,'node',id,'../lean/bridge/') || '<p class="muted">No reviewed correspondence for this quantity.</p>';
-    h+='<p><a href="../lean/bridge/#node='+encodeURIComponent(id)+'">Quantity conditions and coverage</a> · <a href="#physlib=1">Browse upstream declarations</a></p>';
-    [...new Set(fl.map(f=>f.op).filter(Boolean))].forEach(op=>{
-      const row=formulaBindings.operators[op];
-      if(row) h+='<p><a href="#operator='+encodeURIComponent(op)+'">'+esc(opName(op))+'</a>: '+(row.binding_ids.length?row.binding_ids.length+' correspondence'+(row.binding_ids.length===1?'':'s'):'gap')+'</p>';
-    });
-  }
+  if(lv){ h+='<div class="om-panel-label"><span class="lean-badge">Lean dimension</span></div><pre class="lean-line">'+esc(lv.lean)+'</pre><p class="muted">This checks the quantity\'s dimension. It is not a theorem and leaves the Lean rung unchanged.</p>'; }
   if(ins.length){ h+='<div class="om-panel-label">Built from</div><div class="chips">'+ins.map(chip).join('')+'</div>'; }
   if(outs.length){ h+='<div class="om-panel-label">Feeds</div><div class="chips">'+outs.map(chip).join('')+'</div>'; }
+  h+=tagLinks('node', id);
   h+=mappedByHtml(id);
   panelEl.innerHTML=h; panelEl.style.display='block';
   syncHash(id);
@@ -630,6 +738,7 @@ function selectEdge(key, op){
   captionEl.hidden=true; depth='focused';
   clearDim();
   vp.querySelectorAll('.node').forEach(el=> el.classList.toggle('dim', !(el.dataset.id===s||el.dataset.id===t)));
+  vp.querySelectorAll('.fmark,.wire').forEach(el=> el.classList.add('dim'));
   vp.querySelectorAll('.edge').forEach(el=>{ const on=el.dataset.edge===key; el.classList.toggle('dim', !on); el.classList.toggle('hot', on); });
   let h=closeBtn()+'<div class="om-panel-label">Operator</div><div class="name" style="font-family:inherit;font-weight:500;color:var(--ink,#171717);font-size:16px">'+esc(opName(op))+'</div>';
   h+='<div class="sym" style="margin-top:8px">'+tex(sn.symbol)+' <span class="muted">&rarr;</span> '+tex(tn.symbol)+'</div>';
@@ -638,25 +747,121 @@ function selectEdge(key, op){
   panelEl.innerHTML=h; panelEl.style.display='block';
 }
 
+// the layer switch (setLayer and writeHash live with the hash handlers below)
+document.querySelectorAll('input[name=layer]').forEach(r=> r.addEventListener('change', ()=>{ setLayer(r.value); const rest=LW.state(location.hash).rest; if(tagKey) rest.delete('code'); writeHash(rest); }));
+// A formula mark opens its operator; without the bindings file it shows its formula.
+function selectFormula(op){
+  if(formulaBindings.operators[op]){ selectOperator(op); return; }
+  const f=LM.formulas.get(op); if(!f) return;
+  reveal(f.rung);
+  picked.clear(); captionEl.hidden=true; depth='focused'; clearDim();
+  const related=new Set(f.inputs.concat(f.outputs));
+  vp.querySelectorAll('.node').forEach(el=> el.classList.toggle('dim',!related.has(el.dataset.id)));
+  vp.querySelectorAll('.fmark').forEach(el=> el.classList.toggle('dim',el.dataset.op!==op));
+  vp.querySelectorAll('.wire').forEach(el=>{ const on=el.dataset.op===op; el.classList.toggle('dim',!on); el.classList.toggle('hot',on); });
+  const latex=edgeFormula(nodeById[f.outputs.slice().sort()[0]]||{}, op);
+  panelEl.innerHTML=closeBtn()+'<div class="om-panel-label">Formula</div><h2 class="name">'+esc(op)+'</h2>'+(latex?'<div class="formula">'+tex(latex,true)+'</div>':'');
+  panelEl.style.display='block';
+  writeHash({operator:op});
+  const shown=[...related].filter(id=>pos[id]); if(shown.length) fitTo(shown, f.outputs[0]);
+}
 // Formal references are navigation metadata; they never become graph edges.
 function selectOperator(id){
   const row=formulaBindings.operators[id]; if(!row) return;
+  reveal((LM.formulas.get(id)||{}).rung);
   picked.clear();
   captionEl.hidden=true; depth='focused'; clearDim();
   const related=new Set(row.inputs.concat(row.outputs));
   vp.querySelectorAll('.node').forEach(el=>{ el.classList.toggle('dim',!related.has(el.dataset.id)); el.classList.toggle('sel',row.outputs.includes(el.dataset.id)); });
+  vp.querySelectorAll('.fmark').forEach(el=>{ el.classList.toggle('dim',el.dataset.op!==id); el.classList.toggle('sel',el.dataset.op===id); });
+  vp.querySelectorAll('.wire').forEach(el=>{ const on=el.dataset.op===id; el.classList.toggle('dim',!on); el.classList.toggle('hot',on); });
   vp.querySelectorAll('.edge').forEach(el=>{ const on=el.dataset.op===id; el.classList.toggle('dim',!on); el.classList.toggle('hot',on); });
   let h=closeBtn()+'<div class="om-panel-label">Operator</div><h2 class="name">'+esc(id)+'</h2>';
   h+='<div class="om-panel-label">Formula</div><div class="formula">'+tex(row.formula_latex,true)+'</div>';
   h+='<div class="om-panel-label">Inputs</div><div class="chips">'+(row.inputs.length?row.inputs.map(chip).join(''):'No input quantities')+'</div>';
   h+='<div class="om-panel-label">Outputs</div><div class="chips">'+row.outputs.map(chip).join('')+'</div>';
-  h+='<div class="om-panel-label">PhysLean / Physlib references</div>';
-  h+=FB.targetReferencesHtml(formalData,'operator',id,'../lean/bridge/') || '<p class="muted">No reviewed correspondence for this formula.</p>';
-  h+='<p><a href="../lean/bridge/#operator='+encodeURIComponent(id)+'">Conditions and coverage</a> · <a href="#physlib=1">Browse upstream declarations</a></p>';
+  h+=LW.leanPanel({kind:'operator', id:id, layers:layersData, formal:formalLoaded?formalData:null, FB:FB});
+  h+=tagLinks('operator', id);
   panelEl.innerHTML=h; panelEl.style.display='block';
-  history.replaceState(null,'',FB.fragment({operator:id}));
+  writeHash({operator:id});
   const visible=[...related].filter(name=>pos[name]); if(visible.length) fitTo(visible,row.outputs[0]);
   mapStatus.textContent='Operator '+id+' selected; Physlib references do not change the scientific graph.';
+}
+// ---- layers: OMAI shows every mark, Lean the marks with a Lean theorem or a Physlib identification.
+let layer='omai';
+const theorem=(r)=> r.rung==='local'||r.rung==='physlib';
+function layerWords(l){
+  const q=[...LM.quantities.values()].filter(r=>LW.inLayer(r.rung,'lean')).length, f=[...LM.formulas.values()].filter(r=>LW.inLayer(r.rung,'lean')).length;
+  return l==='lean' ? 'Lean layer: '+f+' of '+LM.formulas.size+' formulas and '+q+' of '+LM.quantities.size+' quantities with a Lean theorem or a Physlib identification. Each theorem stands alone, and a wire shows data flow, not a proof step.'
+    : 'OMAI layer: '+LM.formulas.size+' formulas and '+LM.quantities.size+' quantities. '+[...LM.formulas.values()].filter(theorem).length+' formulas have a Lean theorem.';
+}
+function legendCount(){
+  document.getElementById('layerCount').textContent=(layer==='lean' ? 'Each theorem stands alone. Wires show data flow.'
+    : [...LM.formulas.values()].filter(theorem).length+' of '+LM.formulas.size+' formulas have a Lean theorem.')+(tagKey?' Dimmed marks inside the frame are outside the area.':'');
+}
+// A selection never hides: selecting a mark outside the layer returns the map to the OMAI layer.
+function reveal(rung){ if(!LW.inLayer(rung||'none', layer)) setLayer('omai'); }
+function setLayer(l, quiet){
+  layer=l;
+  document.querySelectorAll('input[name=layer]').forEach(r=>{ r.checked=(r.value===l); });
+  const out=new Set();
+  vp.querySelectorAll('.node').forEach(el=>{ const o=!LW.inLayer((LM.quantities.get(el.dataset.id)||{rung:'none'}).rung,l); el.classList.toggle('out',o); el.setAttribute('tabindex',o?'-1':'0'); if(o) out.add(el.dataset.id); const lab=labelById[el.dataset.id]; if(lab) lab.classList.toggle('out',o); });
+  vp.querySelectorAll('.fmark').forEach(el=>{ const o=!LW.inLayer(LM.formulas.get(el.dataset.op).rung,l); el.classList.toggle('out',o); el.setAttribute('tabindex',o?'-1':'0'); if(o) out.add(el.dataset.op); });
+  vp.querySelectorAll('.wire').forEach(el=> el.classList.toggle('out', out.has(el.dataset.op)||out.has(el.dataset.q)));
+  vp.querySelectorAll('.edge').forEach(el=>{ const ab=el.dataset.edge.split('>>'); el.classList.toggle('out', out.has(ab[0])||out.has(ab[1])); });
+  legendCount();
+  if(!tableEl.hidden) tableEl.innerHTML=tableHtml();
+  if(!quiet) mapStatus.textContent=layerWords(l);
+}
+// ---- tags: a paper's, project's or code's area of the map, framed and zoomed to
+let tagKey=null, tagAreas=new Map();
+function setTag(key){
+  const a=key?tagAreas.get(key):null, g=document.getElementById('tagFrame');
+  tagKey=a?key:null; tagPick.value=tagKey||''; g.innerHTML='';
+  legendCount();
+  if(!a) return;
+  // a tag never hides: an area with no mark in the layer returns the map to the OMAI layer
+  const shown=(r)=> LW.inLayer(r.rung, layer);
+  if(![...a.quantities].some(id=> shown(LM.quantities.get(id)||{rung:'none'}))&&![...a.formulas].some(op=> shown(LM.formulas.get(op)))) setLayer('omai');
+  picked.clear(); depth='focused'; clearDim(); panelEl.style.display='none'; captionEl.hidden=true;
+  lightSet(a.quantities);
+  vp.querySelectorAll('.fmark').forEach(el=> el.classList.toggle('dim', !a.formulas.has(el.dataset.op)));
+  vp.querySelectorAll('.wire').forEach(el=> el.classList.toggle('dim', !(a.formulas.has(el.dataset.op)&&a.quantities.has(el.dataset.q))));
+  const fr=LW.frame(a, pos, slotOf); if(!fr) return;
+  const k=tagKey.split(':'), tag=k[0]==='code' ? {label:codeName(k.slice(1).join(':'))} : layersData.tags[tagKey];
+  const words=LW.tabText(tagKey, tag, a, LM.formulas);
+  g.innerHTML='<rect class="tag-box" x="'+fr.x+'" y="'+fr.y+'" width="'+fr.w+'" height="'+fr.h+'" rx="2"></rect>'+
+    '<rect class="tab" data-x="'+fr.x+'" data-y="'+(fr.y+fr.h)+'" data-chars="'+words.length+'"></rect><text class="tab-text">'+esc(words)+'</text>';
+  // the frame and its tab, with room under them for the legend
+  fitBox({x:fr.x-60, y:fr.y-60, w:fr.w+120, h:fr.h+26+150}, fr.x+fr.w/2, fr.y+fr.h/2);
+  lastFocus=[...a.quantities]; lastAnchor=null;
+  mapStatus.textContent=words+'. Dimmed marks inside the frame are outside the area.'+
+    (tagKey.startsWith('code:')?'':' A theorem may state a property of a formula, and its conditions need not hold in this paper\'s runs.');
+}
+// The tab's words stay at 11 px or more on screen, at 13 units when the view is that close.
+function sizeTab(sc){
+  const r=document.querySelector('#tagFrame .tab'), t=document.querySelector('#tagFrame .tab-text'); if(!r||!t) return;
+  const fs=Math.max(13, Math.ceil(110/sc)/10), x=+r.dataset.x, y=+r.dataset.y;
+  r.setAttribute('x', x); r.setAttribute('y', y); r.setAttribute('height', (2*fs).toFixed(1)); r.setAttribute('width', (+r.dataset.chars*0.61*fs+1.54*fs).toFixed(1));
+  t.setAttribute('font-size', fs.toFixed(1)); t.setAttribute('x', (x+0.77*fs).toFixed(1)); t.setAttribute('y', (y+1.38*fs).toFixed(1));
+}
+function tagsOf(kind, id){
+  return [...tagAreas].filter(([k,a])=> !k.startsWith('code:') && (kind==='node'?a.quantities:a.formulas).has(id)).map(([k])=>k);
+}
+// A quantity's papers: those with values on it, and those whose curated path of formulas passes through it.
+function tagLinks(kind, id){
+  const ks=tagsOf(kind, id); if(!ks.length) return '';
+  const link=(k)=> '<p><a href="'+attr(LW.fragment({},{layer:layer,tag:k}))+'">'+esc(layersData.tags[k].label)+'</a></p>';
+  const here=ks.filter(k=> kind==='node'&&(layersData.tags[k].quantities||[]).includes(id)), path=ks.filter(k=> !here.includes(k));
+  const tags=Object.values(layersData.tags||{}), listed=tags.filter(t=> t.formulas.length).length;
+  return (here.length?'<div class="om-panel-label">Values here</div>'+here.map(link).join(''):'')+
+    (path.length?'<div class="om-panel-label">On a paper\'s curated path</div><p class="muted">'+listed+' of '+tags.length+' papers list the formulas they used.</p>'+path.map(link).join(''):'');
+}
+// Every hash the page writes goes through here, so the layer and the tag ride along with selections and the Physlib browser.
+function writeHash(base){
+  const h=LW.fragment(base, {layer:layer, tag:tagKey});
+  if(location.hash===h||(!h&&!location.hash)) return;
+  history.replaceState(null,'',h||location.pathname+location.search);
 }
 function showFormalNavigator(state){
   state=state||{}; captionEl.hidden=true;
@@ -677,10 +882,10 @@ function showFormalNavigator(state){
     if(rows.length===1) document.querySelector('#formal-results details').open=true;
   }
   [input,module,evidence].forEach(control=>control.addEventListener('input',()=>{
-    exactDeclaration=''; exactModule=''; render(); history.replaceState(null,'',FB.fragment({physlib:'1',module:module.value}));
+    exactDeclaration=''; exactModule=''; render(); writeHash({physlib:'1',module:module.value});
   }));
   render();
-  history.replaceState(null,'',FB.fragment({physlib:'1',declaration:exactDeclaration,module:exactModule}));
+  writeHash({physlib:'1',declaration:exactDeclaration,module:exactModule});
   panelEl.focus();
 }
 document.getElementById('physlibBtn').addEventListener('click',()=>showFormalNavigator());
@@ -688,23 +893,35 @@ document.getElementById('physlibBtn').addEventListener('click',()=>showFormalNav
 // ---- deep links: quantities, real operators, and formal-reference navigation
 function nodeFromHash(){ return new URLSearchParams(location.hash.slice(1)).get('node'); }
 function codeFromHash(){ return new URLSearchParams(location.hash.slice(1)).get('code'); }
-function syncHash(id){
-  const h=id?('#node='+encodeURIComponent(id)):'';
-  if(location.hash===h||(!h&&!location.hash)) return;
-  history.replaceState(null,'',h||location.pathname+location.search);
-}
+function syncHash(id){ writeHash(id?{node:id}:{}); }
 function missingFormalTarget(state){
   clearDim(); panelEl.innerHTML=closeBtn()+'<p>No such OMAI '+esc(state.kind)+': '+esc(state.id)+'</p><p><a href="#physlib=1">Browse reviewed Physlib references</a></p>'; panelEl.style.display='block';
   mapStatus.textContent='No such OMAI '+state.kind+': '+state.id;
 }
 function applyHash(){
+  const st=LW.state(location.hash);
+  if(st.tag&&!tagAreas.has(st.tag)) st.unknown.push('tag='+st.tag);
+  if(new URLSearchParams(location.hash.slice(1)).has('layer')&&st.layer!==layer) setLayer(st.layer, true);
+  applySelection();
+  // what the link named that the map does not have, said in the panel
+  if(st.unknown.length){
+    const note='<p class="muted">The map ignores '+st.unknown.map(esc).join(' and ')+' in this link.</p>';
+    if(panelEl.style.display==='block') panelEl.querySelector('.x').insertAdjacentHTML('afterend', note);
+    else { panelEl.innerHTML=closeBtn()+note; panelEl.style.display='block'; }
+  }
+}
+function applySelection(){
+  // a #code= link reads as the code's tag; a tag= link frames its area
   const codeRef=codeFromHash();
-  if(codeRef && codesData[codeRef]){ if(activeCode!==codeRef) toggleCode(codeRef); return; }
-  if(activeCode) toggleCode(activeCode);
+  if(codeRef && codesData[codeRef]){ if(tagKey!=='code:'+codeRef) setTag('code:'+codeRef); return; }
+  const st=LW.state(location.hash);
+  // a link that names a tag and nothing else returns to the tag's view, even from a mark inside it
+  const named=new URLSearchParams(location.hash.slice(1)), bare=!['node','operator','physlib','declaration','module'].some(k=> named.has(k));
+  if(st.tag&&tagAreas.has(st.tag)){ if(tagKey!==st.tag||bare) setTag(st.tag); } else if(tagKey) setTag(null);
   const state=FB.mapSelection(location.hash,formalData);
   if(state.view==='physlib'){ showFormalNavigator(state); return; }
   if(state.kind==='operator'){
-    if(state.view==='missing'){ missingFormalTarget(state); return; }
+    if(state.view==='missing'){ if(LM.formulas.has(state.id)) selectFormula(state.id); else missingFormalTarget(state); return; }
     selectOperator(state.id); return;
   }
   let id=nodeFromHash(); if(!id) return;
@@ -746,19 +963,22 @@ document.querySelector('.view-switch').addEventListener('click', e=>{
 // click routing
 svg.addEventListener('click', e=>{ if(moved)return;
   const nd=e.target.closest('.node'); if(nd){ if(e.shiftKey) togglePick(nd.dataset.id); else selectNode(nodeById[nd.dataset.id]); return; }
+  const fm=e.target.closest('.fmark,.wire'); if(fm){ selectFormula(fm.dataset.op); return; }
   const ed=e.target.closest('.edge'); if(ed){ selectEdge(ed.dataset.edge, ed.dataset.op); return; }
   const bh=e.target.closest('.bh'); if(bh){ showTier(+bh.parentNode.dataset.band); return; }
   clearSel();
 });
 // a focused node opens with Enter or Space, framed with its neighbors
 svg.addEventListener('keydown', e=>{
+  const fm=(e.key==='Enter'||e.key===' ')&&e.target.closest&&e.target.closest('.fmark'); if(fm){ e.preventDefault(); selectFormula(fm.dataset.op); return; }
   const nd=(e.key==='Enter'||e.key===' ')&&e.target.closest&&e.target.closest('.node'); if(!nd) return;
   e.preventDefault(); const id=nd.dataset.id; selectNode(nodeById[id]); fitTo(neighborhood(id), id);
 });
 
 // ---- interaction: edge formula hover ---------------------------------------
-svg.addEventListener('mousemove', e=>{ const ed=e.target.closest('.edge'); if(!ed){ tip.style.display='none'; return; }
-  const [s,t]=ed.dataset.edge.split('>>'); const tn=nodeById[t]; if(!tn) return;
+svg.addEventListener('mousemove', e=>{ const ed=e.target.closest('.edge,.fmark,.wire'); if(!ed){ tip.style.display='none'; return; }
+  const fo=LM.formulas.get(ed.dataset.op);
+  const tn=fo ? nodeById[fo.outputs.slice().sort()[0]] : nodeById[ed.dataset.edge.split('>>')[1]]; if(!tn) return;
   const f=edgeFormula(tn, ed.dataset.op);
   const body = f ? tex(f) : '<span>Input quantity: no edge produces it.</span>';
   tip.innerHTML='<div class="op">'+esc(opName(ed.dataset.op))+'</div><div class="fx">'+body+'</div>';
@@ -771,20 +991,24 @@ svg.addEventListener('mousemove', e=>{ const ed=e.target.closest('.edge'); if(!e
 });
 svg.addEventListener('mouseleave', ()=>{ tip.style.display='none'; });
 
-// ---- interaction: code filter ----------------------------------------------
+// ---- interaction: the tag picker -------------------------------------------
 function codeName(code){ return Sources.codeName(code, codesData); }
 function codeCredit(code){ const sp=codesData[code]||{}; const any=Object.values(sp).find(e=>e && (e.citation||e.license)); if(!any) return ''; const cit=(any.citation||'').trim().replace(/\.$/,''); const lic=(any.license||'').trim(); return cit&&lic?(cit+'. License: '+lic+'.'):(cit||lic); }
-function renderCodeBar(){ Object.keys(codesData).sort().forEach(code=>{ const o=document.createElement('option'); o.value=code; o.textContent=codeName(code)+' ('+Object.keys(codesData[code]||{}).length+')'; const cr=codeCredit(code); if(cr) o.title=cr; codeFilter.appendChild(o); }); }
-codeFilter.addEventListener('change', function(){ if(this.value) toggleCode(this.value); else if(activeCode) toggleCode(activeCode); });
-function toggleCode(code){
-  if(activeCode===code){ activeCode=null; codeFilter.value=''; depth='expanded'; applyDepth(); return; }
-  activeCode=code; codeFilter.value=code; picked.clear();
-  const set=new Set(Object.keys(codesData[code]||{}));
-  depth='focused'; clearDim(); panelEl.style.display='none';
-  vp.querySelectorAll('.node').forEach(el=> el.classList.toggle('dim', !set.has(el.dataset.id)));
-  vp.querySelectorAll('.edge').forEach(el=>{ const ab=el.dataset.edge.split('>>'); el.classList.toggle('dim', !(set.has(ab[0])&&set.has(ab[1]))); });
-  if(set.size) fitTo([...set]);
+// Papers (and projects, once cleared) come from map_layers.json and codes from codes.json. Each option shows its count of quantities.
+function renderTagPick(){
+  const groups=[['Papers',Object.keys(layersData.tags||{}).filter(k=>k.startsWith('paper:'))],
+    ['Projects',Object.keys(layersData.tags||{}).filter(k=>k.startsWith('project:'))],
+    ['Codes',Object.keys(codesData).sort().map(c=>'code:'+c)]];
+  groups.forEach(([label,keys])=>{
+    const og=document.createElement('optgroup'); og.label=label;
+    keys.forEach(k=>{ const a=LW.area(k, layersData, codesData, graphData); if(!a) return; tagAreas.set(k,a);
+      const o=document.createElement('option'), code=k.startsWith('code:')?k.slice(5):null;
+      o.value=k; o.textContent=(code?codeName(code):layersData.tags[k].label)+' ('+a.quantities.size+')';
+      const cr=code&&codeCredit(code); if(cr) o.title=cr; og.appendChild(o); });
+    if(og.children.length) tagPick.appendChild(og);
+  });
 }
+tagPick.addEventListener('change', function(){ if(this.value){ setTag(this.value); writeHash({}); } else { setTag(null); clearSel(); } });
 
 // ---- interaction: search ---------------------------------------------------
 const qInput=document.getElementById('q'), mapStatus=document.getElementById('mapStatus');
@@ -804,17 +1028,21 @@ qInput.addEventListener('input', function(){
     nodeHits=Object.values(nodeById).filter(n=> (n.id+' '+(n.symbol||'')).toLowerCase().includes(lv)).map(n=>n.id);
     edgeOps=new Set();
   }
+  // Lean declaration names (Physlib's and the bridge's) find the marks their bindings name, when the words
+  // look like a Lean name (a dot or an underscore) or nothing else matches
+  const byLean=/[._]/.test(v)||!nodeHits.length, leanHits=byLean?LW.searchLean(leanIx, v):{quantities:[],formulas:[]};
+  leanHits.quantities.forEach(id=>{ if(nodeById[id]&&!nodeHits.includes(id)) nodeHits.push(id); });
+  leanHits.formulas.forEach(op=> edgeOps.add(op));
+  const frame=nodeHits.concat(...leanHits.formulas.map(op=> LM.formulas.get(op).outputs));
   const set=new Set(nodeHits); depth='focused'; clearDim(); panelEl.style.display='none';
-  vp.querySelectorAll('.node').forEach(el=> el.classList.toggle('dim', !set.has(el.dataset.id)));
-  // an edge lights if it produces/consumes a hit node, or its operator resolved
-  vp.querySelectorAll('.edge').forEach(el=>{
-    const ab=(el.dataset.edge||'').split('>>'); const opn=el.dataset.op||'';
-    const touches=set.has(ab[0])||set.has(ab[1]); const named=edgeOps.has(opn);
-    el.classList.toggle('dim', !(touches||named)); el.classList.toggle('hot', named);
-  });
+  lightSet(set);
+  // a formula whose operator the words name lights with its wires
+  vp.querySelectorAll('.fmark').forEach(el=>{ if(edgeOps.has(el.dataset.op)) el.classList.remove('dim'); });
+  vp.querySelectorAll('.wire').forEach(el=>{ if(edgeOps.has(el.dataset.op)){ el.classList.remove('dim'); el.classList.add('hot'); } });
   lastHits=nodeHits;
-  mapStatus.textContent=nodeHits.length+(nodeHits.length===1?' match':' matches');
-  if(nodeHits.length) fitTo(nodeHits, nodeHits[0]);
+  const n=nodeHits.length+leanHits.formulas.length;
+  mapStatus.textContent=n+(n===1?' match':' matches')+(leanHits.quantities.length+leanHits.formulas.length?' by Lean declaration name':'');
+  if(frame.length) fitTo(frame, frame[0]);
 });
 // Enter opens the best hit, framed with its neighbors
 qInput.addEventListener('keydown', e=>{
@@ -826,7 +1054,8 @@ qInput.addEventListener('keydown', e=>{
 // + and - zoom, 0 returns to the landing view, arrows pan by a tenth of the view.
 const PAN={ArrowLeft:[-1,0],ArrowRight:[1,0],ArrowUp:[0,-1],ArrowDown:[0,1]};
 window.addEventListener('keydown', e=>{
-  if(e.key==='Escape'){ if(panelEl.style.display==='block'||depth==='focused'){ clearSel(); } return; }
+  if(e.key==='Escape'){ if(!tableEl.hidden) showTable(false); else if(panelEl.style.display==='block'||depth==='focused'){ clearSel(); } return; }
+  if(!tableEl.hidden) return;
   const t=e.target;
   if(e.metaKey||e.ctrlKey||e.altKey||!(t instanceof Element)||/^(INPUT|SELECT|TEXTAREA)$/.test(t.tagName)||t.isContentEditable||panelEl.contains(t)) return;
   if(e.key==='/'){ e.preventDefault(); qInput.focus(); }
@@ -836,30 +1065,31 @@ window.addEventListener('keydown', e=>{
   else if(PAN[e.key]){ e.preventDefault(); VB.x+=PAN[e.key][0]*VB.w*0.1; VB.y+=PAN[e.key][1]*VB.h*0.1; setVB(); }
 });
 
-// ---- fallback: static readable outline (dagre missing) ---------------------
-// Each tier heading + its nodes listed (symbol-or-name) with outgoing edges
-// named by op, so the page communicates structure without a layout engine.
-function renderFallback(graph, bandOf){
-  banner('The layout library did not load, so the tiers are listed as text.');
+// ---- table: every quantity and formula with its Lean rung, by tier; rows outside the layer stay listed
+function tableHtml(){
+  let h='<p class="intro">A Lean theorem may state a property of a formula, such as a sign, a symmetry or a bound, rather than the formula itself. Open a mark to read its statement.</p>', cur=null;
+  LW.tableRows(graphData, layersData).forEach(r=>{
+    if(r.tier!==cur){
+      if(cur!==null) h+='</tbody></table>';
+      cur=r.tier; const t=tierList[tierIndex[r.tier]];
+      h+='<table><caption>'+(t&&t.order!==1e6?String(t.order+1).padStart(2,'0')+' ':'')+esc(r.tier)+'</caption><thead><tr><th scope="col">Kind</th><th scope="col">Name</th><th scope="col">Lean</th></tr></thead><tbody>';
+    }
+    const q=r.kind==='quantity', href=LW.fragment(q?{node:r.id}:{operator:r.id},{layer:layer,tag:tagKey});
+    h+='<tr'+(LW.inLayer(r.rung,layer)?'':' data-out')+'><td>'+(q?'Quantity':'Formula')+'</td><td><a href="'+attr(href)+'">'+(q?(symHtml[r.id]||esc(r.id)):esc(opName(r.id)))+'</a> <code>'+esc(r.id)+'</code></td><td><i class="sw rung-'+r.rung+'"></i> '+esc(LW.RUNG_WORDS[r.rung])+'</td></tr>';
+  });
+  return h+(cur!==null?'</tbody></table>':'');
+}
+const tableEl=document.getElementById('table'), tableBtn=document.getElementById('tableBtn');
+function showTable(on){ tableEl.hidden=!on; tableBtn.setAttribute('aria-pressed', on?'true':'false'); if(on){ tableEl.innerHTML=tableHtml(); tableEl.focus({preventScroll:true}); } }
+tableBtn.addEventListener('click', ()=> showTable(tableEl.hidden));
+tableEl.addEventListener('click', e=>{ if(e.target.closest('a')) showTable(false); });
+
+// ---- fallback: the table, when the layout library is missing ---------------
+function renderFallback(){
+  banner('The layout library did not load. This page lists the map as a table.');
   document.getElementById('cy').style.display='none';
   const fb=document.getElementById('fallback'); fb.style.display='block';
-  const byBand={};
-  graph.nodes.forEach(n=>{ const b=bandOf(n); (byBand[b]=byBand[b]||[]).push(n); });
-  let s='';
-  tierList.forEach((t,i)=>{
-    const list=byBand[i]||[];
-    s+='<div class="ft">'+esc(t.name)+'</div><div class="fd">'+esc(t.description||'')+'</div>';
-    list.forEach(n=>{
-      const outs=(children[n.id]||[]);
-      s+='<div class="fn"><span class="fs">'+(symHtml[n.id]||'')+' '+esc(n.id)+'</span><span class="fk '+n.type+'">'+esc(n.type)+'</span>';
-      if(outs.length){
-        const edg=outs.map(t2=>{ const e=edgeList.find(x=> x.source===n.id && x.target===t2); return '<span>&rarr;</span> '+esc(t2)+(e&&e.op?(' ('+esc(opName(e.op))+')'):''); });
-        s+='<div class="fe">'+edg.join('<br>')+'</div>';
-      }
-      s+='</div>';
-    });
-  });
-  fb.innerHTML=s;
+  fb.innerHTML=tableHtml();
 }
 </script>
 <script src="../assets/site.js"></script>
