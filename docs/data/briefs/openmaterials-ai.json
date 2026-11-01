@@ -54,7 +54,7 @@
   "workflow": [
     {
       "title": "Install",
-      "text": "pip install openmaterials-ai==0.6.0 on Python 3.11 or later."
+      "text": "pip install openmaterials-ai==0.6.1 on Python 3.11 or later."
     },
     {
       "title": "Build the DAG",
