@@ -7,6 +7,10 @@ id.
 
 ## Unreleased
 
+## 0.6.1
+
+Every consumer pins `openmaterials-ai==0.6.1`. A patch release: no id is re-keyed and no public name is added or removed. The map moves from graph_version `5124100905c0` to `b5d3f4502be2` by one `edit_meta` record, which corrects a citation. `omai.map_layers` and `omai/data/projects.json`, merged after 0.6.0, are not in this release: a new public name takes the next minor version.
+
 - The Every, Tzou, Hasselman and Raj reference in the `nan_effective_kappa` description is Acta Metall. Mater. 40, 123 (1992), not 38, 3105 (1990). An `edit_meta` record (record 377) corrects it. The map moves from graph_version `5124100905c0` to `b5d3f4502be2` and the lineage version from `3f08dcf2117b` to `14695f56891b`. The packaged kaldo external-solve request is re-minted against the new head (`f1d96253c786` to `2ce1369c50c6`), and its `lineage_id` is unchanged. `omai.render` no longer calls a Kamal-Sourour conversion past vitrification an upper bound: the cure record's source detail says the rate law overestimates the rate there, and `omai/vectors/render.json` follows. No record id moves. The OpenMaterials document states when a filler lowers the composite conductivity (both Kapitza-corrected conductivities below km, every sphere radius below a_c = a_K k/(k - km)) instead of naming a_K as the crossover. The openmaterials-ai brief drops the map version hash, which moved with every record.
 - The workflow strip of a code infographic wraps a token wider than its column (`overflow-wrap: anywhere` in `omai.infographic`): the openmaterials-ai poster's step 03 ran into step 04. The openmaterials-ai brief states the current map (version 3f08dcf2117b, 310 links, 33 codes, 90 values), and README.md and the OpenMaterials document correct 308 links to 310 (268 formula), the count since `solve_bte[bte_solver=direct_inverse]` gained two inputs. No id changes.
 - `docs/data/releases/openmaterials-ai.json` registers 0.6.0 (tag v0.6.0, commit e6c4e35), so `release_check` resolves an `execution.registry` row naming `openmaterials-ai` 0.6.0. No id changes.
