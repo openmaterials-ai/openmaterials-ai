@@ -69,6 +69,14 @@
    "spdx": "Apache-2.0 AND CC-BY-4.0",
    "tag": "v0.6.1",
    "version": "0.6.1"
+  },
+  {
+   "commit": "6728ee8639cb106e1c8b67c3c98fe989efd45754",
+   "license_source": "https://github.com/openmaterials-ai/openmaterials-ai/tree/v0.7.0 (LICENSE, Apache License 2.0; LICENSE-DATA, CC BY 4.0 for the map data, including the package's copy under omai/data/; pyproject.toml license Apache-2.0 AND CC-BY-4.0)",
+   "released": "2026-11-02",
+   "spdx": "Apache-2.0 AND CC-BY-4.0",
+   "tag": "v0.7.0",
+   "version": "0.7.0"
   }
  ]
 }

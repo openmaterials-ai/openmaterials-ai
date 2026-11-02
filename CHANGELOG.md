@@ -7,6 +7,9 @@ id.
 
 ## Unreleased
 
+- `docs/data/releases/openmaterials-ai.json` registers 0.7.0 (tag v0.7.0, commit 6728ee8), so `release_check` resolves an `execution.registry` row naming `openmaterials-ai` 0.7.0. No id changes.
+- The openmaterials-ai brief, code page and poster install `openmaterials-ai==0.7.0`. The poster and the social card are re-rendered from the brief and show 137 typed quantities, the count the brief has stated since PR 238. They showed 136. No id changes.
+
 ## 0.7.0
 
 Every consumer pins `openmaterials-ai==0.7.0`. The minor version follows README "Versioning": public names are added (`omai.map_layers`, the MeanPotentialEnergy node and its edge `sample_mean_potential_energy`, the quantity tag `mean_potential_energy`, the GPUMD representation of the node, and the package data `omai/data/projects.json`) and none is removed. No record id is re-keyed and no committed value moves. `omai.map_layers`, like the other site generators, imports from the wheel but reads docs/, index/ and lean/ and runs only from a checkout of this repository. The map moves from graph_version `b5d3f4502be2` to `8491d0b6ad04` by records 378-379, the lineage version from `14695f56891b` to `808a954e386e` and the latest share snapshot from `c56731602651` to `b854d4951869`. The packaged kaldo external-solve request moves from `2ce1369c50c6` to `ba921e7c1086`, and its `lineage_id` is unchanged.
