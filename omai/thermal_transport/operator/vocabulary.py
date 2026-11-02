@@ -191,4 +191,8 @@ register_space_symbols({
     # Trajectory positions r and the Potential members V({u}) through the input
     # spaces; f^{exc} is a sympy Function, so only the LHS needs registering.
     "PotentialUncertaintyExceedance[method=committee_force_spread]": {r"f_{\sigma}"},
+    # sample_mean_potential_energy has LHS \bar{U}, the frame count N_s and the
+    # frame configurations R_m read off the Trajectory. N is a constant, V a
+    # Function.
+    "MeanPotentialEnergy": {r"\bar{U}", "N_s", "R"},
 })

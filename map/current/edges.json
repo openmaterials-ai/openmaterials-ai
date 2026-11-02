@@ -1007,6 +1007,28 @@
   },
   "uid": "40d04377570142198d0a7f3d505de3b8fa6fdcf0418622be679aceec11b13264"
  },
+ "450186839ad821ee4b3973b73d4aebbb8b6ebe40e9e8cb0be20b43aca0f65329": {
+  "identity": {
+   "formula": "Equality(Symbol('\\\\bar{U}'), Mul(Pow(Symbol('N', positive=True, integer=True), Integer(-1)), Pow(Symbol('N_s', positive=True, integer=True), Integer(-1)), Sum(Function('V')(Indexed(IndexedBase(Symbol('R')), Symbol('m', integer=True))), Tuple(Symbol('m', integer=True), Integer(1), Symbol('N_s', positive=True, integer=True)))))",
+   "inputs": [
+    "12cde23e9a333fdd03313c4cdbd82d51033f9bb3bd505466a8db5360faf166b4",
+    "80a4273845e09207860e06db18d1f1ee5670a9b9c8b1020a99928c872878f901"
+   ],
+   "output": "31af780e2daebb229b18642e20d5bb48a9ad42e73a0a7689e5ab148e31eaec6f",
+   "outputs": [
+    "31af780e2daebb229b18642e20d5bb48a9ad42e73a0a7689e5ab148e31eaec6f"
+   ],
+   "schemes": {}
+  },
+  "meta": {
+   "description": "Mean potential energy per atom of an equilibrated canonical trajectory: U_bar = (1/(N N_s)) sum_{m=1}^{N_s} V(R_m), the Potential V evaluated on the N_s sampled configurations R_m of the N-atom cell (N the AtomCount) and averaged, so V(R_m) is the potential energy U(R_m). The estimator is the canonical average only if the Trajectory samples the canonical ensemble: run_md at a fixed cell with ensemble NVT and a thermostat that generates it, such as a Nose-Hoover chain, Bussi-Donadio-Parrinello or Langevin. An NVE run or a Berendsen weak coupling does not generate it. The temperature enters through the Trajectory. The Potential input is the one that propagated the Trajectory. Frames from equilibration are discarded. Successive frames are correlated, so the statistical error follows from block averages or the integrated autocorrelation time, not from 1/sqrt(N_s). V is the opaque Potential, so the formula is not sympy-executable and the dimensional gate skips it.",
+   "formula_latex": "\\bar{U} = \\frac{\\sum_{m=1}^{N_{s}} V{\\left({R}_{m} \\right)}}{N N_{s}}",
+   "formula_srepr": "Equality(Symbol('\\\\bar{U}'), Mul(Pow(Symbol('N', positive=True, integer=True), Integer(-1)), Pow(Symbol('N_s', positive=True, integer=True), Integer(-1)), Sum(Function('V')(Indexed(IndexedBase(Symbol('R')), Symbol('m', integer=True))), Tuple(Symbol('m', integer=True), Integer(1), Symbol('N_s', positive=True, integer=True)))))",
+   "name": "sample_mean_potential_energy",
+   "schemes": {}
+  },
+  "uid": "450186839ad821ee4b3973b73d4aebbb8b6ebe40e9e8cb0be20b43aca0f65329"
+ },
  "4517674f602a29f64ecc7140384fc486ee295233ce03ca7dc6bbec7eb00a91c2": {
   "identity": {
    "formula": "Equality(Symbol('\\\\epsilon_{dot}'), Mul(Pow(Symbol('S_1'), Integer(-1)), Symbol('c_G'), Pow(Add(Mul(Symbol('S_1'), Symbol('w_max'), Pow(Add(Symbol('W_G'), Integer(-1)), Integer(-1))), Mul(Rational(1, 2), Symbol('S_2')), Mul(Rational(1, 2), Symbol('n_w'), Pow(Symbol('w_max'), Integer(2)), Pow(Add(Symbol('W_G'), Integer(-1)), Integer(-2)))), Rational(1, 2))))",

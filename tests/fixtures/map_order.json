@@ -27,7 +27,7 @@
  "BandGap": [
   6,
   0,
-  2
+  1
  ],
  "BareDynamicalMatrix": [
   1,
@@ -47,7 +47,7 @@
  "BulkModulus": [
   7,
   3,
-  0
+  1
  ],
  "CalphadMolarEntropy": [
   9,
@@ -262,12 +262,12 @@
  "HeatCurrent": [
   5,
   1,
-  11
+  12
  ],
  "HeatCurrentACF": [
   5,
   2,
-  12
+  13
  ],
  "HelmholtzFreeEnergy": [
   2,
@@ -282,7 +282,7 @@
  "InterfaceConductance[transport_model=nemd]": [
   5,
   2,
-  2
+  1
  ],
  "InterfaceTrapRelaxationTime": [
   16,
@@ -322,7 +322,7 @@
  "MagneticMoment": [
   6,
   0,
-  4
+  3
  ],
  "MassDensity": [
   7,
@@ -337,12 +337,17 @@
  "MeanFreeDisplacement[bte_solver=rta]": [
   4,
   2,
-  11
+  10
+ ],
+ "MeanPotentialEnergy": [
+  5,
+  1,
+  6
  ],
  "MeanSquaredDisplacement": [
   5,
   1,
-  8
+  7
  ],
  "MigrationBarrier": [
   13,
@@ -432,22 +437,22 @@
  "PotentialEnergyFitError": [
   6,
   1,
-  1
+  2
  ],
  "PotentialForceFitError": [
   6,
   2,
-  3
+  4
  ],
  "PotentialOfMeanForce": [
   5,
   1,
-  1
+  2
  ],
  "PotentialUncertaintyExceedance[method=committee_force_spread]": [
   5,
   1,
-  6
+  9
  ],
  "PotentialVirialFitError": [
   6,
@@ -462,7 +467,7 @@
  "Pressure": [
   7,
   1,
-  1
+  0
  ],
  "ProgrammingPulseEnergy": [
   16,
@@ -562,7 +567,7 @@
  "ThermalConductivity[bte_solver=rta]": [
   4,
   3,
-  12
+  11
  ],
  "ThermalConductivity[contribution=total]": [
   14,
@@ -612,7 +617,7 @@
  "ThermalConductivity[transport_model=wigner]": [
   4,
   4,
-  10
+  12
  ],
  "ThermalConductivity[transport_model=wigner_coherences]": [
   4,
@@ -642,7 +647,7 @@
  "Trajectory": [
   5,
   0,
-  7
+  8
  ],
  "TransitionTemperature": [
   9,
@@ -652,7 +657,7 @@
  "VelocityAutocorrelation": [
   5,
   1,
-  9
+  11
  ],
  "Voltage": [
   8,

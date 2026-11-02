@@ -1,7 +1,7 @@
 {
  "representation": "gpumd",
- "lineage_version": "14695f56891b32d79cb2215e32a51725ddfa8cd3f0cafcaf7da1b1e17b1e243a",
- "map_version": "b5d3f4502be20e03212af142d2b953c29a7189ae386194c478e53e36c72e6c9e",
+ "lineage_version": "808a954e386e5aa5dbb5cc4802fe5b4ca6c5b69df03d237ee9583a54fa15e70d",
+ "map_version": "8491d0b6ad048cea62b7cdfac631632debb08a3d354bb25fb9f08191b4cedc66",
  "covers": [
   {
    "node": "HeatCurrent",
@@ -20,6 +20,12 @@
    "uid": "9dabd5c3e66ac0b87479050482b623c9d72de947eb2aa74730dcb7ad7b4c8d81",
    "api": "run.in: ensemble heat_lan <T> <T_coup> <delta_T> <label_source> <label_sink> + compute 0 <sample_interval> <output_interval> temperature  \u2192  compute.out",
    "unit": null
+  },
+  {
+   "node": "MeanPotentialEnergy",
+   "uid": "31af780e2daebb229b18642e20d5bb48a9ad42e73a0a7689e5ab148e31eaec6f",
+   "api": "run.in: ensemble nvt_nhc|nvt_bdp|nvt_lan|nvt_bao <T> <T> <T_coup> (or nvt_mttk temp <T> <T> tperiod <tau>), then dump_thermo <n> before the production run. thermo.out column 3 (PE, potential energy of the whole system, eV): mean over the production rows divided by the atom count N, eV/atom",
+   "unit": "ev_per_atom"
   },
   {
    "node": "MeanSquaredDisplacement",

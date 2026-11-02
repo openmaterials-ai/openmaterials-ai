@@ -636,6 +636,21 @@
 },
 {
 "curated": [
+"average-potential-energy",
+"mean-potential-energy",
+"nvt-potential-energy"
+],
+"id": "MeanPotentialEnergy",
+"kind": "node",
+"labels": [
+"MeanPotentialEnergy",
+"\\langle U\\rangle/N",
+"mean potential energy"
+],
+"uid": "31af780e2daebb229b18642e20d5bb48a9ad42e73a0a7689e5ab148e31eaec6f"
+},
+{
+"curated": [
 "structure-relaxation"
 ],
 "id": "Structure",
@@ -2116,6 +2131,18 @@
 "compute_potential_uncertainty_exceedance"
 ],
 "uid": "cdd7b5cc99b5cc279c21df1c1e6b179a7eafb368b4b5f1d154fbd30d64fa8aef"
+},
+{
+"curated": [
+"mean-potential-energy"
+],
+"id": "sample_mean_potential_energy",
+"kind": "edge",
+"labels": [
+"sample mean potential energy",
+"sample_mean_potential_energy"
+],
+"uid": "450186839ad821ee4b3973b73d4aebbb8b6ebe40e9e8cb0be20b43aca0f65329"
 },
 {
 "curated": [

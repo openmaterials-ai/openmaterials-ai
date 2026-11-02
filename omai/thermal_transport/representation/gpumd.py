@@ -70,6 +70,7 @@ from omai.thermal_transport.operator.edges import (
 from omai.thermal_transport.operator.nodes import (
     HEAT_CURRENT,
     HEAT_CURRENT_ACF,
+    MEAN_POTENTIAL_ENERGY,
     MEAN_SQUARED_DISPLACEMENT,
     POTENTIAL,
     POTENTIAL_UNCERTAINTY_EXCEEDANCE,
@@ -118,6 +119,38 @@ GPUMD_POTENTIAL_UNCERTAINTY_EXCEEDANCE = SpaceRepresentationSpec(
         "in append mode, so rows from an earlier run in the same directory "
         "must be excluded. The node value is the fraction of this run's "
         "active.out rows above sigma."
+    ),
+)
+
+
+GPUMD_MEAN_POTENTIAL_ENERGY = SpaceRepresentationSpec(
+    space=MEAN_POTENTIAL_ENERGY,
+    representation_name="gpumd",
+    observable_units={"U_bar": "ev_per_atom"},
+    code_api={
+        "U_bar": "run.in: ensemble nvt_nhc|nvt_bdp|nvt_lan|nvt_bao <T> <T> <T_coup> (or nvt_mttk temp <T> <T> tperiod <tau>), then dump_thermo <n> before the production run. thermo.out column 3 (PE, potential energy of the whole system, eV): mean over the production rows divided by the atom count N, eV/atom",
+    },
+    notes=(
+        "Read at GPUMD v5.9 (src/measure/dump_thermo.cu, "
+        "doc/gpumd/output_files/thermo_out.rst). Column 3 is the potential "
+        "energy of the whole system in eV, from the potential that drives "
+        "the MD, in every version. One row is written every n steps. In "
+        "v5.9 a row has 18 columns: T, kinetic energy, potential energy, six "
+        "pressure components (GPa) and nine box components (A). v3.9.5 "
+        "writes 12 columns for an orthogonal box. dump_thermo applies to the "
+        "next run only, and thermo.out is opened in append mode, so rows "
+        "from an earlier run in the same directory, such as the "
+        "equilibration, must be excluded. From v5.6 each run with "
+        "dump_thermo starts with a block of lines beginning with #. Skip "
+        "them. The last block starts the production rows, and its num_atoms "
+        "line gives N. Older files have no header, and N is the atom count "
+        "of model.xyz. The canonical ensemble is sampled by nvt_nhc "
+        "(Nose-Hoover chain), nvt_bdp (Bussi-Donadio-Parrinello), nvt_lan "
+        "(Langevin), nvt_bao (BAOAB Langevin) and nvt_mttk. nvt_ber "
+        "(Berendsen) does not sample it. nvt_qtb (quantum thermal bath) adds "
+        "zero-point motion and is not this node. Under the path-integral "
+        "integrators (pimd, rpmd and their variants) the PE column is the "
+        "bead average of V in the path-integral ensemble, not this node."
     ),
 )
 

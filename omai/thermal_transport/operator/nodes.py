@@ -958,6 +958,47 @@ POTENTIAL_UNCERTAINTY_EXCEEDANCE = ObservableSpace(
     ),
 )
 
+# Canonical mean potential energy of classical MD: a scalar per-atom average
+# read off an equilibrated NVT Trajectory with the Potential that drove it.
+MEAN_POTENTIAL_ENERGY = ObservableSpace(
+    name="MeanPotentialEnergy",
+    fields=(Field("U_bar", ENERGY, indices=()),),
+    tier="Molecular dynamics",
+    description=(
+        "Mean potential energy per atom of a periodic N-atom cell in the "
+        "canonical ensemble, from classical molecular dynamics. With U(R) "
+        "the potential energy of configuration R given by the Potential V, "
+        "the quantity is <U>/N, the canonical average at fixed N, cell and "
+        "temperature T, in eV/atom. The edge estimates it from N_s "
+        "configurations R_m of an equilibrated trajectory as U_bar = "
+        "(1/(N N_s)) sum_m U(R_m). The node symbol <U>/N and the estimator "
+        "U_bar denote the same quantity. It excludes the kinetic energy. The "
+        "nuclei are classical, so no zero-point energy enters. For a "
+        "harmonic crystal U_bar - U_0/N = (3/2) k_B T (1 - 1/N), 38.8 "
+        "meV/atom at 300 K for large N, with U_0 the energy of the static "
+        "structure relaxed at the same cell under the same potential. The "
+        "excess over that value measures the anharmonicity of the potential "
+        "at fixed volume. The zero of energy is the potential's own, so "
+        "values from different potentials compare only after each "
+        "potential's own U_0/N is subtracted. The value depends on N, at "
+        "least through the factor 1 - 1/N, so the cell size is a condition "
+        "to converge. An isothermal-isobaric run at pressure P and "
+        "temperature T gives <U>/N equal to this value, up to terms of order "
+        "1/N, when the cell here is the mean cell of that run. Conditions: "
+        "the potential and its sha256, the structure (composition, cell, N), "
+        "T, the ensemble and the thermostat, the time step, the equilibration "
+        "steps discarded, the production steps and the sampling interval, "
+        "and the random seed. Distinct from InternalEnergy (the quantum "
+        "harmonic energy of one phonon mode, kinetic plus potential), from "
+        "MolarInternalEnergy (its sum per mole of cells, whose classical "
+        "limit is 3 k_B T per atom, while twice the harmonic U_bar - U_0/N "
+        "is 3 k_B T (1 - 1/N)), from TotalEnergy (the energy of one static "
+        "structure under a Potential, per cell) and from "
+        "ConfigurationalEnergy (the cluster-expansion energy of one lattice "
+        "configuration)."
+    ),
+)
+
 
 NODES: tuple[Space, ...] = (
     POTENTIAL,
@@ -1023,4 +1064,6 @@ NODES: tuple[Space, ...] = (
     POTENTIAL_OF_MEAN_FORCE,
     # Committee force-spread exceedance of one MD run (NEP active learning)
     POTENTIAL_UNCERTAINTY_EXCEEDANCE,
+    # Canonical mean potential energy per atom of classical MD
+    MEAN_POTENTIAL_ENERGY,
 )

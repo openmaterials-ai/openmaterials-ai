@@ -209,6 +209,7 @@ QUANTITY_TAGS: dict[str, str] = {
     "potential_force_fit_error": "Raw RMSE of the Cartesian force components of a fitted interatomic potential against held-out reference forces; FORCE (eV/A). The error on the held-out labels' distribution, not a measure of accuracy outside it.",
     "potential_virial_fit_error": "Raw RMSE of the per-atom virial components of a fitted interatomic potential against held-out reference virials (from the reference stress); ENERGY (eV/atom). The error on the held-out labels' distribution, not a measure of accuracy outside it.",
     "potential_uncertainty_exceedance": "Fraction of one molecular dynamics run's uncertainty checks at which the largest per-atom force spread of a committee of machine-learned potentials exceeds a threshold sigma; DIMENSIONLESS, in [0, 1]. Size dependent (a maximum over atoms). An active-learning stopping criterion for a fitted potential at the run's conditions: a low value means a small spread among the members' forces on the sampled configurations, not that the potential is accurate there. Not a property of the material.",
+    "mean_potential_energy": "Ensemble average of the potential energy of an atomistic cell per atom, <U>/N, sampled by classical molecular dynamics; ENERGY (eV/atom). Excludes the kinetic energy. Classical nuclei, so no zero-point energy. The zero of energy is the potential's own. Distinct from the per-mode harmonic internal_energy, the total_energy of one static structure and the lattice-model configurational_energy.",
 }
 
 

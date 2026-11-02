@@ -1876,13 +1876,13 @@
  "counts": {
   "formulas": {
    "local": 56,
-   "none": 48,
+   "none": 49,
    "physlib": 29,
    "stated": 0
   },
   "quantities": {
    "local": 47,
-   "none": 64,
+   "none": 65,
    "physlib": 25,
    "stated": 0
   }
@@ -3490,6 +3490,18 @@
    "rung": "none",
    "tier": "Molecular dynamics"
   },
+  "sample_mean_potential_energy": {
+   "bindings": [],
+   "inputs": [
+    "Potential",
+    "Trajectory"
+   ],
+   "outputs": [
+    "MeanPotentialEnergy"
+   ],
+   "rung": "none",
+   "tier": "Molecular dynamics"
+  },
   "sample_pmf": {
    "bindings": [],
    "inputs": [
@@ -4140,6 +4152,12 @@
    "related": [],
    "rung": "local",
    "via": "formulas"
+  },
+  "MeanPotentialEnergy": {
+   "bindings": [],
+   "related": [],
+   "rung": "none",
+   "via": null
   },
   "MeanSquaredDisplacement": {
    "bindings": [
@@ -4797,7 +4815,7 @@
    "theorems": 5
   },
   {
-   "formulas": 13,
+   "formulas": 14,
    "name": "Molecular dynamics",
    "theorems": 4
   },
