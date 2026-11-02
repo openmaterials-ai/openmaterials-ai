@@ -124,6 +124,12 @@ ALIASES: dict[str, tuple[str, ...]] = {
         "PotentialUncertaintyExceedance[method=committee_force_spread]",
         "compute_potential_uncertainty_exceedance",
     ),
+    # Canonical mean potential energy of classical MD.
+    "mean-potential-energy": (
+        "MeanPotentialEnergy", "sample_mean_potential_energy",
+    ),
+    "average-potential-energy": ("MeanPotentialEnergy",),
+    "nvt-potential-energy": ("MeanPotentialEnergy",),
     # NO-HOME markers live in the alignment files, not here: an alias
     # must point at something that exists (the gate below enforces it).
 }

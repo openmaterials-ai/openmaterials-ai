@@ -76,6 +76,8 @@ from omai.thermal_transport.operator.nodes import (
     POTENTIAL_OF_MEAN_FORCE,
     # Committee force-spread exceedance (NEP active learning)
     POTENTIAL_UNCERTAINTY_EXCEEDANCE,
+    # Canonical mean potential energy of classical MD
+    MEAN_POTENTIAL_ENERGY,
 )
 
 
@@ -1951,6 +1953,49 @@ compute_potential_uncertainty_exceedance = Operator(
 )
 
 
+# ---------------------------------------------------------------------------
+# Canonical mean potential energy of classical MD. One sampling edge from the
+# Potential and the Trajectory it propagated: the sample mean of V over N_s
+# production frames, per atom. V is the opaque Potential, so not
+# sympy-executable. The dimensional gate skips it.
+# ---------------------------------------------------------------------------
+
+_U_bar = sp.Symbol(r"\bar{U}")
+# R[m]: the whole configuration of frame m, all atoms.
+_R_frame = sp.IndexedBase("R")
+_m_frame = sp.Symbol("m", integer=True)
+_N_s = sp.Symbol("N_s", positive=True, integer=True)
+
+sample_mean_potential_energy = Operator(
+    name="sample_mean_potential_energy",
+    inputs=(POTENTIAL, TRAJECTORY),
+    outputs=(MEAN_POTENTIAL_ENERGY,),
+    # N (not N_{atoms} as in compute_msd) so the edge draws the AtomCount link.
+    formula=sp.Eq(
+        _U_bar,
+        sp.Sum(_V_pot(_R_frame[_m_frame]), (_m_frame, 1, _N_s)) / (_N_atoms * _N_s),
+    ),
+    is_executable_in_sympy_override=False,
+    description=(
+        "Mean potential energy per atom of an equilibrated canonical "
+        "trajectory: U_bar = (1/(N N_s)) sum_{m=1}^{N_s} V(R_m), the "
+        "Potential V evaluated on the N_s sampled configurations R_m of the "
+        "N-atom cell (N the AtomCount) and averaged, so V(R_m) is the "
+        "potential energy U(R_m). The estimator is the canonical average "
+        "only if the Trajectory samples the canonical ensemble: run_md at a "
+        "fixed cell with ensemble NVT and a thermostat that generates it, "
+        "such as a Nose-Hoover chain, Bussi-Donadio-Parrinello or Langevin. "
+        "An NVE run or a Berendsen weak coupling does not generate it. The "
+        "temperature enters through the Trajectory. The Potential input is "
+        "the one that propagated the Trajectory. Frames from equilibration "
+        "are discarded. Successive frames are correlated, so the statistical "
+        "error follows from block averages or the integrated autocorrelation "
+        "time, not from 1/sqrt(N_s). V is the opaque Potential, so the "
+        "formula is not sympy-executable and the dimensional gate skips it."
+    ),
+)
+
+
 EDGES: tuple[Operator, ...] = (
     provide_potential,
     provide_temperature,
@@ -2015,4 +2060,6 @@ EDGES: tuple[Operator, ...] = (
     sample_pmf,
     # Committee force-spread exceedance (NEP active learning)
     compute_potential_uncertainty_exceedance,
+    # Canonical mean potential energy of classical MD
+    sample_mean_potential_energy,
 )

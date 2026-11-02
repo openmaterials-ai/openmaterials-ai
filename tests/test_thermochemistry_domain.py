@@ -374,8 +374,9 @@ def test_map_has_one_hundred_nodes_and_fifteen_tiers():
     # +1 for PotentialUncertaintyExceedance[method=committee_force_spread]
     # (Molecular dynamics, no new tier). +3 for ConductanceRelaxationTime,
     # InterfaceTrapRelaxationTime and ClassificationAccuracy (Analog device
-    # metrology, no new tier).
-    assert len(g["nodes"]) == 136
+    # metrology, no new tier). +1 for MeanPotentialEnergy
+    # (Molecular dynamics, no new tier).
+    assert len(g["nodes"]) == 137
     assert len(g["tiers"]) == 18
 
 

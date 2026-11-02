@@ -684,6 +684,16 @@ def dimension_MeanFreeDisplacement_bte_solver_rta_field_F : Dimension ISQDimensi
   | .current => 0
   | .luminousIntensity => 0
 
+-- MeanPotentialEnergy / U_bar; uid 31af780e2daebb229b18642e20d5bb48a9ad42e73a0a7689e5ab148e31eaec6f
+def dimension_MeanPotentialEnergy_field_U_bar : Dimension ISQDimensionBase := ofFunction fun
+  | .mass => 1
+  | .length => 2
+  | .time => -2
+  | .temperature => 0
+  | .amount => 0
+  | .current => 0
+  | .luminousIntensity => 0
+
 -- MeanSquaredDisplacement / M; uid 28ebe96bc049a92e4318fd5242778f30e5647531d0a2b39c5891546329c8bca0
 def dimension_MeanSquaredDisplacement_field_M : Dimension ISQDimensionBase := ofFunction fun
   | .mass => 0

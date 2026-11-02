@@ -1,9 +1,9 @@
 {
   "physlib_rev": "9b583cb6ef6e9cc537c4d4b786b508de1abbcf42",
   "lean_toolchain": "leanprover/lean4:v4.35.0",
-  "catalog_nodes": 136,
-  "fields": 138,
-  "encoded_fields": 133,
+  "catalog_nodes": 137,
+  "fields": 139,
+  "encoded_fields": 134,
   "opaque_fields": 5,
   "records": [
     {
@@ -1332,6 +1332,24 @@
         0
       ],
       "declaration": "OMAI.PhyslibBridge.ISQ.dimension_MeanFreeDisplacement_bte_solver_rta_field_F",
+      "status": "encoded"
+    },
+    {
+      "node": "MeanPotentialEnergy",
+      "node_uid": "31af780e2daebb229b18642e20d5bb48a9ad42e73a0a7689e5ab148e31eaec6f",
+      "field": "U_bar",
+      "dimension": "energy",
+      "indices": [],
+      "exponents": [
+        1,
+        2,
+        -2,
+        0,
+        0,
+        0,
+        0
+      ],
+      "declaration": "OMAI.PhyslibBridge.ISQ.dimension_MeanPotentialEnergy_field_U_bar",
       "status": "encoded"
     },
     {

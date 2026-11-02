@@ -2,7 +2,7 @@
 
 # openmaterials-ai
 
-[![OpenMaterials map version](https://openmaterials.ai/badge/14695f56891b.svg)](https://openmaterials.ai/)
+[![OpenMaterials map version](https://openmaterials.ai/badge/808a954e386e.svg)](https://openmaterials.ai/)
 
 
 OpenMaterials is a versioned, content-addressed map of physics. Physical
@@ -20,8 +20,8 @@ Lean dimension and any compiled formula proof, the codes that produce it with th
 citations, and the values attached to it with their provenance. OpenMaterials is
 stewarded by OpenMaterials-AI, a foundation in formation.
 
-At map version 14695f56891b the map has 136 typed quantities (122 observable, 11
-hidden, 3 parameter), 310 links (268 formula, 42 parameter), and 133 operators
+At map version 808a954e386e the map has 137 typed quantities (123 observable, 11
+hidden, 3 parameter), 313 links (270 formula, 43 parameter), and 134 operators
 in 18 tiers. It holds representations for 33 codes and 90 committed values (84
 from simulations, 6 from measurements). The [codes
 bibliography](https://openmaterials.ai/codes/) lists each code with its
@@ -197,7 +197,7 @@ it as a simulation on MaterialsCodeGraph). Every page has a copy-link control.
 
 [![Physlib bridge check](https://github.com/openmaterials-ai/openmaterials-ai/actions/workflows/physlib-bridge.yml/badge.svg)](https://github.com/openmaterials-ai/openmaterials-ai/actions/workflows/physlib-bridge.yml)
 
-The map's Lean layer is one lake package, `lean/bridge/`, pinned to one [Physlib](https://github.com/leanprover-community/physlib) revision on Lean 4.35.0. Every node with dimensional content is a Physlib seven-base ISQ `Dimension`, and the compiled formula bridges prove conditional theorems about the map's formulas. `cd lean/bridge && lake exe cache get && lake build --wfail` reproduces the build, and CI rebuilds it on every change to the package or its generators. Closed-form formulas are not restated as theorems: concluding `Y*D = N` from `Y = N/D` certifies nothing, so the package holds no such statements. The [Lean page](https://openmaterials.ai/lean/) renders the coverage, and the [formalization roadmap](https://openmaterials.ai/lean/roadmap/) rates every operator on the map by what a theorem about its formula would take, from closed-form definitions to the open analysis frontier (Brillouin-zone sums, correlation integrals). A hand-reviewed [crosswalk](https://openmaterials.ai/data/physlib_crosswalk.json) records, at the bridge's pinned revision, the Physlib declarations each map node cites or would specialize: 47 of 136 nodes cite at least one (11 with an exact concept match), graded against the declarations the compiled bindings actually use, and each of the other 89 carries a proposal for the upstream definition that would cover it. An `exact` label names a concept match, not a proof of model-specific equivalence. Where a compiled binding exists, the binding is the proof.
+The map's Lean layer is one lake package, `lean/bridge/`, pinned to one [Physlib](https://github.com/leanprover-community/physlib) revision on Lean 4.35.0. Every node with dimensional content is a Physlib seven-base ISQ `Dimension`, and the compiled formula bridges prove conditional theorems about the map's formulas. `cd lean/bridge && lake exe cache get && lake build --wfail` reproduces the build, and CI rebuilds it on every change to the package or its generators. Closed-form formulas are not restated as theorems: concluding `Y*D = N` from `Y = N/D` certifies nothing, so the package holds no such statements. The [Lean page](https://openmaterials.ai/lean/) renders the coverage, and the [formalization roadmap](https://openmaterials.ai/lean/roadmap/) rates every operator on the map by what a theorem about its formula would take, from closed-form definitions to the open analysis frontier (Brillouin-zone sums, correlation integrals). A hand-reviewed [crosswalk](https://openmaterials.ai/data/physlib_crosswalk.json) records, at the bridge's pinned revision, the Physlib declarations each map node cites or would specialize: 48 of 137 nodes cite at least one (11 with an exact concept match), graded against the declarations the compiled bindings actually use, and each of the other 89 carries a proposal for the upstream definition that would cover it. An `exact` label names a concept match, not a proof of model-specific equivalence. Where a compiled binding exists, the binding is the proof.
 
 The [formula bridge](https://openmaterials.ai/lean/bridge/) lists every
 quantity and operator, including those with no established correspondence.

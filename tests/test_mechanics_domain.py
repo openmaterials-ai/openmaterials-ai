@@ -163,8 +163,9 @@ def test_no_node_uid_collisions_at_105_nodes():
     # 133 with PotentialUncertaintyExceedance[method=committee_force_spread] (Molecular dynamics tier).
     # 136 with ConductanceRelaxationTime, InterfaceTrapRelaxationTime and
     # ClassificationAccuracy (Analog device metrology tier).
+    # 137 with MeanPotentialEnergy (Molecular dynamics tier).
     g = build_graph_dict(DOMAINS)
-    assert len(g["nodes"]) == 136
+    assert len(g["nodes"]) == 137
     uids = [n["uid"] for n in g["nodes"]]
     assert len(set(uids)) == len(uids), "node uid collision"
 

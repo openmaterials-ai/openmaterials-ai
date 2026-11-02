@@ -5114,6 +5114,13 @@
         "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
       },
       {
+        "id": "MeanPotentialEnergy",
+        "uid": "31af780e2daebb229b18642e20d5bb48a9ad42e73a0a7689e5ab148e31eaec6f",
+        "binding_ids": [],
+        "status": "gap",
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
+      },
+      {
         "id": "MeanSquaredDisplacement",
         "uid": "28ebe96bc049a92e4318fd5242778f30e5647531d0a2b39c5891546329c8bca0",
         "binding_ids": [
@@ -7903,6 +7910,23 @@
         "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
+        "id": "sample_mean_potential_energy",
+        "uid": "450186839ad821ee4b3973b73d4aebbb8b6ebe40e9e8cb0be20b43aca0f65329",
+        "domain": "thermal_transport",
+        "formula_sha256": "b56f9babc6321db4db81d207e1440775be1a1a89592d7dec262d4325cdb71e84",
+        "formula_latex": "\\bar{U} = \\frac{\\sum_{m=1}^{N_{s}} V{\\left({R}_{m} \\right)}}{N N_{s}}",
+        "inputs": [
+          "Potential",
+          "Trajectory"
+        ],
+        "outputs": [
+          "MeanPotentialEnergy"
+        ],
+        "binding_ids": [],
+        "status": "gap",
+        "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
+      },
+      {
         "id": "sample_pmf",
         "uid": "40c9c4bdbf9b62a690eceb9042667a3ebc6c73a53ac141b538c0d2e44037d2a1",
         "domain": "thermal_transport",
@@ -8129,9 +8153,9 @@
     ]
   },
   "coverage": {
-    "nodes_total": 136,
+    "nodes_total": 137,
     "nodes_mapped": 35,
-    "operators_total": 133,
+    "operators_total": 134,
     "operators_mapped": 29,
     "nodes_local": 44,
     "operators_local": 56,

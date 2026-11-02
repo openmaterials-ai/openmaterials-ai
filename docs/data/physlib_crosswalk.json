@@ -835,7 +835,17 @@
   "PotentialEnergyFitError": [],
   "PotentialForceFitError": [],
   "PotentialVirialFitError": [],
-  "PotentialUncertaintyExceedance[method=committee_force_spread]": []
+  "PotentialUncertaintyExceedance[method=committee_force_spread]": [],
+  "MeanPotentialEnergy": [
+   {
+    "name": "CanonicalEnsemble.meanEnergy",
+    "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Basic",
+    "kind": "def",
+    "informal": "Mean energy of a canonical ensemble. With the configurations of the cell as microstates, the potential as their energy and the Lebesgue measure, it is the configurational average <U> that the node divides by N and estimates from MD samples.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L519",
+    "confidence": "related"
+   }
+  ]
  },
  "needs_upstream": {
   "ActivationEnergy": "An Arrhenius rate law with the activation energy E_a in the Boltzmann factor exp(-E_a / (kB T)), in Thermodynamics next to Temperature.β. The Lean bridge formalizes it locally in OMAIMaterialsTransport, the upstreaming candidate.",
