@@ -49,8 +49,7 @@
    "node_id": "ThermalConductivity[bte_solver=direct_inverse]",
    "node_uid": "a369d33e9643b9f8766b111cde72c44fbf34a13ae46dfab31e1afab1c2129ca9",
    "pages": [
-    13,
-    23
+    13
    ],
    "quote": "Our first-principles BTE calculations give kz = 2.84 Wm-1K-1 and kr = 39.0 Wm-1K-1",
    "units": "W/(m K)",
@@ -61,8 +60,7 @@
    "node_id": "ThermalConductivity[bte_solver=direct_inverse]",
    "node_uid": "a369d33e9643b9f8766b111cde72c44fbf34a13ae46dfab31e1afab1c2129ca9",
    "pages": [
-    13,
-    23
+    13
    ],
    "quote": "Our first-principles BTE calculations give kz = 2.84 Wm-1K-1 and kr = 39.0 Wm-1K-1",
    "units": "W/(m K)",

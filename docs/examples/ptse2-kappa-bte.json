@@ -1,7 +1,7 @@
 {
-  "id": "d80eb7cae9d790807b5f7a5c22ac170aa1027f47e735c0df1a9e204ba7b118c5",
+  "id": "873062a644b3a4912d9981672a2a5c34bd52f1caa279d7ee10cfe6684372036e",
   "lineage": {
-    "node": "ThermalConductivity",
+    "node": "ThermalConductivity[bte_solver=direct_inverse]",
     "material": "PtSe2 (bulk)",
     "hyperparameters": {
       "direction": "in-plane"
@@ -11,14 +11,14 @@
       "units": "W/(m K)"
     },
     "template": "dft_bte_kappa",
-    "node_uid": "a03324d4def54619f16ee80ccf176b95a59808141651debabbf1611b7e3a12d5",
+    "node_uid": "a369d33e9643b9f8766b111cde72c44fbf34a13ae46dfab31e1afab1c2129ca9",
     "conditions": {
       "T": "room temperature"
     },
     "source": "paper:ptse2-2021-donadio"
   },
   "execution": {
-    "code": "first-principles BTE"
+    "code": "kaldo"
   },
   "artifacts": [
     {

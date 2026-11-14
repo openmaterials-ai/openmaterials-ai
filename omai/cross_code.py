@@ -76,8 +76,8 @@ def _estimator_key(rec: dict) -> tuple:
 
 def _estimator_str(rec: dict) -> str:
     """A human label for the estimator: the variable [label] when present, else
-    the method string (the neutral-node case, e.g. PtSe2's first-principles BTE
-    vs FDTR, carries no [label] so the method is the only distinguishing text)."""
+    the method string (the neutral-node case, e.g. an FDTR measurement, carries
+    no [label] so the method is the only distinguishing text)."""
     lab = _label(rec["variable"])
     cond = rec.get("conditions") or {}
     parts = []
