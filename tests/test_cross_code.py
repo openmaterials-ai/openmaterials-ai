@@ -236,8 +236,8 @@ def test_cross_code_same_estimator_different_ref_groups_and_flags():
 
 
 def test_method_axis_alone_spans_two_estimators_on_a_labelless_node():
-    # A neutral (labelless) node where the estimator is the method string only,
-    # the PtSe2 shape: two methods, same conditions -> one group.
+    # A neutral (labelless) node where the estimator is the method string only:
+    # two methods, same conditions -> one group.
     insts = [
         _inst("ThermalConductivity", "X", 39.0,
               {"T": "room temperature", "direction": "in-plane", "method": "BTE"}),

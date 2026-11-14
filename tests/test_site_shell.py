@@ -213,8 +213,10 @@ const titles = {};
 for (const ref in byRef) titles[ref] = Sources.titleOf(byRef[ref], codes);
 const one = id => recs.find(r => r.id.startsWith(id));
 console.log(JSON.stringify({titles, quotes: recs.map(r => Sources.parts(r.source.detail).quote),
+  cites: recs.map(r => Sources.parts(r.source.detail).cite),
   conds: recs.map(r => Sources.condText(r.conditions)), methods: recs.map(r => Sources.methodLine(r, codes)),
-  ptse2: Sources.condText(one('adab238871da').conditions), si: Sources.condText(one('f735a05c14db').conditions),
+  ptse2: Sources.condText(one('7e1b4e1f333d').conditions), si: Sources.condText(one('f735a05c14db').conditions),
+  unstated: Sources.condText({method: 'first-principles BTE (solver unstated: the paper does not say RTA or full solution)'}),
   conformance: Sources.methodLine(one('f64affbf549a'), codes),
   precision: Sources.condText({precision: 'frozen reference output (reference commit 0123abcd); the solver reproduces it on the CPU complex128 path (source of truth; GPU complex64 is the fast path)'}),
   ethanol: [...new Set(Sources.groups(recs)['atomisticskills-chem-bond-dissociation-ethanol'].map(r => Sources.methodLine(r, codes)))],
@@ -244,7 +246,9 @@ def test_sources_take_their_citations_and_print_plain_words():
     assert titles["kaldo"].endswith(" run") and not titles["materialscodegraph"], "a code's run, or the ref"
     assert not [t for t in titles.values() if re.search(r"doi:|arXiv:|\[", t)]
     assert not [q for q in got["quotes"] if "[MIGRATED" in q]
-    assert got["ptse2"].endswith("method = first-principles BTE, solver not stated")
+    assert not [c for c in got["cites"] if re.search(r"\(p\. ?\d", c)], "a second quoted passage leaked into a citation"
+    assert got["ptse2"].endswith("method = first-principles BTE, direct inversion of the scattering tensor in kALDo")
+    assert got["unstated"] == "method = first-principles BTE, solver not stated"
     assert got["si"].startswith("T 300 K · ")
     assert not [c for c in got["conds"] if "unstated" in c or re.search(r"\b[0-9a-f]{64}\b", c)]
     assert got["conformance"].endswith(" 2.2.1 run of Si with the Tersoff potential")

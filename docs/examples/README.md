@@ -26,7 +26,7 @@ Use them two ways:
 | si-kappa-kaldo-rta | Silicon thermal conductivity, kaldo RTA; the method-comparison story |
 | ge-kappa-kaldo | Germanium thermal conductivity, kaldo; cross-code agreement |
 | si-diamond-kappa-dfpt | Silicon thermal conductivity from DFPT, the high-fidelity value |
-| ptse2-kappa-bte | PtSe2 thermal conductivity, first-principles BTE; theory vs experiment agreement |
+| ptse2-kappa-bte | PtSe2 thermal conductivity, direct-inversion BTE in kALDo; theory vs experiment agreement |
 | tan-kappa-shengbte | TaN, a high thermal conductivity semiconductor, 3 plus 4 phonon |
 | a-si-kappa-qhgk | Amorphous silicon thermal conductivity, QHGK glass transport |
 | sige-zt-qhgk | SiGe alloy thermoelectric figure of merit ZT |

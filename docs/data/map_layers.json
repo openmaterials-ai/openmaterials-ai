@@ -4752,7 +4752,8 @@
    ],
    "label": "Phonon dynamics and thermal conductivity of PtSe2 thin films: Impact of crystallinity and film thickness",
    "quantities": [
-    "ThermalConductivity"
+    "ThermalConductivity",
+    "ThermalConductivity[bte_solver=direct_inverse]"
    ],
    "url": "https://arxiv.org/abs/2111.13395",
    "values": 3

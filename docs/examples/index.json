@@ -52,15 +52,15 @@
   },
   {
     "slug": "ptse2-kappa-bte",
-    "id": "d80eb7cae9d7",
-    "node": "ThermalConductivity",
+    "id": "873062a644b3",
+    "node": "ThermalConductivity[bte_solver=direct_inverse]",
     "material": "PtSe2 (bulk)",
     "value": {
       "kappa": 39.0,
       "units": "W/(m K)"
     },
-    "code": "first-principles BTE",
-    "fragment": "gH4sIAPG8wWoC_yWQwYrbMBCGXyXotAtJK8l2ZOfWhu2lsFsaQw-lmJE0asTakpHlpUvIu3fkPQlG3_z6ft2Yt-zEbMtRKwPYWdXxlivdOAWNkRKMUBxAcKlcrVBVjeHWCehQ8lqD0kK0pmF7NvqA8BfZ6cZCtHSy_oppgvEcg11N9m8-vxM3QcbkYSTgR76g3D3odXx9pJvr-4xphgQTErKUJOsT0moMRPtwmEcIyO579gbjihvxCvMM7FR1n_iercFnmrJfnx-m3ffHQmacaCsXH-vyoDMOHyv7TXNYt_7Aq0rWtrbomvooOieOiC03xgl11F0DTdfyVtTi2AiLGrQmQgitsAIhbelvqKYvqptWT6EpxmlX3scEeU2b-BLXZIrMDDQ-zXlBeZBcioONAayPBcJ_aNaP1jfK3T7T-bTkw5x8MH4ecdl97Z8KCyl7B6bU_n2j1Hwl-NvLz_PTcH55vvRfnvsL2aU4bimRXh9IdckQaOf-5_4f9a5lqQICAAA"
+    "code": "kaldo",
+    "fragment": "gH4sIAAAAAAAC_yWQT2vjMBDFv0rQqYVka_2pHAV6WMLuZaFdNoEeSjFjabwRsSUjy2FLyHffkXMapHnvzW_myrxjO7atZaUFaKVaCcpw4YzZcl0LEPBspWrds-i4BRC1cTUir2yHWm-VrEUlNbI1631A-Itsd2UhOqrseMI0QL-Pwc02-4vPXx9txmaK_QXTi_MJbW58oMeEnxQxQMbkoSfv73xAsXpo5_78SJ3T14hphAQDkmQqQ-52HwOpfdiMPQRktzW7QD_jojjDOALbSfOtWrM5-Ey_7P3pYVj9eizKjAO5ckF1XW4K2t2yXjZo5uU0ILVxUqLRSram29Zat5xz67AWVqmu7aQCLgGVdh20kiMHqtwKLowFQ2mWLuAL6oJ1pNAU47Aq8zFBntMCPsU52QIzAn3vxjyh2IhK8I2LAZyPRYT_0M73ra-Uu9z5DL1bmpCy78CWPT-uFJNP1P359mf_o9m_vR6O31-PB8JJsS-2LtK4htimDIE8t8_bf2xF7yQOAgAA"
   },
   {
     "slug": "tan-kappa-shengbte",
