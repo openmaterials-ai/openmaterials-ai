@@ -328,8 +328,8 @@ python -m omai.formula_bindings --check --lean-package lean/bridge</pre>
       ['Operators referenced', c.operators_mapped + ' / ' + c.operators_total],
       ['Quantities covered by compiled results', c.nodes_compiled + ' / ' + c.nodes_total],
       ['Compiled formula output quantities', c.nodes_compiled_outputs], ['Standalone quantity interpretations', c.nodes_compiled_interpretations], ['Operators covered by compiled results citing Physlib', c.operators_compiled + ' / ' + c.operators_total],
-      ['Operators covered by local proofs only', (c.operators_compiled_local || 0) + ' / ' + c.operators_total],
-      ['Operators with any compiled proof', (c.operators_proved === undefined ? c.operators_compiled : c.operators_proved) + ' / ' + c.operators_total],
+      ['Operators covered by local theorems only', (c.operators_compiled_local || 0) + ' / ' + c.operators_total],
+      ['Operators with any compiled theorem', (c.operators_proved === undefined ? c.operators_compiled : c.operators_proved) + ' / ' + c.operators_total],
       ['Source-only binding records', c.source_correspondences], ['Compiled bridge records', c.compiled_bridges],
       ['Physlib declarations referenced', declarations.length], ['Physlib modules referenced', new Set(declarations.map(function (row) { return row.module; })).size],
       ['Exact-definition relations', c.relations.exact_definition], ['Conditional relations', c.relations.conditional], ['Conceptual relations', c.relations.conceptual], ['Local relations', c.relations.local || 0] ];

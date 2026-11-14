@@ -16,7 +16,7 @@ numerical arrays and cross-check two inputs at a gauge-invariant observable
 in docs/data/semantics.json) maps a method name as a paper or a language model
 writes it, such as "quasi-harmonic approximation", to typed, content-addressed
 node ids. An agent that resolves a phrase this way gets the node's formula, its
-Lean dimension and any compiled formula proof, the codes that produce it with their
+Lean dimension and any compiled Lean theorem about its formula, the codes that produce it with their
 citations, and the values attached to it with their provenance. OpenMaterials is
 stewarded by OpenMaterials-AI, a foundation in formation.
 
