@@ -36,7 +36,7 @@
 <main class="frame" id="main">
   <header class="page-head">
     <h1>Formalization roadmap</h1>
-    <p class="lede">The <a href="../bridge/">formula bridge</a> shows what is proven. This page rates every operator on the map by what a Lean theorem about its formula would take: a closed-form definition, a formula that needs analysis, or an external code's output with nothing to prove. A definition gets no theorem that restates it. A theorem about one must state a property, such as a limit, a bound or a reduction to another model.</p>
+    <p class="lede">The <a href="../bridge/">formula bridge</a> shows which formulas carry a Lean theorem. This page rates every operator on the map by what a Lean theorem about its formula would take: a closed-form definition, a formula that needs analysis, or an external code's output with nothing to prove. A definition gets no theorem that restates it. A theorem about one must state a property, such as a limit, a bound or a reduction to another model.</p>
   </header>
 
   <div class="page-body">
@@ -50,7 +50,7 @@
         <h2>Counts by difficulty</h2>
         <dl class="ledger" id="stats"></dl>
         <p id="statsline"></p>
-        <p class="notice gnote">The rows marked "Needs analysis" hold Brillouin-zone sums, correlation-function integrals and occupation-number factors. Each is a well-posed formalization project. A row is marked proven when a compiled bridge in <code>lean/bridge</code> proves a statement about its formula, under the conditions the <a href="../bridge/">bridge page</a> lists. If one of the open rows is a problem you work on, the <a href="https://github.com/openmaterials-ai/openmaterials-ai">repository</a> is open, and <code>lean/bridge</code> builds against <a href="https://github.com/leanprover-community/physlib">Physlib</a> with <code>lake exe cache get</code> and <code>lake build</code>.</p>
+        <p class="notice gnote">The rows marked "Needs analysis" hold Brillouin-zone sums, correlation-function integrals and occupation-number factors. Each is a well-posed formalization project. A row is marked theorem when a compiled bridge in <code>lean/bridge</code> proves a statement about its formula, under the conditions the <a href="../bridge/">bridge page</a> lists. If one of the open rows is a problem you work on, the <a href="https://github.com/openmaterials-ai/openmaterials-ai">repository</a> is open, and <code>lean/bridge</code> builds against <a href="https://github.com/leanprover-community/physlib">Physlib</a> with <code>lake exe cache get</code> and <code>lake build</code>.</p>
       </section>
 
       <section class="gsec" id="table">
@@ -87,7 +87,7 @@
         html += '<tr><td class="opcell" data-label="Operator">' + esc(row.op) + "</td>" +
           '<td data-label="Formula class">' + esc(row["class"]) + "</td>" +
           '<td data-label="Difficulty"><span class="diff ' + row.difficulty + '">' + DIFF_LABEL[row.difficulty] + "</span></td>" +
-          '<td data-label="Status">' + (row.proven ? '<span class="proven-mark">proven</span>' : "") + "</td>" +
+          '<td data-label="Status">' + (row.proven ? '<span class="proven-mark">theorem</span>' : "") + "</td>" +
           '<td class="why" data-label="Why">' + esc(row.reason) + "</td></tr>";
       }
       html += "</tbody></table></div>";
