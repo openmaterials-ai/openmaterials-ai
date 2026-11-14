@@ -75,7 +75,7 @@
     document.getElementById("stats").innerHTML = tiles.map(t =>
       "<div><dt>" + t.l + '</dt><dd class="mono">' + t.n + "</dd></div>").join("");
     document.getElementById("statsline").textContent =
-      r.total + " operators on map version " + r.version + "; " + r.proven + " have a compiled Lean proof.";
+      r.total + " operators on map version " + r.version + "; " + r.proven + " have a compiled Lean theorem.";
 
     const held = document.getElementById("rows");
     const esc = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;");
