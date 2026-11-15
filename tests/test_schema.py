@@ -250,7 +250,7 @@ def test_an_artifact_without_a_role_is_refused():
 
 def test_a_backref_slug_result_is_accepted():
     record = _light()
-    record["results"] = ["materialscodegraph-dgeba-cp300-gfn2"]
+    record["results"] = ["materialscodegraph-run-ref"]
     assert validate_record(record) == []
 
 

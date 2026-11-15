@@ -9,9 +9,9 @@ Load-bearing proofs here:
 
   * the new dimension INTERFACE_CONDUCTANCE (W/(m^2 K)), distinct from
     THERMAL_CONDUCTANCE (W/K) and THERMAL_CONDUCTIVITY (W/(m K));
-  * the reference DGEBA epoxy + 5 vol% GNP draft reproduces kappa_random =
-    1.2452 W/(m K) and the Kapitza radius a_K = km/G = 8.0 nm, from BOTH a
-    self-contained Python port and the domain's sympy formula (they agree);
+  * a synthetic platelet formulation gives the same kappa_random (1.2030
+    W/(m K)) and Kapitza radius a_K = km/G = 10 nm from BOTH a self-contained
+    Python port and the domain's sympy formula (they agree);
   * the depolarization analytic limits: sphere (1/3, 1/3), long fiber (1/2, ~0),
     thin disk (~0, 1), and the sum rule 2 L11 + L33 = 1;
   * the Hasselman-Johnson second producer agrees with Nan-random at aspect ratio
@@ -22,7 +22,7 @@ Load-bearing proofs here:
     gate; the depolarization Piecewise and the resolve identity are SKIPPED (both
     acceptable);
   * the effective-kappa random node resolves onto the neutral ThermalConductivity
-    observable (the connectivity bridge), and the reference instance pins 1.2452;
+    observable (the connectivity bridge);
   * the NEMD interface conductance has a producer and no resolve edge, and its
     records pass the contribution gates on the store before them.
 """
@@ -34,7 +34,7 @@ from pathlib import Path
 
 import sympy as sp
 
-from omai.map_data import DOMAINS, build_graph_dict, build_instances
+from omai.map_data import DOMAINS, build_graph_dict
 from omai.operator.dimcheck import dimensional_report
 from omai.operator.identity import node_id
 from omai.operator.validate import validate_dag
@@ -88,8 +88,8 @@ def _hasselman_johnson(km, kp, a_um, g_MW, f):
     return km * num / den
 
 
-# The reference DGEBA epoxy + 5 vol% GNP formulation (the mcg eval target).
-_REF = dict(km=0.2, k11=1200.0, k33=6.0, d1um=5.0, d3um=0.02, g_MW=25.0, f=0.05)
+# A synthetic platelet formulation: inputs chosen for the check, not a material.
+_REF = dict(km=0.5, k11=100.0, k33=10.0, d1um=2.0, d3um=0.1, g_MW=50.0, f=0.1)
 
 
 def _domain_edges():
@@ -155,19 +155,19 @@ def test_interface_conductance_units_registered():
 
 
 # --------------------------------------------------------------------------
-# The reference value: 1.2452 W/(m K) and the 8.0 nm Kapitza radius.
+# The synthetic formulation: 1.2030 W/(m K) and the 10 nm Kapitza radius.
 # --------------------------------------------------------------------------
 
-def test_reference_epoxy_reproduces_1p2452_from_the_python_port():
+def test_synthetic_formulation_from_the_python_port():
     rand, _al11, _al33, a_k_nm = _effective_kappa(**_REF)
-    assert round(rand, 4) == 1.2452
-    assert round(a_k_nm, 1) == 8.0  # a_K = km/G = 0.2 / 2.5e7 = 8 nm
+    assert round(rand, 4) == 1.2030
+    assert round(a_k_nm, 1) == 10.0  # a_K = km/G = 0.5 / 5e7 = 10 nm
 
 
-def test_reference_epoxy_reproduces_1p2452_from_the_sympy_formula():
-    """The domain's nan_effective_kappa sympy Eq, evaluated at the reference
-    inputs (with the depolarization factors from the closed form), reproduces
-    the same 1.2452 the Python port gives."""
+def test_synthetic_formulation_from_the_sympy_formula():
+    """The domain's nan_effective_kappa sympy Eq, evaluated at the synthetic
+    inputs (with the depolarization factors from the closed form), gives the
+    same 1.2030 the Python port gives."""
     op = _domain_edges()["nan_effective_kappa"]
     rhs = op.formula.rhs
 
@@ -186,7 +186,7 @@ def test_reference_epoxy_reproduces_1p2452_from_the_sympy_formula():
     value = float(rhs.subs(subs))
     port, *_ = _effective_kappa(**_REF)
     assert abs(value - port) < 1e-12
-    assert round(value, 4) == 1.2452
+    assert round(value, 4) == 1.2030
 
 
 def test_zero_loading_returns_the_matrix_conductivity():
@@ -439,26 +439,8 @@ def test_dag_validates_with_the_composites_domain():
 
 
 # --------------------------------------------------------------------------
-# The reference instance and the graph totals.
+# Representations and the graph totals.
 # --------------------------------------------------------------------------
-
-def test_reference_instance_pins_the_nan_random_node():
-    insts = build_instances()
-    mine = [i for i in insts if i["source"]["ref"] == "materialscodegraph"]
-    assert len(mine) == 1
-    rec = mine[0]
-    assert rec["variable"] == \
-        "ThermalConductivity[effective_medium=nan,orientation=random]"
-    assert rec["value"] == 1.2452
-    assert rec["units"] == "W/(m K)"
-    assert rec["source"]["kind"] == "simulation"
-    assert rec["conditions"]["f"] == 0.05
-    assert rec["conditions"]["kapitza_radius_nm"] == 8.0
-    # pinned to the live node uid.
-    g = build_graph_dict(DOMAINS)
-    uid = {n["id"]: n["uid"] for n in g["nodes"]}[rec["variable"]]
-    assert rec["node_uid"] == uid
-
 
 def test_no_platform_representation_on_the_map():
     """The composite formulas are the map's own closed-form edges; the

@@ -370,7 +370,7 @@ Existing dictionary APIs and wire identities remain unchanged.
 
 - `lineage_ids.json`: 32 lineages, each with its canonical JSON, `lineage_id`,
   and `canonical_id` with and without an execution block. Sources: the four
-  openmaterials commons conformance targets, the 27 adversarial float/int
+  Si thermal-conductivity conformance targets of the commons, the 27 adversarial float/int
   vectors MaterialsCodeGraph pins in Python and TypeScript, and the kaldo
   external-solve fixture.
 - `records.json`: 35 full records with their ids, including one carrying
@@ -379,14 +379,15 @@ Existing dictionary APIs and wire identities remain unchanged.
   the Cut 1 proof record exactly as the platform served it (real production
   bytes, so the vectors pin the shape a producer emits and not only the
   shapes this repository invents).
-- `render.json`: 15 renderer inputs and the instances they render to, in both
-  producer forms. Eleven carry no `run_ref`: the form the platform serves, where
+- `render.json`: 14 renderer inputs and the instances they render to, in both
+  producer forms. Thirteen carry no `run_ref`: the form the platform serves, where
   `source.ref` is the bare provider and the detail names no run, because a
   public share page carries no run identity. One of those, `kappa_served_proof`,
   equals the result stored for the Cut 1 proof run in every field but the
-  0.2.0 detail text. Four carry a `run_ref`, the form the committed instances under
-  `docs/data/instances/` use (`materialscodegraph-dgeba-cp300-gfn2` and
-  friends).
+  0.2.0 detail text. The molar heat capacity, reaction energy and composite
+  cases are synthetic fixtures. One carries a `run_ref`, the form of a record that
+  names the run it came from. No committed instance under `docs/data/instances/`
+  uses that form now.
 - `configurations.json`: the committed Si configuration's structure, the
   canonical JSON its uid hashes, and the uid (`7b5e77b1...`). Python only:
   computing the canonical JSON needs spglib. The record keeps its former uid,

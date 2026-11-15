@@ -5,9 +5,8 @@ behind the GFN family of methods. Its `--hess` / `--ohess` runs end in a
 THERMO block: vibrational frequencies feed the rigid-rotor /
 harmonic-oscillator (RRHO) partition function and the block prints, among
 enthalpy and entropy, the molar heat capacity at the requested temperature.
-The committed DGEBA evidence instance (397.7 J/(K mol) at 300 K, gas phase,
-GFN2-xTB, 0 imaginary modes) names `xtb 6.7.1` in its in-hash conditions;
-this representation records the interface that reproduces it.
+A record names the xtb release in its in-hash conditions; this
+representation records the interface that produces the value.
 """
 from __future__ import annotations
 

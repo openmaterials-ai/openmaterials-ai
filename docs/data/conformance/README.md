@@ -17,9 +17,9 @@ To append one, add a JSON file (one target per file) and open a pull request:
 {
   "id": "<sha256 of the lineage object, identical to the evidence instance's id>",
   "lineage": { ...copied byte-for-byte from the evidence instance... },
-  "code": "materialscodegraph",
-  "expected": {"value": 1.2452, "units": "W/(m K)"},
-  "tolerance": {"value": 0.001, "kind": "absolute"},
+  "code": "kaldo",
+  "expected": {"value": 224.64189423095536, "units": "W/(m K)"},
+  "tolerance": {"value": 0.02, "kind": "relative"},
   "evidence": "<the evidence instance's filename>.json",
   "note": "<optional: how the tolerance was chosen, or any pin provenance>"
 }

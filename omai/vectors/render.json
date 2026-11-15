@@ -240,7 +240,7 @@
   }
  },
  {
-  "filename": "c21h24o4-dgeba-molarheatcapacity-materialscodegraph-dgeba-cp300-gfn2.json",
+  "filename": "synthetic-molecule-molarheatcapacity-materialscodegraph.json",
   "function": "render_molar_cp",
   "instance": {
    "conditions": {
@@ -250,28 +250,27 @@
     "n_imaginary": 0,
     "phase": "gas"
    },
-   "material": "C21H24O4 (DGEBA)",
+   "material": "synthetic molecule",
    "source": {
-    "detail": "Gas-phase harmonic molar heat capacity of C21H24O4 (DGEBA) at 300 K (397.7 J/(K mol), GFN2-xTB, 0 imaginary modes) from a MaterialsCodeGraph run dgeba-cp300-gfn2; rendered against openmaterials graph version 9802d9e854c915eb47d867575730a556ab7f4a565e392bf5b29da58338f08434.",
+    "detail": "Gas-phase harmonic molar heat capacity of synthetic molecule at 300 K (50.25 J/(K mol), GFN2-xTB, 0 imaginary modes) from a MaterialsCodeGraph run; rendered against openmaterials graph version 9802d9e854c915eb47d867575730a556ab7f4a565e392bf5b29da58338f08434.",
     "kind": "simulation",
-    "ref": "materialscodegraph-dgeba-cp300-gfn2"
+    "ref": "materialscodegraph"
    },
    "units": "J/(K mol)",
-   "value": 397.7,
+   "value": 50.25,
    "variable": "MolarHeatCapacity"
   },
   "kwargs": {
-   "at_K": 300.0,
-   "run_ref": "dgeba-cp300-gfn2"
+   "at_K": 300.0
   },
   "map_version": "9802d9e854c915eb47d867575730a556ab7f4a565e392bf5b29da58338f08434",
-  "name": "molar_cp_dgeba",
+  "name": "molar_cp_synthetic",
   "result": {
    "cp_harmonic_J_per_molK": [
-    301.2,
-    350.9,
-    397.7,
-    442.1
+    40.0,
+    45.5,
+    50.25,
+    55.125
    ],
    "cp_temperatures_K": [
     200.0,
@@ -279,124 +278,87 @@
     300.0,
     350.0
    ],
-   "molecule_name": "C21H24O4 (DGEBA)",
+   "molecule_name": "synthetic molecule",
    "n_imaginary": 0
   }
  },
  {
-  "filename": "c9h10o2-glycidyl-phenyl-ether-reactionenergy-materialscodegraph-cure-dh-gpe-aniline-gfn2.json",
+  "filename": "synthetic-a-reactionenergy-materialscodegraph.json",
   "function": "render_reaction_energy",
   "instance": {
    "conditions": {
     "T": "298.15 K",
-    "de_elec_kJ_per_mol": -98.4,
-    "dh298_kJ_per_mol": -106.3,
+    "de_elec_kJ_per_mol": -95.5,
+    "dh298_kJ_per_mol": -100.0,
     "model": "GFN2-xTB",
     "normalization": "per_reaction_event",
     "phase": "gas",
     "quantity": "reaction enthalpy dH(298 K)",
-    "reaction": "glycidyl phenyl ether + aniline -> 1-(phenylamino)-3-phenoxy-2-propanol"
+    "reaction": "synthetic A + B -> AB"
    },
-   "material": "C9H10O2 (glycidyl phenyl ether)",
+   "material": "synthetic A",
    "source": {
-    "detail": "Reaction enthalpy dH(298 K) of glycidyl phenyl ether + aniline -> 1-(phenylamino)-3-phenoxy-2-propanol (-106.3 kJ/mol = -1.101722 eV per reaction event, GFN2-xTB) from a MaterialsCodeGraph run cure-dh-gpe-aniline-gfn2; rendered against openmaterials graph version 9802d9e854c915eb47d867575730a556ab7f4a565e392bf5b29da58338f08434.",
+    "detail": "Reaction enthalpy dH(298 K) of synthetic A + B -> AB (-100.0 kJ/mol = -1.036427 eV per reaction event, GFN2-xTB) from a MaterialsCodeGraph run; rendered against openmaterials graph version 9802d9e854c915eb47d867575730a556ab7f4a565e392bf5b29da58338f08434.",
     "kind": "simulation",
-    "ref": "materialscodegraph-cure-dh-gpe-aniline-gfn2"
+    "ref": "materialscodegraph"
    },
    "units": "eV",
-   "value": -1.101722,
+   "value": -1.036427,
    "variable": "ReactionEnergy"
   },
   "kwargs": {
-   "material": "C9H10O2 (glycidyl phenyl ether)",
-   "run_ref": "cure-dh-gpe-aniline-gfn2"
+   "material": "synthetic A"
   },
   "map_version": "9802d9e854c915eb47d867575730a556ab7f4a565e392bf5b29da58338f08434",
-  "name": "reaction_energy_aniline",
+  "name": "reaction_energy_synthetic",
   "result": {
-   "de_elec_kJ_per_mol": -98.4,
-   "dh298_kJ_per_mol": -106.3,
-   "reaction_name": "glycidyl phenyl ether + aniline -> 1-(phenylamino)-3-phenoxy-2-propanol"
+   "de_elec_kJ_per_mol": -95.5,
+   "dh298_kJ_per_mol": -100.0,
+   "reaction_name": "synthetic A + B -> AB"
   }
  },
  {
-  "filename": "c9h10o2-glycidyl-phenyl-ether-reactionenergy-materialscodegraph-cure-dh-gpe-methylamine-gfn2.json",
-  "function": "render_reaction_energy",
-  "instance": {
-   "conditions": {
-    "T": "298.15 K",
-    "de_elec_kJ_per_mol": -107.9,
-    "dh298_kJ_per_mol": -116.1,
-    "model": "GFN2-xTB",
-    "normalization": "per_reaction_event",
-    "phase": "gas",
-    "quantity": "reaction enthalpy dH(298 K)",
-    "reaction": "glycidyl phenyl ether + methylamine -> 1-(methylamino)-3-phenoxy-2-propanol"
-   },
-   "material": "C9H10O2 (glycidyl phenyl ether)",
-   "source": {
-    "detail": "Reaction enthalpy dH(298 K) of glycidyl phenyl ether + methylamine -> 1-(methylamino)-3-phenoxy-2-propanol (-116.1 kJ/mol = -1.203292 eV per reaction event, GFN2-xTB) from a MaterialsCodeGraph run cure-dh-gpe-methylamine-gfn2; rendered against openmaterials graph version 9802d9e854c915eb47d867575730a556ab7f4a565e392bf5b29da58338f08434.",
-    "kind": "simulation",
-    "ref": "materialscodegraph-cure-dh-gpe-methylamine-gfn2"
-   },
-   "units": "eV",
-   "value": -1.203292,
-   "variable": "ReactionEnergy"
-  },
-  "kwargs": {
-   "material": "C9H10O2 (glycidyl phenyl ether)",
-   "run_ref": "cure-dh-gpe-methylamine-gfn2"
-  },
-  "map_version": "9802d9e854c915eb47d867575730a556ab7f4a565e392bf5b29da58338f08434",
-  "name": "reaction_energy_methylamine",
-  "result": {
-   "de_elec_kJ_per_mol": -107.9,
-   "dh298_kJ_per_mol": -116.1,
-   "reaction_name": "glycidyl phenyl ether + methylamine -> 1-(methylamino)-3-phenoxy-2-propanol"
-  }
- },
- {
-  "filename": "dgeba-epoxy-5-vol-gnp-reference-formulation-thermalconductivity-effective-medium-nan-orientation-random-materialscodegraph.json",
+  "filename": "synthetic-matrix-10-vol-synthetic-platelets-thermalconductivity-effective-medium-nan-orientation-random-materialscodegraph.json",
   "function": "render_composite_kappa",
   "instance": {
    "conditions": {
-    "G_MW_per_m2K": 25.0,
-    "d1_um": 5.0,
-    "d3_um": 0.02,
-    "f": 0.05,
-    "k11_W_per_mK": 1200.0,
-    "k33_W_per_mK": 6.0,
-    "kapitza_radius_nm": 8.0,
-    "km_W_per_mK": 0.2,
+    "G_MW_per_m2K": 50.0,
+    "d1_um": 2.0,
+    "d3_um": 0.1,
+    "f": 0.1,
+    "k11_W_per_mK": 100.0,
+    "k33_W_per_mK": 10.0,
+    "kapitza_radius_nm": 10.0,
+    "km_W_per_mK": 0.5,
     "orientation": "random"
    },
-   "material": "DGEBA epoxy + 5 vol% GNP (reference formulation)",
+   "material": "synthetic matrix + 10 vol% synthetic platelets",
    "source": {
-    "detail": "Effective kappa of DGEBA epoxy + 5 vol% GNP (reference formulation) (Nan EMT, random orientation, f=0.05, 1.245 W/(m K)) from a MaterialsCodeGraph run; rendered against openmaterials graph version 9802d9e854c915eb47d867575730a556ab7f4a565e392bf5b29da58338f08434.",
+    "detail": "Effective kappa of synthetic matrix + 10 vol% synthetic platelets (Nan EMT, random orientation, f=0.1, 1.203 W/(m K)) from a MaterialsCodeGraph run; rendered against openmaterials graph version 9802d9e854c915eb47d867575730a556ab7f4a565e392bf5b29da58338f08434.",
     "kind": "simulation",
     "ref": "materialscodegraph"
    },
    "units": "W/(m K)",
-   "value": 1.2452,
+   "value": 1.203,
    "variable": "ThermalConductivity[effective_medium=nan,orientation=random]"
   },
   "kwargs": {},
   "map_version": "9802d9e854c915eb47d867575730a556ab7f4a565e392bf5b29da58338f08434",
-  "name": "composite_kappa_reference_formulation",
+  "name": "composite_kappa_synthetic",
   "result": {
-   "composite_name": "DGEBA epoxy + 5 vol% GNP (reference formulation)",
+   "composite_name": "synthetic matrix + 10 vol% synthetic platelets",
    "filler": {
-    "d1_um": 5,
-    "d3_um": 0.02,
-    "kappa_11_W_per_mK": 1200,
-    "kappa_33_W_per_mK": 6
+    "d1_um": 2,
+    "d3_um": 0.1,
+    "kappa_11_W_per_mK": 100,
+    "kappa_33_W_per_mK": 10
    },
-   "interface_conductance_MW_per_m2K": 25,
-   "kapitza_radius_nm": 8.0,
-   "kappa_random_W_per_mK": 1.2452,
-   "matrix_kappa_W_per_mK": 0.2,
+   "interface_conductance_MW_per_m2K": 50,
+   "kapitza_radius_nm": 10.0,
+   "kappa_random_W_per_mK": 1.203,
+   "matrix_kappa_W_per_mK": 0.5,
    "method": "nan_emt_interfacial_series",
-   "volume_fraction": 0.05
+   "volume_fraction": 0.1
   }
  },
  {

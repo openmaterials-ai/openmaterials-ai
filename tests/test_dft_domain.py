@@ -699,9 +699,8 @@ def test_instances_bundle_32_records_all_uid_pinned():
     # each pinned to its node uid and carrying a verbatim, page-located quote.
     # 83 after the coherent-transport onboarding (2026-07-13): one value on the
     # new ThermalConductance[transport_model=landauer] node. 84 after the composites
-    # domain (2026-07-13): the DGEBA epoxy + 5 vol% GNP reference Nan-EMT
-    # effective conductivity 1.2452 W/(m K) from the materialscodegraph tool,
-    # pinned to ThermalConductivity[effective_medium=nan,orientation=random].
+    # domain (2026-07-13): one value on
+    # ThermalConductivity[effective_medium=nan,orientation=random].
     # 86 after two values on the PhononTransmission node (2026-07-14).
     # 87 after the amorphous-alloys (Lundgren) MassDensity apply (2026-07-14):
     # the a-Si fixed density 2.32 g/cm3 in the NVT ensemble, pinned to
@@ -720,10 +719,12 @@ def test_instances_bundle_32_records_all_uid_pinned():
     # 93 after the Hou 2025 apply (2026-10-05): the UPS work functions of
     # pristine and oxygen-plasma-treated MoS2, two measurements on WorkFunction.
     # 90 after the three coherent-transport values were removed (2026-10-29).
+    # 86 after four pilot values (a molar heat capacity, two reaction
+    # energies and a composite conductivity) were removed (2026-11-15).
     from omai.map_data import build_instances
 
     insts = build_instances()
-    assert len(insts) == 90
+    assert len(insts) == 86
     for it in insts:
         assert it.get("node_uid"), f"instance for {it['variable']} lacks node_uid"
 

@@ -41,11 +41,6 @@
       "source": "openmaterials-ai README"
     },
     {
-      "value": "1.2452",
-      "label": "W/(m K), DGEBA epoxy + 5 vol% GNP, closed form",
-      "source": "OpenMaterials document"
-    },
-    {
       "value": "2",
       "label": "map variables the kernel itself produces",
       "source": "OpenMaterials document"
@@ -73,14 +68,7 @@
       "text": "omai.schema.validate_record lists every schema violation. An empty list means valid."
     }
   ],
-  "applications": [
-    {
-      "glyph": "layers",
-      "title": "DGEBA epoxy with graphene nanoplatelets",
-      "text": "In the OpenMaterials document, the reference draft at 5 vol% filler gives kappa_c = 1.2452 W/(m K) from the map's own closed-form edges (OpenMaterials document).",
-      "source": "OpenMaterials document"
-    }
-  ],
+  "applications": [],
   "sources": [
     {
       "label": "openmaterials-ai README",

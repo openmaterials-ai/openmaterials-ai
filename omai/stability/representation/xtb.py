@@ -3,10 +3,9 @@ r"""xtb as a representation over the ReactionEnergy node.
 xtb (grimme-lab/xtb) computes total free energies and enthalpies per
 species from GFN2-xTB Hessian runs; a balanced reaction's dH(298 K) is the
 difference of product and reactant enthalpies over conformer-searched
-global minima, per reaction event. The committed epoxy-cure evidence
-instances (glycidyl phenyl ether with aniline, -1.101722 eV, and with
-methylamine, -1.203292 eV) name `xtb 6.7.1` in their in-hash conditions;
-this representation records the interface that reproduces them.
+global minima, per reaction event. A record names the xtb release in its
+in-hash conditions; this representation records the interface that
+produces the value.
 """
 from __future__ import annotations
 

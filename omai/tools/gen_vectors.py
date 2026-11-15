@@ -14,9 +14,9 @@ being silently rewritten.
 The inputs were copied verbatim from the three places that already pin these
 ids, never retyped:
 
-- ``commons_conformance_targets``: the four commons conformance targets, as
-  mapengine's ``adapters/tests/golden_targets.py`` holds them (themselves
-  json-loaded from ``docs/data/conformance/*.json``).
+- ``commons_conformance_targets``: the four Si thermal-conductivity
+  conformance targets under ``docs/data/conformance/`` (kaldo and phono3py,
+  RTA and direct inversion, Tersoff Si), each lineage copied with its id.
 - ``mcg_number_vectors``: the adversarial float/int canonicalization vectors
   from MCG's ``mcg/tests/tools/openmaterials/test_record.py`` and the identical
   set in ``platform/worker/test/record.spec.ts``.
@@ -300,16 +300,16 @@ _TBC_RESULT = {"interface_name": "Si/Ge", "method": "nemd", "temperature_K": 300
 #   carries no run identity. `kappa_served_proof` is the Cut 1 proof record's
 #   own result: every field equals the served one except source.detail, whose
 #   text 0.2.0 changed (graph version wording, 4 significant figures).
-# - The COMMONS form (with run_ref): what the committed instances under
-#   docs/data/instances/ carry, e.g. "materialscodegraph-dgeba-cp300-gfn2".
-#   The run refs below are the real committed ones, not invented labels.
+# - The COMMONS form (with run_ref): a run-identified detail, the form a
+#   caller that wants the run named still gets.
 #
 # 0.1.0 shipped six cases in the commons form with INVENTED run refs
 # ("run-ref-xyz"), rendered by MCG's Python renderer, which never served a
 # record. Those bytes had no producer. The kappa cases are re-cut in the
-# platform form (the worker is the only producer of a kappa instance); the
-# molar-Cp and reaction-energy cases keep the commons form and now carry the
-# run refs their committed instances actually use.
+# platform form (the worker is the only producer of a kappa instance). The
+# molar-Cp, reaction-energy and composite cases are synthetic fixtures in the
+# platform form: every name says synthetic, and no number is a computed or
+# measured value of any real system.
 _RENDER_CASES = [
     # The served proof record's own result. std is 0 (single seed), so
     # uncertainty is absent and the detail writes no "+/-" term.
@@ -363,43 +363,32 @@ _RENDER_CASES = [
                 "temperature_K": 300.0, "n_seeds": 4, "code": "GPUMD",
                 "kappa_W_per_mK": 137.5, "kappa_std_W_per_mK": 4.2},
      "kwargs": {"run_ref": "run_74cdf438f9e64a9bb90a"}},
-    {"name": "molar_cp_dgeba",
+    # Synthetic fixtures: the renderer's formatting and identity contract
+    # only. The composite's conductivity is the Nan closed form's value for
+    # its synthetic inputs (tests/test_composites_domain.py).
+    {"name": "molar_cp_synthetic",
      "function": "render_molar_cp",
-     "result": {"molecule_name": "C21H24O4 (DGEBA)",
+     "result": {"molecule_name": "synthetic molecule",
                 "cp_temperatures_K": [200.0, 250.0, 300.0, 350.0],
-                "cp_harmonic_J_per_molK": [301.2, 350.9, 397.7, 442.1],
+                "cp_harmonic_J_per_molK": [40.0, 45.5, 50.25, 55.125],
                 "n_imaginary": 0},
-     "kwargs": {"run_ref": "dgeba-cp300-gfn2", "at_K": 300.0}},
-    {"name": "reaction_energy_aniline",
+     "kwargs": {"at_K": 300.0}},
+    {"name": "reaction_energy_synthetic",
      "function": "render_reaction_energy",
-     "result": {"reaction_name": "glycidyl phenyl ether + aniline -> "
-                                 "1-(phenylamino)-3-phenoxy-2-propanol",
-                "dh298_kJ_per_mol": -106.3,
-                "de_elec_kJ_per_mol": -98.4},
-     "kwargs": {"run_ref": "cure-dh-gpe-aniline-gfn2",
-                "material": "C9H10O2 (glycidyl phenyl ether)"}},
-    {"name": "reaction_energy_methylamine",
-     "function": "render_reaction_energy",
-     "result": {"reaction_name": "glycidyl phenyl ether + methylamine -> "
-                                 "1-(methylamino)-3-phenoxy-2-propanol",
-                "dh298_kJ_per_mol": -116.1,
-                "de_elec_kJ_per_mol": -107.9},
-     "kwargs": {"run_ref": "cure-dh-gpe-methylamine-gfn2",
-                "material": "C9H10O2 (glycidyl phenyl ether)"}},
-    # The composite, interface and cure renderers in the platform form. The
-    # composite inputs are the commons reference formulation's (its committed
-    # instance pins 1.2452), with its integer-valued inputs as committed; the
-    # renderer writes every number as a float.
-    {"name": "composite_kappa_reference_formulation",
+     "result": {"reaction_name": "synthetic A + B -> AB",
+                "dh298_kJ_per_mol": -100.0,
+                "de_elec_kJ_per_mol": -95.5},
+     "kwargs": {"material": "synthetic A"}},
+    {"name": "composite_kappa_synthetic",
      "function": "render_composite_kappa",
-     "result": {"composite_name": "DGEBA epoxy + 5 vol% GNP (reference formulation)",
+     "result": {"composite_name": "synthetic matrix + 10 vol% synthetic platelets",
                 "method": "nan_emt_interfacial_series",
-                "kappa_random_W_per_mK": 1.2452, "matrix_kappa_W_per_mK": 0.2,
-                "filler": {"kappa_11_W_per_mK": 1200, "kappa_33_W_per_mK": 6,
-                           "d1_um": 5, "d3_um": 0.02},
-                "volume_fraction": 0.05,
-                "interface_conductance_MW_per_m2K": 25,
-                "kapitza_radius_nm": 8.0},
+                "kappa_random_W_per_mK": 1.203, "matrix_kappa_W_per_mK": 0.5,
+                "filler": {"kappa_11_W_per_mK": 100, "kappa_33_W_per_mK": 10,
+                           "d1_um": 2, "d3_um": 0.1},
+                "volume_fraction": 0.1,
+                "interface_conductance_MW_per_m2K": 50,
+                "kapitza_radius_nm": 10.0},
      "kwargs": {}},
     {"name": "interface_conductance_nemd_with_spread",
      "function": "render_interface_conductance",

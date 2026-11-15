@@ -10,7 +10,6 @@ from __future__ import annotations
 import hashlib
 import json
 from dataclasses import dataclass
-from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
@@ -122,11 +121,10 @@ def test_render_kappa_without_a_run_ref_is_the_served_platform_form():
 
 
 def test_render_kappa_with_a_run_ref_keeps_the_commons_form():
-    # Still available: the committed instances under docs/data/instances/ use
-    # it (materialscodegraph-dgeba-cp300-gfn2 and friends).
-    inst = render_kappa(kappa(), run_ref="dgeba-cp300-gfn2")
-    assert inst.source.ref == "materialscodegraph-dgeba-cp300-gfn2"
-    assert "MaterialsCodeGraph run dgeba-cp300-gfn2;" in inst.source.detail
+    # Still available to a caller that wants the run named.
+    inst = render_kappa(kappa(), run_ref="kappa-300k")
+    assert inst.source.ref == "materialscodegraph-kappa-300k"
+    assert "MaterialsCodeGraph run kappa-300k;" in inst.source.detail
 
 
 def test_render_kappa_code_defaults_to_gpumd():
@@ -158,20 +156,21 @@ def test_render_kappa_accepts_an_object_with_the_same_fields():
 
 
 def cp_result(**over) -> dict:
-    base = {"molecule_name": "C21H24O4 (DGEBA)",
+    # Synthetic: the renderer's contract only, no computed molecule.
+    base = {"molecule_name": "synthetic molecule",
             "cp_temperatures_K": [200.0, 250.0, 300.0, 350.0],
-            "cp_harmonic_J_per_molK": [301.2, 350.9, 397.7, 442.1],
+            "cp_harmonic_J_per_molK": [40.0, 45.5, 50.25, 55.125],
             "n_imaginary": 0}
     base.update(over)
     return base
 
 
 def test_render_molar_cp_picks_the_grid_temperature():
-    inst = render_molar_cp(cp_result(), run_ref="dgeba-cp300-gfn2", at_K=300.0,
+    inst = render_molar_cp(cp_result(), run_ref="cp-300k", at_K=300.0,
                            map_version=MAP_VERSION)
     assert inst.variable == "MolarHeatCapacity"
-    assert inst.material == "C21H24O4 (DGEBA)"
-    assert inst.value == 397.7
+    assert inst.material == "synthetic molecule"
+    assert inst.value == 50.25
     assert inst.units == "J/(K mol)"
     assert inst.uncertainty is None
     assert inst.conditions == {"T": "300 K", "phase": "gas",
@@ -187,41 +186,39 @@ def test_render_molar_cp_refuses_an_off_grid_temperature():
 
 
 def test_render_molar_cp_material_label_overrides_the_molecule_name():
-    inst = render_molar_cp(cp_result(), run_ref="r", material_label="DGEBA")
-    assert inst.material == "DGEBA"
+    inst = render_molar_cp(cp_result(), run_ref="r", material_label="synthetic label")
+    assert inst.material == "synthetic label"
     # The detail still names the molecule that was computed.
-    assert "C21H24O4 (DGEBA)" in inst.source.detail
+    assert "synthetic molecule" in inst.source.detail
 
 
 def reaction(**over) -> dict:
-    base = {"reaction_name": "glycidyl phenyl ether + aniline -> "
-                             "1-(phenylamino)-3-phenoxy-2-propanol",
-            "dh298_kJ_per_mol": -106.3, "de_elec_kJ_per_mol": -98.4}
+    # Synthetic: the renderer's contract only, no computed reaction.
+    base = {"reaction_name": "synthetic A + B -> AB",
+            "dh298_kJ_per_mol": -100.0, "de_elec_kJ_per_mol": -95.5}
     base.update(over)
     return base
 
 
 def test_render_reaction_energy_converts_to_ev_per_event():
     inst = render_reaction_energy(reaction(), run_ref="r",
-                                  material="C9H10O2 (glycidyl phenyl ether)",
+                                  material="synthetic A",
                                   map_version=MAP_VERSION)
     assert inst.variable == "ReactionEnergy"
     assert inst.units == "eV"
-    # The commons conformance target pins this exact number.
-    assert inst.value == -1.101722
-    assert inst.conditions["dh298_kJ_per_mol"] == -106.3
-    assert inst.conditions["de_elec_kJ_per_mol"] == -98.4
+    # -100 kJ/mol over the CODATA 96.48533212331 kJ/mol per eV, to 6 decimals.
+    assert inst.value == -1.036427
+    assert inst.conditions["dh298_kJ_per_mol"] == -100.0
+    assert inst.conditions["de_elec_kJ_per_mol"] == -95.5
     assert inst.conditions["normalization"] == "per_reaction_event"
     assert inst.conditions["T"] == "298.15 K"
 
 
-def test_render_reaction_energy_methylamine_matches_the_commons_target():
+def test_render_reaction_energy_rounds_to_six_decimals():
     inst = render_reaction_energy(
-        reaction(reaction_name="glycidyl phenyl ether + methylamine -> "
-                               "1-(methylamino)-3-phenoxy-2-propanol",
-                 dh298_kJ_per_mol=-116.1),
-        run_ref="r", material="C9H10O2 (glycidyl phenyl ether)")
-    assert inst.value == -1.203292
+        reaction(reaction_name="synthetic C + D -> CD", dh298_kJ_per_mol=-50.0),
+        run_ref="r", material="synthetic C")
+    assert inst.value == -0.518213
 
 
 def test_kj_per_mol_to_ev_is_the_codata_constant():
@@ -267,51 +264,53 @@ def test_instance_filename_is_the_map_kebab_convention():
 
 
 def test_slugify_collapses_non_alphanumeric_runs():
-    assert slugify("C21H24O4 (DGEBA)") == "c21h24o4-dgeba"
+    assert slugify("C2H6O (ethanol)") == "c2h6o-ethanol"
     assert slugify("") == ""
 
 
 
-# The composite inputs are the commons reference formulation's (its committed
-# instance pins 1.2452); the aligned pair, the interface numbers and the rate-law
-# constants are synthetic. The DiBenedetto constants are Rosetti et al.,
-# Materials 11, 1960 (2018) (see test_cure_kinetics_domain.py).
-_REFERENCE = next((Path(__file__).resolve().parents[1] / "docs" / "data" / "instances").glob(
-    "dgeba-epoxy-5-vol-gnp-reference-formulation-*.json"))
+# The composite inputs are a synthetic platelet formulation; its three
+# conductivities are the Nan closed form's values for these inputs (see
+# test_composites_domain.py). The interface numbers and the rate-law constants
+# are synthetic. The DiBenedetto constants are Rosetti et al., Materials 11,
+# 1960 (2018) (see test_cure_kinetics_domain.py).
+# The conditions in the order the composite node's records carry them.
+_COMPOSITE_KEYS = ["km_W_per_mK", "k11_W_per_mK", "k33_W_per_mK", "d1_um", "d3_um",
+                   "G_MW_per_m2K", "f", "orientation", "kapitza_radius_nm"]
 
 
 def composite(**over) -> dict:
-    base = {"composite_name": "DGEBA epoxy + 5 vol% GNP (reference formulation)",
+    base = {"composite_name": "synthetic matrix + 10 vol% synthetic platelets",
             "method": "nan_emt_interfacial_series",
-            "kappa_random_W_per_mK": 1.2452, "kappa_aligned_11_W_per_mK": 2.5,
-            "kappa_aligned_33_W_per_mK": 0.25, "matrix_kappa_W_per_mK": 0.2,
-            "filler": {"kappa_11_W_per_mK": 1200, "kappa_33_W_per_mK": 6,
-                       "d1_um": 5, "d3_um": 0.02},
-            "volume_fraction": 0.05, "interface_conductance_MW_per_m2K": 25,
-            "kapitza_radius_nm": 8.0}
+            "kappa_random_W_per_mK": 1.203, "kappa_aligned_11_W_per_mK": 1.532,
+            "kappa_aligned_33_W_per_mK": 0.5428, "matrix_kappa_W_per_mK": 0.5,
+            "filler": {"kappa_11_W_per_mK": 100, "kappa_33_W_per_mK": 10,
+                       "d1_um": 2, "d3_um": 0.1},
+            "volume_fraction": 0.1, "interface_conductance_MW_per_m2K": 50,
+            "kapitza_radius_nm": 10.0}
     base.update(over)
     return base
 
 
-def test_composite_kappa_renders_the_committed_reference_conditions():
-    # The committed b13e25c6 is a hand-written commons record the platform
-    # cannot mint (its value sits in the lineage), so the check is on the
-    # conditions, not on that id.
+def test_composite_kappa_renders_the_node_conditions_as_floats():
     inst = render_composite_kappa(composite(), map_version=MAP_VERSION)
-    committed = json.loads(_REFERENCE.read_text())["lineage"]
-    assert (inst.variable, inst.material) == (committed["node"], committed["material"])
-    assert list(inst.conditions) == list(committed["conditions"])
-    assert inst.conditions == committed["conditions"]
+    assert inst.variable == "ThermalConductivity[effective_medium=nan,orientation=random]"
+    assert inst.material == "synthetic matrix + 10 vol% synthetic platelets"
+    assert list(inst.conditions) == _COMPOSITE_KEYS
+    assert inst.conditions == {"km_W_per_mK": 0.5, "k11_W_per_mK": 100.0,
+                               "k33_W_per_mK": 10.0, "d1_um": 2.0, "d3_um": 0.1,
+                               "G_MW_per_m2K": 50.0, "f": 0.1,
+                               "orientation": "random", "kapitza_radius_nm": 10.0}
     assert all(isinstance(v, float) for k, v in inst.conditions.items()
                if k != "orientation")
     assert "uncertainty" not in inst.to_json_dict()
-    assert "(Nan EMT, random orientation, f=0.05, 1.245 W/(m K))" in inst.source.detail
+    assert "(Nan EMT, random orientation, f=0.1, 1.203 W/(m K))" in inst.source.detail
 
 
 def test_composite_kappa_id_does_not_depend_on_number_typing():
-    as_float = composite(filler={"kappa_11_W_per_mK": 1200.0, "kappa_33_W_per_mK": 6.0,
-                                 "d1_um": 5.0, "d3_um": 0.02},
-                         interface_conductance_MW_per_m2K=25.0)
+    as_float = composite(filler={"kappa_11_W_per_mK": 100.0, "kappa_33_W_per_mK": 10.0,
+                                 "d1_um": 2.0, "d3_um": 0.1},
+                         interface_conductance_MW_per_m2K=50.0)
     assert _id(render_composite_kappa(as_float)) == _id(render_composite_kappa(composite()))
 
 

@@ -170,8 +170,7 @@ EFFECTIVE_CONDUCTIVITY_RANDOM = ObservableSpace(
         "composite kappa is evidence of that node). SECOND-PRODUCER home of the "
         "Hasselman-Johnson cross-check: in the spherical limit (aspect -> 1, "
         "isotropic filler) the HJ sphere formula produces this SAME node and must "
-        "agree numerically (the blessed redundant-route pattern). The reference "
-        "epoxy + 5 vol% GNP formulation gives kappa_c = 1.2452 W/(m K)."
+        "agree numerically (the blessed redundant-route pattern)."
     ),
 )
 
