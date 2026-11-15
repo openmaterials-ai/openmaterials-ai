@@ -300,6 +300,19 @@ class BrokenTableTest(RepoCase):
         items = signed(f"Chief of staff agreed at {head[:8]}", f"Engines agreed at {head[:8]}")
         self.assertEqual(self.judge(items=items)[0], 0)
 
+    def test_a_duplicate_signers_section_on_main_can_be_fixed(self):
+        self.git("checkout", "-q", "main")
+        self.write("OWNERS.md", TABLE + f"\n## Signers\n\n{SIGNER}\n")
+        self.commit("duplicate signers section lands")
+        self.git("checkout", "-q", "-B", "fix", "main")
+        self.write("OWNERS.md", TABLE)
+        head = self.commit("fix the table")
+        code, _, v = self.judge()
+        self.assertEqual(code, oa.EXIT_MISSING)
+        self.assertEqual(v.missing, ["Chief of staff", "Engines"])
+        items = signed(f"Chief of staff agreed at {head[:8]}", f"Engines agreed at {head[:8]}")
+        self.assertEqual(self.judge(items=items)[0], 0)
+
     def test_after_a_broken_table_any_change_needs_the_table_seats(self):
         self.git("checkout", "-q", "main")
         self.write("OWNERS.md", self.BROKEN)

@@ -373,17 +373,19 @@ def table_at(base: str, head: str) -> tuple[str, str]:
 def signers_changed(base: str, head: str) -> bool:
     """Whether the change alters the Signers list, which then needs the seats of the
     Signers row too."""
-    def signers(ref: str) -> list[str]:
-        return section_list(git("show", f"{ref}:{TABLE}", check=False).splitlines(), "## Signers")
+    def signers(ref: str) -> list[str] | None:
+        try:
+            return section_list(git("show", f"{ref}:{TABLE}", check=False).splitlines(), "## Signers")
+        except TableError:
+            return None  # an unreadable side counts as a change
     return signers(merge_base(base, head)) != signers(head)
 
 
-RECOVERY_DEPTH = 200
-
-
 def last_readable_table(base: str) -> tuple[str, str] | None:
-    """The newest commit on the base's first-parent line whose OWNERS.md parses, and its text."""
-    for c in git("rev-list", "--first-parent", f"--max-count={RECOVERY_DEPTH}", base).split():
+    """The newest commit on the base's first-parent line whose OWNERS.md parses, and its
+    text. The walk has no depth limit: it stops at the first table that parses, or where
+    the table was added."""
+    for c in git("rev-list", "--first-parent", base).split():
         text = git("show", f"{c}:{TABLE}", check=False)
         if not text:
             return None
