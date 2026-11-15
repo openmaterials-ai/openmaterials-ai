@@ -260,8 +260,8 @@ representation layer, 33 ingested representations (kaldo, phono3py, phonopy,
 pymatgen, ShengBTE, Quantum ESPRESSO, D3Q, VASP, LAMMPS, GPUMD, i-PI, xtb, the
 machine-learned potentials matgl / MACE / fairchem, the database representation mp-api,
 and the CALPHAD, amset, ORCA, OpenMM, and AtomisticSkills mat-* / chem-*
-workflows, the circuit simulator ngspice, and the package's own cure-kinetics
-and composite evaluators, openmaterials-ai), and a
+workflows, the circuit simulator ngspice, and the package's own ideal-gas
+heat-capacity evaluator, openmaterials-ai), and a
 validation engine that executes the graph, composes
 edges symbolically, and cross-checks redundant routes. Units reconcile
 automatically from the typed dimensions, and a dimensional gate checks every
@@ -2994,7 +2994,9 @@ random effective conductivity that must agree with Nan at aspect ratio 1, a
 gate-level cross-check pinned to machine precision. The reference DGEBA epoxy +
 5\,vol\% graphene-nanoplatelet draft gives $\kappa_c = 1.2452\,\mathrm{W/(m\,K)}$
 from the map's own closed-form edges (the evidence instance keeps its
-contribution provenance in its source ref).
+contribution provenance in its source ref). No code representation of the
+Nan or cure-kinetics nodes is registered. The nodes, the closed-form edges and
+the record renderers are public.
 
 \paragraph{The analog-device-metrology domain.} An analog-device-metrology domain
 (records 250-257) carries the conductance family of analog resistive devices
@@ -3298,8 +3300,8 @@ numbers:
         phono3py 31, kaldo 28, phonopy 22, pymatgen 22, ShengBTE 20,
         Quantum ESPRESSO 14, GPUMD 14, mp-api 13, LAMMPS 12, VASP 10, pycalphad 7,
         matgl 5, mat-elasticity 5, amset 5, ORCA 5, pymatgen-analysis-diffusion 5,
-        D3Q 5, openmaterials-ai 5, xtb 5, i-PI 4, fairchem 4, MACE 4, OpenMM 4,
-        ASE 3, mat-diffusion-analysis 2, ngspice 2, plumed 2, smol 2,
+        D3Q 5, xtb 5, i-PI 4, fairchem 4, MACE 4, OpenMM 4,
+        ASE 3, mat-diffusion-analysis 2, ngspice 2, openmaterials-ai 2, plumed 2, smol 2,
         mat-equation-of-state 1, mat-surface-adsorption 1, rxn-network 1, diffcsp 1,
         mattergen 1.
   \item \textbf{Instances.} 90 recorded values, 84 simulation and 6 measurement.
@@ -3384,16 +3386,16 @@ amset                        & 5  & BSD-3-Clause \\
 ORCA                         & 5  & Proprietary \\
 pymatgen-analysis-diffusion  & 5  & BSD-3-Clause \\
 D3Q (thermal2)               & 5  & GPL-2.0 (CeCILL-2.1, GPL-3.0, Minpack parts) \\
+xtb                          & 5  & LGPL-3.0 \\
 i-PI                         & 4  & GPL-2.0-or-later / MIT \\
 fairchem                     & 4  & MIT \\
 MACE                         & 4  & MIT \\
 OpenMM                       & 4  & MIT (LGPL parts) \\
-openmaterials-ai             & 4  & Apache-2.0 AND CC-BY-4.0 \\
 ASE                          & 3  & LGPL-2.1-or-later \\
 mat-diffusion-analysis       & 2  & MIT \\
+openmaterials-ai             & 2  & Apache-2.0 AND CC-BY-4.0 \\
 ngspice                      & 2  & BSD-3-Clause (LGPL, MPL-2.0, GPL-2.0-or-later parts, and a permissive Sparse notice) \\
 plumed                       & 2  & LGPL-3.0 \\
-xtb                          & 2  & LGPL-3.0 \\
 smol                         & 2  & BSD-3-Clause \\
 mat-equation-of-state        & 1  & MIT \\
 mat-surface-adsorption       & 1  & MIT \\

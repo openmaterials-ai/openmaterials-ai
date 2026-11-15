@@ -4,18 +4,6 @@
  "map_version": "5d4b9b299fbec062eb24d19e9f614e3bb095f6143c40aafcc12991d55f080af5",
  "covers": [
   {
-   "node": "CureConversion",
-   "uid": "a0fea831928d4ff6617a0d102f74966d0ea4ce0a2e4cc160cbd362dd0fb8fc0a",
-   "api": "omai.cure_kinetics.evaluate.cure_conversion",
-   "unit": "dimensionless"
-  },
-  {
-   "node": "GlassTransitionTemperature",
-   "uid": "5789aa6f8439e8b71b48197dd92c6f608f2bf3ca9900bc631d2321f5eded13cb",
-   "api": "omai.cure_kinetics.evaluate.glass_transition_temperature",
-   "unit": "kelvin"
-  },
-  {
    "node": "IdealGasMolarHeatCapacityP",
    "uid": "8597731feda25811b8bd43f504846ce37112c6a21f40444151d6a5b0de2c8622",
    "api": "omai.molecular.evaluate.cp_table(frequencies_cm, temperatures_K, geometry=..., nu0_cm=50.0)",
@@ -26,18 +14,6 @@
    "uid": "4bf0e384a896934c145db0eb34b45bed30190d2d460a0b06d1846720b2d97353",
    "api": "omai.molecular.evaluate.cp_table(frequencies_cm, temperatures_K, geometry=..., nu0_cm=50.0)",
    "unit": "J_per_K_per_mol"
-  },
-  {
-   "node": "ThermalConductivity[effective_medium=nan,orientation=aligned]",
-   "uid": "fc292985123b709c76547dc02721e60797cf5693fbad40b874826291314d5dd3",
-   "api": "omai.composites.evaluate.nan_kappa_aligned",
-   "unit": "W_per_m_per_K"
-  },
-  {
-   "node": "ThermalConductivity[effective_medium=nan,orientation=random]",
-   "uid": "8cee68745e003909cd8e65688628af53a35c0803ace3f330394bbf0edf338d7b",
-   "api": "omai.composites.evaluate.nan_kappa_random",
-   "unit": "W_per_m_per_K"
   }
  ],
  "aliases": [],

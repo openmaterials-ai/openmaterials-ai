@@ -1,5 +1,7 @@
 """Per-code adapter specs for the cure-kinetics domain.
 
-  * `openmaterials_ai`: the library's own evaluators of the domain's two edges
-    (omai.cure_kinetics.evaluate), registered as the code openmaterials-ai.
+No code representation is registered: the map's own edges,
+kamal_cure_conversion and dibenedetto_glass_transition, are the reference, and
+the record renderers (omai.render.render_cure_conversion,
+render_glass_transition) shape the values.
 """

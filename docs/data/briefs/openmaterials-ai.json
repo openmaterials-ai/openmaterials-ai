@@ -5,18 +5,18 @@
   "hero": {
     "glyph": "network",
     "title": "A map whose edges execute",
-    "text": "Quantities are typed nodes and formulas are operators the kernel runs on numerical arrays. Four map variables, two composite conductivities and two cure values, come from the kernel (OpenMaterials document)."
+    "text": "Quantities are typed nodes and formulas are operators the kernel runs on numerical arrays. Two map variables, the harmonic and quasi-RRHO ideal-gas Cp, come from the kernel (omai.molecular module)."
   },
   "features": [
     {
-      "glyph": "fit-curve",
-      "title": "Nan effective medium",
-      "text": "Composite conductivity for random and aligned fillers with Kapitza resistance, kc = k / (1 + 2 R k / d), in the Nan mixing formulas of the map (omai.composites module)."
+      "glyph": "molecule",
+      "title": "Ideal-gas heat capacity",
+      "text": "Cp(T) of a gas-phase atom, linear or nonlinear molecule from its normal modes, harmonic and quasi-RRHO, checked against NIST-JANAF (omai.molecular module)."
     },
     {
       "glyph": "clock",
-      "title": "Cure kinetics",
-      "text": "The degree of cure after an isothermal hold under Kamal-Sourour kinetics, and the glass transition temperature it sets by DiBenedetto (omai.cure_kinetics module)."
+      "title": "Cure and composite edges",
+      "text": "The Kamal-Sourour, DiBenedetto and Nan closed forms stay on the map with their record renderers. No code representation is registered (OpenMaterials document)."
     },
     {
       "glyph": "database",
@@ -36,7 +36,7 @@
   ],
   "facts": [
     {
-      "value": "137",
+      "value": "141",
       "label": "typed quantities on the map",
       "source": "openmaterials-ai README"
     },
@@ -46,7 +46,7 @@
       "source": "OpenMaterials document"
     },
     {
-      "value": "4",
+      "value": "2",
       "label": "map variables the kernel itself produces",
       "source": "OpenMaterials document"
     }
@@ -62,7 +62,7 @@
     },
     {
       "title": "Evaluate a closed form",
-      "text": "nan_kappa_random(params) in omai.composites.evaluate takes km, k11, k33, d1, d3, G and f."
+      "text": "cp_table(freqs, temps, geometry='nonlinear') in omai.molecular.evaluate returns Cp(T)."
     },
     {
       "title": "Render a record",
@@ -91,22 +91,18 @@
       "url": "https://openmaterials.ai/document/"
     },
     {
-      "label": "omai.composites module",
-      "url": "https://github.com/openmaterials-ai/openmaterials-ai/tree/v0.4.0/omai/composites"
-    },
-    {
-      "label": "omai.cure_kinetics module",
-      "url": "https://github.com/openmaterials-ai/openmaterials-ai/tree/v0.4.0/omai/cure_kinetics"
+      "label": "omai.molecular module",
+      "url": "https://github.com/openmaterials-ai/openmaterials-ai/tree/main/omai/molecular"
     }
   ],
   "detail": [
     {
       "heading": "What the kernel holds",
-      "text": "The map has 137 typed quantities (123 observable, 11 hidden, 3 parameter), 313 links (270 formula, 43 parameter) and 134 operators in 18 tiers, with representations for 33 codes and 90 committed values, 84 from simulations and 6 from measurements (openmaterials-ai README). The database is plain files. map/ is an append-only log of content-addressed records, and docs/data/ holds the generated graph.json, catalog.json, codes.json, the instances, configurations, models and releases (openmaterials-ai README). The kernel is Apache 2.0 and the map data CC BY 4.0 (openmaterials-ai README)."
+      "text": "The map has 141 typed quantities (127 observable, 11 hidden, 3 parameter), 323 links (280 formula, 43 parameter) and 138 operators in 18 tiers, with representations for 33 codes and 90 committed values, 84 from simulations and 6 from measurements (openmaterials-ai README). The database is plain files. map/ is an append-only log of content-addressed records, and docs/data/ holds the generated graph.json, catalog.json, codes.json, the instances, configurations, models and releases (openmaterials-ai README). The kernel is Apache 2.0 and the map data CC BY 4.0 (openmaterials-ai README)."
     },
     {
       "heading": "Closed forms and the dimensional gate",
-      "text": "A dimensional gate checks every closed-form edge mechanically. Of the 129 operator edges it walks, 59 are ok, 1 is a documented schematic violation and 69 are skipped as opaque solver edges or non-Eq forms (OpenMaterials document). The proven edges include the Nan random and aligned mixing formulas with the Hasselman-Johnson spherical cross-check, the two cure-kinetics edges, the six thermodynamic identities and the eleven analog-device-metrology closed forms (OpenMaterials document). The cure integral is taken in s = ln(alpha / (1 - alpha)) by 20-point Gauss-Legendre on panels of width 1/2, with the root found by safeguarded Newton (omai.cure_kinetics module)."
+      "text": "A dimensional gate checks every closed-form edge mechanically. Of the 138 operator edges it walks, 61 are ok, none is a violation and 77 are skipped as opaque solver edges or non-Eq forms (OpenMaterials document). The proven edges include the Nan random and aligned mixing formulas with the Hasselman-Johnson spherical cross-check, the two cure-kinetics edges, the two ideal-gas heat capacities, the six thermodynamic identities and the eleven analog-device-metrology closed forms (OpenMaterials document)."
     },
     {
       "heading": "Interfaces",
