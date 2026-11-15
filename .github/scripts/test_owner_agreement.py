@@ -108,9 +108,12 @@ class TableTest(unittest.TestCase):
             "Chief of staff agreed at ZZZZZZZ",  # not a commit
             "    Map agreed at 8888888",  # an indented code block
             "<pre>\nMap agreed at 9999999\n</pre>",
+            "<!-- an unclosed comment\nMap agreed at 1212121",
         ]
         lines = oa.agreement_lines(texts, self.t.seats + ["Map"])
         self.assertEqual(lines, {"Platform": ["abc1234"], "Engines": ["0123456789abcdef"]})
+        mention = oa.agreement_lines(["Lines in `<pre>` do not count.\nPlatform agreed at abc1234"], self.t.seats)
+        self.assertEqual(mention, {"Platform": ["abc1234"]})
 
     def test_seats_in_changed_rows(self):
         diff = "-| `app/` | Platform | The app |\n+| `app/` | Platform, Engines | The app |\n | `engine/` | Engines | x |\n"
@@ -267,6 +270,45 @@ class RepoTest(RepoCase):
         self.write("app/main.ts", "a3\n")
         self.commit("app again")
         self.assertIn("Platform", self.verdict(signed(f"Platform agreed at {first[:8]}")).missing)
+
+
+class BrokenTableTest(RepoCase):
+    BROKEN = TABLE + "| (the Signers list) | Chief of staff | A second Signers row |\n"
+
+    def judge(self, base="main", items=()):
+        head = self.git("rev-parse", "HEAD")
+        return oa.judge(base, head, list(items), "#1", "on the pull request")
+
+    def test_a_change_that_breaks_the_table_is_refused(self):
+        self.write("OWNERS.md", self.BROKEN)
+        head = self.commit("second signers row")
+        code, text, _ = self.judge(items=signed(f"Chief of staff agreed at {head[:8]}"))
+        self.assertEqual(code, oa.EXIT_TABLE)
+        self.assertIn("leaves OWNERS.md unreadable", text)
+
+    def test_after_a_broken_table_reaches_main_a_fix_can_ship(self):
+        self.git("checkout", "-q", "main")
+        self.write("OWNERS.md", self.BROKEN)
+        self.commit("broken table lands")
+        self.git("checkout", "-q", "-B", "fix", "main")
+        self.write("OWNERS.md", TABLE)
+        head = self.commit("fix the table")
+        code, text, v = self.judge()
+        self.assertEqual(code, oa.EXIT_MISSING)
+        self.assertIn("Judged by the table at", text)
+        self.assertEqual(v.missing, ["Chief of staff", "Engines"])
+        items = signed(f"Chief of staff agreed at {head[:8]}", f"Engines agreed at {head[:8]}")
+        self.assertEqual(self.judge(items=items)[0], 0)
+
+    def test_after_a_broken_table_any_change_needs_the_table_seats(self):
+        self.git("checkout", "-q", "main")
+        self.write("OWNERS.md", self.BROKEN)
+        self.commit("broken table lands")
+        self.git("checkout", "-q", "-B", "other", "main")
+        self.write("app/main.ts", "a2\n")
+        head = self.commit("app change")
+        _, _, v = self.judge(items=signed(f"Platform agreed at {head[:8]}"))
+        self.assertEqual(v.missing, ["Chief of staff", "Engines"])
 
 
 class RevertTest(RepoCase):
@@ -441,6 +483,16 @@ class DeployTest(RepoCase):
         self.git("revert", "--no-edit", "HEAD")
         self.api[f"repos/r/commits/{self.git('rev-parse', 'HEAD')}/pulls"] = []
         self.assertEqual(self.deployed(), oa.EXIT_MISSING)
+
+    def test_a_broken_table_on_main_does_not_stop_the_deploys(self):
+        self.checked(self.squash(1, "Engines agreed at {head}"))
+        broken = self.push("OWNERS.md", BrokenTableTest.BROKEN)
+        self.lists[f"repos/r/commits/{broken}/comments"] = [{"user": {"login": SIGNER}, "body": f"Chief of staff agreed at {broken[:8]}"}]
+        self.assertEqual(self.deployed(), oa.EXIT_MISSING)  # Engines, of the Signers row, has not agreed
+        self.lists[f"repos/r/commits/{broken}/comments"].append({"user": {"login": SIGNER}, "body": f"Engines agreed at {broken[:8]}"})
+        fix = self.push("OWNERS.md", TABLE)
+        self.lists[f"repos/r/commits/{fix}/comments"] = [{"user": {"login": SIGNER}, "body": f"Chief of staff agreed at {fix[:8]}\nEngines agreed at {fix[:8]}"}]
+        self.assertEqual(self.deployed(), 0)
 
     def test_the_check_runs_as_of_the_last_trusted_commit(self):
         self.git("checkout", "-q", "main")

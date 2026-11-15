@@ -293,7 +293,7 @@ def agreement_lines(texts: list[str], seats: list[str]) -> dict[str, list[str]]:
     lines: dict[str, list[str]] = {}
     for text in texts:
         fenced = False
-        text = re.sub(r"<!--.*?(-->|$)|<pre\b.*?(</pre>|$)", "", text or "", flags=re.S | re.I)
+        text = re.sub(r"<!--.*?(?:-->|\Z)|^[ \t]*<pre\b.*?(?:</pre>|\Z)", "", text or "", flags=re.S | re.I | re.M)
         for line in text.splitlines():
             if line.lstrip().startswith(("```", "~~~")):
                 fenced = not fenced
@@ -309,13 +309,22 @@ def signed_texts(table: Table, items: list[tuple[str, str]]) -> list[str]:
     return [body for login, body in items if login in table.signers]
 
 
-def check(base: str, head: str, items: list[tuple[str, str]], table_text: str, table_diff: str) -> Verdict:
+def check(base: str, head: str, items: list[tuple[str, str]], table_text: str, table_diff: str, extra: frozenset[str] = frozenset()) -> Verdict:
+    """The verdict of base..head. Seats in `extra` must agree to the whole diff."""
     table = parse_table(table_text)
     table_seats = seats_in_changed_rows(table_diff, table.seats)
     if table_diff and signers_changed(base, head):
         table_seats |= set(table.signer_owners)
+
+    def seat_files(files: list[str]) -> dict[str, list[str]]:
+        by_seat = owners_map(table, files, table_seats)
+        for seat in extra:
+            if files:
+                by_seat[seat] = list(files)
+        return by_seat
+
     mb = merge_base(base, head)
-    required = owners_map(table, changed_files(mb, head), table_seats)
+    required = seat_files(changed_files(mb, head))
     lines = agreement_lines(signed_texts(table, items), table.seats)
     agreed: dict[str, str] = {}
     stale: dict[str, list[str]] = {}
@@ -326,7 +335,7 @@ def check(base: str, head: str, items: list[tuple[str, str]], table_text: str, t
             if commit is None:
                 stale.setdefault(seat, []).append(sha)
                 continue
-            theirs = owners_map(table, changed_files(merge_base(base, commit), commit), table_seats).get(seat, [])
+            theirs = seat_files(changed_files(merge_base(base, commit), commit)).get(seat, [])
             if seat_hash(base, commit, theirs) == want:
                 agreed[seat] = sha
                 break
@@ -369,16 +378,66 @@ def signers_changed(base: str, head: str) -> bool:
     return signers(merge_base(base, head)) != signers(head)
 
 
-def judge(base: str, head: str, items: list[tuple[str, str]], label: str, where: str) -> tuple[int, str, Verdict | None]:
-    """The exit code, the report and the verdict of the change base..head."""
+RECOVERY_DEPTH = 200
+
+
+def last_readable_table(base: str) -> tuple[str, str] | None:
+    """The newest commit on the base's first-parent line whose OWNERS.md parses, and its text."""
+    for c in git("rev-list", "--first-parent", f"--max-count={RECOVERY_DEPTH}", base).split():
+        text = git("show", f"{c}:{TABLE}", check=False)
+        if not text:
+            return None
+        try:
+            parse_table(text)
+            return c, text
+        except TableError:
+            continue
+    return None
+
+
+def judge(base: str, head: str, items: list[tuple[str, str]], label: str, where: str, strict: bool = True) -> tuple[int, str, Verdict | None]:
+    """The exit code, the report and the verdict of the change base..head.
+
+    A pull request that leaves OWNERS.md unreadable is refused (strict), so a broken table
+    cannot pass its own check. If one reaches main anyway, the deploy (not strict) asks
+    the seats of the `OWNERS.md` row and the Signers row to agree to that commit, and
+    judges later changes by the last table that parses with the same seats agreeing to
+    each, so a fix can ship."""
     table_text, table_diff = table_at(base, head)
     if not table_text:
         return 0, f"{label}: {TABLE} is on neither the base nor the head, nothing to check.", None
+    head_broken = ""
+    if table_diff:
+        head_text = git("show", f"{head}:{TABLE}", check=False)
+        if head_text:
+            try:
+                parse_table(head_text)
+            except TableError as e:
+                head_broken = str(e)
+    if head_broken and strict:
+        return EXIT_TABLE, f"{label}: this change leaves {TABLE} unreadable: {head_broken}", None
+    notes = []
     try:
-        v = check(base, head, items, table_text, table_diff)
+        table = parse_table(table_text)
+    except TableError as e:
+        good = last_readable_table(base)
+        if good is None:
+            return EXIT_TABLE, f"{label}: {TABLE} cannot be read: {e}", None
+        table_text = good[1]
+        table = parse_table(table_text)
+        notes.append(f"{TABLE} on the base cannot be read ({e}). Judged by the table at {good[0][:8]}.")
+    extra: frozenset[str] = frozenset()
+    if notes or head_broken:
+        extra = frozenset(table.owners(TABLE) | set(table.signer_owners))
+        if head_broken:
+            notes.append(f"This change left {TABLE} unreadable ({head_broken}).")
+        notes.append(f"{', '.join(sorted(extra))} must agree to the whole change.")
+    note = "".join(f"\n  {n}" for n in notes)
+    try:
+        v = check(base, head, items, table_text, table_diff, extra)
     except TableError as e:
         return EXIT_TABLE, f"{label}: {TABLE} cannot be read: {e}", None
-    return (EXIT_MISSING if v.missing else 0), f"{label} " + report(v, head, where), v
+    return (EXIT_MISSING if v.missing else 0), f"{label} " + report(v, head, where) + note, v
 
 
 # --- GitHub ----------------------------------------------------------------------
@@ -523,10 +582,10 @@ def deployed(repo: str, target_ref: str, workflow: str | None, remote: str, argv
         if prs:
             pr = gh_json(f"repos/{repo}/pulls/{prs[0]['number']}")
             fetch(remote, f"+refs/pull/{pr['number']}/head:refs/remotes/{remote}/pr-{pr['number']}")
-            code, text, _ = judge(parent, pr["head"]["sha"], pr_items(repo, pr), f"#{pr['number']}", "on the pull request")
+            code, text, _ = judge(parent, pr["head"]["sha"], pr_items(repo, pr), f"#{pr['number']}", "on the pull request", strict=False)
         if code:
             # No pull request, or its lines do not hold: the commit's own comments, or a pure revert.
-            code2, text2, _ = judge(parent, c, commit_items(repo, c), f"commit {c[:8]}", f"as a comment on commit {c[:8]}")
+            code2, text2, _ = judge(parent, c, commit_items(repo, c), f"commit {c[:8]}", f"as a comment on commit {c[:8]}", strict=False)
             if code2 == 0 or not prs:
                 code, text = code2, (text + "\n" if text else "") + text2
         print(f"{c[:8]}: {text}")

@@ -16,9 +16,11 @@ In a pattern, `dir/` is everything under `dir`, `*` matches inside one path segm
 
 The check posts the commit status `owner-agreement` on every pull request. The deploy step of `deploy-site.yml` runs the check on every main commit since the last deploy whose check passed, and ships nothing when one fails. A line posted afterwards, on the merged pull request or on the commit, still counts, so the deploy can then be run again. When the commits being shipped change anything under `.github/`, the deploy runs the check as it was at the last checked commit, and refuses when that commit has no check at the same path. This stops a weakened check from judging itself by accident. It cannot stop a deliberate change, which can also edit the workflow, because GitHub runs the workflow as committed. The `.github/` row, which needs IT and security, is the guard for that.
 
-A pure revert needs no line (part 5 of the working agreement): a change whose diff is exactly the inverse of one of the last 100 commits on `main`. The seat that reverts tells the owners. A partial revert, a revert with any other change in it, the revert of a revert (which lands the first change again) and any revert that touches this file or `.github/` need their lines.
+A pure revert needs no line (part 5 of the working agreement): a change whose diff is exactly the inverse of one of the last 100 commits on `main`, at the same place in each file. The seat that reverts tells the owners. A partial revert, a revert with any other change in it, the revert of a revert (which lands the first change again) and any revert that touches this file or `.github/` need their lines.
 
 CI checks this table on every push. It must parse, and a pattern a change adds must match a tracked file. A pattern whose files were later moved or deleted gives a warning instead, so a deletion cannot stop the deploys. Update its row.
+
+A change that leaves this table unreadable fails its check. If one reaches `main` anyway, each later change is judged by the last table that parses, and the seats of the `OWNERS.md` row and the `(the Signers list)` row must also agree to it, until a fix lands. The deploy also asks those seats to agree to the commit that broke it. A change to the table's format or to the check ships in two steps: the check that reads it first, then the change that uses it.
 
 Local merge gate, from a clone with `gh` signed in: `python3 .github/scripts/owner_agreement.py --pr <number>`. It exits 3 and names the missing seats, or 2 when the table cannot be read.
 

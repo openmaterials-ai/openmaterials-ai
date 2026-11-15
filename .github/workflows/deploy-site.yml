@@ -1,6 +1,8 @@
 # Deploys the site Worker (infra/site) after ci passes on main. The Worker bundles docs/ as its static
 # fallback, so every merge changes it, not only edits under infra/site. The token is an API token of the
 # Cloudflare account that holds openmaterials.ai (Edit Cloudflare Workers, zone openmaterials.ai).
+# workflow_dispatch deploys again, or rolls back to, a chosen commit on main, for example after
+# a missing owner line was posted.
 name: deploy-site
 
 on:
@@ -8,6 +10,7 @@ on:
     workflows: [ci]
     types: [completed]
     branches: [main]
+  workflow_dispatch:
 
 concurrency:
   group: deploy-site
@@ -19,13 +22,14 @@ jobs:
     # had already moved past is skipped here, so every run of this job checks out the
     # commit GitHub records as its head_sha, which the owner-agreement step reads back
     # to find the last commit it judged. A re-run keeps its first attempt's github.sha,
-    # so it is skipped too.
+    # so it is skipped too: retry with a dispatch on main.
     if: >-
-      github.event.workflow_run.conclusion == 'success' &&
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.workflow_run.conclusion == 'success' &&
       github.event.workflow_run.event == 'push' &&
       github.event.workflow_run.head_repository.full_name == github.repository &&
       github.event.workflow_run.head_sha == github.sha &&
-      github.run_attempt == 1
+      github.run_attempt == 1)
     # Checkout, and the owner-agreement step's reads of pull requests, their
     # comments and this workflow's earlier runs.
     permissions:
@@ -45,15 +49,19 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.workflow_run.head_sha }}
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
           fetch-depth: 0
-      # Main as it is now: it may have moved while this job queued. Only the tip ships.
+      # Main as it is now: it may have moved while this job queued. A ci deploy ships only
+      # the tip, a dispatch any commit on main.
       - id: tip
         run: |
           git fetch -q origin main
           head=$(git rev-parse HEAD)
           tip=$(git rev-parse FETCH_HEAD)
-          if [ "$head" != "$tip" ]; then
+          if ! git merge-base --is-ancestor "$head" "$tip"; then
+            echo "::error::deploy-site: $head is not on main; nothing shipped"
+            exit 1
+          elif [ "$GITHUB_EVENT_NAME" = workflow_run ] && [ "$head" != "$tip" ]; then
             echo "::notice::deploy-site: skipped, $head is no longer the main tip ($tip); only the tip ships"
           else
             echo "ship=true" >> "$GITHUB_OUTPUT"
