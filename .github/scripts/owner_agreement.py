@@ -47,6 +47,8 @@ CONTEXT = "owner-agreement"
 EXIT_MISSING = 3
 EXIT_TABLE = 2
 DEFAULT_MARK = "(any other path)"
+# The row naming the seats that must agree to any change of the Signers list.
+SIGNERS_MARK = "(the Signers list)"
 # A line is the whole line: a seat name, "agreed at", a commit, and at most a full stop.
 LINE = re.compile(r"^\s*(?P<seat>[A-Za-z][A-Za-z\- ]*?) agreed at (?P<sha>[0-9a-f]{7,40})\.?\s*$")
 # Paths no pure revert may touch without lines: the table, and the workflows and scripts
@@ -75,6 +77,7 @@ class Table:
     signers: list[str]
     rows: list[Row]
     default: list[str]
+    signer_owners: list[str]
 
     def owners(self, path: str) -> set[str]:
         """Every seat of every row that matches, or the default owner when none does."""
@@ -135,6 +138,7 @@ def parse_table(text: str) -> Table:
         raise TableError("OWNERS.md has no '## Signers' list")
     rows: list[Row] = []
     default: list[str] = []
+    signer_owners: list[str] = []
     for line in lines:
         if not line.startswith("|"):
             continue
@@ -148,13 +152,18 @@ def parse_table(text: str) -> Table:
         if DEFAULT_MARK in cells[0]:
             default = row_seats
             continue
+        if SIGNERS_MARK in cells[0]:
+            signer_owners = row_seats
+            continue
         patterns = re.findall(r"`([^`]+)`", cells[0])
         if not patterns:
             raise TableError(f"row {cells[0]!r} has no `path` pattern")
         rows.append(Row(patterns, row_seats, [pattern_regex(p) for p in patterns]))
     if not default:
         raise TableError(f"OWNERS.md has no '{DEFAULT_MARK}' row")
-    return Table(seats, signers, rows, default)
+    if not signer_owners:
+        raise TableError(f"OWNERS.md has no '{SIGNERS_MARK}' row")
+    return Table(seats, signers, rows, default, signer_owners)
 
 
 def seats_in_changed_rows(diff_text: str, seats: list[str]) -> set[str]:
@@ -294,6 +303,8 @@ def signed_texts(table: Table, items: list[tuple[str, str]]) -> list[str]:
 def check(base: str, head: str, items: list[tuple[str, str]], table_text: str, table_diff: str) -> Verdict:
     table = parse_table(table_text)
     table_seats = seats_in_changed_rows(table_diff, table.seats)
+    if table_diff and signers_changed(base, head):
+        table_seats |= set(table.signer_owners)
     mb = merge_base(base, head)
     required = owners_map(table, changed_files(mb, head), table_seats)
     lines = agreement_lines(signed_texts(table, items), table.seats)
@@ -339,6 +350,14 @@ def table_at(base: str, head: str) -> tuple[str, str]:
     the diff of OWNERS.md the change makes."""
     text = git("show", f"{base}:{TABLE}", check=False) or git("show", f"{head}:{TABLE}", check=False)
     return text, git(*DIFF, merge_base(base, head), head, "--", TABLE)
+
+
+def signers_changed(base: str, head: str) -> bool:
+    """Whether the change alters the Signers list, which then needs the seats of the
+    Signers row too."""
+    def signers(ref: str) -> list[str]:
+        return section_list(git("show", f"{ref}:{TABLE}", check=False).splitlines(), "## Signers")
+    return signers(merge_base(base, head)) != signers(head)
 
 
 def judge(base: str, head: str, items: list[tuple[str, str]], label: str, where: str) -> tuple[int, str, Verdict | None]:

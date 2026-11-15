@@ -37,6 +37,7 @@ Chief of staff, Platform, Engines, Revenue and legal.
 | `app/billing.ts`, `app/**/*.price.json` | Revenue and legal | Money |
 | `engine/` | Engines | Engines |
 | `docs/*.md` | Platform | Docs, one level |
+| (the Signers list) | Chief of staff, Engines | Who may sign |
 | (any other path) | Platform | Default owner |
 """
 
@@ -79,6 +80,7 @@ class TableTest(unittest.TestCase):
             TABLE.replace("| (any other path) | Platform | Default owner |\n", ""),
             TABLE.replace("## Seats", "## People"),
             TABLE.replace("## Signers", "## Writers"),
+            TABLE.replace("| (the Signers list) | Chief of staff, Engines | Who may sign |\n", ""),
         ):
             with self.assertRaises(oa.TableError):
                 oa.parse_table(broken)
@@ -214,6 +216,23 @@ class RepoTest(RepoCase):
         self.assertEqual(sorted(v.required), ["Chief of staff", "Engines", "Revenue and legal"])
         items = signed(*(f"{s} agreed at {head[:8]}" for s in ("Chief of staff", "Engines", "Revenue and legal")))
         self.assertEqual(self.verdict(items).missing, [])
+
+    def test_a_new_signer_needs_the_signers_row(self):
+        self.write("OWNERS.md", TABLE.replace(f"\n{SIGNER}\n", f"\n{SIGNER}, newcomer\n"))
+        head = self.commit("signer")
+        self.assertEqual(sorted(self.verdict([]).required), ["Chief of staff", "Engines"])
+        self.assertEqual(self.verdict(signed(f"Chief of staff agreed at {head[:8]}")).missing, ["Engines"])
+
+    def test_a_new_signer_does_not_count_in_its_own_change(self):
+        self.write("OWNERS.md", TABLE.replace(f"\n{SIGNER}\n", f"\n{SIGNER}, newcomer\n"))
+        head = self.commit("signer")
+        items = [("newcomer", f"Chief of staff agreed at {head[:8]}\nEngines agreed at {head[:8]}")]
+        self.assertEqual(self.verdict(items).missing, ["Chief of staff", "Engines"])
+
+    def test_a_table_edit_outside_the_signers_needs_only_the_chief_of_staff(self):
+        self.write("OWNERS.md", TABLE + "\nA note.\n")
+        self.commit("note")
+        self.assertEqual(sorted(self.verdict([]).required), ["Chief of staff"])
 
     def test_no_owned_change_needs_nothing(self):
         self.git("commit", "-q", "--allow-empty", "-m", "empty")

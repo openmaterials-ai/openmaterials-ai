@@ -30,7 +30,7 @@ Chief of staff, Platform, Engines, Map, Revenue and legal, Product and marketing
 
 `gbarbalinardo`
 
-The GitHub accounts whose lines count. They are read from `main` like the rest of this table, so a change cannot add a signer for itself.
+The GitHub accounts whose lines count. They are read from `main` like the rest of this table, so a change cannot add a signer for itself. A change to this list needs the seats of the row `(the Signers list)`.
 
 ## Table
 
@@ -45,4 +45,5 @@ The GitHub accounts whose lines count. They are read from `main` like the rest o
 | `SECURITY.md` | Map, IT and security | Security policy |
 | `docs/index.html`, `docs/assets/site.css`, `omai/code_pages.py`, `omai/code_cards.py` | Map, Product and marketing | The site's hand-written copy and design, and the page generators whose templates carry visible wording |
 | `infra/learn-proxy/wrangler.jsonc` | Map, IT and security, Revenue and legal | The learn proxy's daily spend cap |
+| (the Signers list) | Chief of staff, IT and security | Who may sign: a change to the Signers list above |
 | (any other path) | Map | Default owner |
