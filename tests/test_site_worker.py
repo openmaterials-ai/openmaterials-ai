@@ -204,6 +204,18 @@ def test_share_card_under_node():
 def test_worker_deploys_after_green_ci_on_main():
     wf = (_SITE.parents[1] / ".github" / "workflows" / "deploy-site.yml").read_text()
     assert "workflow_run:\n    workflows: [ci]\n    types: [completed]\n    branches: [main]" in wf
-    assert "if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push'" in wf
+    # Only a green push run on main whose head is still the main tip deploys, so each
+    # run's recorded head is the commit the owner-agreement step judged.
+    for clause in (
+        "github.event.workflow_run.conclusion == 'success'",
+        "github.event.workflow_run.event == 'push'",
+        "github.event.workflow_run.head_repository.full_name == github.repository",
+        "github.event.workflow_run.head_sha == github.sha",
+        "github.run_attempt == 1",
+    ):
+        assert clause in wf, clause
+    after_tip = wf.split("      - id: tip\n", 1)[1]
+    steps = [line for line in after_tip.splitlines() if line.startswith("      - ")]
+    assert steps and all(line == "      - if: steps.tip.outputs.ship == 'true'" for line in steps), steps
     assert "ref: ${{ github.event.workflow_run.head_sha }}" in wf
     assert "CLOUDFLARE_ACCOUNT_ID: 5219ec03b38a883ca6919581402272fd" in wf
