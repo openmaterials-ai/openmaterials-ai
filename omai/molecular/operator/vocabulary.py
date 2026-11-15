@@ -14,7 +14,7 @@ periodic BandGap's E_{gap} and from any TotalEnergy / ReactionEnergy symbol.
 
 from __future__ import annotations
 
-from omai.operator.vocabulary import register_space_symbols
+from omai.operator.vocabulary import register_formula_constants, register_space_symbols
 
 register_space_symbols({
     "HOMOLUMOGap": {r"E_{gap}^{mol}"},
@@ -23,4 +23,13 @@ register_space_symbols({
     # The molecular normal-mode frequencies (indexed by mode m); the \nu^{H}
     # Hessian solver function is an applied function, needing no entry.
     "MolecularFrequency": {"nu_mol"},
+    # Gas-phase thermochemistry (2026-11-15). The opaque I^{IR} and
+    # \Delta_{r}H functions are applied functions, needing no entry.
+    "IdealGasMolarHeatCapacityP": {"cp_mol"},
+    "InfraredIntensity": {"ir_int"},
+    "MolecularReactionEnthalpy": {"dh_r"},
 })
+
+# rrho_ideal_gas_heat_capacity's two molecular constants: the external term
+# c_{ext} (4 nonlinear, 7/2 linear) and the internal mode count N_{m}.
+register_formula_constants({"c_{ext}", "N_{m}"})

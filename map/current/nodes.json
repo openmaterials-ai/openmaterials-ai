@@ -1131,6 +1131,26 @@
   },
   "uid": "50c33a1edd60bff6fb74124af1a8847a4c8a2c58d39554b4661e6a2cddb62f30"
  },
+ "5201fe13af396ae618272126deb5d50f199d4b98f579d0f83c5a10cefeec7842": {
+  "identity": {
+   "fields": [
+    {
+     "dimension": "M^1 L^2 T^-2 N^-1",
+     "indices": []
+    }
+   ],
+   "gauge": "observable",
+   "labels": {},
+   "quantity": "molecular_reaction_enthalpy"
+  },
+  "meta": {
+   "description": "Standard reaction enthalpy Delta_r H(T) of a balanced gas-phase reaction of molecules, per mole of reaction as written, kJ/mol: sum_i s_i H_i(T) with s_i the signed stoichiometric coefficient (positive for a product) and H_i the molar enthalpy of species i, its electronic energy plus the zero-point and thermal enthalpy of its normal modes and the ideal-gas external terms (translation, rotation, pV). The reference temperature is 298.15 K unless a value's conditions state another. The reaction, the stoichiometry, the phase (gas) and the number of conformers are conditions of a value; the electronic Delta_r E is a secondary of the same value. Distinct from the solid-state ReactionEnergy (a stoichiometric combination of per-atom formation energies of crystals, plain ENERGY) and from the CALPHAD MolarEnthalpy of a phase (per mole of atoms, SER reference), which shares its J/mol exponent vector; the molecular_reaction_enthalpy tag keeps it a distinct node.",
+   "name": "MolecularReactionEnthalpy",
+   "symbol": "\\Delta_{r} H",
+   "tier": "Molecular"
+  },
+  "uid": "5201fe13af396ae618272126deb5d50f199d4b98f579d0f83c5a10cefeec7842"
+ },
  "55eaa32f15db94d55448456fb26f1c3ecaafcc9a3da2947f1615258c492542ef": {
   "identity": {
    "fields": [
@@ -1594,6 +1614,26 @@
   },
   "uid": "833c3db3fbd145b45ed051cd6eaf782d7555518a0634f524b9ceee7fe49245e0"
  },
+ "8597731feda25811b8bd43f504846ce37112c6a21f40444151d6a5b0de2c8622": {
+  "identity": {
+   "fields": [
+    {
+     "dimension": "M^1 L^2 T^-2 Th^-1 N^-1",
+     "indices": []
+    }
+   ],
+   "gauge": "observable",
+   "labels": {},
+   "quantity": "ideal_gas_molar_heat_capacity_p"
+  },
+  "meta": {
+   "description": "Constant-pressure heat capacity C_p(T) of one isolated molecule treated as an ideal gas, per mole of molecules, J/(K mol). Under the rigid-rotor harmonic-oscillator (RRHO) model each internal normal mode of MolecularFrequency contributes its quantum harmonic Cv, R x^2 e^x / (e^x - 1)^2 with x = h nu / (k_B T), and the external degrees of freedom add 3R/2 (translation), 3R/2 or R (rotation, nonlinear or linear) and R (Cp - Cv of an ideal gas): 4R for a nonlinear molecule, 7R/2 for a linear one. The approximation (harmonic, or the quasi-RRHO interpolation of soft modes toward the free-rotor R/2) is a scheme of the producing edge and a condition of a value, as are the temperature, the phase (gas) and the number of conformers. Shares the J/(K mol) exponent vector (1,2,-2,-1,-1,0,0) with the harmonic MolarHeatCapacity, which is Cv per mole of primitive crystal cells, and with the QHA HeatCapacityConstantP; the ideal_gas_molar_heat_capacity_p tag keeps it a distinct node.",
+   "name": "IdealGasMolarHeatCapacityP",
+   "symbol": "C_{p}^{\\mathrm{ig}}",
+   "tier": "Molecular"
+  },
+  "uid": "8597731feda25811b8bd43f504846ce37112c6a21f40444151d6a5b0de2c8622"
+ },
  "8932e3cbadef74a82802b43fd1d25328cb40e6136c90df3b6a4a998e77f9567b": {
   "identity": {
    "fields": [
@@ -1961,6 +2001,28 @@
    "tier": "Stability"
   },
   "uid": "a385b7ca981904ab5d82176557d453cea4995164adfa22a6ca195e1dfcd815d5"
+ },
+ "a4d1c8cc29160367d3ce0d6ad27e0c8dde975dee0699116ac0c9981085a6e298": {
+  "identity": {
+   "fields": [
+    {
+     "dimension": "L^1 N^-1",
+     "indices": [
+      "mode"
+     ]
+    }
+   ],
+   "gauge": "observable",
+   "labels": {},
+   "quantity": "infrared_intensity"
+  },
+  "meta": {
+   "description": "Integrated infrared absorption intensity of each molecular normal mode, indexed by the mode index m exactly as MolecularFrequency, so the pair (nu_mol,m, ir_int,m) is the stick IR spectrum. In the harmonic double approximation it is proportional to the squared derivative of the molecular dipole moment along the mode, |d mu / d Q_m|^2. Dimension LENGTH_PER_MOLE (0,1,0,0,-1,0,0): the molar absorptivity (m^2/mol) integrated over wavenumber (1/m). km/mol is the quantum-chemistry convention (1 km/mol = 1000 m/mol). An imaginary mode carries an intensity too; whether a value comes from a minimum is the n_imaginary condition of MolecularFrequency.",
+   "name": "InfraredIntensity",
+   "symbol": "A_{\\mathrm{IR}}",
+   "tier": "Molecular"
+  },
+  "uid": "a4d1c8cc29160367d3ce0d6ad27e0c8dde975dee0699116ac0c9981085a6e298"
  },
  "a5736aa4760c27562f9e189829763a891b6fed83fe4a030a7e306b8d909d825c": {
   "identity": {

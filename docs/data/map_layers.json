@@ -1876,13 +1876,13 @@
  "counts": {
   "formulas": {
    "local": 56,
-   "none": 49,
+   "none": 52,
    "physlib": 29,
    "stated": 0
   },
   "quantities": {
    "local": 47,
-   "none": 65,
+   "none": 68,
    "physlib": 25,
    "stated": 0
   }
@@ -2405,6 +2405,18 @@
    "rung": "none",
    "tier": "Molecular"
   },
+  "compute_infrared_intensities": {
+   "bindings": [],
+   "inputs": [
+    "Structure",
+    "Potential"
+   ],
+   "outputs": [
+    "InfraredIntensity"
+   ],
+   "rung": "none",
+   "tier": "Molecular"
+  },
   "compute_intercalation_voltage": {
    "bindings": [
     "dft-stability-energy-differences"
@@ -2572,6 +2584,19 @@
     "MolecularFrequency"
    ],
    "rung": "local",
+   "tier": "Molecular"
+  },
+  "compute_molecular_reaction_enthalpy": {
+   "bindings": [],
+   "inputs": [
+    "TotalEnergy",
+    "MolecularFrequency",
+    "Temperature"
+   ],
+   "outputs": [
+    "MolecularReactionEnthalpy"
+   ],
+   "rung": "none",
    "tier": "Molecular"
   },
   "compute_msd": {
@@ -3478,6 +3503,18 @@
    "rung": "none",
    "tier": "Transport"
   },
+  "rrho_ideal_gas_heat_capacity": {
+   "bindings": [],
+   "inputs": [
+    "MolecularFrequency",
+    "Temperature"
+   ],
+   "outputs": [
+    "IdealGasMolarHeatCapacityP"
+   ],
+   "rung": "none",
+   "tier": "Molecular"
+  },
   "run_md": {
    "bindings": [],
    "inputs": [
@@ -4061,6 +4098,18 @@
    "rung": "physlib",
    "via": "formulas"
   },
+  "IdealGasMolarHeatCapacityP": {
+   "bindings": [],
+   "related": [],
+   "rung": "none",
+   "via": null
+  },
+  "InfraredIntensity": {
+   "bindings": [],
+   "related": [],
+   "rung": "none",
+   "via": null
+  },
   "InterfaceConductance": {
    "bindings": [],
    "related": [],
@@ -4246,6 +4295,12 @@
    ],
    "rung": "local",
    "via": "formulas"
+  },
+  "MolecularReactionEnthalpy": {
+   "bindings": [],
+   "related": [],
+   "rung": "none",
+   "via": null
   },
   "ParticipationRatio": {
    "bindings": [
@@ -4846,7 +4901,7 @@
    "theorems": 6
   },
   {
-   "formulas": 4,
+   "formulas": 7,
    "name": "Molecular",
    "theorems": 1
   },

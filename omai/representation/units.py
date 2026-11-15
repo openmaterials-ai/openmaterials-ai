@@ -37,6 +37,7 @@ from omai.operator.dimensions import (
     INVERSE_FREQUENCY,
     LENGTH,
     LENGTH_SQUARED,
+    LENGTH_PER_MOLE,
     LENGTH_TIMES_FREQUENCY,
     MAGNETIC_MOMENT,
     MASS_DENSITY,
@@ -134,6 +135,12 @@ MW_PER_M2_K = Unit("MW_per_m2_k", INTERFACE_CONDUCTANCE, 1e6)
 # come in kJ/mol; convert factor is 1000.
 J_PER_MOL = Unit("J_per_mol", ENERGY_PER_MOLE, 1.0, si_scale=1.0)
 KJ_PER_MOL = Unit("kJ_per_mol", ENERGY_PER_MOLE, 1000.0)
+
+
+# Canonical integrated IR band intensity: m/mol (molar absorptivity integrated
+# over wavenumber). Quantum-chemistry codes (xtb, ORCA, Gaussian) print km/mol.
+M_PER_MOL = Unit("m_per_mol", LENGTH_PER_MOLE, 1.0, si_scale=1.0)
+KM_PER_MOL = Unit("km_per_mol", LENGTH_PER_MOLE, 1000.0)
 
 
 # Canonical FC3 unit: eV/Å³ (the "physicist's" form of the third potential
@@ -344,6 +351,8 @@ UNITS: dict[str, Unit] = {
         MW_PER_M2_K,
         J_PER_MOL,
         KJ_PER_MOL,
+        M_PER_MOL,
+        KM_PER_MOL,
         EV_PER_A3,
         EV_PER_A2,
         RY_PER_BOHR2,

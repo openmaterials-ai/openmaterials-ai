@@ -5009,6 +5009,20 @@
         "reason": "See the conditions and evidence for each mapping."
       },
       {
+        "id": "IdealGasMolarHeatCapacityP",
+        "uid": "8597731feda25811b8bd43f504846ce37112c6a21f40444151d6a5b0de2c8622",
+        "binding_ids": [],
+        "status": "gap",
+        "reason": "No current Physlib molecular Hessian, electronic gap, NEB, or bond-dissociation formula identification; harmonic oscillator analogies remain conceptual."
+      },
+      {
+        "id": "InfraredIntensity",
+        "uid": "a4d1c8cc29160367d3ce0d6ad27e0c8dde975dee0699116ac0c9981085a6e298",
+        "binding_ids": [],
+        "status": "gap",
+        "reason": "No current Physlib molecular Hessian, electronic gap, NEB, or bond-dissociation formula identification; harmonic oscillator analogies remain conceptual."
+      },
+      {
         "id": "InterfaceConductance",
         "uid": "2995dc3d963a6d387aa5b62d35a7248391ce3ce8047c0dc381cfc1cc99ef08f9",
         "binding_ids": [],
@@ -5220,6 +5234,13 @@
         ],
         "status": "mapped",
         "reason": "See the conditions and evidence for each mapping."
+      },
+      {
+        "id": "MolecularReactionEnthalpy",
+        "uid": "5201fe13af396ae618272126deb5d50f199d4b98f579d0f83c5a10cefeec7842",
+        "binding_ids": [],
+        "status": "gap",
+        "reason": "No current Physlib molecular Hessian, electronic gap, NEB, or bond-dissociation formula identification; harmonic oscillator analogies remain conceptual."
       },
       {
         "id": "ParticipationRatio",
@@ -6410,6 +6431,23 @@
         "reason": "No current Physlib molecular Hessian, electronic gap, NEB, or bond-dissociation formula identification; harmonic oscillator analogies remain conceptual."
       },
       {
+        "id": "compute_infrared_intensities",
+        "uid": "b2af6ba348608fbea72ef742fb34e7f46b358f478360003ec9e1b1ad36f5e7a1",
+        "domain": "molecular",
+        "formula_sha256": "bc5888d39b1617c3f1592e3dbd83c6d90a3933d755ce40fe786d3ae4164319db",
+        "formula_latex": "{ir_{int}}_{m} = I^{IR}{\\left(\\mathcal{S},V \\right)}",
+        "inputs": [
+          "Structure",
+          "Potential"
+        ],
+        "outputs": [
+          "InfraredIntensity"
+        ],
+        "binding_ids": [],
+        "status": "gap",
+        "reason": "No current Physlib molecular Hessian, electronic gap, NEB, or bond-dissociation formula identification; harmonic oscillator analogies remain conceptual."
+      },
+      {
         "id": "compute_intercalation_voltage",
         "uid": "a4bc99a6b2efc1df1400041ada33cfb59e97819f189e3501a99c06f9c5e5d49f",
         "domain": "stability",
@@ -6637,6 +6675,24 @@
         ],
         "status": "local",
         "reason": "No current Physlib molecular Hessian, electronic gap, NEB, or bond-dissociation formula identification; harmonic oscillator analogies remain conceptual. A local Lean proof over Mathlib covers it under that binding's conditions; see its conditions and evidence."
+      },
+      {
+        "id": "compute_molecular_reaction_enthalpy",
+        "uid": "a53dd59e561384959e48d2a7be61cde0d1a3d36a86d0f7ca8682cce38221bc37",
+        "domain": "molecular",
+        "formula_sha256": "defa61662fbdab32a4476ce0bdf874c14b45d8d0a9f4e740f616de1298763921",
+        "formula_latex": "dh_{r} = \\Delta_{r}H{\\left(E_{tot},\\nu_{mol},T \\right)}",
+        "inputs": [
+          "TotalEnergy",
+          "MolecularFrequency",
+          "Temperature"
+        ],
+        "outputs": [
+          "MolecularReactionEnthalpy"
+        ],
+        "binding_ids": [],
+        "status": "gap",
+        "reason": "No current Physlib molecular Hessian, electronic gap, NEB, or bond-dissociation formula identification; harmonic oscillator analogies remain conceptual."
       },
       {
         "id": "compute_msd",
@@ -7893,6 +7949,23 @@
         "reason": "The compiled lattice-dynamics bridges cover the crystal dynamical matrix, the dispersion relation at commensurate wavevectors, the group velocity on differentiable eigenvector paths and the relaxation-time contraction under explicit model conditions. No current Physlib phonon scattering, anharmonic, numerical estimator, molecular-dynamics or Green-Kubo theorem was identified for the remaining formulas."
       },
       {
+        "id": "rrho_ideal_gas_heat_capacity",
+        "uid": "78fbef7e17da4ea6e53840f36799cbd982dcbaff7bce92c2e3cc2698ba65c0f2",
+        "domain": "molecular",
+        "formula_sha256": "50dae9e64b6c91fee178ae98751951dc8be6a083ecd4382baf14c98de6e4a0b1",
+        "formula_latex": "cp_{mol} = N_{A} k_{B} \\left(c_{ext} + \\sum_{m=1}^{N_{m}} \\frac{4 \\pi^{2} \\bar{\\h}^{2} e^{\\frac{2 \\pi \\bar{\\h} {\\nu_{mol}}_{m}}{T k_{B}}} {\\nu_{mol}}_{m}^{2}}{T^{2} k_{B}^{2} \\left(e^{\\frac{2 \\pi \\bar{\\h} {\\nu_{mol}}_{m}}{T k_{B}}} - 1\\right)^{2}}\\right)",
+        "inputs": [
+          "MolecularFrequency",
+          "Temperature"
+        ],
+        "outputs": [
+          "IdealGasMolarHeatCapacityP"
+        ],
+        "binding_ids": [],
+        "status": "gap",
+        "reason": "No current Physlib molecular Hessian, electronic gap, NEB, or bond-dissociation formula identification; harmonic oscillator analogies remain conceptual."
+      },
+      {
         "id": "run_md",
         "uid": "2444a4dc420004700fd7fe2e6b0f76ad69ac8799c7d8eb3ce2186e6ea138045b",
         "domain": "thermal_transport",
@@ -8153,9 +8226,9 @@
     ]
   },
   "coverage": {
-    "nodes_total": 137,
+    "nodes_total": 140,
     "nodes_mapped": 35,
-    "operators_total": 134,
+    "operators_total": 137,
     "operators_mapped": 29,
     "nodes_local": 44,
     "operators_local": 56,

@@ -1078,7 +1078,9 @@
 "uid": "bf0f65e5f725c4d82321504f06db3610ce8e9d4d2041bf01dbcc9a1a02cfd191"
 },
 {
-"curated": [],
+"curated": [
+"ir-spectrum"
+],
 "id": "MolecularFrequency",
 "kind": "node",
 "labels": [
@@ -1087,6 +1089,47 @@
 "molecular frequency"
 ],
 "uid": "e1270ea9a293c9107226bf831f60985f5525a0c386dca70841743bdc5d082c26"
+},
+{
+"curated": [
+"ideal-gas-heat-capacity",
+"rrho-thermochemistry"
+],
+"id": "IdealGasMolarHeatCapacityP",
+"kind": "node",
+"labels": [
+"C_{p}^{\\mathrm{ig}}",
+"IdealGasMolarHeatCapacityP",
+"ideal gas molar heat capacity p"
+],
+"uid": "8597731feda25811b8bd43f504846ce37112c6a21f40444151d6a5b0de2c8622"
+},
+{
+"curated": [
+"ir-spectrum"
+],
+"id": "InfraredIntensity",
+"kind": "node",
+"labels": [
+"A_{\\mathrm{IR}}",
+"InfraredIntensity",
+"infrared intensity"
+],
+"uid": "a4d1c8cc29160367d3ce0d6ad27e0c8dde975dee0699116ac0c9981085a6e298"
+},
+{
+"curated": [
+"reaction-enthalpy",
+"rrho-thermochemistry"
+],
+"id": "MolecularReactionEnthalpy",
+"kind": "node",
+"labels": [
+"MolecularReactionEnthalpy",
+"\\Delta_{r} H",
+"molecular reaction enthalpy"
+],
+"uid": "5201fe13af396ae618272126deb5d50f199d4b98f579d0f83c5a10cefeec7842"
 },
 {
 "curated": [],
@@ -2554,6 +2597,44 @@
 "compute_molecular_frequencies"
 ],
 "uid": "e8e86bed52c1e09311b9baada0501b7668b72cf8de3797735bc4c7bb60090f3f"
+},
+{
+"curated": [
+"ideal-gas-heat-capacity",
+"rrho-thermochemistry"
+],
+"id": "rrho_ideal_gas_heat_capacity",
+"kind": "edge",
+"labels": [
+"rrho ideal gas heat capacity",
+"rrho_ideal_gas_heat_capacity"
+],
+"uid": "78fbef7e17da4ea6e53840f36799cbd982dcbaff7bce92c2e3cc2698ba65c0f2"
+},
+{
+"curated": [
+"ir-spectrum"
+],
+"id": "compute_infrared_intensities",
+"kind": "edge",
+"labels": [
+"compute infrared intensities",
+"compute_infrared_intensities"
+],
+"uid": "b2af6ba348608fbea72ef742fb34e7f46b358f478360003ec9e1b1ad36f5e7a1"
+},
+{
+"curated": [
+"reaction-enthalpy",
+"rrho-thermochemistry"
+],
+"id": "compute_molecular_reaction_enthalpy",
+"kind": "edge",
+"labels": [
+"compute molecular reaction enthalpy",
+"compute_molecular_reaction_enthalpy"
+],
+"uid": "a53dd59e561384959e48d2a7be61cde0d1a3d36a86d0f7ca8682cce38221bc37"
 },
 {
 "curated": [],

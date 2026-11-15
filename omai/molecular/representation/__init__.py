@@ -1,9 +1,11 @@
 """Per-code adapter specs for the molecular domain.
 
-Two representations: orca (molecular quantum chemistry, the map's first molecular code) and
-openmm (classical force-field MD, a new engine class). Both attach specs to
-pre-existing nodes (TotalEnergy, Forces, Temperature, Pressure, Trajectory) as
-well as the new molecular nodes (HOMOLUMOGap, ReactionBarrier). build_codes
+Four representations: orca (molecular quantum chemistry, the map's first
+molecular code), openmm (classical force-field MD, a new engine class), xtb
+(GFN2-xTB normal modes, IR intensities and reaction enthalpies) and
+openmaterials-ai (the commons' own RRHO evaluator of the ideal-gas heat
+capacity). orca and openmm also attach specs to pre-existing nodes
+(TotalEnergy, Forces, Temperature, Pressure, Trajectory). build_codes
 discovers every SpaceRepresentationSpec module-level object in this package.
 """
 
@@ -22,6 +24,18 @@ from omai.molecular.representation.openmm import (
     OPENMM_PRESSURE,
     OPENMM_TOTAL_ENERGY,
 )
+from omai.molecular.representation.xtb import (
+    XTB_MOLECULAR_FREQUENCY,
+    XTB_INFRARED_INTENSITY,
+    XTB_MOLECULAR_REACTION_ENTHALPY,
+    XTB_COMPUTE_MOLECULAR_FREQUENCIES,
+    XTB_COMPUTE_INFRARED_INTENSITIES,
+    XTB_COMPUTE_MOLECULAR_REACTION_ENTHALPY,
+)
+from omai.molecular.representation.openmaterials_ai import (
+    OMAI_IDEAL_GAS_MOLAR_HEAT_CAPACITY_P,
+    OMAI_RRHO_IDEAL_GAS_HEAT_CAPACITY,
+)
 
 __all__ = [
     "ORCA_TOTAL_ENERGY",
@@ -35,4 +49,12 @@ __all__ = [
     "OPENMM_TEMPERATURE",
     "OPENMM_PRESSURE",
     "OPENMM_TOTAL_ENERGY",
+    "XTB_MOLECULAR_FREQUENCY",
+    "XTB_INFRARED_INTENSITY",
+    "XTB_MOLECULAR_REACTION_ENTHALPY",
+    "XTB_COMPUTE_MOLECULAR_FREQUENCIES",
+    "XTB_COMPUTE_INFRARED_INTENSITIES",
+    "XTB_COMPUTE_MOLECULAR_REACTION_ENTHALPY",
+    "OMAI_IDEAL_GAS_MOLAR_HEAT_CAPACITY_P",
+    "OMAI_RRHO_IDEAL_GAS_HEAT_CAPACITY",
 ]

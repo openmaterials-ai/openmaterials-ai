@@ -86,12 +86,17 @@ def test_molecular_nodes_and_edges():
 
     # Three from the ORCA + MD/chem scan; MolecularFrequency added by the
     # physics review (2026-07-10, the deferred normal-mode hook now landed).
+    # The gas-phase thermochemistry nodes follow (2026-11-15).
     assert [s.name for s in NODES] == [
         "HOMOLUMOGap", "ReactionBarrier[construction=neb_mep]",
-        "BondDissociationEnergy", "MolecularFrequency"]
+        "BondDissociationEnergy", "MolecularFrequency",
+        "IdealGasMolarHeatCapacityP", "InfraredIntensity",
+        "MolecularReactionEnthalpy"]
     assert [op.name for op in EDGES] == [
         "compute_homo_lumo_gap", "compute_reaction_barrier",
-        "compute_bond_dissociation", "compute_molecular_frequencies"]
+        "compute_bond_dissociation", "compute_molecular_frequencies",
+        "rrho_ideal_gas_heat_capacity", "compute_infrared_intensities",
+        "compute_molecular_reaction_enthalpy"]
 
 
 def test_molecular_edges_wiring_and_schemes():
@@ -454,3 +459,193 @@ def test_bond_dissociation_energy_instances_pin_the_live_node_uid():
     by_bond = {it["conditions"]["bond"]: it["value"] for it in bdes}
     assert by_bond["C(1)-O(2)"] == 3.6396048158576377
     assert by_bond["C(0)-H(5)"] == 5.100016565212172
+
+
+# --------------------------------------------------------------------------
+# Gas-phase thermochemistry (2026-11-15): ideal-gas Cp, IR intensities and the
+# reaction enthalpy of a balanced molecular reaction.
+# --------------------------------------------------------------------------
+
+def test_thermochemistry_nodes_identity_and_dimensions():
+    from omai.operator.dimensions import (
+        ENERGY_PER_MOLE,
+        ENERGY_PER_TEMPERATURE_PER_MOLE,
+        LENGTH_PER_MOLE,
+    )
+    from omai.operator.registry import QUANTITY_TAGS
+    from omai.molecular.operator.nodes import (
+        IDEAL_GAS_MOLAR_HEAT_CAPACITY_P,
+        INFRARED_INTENSITY,
+        MOLECULAR_REACTION_ENTHALPY,
+    )
+
+    expected = (
+        (IDEAL_GAS_MOLAR_HEAT_CAPACITY_P, "IdealGasMolarHeatCapacityP",
+         "ideal_gas_molar_heat_capacity_p", "cp_mol",
+         ENERGY_PER_TEMPERATURE_PER_MOLE, ()),
+        (INFRARED_INTENSITY, "InfraredIntensity", "infrared_intensity",
+         "ir_int", LENGTH_PER_MOLE, ("m",)),
+        (MOLECULAR_REACTION_ENTHALPY, "MolecularReactionEnthalpy",
+         "molecular_reaction_enthalpy", "dh_r", ENERGY_PER_MOLE, ()),
+    )
+    for node, name, tag, symbol, dim, indices in expected:
+        assert node.name == name
+        assert node.tier == "Molecular"
+        assert node_identity(node)["quantity"] == tag
+        assert tag in QUANTITY_TAGS
+        assert node.field(symbol).dimension == dim
+        assert node.field(symbol).indices == indices
+        assert node_identity(node)["labels"] == {}
+
+
+def test_thermochemistry_nodes_are_distinct_from_their_neighbours():
+    """Ideal-gas Cp shares J/(K mol) with the per-mole-of-cells MolarHeatCapacity
+    and the QHA HeatCapacityConstantP; the reaction enthalpy shares J/mol with
+    the CALPHAD MolarEnthalpy and stands beside the solid-state ReactionEnergy.
+    The quantity tags keep each a distinct node."""
+    from omai.molecular.operator.nodes import (
+        IDEAL_GAS_MOLAR_HEAT_CAPACITY_P,
+        MOLECULAR_REACTION_ENTHALPY,
+    )
+    from omai.quasiharmonic.operator.nodes import HEAT_CAPACITY_CONSTANT_P
+    from omai.stability.operator.nodes import REACTION_ENERGY
+    from omai.thermal_transport.operator.nodes import MOLAR_HEAT_CAPACITY
+    from omai.thermochemistry.operator.nodes import MOLAR_ENTHALPY
+
+    uids = {node_id(n) for n in (
+        IDEAL_GAS_MOLAR_HEAT_CAPACITY_P, MOLAR_HEAT_CAPACITY,
+        HEAT_CAPACITY_CONSTANT_P, MOLECULAR_REACTION_ENTHALPY,
+        MOLAR_ENTHALPY, REACTION_ENERGY)}
+    assert len(uids) == 6
+
+
+def test_thermochemistry_edges_wiring_and_schemes():
+    from omai.molecular.operator.edges import (
+        compute_infrared_intensities,
+        compute_molecular_reaction_enthalpy,
+        rrho_ideal_gas_heat_capacity,
+    )
+
+    wiring = {
+        rrho_ideal_gas_heat_capacity: (
+            ["MolecularFrequency", "Temperature"],
+            ["IdealGasMolarHeatCapacityP"], {"approximation": "harmonic"}),
+        compute_infrared_intensities: (
+            ["Structure", "Potential"], ["InfraredIntensity"],
+            {"method": "dipole_derivative"}),
+        compute_molecular_reaction_enthalpy: (
+            ["TotalEnergy", "MolecularFrequency", "Temperature"],
+            ["MolecularReactionEnthalpy"],
+            {"method": "rrho_enthalpy_difference"}),
+    }
+    for op, (ins, outs, schemes) in wiring.items():
+        assert [s.name for s in op.inputs] == ins, op.name
+        assert [o.name for o in op.outputs] == outs, op.name
+        assert op.schemes == schemes, op.name
+
+
+def test_rrho_formula_carries_the_modes_and_the_constants():
+    from omai.molecular.operator.edges import rrho_ideal_gas_heat_capacity
+
+    names = {str(s) for s in rrho_ideal_gas_heat_capacity.formula.free_symbols}
+    assert {"T", "k_B", r"\hbar", "N_A", "c_{ext}", "N_{m}"} <= names
+    assert any(n.startswith("nu_mol") for n in names), names
+
+
+def test_rrho_edge_is_dimensionally_proven():
+    """The closed form N_A k_B (c_ext + sum_m x^2 e^x / (e^x - 1)^2) with
+    x = 2 pi hbar nu_m / (k_B T) is J/(K mol) on both sides."""
+    nodes, edges = _all_nodes_edges()
+    report = dimensional_report(nodes, edges)
+    assert "rrho_ideal_gas_heat_capacity" in report["ok"], report
+    for name in ("compute_infrared_intensities",
+                 "compute_molecular_reaction_enthalpy"):
+        assert name in report["skipped"], (name, report)
+
+
+def _thermochemistry_pairs():
+    from omai.molecular.operator.edges import (
+        compute_infrared_intensities,
+        compute_molecular_reaction_enthalpy,
+        rrho_ideal_gas_heat_capacity,
+    )
+    from omai.molecular.operator.nodes import (
+        IDEAL_GAS_MOLAR_HEAT_CAPACITY_P,
+        INFRARED_INTENSITY,
+        MOLECULAR_REACTION_ENTHALPY,
+    )
+    return ((IDEAL_GAS_MOLAR_HEAT_CAPACITY_P, rrho_ideal_gas_heat_capacity),
+            (INFRARED_INTENSITY, compute_infrared_intensities),
+            (MOLECULAR_REACTION_ENTHALPY, compute_molecular_reaction_enthalpy))
+
+
+def test_each_thermochemistry_pair_is_an_admissible_contribution():
+    """Each node lands with its producing edge as one contribution. The IR pair
+    hangs off Structure and Potential, the other two off MolecularFrequency and
+    Temperature, so the three together are not one connected component and
+    land as three contributions."""
+    from omai.gates import validate_contribution
+    from omai.operator.identity import edge_identity
+    from omai.molecular.operator.nodes import MOLECULAR_FREQUENCY
+    from omai.dft_ground_state.operator.nodes import TOTAL_ENERGY, STRUCTURE
+    from omai.thermal_transport.operator.nodes import POTENTIAL, TEMPERATURE_STATE
+
+    current = {"nodes": {}, "edges": {}}
+    for s in (TOTAL_ENERGY, STRUCTURE, POTENTIAL, TEMPERATURE_STATE,
+              MOLECULAR_FREQUENCY):
+        current["nodes"][node_id(s)] = {
+            "uid": node_id(s), "identity": node_identity(s), "meta": {}}
+    for node, op in _thermochemistry_pairs():
+        records = [
+            {"op": "add_node",
+             "payload": {"uid": node_id(node), "identity": node_identity(node),
+                         "meta": {"name": node.name}}},
+            {"op": "add_edge",
+             "payload": {"uid": edge_id(op, node_id),
+                         "identity": edge_identity(op, node_id),
+                         "meta": {"name": op.name, "schemes": op.schemes}}},
+        ]
+        assert validate_contribution(records, current) == [], op.name
+
+
+def test_thermochemistry_records_follow_the_mean_potential_energy():
+    """The three contributions land as records 380-385, each a node then its
+    edge, after the MeanPotentialEnergy pair (378-379)."""
+    lines = (Path(__file__).resolve().parents[1] / "map" / "log.jsonl") \
+        .read_text().splitlines()
+    recs = [json.loads(line) for line in lines[379:385]]
+    assert len(recs) == 6, "the thermochemistry contribution has not landed"
+    expected = []
+    for node, op in _thermochemistry_pairs():
+        expected += [("add_node", node_id(node)), ("add_edge", edge_id(op, node_id))]
+    assert [(r["op"], r["payload"]["uid"]) for r in recs] == expected
+    assert [r["seq"] for r in recs] == list(range(380, 386))
+
+
+def test_xtb_and_openmaterials_ai_cover_the_thermochemistry_nodes():
+    codes = build_codes(DOMAINS)
+    xtb = codes["xtb"]
+    assert xtb["MolecularFrequency"]["unit"] == "inverse_cm"
+    assert xtb["InfraredIntensity"]["unit"] == "km_per_mol"
+    assert xtb["MolecularReactionEnthalpy"]["unit"] == "kJ_per_mol"
+    # The legacy specs stay registered for the committed July records.
+    assert "MolarHeatCapacity" in xtb and "ReactionEnergy" in xtb
+    # Cp is computed by the commons' own RRHO evaluator, not by xtb.
+    assert "IdealGasMolarHeatCapacityP" not in xtb
+    omai_code = codes["openmaterials-ai"]
+    assert omai_code["IdealGasMolarHeatCapacityP"]["unit"] == "J_per_K_per_mol"
+
+
+def test_km_per_mol_unit_is_registered():
+    from omai.representation.units import UNITS, conversion_factor
+
+    assert UNITS["km_per_mol"].dimension == UNITS["m_per_mol"].dimension
+    assert conversion_factor("km_per_mol", "m_per_mol") == 1000.0
+
+
+def test_legacy_xtb_specs_point_at_the_molecular_nodes():
+    from omai.stability.representation.xtb import XTB_REACTION_ENERGY
+    from omai.thermal_transport.representation.xtb import XTB_MOLAR_HEAT_CAPACITY
+
+    assert "Superseded by IdealGasMolarHeatCapacityP" in XTB_MOLAR_HEAT_CAPACITY.notes
+    assert "Superseded by MolecularReactionEnthalpy" in XTB_REACTION_ENERGY.notes

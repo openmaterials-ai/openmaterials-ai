@@ -10,6 +10,9 @@ SYMBOLS: dict[str, str] = {
     "ReactionBarrier[construction=neb_mep]": r"E_{barrier}",
     "BondDissociationEnergy": r"E_{BDE}",
     "MolecularFrequency": r"\nu_{\mathrm{mol}}",
+    "IdealGasMolarHeatCapacityP": r"C_{p}^{\mathrm{ig}}",
+    "InfraredIntensity": r"A_{\mathrm{IR}}",
+    "MolecularReactionEnthalpy": r"\Delta_{r} H",
 }
 
 MOLECULAR = Domain(

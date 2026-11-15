@@ -24,6 +24,9 @@ XTB_MOLAR_HEAT_CAPACITY = SpaceRepresentationSpec(
         "under the RRHO approximation: xtb's thermo block prints Cp(T) after "
         "a converged Hessian run with no imaginary modes. The model "
         "(GFN2-xTB), the xtb version, the phase, and the RRHO approximation "
-        "ride in the record's conditions."
+        "ride in the record's conditions. Superseded by IdealGasMolarHeatCapacityP "
+        "(molecular domain): MolarHeatCapacity is Cv per mole of crystal cells, "
+        "not the Cp of a gas molecule. This spec stays for the committed July "
+        "2026 record and is not re-keyed; new records use the molecular node."
     ),
 )

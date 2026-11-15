@@ -17,6 +17,15 @@ Node table:
     neb_mep]
   BondDissociationEnergy        bond_dissociation_energy  ENERGY     ()
   MolecularFrequency            molecular_frequency       FREQUENCY  (m)
+  IdealGasMolarHeatCapacityP    ideal_gas_molar_heat_     J/(K mol)  ()
+                                  capacity_p
+  InfraredIntensity             infrared_intensity        m/mol      (m)
+  MolecularReactionEnthalpy     molecular_reaction_       J/mol      ()
+                                  enthalpy
+
+The last three (2026-11-15) are the gas-phase thermochemistry the RRHO hook
+below named: the ideal-gas heat capacity of one molecule, the IR intensity of
+each normal mode, and the reaction enthalpy of a balanced molecular reaction.
 
 MolecularFrequency arrives from the physics review (2026-07-10): the molecular
 normal-mode axis, FREQUENCY dimension, indexed by mode number m (the registered
@@ -77,14 +86,22 @@ Deferred still (each with a named hook, so minting later is a clean add):
     ENERGY scalars, kept apart from the CALPHAD per-mole-of-atoms and phonon
     per-mole-of-cells nodes. This RRHO bundle is the NEXT named hook, now
     UNBLOCKED: it needed the MolecularFrequency node first (the modes drive the
-    partition function), which this slice landed.
+    partition function), which this slice landed. The ideal-gas heat capacity
+    and the reaction enthalpy of a balanced reaction landed 2026-11-15; the
+    per-species ZPE, enthalpy, Gibbs energy and entropy stay deferred.
   * SolvationFreeEnergy, DipoleMoment, NMRShift: not surfaced by any parser today
     (the skills tag solvation on/off and read dipole/NMR from the property file
     manually), so deferred. Solvated single points ride TotalEnergy provenance.
 """
 from __future__ import annotations
 
-from omai.operator.dimensions import ENERGY, FREQUENCY
+from omai.operator.dimensions import (
+    ENERGY,
+    ENERGY_PER_MOLE,
+    ENERGY_PER_TEMPERATURE_PER_MOLE,
+    FREQUENCY,
+    LENGTH_PER_MOLE,
+)
 from omai.operator.space import Field, ObservableSpace, Space
 
 HOMO_LUMO_GAP = ObservableSpace(
@@ -200,9 +217,77 @@ MOLECULAR_FREQUENCY = ObservableSpace(
     ),
 )
 
+IDEAL_GAS_MOLAR_HEAT_CAPACITY_P = ObservableSpace(
+    name="IdealGasMolarHeatCapacityP",
+    fields=(Field("cp_mol", ENERGY_PER_TEMPERATURE_PER_MOLE, indices=()),),
+    tier="Molecular",
+    description=(
+        "Constant-pressure heat capacity C_p(T) of one isolated molecule "
+        "treated as an ideal gas, per mole of molecules, J/(K mol). Under the "
+        "rigid-rotor harmonic-oscillator (RRHO) model each internal normal mode "
+        "of MolecularFrequency contributes its quantum harmonic Cv, "
+        "R x^2 e^x / (e^x - 1)^2 with x = h nu / (k_B T), and the external "
+        "degrees of freedom add 3R/2 (translation), 3R/2 or R (rotation, "
+        "nonlinear or linear) and R (Cp - Cv of an ideal gas): 4R for a "
+        "nonlinear molecule, 7R/2 for a linear one. The approximation "
+        "(harmonic, or the quasi-RRHO interpolation of soft modes toward the "
+        "free-rotor R/2) is a scheme of the producing edge and a condition of a "
+        "value, as are the temperature, the phase (gas) and the number of "
+        "conformers. Shares the J/(K mol) exponent vector "
+        "(1,2,-2,-1,-1,0,0) with the harmonic MolarHeatCapacity, which is Cv "
+        "per mole of primitive crystal cells, and with the QHA "
+        "HeatCapacityConstantP; the ideal_gas_molar_heat_capacity_p tag keeps "
+        "it a distinct node."
+    ),
+)
+
+INFRARED_INTENSITY = ObservableSpace(
+    name="InfraredIntensity",
+    fields=(Field("ir_int", LENGTH_PER_MOLE, indices=("m",)),),
+    tier="Molecular",
+    description=(
+        "Integrated infrared absorption intensity of each molecular normal "
+        "mode, indexed by the mode index m exactly as MolecularFrequency, so "
+        "the pair (nu_mol,m, ir_int,m) is the stick IR spectrum. In the "
+        "harmonic double approximation it is proportional to the squared "
+        "derivative of the molecular dipole moment along the mode, "
+        "|d mu / d Q_m|^2. Dimension LENGTH_PER_MOLE (0,1,0,0,-1,0,0): the "
+        "molar absorptivity (m^2/mol) integrated over wavenumber (1/m). km/mol "
+        "is the quantum-chemistry convention (1 km/mol = 1000 m/mol). An "
+        "imaginary mode carries an intensity too; whether a value comes from a "
+        "minimum is the n_imaginary condition of MolecularFrequency."
+    ),
+)
+
+MOLECULAR_REACTION_ENTHALPY = ObservableSpace(
+    name="MolecularReactionEnthalpy",
+    fields=(Field("dh_r", ENERGY_PER_MOLE, indices=()),),
+    tier="Molecular",
+    description=(
+        "Standard reaction enthalpy Delta_r H(T) of a balanced gas-phase "
+        "reaction of molecules, per mole of reaction as written, kJ/mol: "
+        "sum_i s_i H_i(T) with s_i the signed stoichiometric coefficient "
+        "(positive for a product) and H_i the molar enthalpy of species i, its "
+        "electronic energy plus the zero-point and thermal enthalpy of its "
+        "normal modes and the ideal-gas external terms (translation, rotation, "
+        "pV). The reference temperature is 298.15 K unless a value's "
+        "conditions state another. The reaction, the stoichiometry, the phase "
+        "(gas) and the number of conformers are conditions of a value; the "
+        "electronic Delta_r E is a secondary of the same value. Distinct from "
+        "the solid-state ReactionEnergy (a stoichiometric combination of "
+        "per-atom formation energies of crystals, plain ENERGY) and from the "
+        "CALPHAD MolarEnthalpy of a phase (per mole of atoms, SER reference), "
+        "which shares its J/mol exponent vector; the "
+        "molecular_reaction_enthalpy tag keeps it a distinct node."
+    ),
+)
+
 NODES: tuple[Space, ...] = (
     HOMO_LUMO_GAP,
     REACTION_BARRIER,
     BOND_DISSOCIATION_ENERGY,
     MOLECULAR_FREQUENCY,
+    IDEAL_GAS_MOLAR_HEAT_CAPACITY_P,
+    INFRARED_INTENSITY,
+    MOLECULAR_REACTION_ENTHALPY,
 )

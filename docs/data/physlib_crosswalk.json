@@ -845,7 +845,19 @@
     "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Basic.lean#L519",
     "confidence": "related"
    }
-  ]
+  ],
+  "IdealGasMolarHeatCapacityP": [
+   {
+    "name": "CanonicalEnsemble.heatCapacity",
+    "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
+    "kind": "def",
+    "informal": "Heat capacity of a canonical ensemble as the temperature derivative of the mean energy. The ideal-gas Cp of one molecule is that Cv for the translational, rotational and vibrational partition functions of the molecule, plus R for Cp - Cv.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L417",
+    "confidence": "related"
+   }
+  ],
+  "InfraredIntensity": [],
+  "MolecularReactionEnthalpy": []
  },
  "needs_upstream": {
   "ActivationEnergy": "An Arrhenius rate law with the activation energy E_a in the Boltzmann factor exp(-E_a / (kB T)), in Thermodynamics next to Temperature.β. The Lean bridge formalizes it locally in OMAIMaterialsTransport, the upstreaming candidate.",
@@ -936,6 +948,8 @@
   "VelocityAutocorrelation": "A stationary time-correlation function <f(0) g(tau)> over a measure-preserving Hamiltonian flow in StatisticalMechanics, specialized to per-atom velocities. The Physlib library has no correlation functions. PhyslibAlpha's StructureFactor module (a translation-invariant correlation function as the Fourier transform of a positive measure) is the natural base. The Lean bridge formalizes it locally in OMAIMDCorrelations, the upstreaming candidate.",
   "Voltage": "An electrochemistry definition in Thermodynamics, V = -Delta G / (z F), built from free-energy differences between intercalated, de-intercalated and metal-reservoir phases. The Physlib library has neither reaction free energies nor charged reservoirs. The Lean bridge formalizes it locally in OMAIStabilityEnergies, the upstreaming candidate.",
   "WorkFunction": "A CondensedMatter surface electronic-structure module with a Fermi level and the asymptotic vacuum electrostatic potential of a half-crystal, giving the work function as the vacuum-level energy -e phi_vac minus the Fermi energy E_F. The Physlib library has neither.",
-  "YoungsModulus": "The same missing CondensedMatter isotropic elasticity module as for the shear modulus, where E_Y = mu (3 lambda + 2 mu) / (lambda + mu) follows from the stiffness tensor of a linear-elastic solid. The Lean bridge formalizes it locally in OMAIElasticity, the upstreaming candidate."
+  "YoungsModulus": "The same missing CondensedMatter isotropic elasticity module as for the shear modulus, where E_Y = mu (3 lambda + 2 mu) / (lambda + mu) follows from the stiffness tensor of a linear-elastic solid. The Lean bridge formalizes it locally in OMAIElasticity, the upstreaming candidate.",
+  "InfraredIntensity": "Needs a molecular dipole moment as a function of nuclear positions and its derivative along a normal coordinate of the mass-weighted Hessian, the integrated band intensity being proportional to the squared derivative.",
+  "MolecularReactionEnthalpy": "Needs the ideal-gas enthalpy of one molecule from its rigid-rotor harmonic-oscillator partition function (electronic energy, zero-point and thermal vibrational energy, translational and rotational terms, pV) and the signed stoichiometric sum over a balanced reaction."
  }
 }

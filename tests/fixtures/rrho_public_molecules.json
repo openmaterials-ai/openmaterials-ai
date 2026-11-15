@@ -1,0 +1,90 @@
+{
+ "_source": "Gas-phase vibrational fundamentals in cm^-1 from T. Shimanouchi, Tables of Molecular Vibrational Frequencies, Consolidated Volume I, NSRDS-NBS 39 (National Bureau of Standards, 1972), as tabulated in the NIST Chemistry WebBook (SRD 69). H2O: nu1 3657, nu2 1595, nu3 3756. CO2: nu1 1333, nu2 667 (doubly degenerate), nu3 2349.",
+ "_generator": "python -I gen_rrho_fixture.py mcg/tools/thermo/rrho.py tests/fixtures/rrho_public_molecules.json (MaterialsCodeGraph rrho.py at commit cef1c837, Linux x86_64). mcg_nonlinear holds that function's output, which treats every molecule as nonlinear (external term 4R), CO2 included.",
+ "temperatures_K": [
+  100.0,
+  200.0,
+  298.15,
+  300.0,
+  500.0,
+  1000.0,
+  2000.0
+ ],
+ "molecules": {
+  "H2O": {
+   "linear": false,
+   "frequencies_cm": [
+    3657.0,
+    1595.0,
+    3756.0
+   ],
+   "mcg_nonlinear": {
+    "cp_harmonic_J_per_molK": [
+     33.257850945698166,
+     33.2692291347424,
+     33.48187698164953,
+     33.48989478499909,
+     35.11774433584898,
+     41.02359167220756,
+     50.20764905109421
+    ],
+    "cp_qrrho_J_per_molK": [
+     33.25785523611054,
+     33.26923341416702,
+     33.48188105580914,
+     33.48989885142488,
+     35.11774687160459,
+     41.02359061593365,
+     50.207645823081286
+    ],
+    "cp_classical_J_per_molK": [
+     58.20123832707267,
+     58.20123832707267,
+     58.20123832707267,
+     58.20123832707267,
+     58.20123832707267,
+     58.20123832707267,
+     58.20123832707267
+    ]
+   }
+  },
+  "CO2": {
+   "linear": true,
+   "frequencies_cm": [
+    1333.0,
+    667.0,
+    667.0,
+    2349.0
+   ],
+   "mcg_nonlinear": {
+    "cp_harmonic_J_per_molK": [
+     33.36195101455603,
+     36.51914232948553,
+     41.30427102673251,
+     41.38919565492103,
+     48.800516793603165,
+     58.307912611184214,
+     63.86626514660594
+    ],
+    "cp_qrrho_J_per_molK": [
+     33.362219351564015,
+     36.5193125257782,
+     41.30430540200561,
+     41.38922782909655,
+     48.80039312743024,
+     58.30768472778391,
+     63.86600504193471
+    ],
+    "cp_classical_J_per_molK": [
+     66.51570094522592,
+     66.51570094522592,
+     66.51570094522592,
+     66.51570094522592,
+     66.51570094522592,
+     66.51570094522592,
+     66.51570094522592
+    ]
+   }
+  }
+ }
+}

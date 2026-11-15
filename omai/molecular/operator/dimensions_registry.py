@@ -20,10 +20,26 @@ base symbol names is otherwise used by an edge formula.
 from __future__ import annotations
 
 from omai.operator.dimcheck import register_symbol_dimensions
-from omai.operator.dimensions import ENERGY
+from omai.operator.dimensions import (
+    DIMENSIONLESS,
+    ENERGY,
+    ENERGY_PER_MOLE,
+    ENERGY_PER_TEMPERATURE_PER_MOLE,
+    FREQUENCY,
+    LENGTH_PER_MOLE,
+)
 
 register_symbol_dimensions({
     r"E_{gap}^{mol}": ENERGY,
     r"E_{barrier}": ENERGY,
     r"E_{BDE}": ENERGY,
+    # Gas-phase thermochemistry (2026-11-15). rrho_ideal_gas_heat_capacity is a
+    # closed form and these bindings PROVE it: N_A k_B is J/(K mol), and
+    # 2 pi hbar nu / (k_B T) is dimensionless for a linear frequency nu.
+    "nu_mol": FREQUENCY,
+    "cp_mol": ENERGY_PER_TEMPERATURE_PER_MOLE,
+    "ir_int": LENGTH_PER_MOLE,
+    "dh_r": ENERGY_PER_MOLE,
+    "c_{ext}": DIMENSIONLESS,
+    "N_{m}": DIMENSIONLESS,
 })

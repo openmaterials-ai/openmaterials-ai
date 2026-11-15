@@ -23,6 +23,10 @@ XTB_REACTION_ENERGY = SpaceRepresentationSpec(
         "enthalpies over conformer-searched global minima, per reaction "
         "event. The reaction, the phase, the normalization, the model "
         "(GFN2-xTB), and the xtb version ride in the record's conditions "
-        "(the normalization is a condition, not the dimension)."
+        "(the normalization is a condition, not the dimension). Superseded by "
+        "MolecularReactionEnthalpy (molecular domain): ReactionEnergy is a "
+        "solid-state reaction of crystals. This spec stays for the committed "
+        "July 2026 records and is not re-keyed; new records use the molecular "
+        "node."
     ),
 )

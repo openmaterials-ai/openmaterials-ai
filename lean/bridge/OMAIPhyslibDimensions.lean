@@ -554,6 +554,26 @@ def dimension_HelmholtzFreeEnergy_field_f : Dimension ISQDimensionBase := ofFunc
   | .current => 0
   | .luminousIntensity => 0
 
+-- IdealGasMolarHeatCapacityP / cp_mol; uid 8597731feda25811b8bd43f504846ce37112c6a21f40444151d6a5b0de2c8622
+def dimension_IdealGasMolarHeatCapacityP_field_cp_mol : Dimension ISQDimensionBase := ofFunction fun
+  | .mass => 1
+  | .length => 2
+  | .time => -2
+  | .temperature => -1
+  | .amount => -1
+  | .current => 0
+  | .luminousIntensity => 0
+
+-- InfraredIntensity / ir_int; uid a4d1c8cc29160367d3ce0d6ad27e0c8dde975dee0699116ac0c9981085a6e298
+def dimension_InfraredIntensity_field_ir_int : Dimension ISQDimensionBase := ofFunction fun
+  | .mass => 0
+  | .length => 1
+  | .time => 0
+  | .temperature => 0
+  | .amount => -1
+  | .current => 0
+  | .luminousIntensity => 0
+
 -- InterfaceConductance / G_int; uid 2995dc3d963a6d387aa5b62d35a7248391ce3ce8047c0dc381cfc1cc99ef08f9
 def dimension_InterfaceConductance_field_G_int : Dimension ISQDimensionBase := ofFunction fun
   | .mass => 1
@@ -801,6 +821,16 @@ def dimension_MolecularFrequency_field_nu_mol : Dimension ISQDimensionBase := of
   | .time => -1
   | .temperature => 0
   | .amount => 0
+  | .current => 0
+  | .luminousIntensity => 0
+
+-- MolecularReactionEnthalpy / dh_r; uid 5201fe13af396ae618272126deb5d50f199d4b98f579d0f83c5a10cefeec7842
+def dimension_MolecularReactionEnthalpy_field_dh_r : Dimension ISQDimensionBase := ofFunction fun
+  | .mass => 1
+  | .length => 2
+  | .time => -2
+  | .temperature => 0
+  | .amount => -1
   | .current => 0
   | .luminousIntensity => 0
 

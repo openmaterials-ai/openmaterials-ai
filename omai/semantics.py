@@ -130,6 +130,20 @@ ALIASES: dict[str, tuple[str, ...]] = {
     ),
     "average-potential-energy": ("MeanPotentialEnergy",),
     "nvt-potential-energy": ("MeanPotentialEnergy",),
+    # Gas-phase molecular thermochemistry.
+    "ideal-gas-heat-capacity": (
+        "IdealGasMolarHeatCapacityP", "rrho_ideal_gas_heat_capacity",
+    ),
+    "rrho-thermochemistry": (
+        "IdealGasMolarHeatCapacityP", "MolecularReactionEnthalpy",
+        "rrho_ideal_gas_heat_capacity", "compute_molecular_reaction_enthalpy",
+    ),
+    "ir-spectrum": (
+        "InfraredIntensity", "MolecularFrequency", "compute_infrared_intensities",
+    ),
+    "reaction-enthalpy": (
+        "MolecularReactionEnthalpy", "compute_molecular_reaction_enthalpy",
+    ),
     # NO-HOME markers live in the alignment files, not here: an alias
     # must point at something that exists (the gate below enforces it).
 }

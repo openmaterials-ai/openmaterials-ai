@@ -1,9 +1,9 @@
 {
   "physlib_rev": "9b583cb6ef6e9cc537c4d4b786b508de1abbcf42",
   "lean_toolchain": "leanprover/lean4:v4.35.0",
-  "catalog_nodes": 137,
-  "fields": 139,
-  "encoded_fields": 134,
+  "catalog_nodes": 140,
+  "fields": 142,
+  "encoded_fields": 137,
   "opaque_fields": 5,
   "records": [
     {
@@ -1074,6 +1074,44 @@
       "status": "encoded"
     },
     {
+      "node": "IdealGasMolarHeatCapacityP",
+      "node_uid": "8597731feda25811b8bd43f504846ce37112c6a21f40444151d6a5b0de2c8622",
+      "field": "cp_mol",
+      "dimension": "energy_per_temperature_per_mole",
+      "indices": [],
+      "exponents": [
+        1,
+        2,
+        -2,
+        -1,
+        -1,
+        0,
+        0
+      ],
+      "declaration": "OMAI.PhyslibBridge.ISQ.dimension_IdealGasMolarHeatCapacityP_field_cp_mol",
+      "status": "encoded"
+    },
+    {
+      "node": "InfraredIntensity",
+      "node_uid": "a4d1c8cc29160367d3ce0d6ad27e0c8dde975dee0699116ac0c9981085a6e298",
+      "field": "ir_int",
+      "dimension": "length_per_mole",
+      "indices": [
+        "m"
+      ],
+      "exponents": [
+        0,
+        1,
+        0,
+        0,
+        -1,
+        0,
+        0
+      ],
+      "declaration": "OMAI.PhyslibBridge.ISQ.dimension_InfraredIntensity_field_ir_int",
+      "status": "encoded"
+    },
+    {
       "node": "InterfaceConductance",
       "node_uid": "2995dc3d963a6d387aa5b62d35a7248391ce3ce8047c0dc381cfc1cc99ef08f9",
       "field": "G_int",
@@ -1555,6 +1593,24 @@
         0
       ],
       "declaration": "OMAI.PhyslibBridge.ISQ.dimension_MolecularFrequency_field_nu_mol",
+      "status": "encoded"
+    },
+    {
+      "node": "MolecularReactionEnthalpy",
+      "node_uid": "5201fe13af396ae618272126deb5d50f199d4b98f579d0f83c5a10cefeec7842",
+      "field": "dh_r",
+      "dimension": "energy_per_mole",
+      "indices": [],
+      "exponents": [
+        1,
+        2,
+        -2,
+        0,
+        -1,
+        0,
+        0
+      ],
+      "declaration": "OMAI.PhyslibBridge.ISQ.dimension_MolecularReactionEnthalpy_field_dh_r",
       "status": "encoded"
     },
     {

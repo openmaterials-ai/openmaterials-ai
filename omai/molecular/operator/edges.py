@@ -1,13 +1,22 @@
 r"""Operators (edges) of the molecular domain.
 
-Four edges, all implicit (is_executable_in_sympy_override=False): each an opaque
-applied function of its inputs with the molecular method recorded as a scheme,
+Seven edges, all implicit (is_executable_in_sympy_override=False). The first
+four are each an opaque applied function of its inputs with the molecular
+method recorded as a scheme,
 exactly like the electronic-transport, thermochemistry, and quasi-harmonic edges.
 
   compute_homo_lumo_gap        : (Structure, Potential) -> HOMOLUMOGap
   compute_reaction_barrier     : (TotalEnergy, Structure) -> ReactionBarrier[construction=neb_mep]
   compute_bond_dissociation    : (TotalEnergy, Structure) -> BondDissociationEnergy
   compute_molecular_frequencies: (Structure, Potential) -> MolecularFrequency
+  rrho_ideal_gas_heat_capacity : (MolecularFrequency, Temperature) -> IdealGasMolarHeatCapacityP
+  compute_infrared_intensities : (Structure, Potential) -> InfraredIntensity
+  compute_molecular_reaction_enthalpy: (TotalEnergy, MolecularFrequency,
+                                 Temperature) -> MolecularReactionEnthalpy
+
+rrho_ideal_gas_heat_capacity is a closed form (2026-11-15), dimensionally
+proven, but not sympy-executable: its external constant and mode count are
+properties of the molecule. The other two are opaque.
 
 Connectivity. The four nodes plus four edges form ONE weakly connected component
 through the pre-existing Structure / TotalEnergy / Potential source nodes:
@@ -34,12 +43,15 @@ from omai.operator.operator import Operator
 from omai.molecular.operator.nodes import (
     BOND_DISSOCIATION_ENERGY,
     HOMO_LUMO_GAP,
+    IDEAL_GAS_MOLAR_HEAT_CAPACITY_P,
+    INFRARED_INTENSITY,
     MOLECULAR_FREQUENCY,
+    MOLECULAR_REACTION_ENTHALPY,
     REACTION_BARRIER,
 )
 from omai.dft_ground_state.operator.nodes import TOTAL_ENERGY
 from omai.materials.operator.shared_primitives import STRUCTURE
-from omai.thermal_transport.operator.nodes import POTENTIAL
+from omai.thermal_transport.operator.nodes import POTENTIAL, TEMPERATURE_STATE
 
 
 # ---------------------------------------------------------------------------
@@ -61,6 +73,20 @@ _gap_fn = sp.Function(r"\Delta_{HL}")
 _neb_fn = sp.Function(r"\Delta_{NEB}")
 _bde_fn = sp.Function(r"\Delta_{BDE}")
 _hess_fn = sp.Function(r"\nu^{H}")     # mass-weighted-Hessian normal modes
+_ir_fn = sp.Function(r"I^{IR}")        # dipole-derivative band intensity
+_dh_fn = sp.Function(r"\Delta_{r}H")   # stoichiometric RRHO enthalpy sum
+# Gas-phase thermochemistry symbols.
+_cp_mol = sp.Symbol("cp_mol")          # IdealGasMolarHeatCapacityP
+_ir_int = sp.IndexedBase("ir_int")     # InfraredIntensity (indexed by mode m)
+_dh_r = sp.Symbol("dh_r")              # MolecularReactionEnthalpy
+_nu_set = sp.Symbol("nu_mol")          # the mode set as one opaque argument
+_T = sp.Symbol("T")
+_kB = sp.Symbol("k_B")
+_hbar = sp.Symbol(r"\hbar")
+_N_A = sp.Symbol("N_A")
+_c_ext = sp.Symbol("c_{ext}")          # 4 (nonlinear) or 7/2 (linear)
+_N_m = sp.Symbol("N_{m}", positive=True, integer=True)  # internal mode count
+_x_m = 2 * sp.pi * _hbar * _nu_mol[_m] / (_kB * _T)
 
 
 # ---------------------------------------------------------------------------
@@ -165,9 +191,85 @@ compute_molecular_frequencies = Operator(
     ),
 )
 
+rrho_ideal_gas_heat_capacity = Operator(
+    name="rrho_ideal_gas_heat_capacity",
+    inputs=(MOLECULAR_FREQUENCY, TEMPERATURE_STATE),
+    outputs=(IDEAL_GAS_MOLAR_HEAT_CAPACITY_P,),
+    schemes={"approximation": "harmonic"},
+    formula=sp.Eq(
+        _cp_mol,
+        _N_A * _kB * (_c_ext + sp.Sum(
+            _x_m ** 2 * sp.exp(_x_m) / (sp.exp(_x_m) - 1) ** 2,
+            (_m, 1, _N_m))),
+    ),
+    is_executable_in_sympy_override=False,
+    description=(
+        "Ideal-gas heat capacity of one molecule under the rigid-rotor "
+        "harmonic-oscillator model: C_p = N_A k_B (c_ext + sum_m x_m^2 "
+        "e^{x_m} / (e^{x_m} - 1)^2), x_m = 2 pi hbar nu_m / (k_B T) = h nu_m / "
+        "(k_B T), summed over the N_m internal modes of MolecularFrequency "
+        "(3N-6, or 3N-5 for a linear molecule). The external constant c_ext is "
+        "4 for a nonlinear molecule (3/2 translation, 3/2 rotation, 1 for "
+        "Cp - Cv) and 7/2 for a linear one (rotation 1). The approximation "
+        "scheme is harmonic; the quasi-RRHO variant (qrrho) replaces each mode's "
+        "term by w c_m + (1 - w)/2 with w = 1/(1 + (nu0/nu_m)^4), taking soft "
+        "torsions toward the free-rotor limit R/2 (nu0 = 50 cm^-1 by default). "
+        "Imaginary modes are refused: the model holds at a minimum. Not "
+        "sympy-executable because c_ext and N_m are properties of the molecule, "
+        "not of the inputs; omai.molecular.evaluate.cp_table evaluates it."
+    ),
+)
+
+compute_infrared_intensities = Operator(
+    name="compute_infrared_intensities",
+    inputs=(STRUCTURE, POTENTIAL),
+    outputs=(INFRARED_INTENSITY,),
+    schemes={"method": "dipole_derivative"},
+    formula=sp.Eq(_ir_int[_m], _ir_fn(_S_struct, _V_pot)),
+    is_executable_in_sympy_override=False,
+    description=(
+        "Infrared intensity of each normal mode ir_int,m = I^{IR}[Structure, "
+        "Potential]: the integrated absorption of mode m, proportional to "
+        "|d mu / d Q_m|^2, the squared derivative of the molecular dipole along "
+        "the mass-weighted normal coordinate of the same Hessian that gives "
+        "MolecularFrequency. I^{IR} is opaque over the molecular Structure and "
+        "the chosen method (the Potential-provenance analog). The scheme "
+        "records the dipole_derivative construction (the harmonic double "
+        "approximation). km/mol native. Implicit (a Hessian plus dipole "
+        "derivatives from an electronic-structure method), so not "
+        "sympy-executable."
+    ),
+)
+
+compute_molecular_reaction_enthalpy = Operator(
+    name="compute_molecular_reaction_enthalpy",
+    inputs=(TOTAL_ENERGY, MOLECULAR_FREQUENCY, TEMPERATURE_STATE),
+    outputs=(MOLECULAR_REACTION_ENTHALPY,),
+    schemes={"method": "rrho_enthalpy_difference"},
+    formula=sp.Eq(_dh_r, _dh_fn(_E_tot, _nu_set, _T)),
+    is_executable_in_sympy_override=False,
+    description=(
+        "Reaction enthalpy of a balanced gas-phase reaction Delta_r H(T) = "
+        "sum_i s_i H_i(T), s_i the signed stoichiometric coefficient (positive "
+        "for a product) and H_i = N_A [E_tot,i + sum_m (h nu_m / 2 + h nu_m / "
+        "(e^{x_m} - 1))] + c_H R T the RRHO molar enthalpy of species i: its "
+        "electronic TotalEnergy, the zero-point and thermal energy of its "
+        "MolecularFrequency modes, and the ideal-gas external term c_H = 4 "
+        "(nonlinear) or 7/2 (linear). Delta_r H is opaque over the per-species "
+        "energies, mode sets and stoichiometry; the scheme records the "
+        "rrho_enthalpy_difference construction. The reaction must balance in "
+        "atoms and charge. Per mole of reaction as written, kJ/mol; the "
+        "electronic Delta_r E = sum_i s_i N_A E_tot,i is a secondary. Implicit "
+        "(a stoichiometric sum over species), so not sympy-executable."
+    ),
+)
+
 EDGES: tuple[Operator, ...] = (
     compute_homo_lumo_gap,
     compute_reaction_barrier,
     compute_bond_dissociation,
     compute_molecular_frequencies,
+    rrho_ideal_gas_heat_capacity,
+    compute_infrared_intensities,
+    compute_molecular_reaction_enthalpy,
 )

@@ -217,6 +217,11 @@ POWER_FACTOR = Dimension("power_factor", (1, 1, -3, -2, 0, 0, 0))
 # the composite EMT edges on this). Distinct exponent vector from both, kept apart
 # by its own tuple. Canonical unit w_per_m2_k; the common MW/(m^2 K) is 1e6.
 INTERFACE_CONDUCTANCE = Dimension("interface_conductance", (1, 0, -3, -1, 0, 0, 0))
+# Length per mole: m/mol = L N^-1 (0,1,0,0,-1,0,0). The InfraredIntensity node
+# carries it: the integrated molar absorption coefficient of one IR band, the
+# molar absorptivity (m^2/mol) integrated over wavenumber (m^-1). Canonical unit
+# m_per_mol; the quantum-chemistry convention km/mol carries 1e3.
+LENGTH_PER_MOLE = Dimension("length_per_mole", (0, 1, 0, 0, -1, 0, 0))
 
 
 DIMENSIONS: dict[str, Dimension] = {
@@ -260,5 +265,6 @@ DIMENSIONS: dict[str, Dimension] = {
         NUMBER_DENSITY,
         POWER_FACTOR,
         INTERFACE_CONDUCTANCE,
+        LENGTH_PER_MOLE,
     ]
 }

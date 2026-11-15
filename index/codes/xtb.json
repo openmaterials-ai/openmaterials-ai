@@ -1,13 +1,31 @@
 {
  "representation": "xtb",
- "lineage_version": "808a954e386e5aa5dbb5cc4802fe5b4ca6c5b69df03d237ee9583a54fa15e70d",
- "map_version": "8491d0b6ad048cea62b7cdfac631632debb08a3d354bb25fb9f08191b4cedc66",
+ "lineage_version": "a2e073eb986ab3caaf199054081bd024fe0d6905e925273e883b3f337ef974fa",
+ "map_version": "70d84ca0fd219d45c8db350d49d6f629affd14dc81431d0bf889ee0674a56a9e",
  "covers": [
+  {
+   "node": "InfraredIntensity",
+   "uid": "a4d1c8cc29160367d3ce0d6ad27e0c8dde975dee0699116ac0c9981085a6e298",
+   "api": "xtb <geom> --ohess tight --gfn 2: the 'IR Inten    --' lines of g98.out, km/mol",
+   "unit": "km_per_mol"
+  },
   {
    "node": "MolarHeatCapacity",
    "uid": "4fa2d8e16bde42f794f150f5d149e5d645d63f7ddaac59cef79bd41771b13c17",
    "api": "xtb <geom> --ohess --temp <T>  (THERMO block, Cp row)",
    "unit": "J_per_K_per_mol"
+  },
+  {
+   "node": "MolecularFrequency",
+   "uid": "e1270ea9a293c9107226bf831f60985f5525a0c386dca70841743bdc5d082c26",
+   "api": "xtb <geom> --ohess tight --gfn 2: the 'Frequencies --' lines of g98.out, cm^-1",
+   "unit": "inverse_cm"
+  },
+  {
+   "node": "MolecularReactionEnthalpy",
+   "uid": "5201fe13af396ae618272126deb5d50f199d4b98f579d0f83c5a10cefeec7842",
+   "api": "xtb <geom> --ohess tight --gfn 2 --temp 298.15 per species: THERMO 'TOTAL ENTHALPY' (Eh); dH = sum(s_i H_i) * 2625.4996394799 kJ/mol",
+   "unit": "kJ_per_mol"
   },
   {
    "node": "ReactionEnergy",
