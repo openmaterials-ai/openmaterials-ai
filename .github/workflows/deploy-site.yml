@@ -37,8 +37,9 @@ jobs:
           ref: ${{ github.event.workflow_run.head_sha }}
           fetch-depth: 0
       # Part 9 of the working agreement between seats: every main commit this deploy
-      # ships, since the last one this step passed, came from a pull request whose
-      # owning seats agreed (OWNERS.md). It refuses before anything ships.
+      # ships, since the last one this step passed, carries the lines of its owning
+      # seats (OWNERS.md), on its pull request or on the commit, or is a pure revert.
+      # It refuses before anything ships.
       - name: owner-agreement
         env:
           GH_TOKEN: ${{ github.token }}

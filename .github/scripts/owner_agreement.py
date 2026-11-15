@@ -1,23 +1,28 @@
 #!/usr/bin/env python3
 """The owner-agreement check (part 9 of the working agreement between seats).
 
-Every seat that owns a path a pull request changes must post one line on the pull
-request, in its body or a comment:
+Every seat that owns a path a change touches must agree to it with a line of its own,
+posted by a signer named in OWNERS.md:
 
     <Seat> agreed at <head commit>
 
-The path table is OWNERS.md at the repository root, read from the base branch, so a
-pull request cannot change the rules it is checked by. A line holds while the diff of
-that seat's paths against the base is unchanged, so a later push that leaves the
-seat's paths alone keeps the line, and one that touches them needs a new line.
+For a pull request the line goes in its body or a comment. For a commit that reached the
+main branch without a pull request it goes in a comment on that commit.
 
-All seats act as one GitHub user, so GitHub's own approvals cannot carry this. The
-check stops a seat from forgetting. It cannot stop a forged line.
+The path table is OWNERS.md at the repository root, read from the base, so a change
+cannot alter the rules it is checked by. A line holds while the diff of that seat's
+paths against the base is byte for byte the same, apart from line numbers.
 
-Standard library only. Needs git, and gh for the pull request's text.
+All seats act as one GitHub user, so GitHub's own approvals cannot carry this. The check
+stops a seat from forgetting. It cannot stop a forged line: anyone with write access can
+edit a signer's pull request body or comment, and the API does not say who did.
 
-    owner_agreement.py --pr 123                  # local merge gate
-    owner_agreement.py --pr 123 --post-status    # CI: also posts the owner-agreement commit status
+Standard library only. Needs git, and gh for the text on GitHub.
+
+    owner_agreement.py --pr 123                   # local merge gate
+    owner_agreement.py --pr 123 --post-status     # CI: also posts the owner-agreement status
+    owner_agreement.py --deployed HEAD --workflow deploy-app.yml   # the deploy step
+    owner_agreement.py --lint --base HEAD^1       # CI: the table parses, its new patterns match files
 
 Exit 0 when every owning seat agreed, 3 when one is missing, 2 when OWNERS.md cannot be
 read, and anything else when the check itself broke.
@@ -26,22 +31,31 @@ read, and anything else when the check itself broke.
 from __future__ import annotations
 
 import argparse
+import functools
+import hashlib
 import json
 import os
 import re
 import subprocess
 import sys
+import tempfile
 from dataclasses import dataclass, field
 
 TABLE = "OWNERS.md"
+SCRIPT = ".github/scripts/owner_agreement.py"
 CONTEXT = "owner-agreement"
 EXIT_MISSING = 3
 EXIT_TABLE = 2
 DEFAULT_MARK = "(any other path)"
-# Only text written by people with write access counts. In a public repository anyone can
-# open a pull request or comment, and their "<Seat> agreed at" line must not count.
-TRUSTED = {"OWNER", "MEMBER", "COLLABORATOR"}
-LINE = re.compile(r"^[\s\-*\"`]*(?P<seat>[A-Za-z][A-Za-z\- ]*?) agreed at (?P<sha>[0-9a-f]{7,40})\b")
+# A line is the whole line: a seat name, "agreed at", a commit, and at most a full stop.
+LINE = re.compile(r"^\s*(?P<seat>[A-Za-z][A-Za-z\- ]*?) agreed at (?P<sha>[0-9a-f]{7,40})\.?\s*$")
+# Paths no pure revert may touch without lines: the table, and the workflows and scripts
+# that run the check.
+GUARDED = re.compile(r"^(OWNERS\.md$|\.github/)")
+REVERT_DEPTH = 100
+# The same diff text on every machine: no user configuration can change it.
+GIT = ["git", "-c", "core.quotePath=false", "-c", "diff.noprefix=false", "-c", "diff.mnemonicPrefix=false", "-c", "diff.relative=false", "--literal-pathspecs"]
+DIFF = ["diff", "--no-renames", "--full-index", "--binary", "--no-color", "--no-ext-diff", "--no-textconv", "--diff-algorithm=myers", "--indent-heuristic", "-U3", "--inter-hunk-context=0", "-O/dev/null", "--src-prefix=a/", "--dst-prefix=b/"]
 
 
 class TableError(Exception):
@@ -58,6 +72,7 @@ class Row:
 @dataclass
 class Table:
     seats: list[str]
+    signers: list[str]
     rows: list[Row]
     default: list[str]
 
@@ -69,12 +84,18 @@ class Table:
                 found.update(row.seats)
         return found or set(self.default)
 
+    def patterns(self) -> list[tuple[str, re.Pattern]]:
+        return [(p, rx) for row in self.rows for p, rx in zip(row.patterns, row.regexes)]
+
 
 def pattern_regex(pattern: str) -> re.Pattern:
     """`dir/` matches everything under dir, `*` one path segment, `**` any depth."""
     out, i = [], 0
     while i < len(pattern):
-        if pattern.startswith("**", i):
+        if pattern.startswith("**/", i):
+            out.append("(?:.*/)?")
+            i += 3
+        elif pattern.startswith("**", i):
             out.append(".*")
             i += 2
         elif pattern[i] == "*":
@@ -91,22 +112,27 @@ def pattern_regex(pattern: str) -> re.Pattern:
     return re.compile("".join(out))
 
 
-def split_seats(cell: str) -> list[str]:
-    return [s.strip().rstrip(".") for s in cell.split(",") if s.strip()]
+def split_list(cell: str) -> list[str]:
+    return [s.strip().strip("`").rstrip(".") for s in cell.split(",") if s.strip()]
+
+
+def section_list(lines: list[str], heading: str) -> list[str]:
+    for i, line in enumerate(lines):
+        if line.strip() == heading:
+            for nxt in lines[i + 1 :]:
+                if nxt.strip():
+                    return split_list(nxt)
+    return []
 
 
 def parse_table(text: str) -> Table:
-    seats: list[str] = []
     lines = text.splitlines()
-    for i, line in enumerate(lines):
-        if line.strip() == "## Seats":
-            for nxt in lines[i + 1 :]:
-                if nxt.strip():
-                    seats = split_seats(nxt)
-                    break
-            break
+    seats = section_list(lines, "## Seats")
     if not seats:
         raise TableError("OWNERS.md has no '## Seats' list")
+    signers = section_list(lines, "## Signers")
+    if not signers:
+        raise TableError("OWNERS.md has no '## Signers' list")
     rows: list[Row] = []
     default: list[str] = []
     for line in lines:
@@ -115,7 +141,7 @@ def parse_table(text: str) -> Table:
         cells = [c.strip() for c in line.strip().strip("|").split("|")]
         if len(cells) < 2 or set(cells[0]) <= {"-", " ", ":"} or cells[0] == "Paths":
             continue
-        row_seats = split_seats(cells[1])
+        row_seats = split_list(cells[1])
         unknown = [s for s in row_seats if s not in seats]
         if unknown or not row_seats:
             raise TableError(f"row {cells[0]!r} names unknown seats {unknown or 'none'}")
@@ -128,29 +154,7 @@ def parse_table(text: str) -> Table:
         rows.append(Row(patterns, row_seats, [pattern_regex(p) for p in patterns]))
     if not default:
         raise TableError(f"OWNERS.md has no '{DEFAULT_MARK}' row")
-    return Table(seats, rows, default)
-
-
-def unmatched_patterns(table: Table, files: list[str]) -> list[str]:
-    """Patterns that match no tracked file. A moved or misspelled path would stop
-    guarding anything without a word, so CI refuses the table instead."""
-    return [p for row in table.rows for p, rx in zip(row.patterns, row.regexes) if not any(rx.fullmatch(f) for f in files)]
-
-
-def lint(path: str = TABLE) -> int:
-    """CI's check of the table in the working tree: it parses, and every pattern matches a file."""
-    try:
-        table = parse_table(open(path).read())
-    except (OSError, TableError) as e:
-        print(f"{path}: {e}")
-        return EXIT_TABLE
-    bad = unmatched_patterns(table, git("ls-files").splitlines())
-    for p in bad:
-        print(f"{path}: `{p}` matches no tracked file")
-    if bad:
-        return EXIT_TABLE
-    print(f"{path}: {len(table.rows)} rows, {sum(len(r.patterns) for r in table.rows)} patterns, every one matches a file")
-    return 0
+    return Table(seats, signers, rows, default)
 
 
 def seats_in_changed_rows(diff_text: str, seats: list[str]) -> set[str]:
@@ -160,7 +164,7 @@ def seats_in_changed_rows(diff_text: str, seats: list[str]) -> set[str]:
         if line[:2] in ("+|", "-|"):
             cells = [c.strip() for c in line[1:].strip().strip("|").split("|")]
             if len(cells) >= 2:
-                named.update(s for s in split_seats(cells[1]) if s in seats)
+                named.update(s for s in split_list(cells[1]) if s in seats)
     return named
 
 
@@ -168,58 +172,75 @@ def seats_in_changed_rows(diff_text: str, seats: list[str]) -> set[str]:
 
 
 def git(*args: str, check: bool = True) -> str:
-    res = subprocess.run(["git", *args], capture_output=True, text=True)
+    res = subprocess.run([*GIT, *args], capture_output=True, text=True)
     if check and res.returncode != 0:
         raise RuntimeError(f"git {' '.join(args)}: {res.stderr.strip()}")
     return res.stdout
 
 
+def git_z(*args: str) -> list[str]:
+    """A NUL-separated list of paths, exactly as stored."""
+    out = subprocess.run([*GIT, *args, "-z"], capture_output=True, check=True).stdout
+    return [p.decode("utf-8", "surrogateescape") for p in out.split(b"\0") if p]
+
+
 def resolve(ref: str) -> str | None:
-    res = subprocess.run(["git", "rev-parse", "--verify", "--quiet", f"{ref}^{{commit}}"], capture_output=True, text=True)
+    res = subprocess.run([*GIT, "rev-parse", "--verify", "--quiet", f"{ref}^{{commit}}"], capture_output=True, text=True)
     return res.stdout.strip() or None
 
 
-def changed_files(base: str, commit: str) -> list[str]:
-    mb = git("merge-base", base, commit).strip()
-    return [f for f in git("diff", "--name-only", "--no-renames", mb, commit).splitlines() if f]
+def is_ancestor(a: str, b: str) -> bool:
+    return subprocess.run([*GIT, "merge-base", "--is-ancestor", a, b], capture_output=True).returncode == 0
 
 
-def seat_patch_id(base: str, commit: str, files: list[str]) -> str:
-    """The stable patch id of the commit's diff against its merge base, over these files."""
-    if not files:
+def merge_base(a: str, b: str) -> str:
+    return git("merge-base", a, b).strip()
+
+
+def changed_files(a: str, b: str) -> list[str]:
+    return git_z("diff", "--name-only", "--no-renames", a, b)
+
+
+INDEX_LINE = re.compile(rb"^index [0-9a-f]+\.\.[0-9a-f]+(?: [0-7]+)?\n", re.M)
+# The whole hunk header: its line numbers and the function name git copies from above the hunk.
+HUNK_HEADER = re.compile(rb"^@@ [^\n]*", re.M)
+
+
+@functools.lru_cache(maxsize=4096)
+def diff_hash(a: str, b: str, files: tuple[str, ...] | None = None) -> str:
+    """A hash of the diff a..b (over these files, or all), byte for byte apart from blob
+    ids and hunk headers, so the same change on a moved base keeps its hash while
+    any change to its text, whitespace included, does not. "" when nothing changed."""
+    if files == ():
         return ""
-    mb = git("merge-base", base, commit).strip()
-    diff = git("diff", "--no-renames", "--full-index", "--binary", mb, commit, "--", *files)
-    if not diff:
+    args = [*GIT, *DIFF, a, b] + (["--", *files] if files else [])
+    out = subprocess.run(args, capture_output=True, check=True).stdout
+    if not out:
         return ""
-    res = subprocess.run(["git", "patch-id", "--stable"], input=diff, capture_output=True, text=True, check=True)
-    return "\n".join(sorted(line.split()[0] for line in res.stdout.splitlines() if line.strip()))
+    out = HUNK_HEADER.sub(b"@@", INDEX_LINE.sub(b"", out))
+    return hashlib.sha256(out).hexdigest()
 
 
-def diff_id(a: str, b: str) -> str:
-    """The stable patch id of the whole diff a..b, or "" when nothing changed."""
-    diff = git("diff", "--no-renames", "--full-index", "--binary", a, b)
-    if not diff:
-        return ""
-    res = subprocess.run(["git", "patch-id", "--stable"], input=diff, capture_output=True, text=True, check=True)
-    return res.stdout.split()[0] if res.stdout.strip() else ""
-
-
-REVERT_DEPTH = 100
+def seat_hash(base: str, commit: str, files: list[str]) -> str:
+    """The seat's diff from the merge base of base and commit."""
+    return diff_hash(merge_base(base, commit), commit, tuple(sorted(files)))
 
 
 def revert_of(base: str, a: str, b: str) -> str | None:
     """The commit among the last REVERT_DEPTH on the base's first-parent line whose exact
     inverse is the diff a..b. Part 5 of the working agreement lets any seat merge a pure
-    revert of a change that broke production and tell the owners after, so it needs no line.
-    A partial revert, or one with any other change in it, is an ordinary change. So is
-    the revert of a revert: it lands the first change again, which needs its lines."""
-    want = diff_id(a, b)
+    revert of a change that broke production and tell the owners after, so it needs no
+    line. Not for a change to OWNERS.md or .github/, which guard the check itself. A
+    partial revert, one with any other change, and the revert of a revert (which lands
+    the first change again) are ordinary changes."""
+    if any(GUARDED.match(f) for f in changed_files(a, b)):
+        return None
+    want = diff_hash(a, b)
     if not want:
         return None
     for r in git("rev-list", "--first-parent", f"--max-count={REVERT_DEPTH}", base).split():
         parent = resolve(f"{r}^1")
-        if parent and diff_id(r, parent) == want:
+        if parent and diff_hash(r, parent) == want:
             return None if revert_of(parent, parent, r) else r
     return None
 
@@ -229,14 +250,14 @@ def revert_of(base: str, a: str, b: str) -> str | None:
 
 @dataclass
 class Verdict:
-    required: dict[str, list[str]]  # seat -> its changed files at the head
+    required: dict[str, list[str]]  # seat -> its changed files
     agreed: dict[str, str]  # seat -> the commit of its line that holds
     stale: dict[str, list[str]]  # seat -> commits of lines that no longer hold
-    revert_of: str = ""  # the commit this change exactly undoes (part 5), which needs no line
+    revert_of: str = ""  # the commit this change exactly undoes (part 5): no line needed
 
     @property
     def missing(self) -> list[str]:
-        return sorted(s for s in self.required if s not in self.agreed)
+        return [] if self.revert_of else sorted(s for s in self.required if s not in self.agreed)
 
 
 def owners_map(table: Table, files: list[str], table_seats: set[str]) -> dict[str, list[str]]:
@@ -251,38 +272,52 @@ def owners_map(table: Table, files: list[str], table_seats: set[str]) -> dict[st
 
 
 def agreement_lines(texts: list[str], seats: list[str]) -> dict[str, list[str]]:
+    """Lines on their own, outside HTML comments and fenced code."""
     lines: dict[str, list[str]] = {}
     for text in texts:
-        for line in (text or "").splitlines():
-            m = LINE.match(line)
+        fenced = False
+        for line in re.sub(r"<!--.*?(-->|$)", "", text or "", flags=re.S).splitlines():
+            if line.lstrip().startswith(("```", "~~~")):
+                fenced = not fenced
+                continue
+            m = None if fenced else LINE.match(line)
             if m and m.group("seat").strip() in seats:
                 lines.setdefault(m.group("seat").strip(), []).append(m.group("sha"))
     return lines
 
 
-def check(base: str, head: str, texts: list[str], table_text: str, table_diff: str) -> Verdict:
+def signed_texts(table: Table, items: list[tuple[str, str]]) -> list[str]:
+    """The bodies of (login, body) pairs written by a signer named in the table."""
+    return [body for login, body in items if login in table.signers]
+
+
+def check(base: str, head: str, items: list[tuple[str, str]], table_text: str, table_diff: str) -> Verdict:
     table = parse_table(table_text)
     table_seats = seats_in_changed_rows(table_diff, table.seats)
-    required = owners_map(table, changed_files(base, head), table_seats)
-    lines = agreement_lines(texts, table.seats)
+    mb = merge_base(base, head)
+    required = owners_map(table, changed_files(mb, head), table_seats)
+    lines = agreement_lines(signed_texts(table, items), table.seats)
     agreed: dict[str, str] = {}
     stale: dict[str, list[str]] = {}
     for seat, files in sorted(required.items()):
-        want = seat_patch_id(base, head, files)
+        want = seat_hash(base, head, files)
         for sha in lines.get(seat, []):
             commit = resolve(sha)
             if commit is None:
                 stale.setdefault(seat, []).append(sha)
                 continue
-            theirs = owners_map(table, changed_files(base, commit), table_seats).get(seat, [])
-            if seat_patch_id(base, commit, theirs) == want:
+            theirs = owners_map(table, changed_files(merge_base(base, commit), commit), table_seats).get(seat, [])
+            if seat_hash(base, commit, theirs) == want:
                 agreed[seat] = sha
                 break
             stale.setdefault(seat, []).append(sha)
-    return Verdict(required, agreed, stale)
+    v = Verdict(required, agreed, stale)
+    if v.missing:
+        v.revert_of = revert_of(base, mb, head) or ""
+    return v
 
 
-def report(v: Verdict, head: str) -> str:
+def report(v: Verdict, head: str, where: str) -> str:
     out = [f"owner-agreement at {head[:8]}"]
     if v.revert_of:
         out.append(f"A pure revert of {v.revert_of[:8]} (part 5 of the working agreement): no line needed. Tell the owners.")
@@ -295,8 +330,27 @@ def report(v: Verdict, head: str) -> str:
             out.append(f"  ok       {seat} agreed at {v.agreed[seat]} ({shown})")
         else:
             why = f"; lines at {', '.join(v.stale[seat])} no longer hold" if seat in v.stale else ""
-            out.append(f"  MISSING  {seat}: post \"{seat} agreed at {head[:8]}\"{why} ({shown})")
+            out.append(f"  MISSING  {seat}: post \"{seat} agreed at {head[:8]}\" {where}{why} ({shown})")
     return "\n".join(out)
+
+
+def table_at(base: str, head: str) -> tuple[str, str]:
+    """The table to judge by (the base's, or the head's when the head first adds it) and
+    the diff of OWNERS.md the change makes."""
+    text = git("show", f"{base}:{TABLE}", check=False) or git("show", f"{head}:{TABLE}", check=False)
+    return text, git(*DIFF, merge_base(base, head), head, "--", TABLE)
+
+
+def judge(base: str, head: str, items: list[tuple[str, str]], label: str, where: str) -> tuple[int, str, Verdict | None]:
+    """The exit code, the report and the verdict of the change base..head."""
+    table_text, table_diff = table_at(base, head)
+    if not table_text:
+        return 0, f"{label}: {TABLE} is on neither the base nor the head, nothing to check.", None
+    try:
+        v = check(base, head, items, table_text, table_diff)
+    except TableError as e:
+        return EXIT_TABLE, f"{label}: {TABLE} cannot be read: {e}", None
+    return (EXIT_MISSING if v.missing else 0), f"{label} " + report(v, head, where), v
 
 
 # --- GitHub ----------------------------------------------------------------------
@@ -311,8 +365,11 @@ def gh_list(path: str) -> list:
     """Every item of a list endpoint, one page of 100 at a time."""
     items: list = []
     page = 1
+    sep = "&" if "?" in path else "?"
     while True:
-        batch = gh_json(f"{path}?per_page=100&page={page}")
+        batch = gh_json(f"{path}{sep}per_page=100&page={page}")
+        if isinstance(batch, dict):  # endpoints that wrap their list, such as workflow runs
+            batch = next(v for v in batch.values() if isinstance(v, list))
         items.extend(batch)
         if len(batch) < 100:
             return items
@@ -329,51 +386,30 @@ def post_status(repo: str, head: str, state: str, description: str) -> None:
     subprocess.run(args, capture_output=True, text=True, check=True)
 
 
-def fetch_pr(remote: str, number: int, base_ref: str | None = None) -> None:
-    refs = [f"+refs/pull/{number}/head:refs/remotes/{remote}/pr-{number}"]
-    if base_ref:
-        refs.append(f"+refs/heads/{base_ref}:refs/remotes/{remote}/{base_ref}")
+def fetch(remote: str, *refs: str) -> None:
     git("fetch", "--quiet", remote, *refs)
 
 
-def judge(repo: str, pr: dict, base: str) -> tuple[int, str, Verdict | None]:
-    """The exit code, the report and the verdict of one pull request against a base commit."""
-    head_sha = pr["head"]["sha"]
-    if resolve(head_sha) is None:
-        raise RuntimeError(f"head {head_sha} of #{pr['number']} is not in the fetched pull request ref")
-    texts = [pr.get("body") or ""] if pr.get("author_association") in TRUSTED else []
-    texts += [c.get("body") or "" for c in gh_list(f"repos/{repo}/issues/{pr['number']}/comments") if c.get("author_association") in TRUSTED]
-    # The table comes from the base. Only the pull request that first adds it is
-    # checked against its own copy, and that one needs every seat it names.
-    table_text = git("show", f"{base}:{TABLE}", check=False)
-    mb = git("merge-base", base, head_sha).strip()
-    table_diff = git("diff", "--no-renames", mb, head_sha, "--", TABLE)
-    if not table_text:
-        table_text = git("show", f"{head_sha}:{TABLE}", check=False)
-    if not table_text:
-        return 0, f"#{pr['number']}: {TABLE} is on neither the base nor the head, nothing to check.", None
-    reverted = revert_of(base, mb, head_sha)
-    if reverted:
-        v = Verdict({}, {}, {}, reverted)
-        return 0, f"#{pr['number']} " + report(v, head_sha), v
-    try:
-        v = check(base, head_sha, texts, table_text, table_diff)
-    except TableError as e:
-        return EXIT_TABLE, f"#{pr['number']}: {TABLE} cannot be read: {e}", None
-    return (EXIT_MISSING if v.missing else 0), f"#{pr['number']} " + report(v, head_sha), v
+def pr_items(repo: str, pr: dict) -> list[tuple[str, str]]:
+    items = [(pr["user"]["login"], pr.get("body") or "")]
+    items += [(c["user"]["login"], c.get("body") or "") for c in gh_list(f"repos/{repo}/issues/{pr['number']}/comments")]
+    return items
 
 
-def is_ancestor(a: str, b: str) -> bool:
-    return subprocess.run(["git", "merge-base", "--is-ancestor", a, b], capture_output=True).returncode == 0
+def commit_items(repo: str, sha: str) -> list[tuple[str, str]]:
+    return [(c["user"]["login"], c.get("body") or "") for c in gh_list(f"repos/{repo}/commits/{sha}/comments")]
+
+
+# --- the deploy step ---------------------------------------------------------------
 
 
 def last_checked(repo: str, target: str, workflow: str) -> str | None:
     """The newest commit, an ancestor of the target, whose deploy run passed this step.
 
-    A run that skipped its deploy (main had moved on) never ran the step, so its commit
-    does not count: the commits after the last one checked are all checked now."""
-    runs = gh_json(f"repos/{repo}/actions/workflows/{workflow}/runs?per_page=30")["workflow_runs"]
-    for run in runs:
+    Every run is read, newest first. A run that skipped the step (main had moved on, or
+    an earlier step failed) does not count, so the commits after the last one checked
+    are all checked now."""
+    for run in gh_list(f"repos/{repo}/actions/workflows/{workflow}/runs"):
         commit = resolve(run["head_sha"])
         if commit is None or commit == target or not is_ancestor(commit, target):
             continue
@@ -383,73 +419,150 @@ def last_checked(repo: str, target: str, workflow: str) -> str | None:
     return None
 
 
-def deployed(repo: str, target_ref: str, workflow: str | None, remote: str) -> int:
+def table_added(target: str) -> str | None:
+    """The commit on the target's first-parent line that added OWNERS.md."""
+    found = git("log", "--first-parent", "--diff-filter=A", "--format=%H", target, "--", TABLE).split()
+    return found[-1] if found else None
+
+
+def deploy_range(repo: str, target: str, workflow: str | None) -> tuple[str | None, list[str]]:
+    """The last checked commit (or the one that added the table) and the commits to judge,
+    oldest first. When no run ever passed the step, every commit since the table is judged."""
+    since = last_checked(repo, target, workflow) if workflow else None
+    if since:
+        return since, git("rev-list", "--reverse", "--first-parent", f"{since}..{target}").split()
+    added = table_added(target)
+    if not added:
+        return None, []
+    start = resolve(f"{added}^1")
+    rng = f"{start}..{target}" if start else target
+    return added, git("rev-list", "--reverse", "--first-parent", rng).split()
+
+
+def trusted_script(trusted: str, target: str) -> str | None:
+    """The check as of the last trusted commit, when the commits being judged changed it:
+    a change must not judge itself with its own copy of the check."""
+    if not trusted or SCRIPT not in changed_files(trusted, target):
+        return None
+    return git("show", f"{trusted}:{SCRIPT}", check=False) or None
+
+
+def deployed(repo: str, target_ref: str, workflow: str | None, remote: str, argv: list[str]) -> int:
     """The deploy step: every main commit this deploy ships, since the last one checked,
-    came from a pull request whose owning seats agreed. A direct push fails."""
+    came from a pull request whose owning seats agreed, is a pure revert, or carries the
+    owners' lines as comments on the commit itself."""
     target = resolve(target_ref)
     if target is None:
         raise RuntimeError(f"{target_ref} is not a commit")
-    since = last_checked(repo, target, workflow) if workflow else None
-    commits = git("rev-list", "--first-parent", f"{since}..{target}").split() if since else [target]
-    print(f"owner-agreement for the deploy of {target[:8]}: {len(commits)} commit(s) since " + (since[:8] if since else "no checked deploy (only this commit)"))
+    trusted, commits = deploy_range(repo, target, workflow)
+    if not commits:
+        print(f"owner-agreement for the deploy of {target[:8]}: {TABLE} is not on main, nothing to check.")
+        return 0
+    if not os.environ.get("OWNER_AGREEMENT_TRUSTED"):
+        older = trusted_script(trusted, target)
+        if older:
+            print(f"The commits being judged change the check, so it runs as of {trusted[:8]}.")
+            with tempfile.NamedTemporaryFile("w", suffix=".py", delete=False) as f:
+                f.write(older)
+            try:
+                env = dict(os.environ, OWNER_AGREEMENT_TRUSTED="1")
+                return subprocess.run([sys.executable, "-I", f.name, *argv], env=env).returncode
+            finally:
+                os.unlink(f.name)
+    print(f"owner-agreement for the deploy of {target[:8]}: {len(commits)} commit(s) since {trusted[:8]}")
     worst = 0
     for c in commits:
         parent = resolve(f"{c}^1")
-        if parent is None or not (git("show", f"{parent}:{TABLE}", check=False) or git("show", f"{c}:{TABLE}", check=False)):
-            print(f"{c[:8]}: before {TABLE}, nothing to check.")
-            continue
-        reverted = revert_of(parent, parent, c)
-        if reverted:
-            print(f"{c[:8]}: a pure revert of {reverted[:8]} (part 5 of the working agreement), shipped without lines. Tell the owners.")
+        if parent is None:
             continue
         prs = [p for p in gh_json(f"repos/{repo}/commits/{c}/pulls") if p.get("merge_commit_sha") == c]
-        if not prs:
-            print(f"{c[:8]}: no pull request was merged as this commit, so no seat could agree to it. Refused.")
-            worst = worst or EXIT_MISSING
-            continue
-        pr = gh_json(f"repos/{repo}/pulls/{prs[0]['number']}")
-        fetch_pr(remote, pr["number"])
-        code, text, _ = judge(repo, pr, parent)
+        code, text = EXIT_MISSING, ""
+        if prs:
+            pr = gh_json(f"repos/{repo}/pulls/{prs[0]['number']}")
+            fetch(remote, f"+refs/pull/{pr['number']}/head:refs/remotes/{remote}/pr-{pr['number']}")
+            code, text, _ = judge(parent, pr["head"]["sha"], pr_items(repo, pr), f"#{pr['number']}", "on the pull request")
+        if code:
+            # No pull request, or its lines do not hold: the commit's own comments, or a pure revert.
+            code2, text2, _ = judge(parent, c, commit_items(repo, c), f"commit {c[:8]}", f"as a comment on commit {c[:8]}")
+            if code2 == 0 or not prs:
+                code, text = code2, (text + "\n" if text else "") + text2
         print(f"{c[:8]}: {text}")
         worst = worst or code
     if worst:
-        print("Refused. A missing line can still be posted on the merged pull request; then run the deploy again.")
+        print("Refused. Post the missing lines where named above, then run the deploy again.")
     return worst
+
+
+# --- the table lint ----------------------------------------------------------------
+
+
+def lint(base: str | None) -> int:
+    """The table in the working tree parses, and every pattern it adds or changes against
+    the base matches a tracked file. A pattern the base already had that no longer matches
+    (its file moved or was deleted) is a warning, so a deletion cannot stop the deploys."""
+    try:
+        with open(TABLE, encoding="utf-8") as f:
+            table = parse_table(f.read())
+    except (OSError, TableError) as e:
+        print(f"{TABLE}: {e}")
+        return EXIT_TABLE
+    old: set[str] = set()
+    if base and resolve(base):
+        try:
+            old = {p for p, _ in parse_table(git("show", f"{base}:{TABLE}", check=False)).patterns()}
+        except TableError:
+            old = set()
+    files = git_z("ls-files")
+    bad = 0
+    for p, rx in table.patterns():
+        if any(rx.fullmatch(f) for f in files):
+            continue
+        if p in old:
+            print(f"::warning::{TABLE}: `{p}` no longer matches a tracked file. Update its row.")
+        else:
+            print(f"{TABLE}: `{p}` matches no tracked file")
+            bad += 1
+    if bad:
+        return EXIT_TABLE
+    print(f"{TABLE}: {len(table.rows)} rows, {len(table.patterns())} patterns, signers {', '.join(table.signers)}")
+    return 0
 
 
 def main(argv: list[str]) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--pr", type=int)
-    ap.add_argument("--deployed", metavar="COMMIT", help="check every main commit a deploy of COMMIT ships (the deploy step)")
+    ap.add_argument("--deployed", metavar="COMMIT", help="judge every main commit a deploy of COMMIT ships (the deploy step)")
     ap.add_argument("--workflow", help="with --deployed: the deploy workflow file, to find the last commit it checked")
     ap.add_argument("--lint", action="store_true", help="check the table in the working tree and exit (CI)")
+    ap.add_argument("--base", help="with --lint: the commit whose table the working tree's is compared with")
     ap.add_argument("--repo", default=os.environ.get("GITHUB_REPOSITORY"))
     ap.add_argument("--remote", default="origin")
     ap.add_argument("--post-status", action="store_true", help="post the owner-agreement commit status on the head")
     a = ap.parse_args(argv)
     if a.lint:
-        return lint()
+        return lint(a.base)
     if not a.repo:
         a.repo = subprocess.run(["gh", "repo", "view", "--json", "nameWithOwner", "--jq", ".nameWithOwner"], capture_output=True, text=True, check=True).stdout.strip()
     if a.deployed:
-        return deployed(a.repo, a.deployed, a.workflow, a.remote)
+        return deployed(a.repo, a.deployed, a.workflow, a.remote, argv)
     if a.pr is None:
         ap.error("--pr, --deployed or --lint is required")
     pr = gh_json(f"repos/{a.repo}/pulls/{a.pr}")
-    base_ref = pr["base"]["ref"]
-    fetch_pr(a.remote, a.pr, base_ref)
-    code, text, v = judge(a.repo, pr, f"refs/remotes/{a.remote}/{base_ref}")
+    base_ref, head = pr["base"]["ref"], pr["head"]["sha"]
+    fetch(a.remote, f"+refs/heads/{base_ref}:refs/remotes/{a.remote}/{base_ref}", f"+refs/pull/{a.pr}/head:refs/remotes/{a.remote}/pr-{a.pr}")
+    if resolve(head) is None:
+        raise RuntimeError(f"head {head} is not in the fetched pull request ref")
+    code, text, v = judge(f"refs/remotes/{a.remote}/{base_ref}", head, pr_items(a.repo, pr), f"#{a.pr}", "on the pull request")
     print(text)
     if a.post_status:
-        head = pr["head"]["sha"]
         if code == EXIT_TABLE:
             post_status(a.repo, head, "error", text.split(": ", 1)[-1])
-        elif v is not None and v.missing:
-            post_status(a.repo, head, "failure", "Waiting for: " + ", ".join(v.missing))
         elif v is None:
             post_status(a.repo, head, "success", f"No {TABLE} yet")
         elif v.revert_of:
             post_status(a.repo, head, "success", f"Pure revert of {v.revert_of[:8]}: tell the owners")
+        elif v.missing:
+            post_status(a.repo, head, "failure", "Waiting for: " + ", ".join(v.missing))
         else:
             post_status(a.repo, head, "success", "Every owning seat agreed" if v.required else "No owned path changed")
     return code

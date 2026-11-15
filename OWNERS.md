@@ -2,25 +2,35 @@
 
 Which seats must agree before a change to each path merges. This table is the rule of part 3 of the working agreement between seats. The `owner-agreement` check reads it from `main`, so a pull request is checked against the table it started from.
 
-A pull request that changes a path needs one line from every seat that owns it, in the pull request body or a comment:
+A change that touches a path needs one line from every seat that owns it:
 
     <Seat> agreed at <head commit>
 
-The author's own seat posts its line too, after its fresh reviewer has passed the change. Only lines written by an owner, member or collaborator of the repository count. A line holds while the diff of that seat's paths against `main` is unchanged. A later push that leaves those paths alone keeps the line, and one that touches them needs a new line. Every row that matches a path applies, so where rows overlap, every listed seat agrees. A path that no row names belongs to the default owner. A change to this file needs the chief of staff and every seat named in a row it adds or removes.
+The line goes in the pull request body or a comment. A commit that reaches `main` without a pull request needs its lines as comments on that commit. The author's own seat posts its line too, after its fresh reviewer has passed the change.
 
-In a pattern, `dir/` is everything under `dir`, `*` matches inside one path segment, `**` across segments, and any other pattern is one file. Owners are seat names, not GitHub accounts, because every seat acts as the same GitHub user.
+A line counts only when it stands alone on its own line, outside quotes, lists, code and HTML comments, and was written by a GitHub account listed under Signers. Anyone with write access can edit a signer's text, and GitHub does not record who did, so the check stops a seat from forgetting. It cannot stop a forged line.
 
-The check matches paths, not content. A migration that writes `token_ledger`, `token_expirations` or a `stripe_` table also needs Revenue and legal: its author asks for the line.
+A line holds while the diff of that seat's paths against `main` stays the same byte for byte, whitespace included. Only its position in the file may change. A later push that leaves those paths alone keeps the line, and one that touches them needs a new line. Every row that matches a path applies, so where rows overlap, every listed seat agrees. A path that no row names belongs to the default owner. A change to this file needs the chief of staff and every seat named in a row it adds or removes.
 
-The check posts the commit status `owner-agreement` on every pull request. The deploy step of `deploy-site.yml` runs it on every main commit it ships and refuses a commit whose pull request lacks a line. A line posted on the merged pull request afterwards still counts, so the deploy can then be run again.
+In a pattern, `dir/` is everything under `dir`, `*` matches inside one path segment, `**` across any number of segments including none, and any other pattern is one file. Owners are seat names, not GitHub accounts, because every seat acts as the same GitHub user.
 
-A pure revert needs no line (part 5 of the working agreement): a change whose diff is exactly the inverse of one of the last 100 commits on `main`. The seat that reverts tells the owners. A partial revert, a revert with any other change in it, and the revert of a revert (which lands the first change again) need their lines.
+The check posts the commit status `owner-agreement` on every pull request. The deploy step of `deploy-site.yml` runs the check on every main commit since the last deploy whose check passed, and ships nothing when one fails. A line posted afterwards, on the merged pull request or on the commit, still counts, so the deploy can then be run again. When the commits being shipped change the check's script, the deploy runs the script as it was at the last checked commit, so a change is never judged by its own copy. A change to a workflow file is not covered this way, because GitHub runs the workflow as committed. The `.github/` row is there for that reason.
+
+A pure revert needs no line (part 5 of the working agreement): a change whose diff is exactly the inverse of one of the last 100 commits on `main`. The seat that reverts tells the owners. A partial revert, a revert with any other change in it, the revert of a revert (which lands the first change again) and any revert that touches this file or `.github/` need their lines.
+
+CI checks this table on every push. It must parse, and a pattern a change adds must match a tracked file. A pattern whose files were later moved or deleted gives a warning instead, so a deletion cannot stop the deploys. Update its row.
 
 Local merge gate, from a clone with `gh` signed in: `python3 .github/scripts/owner_agreement.py --pr <number>`. It exits 3 and names the missing seats, or 2 when the table cannot be read.
 
 ## Seats
 
 Chief of staff, Platform, Engines, Map, Revenue and legal, Product and marketing, IT and security.
+
+## Signers
+
+`gbarbalinardo`
+
+The GitHub accounts whose lines count. They are read from `main` like the rest of this table, so a change cannot add a signer for itself.
 
 ## Table
 
