@@ -50,7 +50,8 @@ DEFAULT_MARK = "(any other path)"
 # The row naming the seats that must agree to any change of the Signers list.
 SIGNERS_MARK = "(the Signers list)"
 # A line is the whole line: a seat name, "agreed at", a commit, and at most a full stop.
-LINE = re.compile(r"^\s*(?P<seat>[A-Za-z][A-Za-z\- ]*?) agreed at (?P<sha>[0-9a-f]{7,40})\.?\s*$")
+# Four spaces of indent or more make a markdown code block, so at most three are allowed.
+LINE = re.compile(r"^ {0,3}(?P<seat>[A-Za-z][A-Za-z\- ]*?) agreed at (?P<sha>[0-9a-f]{7,40})\.?\s*$")
 # Paths no pure revert may touch without lines: the table, and the workflows and scripts
 # that run the check.
 GUARDED = re.compile(r"^(OWNERS\.md$|\.github/)")
@@ -120,6 +121,8 @@ def split_list(cell: str) -> list[str]:
 
 
 def section_list(lines: list[str], heading: str) -> list[str]:
+    if sum(1 for line in lines if line.strip() == heading) > 1:
+        raise TableError(f"OWNERS.md has more than one '{heading}' section")
     for i, line in enumerate(lines):
         if line.strip() == heading:
             for nxt in lines[i + 1 :]:
@@ -149,11 +152,13 @@ def parse_table(text: str) -> Table:
         unknown = [s for s in row_seats if s not in seats]
         if unknown or not row_seats:
             raise TableError(f"row {cells[0]!r} names unknown seats {unknown or 'none'}")
-        if DEFAULT_MARK in cells[0]:
-            default = row_seats
-            continue
-        if SIGNERS_MARK in cells[0]:
-            signer_owners = row_seats
+        if cells[0] in (DEFAULT_MARK, SIGNERS_MARK):
+            if (default if cells[0] == DEFAULT_MARK else signer_owners):
+                raise TableError(f"OWNERS.md has more than one '{cells[0]}' row")
+            if cells[0] == DEFAULT_MARK:
+                default = row_seats
+            else:
+                signer_owners = row_seats
             continue
         patterns = re.findall(r"`([^`]+)`", cells[0])
         if not patterns:
@@ -216,17 +221,20 @@ HUNK_HEADER = re.compile(rb"^@@ [^\n]*", re.M)
 
 
 @functools.lru_cache(maxsize=4096)
-def diff_hash(a: str, b: str, files: tuple[str, ...] | None = None) -> str:
+def diff_hash(a: str, b: str, files: tuple[str, ...] | None = None, exact: bool = False) -> str:
     """A hash of the diff a..b (over these files, or all), byte for byte apart from blob
     ids and hunk headers, so the same change on a moved base keeps its hash while
-    any change to its text, whitespace included, does not. "" when nothing changed."""
+    any change to its text, whitespace included, does not. With exact, the hunk headers
+    stay, so the same lines at another place in the file differ. "" when nothing changed."""
     if files == ():
         return ""
     args = [*GIT, *DIFF, a, b] + (["--", *files] if files else [])
     out = subprocess.run(args, capture_output=True, check=True).stdout
     if not out:
         return ""
-    out = HUNK_HEADER.sub(b"@@", INDEX_LINE.sub(b"", out))
+    out = INDEX_LINE.sub(b"", out)
+    if not exact:
+        out = HUNK_HEADER.sub(b"@@", out)
     return hashlib.sha256(out).hexdigest()
 
 
@@ -244,12 +252,12 @@ def revert_of(base: str, a: str, b: str) -> str | None:
     the first change again) are ordinary changes."""
     if any(GUARDED.match(f) for f in changed_files(a, b)):
         return None
-    want = diff_hash(a, b)
+    want = diff_hash(a, b, exact=True)
     if not want:
         return None
     for r in git("rev-list", "--first-parent", f"--max-count={REVERT_DEPTH}", base).split():
         parent = resolve(f"{r}^1")
-        if parent and diff_hash(r, parent) == want:
+        if parent and diff_hash(r, parent, exact=True) == want:
             return None if revert_of(parent, parent, r) else r
     return None
 
@@ -281,11 +289,12 @@ def owners_map(table: Table, files: list[str], table_seats: set[str]) -> dict[st
 
 
 def agreement_lines(texts: list[str], seats: list[str]) -> dict[str, list[str]]:
-    """Lines on their own, outside HTML comments and fenced code."""
+    """Lines on their own, outside HTML comments, <pre> blocks, fenced and indented code."""
     lines: dict[str, list[str]] = {}
     for text in texts:
         fenced = False
-        for line in re.sub(r"<!--.*?(-->|$)", "", text or "", flags=re.S).splitlines():
+        text = re.sub(r"<!--.*?(-->|$)|<pre\b.*?(</pre>|$)", "", text or "", flags=re.S | re.I)
+        for line in text.splitlines():
             if line.lstrip().startswith(("```", "~~~")):
                 fenced = not fenced
                 continue
@@ -458,12 +467,23 @@ def deploy_range(repo: str, target: str, workflow: str | None) -> tuple[str | No
     return added, git("rev-list", "--reverse", "--first-parent", rng).split()
 
 
+class Untrusted(Exception):
+    """The commits being judged changed .github/ and the trusted commit has no check at
+    this script's path, so no trusted copy can judge them."""
+
+
 def trusted_script(trusted: str, target: str) -> str | None:
-    """The check as of the last trusted commit, when the commits being judged changed it:
-    a change must not judge itself with its own copy of the check."""
-    if not trusted or SCRIPT not in changed_files(trusted, target):
+    """The check as of the last trusted commit, when the commits being judged changed
+    anything under .github/, so a weakened check does not judge itself. A check moved to
+    a new path has no trusted copy, and the deploy refuses: move it in two steps, a copy
+    that deploys first, then the switch. A deliberate change can still edit the workflow,
+    which the `.github/` row guards."""
+    if not trusted or not any(f.startswith(".github/") for f in changed_files(trusted, target)):
         return None
-    return git("show", f"{trusted}:{SCRIPT}", check=False) or None
+    text = git("show", f"{trusted}:{SCRIPT}", check=False)
+    if not text:
+        raise Untrusted(f"{trusted[:8]} has no {SCRIPT}")
+    return text
 
 
 def deployed(repo: str, target_ref: str, workflow: str | None, remote: str, argv: list[str]) -> int:
@@ -478,8 +498,12 @@ def deployed(repo: str, target_ref: str, workflow: str | None, remote: str, argv
         print(f"owner-agreement for the deploy of {target[:8]}: {TABLE} is not on main, nothing to check.")
         return 0
     if not os.environ.get("OWNER_AGREEMENT_TRUSTED"):
-        older = trusted_script(trusted, target)
-        if older:
+        try:
+            older = trusted_script(trusted, target)
+        except Untrusted as e:
+            print(f"Refused. The commits being shipped change .github/, and {e}, so no trusted copy of the check can judge them.")
+            return EXIT_MISSING
+        if older and older != open(__file__, encoding="utf-8").read():
             print(f"The commits being judged change the check, so it runs as of {trusted[:8]}.")
             with tempfile.NamedTemporaryFile("w", suffix=".py", delete=False) as f:
                 f.write(older)

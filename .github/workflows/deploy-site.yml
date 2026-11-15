@@ -15,7 +15,17 @@ concurrency:
 
 jobs:
   deploy:
-    if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push'
+    # A workflow_run's github.sha is the main tip when ci finished. A ci run that main
+    # had already moved past is skipped here, so every run of this job checks out the
+    # commit GitHub records as its head_sha, which the owner-agreement step reads back
+    # to find the last commit it judged. A re-run keeps its first attempt's github.sha,
+    # so it is skipped too.
+    if: >-
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.event == 'push' &&
+      github.event.workflow_run.head_repository.full_name == github.repository &&
+      github.event.workflow_run.head_sha == github.sha &&
+      github.run_attempt == 1
     # Checkout, and the owner-agreement step's reads of pull requests, their
     # comments and this workflow's earlier runs.
     permissions:
@@ -23,9 +33,10 @@ jobs:
       pull-requests: read
       issues: read
       actions: read
-    # The Cloudflare token belongs in this environment, whose deployment branches are
-    # main only, so a workflow on any other branch cannot read it. Until it moves there
-    # from the repository secrets, the job reads the repository secret as before.
+    # The Cloudflare token is to move into this environment, with deployment branches
+    # limited to main, so a workflow on another branch cannot read it. GitHub creates
+    # the environment on first use with no branch rule. Until IT and security sets the
+    # rule and moves the secret, the job reads the repository secret as before.
     environment: production
     runs-on: ubuntu-latest
     env:
@@ -36,24 +47,40 @@ jobs:
         with:
           ref: ${{ github.event.workflow_run.head_sha }}
           fetch-depth: 0
+      # Main as it is now: it may have moved while this job queued. Only the tip ships.
+      - id: tip
+        run: |
+          git fetch -q origin main
+          head=$(git rev-parse HEAD)
+          tip=$(git rev-parse FETCH_HEAD)
+          if [ "$head" != "$tip" ]; then
+            echo "::notice::deploy-site: skipped, $head is no longer the main tip ($tip); only the tip ships"
+          else
+            echo "ship=true" >> "$GITHUB_OUTPUT"
+          fi
       # Part 9 of the working agreement between seats: every main commit this deploy
       # ships, since the last one this step passed, carries the lines of its owning
       # seats (OWNERS.md), on its pull request or on the commit, or is a pure revert.
       # It refuses before anything ships.
-      - name: owner-agreement
+      - if: steps.tip.outputs.ship == 'true'
+        name: owner-agreement
         env:
           GH_TOKEN: ${{ github.token }}
         run: python3 .github/scripts/owner_agreement.py --deployed HEAD --workflow deploy-site.yml
-      - uses: actions/setup-node@v4
+      - if: steps.tip.outputs.ship == 'true'
+        uses: actions/setup-node@v4
         with:
           node-version: "22"
           cache: npm
           cache-dependency-path: infra/site/package-lock.json
-      - name: Install
+      - if: steps.tip.outputs.ship == 'true'
+        name: Install
         working-directory: infra/site
         run: npm ci
-      - name: Deploy
+      - if: steps.tip.outputs.ship == 'true'
+        name: Deploy
         working-directory: infra/site
         run: npx wrangler deploy
-      - name: Check
+      - if: steps.tip.outputs.ship == 'true'
+        name: Check
         run: curl -fsS https://openmaterials.ai/healthz

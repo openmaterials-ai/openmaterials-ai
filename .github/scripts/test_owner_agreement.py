@@ -81,9 +81,18 @@ class TableTest(unittest.TestCase):
             TABLE.replace("## Seats", "## People"),
             TABLE.replace("## Signers", "## Writers"),
             TABLE.replace("| (the Signers list) | Chief of staff, Engines | Who may sign |\n", ""),
+            TABLE + "| (the Signers list) | Chief of staff | A second Signers row |\n",
+            TABLE + "| (any other path) | Engines | A second default |\n",
+            TABLE + "\n## Signers\n\nsomeone-else\n",
+            TABLE.replace("## Seats", "## Seats\n\nPlatform.\n\n## Seats"),
         ):
             with self.assertRaises(oa.TableError):
                 oa.parse_table(broken)
+
+    def test_a_marker_inside_a_path_cell_is_a_path_row(self):
+        t = oa.parse_table(TABLE.replace("| `docs/*.md` | Platform |", "| `docs/*.md` (any other path) | Platform |"))
+        self.assertEqual(t.default, ["Platform"])
+        self.assertIn("docs/*.md", [p for p, _ in t.patterns()])
 
     def test_only_whole_lines_count(self):
         texts = [
@@ -97,6 +106,8 @@ class TableTest(unittest.TestCase):
             "```\nChief of staff agreed at 6666666\n```",
             "Nobody agreed at 7777777",  # not a seat
             "Chief of staff agreed at ZZZZZZZ",  # not a commit
+            "    Map agreed at 8888888",  # an indented code block
+            "<pre>\nMap agreed at 9999999\n</pre>",
         ]
         lines = oa.agreement_lines(texts, self.t.seats + ["Map"])
         self.assertEqual(lines, {"Platform": ["abc1234"], "Engines": ["0123456789abcdef"]})
@@ -281,6 +292,18 @@ class RevertTest(RepoCase):
         self.assertEqual(self.verdict([]).missing, ["Engines"])
         self.assertTrue(removed)
 
+    def test_the_same_lines_at_another_place_are_not_a_revert(self):
+        block = "a\nb\nc\n{x}d\ne\nf\n"
+        filler = "".join(f"line {i}\n" for i in range(10))
+        self.git("checkout", "-q", "main")
+        self.write("engine/job.yml", block.format(x="check\n") + filler + block.format(x=""))
+        self.commit("two jobs")
+        self.land("engine/job.yml", block.format(x="") + filler + block.format(x=""), "drop the check from job a")
+        self.write("engine/job.yml", block.format(x="") + filler + block.format(x="check\n"))
+        self.commit("add the check to job b")
+        self.assertEqual(self.verdict([]).revert_of, "")
+        self.assertEqual(self.verdict([]).missing, ["Engines"])
+
     def test_a_revert_of_a_table_change_needs_its_lines(self):
         change = self.land("OWNERS.md", TABLE.replace("| Engines | Engines |", "| Engines, Revenue and legal | Engines |"), "row")
         self.git("revert", "--no-edit", change)
@@ -429,6 +452,28 @@ class DeployTest(RepoCase):
         self.write("app/main.ts", "unrelated\n")
         later = self.commit("unrelated")
         self.assertIsNone(oa.trusted_script(target, later))
+
+    def test_a_moved_check_has_no_trusted_copy(self):
+        self.git("checkout", "-q", "main")
+        self.write(oa.SCRIPT, "check v1\n")
+        trusted = self.commit("check v1")
+        self.write(".github/scripts/moved.py", "weakened\n")
+        self.git("rm", "-q", oa.SCRIPT)
+        target = self.commit("move the check")
+        saved, oa.SCRIPT = oa.SCRIPT, ".github/scripts/moved.py"  # the moved copy's own constant
+        try:
+            with self.assertRaises(oa.Untrusted):
+                oa.trusted_script(trusted, target)
+        finally:
+            oa.SCRIPT = saved
+
+    def test_any_change_under_github_defers_to_the_trusted_check(self):
+        self.git("checkout", "-q", "main")
+        self.write(oa.SCRIPT, "check v1\n")
+        trusted = self.commit("check v1")
+        self.write(".github/workflows/deploy.yml", "steps: []\n")
+        target = self.commit("workflow edit")
+        self.assertEqual(oa.trusted_script(trusted, target), "check v1\n")
 
 
 class LintTest(RepoCase):
