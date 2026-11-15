@@ -21,11 +21,11 @@ OMAI_IDEAL_GAS_MOLAR_HEAT_CAPACITY_P = SpaceRepresentationSpec(
     space=IDEAL_GAS_MOLAR_HEAT_CAPACITY_P,
     representation_name="openmaterials-ai",
     observable_units={"cp_mol": "J_per_K_per_mol"},
-    code_api={"cp_mol": "omai.molecular.evaluate.cp_table(frequencies_cm, temperatures_K, linear=..., nu0_cm=50.0)"},
+    code_api={"cp_mol": "omai.molecular.evaluate.cp_table(frequencies_cm, temperatures_K, geometry=..., nu0_cm=50.0)"},
     notes=(
         "rrho_ideal_gas_heat_capacity evaluated per temperature: the quantum "
-        "harmonic Cv of each internal mode plus 4R (nonlinear) or 7R/2 "
-        "(linear). Returns the harmonic curve, the qRRHO curve (soft modes "
+        "harmonic Cv of each internal mode plus 5R/2 (atom), 7R/2 (linear) "
+        "or 4R (nonlinear). The geometry is a condition of every value. Returns the harmonic curve, the qRRHO curve (soft modes "
         "interpolated toward R/2 with the rotor cutoff nu0) and the classical "
         "limit. Imaginary modes are refused."
     ),

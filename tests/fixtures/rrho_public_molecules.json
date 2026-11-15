@@ -1,6 +1,7 @@
 {
  "_source": "Gas-phase vibrational fundamentals in cm^-1 from T. Shimanouchi, Tables of Molecular Vibrational Frequencies, Consolidated Volume I, NSRDS-NBS 39 (National Bureau of Standards, 1972), as tabulated in the NIST Chemistry WebBook (SRD 69). H2O: nu1 3657, nu2 1595, nu3 3756. CO2: nu1 1333, nu2 667 (doubly degenerate), nu3 2349.",
- "_generator": "python -I gen_rrho_fixture.py mcg/tools/thermo/rrho.py tests/fixtures/rrho_public_molecules.json (MaterialsCodeGraph rrho.py at commit cef1c837, Linux x86_64). mcg_nonlinear holds that function's output, which treats every molecule as nonlinear (external term 4R), CO2 included.",
+ "_janaf": "Ideal-gas Cp at 1 bar from M. W. Chase Jr., NIST-JANAF Thermochemical Tables, Fourth Edition, J. Phys. Chem. Ref. Data, Monograph 9 (1998): H2O (g) 33.590 J/(K mol) at 298.15 K, CO2 (g) 37.129 at 298.15 K and 54.308 at 1000 K. These include anharmonicity and rotation-vibration coupling, which the RRHO model omits.",
+ "_generator": "platform_nonlinear holds the values of the platform's RRHO function on these inputs, which it evaluated with the nonlinear external term 4R for every molecule, CO2 included.",
  "temperatures_K": [
   100.0,
   200.0,
@@ -12,13 +13,16 @@
  ],
  "molecules": {
   "H2O": {
-   "linear": false,
+   "geometry": "nonlinear",
    "frequencies_cm": [
     3657.0,
     1595.0,
     3756.0
    ],
-   "mcg_nonlinear": {
+   "janaf_cp_J_per_molK": {
+    "298.15": 33.59
+   },
+   "platform_nonlinear": {
     "cp_harmonic_J_per_molK": [
      33.257850945698166,
      33.2692291347424,
@@ -49,14 +53,18 @@
    }
   },
   "CO2": {
-   "linear": true,
+   "geometry": "linear",
    "frequencies_cm": [
     1333.0,
     667.0,
     667.0,
     2349.0
    ],
-   "mcg_nonlinear": {
+   "janaf_cp_J_per_molK": {
+    "298.15": 37.129,
+    "1000.0": 54.308
+   },
+   "platform_nonlinear": {
     "cp_harmonic_J_per_molK": [
      33.36195101455603,
      36.51914232948553,
