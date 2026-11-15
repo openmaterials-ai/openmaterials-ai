@@ -564,6 +564,16 @@ def dimension_IdealGasMolarHeatCapacityP_field_cp_mol : Dimension ISQDimensionBa
   | .current => 0
   | .luminousIntensity => 0
 
+-- IdealGasMolarHeatCapacityP[approximation=qrrho] / cp_mol; uid 4bf0e384a896934c145db0eb34b45bed30190d2d460a0b06d1846720b2d97353
+def dimension_IdealGasMolarHeatCapacityP_approximation_qrrho_field_cp_mol : Dimension ISQDimensionBase := ofFunction fun
+  | .mass => 1
+  | .length => 2
+  | .time => -2
+  | .temperature => -1
+  | .amount => -1
+  | .current => 0
+  | .luminousIntensity => 0
+
 -- InfraredIntensity / ir_int; uid a4d1c8cc29160367d3ce0d6ad27e0c8dde975dee0699116ac0c9981085a6e298
 def dimension_InfraredIntensity_field_ir_int : Dimension ISQDimensionBase := ofFunction fun
   | .mass => 0

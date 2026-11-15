@@ -134,6 +134,10 @@ ALIASES: dict[str, tuple[str, ...]] = {
     "ideal-gas-heat-capacity": (
         "IdealGasMolarHeatCapacityP", "rrho_ideal_gas_heat_capacity",
     ),
+    "qrrho-heat-capacity": (
+        "IdealGasMolarHeatCapacityP[approximation=qrrho]",
+        "rrho_ideal_gas_heat_capacity[approximation=qrrho]",
+    ),
     "rrho-thermochemistry": (
         "IdealGasMolarHeatCapacityP", "MolecularReactionEnthalpy",
         "rrho_ideal_gas_heat_capacity", "compute_molecular_reaction_enthalpy",

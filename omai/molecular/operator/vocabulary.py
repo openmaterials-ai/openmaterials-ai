@@ -26,10 +26,12 @@ register_space_symbols({
     # Gas-phase thermochemistry (2026-11-15). The opaque I^{IR} and
     # \Delta_{r}H functions are applied functions, needing no entry.
     "IdealGasMolarHeatCapacityP": {"cp_mol"},
+    "IdealGasMolarHeatCapacityP[approximation=qrrho]": {"cp_mol"},
     "InfraredIntensity": {"ir_int"},
     "MolecularReactionEnthalpy": {"dh_r"},
 })
 
-# rrho_ideal_gas_heat_capacity's two molecular constants: the external term
-# c_{ext} (4 nonlinear, 7/2 linear) and the internal mode count N_{m}.
-register_formula_constants({"c_{ext}", "N_{m}"})
+# rrho_ideal_gas_heat_capacity's two molecular constants, the external term
+# c_{ext} (5/2 atom, 7/2 linear, 4 nonlinear) and the internal mode count N_{m},
+# and the quasi-RRHO rotor cutoff nu_{0}, a condition of each qRRHO value.
+register_formula_constants({"c_{ext}", "N_{m}", "nu_{0}"})

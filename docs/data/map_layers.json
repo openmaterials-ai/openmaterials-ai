@@ -1876,13 +1876,13 @@
  "counts": {
   "formulas": {
    "local": 56,
-   "none": 52,
+   "none": 53,
    "physlib": 29,
    "stated": 0
   },
   "quantities": {
    "local": 47,
-   "none": 68,
+   "none": 69,
    "physlib": 25,
    "stated": 0
   }
@@ -2409,7 +2409,8 @@
    "bindings": [],
    "inputs": [
     "Structure",
-    "Potential"
+    "Potential",
+    "MolecularFrequency"
    ],
    "outputs": [
     "InfraredIntensity"
@@ -3515,6 +3516,18 @@
    "rung": "none",
    "tier": "Molecular"
   },
+  "rrho_ideal_gas_heat_capacity[approximation=qrrho]": {
+   "bindings": [],
+   "inputs": [
+    "MolecularFrequency",
+    "Temperature"
+   ],
+   "outputs": [
+    "IdealGasMolarHeatCapacityP[approximation=qrrho]"
+   ],
+   "rung": "none",
+   "tier": "Molecular"
+  },
   "run_md": {
    "bindings": [],
    "inputs": [
@@ -4099,6 +4112,12 @@
    "via": "formulas"
   },
   "IdealGasMolarHeatCapacityP": {
+   "bindings": [],
+   "related": [],
+   "rung": "none",
+   "via": null
+  },
+  "IdealGasMolarHeatCapacityP[approximation=qrrho]": {
    "bindings": [],
    "related": [],
    "rung": "none",
@@ -4901,7 +4920,7 @@
    "theorems": 6
   },
   {
-   "formulas": 7,
+   "formulas": 8,
    "name": "Molecular",
    "theorems": 1
   },

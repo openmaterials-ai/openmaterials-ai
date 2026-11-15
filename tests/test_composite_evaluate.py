@@ -126,6 +126,7 @@ def test_registered_as_the_code_openmaterials_ai():
     assert set(entry) == {
         "CureConversion", "GlassTransitionTemperature",
         "IdealGasMolarHeatCapacityP",
+        "IdealGasMolarHeatCapacityP[approximation=qrrho]",
         "ThermalConductivity[effective_medium=nan,orientation=random]",
         "ThermalConductivity[effective_medium=nan,orientation=aligned]"}
     assert entry["ThermalConductivity[effective_medium=nan,orientation=random]"]["api"] == (

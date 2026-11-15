@@ -42,4 +42,6 @@ register_symbol_dimensions({
     "dh_r": ENERGY_PER_MOLE,
     "c_{ext}": DIMENSIONLESS,
     "N_{m}": DIMENSIONLESS,
+    # The quasi-RRHO rotor cutoff, a frequency like the modes it damps.
+    "nu_{0}": FREQUENCY,
 })

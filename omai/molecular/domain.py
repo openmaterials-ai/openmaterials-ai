@@ -11,6 +11,7 @@ SYMBOLS: dict[str, str] = {
     "BondDissociationEnergy": r"E_{BDE}",
     "MolecularFrequency": r"\nu_{\mathrm{mol}}",
     "IdealGasMolarHeatCapacityP": r"C_{p}^{\mathrm{ig}}",
+    "IdealGasMolarHeatCapacityP[approximation=qrrho]": r"C_{p}^{\mathrm{qRRHO}}",
     "InfraredIntensity": r"A_{\mathrm{IR}}",
     "MolecularReactionEnthalpy": r"\Delta_{r} H",
 }

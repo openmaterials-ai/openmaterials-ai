@@ -1,9 +1,9 @@
 {
   "physlib_rev": "9b583cb6ef6e9cc537c4d4b786b508de1abbcf42",
   "lean_toolchain": "leanprover/lean4:v4.35.0",
-  "catalog_nodes": 140,
-  "fields": 142,
-  "encoded_fields": 137,
+  "catalog_nodes": 141,
+  "fields": 143,
+  "encoded_fields": 138,
   "opaque_fields": 5,
   "records": [
     {
@@ -1089,6 +1089,24 @@
         0
       ],
       "declaration": "OMAI.PhyslibBridge.ISQ.dimension_IdealGasMolarHeatCapacityP_field_cp_mol",
+      "status": "encoded"
+    },
+    {
+      "node": "IdealGasMolarHeatCapacityP[approximation=qrrho]",
+      "node_uid": "4bf0e384a896934c145db0eb34b45bed30190d2d460a0b06d1846720b2d97353",
+      "field": "cp_mol",
+      "dimension": "energy_per_temperature_per_mole",
+      "indices": [],
+      "exponents": [
+        1,
+        2,
+        -2,
+        -1,
+        -1,
+        0,
+        0
+      ],
+      "declaration": "OMAI.PhyslibBridge.ISQ.dimension_IdealGasMolarHeatCapacityP_approximation_qrrho_field_cp_mol",
       "status": "encoded"
     },
     {

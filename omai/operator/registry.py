@@ -381,4 +381,12 @@ LABEL_KEYS: dict[str, frozenset[str]] = {
     # label (alongside effective_medium=nan). Collision-free against every other
     # label key: no key or value overlaps.
     "orientation": frozenset({"random", "aligned"}),
+    # The soft-mode treatment of an ideal-gas heat capacity: qrrho (the
+    # quasi-RRHO interpolation of each mode toward the free-rotor R/2). Carried
+    # by IdealGasMolarHeatCapacityP[approximation=qrrho], which shares the
+    # ideal_gas_molar_heat_capacity_p tag and dimension with the harmonic node
+    # and is kept a distinct node only by this label, as the BTE solutions are
+    # by bte_solver. The harmonic node carries no label. A fresh key, so no
+    # value collides with another key's.
+    "approximation": frozenset({"qrrho"}),
 }

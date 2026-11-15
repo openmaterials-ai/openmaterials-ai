@@ -857,7 +857,17 @@
    }
   ],
   "InfraredIntensity": [],
-  "MolecularReactionEnthalpy": []
+  "MolecularReactionEnthalpy": [],
+  "IdealGasMolarHeatCapacityP[approximation=qrrho]": [
+   {
+    "name": "CanonicalEnsemble.heatCapacity",
+    "module": "Physlib.StatisticalMechanics.CanonicalEnsemble.Lemmas",
+    "kind": "def",
+    "informal": "Heat capacity of a canonical ensemble as the temperature derivative of the mean energy. The quasi-RRHO Cp of one molecule is that derivative of an enthalpy whose soft modes are interpolated toward a free rotor with a temperature-independent weight, plus R for Cp - Cv.",
+    "source_url": "https://github.com/leanprover-community/physlib/blob/9b583cb6ef6e9cc537c4d4b786b508de1abbcf42/Physlib/StatisticalMechanics/CanonicalEnsemble/Lemmas.lean#L417",
+    "confidence": "related"
+   }
+  ]
  },
  "needs_upstream": {
   "ActivationEnergy": "An Arrhenius rate law with the activation energy E_a in the Boltzmann factor exp(-E_a / (kB T)), in Thermodynamics next to Temperature.β. The Lean bridge formalizes it locally in OMAIMaterialsTransport, the upstreaming candidate.",

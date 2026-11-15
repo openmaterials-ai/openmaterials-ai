@@ -11,7 +11,7 @@ requested temperature.
   --------------------------  --------------------------------------------  ----------------
   MolecularFrequency          g98.out "Frequencies --" lines                cm^-1
   InfraredIntensity           g98.out "IR Inten    --" lines                km/mol
-  MolecularReactionEnthalpy   THERMO "TOTAL ENTHALPY" per species, summed   Eh -> kJ/mol
+  MolecularReactionEnthalpy   "TOTAL ENERGY" + RRHO terms per species       Eh -> kJ/mol
 
 IdealGasMolarHeatCapacityP is not xtb's: the Cp(T) curves a record carries are
 computed from these modes by the commons' own evaluator
@@ -72,15 +72,19 @@ XTB_MOLECULAR_REACTION_ENTHALPY = SpaceRepresentationSpec(
     space=MOLECULAR_REACTION_ENTHALPY,
     representation_name="xtb",
     observable_units={"dh_r": "kJ_per_mol"},
-    code_api={"dh_r": "xtb <geom> --ohess tight --gfn 2 --temp 298.15 per species: THERMO 'TOTAL ENTHALPY' (Eh); dH = sum(s_i H_i) * 2625.4996394799 kJ/mol"},
+    code_api={"dh_r": "xtb <geom> --ohess tight --gfn 2 per species: 'TOTAL ENERGY' (Eh) plus the RRHO enthalpy of the g98.out modes; dH = sum(s_i H_i), 1 Eh = 2625.4996394799 kJ/mol"},
     notes=(
-        "Each species is optimized and its Hessian built in one --ohess run; "
-        "the THERMO block's TOTAL ENTHALPY is the electronic energy plus the "
-        "zero-point and thermal enthalpy (RRHO, xtb's rotor treatment of soft "
-        "modes) at 298.15 K, in Hartree. The reaction enthalpy is the signed "
-        "stoichiometric sum, converted at 1 Eh = 2625.4996394799 kJ/mol "
-        "(CODATA 2018). The reaction must balance in atoms and charge. Single "
-        "conformer per species and gas phase, both conditions of a value."
+        "Each species is optimized and its Hessian built in one --ohess run. "
+        "H_i is its electronic TOTAL ENERGY plus the zero-point and thermal "
+        "enthalpy of its g98.out modes and the external term c_H RT, the terms "
+        "of compute_molecular_reaction_enthalpy, at 298.15 K unless a "
+        "condition states another. The THERMO block's TOTAL ENTHALPY is not "
+        "used: xtb inverts small imaginary modes there, where this node "
+        "refuses a species with any mode at or below 0 cm^-1. The reaction "
+        "enthalpy is the signed stoichiometric sum, converted at 1 Eh = "
+        "2625.4996394799 kJ/mol (CODATA 2018). The reaction must balance in "
+        "atoms and charge. Single conformer per species and gas phase, both "
+        "conditions of a value."
     ),
 )
 
@@ -102,12 +106,12 @@ XTB_COMPUTE_INFRARED_INTENSITIES = OperatorRepresentationSpec(
     operator=compute_infrared_intensities,
     representation_name="xtb",
     discretization_choices=_XTB_METHOD_CHOICES,
-    notes="Dipole derivatives along the normal modes of the same --ohess run.",
+    notes="Dipole derivatives along the normal modes of the same --ohess run, so each intensity sits on its MolecularFrequency mode.",
 )
 
 XTB_COMPUTE_MOLECULAR_REACTION_ENTHALPY = OperatorRepresentationSpec(
     operator=compute_molecular_reaction_enthalpy,
     representation_name="xtb",
     discretization_choices=_XTB_METHOD_CHOICES,
-    notes="One --ohess run per species; the stoichiometric sum of the THERMO enthalpies.",
+    notes="One --ohess run per species; the stoichiometric sum of the RRHO enthalpies built from its energy and modes.",
 )

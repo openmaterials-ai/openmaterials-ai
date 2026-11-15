@@ -10,7 +10,10 @@ exactly like the electronic-transport, thermochemistry, and quasi-harmonic edges
   compute_bond_dissociation    : (TotalEnergy, Structure) -> BondDissociationEnergy
   compute_molecular_frequencies: (Structure, Potential) -> MolecularFrequency
   rrho_ideal_gas_heat_capacity : (MolecularFrequency, Temperature) -> IdealGasMolarHeatCapacityP
-  compute_infrared_intensities : (Structure, Potential) -> InfraredIntensity
+  rrho_ideal_gas_heat_capacity[approximation=qrrho]
+                                : (MolecularFrequency, Temperature)
+                                  -> IdealGasMolarHeatCapacityP[approximation=qrrho]
+  compute_infrared_intensities : (Structure, Potential, MolecularFrequency) -> InfraredIntensity
   compute_molecular_reaction_enthalpy: (TotalEnergy, MolecularFrequency,
                                  Temperature) -> MolecularReactionEnthalpy
 
@@ -44,6 +47,7 @@ from omai.molecular.operator.nodes import (
     BOND_DISSOCIATION_ENERGY,
     HOMO_LUMO_GAP,
     IDEAL_GAS_MOLAR_HEAT_CAPACITY_P,
+    IDEAL_GAS_MOLAR_HEAT_CAPACITY_P_QRRHO,
     INFRARED_INTENSITY,
     MOLECULAR_FREQUENCY,
     MOLECULAR_REACTION_ENTHALPY,
@@ -84,9 +88,12 @@ _T = sp.Symbol("T")
 _kB = sp.Symbol("k_B")
 _hbar = sp.Symbol(r"\hbar")
 _N_A = sp.Symbol("N_A")
-_c_ext = sp.Symbol("c_{ext}")          # 4 (nonlinear) or 7/2 (linear)
+_c_ext = sp.Symbol("c_{ext}")          # 5/2 (atom), 7/2 (linear) or 4 (nonlinear)
 _N_m = sp.Symbol("N_{m}", positive=True, integer=True)  # internal mode count
 _x_m = 2 * sp.pi * _hbar * _nu_mol[_m] / (_kB * _T)
+_nu_0 = sp.Symbol("nu_{0}", positive=True)  # quasi-RRHO rotor cutoff
+_c_m = _x_m ** 2 * sp.exp(_x_m) / (sp.exp(_x_m) - 1) ** 2  # mode Cv over R
+_w_m = 1 / (1 + (_nu_0 / _nu_mol[_m]) ** 4)  # Grimme damping, T-independent
 
 
 # ---------------------------------------------------------------------------
@@ -198,41 +205,70 @@ rrho_ideal_gas_heat_capacity = Operator(
     schemes={"approximation": "harmonic"},
     formula=sp.Eq(
         _cp_mol,
-        _N_A * _kB * (_c_ext + sp.Sum(
-            _x_m ** 2 * sp.exp(_x_m) / (sp.exp(_x_m) - 1) ** 2,
-            (_m, 1, _N_m))),
+        _N_A * _kB * (_c_ext + sp.Sum(_c_m, (_m, 1, _N_m))),
     ),
     is_executable_in_sympy_override=False,
     description=(
-        "Ideal-gas heat capacity of one molecule under the rigid-rotor "
+        "Ideal-gas heat capacity of one gas-phase species under the rigid-rotor "
         "harmonic-oscillator model: C_p = N_A k_B (c_ext + sum_m x_m^2 "
         "e^{x_m} / (e^{x_m} - 1)^2), x_m = 2 pi hbar nu_m / (k_B T) = h nu_m / "
         "(k_B T), summed over the N_m internal modes of MolecularFrequency "
-        "(3N-6, or 3N-5 for a linear molecule). The external constant c_ext is "
-        "4 for a nonlinear molecule (3/2 translation, 3/2 rotation, 1 for "
-        "Cp - Cv) and 7/2 for a linear one (rotation 1). The approximation "
-        "scheme is harmonic; the quasi-RRHO variant (qrrho) replaces each mode's "
-        "term by w c_m + (1 - w)/2 with w = 1/(1 + (nu0/nu_m)^4), taking soft "
-        "torsions toward the free-rotor limit R/2 (nu0 = 50 cm^-1 by default). "
-        "Imaginary modes are refused: the model holds at a minimum. Not "
-        "sympy-executable because c_ext and N_m are properties of the molecule, "
-        "not of the inputs; omai.molecular.evaluate.cp_table evaluates it."
+        "(3N-6, 3N-5 for a linear molecule, none for an atom). The external "
+        "constant c_ext is 3/2 for translation, plus 0, 1 or 3/2 for rotation, "
+        "plus 1 for Cp - Cv: 5/2 for an atom, 7/2 for a linear molecule and 4 "
+        "for a nonlinear one. The geometry is a condition of every value. The "
+        "quasi-RRHO treatment is the sibling edge "
+        "rrho_ideal_gas_heat_capacity[approximation=qrrho]. Imaginary modes are "
+        "refused, not inverted: the model holds at a minimum. Not "
+        "sympy-executable because c_ext and N_m are properties of the species, "
+        "not of the inputs. omai.molecular.evaluate.cp_table evaluates it."
+    ),
+)
+
+rrho_ideal_gas_heat_capacity_qrrho = Operator(
+    name="rrho_ideal_gas_heat_capacity[approximation=qrrho]",
+    inputs=(MOLECULAR_FREQUENCY, TEMPERATURE_STATE),
+    outputs=(IDEAL_GAS_MOLAR_HEAT_CAPACITY_P_QRRHO,),
+    schemes={"approximation": "qrrho"},
+    formula=sp.Eq(
+        _cp_mol,
+        _N_A * _kB * (_c_ext + sp.Sum(
+            _w_m * _c_m + (1 - _w_m) / 2, (_m, 1, _N_m))),
+    ),
+    is_executable_in_sympy_override=False,
+    description=(
+        "Quasi-RRHO ideal-gas heat capacity of one gas-phase species: C_p = "
+        "N_A k_B (c_ext + sum_m [w_m c_m + (1 - w_m)/2]), c_m = x_m^2 e^{x_m} / "
+        "(e^{x_m} - 1)^2 the harmonic mode term and w_m = 1/(1 + (nu0/nu_m)^4). "
+        "It is the temperature derivative of the quasi-RRHO enthalpy H = w H_vib "
+        "+ (1 - w) RT/2 of Li, Gomes, Sharada, Bell and Head-Gordon, J. Phys. "
+        "Chem. C 119, 1840 (2015): w depends on nu_m and nu0 and does not depend "
+        "on T, so each mode contributes w c_m + (1 - w)/2. The damping function "
+        "is the one Grimme introduced for the entropy, Chem. Eur. J. 18, 9955 "
+        "(2012). Soft torsions go to the free-rotor limit R/2, stiff modes keep "
+        "their harmonic term. The rotor cutoff nu0 (cm^-1, 50 by default) is a "
+        "condition of every value, as is the geometry: c_ext = 5/2 for an atom, "
+        "7/2 for a linear molecule and 4 for a nonlinear one. Imaginary modes "
+        "are refused, not inverted. Not sympy-executable for the reason of the "
+        "harmonic edge. omai.molecular.evaluate.cp_table evaluates both."
     ),
 )
 
 compute_infrared_intensities = Operator(
     name="compute_infrared_intensities",
-    inputs=(STRUCTURE, POTENTIAL),
+    inputs=(STRUCTURE, POTENTIAL, MOLECULAR_FREQUENCY),
     outputs=(INFRARED_INTENSITY,),
     schemes={"method": "dipole_derivative"},
-    formula=sp.Eq(_ir_int[_m], _ir_fn(_S_struct, _V_pot)),
+    formula=sp.Eq(_ir_int[_m], _ir_fn(_S_struct, _V_pot, _nu_mol[_m])),
     is_executable_in_sympy_override=False,
     description=(
         "Infrared intensity of each normal mode ir_int,m = I^{IR}[Structure, "
-        "Potential]: the integrated absorption of mode m, proportional to "
-        "|d mu / d Q_m|^2, the squared derivative of the molecular dipole along "
-        "the mass-weighted normal coordinate of the same Hessian that gives "
-        "MolecularFrequency. I^{IR} is opaque over the molecular Structure and "
+        "Potential, nu_mol,m]: the integrated absorption of mode m, proportional "
+        "to |d mu / d Q_m|^2, the squared derivative of the molecular dipole "
+        "along the mass-weighted normal coordinate of the same Hessian that "
+        "gives MolecularFrequency. That Hessian fixes the modes, so the edge "
+        "reads MolecularFrequency and the index m aligns each intensity with "
+        "its frequency. I^{IR} is opaque over the molecular Structure and "
         "the chosen method (the Potential-provenance analog). The scheme "
         "records the dipole_derivative construction (the harmonic double "
         "approximation). km/mol native. Implicit (a Hessian plus dipole "
@@ -255,7 +291,7 @@ compute_molecular_reaction_enthalpy = Operator(
         "(e^{x_m} - 1))] + c_H R T the RRHO molar enthalpy of species i: its "
         "electronic TotalEnergy, the zero-point and thermal energy of its "
         "MolecularFrequency modes, and the ideal-gas external term c_H = 4 "
-        "(nonlinear) or 7/2 (linear). Delta_r H is opaque over the per-species "
+        "(nonlinear), 7/2 (linear) or 5/2 (atom). Delta_r H is opaque over the per-species "
         "energies, mode sets and stoichiometry; the scheme records the "
         "rrho_enthalpy_difference construction. The reaction must balance in "
         "atoms and charge. Per mole of reaction as written, kJ/mol; the "
@@ -270,6 +306,7 @@ EDGES: tuple[Operator, ...] = (
     compute_bond_dissociation,
     compute_molecular_frequencies,
     rrho_ideal_gas_heat_capacity,
+    rrho_ideal_gas_heat_capacity_qrrho,
     compute_infrared_intensities,
     compute_molecular_reaction_enthalpy,
 )

@@ -5,7 +5,7 @@
       "Quot.sound",
       "propext"
     ],
-    "declaration_count": 2145,
+    "declaration_count": 2146,
     "declarations": {
       "CanonicalEnsemble.heatCapacity.eq_1": [
         "Classical.choice",
@@ -2752,6 +2752,11 @@
         "propext"
       ],
       "OMAI.PhyslibBridge.ISQ.dimension_HelmholtzFreeEnergy_field_f": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "OMAI.PhyslibBridge.ISQ.dimension_IdealGasMolarHeatCapacityP_approximation_qrrho_field_cp_mol": [
         "Classical.choice",
         "Quot.sound",
         "propext"
@@ -10124,7 +10129,7 @@
     "lean/bridge/OMAIPhononScattering.lean": "a3fe99ec9df1ae2432a92534361bca2989b6ea8341b3d3f81648d41b28ec6860",
     "lean/bridge/OMAIPhyslibBridge.lean": "f5fbe0d37179462bb151beb2b479f76f0de3faf607ee7ad5eabcb94166d5d516",
     "lean/bridge/OMAIPhyslibContinuum.lean": "e8bff3cb5d44cd78885d8c5f200d8761e8c568cd0d101fc0c2110f521bdca7ff",
-    "lean/bridge/OMAIPhyslibDimensions.lean": "6920192c2c79dffa3407cac1586d9d9deab372b9bffeea8d2e1df04bd9f655c4",
+    "lean/bridge/OMAIPhyslibDimensions.lean": "ea6f8c5e49b191f96211ebc7411f0583464c7b4b36a88d340c2677a145124963",
     "lean/bridge/OMAIPhyslibElectronicTransport.lean": "2609b6b410cb84b120f782adf88b7204e13bcef14ddee5adbce92f5c89805f45",
     "lean/bridge/OMAIPhyslibGibbsBranch.lean": "187fcc3093e54b76aa40fb12d866cffadc01adef119f31d3bd48eaadfc1367be",
     "lean/bridge/OMAIPhyslibGroupVelocity.lean": "d9d14bdfc6c429bd5ee07f85e659bdb2a56fc208b7fc6356cbf4ac76df495dca",

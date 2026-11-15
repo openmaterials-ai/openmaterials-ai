@@ -353,6 +353,33 @@
   },
   "uid": "15a6a24bb6b4ad6d1c1b44ef4d56407bd37565a4fa21a97efb99b763d75f3771"
  },
+ "168cec15edecc226c64ab55712d182f914b1ac20170e1ee2614c02b690885576": {
+  "identity": {
+   "formula": "Equality(Indexed(IndexedBase(Symbol('ir_int')), Symbol('m', integer=True)), Function('I^{IR}')(Symbol('\\\\mathcal{S}'), Symbol('V'), Indexed(IndexedBase(Symbol('nu_mol')), Symbol('m', integer=True))))",
+   "inputs": [
+    "80a4273845e09207860e06db18d1f1ee5670a9b9c8b1020a99928c872878f901",
+    "db1df71467f5a79440f849704ac20a33573ed4e270b5ebba59549272b2475239",
+    "e1270ea9a293c9107226bf831f60985f5525a0c386dca70841743bdc5d082c26"
+   ],
+   "output": "a4d1c8cc29160367d3ce0d6ad27e0c8dde975dee0699116ac0c9981085a6e298",
+   "outputs": [
+    "a4d1c8cc29160367d3ce0d6ad27e0c8dde975dee0699116ac0c9981085a6e298"
+   ],
+   "schemes": {
+    "method": "dipole_derivative"
+   }
+  },
+  "meta": {
+   "description": "Infrared intensity of each normal mode ir_int,m = I^{IR}[Structure, Potential, nu_mol,m]: the integrated absorption of mode m, proportional to |d mu / d Q_m|^2, the squared derivative of the molecular dipole along the mass-weighted normal coordinate of the same Hessian that gives MolecularFrequency. That Hessian fixes the modes, so the edge reads MolecularFrequency and the index m aligns each intensity with its frequency. I^{IR} is opaque over the molecular Structure and the chosen method (the Potential-provenance analog). The scheme records the dipole_derivative construction (the harmonic double approximation). km/mol native. Implicit (a Hessian plus dipole derivatives from an electronic-structure method), so not sympy-executable.",
+   "formula_latex": "{ir_{int}}_{m} = I^{IR}{\\left(\\mathcal{S},V,{\\nu_{mol}}_{m} \\right)}",
+   "formula_srepr": "Equality(Indexed(IndexedBase(Symbol('ir_int')), Symbol('m', integer=True)), Function('I^{IR}')(Symbol('\\\\mathcal{S}'), Symbol('V'), Indexed(IndexedBase(Symbol('nu_mol')), Symbol('m', integer=True))))",
+   "name": "compute_infrared_intensities",
+   "schemes": {
+    "method": "dipole_derivative"
+   }
+  },
+  "uid": "168cec15edecc226c64ab55712d182f914b1ac20170e1ee2614c02b690885576"
+ },
  "1795d2610a857e1ab6d3fff4c3fa60712330c92f6e370899bcf63813a417f805": {
   "identity": {
    "formula": "Equality(Symbol('E_{BDE}'), Function('\\\\Delta_{BDE}')(Symbol('E_{tot}'), Symbol('\\\\mathcal{S}')))",
@@ -1700,7 +1727,7 @@
    }
   },
   "meta": {
-   "description": "Ideal-gas heat capacity of one molecule under the rigid-rotor harmonic-oscillator model: C_p = N_A k_B (c_ext + sum_m x_m^2 e^{x_m} / (e^{x_m} - 1)^2), x_m = 2 pi hbar nu_m / (k_B T) = h nu_m / (k_B T), summed over the N_m internal modes of MolecularFrequency (3N-6, or 3N-5 for a linear molecule). The external constant c_ext is 4 for a nonlinear molecule (3/2 translation, 3/2 rotation, 1 for Cp - Cv) and 7/2 for a linear one (rotation 1). The approximation scheme is harmonic; the quasi-RRHO variant (qrrho) replaces each mode's term by w c_m + (1 - w)/2 with w = 1/(1 + (nu0/nu_m)^4), taking soft torsions toward the free-rotor limit R/2 (nu0 = 50 cm^-1 by default). Imaginary modes are refused: the model holds at a minimum. Not sympy-executable because c_ext and N_m are properties of the molecule, not of the inputs; omai.molecular.evaluate.cp_table evaluates it.",
+   "description": "Ideal-gas heat capacity of one gas-phase species under the rigid-rotor harmonic-oscillator model: C_p = N_A k_B (c_ext + sum_m x_m^2 e^{x_m} / (e^{x_m} - 1)^2), x_m = 2 pi hbar nu_m / (k_B T) = h nu_m / (k_B T), summed over the N_m internal modes of MolecularFrequency (3N-6, 3N-5 for a linear molecule, none for an atom). The external constant c_ext is 3/2 for translation, plus 0, 1 or 3/2 for rotation, plus 1 for Cp - Cv: 5/2 for an atom, 7/2 for a linear molecule and 4 for a nonlinear one. The geometry is a condition of every value. The quasi-RRHO treatment is the sibling edge rrho_ideal_gas_heat_capacity[approximation=qrrho]. Imaginary modes are refused, not inverted: the model holds at a minimum. Not sympy-executable because c_ext and N_m are properties of the species, not of the inputs. omai.molecular.evaluate.cp_table evaluates it.",
    "formula_latex": "cp_{mol} = N_{A} k_{B} \\left(c_{ext} + \\sum_{m=1}^{N_{m}} \\frac{4 \\pi^{2} \\bar{\\h}^{2} e^{\\frac{2 \\pi \\bar{\\h} {\\nu_{mol}}_{m}}{T k_{B}}} {\\nu_{mol}}_{m}^{2}}{T^{2} k_{B}^{2} \\left(e^{\\frac{2 \\pi \\bar{\\h} {\\nu_{mol}}_{m}}{T k_{B}}} - 1\\right)^{2}}\\right)",
    "formula_srepr": "Equality(Symbol('cp_mol'), Mul(Symbol('N_A'), Symbol('k_B'), Add(Symbol('c_{ext}'), Sum(Mul(Integer(4), Pow(pi, Integer(2)), Pow(Symbol('T'), Integer(-2)), Pow(Symbol('\\\\hbar'), Integer(2)), Pow(Symbol('k_B'), Integer(-2)), Pow(Add(exp(Mul(Integer(2), pi, Pow(Symbol('T'), Integer(-1)), Symbol('\\\\hbar'), Pow(Symbol('k_B'), Integer(-1)), Indexed(IndexedBase(Symbol('nu_mol')), Symbol('m', integer=True)))), Integer(-1)), Integer(-2)), exp(Mul(Integer(2), pi, Pow(Symbol('T'), Integer(-1)), Symbol('\\\\hbar'), Pow(Symbol('k_B'), Integer(-1)), Indexed(IndexedBase(Symbol('nu_mol')), Symbol('m', integer=True)))), Pow(Indexed(IndexedBase(Symbol('nu_mol')), Symbol('m', integer=True)), Integer(2))), Tuple(Symbol('m', integer=True), Integer(1), Symbol('N_{m}', positive=True, integer=True))))))",
    "name": "rrho_ideal_gas_heat_capacity",
@@ -2412,6 +2439,32 @@
   },
   "uid": "9d4ded802829a8b2fe5544556eeb81534fe39e3ceae5efac0065e7ddcf3da152"
  },
+ "9ebf9aa196a41af07c18b3f338490cc68e3ab25af2a071fe30f6cd11b59b4735": {
+  "identity": {
+   "formula": "Equality(Symbol('cp_mol'), Mul(Symbol('N_A'), Symbol('k_B'), Add(Symbol('c_{ext}'), Sum(Add(Rational(1, 2), Mul(Integer(-1), Rational(1, 2), Pow(Add(Mul(Pow(Symbol('nu_{0}', positive=True), Integer(4)), Pow(Indexed(IndexedBase(Symbol('nu_mol')), Symbol('m', integer=True)), Integer(-4))), Integer(1)), Integer(-1))), Mul(Integer(4), Pow(pi, Integer(2)), Pow(Symbol('T'), Integer(-2)), Pow(Symbol('\\\\hbar'), Integer(2)), Pow(Symbol('k_B'), Integer(-2)), Pow(Add(Mul(Pow(Symbol('nu_{0}', positive=True), Integer(4)), Pow(Indexed(IndexedBase(Symbol('nu_mol')), Symbol('m', integer=True)), Integer(-4))), Integer(1)), Integer(-1)), Pow(Add(exp(Mul(Integer(2), pi, Pow(Symbol('T'), Integer(-1)), Symbol('\\\\hbar'), Pow(Symbol('k_B'), Integer(-1)), Indexed(IndexedBase(Symbol('nu_mol')), Symbol('m', integer=True)))), Integer(-1)), Integer(-2)), exp(Mul(Integer(2), pi, Pow(Symbol('T'), Integer(-1)), Symbol('\\\\hbar'), Pow(Symbol('k_B'), Integer(-1)), Indexed(IndexedBase(Symbol('nu_mol')), Symbol('m', integer=True)))), Pow(Indexed(IndexedBase(Symbol('nu_mol')), Symbol('m', integer=True)), Integer(2)))), Tuple(Symbol('m', integer=True), Integer(1), Symbol('N_{m}', positive=True, integer=True))))))",
+   "inputs": [
+    "63f9bd32d94d77e12afbb96f5b1b7a870de6b1f5805213b7f3c3ff227da301f0",
+    "e1270ea9a293c9107226bf831f60985f5525a0c386dca70841743bdc5d082c26"
+   ],
+   "output": "4bf0e384a896934c145db0eb34b45bed30190d2d460a0b06d1846720b2d97353",
+   "outputs": [
+    "4bf0e384a896934c145db0eb34b45bed30190d2d460a0b06d1846720b2d97353"
+   ],
+   "schemes": {
+    "approximation": "qrrho"
+   }
+  },
+  "meta": {
+   "description": "Quasi-RRHO ideal-gas heat capacity of one gas-phase species: C_p = N_A k_B (c_ext + sum_m [w_m c_m + (1 - w_m)/2]), c_m = x_m^2 e^{x_m} / (e^{x_m} - 1)^2 the harmonic mode term and w_m = 1/(1 + (nu0/nu_m)^4). It is the temperature derivative of the quasi-RRHO enthalpy H = w H_vib + (1 - w) RT/2 of Li, Gomes, Sharada, Bell and Head-Gordon, J. Phys. Chem. C 119, 1840 (2015): w depends on nu_m and nu0 and does not depend on T, so each mode contributes w c_m + (1 - w)/2. The damping function is the one Grimme introduced for the entropy, Chem. Eur. J. 18, 9955 (2012). Soft torsions go to the free-rotor limit R/2, stiff modes keep their harmonic term. The rotor cutoff nu0 (cm^-1, 50 by default) is a condition of every value, as is the geometry: c_ext = 5/2 for an atom, 7/2 for a linear molecule and 4 for a nonlinear one. Imaginary modes are refused, not inverted. Not sympy-executable for the reason of the harmonic edge. omai.molecular.evaluate.cp_table evaluates both.",
+   "formula_latex": "cp_{mol} = N_{A} k_{B} \\left(c_{ext} + \\sum_{m=1}^{N_{m}} \\left(\\frac{1}{2} - \\frac{1}{2 \\left(\\frac{nu_{0}^{4}}{{\\nu_{mol}}_{m}^{4}} + 1\\right)} + \\frac{4 \\pi^{2} \\bar{\\h}^{2} e^{\\frac{2 \\pi \\bar{\\h} {\\nu_{mol}}_{m}}{T k_{B}}} {\\nu_{mol}}_{m}^{2}}{T^{2} k_{B}^{2} \\left(\\frac{nu_{0}^{4}}{{\\nu_{mol}}_{m}^{4}} + 1\\right) \\left(e^{\\frac{2 \\pi \\bar{\\h} {\\nu_{mol}}_{m}}{T k_{B}}} - 1\\right)^{2}}\\right)\\right)",
+   "formula_srepr": "Equality(Symbol('cp_mol'), Mul(Symbol('N_A'), Symbol('k_B'), Add(Symbol('c_{ext}'), Sum(Add(Rational(1, 2), Mul(Integer(-1), Rational(1, 2), Pow(Add(Mul(Pow(Symbol('nu_{0}', positive=True), Integer(4)), Pow(Indexed(IndexedBase(Symbol('nu_mol')), Symbol('m', integer=True)), Integer(-4))), Integer(1)), Integer(-1))), Mul(Integer(4), Pow(pi, Integer(2)), Pow(Symbol('T'), Integer(-2)), Pow(Symbol('\\\\hbar'), Integer(2)), Pow(Symbol('k_B'), Integer(-2)), Pow(Add(Mul(Pow(Symbol('nu_{0}', positive=True), Integer(4)), Pow(Indexed(IndexedBase(Symbol('nu_mol')), Symbol('m', integer=True)), Integer(-4))), Integer(1)), Integer(-1)), Pow(Add(exp(Mul(Integer(2), pi, Pow(Symbol('T'), Integer(-1)), Symbol('\\\\hbar'), Pow(Symbol('k_B'), Integer(-1)), Indexed(IndexedBase(Symbol('nu_mol')), Symbol('m', integer=True)))), Integer(-1)), Integer(-2)), exp(Mul(Integer(2), pi, Pow(Symbol('T'), Integer(-1)), Symbol('\\\\hbar'), Pow(Symbol('k_B'), Integer(-1)), Indexed(IndexedBase(Symbol('nu_mol')), Symbol('m', integer=True)))), Pow(Indexed(IndexedBase(Symbol('nu_mol')), Symbol('m', integer=True)), Integer(2)))), Tuple(Symbol('m', integer=True), Integer(1), Symbol('N_{m}', positive=True, integer=True))))))",
+   "name": "rrho_ideal_gas_heat_capacity[approximation=qrrho]",
+   "schemes": {
+    "approximation": "qrrho"
+   }
+  },
+  "uid": "9ebf9aa196a41af07c18b3f338490cc68e3ab25af2a071fe30f6cd11b59b4735"
+ },
  "9fc03548d4ca70a6634ed22f93f7efb198f00c48c8c8b0bd94b2b37d7f73c456": {
   "identity": {
    "formula": "Equality(Symbol('\\\\sigma_{el}'), Function('\\\\sigma^{bte}')(Symbol('\\\\mathcal{S}'), Symbol('\\\\varepsilon_0'), Symbol('C'), Symbol('\\\\omega')))",
@@ -2518,7 +2571,7 @@
    }
   },
   "meta": {
-   "description": "Reaction enthalpy of a balanced gas-phase reaction Delta_r H(T) = sum_i s_i H_i(T), s_i the signed stoichiometric coefficient (positive for a product) and H_i = N_A [E_tot,i + sum_m (h nu_m / 2 + h nu_m / (e^{x_m} - 1))] + c_H R T the RRHO molar enthalpy of species i: its electronic TotalEnergy, the zero-point and thermal energy of its MolecularFrequency modes, and the ideal-gas external term c_H = 4 (nonlinear) or 7/2 (linear). Delta_r H is opaque over the per-species energies, mode sets and stoichiometry; the scheme records the rrho_enthalpy_difference construction. The reaction must balance in atoms and charge. Per mole of reaction as written, kJ/mol; the electronic Delta_r E = sum_i s_i N_A E_tot,i is a secondary. Implicit (a stoichiometric sum over species), so not sympy-executable.",
+   "description": "Reaction enthalpy of a balanced gas-phase reaction Delta_r H(T) = sum_i s_i H_i(T), s_i the signed stoichiometric coefficient (positive for a product) and H_i = N_A [E_tot,i + sum_m (h nu_m / 2 + h nu_m / (e^{x_m} - 1))] + c_H R T the RRHO molar enthalpy of species i: its electronic TotalEnergy, the zero-point and thermal energy of its MolecularFrequency modes, and the ideal-gas external term c_H = 4 (nonlinear), 7/2 (linear) or 5/2 (atom). Delta_r H is opaque over the per-species energies, mode sets and stoichiometry; the scheme records the rrho_enthalpy_difference construction. The reaction must balance in atoms and charge. Per mole of reaction as written, kJ/mol; the electronic Delta_r E = sum_i s_i N_A E_tot,i is a secondary. Implicit (a stoichiometric sum over species), so not sympy-executable.",
    "formula_latex": "dh_{r} = \\Delta_{r}H{\\left(E_{tot},\\nu_{mol},T \\right)}",
    "formula_srepr": "Equality(Symbol('dh_r'), Function('\\\\Delta_{r}H')(Symbol('E_{tot}'), Symbol('nu_mol'), Symbol('T')))",
    "name": "compute_molecular_reaction_enthalpy",
@@ -2649,32 +2702,6 @@
    }
   },
   "uid": "b24757dc6349ac2bcf8429ab264385f76d6895fc52baea4eb380f7d7e063ca11"
- },
- "b2af6ba348608fbea72ef742fb34e7f46b358f478360003ec9e1b1ad36f5e7a1": {
-  "identity": {
-   "formula": "Equality(Indexed(IndexedBase(Symbol('ir_int')), Symbol('m', integer=True)), Function('I^{IR}')(Symbol('\\\\mathcal{S}'), Symbol('V')))",
-   "inputs": [
-    "80a4273845e09207860e06db18d1f1ee5670a9b9c8b1020a99928c872878f901",
-    "db1df71467f5a79440f849704ac20a33573ed4e270b5ebba59549272b2475239"
-   ],
-   "output": "a4d1c8cc29160367d3ce0d6ad27e0c8dde975dee0699116ac0c9981085a6e298",
-   "outputs": [
-    "a4d1c8cc29160367d3ce0d6ad27e0c8dde975dee0699116ac0c9981085a6e298"
-   ],
-   "schemes": {
-    "method": "dipole_derivative"
-   }
-  },
-  "meta": {
-   "description": "Infrared intensity of each normal mode ir_int,m = I^{IR}[Structure, Potential]: the integrated absorption of mode m, proportional to |d mu / d Q_m|^2, the squared derivative of the molecular dipole along the mass-weighted normal coordinate of the same Hessian that gives MolecularFrequency. I^{IR} is opaque over the molecular Structure and the chosen method (the Potential-provenance analog). The scheme records the dipole_derivative construction (the harmonic double approximation). km/mol native. Implicit (a Hessian plus dipole derivatives from an electronic-structure method), so not sympy-executable.",
-   "formula_latex": "{ir_{int}}_{m} = I^{IR}{\\left(\\mathcal{S},V \\right)}",
-   "formula_srepr": "Equality(Indexed(IndexedBase(Symbol('ir_int')), Symbol('m', integer=True)), Function('I^{IR}')(Symbol('\\\\mathcal{S}'), Symbol('V')))",
-   "name": "compute_infrared_intensities",
-   "schemes": {
-    "method": "dipole_derivative"
-   }
-  },
-  "uid": "b2af6ba348608fbea72ef742fb34e7f46b358f478360003ec9e1b1ad36f5e7a1"
  },
  "b8fd10813fea32fe974f69f9bf3b2129e374e4556047828e7ffb768249e5bb12": {
   "identity": {

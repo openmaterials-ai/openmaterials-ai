@@ -19,13 +19,16 @@ Node table:
   MolecularFrequency            molecular_frequency       FREQUENCY  (m)
   IdealGasMolarHeatCapacityP    ideal_gas_molar_heat_     J/(K mol)  ()
                                   capacity_p
+  IdealGasMolarHeatCapacityP[   ideal_gas_molar_heat_     J/(K mol)  ()
+    approximation=qrrho]          capacity_p
   InfraredIntensity             infrared_intensity        m/mol      (m)
   MolecularReactionEnthalpy     molecular_reaction_       J/mol      ()
                                   enthalpy
 
-The last three (2026-11-15) are the gas-phase thermochemistry the RRHO hook
-below named: the ideal-gas heat capacity of one molecule, the IR intensity of
-each normal mode, and the reaction enthalpy of a balanced molecular reaction.
+The last four (2026-11-15) are the gas-phase thermochemistry the RRHO hook
+below named: the ideal-gas heat capacity of one species, harmonic and its
+quasi-RRHO variant, the IR intensity of each normal mode, and the reaction
+enthalpy of a balanced molecular reaction.
 
 MolecularFrequency arrives from the physics review (2026-07-10): the molecular
 normal-mode axis, FREQUENCY dimension, indexed by mode number m (the registered
@@ -222,22 +225,46 @@ IDEAL_GAS_MOLAR_HEAT_CAPACITY_P = ObservableSpace(
     fields=(Field("cp_mol", ENERGY_PER_TEMPERATURE_PER_MOLE, indices=()),),
     tier="Molecular",
     description=(
-        "Constant-pressure heat capacity C_p(T) of one isolated molecule "
-        "treated as an ideal gas, per mole of molecules, J/(K mol). Under the "
-        "rigid-rotor harmonic-oscillator (RRHO) model each internal normal mode "
+        "Constant-pressure heat capacity C_p(T) of one isolated gas-phase "
+        "species treated as an ideal gas, per mole, J/(K mol), under the "
+        "rigid-rotor harmonic-oscillator (RRHO) model. Each internal normal mode "
         "of MolecularFrequency contributes its quantum harmonic Cv, "
         "R x^2 e^x / (e^x - 1)^2 with x = h nu / (k_B T), and the external "
-        "degrees of freedom add 3R/2 (translation), 3R/2 or R (rotation, "
-        "nonlinear or linear) and R (Cp - Cv of an ideal gas): 4R for a "
-        "nonlinear molecule, 7R/2 for a linear one. The approximation "
-        "(harmonic, or the quasi-RRHO interpolation of soft modes toward the "
-        "free-rotor R/2) is a scheme of the producing edge and a condition of a "
-        "value, as are the temperature, the phase (gas) and the number of "
-        "conformers. Shares the J/(K mol) exponent vector "
-        "(1,2,-2,-1,-1,0,0) with the harmonic MolarHeatCapacity, which is Cv "
-        "per mole of primitive crystal cells, and with the QHA "
-        "HeatCapacityConstantP; the ideal_gas_molar_heat_capacity_p tag keeps "
-        "it a distinct node."
+        "degrees of freedom add 3R/2 (translation), 0, R or 3R/2 (rotation of an "
+        "atom, a linear or a nonlinear molecule) and R (Cp - Cv of an ideal gas): "
+        "c_ext = 5/2 for an atom, 7/2 for a linear molecule and 4 for a "
+        "nonlinear one. The geometry (atom, linear, nonlinear) is a condition of "
+        "every value, as are the temperature, the phase (gas) and the number of "
+        "conformers. A species with an imaginary mode (at or below 0 cm^-1) is "
+        "refused, not inverted: the model holds at a minimum. The quasi-RRHO "
+        "value is the labeled variant IdealGasMolarHeatCapacityP[approximation=qrrho]. "
+        "Shares the J/(K mol) exponent vector (1,2,-2,-1,-1,0,0) with the "
+        "harmonic MolarHeatCapacity, which is Cv per mole of primitive crystal "
+        "cells, and with the QHA HeatCapacityConstantP. The "
+        "ideal_gas_molar_heat_capacity_p tag keeps it a distinct node."
+    ),
+)
+
+IDEAL_GAS_MOLAR_HEAT_CAPACITY_P_QRRHO = ObservableSpace(
+    name="IdealGasMolarHeatCapacityP[approximation=qrrho]",
+    fields=(Field("cp_mol", ENERGY_PER_TEMPERATURE_PER_MOLE, indices=()),),
+    labels={"approximation": "qrrho"},
+    tier="Molecular",
+    description=(
+        "Quasi-RRHO ideal-gas C_p(T) of one gas-phase species, J/(K mol): the "
+        "labeled variant of IdealGasMolarHeatCapacityP, same tag and dimension, "
+        "differing in the treatment of soft modes. Each mode's harmonic Cv c_m "
+        "is replaced by w_m c_m + (1 - w_m) R/2 with w_m = 1/(1 + (nu0/nu_m)^4), "
+        "taking soft torsions toward the free-rotor limit R/2. It is the "
+        "temperature derivative of the quasi-RRHO enthalpy H = w H_vib + "
+        "(1 - w) RT/2 of Li, Gomes, Sharada, Bell and Head-Gordon, J. Phys. "
+        "Chem. C 119, 1840 (2015). The weight depends on the frequency only and "
+        "does not depend on T, so the derivative acts on H_vib and RT/2 alone. "
+        "The damping function is Grimme's for the entropy, Chem. Eur. J. 18, "
+        "9955 (2012). The rotor cutoff nu0 (cm^-1, 50 by default) is a "
+        "condition of every value, as is the geometry (c_ext = 5/2 for an atom, "
+        "7/2 for a linear molecule, 4 for a nonlinear one). A species with an "
+        "imaginary mode is refused, not inverted."
     ),
 )
 
@@ -270,10 +297,14 @@ MOLECULAR_REACTION_ENTHALPY = ObservableSpace(
         "(positive for a product) and H_i the molar enthalpy of species i, its "
         "electronic energy plus the zero-point and thermal enthalpy of its "
         "normal modes and the ideal-gas external terms (translation, rotation, "
-        "pV). The reference temperature is 298.15 K unless a value's "
-        "conditions state another. The reaction, the stoichiometry, the phase "
-        "(gas) and the number of conformers are conditions of a value; the "
-        "electronic Delta_r E is a secondary of the same value. Distinct from "
+        "pV), c_H RT with c_H = 5/2 for an atom, 7/2 for a linear molecule and 4 "
+        "for a nonlinear one. A reaction with a species that has an imaginary "
+        "mode (at or below 0 cm^-1) is refused, not inverted: the RRHO "
+        "enthalpy holds at a minimum. The reference temperature is 298.15 K unless a value's "
+        "conditions state another. The reaction, the stoichiometry, the geometry "
+        "of each species, the phase (gas) and the number of conformers are "
+        "conditions of a value. The electronic Delta_r E is a secondary of the "
+        "same value. Distinct from "
         "the solid-state ReactionEnergy (a stoichiometric combination of "
         "per-atom formation energies of crystals, plain ENERGY) and from the "
         "CALPHAD MolarEnthalpy of a phase (per mole of atoms, SER reference), "
@@ -288,6 +319,7 @@ NODES: tuple[Space, ...] = (
     BOND_DISSOCIATION_ENERGY,
     MOLECULAR_FREQUENCY,
     IDEAL_GAS_MOLAR_HEAT_CAPACITY_P,
+    IDEAL_GAS_MOLAR_HEAT_CAPACITY_P_QRRHO,
     INFRARED_INTENSITY,
     MOLECULAR_REACTION_ENTHALPY,
 )

@@ -1106,6 +1106,19 @@
 },
 {
 "curated": [
+"qrrho-heat-capacity"
+],
+"id": "IdealGasMolarHeatCapacityP[approximation=qrrho]",
+"kind": "node",
+"labels": [
+"C_{p}^{\\mathrm{qRRHO}}",
+"IdealGasMolarHeatCapacityP[approximation=qrrho]",
+"ideal gas molar heat capacity p approximation qrrho"
+],
+"uid": "4bf0e384a896934c145db0eb34b45bed30190d2d460a0b06d1846720b2d97353"
+},
+{
+"curated": [
 "ir-spectrum"
 ],
 "id": "InfraredIntensity",
@@ -2613,6 +2626,18 @@
 },
 {
 "curated": [
+"qrrho-heat-capacity"
+],
+"id": "rrho_ideal_gas_heat_capacity[approximation=qrrho]",
+"kind": "edge",
+"labels": [
+"rrho ideal gas heat capacity approximation qrrho",
+"rrho_ideal_gas_heat_capacity[approximation=qrrho]"
+],
+"uid": "9ebf9aa196a41af07c18b3f338490cc68e3ab25af2a071fe30f6cd11b59b4735"
+},
+{
+"curated": [
 "ir-spectrum"
 ],
 "id": "compute_infrared_intensities",
@@ -2621,7 +2646,7 @@
 "compute infrared intensities",
 "compute_infrared_intensities"
 ],
-"uid": "b2af6ba348608fbea72ef742fb34e7f46b358f478360003ec9e1b1ad36f5e7a1"
+"uid": "168cec15edecc226c64ab55712d182f914b1ac20170e1ee2614c02b690885576"
 },
 {
 "curated": [

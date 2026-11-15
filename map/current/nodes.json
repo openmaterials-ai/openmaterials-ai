@@ -1001,6 +1001,28 @@
   },
   "uid": "438f0314dee5f9e98d88e4a7ba4425ef0edd207605338b318340da27bf28b2a4"
  },
+ "4bf0e384a896934c145db0eb34b45bed30190d2d460a0b06d1846720b2d97353": {
+  "identity": {
+   "fields": [
+    {
+     "dimension": "M^1 L^2 T^-2 Th^-1 N^-1",
+     "indices": []
+    }
+   ],
+   "gauge": "observable",
+   "labels": {
+    "approximation": "qrrho"
+   },
+   "quantity": "ideal_gas_molar_heat_capacity_p"
+  },
+  "meta": {
+   "description": "Quasi-RRHO ideal-gas C_p(T) of one gas-phase species, J/(K mol): the labeled variant of IdealGasMolarHeatCapacityP, same tag and dimension, differing in the treatment of soft modes. Each mode's harmonic Cv c_m is replaced by w_m c_m + (1 - w_m) R/2 with w_m = 1/(1 + (nu0/nu_m)^4), taking soft torsions toward the free-rotor limit R/2. It is the temperature derivative of the quasi-RRHO enthalpy H = w H_vib + (1 - w) RT/2 of Li, Gomes, Sharada, Bell and Head-Gordon, J. Phys. Chem. C 119, 1840 (2015). The weight depends on the frequency only and does not depend on T, so the derivative acts on H_vib and RT/2 alone. The damping function is Grimme's for the entropy, Chem. Eur. J. 18, 9955 (2012). The rotor cutoff nu0 (cm^-1, 50 by default) is a condition of every value, as is the geometry (c_ext = 5/2 for an atom, 7/2 for a linear molecule, 4 for a nonlinear one). A species with an imaginary mode is refused, not inverted.",
+   "name": "IdealGasMolarHeatCapacityP[approximation=qrrho]",
+   "symbol": "C_{p}^{\\mathrm{qRRHO}}",
+   "tier": "Molecular"
+  },
+  "uid": "4bf0e384a896934c145db0eb34b45bed30190d2d460a0b06d1846720b2d97353"
+ },
  "4ca6efdb874d146a6cca564c7a8a0504ee8868ae5890d4c33abddc147423d6f1": {
   "identity": {
    "fields": [
@@ -1144,7 +1166,7 @@
    "quantity": "molecular_reaction_enthalpy"
   },
   "meta": {
-   "description": "Standard reaction enthalpy Delta_r H(T) of a balanced gas-phase reaction of molecules, per mole of reaction as written, kJ/mol: sum_i s_i H_i(T) with s_i the signed stoichiometric coefficient (positive for a product) and H_i the molar enthalpy of species i, its electronic energy plus the zero-point and thermal enthalpy of its normal modes and the ideal-gas external terms (translation, rotation, pV). The reference temperature is 298.15 K unless a value's conditions state another. The reaction, the stoichiometry, the phase (gas) and the number of conformers are conditions of a value; the electronic Delta_r E is a secondary of the same value. Distinct from the solid-state ReactionEnergy (a stoichiometric combination of per-atom formation energies of crystals, plain ENERGY) and from the CALPHAD MolarEnthalpy of a phase (per mole of atoms, SER reference), which shares its J/mol exponent vector; the molecular_reaction_enthalpy tag keeps it a distinct node.",
+   "description": "Standard reaction enthalpy Delta_r H(T) of a balanced gas-phase reaction of molecules, per mole of reaction as written, kJ/mol: sum_i s_i H_i(T) with s_i the signed stoichiometric coefficient (positive for a product) and H_i the molar enthalpy of species i, its electronic energy plus the zero-point and thermal enthalpy of its normal modes and the ideal-gas external terms (translation, rotation, pV), c_H RT with c_H = 5/2 for an atom, 7/2 for a linear molecule and 4 for a nonlinear one. A reaction with a species that has an imaginary mode (at or below 0 cm^-1) is refused, not inverted: the RRHO enthalpy holds at a minimum. The reference temperature is 298.15 K unless a value's conditions state another. The reaction, the stoichiometry, the geometry of each species, the phase (gas) and the number of conformers are conditions of a value. The electronic Delta_r E is a secondary of the same value. Distinct from the solid-state ReactionEnergy (a stoichiometric combination of per-atom formation energies of crystals, plain ENERGY) and from the CALPHAD MolarEnthalpy of a phase (per mole of atoms, SER reference), which shares its J/mol exponent vector; the molecular_reaction_enthalpy tag keeps it a distinct node.",
    "name": "MolecularReactionEnthalpy",
    "symbol": "\\Delta_{r} H",
    "tier": "Molecular"
@@ -1627,7 +1649,7 @@
    "quantity": "ideal_gas_molar_heat_capacity_p"
   },
   "meta": {
-   "description": "Constant-pressure heat capacity C_p(T) of one isolated molecule treated as an ideal gas, per mole of molecules, J/(K mol). Under the rigid-rotor harmonic-oscillator (RRHO) model each internal normal mode of MolecularFrequency contributes its quantum harmonic Cv, R x^2 e^x / (e^x - 1)^2 with x = h nu / (k_B T), and the external degrees of freedom add 3R/2 (translation), 3R/2 or R (rotation, nonlinear or linear) and R (Cp - Cv of an ideal gas): 4R for a nonlinear molecule, 7R/2 for a linear one. The approximation (harmonic, or the quasi-RRHO interpolation of soft modes toward the free-rotor R/2) is a scheme of the producing edge and a condition of a value, as are the temperature, the phase (gas) and the number of conformers. Shares the J/(K mol) exponent vector (1,2,-2,-1,-1,0,0) with the harmonic MolarHeatCapacity, which is Cv per mole of primitive crystal cells, and with the QHA HeatCapacityConstantP; the ideal_gas_molar_heat_capacity_p tag keeps it a distinct node.",
+   "description": "Constant-pressure heat capacity C_p(T) of one isolated gas-phase species treated as an ideal gas, per mole, J/(K mol), under the rigid-rotor harmonic-oscillator (RRHO) model. Each internal normal mode of MolecularFrequency contributes its quantum harmonic Cv, R x^2 e^x / (e^x - 1)^2 with x = h nu / (k_B T), and the external degrees of freedom add 3R/2 (translation), 0, R or 3R/2 (rotation of an atom, a linear or a nonlinear molecule) and R (Cp - Cv of an ideal gas): c_ext = 5/2 for an atom, 7/2 for a linear molecule and 4 for a nonlinear one. The geometry (atom, linear, nonlinear) is a condition of every value, as are the temperature, the phase (gas) and the number of conformers. A species with an imaginary mode (at or below 0 cm^-1) is refused, not inverted: the model holds at a minimum. The quasi-RRHO value is the labeled variant IdealGasMolarHeatCapacityP[approximation=qrrho]. Shares the J/(K mol) exponent vector (1,2,-2,-1,-1,0,0) with the harmonic MolarHeatCapacity, which is Cv per mole of primitive crystal cells, and with the QHA HeatCapacityConstantP. The ideal_gas_molar_heat_capacity_p tag keeps it a distinct node.",
    "name": "IdealGasMolarHeatCapacityP",
    "symbol": "C_{p}^{\\mathrm{ig}}",
    "tier": "Molecular"
