@@ -1,10 +1,11 @@
 """Operators (edges) for the materials domain (grown from AtomisticSkills).
 
-Five edges. The diffusion pair (contract_diffusivity, fit_arrhenius) is the
+Six edges. The diffusion pair (contract_diffusivity, fit_arrhenius) is the
 original slice; compute_configurational_energy arrives from the config-thermo
 scan (AtomisticSkills arXiv 2605.24002); compute_carrier_density and the
 EXECUTABLE compute_ionic_conductivity arrive from the physics review (the
-second supersede, 2026-07-10).
+second supersede, 2026-07-10); compute_harmonic_migration_prefactor arrives on
+2026-11-15.
 
   contract_diffusivity           : (MeanSquaredDisplacement,)         -> Diffusivity
   fit_arrhenius                  : (Diffusivity, Temperature)         -> ActivationEnergy
@@ -12,6 +13,8 @@ second supersede, 2026-07-10).
   compute_ionic_conductivity     : (CarrierDensity, Diffusivity, Temperature)
                                        -> ElectricalConductivity[carrier=ionic]  (EXECUTABLE)
   compute_configurational_energy : (Potential, Structure)            -> ConfigurationalEnergy
+  compute_harmonic_migration_prefactor : (Potential, Structure)
+                                       -> MigrationPrefactor[method=harmonic_tst]
 
 compute_carrier_density and compute_configurational_energy are implicit
 (is_executable_in_sympy_override=False), each an opaque applied function of its
@@ -28,6 +31,14 @@ sigma^{NE}[D, T, Structure]; the formula fingerprint changed, so the edge id
 changed, a genuine re-mint routed through the store's supersede machinery. The
 Structure / Diffusivity / Temperature inputs are pre-existing store nodes, so
 every edge touches the store.
+
+compute_harmonic_migration_prefactor (2026-11-15) is implicit too: the Vineyard
+prefactor of a hop needs the normal modes of two Structures of the same cell,
+the minimum and the saddle, under one Potential, and the mode sets it reads are
+not a map node (the stable-lattice Frequency node admits no imaginary mode, and
+a partial Hessian with the other atoms held is the spectrum of no dynamical
+matrix of the cell). omai.materials.evaluate.harmonic_migration_prefactor
+evaluates it from the two mode lists.
 """
 from __future__ import annotations
 
@@ -41,6 +52,7 @@ from omai.materials.operator.nodes import (
     CONFIGURATIONAL_ENERGY,
     DIFFUSIVITY_STATE,
     ELECTRICAL_CONDUCTIVITY_IONIC,
+    MIGRATION_PREFACTOR,
 )
 from omai.materials.operator.shared_primitives import (
     MEAN_SQUARED_DISPLACEMENT,
@@ -72,6 +84,9 @@ _T_ne = sp.Symbol("T", positive=True)
 # Opaque solver functions (applied functions, not free symbols).
 _n_c_fn = sp.Function("n^{c}")            # carrier-count-over-volume selector
 _E_ce = sp.Function("E^{ce}")             # cluster-expansion prediction
+# Harmonic transition-state-theory prefactor (2026-11-15).
+_nu_star = sp.Symbol(r"\nu^{*}", positive=True)   # MigrationPrefactor, FREQUENCY
+_nu_htst = sp.Function(r"\nu^{HTST}")             # Vineyard mode ratio, opaque
 
 # Einstein relation: D = slope of MSD(t) / (2 d). Closed-form in the slope.
 contract_diffusivity = Operator(
@@ -178,10 +193,45 @@ compute_configurational_energy = Operator(
     ),
 )
 
+# Harmonic transition-state-theory prefactor of one hop: the Vineyard ratio of
+# the normal-mode frequencies of two Structures of one cell under one Potential,
+# the minimum and the first-order saddle. Opaque over both.
+compute_harmonic_migration_prefactor = Operator(
+    name="compute_harmonic_migration_prefactor",
+    inputs=(POTENTIAL, STRUCTURE),
+    outputs=(MIGRATION_PREFACTOR,),
+    schemes={"method": "harmonic_tst"},
+    formula=sp.Eq(_nu_star, _nu_htst(_V_pot, _S)),
+    is_executable_in_sympy_override=False,
+    description=(
+        "Harmonic migration prefactor nu* = nu^{HTST}[Potential, Structure]: the "
+        "Vineyard ratio prod_{i=1..n} nu_i(min) / prod_{j=1..n-1} nu_j(saddle) "
+        "of the cyclic normal-mode frequencies of the mass-weighted Hessian of "
+        "the Potential at two Structures of one cell, the initial minimum and the "
+        "first-order saddle of the hop, the saddle's one imaginary mode excluded. "
+        "n = 3N - 3 with every atom displaced, bulk or slab, and the rigid "
+        "translations projected out; a listed subset of M atoms with the rest "
+        "held gives n = 3M and approximates the full ratio, with M and the atom "
+        "set required conditions. nu^{HTST} is opaque over both Structures (which "
+        "ride in conditions with the atom set) and the Potential; the method "
+        "scheme records harmonic_tst. The minimum must have no imaginary or soft "
+        "mode, the saddle exactly one imaginary and no soft mode, and both "
+        "frames must meet the stated residual-force bound, a convention that "
+        "does not guarantee stationarity for soft modes. The product is a sum of "
+        "logarithms. Classical high-temperature limit (k_B T >> h nu_i for the "
+        "modes that change), no zero-point or Wigner correction; above the "
+        "crossover temperature is necessary, not sufficient. "
+        "omai.materials.evaluate.harmonic_migration_prefactor evaluates it from "
+        "the two mode lists. Linear THz. Implicit (two Hessian diagonalizations), "
+        "so not sympy-executable."
+    ),
+)
+
 EDGES: tuple[Operator, ...] = (
     contract_diffusivity,
     fit_arrhenius,
     compute_carrier_density,
     compute_ionic_conductivity,
     compute_configurational_energy,
+    compute_harmonic_migration_prefactor,
 )

@@ -20,6 +20,7 @@ from omai.operator.dimensions import (
     DIMENSIONLESS,
     ELECTRICAL_CONDUCTIVITY,
     ENERGY,
+    FREQUENCY,
     LENGTH_SQUARED,
     NUMBER_DENSITY,
     TIME,
@@ -48,4 +49,8 @@ register_symbol_dimensions({
     # (-1,-3,3,0,0,2,0) = ELECTRICAL_CONDUCTIVITY (S/m).
     "n_c": NUMBER_DENSITY,
     "z": DIMENSIONLESS,
+    # Harmonic migration prefactor nu* (2026-11-15), linear THz canonical. Its
+    # edge carries an opaque function, so the gate classifies it SKIPPED; the
+    # binding documents the intended dimension.
+    r"\nu^{*}": FREQUENCY,
 })

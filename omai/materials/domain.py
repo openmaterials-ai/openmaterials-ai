@@ -9,6 +9,7 @@ SYMBOLS: dict[str, str] = {
     "Diffusivity": r"D",
     "ActivationEnergy": r"E_a",
     "MigrationBarrier": r"E_{m}",
+    "MigrationPrefactor[method=harmonic_tst]": r"\nu^{*}",
     "ElectricalConductivity[carrier=ionic]": r"\sigma_{ion}",
     "ConfigurationalEnergy": r"E_{\mathrm{cfg}}",
     "CarrierDensity": r"n_c",

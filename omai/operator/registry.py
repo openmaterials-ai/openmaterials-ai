@@ -213,6 +213,7 @@ QUANTITY_TAGS: dict[str, str] = {
     "ideal_gas_molar_heat_capacity_p": "Constant-pressure heat capacity C_p(T) of one isolated molecule treated as an ideal gas, per mole of molecules; J/(K mol). The normal modes contribute their quantum harmonic (or quasi-rigid-rotor) Cv, and the external terms add 4R for a nonlinear molecule, 7R/2 for a linear one. Distinct from the per-mole-of-cells harmonic molar_heat_capacity (a crystal's Cv) and the QHA heat_capacity_constant_p.",
     "infrared_intensity": "Integrated infrared absorption intensity of one molecular normal mode, indexed like molecular_frequency by the mode index m; km/mol native. Proportional to the squared derivative of the molecular dipole along the mode.",
     "molecular_reaction_enthalpy": "Standard reaction enthalpy Delta_r H(T) of a balanced gas-phase reaction of molecules, per mole of reaction as written: the stoichiometric sum of the product enthalpies minus the reactant enthalpies, each the electronic energy plus the zero-point and thermal enthalpy of its normal modes and the ideal-gas external terms; kJ/mol. Distinct from the solid-state reaction_energy, which combines per-atom formation energies of crystals, and from the CALPHAD molar_enthalpy of a phase.",
+    "migration_prefactor": "Prefactor nu* of the transition-state-theory rate nu* exp(-E_m / k_B T) of one defect or ion hop in a solid, the pair of migration_barrier; FREQUENCY (linear THz). The harmonic_tst member is the Vineyard ratio of the normal-mode frequencies at the minimum and the saddle, in the classical high-temperature limit (k_B T >> h nu_i for the modes that change; no zero-point or Wigner correction). It includes the migration entropy factor and excludes the path count. Distinct from the diffusivity prefactor D_0, which also carries the jump geometry and correlation, and from any prefactor fitted to measured rates.",
 }
 
 
@@ -347,8 +348,13 @@ LABEL_KEYS: dict[str, frozenset[str]] = {
     # committee_force_spread: PotentialUncertaintyExceedance[method=
     # committee_force_spread], the fraction of an MD run's checks at which the
     # force spread of a committee of potentials exceeds a threshold (no other
-    # value set holds it).
-    "method": frozenset({"pimd", "committee_force_spread"}),
+    # value set holds it). Also harmonic_tst:
+    # MigrationPrefactor[method=harmonic_tst], the classical harmonic
+    # transition-state-theory (Vineyard) prefactor of one hop, kept apart from a
+    # prefactor fitted to measured rates, which absorbs the path count,
+    # anharmonicity, recrossing and the error of its own barrier (no other value
+    # set holds it).
+    "method": frozenset({"pimd", "committee_force_spread", "harmonic_tst"}),
     # The ROLE a thermal conductivity plays as an INPUT to a composite
     # effective-medium calculation: matrix (the continuous host phase km) vs
     # filler (the dispersed inclusion phase, anisotropic k11/k33). Both join the

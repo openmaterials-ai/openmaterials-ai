@@ -166,10 +166,11 @@ def test_no_node_uid_collisions_at_105_nodes():
     # 137 with MeanPotentialEnergy (Molecular dynamics tier).
     # 141 with IdealGasMolarHeatCapacityP, its variant
     # IdealGasMolarHeatCapacityP[approximation=qrrho], InfraredIntensity and
-    # MolecularReactionEnthalpy (Molecular tier). The count includes the three
-    # parameter nodes.
+    # MolecularReactionEnthalpy (Molecular tier). 142 with
+    # MigrationPrefactor[method=harmonic_tst] (Diffusion tier). The count
+    # includes the three parameter nodes.
     g = build_graph_dict(DOMAINS)
-    assert len(g["nodes"]) == 141
+    assert len(g["nodes"]) == 142
     uids = [n["uid"] for n in g["nodes"]]
     assert len(set(uids)) == len(uids), "node uid collision"
 

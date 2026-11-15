@@ -92,6 +92,17 @@ ALIASES: dict[str, tuple[str, ...]] = {
     "switching-energy": ("ProgrammingPulseEnergy",),
     "migration-barrier": ("MigrationBarrier",),
     "hop-barrier": ("MigrationBarrier",),
+    "migration-prefactor": (
+        "MigrationPrefactor[method=harmonic_tst]", "compute_harmonic_migration_prefactor",
+    ),
+    "vineyard-prefactor": (
+        "MigrationPrefactor[method=harmonic_tst]", "compute_harmonic_migration_prefactor",
+    ),
+    "harmonic-transition-state-theory": (
+        "MigrationPrefactor[method=harmonic_tst]", "MigrationBarrier",
+        "compute_harmonic_migration_prefactor",
+    ),
+    "hop-prefactor": ("MigrationPrefactor[method=harmonic_tst]",),
     "set-voltage": ("SetVoltage", "ramp_set_voltage"),
     "set-threshold": ("SetVoltage",),
     "retention-time": ("RetentionTime", "zero_bias_retention"),

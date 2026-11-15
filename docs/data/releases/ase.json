@@ -1,0 +1,13 @@
+{
+  "aliases": [],
+  "releases": [
+    {
+      "commit": "6c965f46a9449cbea275a6cc11fefb82da7df4bf",
+      "license_source": "https://gitlab.com/ase/ase/-/tree/3.26.0 (LICENSE, GNU Lesser General Public License version 2.1 or any later version; COPYING.LESSER, the LGPL 2.1 text; pyproject.toml license LGPL-2.1-or-later)",
+      "released": "2025-08-12",
+      "spdx": "LGPL-2.1-or-later",
+      "tag": "3.26.0",
+      "version": "3.26.0"
+    }
+  ]
+}

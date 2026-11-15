@@ -40,4 +40,7 @@ register_space_symbols({
     "ConfigurationalEnergy": {"E_{cfg}"},
     # Second supersede: the carrier number density, the Nernst-Einstein input.
     "CarrierDensity": {"n_c"},
+    # Harmonic transition-state-theory prefactor of one hop (2026-11-15). The
+    # \nu^{HTST} mode-ratio function is an applied function, needing no entry.
+    "MigrationPrefactor[method=harmonic_tst]": {r"\nu^{*}"},
 })

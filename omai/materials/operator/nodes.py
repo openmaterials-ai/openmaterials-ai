@@ -9,6 +9,14 @@ Node table:
   ElectricalConductivity[carrier=ionic]  electrical_conductivity  ELECTRICAL_CONDUCTIVITY  ()
   ConfigurationalEnergy                  configurational_energy   ENERGY                   ()
   CarrierDensity                         carrier_density          NUMBER_DENSITY           ()
+  MigrationBarrier                       migration_barrier        ENERGY                   ()
+  MigrationPrefactor[method=harmonic_tst]  migration_prefactor    FREQUENCY                ()
+
+MigrationPrefactor[method=harmonic_tst] (2026-11-15) is the prefactor nu* that
+pairs with MigrationBarrier in one hop's rate nu* exp(-E_m / k_B T): the
+Vineyard ratio of the normal-mode frequencies at the minimum and at the saddle,
+in the classical high-temperature limit. The method label keeps it apart from a
+prefactor fitted to measured rates, which is not this quantity.
 
 CarrierDensity arrives from the physics review (2026-07-10, second supersede):
 the L^-3 mobile-carrier number density n_c that makes the Nernst-Einstein ionic
@@ -60,6 +68,7 @@ from omai.operator.dimensions import (
     DIFFUSIVITY,
     ELECTRICAL_CONDUCTIVITY,
     ENERGY,
+    FREQUENCY,
     NUMBER_DENSITY,
 )
 from omai.operator.space import Field, ObservableSpace, Space
@@ -92,14 +101,55 @@ MIGRATION_BARRIER = ObservableSpace(
     description=(
         "Migration barrier E_m of one defect or ion hop in a solid: the energy "
         "from the initial minimum to the saddle point along the hop's path, the "
-        "activation energy of its transition-state-theory rate nu_0 exp(-E_m / "
+        "activation energy of its transition-state-theory rate nu* exp(-E_m / "
         "k_B T). ENERGY. The species and charge state, the path and direction, "
         "the site (bulk, grain boundary, surface, contact) and the source "
         "(nudged elastic band, fit to measured rates, calibrated model) ride in "
         "instance conditions. For diffusion by this one mechanism at fixed "
         "defect density it equals the diffusivity's ActivationEnergy; a "
         "formation term or a second mechanism makes them differ. Molecular "
-        "reaction barriers are ReactionBarrier."
+        "reaction barriers are ReactionBarrier. The prefactor of the same rate, "
+        "in classical harmonic transition-state theory, is "
+        "MigrationPrefactor[method=harmonic_tst]; an (E_m, nu*) pair of one hop "
+        "shares its conditions."
+    ),
+)
+
+MIGRATION_PREFACTOR = ObservableSpace(
+    name="MigrationPrefactor[method=harmonic_tst]",
+    fields=(Field("nu_star", FREQUENCY, indices=()),),
+    labels={"method": "harmonic_tst"},
+    tier="Diffusion",
+    description=(
+        "Prefactor nu* of the rate nu* exp(-E_m / k_B T) of one defect or ion "
+        "hop in a solid, in classical harmonic transition-state theory at fixed "
+        "cell (Vineyard, J. Phys. Chem. Solids 3, 121 (1957)): nu* = prod_{i=1..n} "
+        "nu_i(min) / prod_{j=1..n-1} nu_j(saddle), the ratio of the cyclic "
+        "normal-mode frequencies at the initial minimum and at the first-order "
+        "saddle, the saddle's one imaginary mode excluded. FREQUENCY, linear THz "
+        "canonical. With every atom displaced, bulk or slab, the three rigid "
+        "translations are projected out and n = 3N - 3. A value from a listed "
+        "subset of M atoms displaced with the rest held, none projected, n = 3M, "
+        "approximates the full ratio, and its saddle order is checked only within "
+        "that subspace. It is the classical high-temperature limit, valid for "
+        "k_B T >> h nu_i over the modes that change between the minimum and the "
+        "saddle; zero-point and Wigner corrections are excluded. Tunnelling "
+        "dominates below the crossover temperature h |nu_imag| / (2 pi k_B), so "
+        "being above it is necessary, not sufficient. It is per single path, so "
+        "it excludes the count z of equivalent paths. In the Wert-Zener split "
+        "nu* = nu exp(S_m / k_B), nu is one mode at the minimum along the hop and "
+        "S_m = k_B sum_j ln(nu_j(min) / nu_j(saddle)) over the other n - 1 modes; "
+        "the split is not unique, and nu* includes the entropy factor. "
+        "MigrationBarrier E_m is its pair, and the two share the hop's "
+        "conditions. Required conditions: the hop (species and charge state, "
+        "path, direction, site), the potential, the cell, the displaced atom set "
+        "and M, the masses, the finite-difference step, the imaginary-mode floor "
+        "and the residual force of both frames; the error bound of ln nu* when "
+        "the eigenvalue noise is known. A prefactor fitted to measured rates is "
+        "not this node: it absorbs the path count, anharmonicity, recrossing and "
+        "the error of its own barrier. Distinct from the diffusivity prefactor "
+        "D_0 = z a^2 f nu* / (2 d), which also carries the jump length, the "
+        "correlation factor and, for thermal defects, the formation entropy."
     ),
 )
 
@@ -180,6 +230,7 @@ NODES: tuple[Space, ...] = (
     DIFFUSIVITY_STATE,
     ACTIVATION_ENERGY,
     MIGRATION_BARRIER,
+    MIGRATION_PREFACTOR,
     ELECTRICAL_CONDUCTIVITY_IONIC,
     CONFIGURATIONAL_ENERGY,
     CARRIER_DENSITY,

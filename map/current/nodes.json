@@ -841,6 +841,28 @@
   },
   "uid": "38b082d42f5136a903752e5425c65c112c90bc564693ddb929ef3f175d9d96d8"
  },
+ "3f183436e87ac559173db2903a5ab531c8b131473d8c1e8852e6c12f51c4a969": {
+  "identity": {
+   "fields": [
+    {
+     "dimension": "T^-1",
+     "indices": []
+    }
+   ],
+   "gauge": "observable",
+   "labels": {
+    "method": "harmonic_tst"
+   },
+   "quantity": "migration_prefactor"
+  },
+  "meta": {
+   "description": "Prefactor nu* of the rate nu* exp(-E_m / k_B T) of one defect or ion hop in a solid, in classical harmonic transition-state theory at fixed cell (Vineyard, J. Phys. Chem. Solids 3, 121 (1957)): nu* = prod_{i=1..n} nu_i(min) / prod_{j=1..n-1} nu_j(saddle), the ratio of the cyclic normal-mode frequencies at the initial minimum and at the first-order saddle, the saddle's one imaginary mode excluded. FREQUENCY, linear THz canonical. With every atom displaced, bulk or slab, the three rigid translations are projected out and n = 3N - 3. A value from a listed subset of M atoms displaced with the rest held, none projected, n = 3M, approximates the full ratio, and its saddle order is checked only within that subspace. It is the classical high-temperature limit, valid for k_B T >> h nu_i over the modes that change between the minimum and the saddle; zero-point and Wigner corrections are excluded. Tunnelling dominates below the crossover temperature h |nu_imag| / (2 pi k_B), so being above it is necessary, not sufficient. It is per single path, so it excludes the count z of equivalent paths. In the Wert-Zener split nu* = nu exp(S_m / k_B), nu is one mode at the minimum along the hop and S_m = k_B sum_j ln(nu_j(min) / nu_j(saddle)) over the other n - 1 modes; the split is not unique, and nu* includes the entropy factor. MigrationBarrier E_m is its pair, and the two share the hop's conditions. Required conditions: the hop (species and charge state, path, direction, site), the potential, the cell, the displaced atom set and M, the masses, the finite-difference step, the imaginary-mode floor and the residual force of both frames; the error bound of ln nu* when the eigenvalue noise is known. A prefactor fitted to measured rates is not this node: it absorbs the path count, anharmonicity, recrossing and the error of its own barrier. Distinct from the diffusivity prefactor D_0 = z a^2 f nu* / (2 d), which also carries the jump length, the correlation factor and, for thermal defects, the formation entropy.",
+   "name": "MigrationPrefactor[method=harmonic_tst]",
+   "symbol": "\\nu^{*}",
+   "tier": "Diffusion"
+  },
+  "uid": "3f183436e87ac559173db2903a5ab531c8b131473d8c1e8852e6c12f51c4a969"
+ },
  "3f5753096d30cc6741fe9c6fd5e247e9afbb87b94f5844ec233f9243345d3712": {
   "identity": {
    "fields": [
@@ -2456,7 +2478,7 @@
    "quantity": "migration_barrier"
   },
   "meta": {
-   "description": "Migration barrier E_m of one defect or ion hop in a solid: the energy from the initial minimum to the saddle point along the hop's path, the activation energy of its transition-state-theory rate nu_0 exp(-E_m / k_B T). ENERGY. The species and charge state, the path and direction, the site (bulk, grain boundary, surface, contact) and the source (nudged elastic band, fit to measured rates, calibrated model) ride in instance conditions. For diffusion by this one mechanism at fixed defect density it equals the diffusivity's ActivationEnergy; a formation term or a second mechanism makes them differ. Molecular reaction barriers are ReactionBarrier.",
+   "description": "Migration barrier E_m of one defect or ion hop in a solid: the energy from the initial minimum to the saddle point along the hop's path, the activation energy of its transition-state-theory rate nu* exp(-E_m / k_B T). ENERGY. The species and charge state, the path and direction, the site (bulk, grain boundary, surface, contact) and the source (nudged elastic band, fit to measured rates, calibrated model) ride in instance conditions. For diffusion by this one mechanism at fixed defect density it equals the diffusivity's ActivationEnergy; a formation term or a second mechanism makes them differ. Molecular reaction barriers are ReactionBarrier. The prefactor of the same rate, in classical harmonic transition-state theory, is MigrationPrefactor[method=harmonic_tst]; an (E_m, nu*) pair of one hop shares its conditions.",
    "name": "MigrationBarrier",
    "symbol": "E_{m}",
    "tier": "Diffusion"

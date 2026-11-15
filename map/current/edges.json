@@ -2528,6 +2528,32 @@
   },
   "uid": "9fc76c80bba656236591522ff1955da5d9c313be5d0bc5beca5db579022d2ccd"
  },
+ "a3cec28c097e24dd055e3f28317935cc60de0a3d548dd023464b53e94e7def26": {
+  "identity": {
+   "formula": "Equality(Symbol('\\\\nu^{*}', positive=True), Function('\\\\nu^{HTST}')(Symbol('V'), Symbol('\\\\mathcal{S}')))",
+   "inputs": [
+    "80a4273845e09207860e06db18d1f1ee5670a9b9c8b1020a99928c872878f901",
+    "db1df71467f5a79440f849704ac20a33573ed4e270b5ebba59549272b2475239"
+   ],
+   "output": "3f183436e87ac559173db2903a5ab531c8b131473d8c1e8852e6c12f51c4a969",
+   "outputs": [
+    "3f183436e87ac559173db2903a5ab531c8b131473d8c1e8852e6c12f51c4a969"
+   ],
+   "schemes": {
+    "method": "harmonic_tst"
+   }
+  },
+  "meta": {
+   "description": "Harmonic migration prefactor nu* = nu^{HTST}[Potential, Structure]: the Vineyard ratio prod_{i=1..n} nu_i(min) / prod_{j=1..n-1} nu_j(saddle) of the cyclic normal-mode frequencies of the mass-weighted Hessian of the Potential at two Structures of one cell, the initial minimum and the first-order saddle of the hop, the saddle's one imaginary mode excluded. n = 3N - 3 with every atom displaced, bulk or slab, and the rigid translations projected out; a listed subset of M atoms with the rest held gives n = 3M and approximates the full ratio, with M and the atom set required conditions. nu^{HTST} is opaque over both Structures (which ride in conditions with the atom set) and the Potential; the method scheme records harmonic_tst. The minimum must have no imaginary or soft mode, the saddle exactly one imaginary and no soft mode, and both frames must meet the stated residual-force bound, a convention that does not guarantee stationarity for soft modes. The product is a sum of logarithms. Classical high-temperature limit (k_B T >> h nu_i for the modes that change), no zero-point or Wigner correction; above the crossover temperature is necessary, not sufficient. omai.materials.evaluate.harmonic_migration_prefactor evaluates it from the two mode lists. Linear THz. Implicit (two Hessian diagonalizations), so not sympy-executable.",
+   "formula_latex": "\\nu^{*} = \\nu^{HTST}{\\left(V,\\mathcal{S} \\right)}",
+   "formula_srepr": "Equality(Symbol('\\\\nu^{*}', positive=True), Function('\\\\nu^{HTST}')(Symbol('V'), Symbol('\\\\mathcal{S}')))",
+   "name": "compute_harmonic_migration_prefactor",
+   "schemes": {
+    "method": "harmonic_tst"
+   }
+  },
+  "uid": "a3cec28c097e24dd055e3f28317935cc60de0a3d548dd023464b53e94e7def26"
+ },
  "a4bc99a6b2efc1df1400041ada33cfb59e97819f189e3501a99c06f9c5e5d49f": {
   "identity": {
    "formula": "Equality(Symbol('V_{avg}'), Mul(Pow(Symbol('n_{ion}', positive=True), Integer(-1)), Pow(Symbol('q_e', positive=True), Integer(-1)), Add(Mul(Symbol('\\\\mu_{ion}'), Symbol('n_{ion}', positive=True)), Function('E^{empty}')(Symbol('E_{tot}'), Symbol('\\\\mathcal{S}')), Mul(Integer(-1), Function('E^{full}')(Symbol('E_{tot}'), Symbol('\\\\mathcal{S}'))))))",

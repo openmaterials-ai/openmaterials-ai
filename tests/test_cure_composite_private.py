@@ -58,9 +58,11 @@ def test_cure_and_nan_nodes_stay_on_the_map_with_no_representation():
     codes = build_codes(DOMAINS)
     for code, entry in codes.items():
         assert not CURE_AND_NAN_NODES & set(entry), code
-    # openmaterials-ai keeps only its own evaluator, the ideal-gas heat capacity.
+    # openmaterials-ai keeps only its own public evaluators: the ideal-gas heat
+    # capacity and the harmonic migration prefactor.
     assert set(codes["openmaterials-ai"]) == {
-        "IdealGasMolarHeatCapacityP", "IdealGasMolarHeatCapacityP[approximation=qrrho]"}
+        "IdealGasMolarHeatCapacityP", "IdealGasMolarHeatCapacityP[approximation=qrrho]",
+        "MigrationPrefactor[method=harmonic_tst]"}
 
 
 def test_no_representation_module_for_the_cure_and_nan_nodes():

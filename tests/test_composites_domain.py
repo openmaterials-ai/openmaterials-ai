@@ -474,9 +474,9 @@ def test_no_platform_representation_on_the_map():
 
 def test_graph_totals_after_the_composites_domain():
     g = build_graph_dict(DOMAINS)
-    assert len(g["nodes"]) == 141  # 107 + 8 composite + 11 analog device metrology + MigrationBarrier + 2 cure kinetics + 3 potential fit errors + PotentialUncertaintyExceedance + 3 analog relaxation and classification + MeanPotentialEnergy + 4 molecular thermochemistry (two Cp variants, IR intensity, reaction enthalpy)
+    assert len(g["nodes"]) == 142  # 107 + 8 composite + 11 analog device metrology + MigrationBarrier + 2 cure kinetics + 3 potential fit errors + PotentialUncertaintyExceedance + 3 analog relaxation and classification + MeanPotentialEnergy + 4 molecular thermochemistry (two Cp variants, IR intensity, reaction enthalpy) + MigrationPrefactor[method=harmonic_tst]
     ops = set()
     for d in DOMAINS:
         for op in d.edges:
             ops.add(op.name)
-    assert len(ops) == 138  # 109 + 6 composite + 10 analog device metrology + 2 cure-kinetics edges + 3 potential fit-error edges + compute_potential_uncertainty_exceedance + 2 analog relaxation and classification edges + sample_mean_potential_energy + 4 molecular thermochemistry edges
+    assert len(ops) == 139  # 109 + 6 composite + 10 analog device metrology + 2 cure-kinetics edges + 3 potential fit-error edges + compute_potential_uncertainty_exceedance + 2 analog relaxation and classification edges + sample_mean_potential_energy + 4 molecular thermochemistry edges + compute_harmonic_migration_prefactor
