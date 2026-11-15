@@ -31,7 +31,7 @@ Chief of staff, Platform, Engines, Map, Revenue and legal, Product and marketing
 | `.github/scripts/owner_agreement.py`, `.github/scripts/test_owner_agreement.py`, `.github/workflows/owner-agreement.yml` | Platform, IT and security | The owner check |
 | `infra/` | Map, IT and security | The site Worker and the learn proxy, deployed with the Cloudflare token |
 | `README.md`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, `PRODUCT.md`, `examples/README.md` | Map, Product and marketing | Public copy |
-| `LICENSE`, `LICENSE-DATA`, `NOTICE`, `THIRD_PARTY_NOTICES`, `CITATION.cff` | Map, Revenue and legal | Licences, notices and citation |
+| `LICENSE`, `LICENSE-DATA`, `NOTICE`, `THIRD_PARTY_NOTICES`, `CITATION.cff`, `docs/assets/vendor/LICENSES/`, `infra/site/fonts/LICENSE-*` | Map, Revenue and legal | Licences, notices and citation, and the third-party licence texts the site ships |
 | `SECURITY.md` | Map, IT and security | Security policy |
 | `docs/index.html`, `docs/assets/site.css`, `omai/code_pages.py`, `omai/code_cards.py` | Map, Product and marketing | The site's hand-written copy and design, and the page generators whose templates carry visible wording |
 | `infra/learn-proxy/wrangler.jsonc` | Map, IT and security, Revenue and legal | The learn proxy's daily spend cap |
