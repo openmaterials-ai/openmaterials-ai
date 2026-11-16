@@ -55,7 +55,7 @@ on:
 
 jobs:
   current-physlib:
-    runs-on: ubuntu-26.04
+    runs-on: ubuntu-latest
     env:
       MATHLIB_NO_CACHE_ON_UPDATE: "1"
       LEAN_NUM_THREADS: "4"

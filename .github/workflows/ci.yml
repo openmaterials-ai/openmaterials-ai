@@ -12,7 +12,7 @@ on:
 
 jobs:
   tests:
-    runs-on: ubuntu-26.04
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
@@ -31,7 +31,7 @@ jobs:
   # The distance layer needs its optional extras; without them tests/distance
   # skips itself, so the base matrix above stays lean.
   distance:
-    runs-on: ubuntu-26.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
@@ -47,7 +47,7 @@ jobs:
   # registry the wheel ships. Build the wheel, install it into a fresh venv and
   # run the check from outside the checkout, so nothing imports the source tree.
   wheel:
-    runs-on: ubuntu-26.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
@@ -70,7 +70,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-26.04, macos-15]
+        os: [ubuntu-latest, macos-15]
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
