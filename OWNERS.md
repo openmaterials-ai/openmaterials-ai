@@ -6,11 +6,11 @@ A change that touches a path needs one line from every seat that owns it:
 
     <Seat> agreed at <head commit>
 
-The line goes in the pull request body or a comment. A commit that reaches `main` without a pull request needs its lines as comments on that commit. The author's own seat posts its line too, after its fresh reviewer has passed the change.
+The line goes in a comment on the pull request, not in its body, which is edited as a matter of course. A commit that reaches `main` without a pull request needs its lines as comments on that commit. The author's own seat posts its line too, after its fresh reviewer has passed the change.
 
-A line counts only when it stands alone on its own line, outside quotes, lists, code and HTML comments, and was written by a GitHub account listed under Signers. Anyone with write access can edit a signer's text, and GitHub does not record who did, so the check stops a seat from forgetting. It cannot stop a forged line.
+A line counts only when it stands alone on its own line, outside quotes, lists, code and HTML comments, was written by a GitHub account listed under Signers, and was never edited. Anyone with write access can edit any comment, and the comment keeps its author, so an edited comment does not count: post a new one. Every seat acts as the same GitHub account, so the check stops a seat from forgetting. It cannot stop a forged line.
 
-A line holds while the diff of that seat's paths against `main` stays the same byte for byte, whitespace included. Only its position in the file may change. A later push that leaves those paths alone keeps the line, and one that touches them needs a new line. Every row that matches a path applies, so where rows overlap, every listed seat agrees. A path that no row names belongs to the default owner. A change to this file needs the chief of staff and every seat named in a row it adds or removes.
+A line holds while the diff of that seat's paths against `main` stays the same byte for byte, whitespace included. Only its position in the file may change. A later push that leaves those paths alone keeps the line, and one that touches them needs a new line. Every row that matches a path applies, so where rows overlap, every listed seat agrees. A path that no row names belongs to the default owner. A change to this file needs the chief of staff, every seat named in a row it adds or removes, and every seat that stops owning a file, such as the default owner when a new row covers a file no row named.
 
 In a pattern, `dir/` is everything under `dir`, `*` matches inside one path segment, `**` across any number of segments including none, and any other pattern is one file. Owners are seat names, not GitHub accounts, because every seat acts as the same GitHub user.
 

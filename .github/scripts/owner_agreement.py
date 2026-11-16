@@ -132,6 +132,10 @@ def section_list(lines: list[str], heading: str) -> list[str]:
 
 
 def parse_table(text: str) -> Table:
+    # A NUL byte makes git call the file binary, and bytes that are not UTF-8 arrive as
+    # surrogates: either way the table is not plain text, so it is not read.
+    if "\0" in text or re.search("[\udc80-\udcff]", text):
+        raise TableError("OWNERS.md is not plain UTF-8 text")
     lines = text.splitlines()
     seats = section_list(lines, "## Seats")
     if not seats:
@@ -186,7 +190,7 @@ def seats_in_changed_rows(diff_text: str, seats: list[str]) -> set[str]:
 
 
 def git(*args: str, check: bool = True) -> str:
-    res = subprocess.run([*GIT, *args], capture_output=True, text=True)
+    res = subprocess.run([*GIT, *args], capture_output=True, encoding="utf-8", errors="surrogateescape")
     if check and res.returncode != 0:
         raise RuntimeError(f"git {' '.join(args)}: {res.stderr.strip()}")
     return res.stdout
@@ -309,12 +313,31 @@ def signed_texts(table: Table, items: list[tuple[str, str]]) -> list[str]:
     return [body for login, body in items if login in table.signers]
 
 
+def seats_losing_paths(table: Table, base: str, head: str) -> set[str]:
+    """Seats that own a file under the table judged by and not under the head's table.
+    Rows only add owners, so a seat loses a file without a row of its own changing in
+    one case: a new row over a file no row named takes it from the default owner. Every
+    file in either tree counts. An unreadable head table is judged in judge()."""
+    try:
+        after = parse_table(git("show", f"{head}:{TABLE}", check=False))
+    except TableError:
+        return set()
+    files = set(git_z("ls-tree", "-r", "--name-only", base)) | set(git_z("ls-tree", "-r", "--name-only", head))
+    lost: set[str] = set()
+    for f in files:
+        lost |= table.owners(f) - after.owners(f)
+    return lost
+
+
 def check(base: str, head: str, items: list[tuple[str, str]], table_text: str, table_diff: str, extra: frozenset[str] = frozenset()) -> Verdict:
     """The verdict of base..head. Seats in `extra` must agree to the whole diff."""
     table = parse_table(table_text)
+    mb = merge_base(base, head)
     table_seats = seats_in_changed_rows(table_diff, table.seats)
     if table_diff and signers_changed(base, head):
         table_seats |= set(table.signer_owners)
+    if table_diff:
+        table_seats |= seats_losing_paths(table, mb, head)
 
     def seat_files(files: list[str]) -> dict[str, list[str]]:
         by_seat = owners_map(table, files, table_seats)
@@ -323,7 +346,6 @@ def check(base: str, head: str, items: list[tuple[str, str]], table_text: str, t
                 by_seat[seat] = list(files)
         return by_seat
 
-    mb = merge_base(base, head)
     required = seat_files(changed_files(mb, head))
     lines = agreement_lines(signed_texts(table, items), table.seats)
     agreed: dict[str, str] = {}
@@ -365,9 +387,10 @@ def report(v: Verdict, head: str, where: str) -> str:
 
 def table_at(base: str, head: str) -> tuple[str, str]:
     """The table to judge by (the base's, or the head's when the head first adds it) and
-    the diff of OWNERS.md the change makes."""
+    the diff of OWNERS.md the change makes, as text even when git or .gitattributes
+    would call the file binary."""
     text = git("show", f"{base}:{TABLE}", check=False) or git("show", f"{head}:{TABLE}", check=False)
-    return text, git(*DIFF, merge_base(base, head), head, "--", TABLE)
+    return text, git(*DIFF, "--text", merge_base(base, head), head, "--", TABLE)
 
 
 def signers_changed(base: str, head: str) -> bool:
@@ -479,14 +502,39 @@ def fetch(remote: str, *refs: str) -> None:
     git("fetch", "--quiet", remote, *refs)
 
 
+EDITS = "query($ids: [ID!]!) { nodes(ids: $ids) { ... on Comment { id lastEditedAt } } }"
+
+
+def gh_graphql(query: str, variables: dict) -> dict:
+    res = subprocess.run(["gh", "api", "graphql", "--input", "-"], input=json.dumps({"query": query, "variables": variables}), capture_output=True, text=True)
+    try:
+        data = json.loads(res.stdout)["data"]
+    except (ValueError, KeyError, TypeError):
+        raise RuntimeError(f"gh api graphql: {res.stderr.strip() or res.stdout.strip()}")
+    return data or {}
+
+
+def unedited(comments: list[dict]) -> list[tuple[str, str]]:
+    """(login, body) of the comments GitHub records as never edited. Anyone with write
+    access can edit any comment and the comment keeps its author, so an edited comment
+    could carry anyone's words. GitHub's GraphQL API records every edit. A comment it
+    does not answer for counts as edited."""
+    ids = [c["node_id"] for c in comments if c.get("node_id")]
+    clean: set[str] = set()
+    for i in range(0, len(ids), 100):
+        for node in gh_graphql(EDITS, {"ids": ids[i:i + 100]}).get("nodes") or []:
+            if node and node.get("id") and "lastEditedAt" in node and node["lastEditedAt"] is None:
+                clean.add(node["id"])
+    return [(c["user"]["login"], c.get("body") or "") for c in comments if c.get("node_id") in clean]
+
+
 def pr_items(repo: str, pr: dict) -> list[tuple[str, str]]:
-    items = [(pr["user"]["login"], pr.get("body") or "")]
-    items += [(c["user"]["login"], c.get("body") or "") for c in gh_list(f"repos/{repo}/issues/{pr['number']}/comments")]
-    return items
+    """The pull request's comments. Not its body: the body is edited as a matter of course."""
+    return unedited(gh_list(f"repos/{repo}/issues/{pr['number']}/comments"))
 
 
 def commit_items(repo: str, sha: str) -> list[tuple[str, str]]:
-    return [(c["user"]["login"], c.get("body") or "") for c in gh_list(f"repos/{repo}/commits/{sha}/comments")]
+    return unedited(gh_list(f"repos/{repo}/commits/{sha}/comments"))
 
 
 # --- the deploy step ---------------------------------------------------------------

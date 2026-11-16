@@ -71,6 +71,11 @@ class TableTest(unittest.TestCase):
         self.assertFalse(oa.pattern_regex("app/").fullmatch("application.ts"))
         self.assertFalse(oa.pattern_regex("app/").fullmatch("app"))
 
+    def test_a_table_that_is_not_plain_text_is_refused(self):
+        for bad in (TABLE + "\0", TABLE.replace("The app", "The app \udc80")):
+            with self.assertRaises(oa.TableError):
+                oa.parse_table(bad)
+
     def test_unknown_seat_is_refused(self):
         with self.assertRaises(oa.TableError):
             oa.parse_table(TABLE.replace("| Engines | Engines |", "| Engine | Engines |"))
@@ -231,6 +236,24 @@ class RepoTest(RepoCase):
         items = signed(*(f"{s} agreed at {head[:8]}" for s in ("Chief of staff", "Engines", "Revenue and legal")))
         self.assertEqual(self.verdict(items).missing, [])
 
+    def test_a_new_row_over_a_default_owned_file_needs_the_default_owner(self):
+        self.git("checkout", "-q", "main")
+        self.write("README.md", "readme\n")
+        self.commit("readme")
+        self.git("checkout", "-q", "pr")
+        self.git("reset", "-q", "--hard", "main")
+        self.write("OWNERS.md", TABLE.replace("| (the Signers list)", "| `README.md` | Engines | Readme |\n| (the Signers list)"))
+        head = self.commit("readme row")
+        self.assertEqual(sorted(self.verdict([]).required), ["Chief of staff", "Engines", "Platform"])
+        items = signed(*(f"{s} agreed at {head[:8]}" for s in ("Chief of staff", "Engines")))
+        self.assertEqual(self.verdict(items).missing, ["Platform"])
+
+    def test_a_table_git_calls_binary_is_still_read_as_text(self):
+        self.write(".gitattributes", "OWNERS.md binary\n")
+        self.write("OWNERS.md", TABLE.replace("| `engine/` | Engines | Engines |", "| `engine/` | Engines, Revenue and legal | Engines |"))
+        self.commit("binary table")
+        self.assertIn("Revenue and legal", self.verdict([]).required)
+
     def test_a_new_signer_needs_the_signers_row(self):
         self.write("OWNERS.md", TABLE.replace(f"\n{SIGNER}\n", f"\n{SIGNER}, newcomer\n"))
         head = self.commit("signer")
@@ -285,6 +308,12 @@ class BrokenTableTest(RepoCase):
         code, text, _ = self.judge(items=signed(f"Chief of staff agreed at {head[:8]}"))
         self.assertEqual(code, oa.EXIT_TABLE)
         self.assertIn("leaves OWNERS.md unreadable", text)
+
+    def test_a_nul_byte_in_the_table_is_refused(self):
+        self.write("OWNERS.md", TABLE.replace("| `engine/` | Engines | Engines |", "| `engine/` | Engines | Engines\0 |"))
+        head = self.commit("nul")
+        code, _, _ = self.judge(items=signed(f"Chief of staff agreed at {head[:8]}"))
+        self.assertEqual(code, oa.EXIT_TABLE)
 
     def test_after_a_broken_table_reaches_main_a_fix_can_ship(self):
         self.git("checkout", "-q", "main")
@@ -382,18 +411,25 @@ class DeployTest(RepoCase):
 
     def setUp(self):
         super().setUp()
-        self.api, self.lists = {}, {}
-        self.saved = (oa.gh_json, oa.gh_list, oa.fetch)
+        self.api, self.lists, self.edited = {}, {}, set()
+        self.saved = (oa.gh_json, oa.gh_list, oa.fetch, oa.gh_graphql)
         oa.gh_json = lambda path: self.api[path]
-        oa.gh_list = lambda path: self.lists.get(path, [])
+        # Every listed item gets a node id, as GitHub gives every comment one.
+        oa.gh_list = lambda path: [dict(c, node_id=c.get("node_id", f"{path}#{i}")) for i, c in enumerate(self.lists.get(path, []))]
+        oa.gh_graphql = lambda query, variables: {"nodes": [self.node(i) for i in variables["ids"]]}
         oa.fetch = lambda *a, **k: None
 
+    def node(self, node_id):
+        """GitHub's answer for one comment: a time when it was edited."""
+        return {"id": node_id, "lastEditedAt": "2026-11-15T00:00:00Z" if node_id in self.edited else None}
+
     def tearDown(self):
-        oa.gh_json, oa.gh_list, oa.fetch = self.saved
+        oa.gh_json, oa.gh_list, oa.fetch, oa.gh_graphql = self.saved
         super().tearDown()
 
-    def squash(self, number, body, login=SIGNER, path="engine/run.py"):
-        """A pull request changing one file, squash-merged onto main."""
+    def squash(self, number, body, login=SIGNER, path="engine/run.py", pr_body=""):
+        """A pull request changing one file, squash-merged onto main, with `body` as its
+        one comment."""
         self.git("checkout", "-q", "-B", f"pr{number}", "main")
         self.write(path, f"change {number}\n")
         head = self.commit(f"pr {number}")
@@ -401,7 +437,8 @@ class DeployTest(RepoCase):
         self.write(path, f"change {number}\n")
         merged = self.commit(f"squash {number}")
         self.api[f"repos/r/commits/{merged}/pulls"] = [{"number": number, "merge_commit_sha": merged}]
-        self.api[f"repos/r/pulls/{number}"] = {"number": number, "head": {"sha": head}, "user": {"login": login}, "body": body.format(head=head[:8])}
+        self.api[f"repos/r/pulls/{number}"] = {"number": number, "head": {"sha": head}, "user": {"login": login}, "body": pr_body.format(head=head[:8])}
+        self.lists[f"repos/r/issues/{number}/comments"] = [{"user": {"login": login}, "body": body.format(head=head[:8])}] if body else []
         return merged
 
     def push(self, path, text):
@@ -429,6 +466,26 @@ class DeployTest(RepoCase):
 
     def test_lines_from_a_non_signer_do_not_count(self):
         self.squash(1, "Engines agreed at {head}", login="outsider")
+        self.assertEqual(self.deployed(), oa.EXIT_MISSING)
+
+    def test_lines_in_the_pull_request_body_do_not_count(self):
+        self.squash(1, "", pr_body="Engines agreed at {head}")
+        self.assertEqual(self.deployed(), oa.EXIT_MISSING)
+
+    def test_an_edited_comment_does_not_count(self):
+        self.squash(1, "Engines agreed at {head}")
+        self.edited.add("repos/r/issues/1/comments#0")
+        self.assertEqual(self.deployed(), oa.EXIT_MISSING)
+
+    def test_a_comment_github_does_not_answer_for_counts_as_edited(self):
+        self.squash(1, "Engines agreed at {head}")
+        oa.gh_graphql = lambda query, variables: {"nodes": [None for _ in variables["ids"]]}
+        self.assertEqual(self.deployed(), oa.EXIT_MISSING)
+
+    def test_an_edited_commit_comment_does_not_count(self):
+        sha = self.push("app/main.ts", "pushed\n")
+        self.lists[f"repos/r/commits/{sha}/comments"] = [{"user": {"login": SIGNER}, "body": f"Platform agreed at {sha[:8]}"}]
+        self.edited.add(f"repos/r/commits/{sha}/comments#0")
         self.assertEqual(self.deployed(), oa.EXIT_MISSING)
 
     def test_a_direct_push_needs_lines_on_the_commit(self):
