@@ -99,8 +99,8 @@ CODE_CREDITS: dict[str, dict] = {
         "license": "LGPL-3.0-or-later",
         "license_source": "GPUMD README.md and src/main_gpumd/main.cu at v5.9.1, "
         "read 2026-11-18: LGPL version 3 or any later version, relicensed from "
-        "GPL-3.0-or-later in commit ebe1eeb083 (2026-10-05); v3.9.5 and earlier "
-        "are GPL-3.0-or-later",
+        "GPL-3.0-or-later in commit ebe1eeb083 (2026-10-05), first released in "
+        "v5.9.1; v5.9 and earlier are GPL-3.0-or-later",
         "url": "https://github.com/brucefan1983/GPUMD",
     },
     "lammps": {

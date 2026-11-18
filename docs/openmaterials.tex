@@ -2206,12 +2206,13 @@ reproduced and is not quoted here.
 
 The frequency, heat-capacity and contracted-linewidth comparisons pass at
 $\le 1\%$ tolerance. The direct-solution $\kappa$ does not. The broadening sweep
-committed in \texttt{experiments/silicon\_tersoff/README.md} shows part of the
-reason: as $\sigma$ goes from 0.05 to 1.0\,THz the kaldo/phono3py ratio of the
-direct solution runs between 1.065 and 1.222, smallest near 0.2\,THz, so the two
-codes apply the same $\sigma$ differently in the energy-conserving delta. The two
-runs also differ in the acoustic sum rule on the force constants, imposed by
-phono3py and not by kaldo. The sweep does not separate these causes. All
+in \texttt{experiments/silicon\_tersoff/README.md} (run by
+\texttt{sigma\_sweep.py}, commit \texttt{2119cf0}) shows that the gap depends on
+the broadening: as $\sigma$ goes from 0.05 to 1.0\,THz the kaldo/phono3py ratio of
+the direct solution runs between 1.065 and 1.222, smallest near 0.2\,THz. That
+points to the two codes applying the same $\sigma$ differently in the
+energy-conserving delta, but differences in the force constants also act through
+the $\sigma$-dependent phase space, and the sweep does not separate the two. All
 HiddenSpace per-element comparisons return \textsc{Not\_Comparable}. The $1/(4\pi)$ factor on $\Gamma$
 decomposes into a $1/(2\pi)$ \emph{unit} factor (kaldo angular vs phono3py linear
 THz) and a $1/2$ \emph{normalization} factor (kaldo $\Gamma = 2\,\text{Im}\,\Sigma$
@@ -3422,7 +3423,7 @@ for kaldo, LAMMPS, Quantum ESPRESSO, phonopy, phono3py, ShengBTE, and the
 AtomisticSkills skills; package metadata for the pip-distributed codes; the
 project's GitHub LICENSE for MatterGen, DiffCSP, and OpenMM; GPUMD's README and
 file headers at tag v5.9.1, LGPL-3.0-or-later since its relicensing of 5 October
-2026 (v3.9.5 and earlier are GPL-3.0-or-later);
+2026, first released in v5.9.1 (v5.9 and earlier are GPL-3.0-or-later);
 ngspice's COPYING and file headers at tag
 ngspice-47 (BSD-3-Clause; numparam and KLU LGPL, OSDI MPL-2.0, the XSPICE
 table code model GPL-2.0-or-later, the Sparse 1.3 solver an unnamed
