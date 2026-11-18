@@ -60,8 +60,8 @@ jobs:
       MATHLIB_NO_CACHE_ON_UPDATE: "1"
       LEAN_NUM_THREADS: "4"
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
           cache: pip
@@ -70,7 +70,7 @@ jobs:
       - name: Verify generated ISQ encodings
         run: python -m pytest tests/test_physlib_dimensions.py -q
       - name: Cache isolated toolchain and dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: |
             ~/.elan
