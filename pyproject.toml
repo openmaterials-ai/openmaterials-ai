@@ -23,6 +23,12 @@ dependencies = [
     "jsonschema>=4",
 ]
 
+[project.urls]
+Homepage = "https://openmaterials.ai/"
+Source = "https://github.com/openmaterials-ai/openmaterials-ai"
+Documentation = "https://openmaterials.ai/guide/"
+"Run a calculation" = "https://materialscodegraph.com/?ref=omai-pypi#hero-connect"
+
 [project.optional-dependencies]
 # The paper parser (omai/paper_parser, omai/paper_db) imports these lazily:
 # pypdf>=6.1 for PdfReader/PdfWriter and filters.ZLIB_MAX_OUTPUT_LENGTH (the

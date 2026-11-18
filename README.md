@@ -59,12 +59,11 @@ non-exclusive license to redistribute it under CC BY 4.0, and the raw simulation
 or experimental artifacts behind it are never ingested (GOVERNANCE.md, "Data
 ownership and fairness").
 
-## Share a result with a link
+## Run a lineage on MaterialsCodeGraph
 
-OpenMaterials provides templates and lineages; MaterialsCodeGraph stores
-experiments and runs simulations from lineages.
+A lineage identifies one result. It names the map quantity, the material and the conditions, and the result's id is the hash of the whole lineage. The openmaterials-ai package records lineages and their values but does not run simulation codes. MaterialsCodeGraph, a paid service from Da Vinci Labs, runs lineages for an AI agent over the Model Context Protocol (MCP). The agent asks for a quote, which is free and caps the price, and then launches the run. When a run on a map node finishes, the agent receives a permanent record that names its lineage. The catalog tool, `mcg_catalog`, lists the kinds and codes a run may use. To connect an agent, start at [materialscodegraph.com](https://materialscodegraph.com/?ref=omai-readme#hero-connect).
 
-Glossary:
+## Terms
 
 - THE LINEAGE (the schema) is one versioned artifact holding the derivation
   graph and the instance-format rules, published as `docs/data/lineage.json`
@@ -81,6 +80,8 @@ Glossary:
   old records ride outside the hash forever and never re-mint an id.
 - Provenance is a quantity instance's source reference, `source.ref`.
 - Derivation is a node's upstream graph in the map.
+
+## Share a result with a link
 
 A lineage can be shared as a link on its own, with no store or server. The
 record is light and lineage-identified: its identity comes from its `lineage`
