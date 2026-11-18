@@ -108,9 +108,10 @@ the energy-conservation delta function and/or the Gaussian normalization.
 
 ## What this experiment does NOT yet exercise
 
-- Acoustic-sum-rule enforcement. Both codes ran with their respective
-  defaults (kaldo: off; phonopy/phono3py: on internally during FC
-  production).
+- Acoustic-sum-rule enforcement. Neither run imposes it explicitly:
+  kaldo does not by default, and `run_phono3py.py` calls `produce_fc2()`
+  and `produce_fc3()` with their defaults and no symmetrize call. Which
+  phono3py version ran, and so what its defaults did, is not recorded.
 - Absolute κ. The values are not comparable with the literature (see
   Reference numbers); we check cross-code agreement at fixed settings.
 - Isotopic scattering. Both runs used `is_isotope=False`.

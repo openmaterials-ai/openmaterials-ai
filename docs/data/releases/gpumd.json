@@ -8,6 +8,14 @@
       "spdx": "GPL-3.0-or-later",
       "tag": "v3.9.5",
       "version": "3.9.5"
+    },
+    {
+      "commit": "11ba6fbdb4d71b2cdb351b39972fa057521585b3",
+      "license_source": "https://github.com/brucefan1983/GPUMD/tree/v5.9.1 (README.md, the source under src/ is licensed under the GNU Lesser General Public License, version 3 or any later version; src/main_gpumd/main.cu, version 3 or any later version; LICENSES/LGPL-3.0.txt and LICENSES/GPL-3.0.txt; relicensed in commit ebe1eeb083 of 2026-10-05)",
+      "released": "2026-10-05",
+      "spdx": "LGPL-3.0-or-later",
+      "tag": "v5.9.1",
+      "version": "5.9.1"
     }
   ]
 }

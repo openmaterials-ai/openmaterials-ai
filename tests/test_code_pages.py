@@ -211,3 +211,21 @@ def test_the_embed_snippet_is_the_permanent_share_link():
         assert m and index["latest"].startswith(m.group(1)), key
         assert set(decode(snap, m.group(2))) == set(code["nodes"]), key
         assert f'<a href="https://openmaterials.ai/m/{m.group(1)}/{m.group(2)}">Share this submap</a>' in page, key
+
+
+def test_source_labels_in_the_figure_text_link_their_source():
+    # The facts and applications cards always linked their paper. The hero, feature and
+    # workflow text cite in prose ("RTA undershoots silicon by about 5% (Barbalinardo 2020)"),
+    # and those mentions now link too, on the code page. For every public code page, each
+    # source label with a DOI or https URL that this text names appears on the page as a link.
+    from omai import infographic
+    for key in PUBLIC:
+        brief = json.loads((DOCS / "data" / "briefs" / f"{key}.json").read_text())
+        page = (DOCS / "codes" / key / "index.html").read_text()
+        texts = [brief["hero"]["text"]] + [f["text"] for f in brief["features"]] + [s["text"] for s in brief["workflow"]]
+        for s in brief.get("sources") or []:
+            href = infographic._source_href(brief, s["label"])
+            if not href or not any(re.search(r"(?<!\w)" + re.escape(s["label"]) + r"(?!\w)", t) for t in texts):
+                continue
+            link = f'<a class="info-cite" href="{infographic.esc(href)}" rel="noopener">{infographic.esc(s["label"])}</a>'
+            assert link in page, (key, s["label"])

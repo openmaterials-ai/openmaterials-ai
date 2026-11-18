@@ -15,7 +15,7 @@
   }
   function proofHref(path) {
     return /^lean\/bridge\/(?:[A-Za-z0-9_-]+\/)*[A-Za-z0-9_-]+\.(?:lean|json)$/.test(path || '') ?
-      'https://github.com/openmaterials-ai/openmaterials-ai/blob/27f71197ccfac0bbfed535a4376e941113bb567b/' + path : '';
+      'https://github.com/openmaterials-ai/openmaterials-ai/blob/main/' + path : '';
   }
   function fragment(params) {
     var encoded = new URLSearchParams();
