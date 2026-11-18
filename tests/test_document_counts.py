@@ -42,7 +42,9 @@ def _table_key(name: str) -> str:
 
 def test_code_table_counts_equal_codes_json():
     codes = _data("codes.json")
-    rows = re.findall(r"^([A-Za-z][\w .()+-]*?)\s+&\s+(\d+)\s+&\s+[^\n]*\\\\$", TEX, re.M)
+    block = re.search(r"\\begin\{tabular\}\{lrl\}(.*?)\\end\{tabular\}", TEX, re.S)
+    assert block, "the code table (tabular lrl) is gone from the tex"
+    rows = re.findall(r"^([A-Za-z][\w .()+-]*?)\s+&\s+(\d+)\s+&\s+[^\n]*\\\\$", block.group(1), re.M)
     table = {_table_key(name): int(n) for name, n in rows}
     assert set(table) == set(codes), (sorted(set(codes) - set(table)), sorted(set(table) - set(codes)))
     wrong = {k: (table[k], len(codes[k])) for k in table if table[k] != len(codes[k])}

@@ -216,8 +216,8 @@ def test_the_embed_snippet_is_the_permanent_share_link():
 def test_source_labels_in_the_figure_text_link_their_source():
     # The facts and applications cards always linked their paper. The hero, feature and
     # workflow text cite in prose ("RTA undershoots silicon by about 5% (Barbalinardo 2020)"),
-    # and those mentions now link too, on the code page. Every mention of a source label with
-    # a DOI or https URL in that text is a link on every public code page.
+    # and those mentions now link too, on the code page. For every public code page, each
+    # source label with a DOI or https URL that this text names appears on the page as a link.
     from omai import infographic
     for key in PUBLIC:
         brief = json.loads((DOCS / "data" / "briefs" / f"{key}.json").read_text())

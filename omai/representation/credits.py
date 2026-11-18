@@ -65,7 +65,8 @@ CODE_CREDITS: dict[str, dict] = {
         "Commun. 185, 1747 (2014)",
         "doi": "10.1016/j.cpc.2014.02.015",
         "license": "GPL-3.0-or-later",
-        "license_source": "shengbte/LICENSE (vendored clone, GPL v3)",
+        "license_source": "shengbte/LICENSE (vendored clone, GPL v3); Src/main.f90 on "
+        "master grants version 3 or any later version (read 2026-11-18)",
         "url": "https://bitbucket.org/sousaw/shengbte",
     },
     "phonopy": {
@@ -95,8 +96,11 @@ CODE_CREDITS: dict[str, dict] = {
         "dynamics simulations with many-body potentials on graphics processing "
         "units, Comput. Phys. Commun. 218, 10 (2017)",
         "doi": "10.1016/j.cpc.2017.05.003",
-        "license": "GPL-3.0-or-later",
-        "license_source": "GPUMD GitHub LICENSE (WebFetch, GPL v3)",
+        "license": "LGPL-3.0-or-later",
+        "license_source": "GPUMD README.md and src/main_gpumd/main.cu at v5.9.1, "
+        "read 2026-11-18: LGPL version 3 or any later version, relicensed from "
+        "GPL-3.0-or-later in commit ebe1eeb083 (2026-10-05); v3.9.5 and earlier "
+        "are GPL-3.0-or-later",
         "url": "https://github.com/brucefan1983/GPUMD",
     },
     "lammps": {
@@ -107,8 +111,9 @@ CODE_CREDITS: dict[str, dict] = {
         "108171 (2022)",
         "doi": "10.1016/j.cpc.2021.108171",
         "license": "GPL-2.0-only",
-        "license_source": "lammps/LICENSE (vendored clone, GPL v2); "
-        "citation from lammps/CITATION.cff",
+        "license_source": "lammps/LICENSE (vendored clone, GPL v2, no later-version "
+        "grant); README: GNU Public License (GPL) version 2; CITATION.cff: "
+        "GPL-2.0-only; citation from lammps/CITATION.cff",
         "url": "https://www.lammps.org",
     },
     "i-pi": {
@@ -117,10 +122,12 @@ CODE_CREDITS: dict[str, dict] = {
         "a flexible and efficient framework for advanced atomistic simulations, "
         "J. Chem. Phys. 161, 062504 (2024)",
         "doi": "10.1063/5.0215869",
-        "license": "GPL-2.0-or-later OR MIT (user's choice, dual license)",
+        "license": "GPL-3.0-or-later OR MIT (user's choice, dual license)",
         "license_source": "i-pi repo licenses/LICENSE.md (WebFetch, verified "
         "2026-07-11): 'i-PI is free software distributed under both the GPL and "
-        "MIT licenses' (user's choice)",
+        "MIT licenses' (user's choice); the GPL is version 3 "
+        "(licenses/license_GPL.txt) and file headers grant version 3 or any later "
+        "version (ipi/engine/motion/phonons.py on master, read 2026-11-18)",
         "url": "https://ipi-code.org",
     },
     "plumed": {
@@ -131,7 +138,9 @@ CODE_CREDITS: dict[str, dict] = {
         "doi": "10.1016/j.cpc.2013.09.018",
         "license": "LGPL-3.0-or-later",
         "license_source": "plumed2 repo COPYING.LESSER (GNU LGPL v3, 29 June "
-        "2007; verified 2026-07-11 from the reviewed cookbook-audit table)",
+        "2007; verified 2026-07-11 from the reviewed cookbook-audit table); "
+        "src/core/PlumedMain.cpp on master grants version 3 or any later version "
+        "(read 2026-11-18)",
         "url": "https://www.plumed.org",
     },
     # --- DFT ground state / periodic quantum chemistry -----------------------
@@ -142,7 +151,8 @@ CODE_CREDITS: dict[str, dict] = {
         "simulations of materials, J. Phys. Condens. Matter 21, 395502 (2009)",
         "doi": "10.1088/0953-8984/21/39/395502",
         "license": "GPL-2.0-or-later",
-        "license_source": "q-e/LICENSE (vendored clone, GPL v2)",
+        "license_source": "q-e/LICENSE (vendored clone, GPL v2); README.md at qe-7.5 "
+        "grants version 2 or any later version (read 2026-11-18)",
         "url": "https://www.quantum-espresso.org",
     },
     "qe-d3q": {
@@ -314,7 +324,8 @@ CODE_CREDITS: dict[str, dict] = {
         "doi": "10.1002/wcms.1493",
         "license": "LGPL-3.0-or-later",
         "license_source": "grimme-lab/xtb license (gh api repos/grimme-lab/xtb/"
-        "license -> spdx_id LGPL-3.0, verified 2026-07-22); software-paper DOI "
+        "license -> spdx_id LGPL-3.0, verified 2026-07-22; README.md on main grants "
+        "version 3 or any later version, read 2026-11-18); software-paper DOI "
         "verified via doi.org metadata 2026-07-22 (Bannwarth 2020, WIREs "
         "Comput. Mol. Sci.)",
         "url": "https://github.com/grimme-lab/xtb",

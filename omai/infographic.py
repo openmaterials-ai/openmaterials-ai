@@ -54,17 +54,22 @@ def self_reported(brief: dict, references: dict | None) -> bool:
 def _linked(brief: dict, text: str) -> str:
     """The text, escaped, with every mention of one of the brief's source labels
     ("Barbalinardo 2020") linked to that source. Longer labels match first, and a label
-    glued to a longer word is left alone. Labels without a resolvable link stay text."""
-    out = esc(text)
+    glued to a longer word is left alone. Labels without a resolvable link stay text.
+    The match runs on the raw text and each piece is escaped after, so a label can
+    never fall inside an HTML entity."""
     labels = sorted({s["label"] for s in brief.get("sources") or [] if _source_href(brief, s["label"])},
                     key=len, reverse=True)
     if not labels:
-        return out
-    by_escaped = {esc(label): label for label in labels}
-    pattern = re.compile(r"(?<![\w])(?:" + "|".join(re.escape(e) for e in by_escaped) + r")(?![\w])")
-    return pattern.sub(
-        lambda m: f'<a class="info-cite" href="{esc(_source_href(brief, by_escaped[m.group(0)]))}" '
-                  f'rel="noopener">{m.group(0)}</a>', out)
+        return esc(text)
+    pattern = re.compile(r"(?<![\w])(?:" + "|".join(re.escape(label) for label in labels) + r")(?![\w])")
+    out, at = [], 0
+    for m in pattern.finditer(text):
+        out.append(esc(text[at:m.start()]))
+        out.append(f'<a class="info-cite" href="{esc(_source_href(brief, m.group(0)))}" '
+                   f'rel="noopener">{esc(m.group(0))}</a>')
+        at = m.end()
+    out.append(esc(text[at:]))
+    return "".join(out)
 
 
 def _cite(brief: dict, label: str) -> str:

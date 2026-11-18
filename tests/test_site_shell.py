@@ -179,7 +179,7 @@ def test_the_home_static_text_equals_the_data():
         got = re.findall(r'data-bind="%s">([^<]*)<' % bind, HOME)
         assert got and set(got) == {str(want)}, f"data-bind={bind}: {got} != {want}"
     # The Cite block's access date is the reader's today, set by script. Without JS the
-    # static text shows; it is the date of the newest map record, so a reader without JS
+    # static text shows. It is the date of the newest map record, so a reader without JS
     # never sees an access date older than the version the citation stamps.
     log = (DOCS.parent / "map" / "log.jsonl").read_text().splitlines()
     newest = max(json.loads(line)["date"] for line in log if line.strip())
@@ -298,5 +298,10 @@ def test_bridge_source_links_name_files_that_exist_on_main():
     root = DOCS.parent
     linked = set(re.findall(re.escape(repo) + r"blob/main/([^\"'#?\s]+)", text))
     assert linked
+    # lib.js also links each binding's evidence source_path at run time.
+    bindings = (DOCS / "data" / "formula_bindings.json").read_text()
+    linked |= set(re.findall(r'"(lean/bridge/[^"]+\.(?:lean|json))"', bindings))
     missing = sorted(p for p in linked if not (root / p).is_file())
     assert not missing, missing
+    for tree in re.findall(re.escape(repo) + r"tree/main/([^\"'#?\s]+)", text):
+        assert (root / tree).is_dir(), tree

@@ -2174,40 +2174,44 @@ spec-load time.
 \subsection{Verification on silicon (Tersoff potential)}
 \label{ssec:silicon-verification}
 
-The operator layer's predictions have been verified end-to-end against numerical
-runs of kaldo and phono3py on silicon at the Tersoff potential, $8\times 8\times 8$
-q-mesh, $T = 300\,\text{K}$, broadening stdev $0.1\,\text{THz}$:
+The operator layer's predictions were tested against numerical runs of kaldo and
+phono3py on silicon at the Tersoff potential, $8\times 8\times 8$ q-mesh,
+$T = 300\,\text{K}$, Gaussian broadening of $0.1\,\text{THz}$ in both codes
+(\texttt{experiments/silicon\_tersoff/seed.py}). Each code computed its own force
+constants. Residuals marked $^\dagger$ come from an earlier run of that experiment
+whose outputs are not committed:
 
 \begin{center}
 \begin{tabular}{lll}
 \toprule
 ObservableSpace / contraction & Operator prediction & Empirical residual \\
 \midrule
-\texttt{Frequency} per-mode (\textbf{O})            & factor $1$ (both linear THz)  & $5\times 10^{-4}$ \\
-\texttt{HeatCapacity} per-mode (\textbf{O})         & factor $1/e \approx 6\times 10^{18}$ & $3\times 10^{-5}$ \\
-$\sum_{q\nu}\Gamma$ contracted (\textbf{O})          & factor $1/(4\pi)$              & $5\times 10^{-4}$ \\
+\texttt{Frequency} per-mode (\textbf{O})            & factor $1$ (both linear THz)  & $5\times 10^{-4}$\,$^\dagger$ \\
+\texttt{HeatCapacity} per-mode (\textbf{O})         & factor $1/e \approx 6\times 10^{18}$ & $3\times 10^{-5}$\,$^\dagger$ \\
+$\sum_{q\nu}\Gamma$ contracted (\textbf{O})          & factor $1/(4\pi)$              & $5\times 10^{-4}$\,$^\dagger$ \\
 $\kappa$\texttt{[bte\_solver=direct\_inverse]} (\textbf{O}) & factor $1$                & 11\% \\
 \midrule
-\texttt{Linewidth} per-mode (\textbf{H})            & \textsc{Not\_Comparable} & 25\% (diagnostic only) \\
+\texttt{Linewidth} per-mode (\textbf{H})            & \textsc{Not\_Comparable} & 25\%\,$^\dagger$ (diagnostic only) \\
 $\kappa$\texttt{[bte\_solver=rta]} (\textbf{H})     & \textsc{Not\_Comparable} & 16\% (diagnostic only) \\
 \bottomrule
 \end{tabular}
 \end{center}
-The two $\kappa$ residuals compare the committed values on the
-map, each code with its own force constants: kaldo 26.908 against phono3py
-24.301\,W/(m\,K) by the direct solution (values \texttt{52536963e294} and
-\texttt{e57d4c76b2b4}, ratio 1.107) and 19.46 against 16.735\,W/(m\,K) by RTA
-(\texttt{04c6dbdb9b04} and \texttt{c68baffc7890}, ratio 1.163). The per-mode
-residuals above them come from an earlier run of
-\texttt{experiments/silicon\_tersoff} whose outputs are not committed. A
-comparison of the two solvers on one shared set of force constants, which would
-isolate the solvers from the force constants, has not been reproduced and is
-not quoted here.
+The two $\kappa$ residuals compare the committed values on the map: kaldo 26.908
+against phono3py 24.301\,W/(m\,K) by the direct solution (values
+\texttt{52536963e294} and \texttt{e57d4c76b2b4}, ratio 1.107) and 19.46 against
+16.735\,W/(m\,K) by RTA (\texttt{04c6dbdb9b04} and \texttt{c68baffc7890}, ratio
+1.163). A comparison of the two solvers on one shared set of force constants,
+which would isolate the solvers from the force constants, has not been
+reproduced and is not quoted here.
 
-The per-mode ObservableSpace comparisons pass at $\le 1\%$ tolerance. The
-direct-solution $\kappa$ does not: each run computed its own third-order force
-constants, and the committed values do not record the broadening of the
-energy-conserving delta, so this comparison does not separate the causes. All
+The frequency, heat-capacity and contracted-linewidth comparisons pass at
+$\le 1\%$ tolerance. The direct-solution $\kappa$ does not. The broadening sweep
+committed in \texttt{experiments/silicon\_tersoff/README.md} shows part of the
+reason: as $\sigma$ goes from 0.05 to 1.0\,THz the kaldo/phono3py ratio of the
+direct solution runs between 1.065 and 1.222, smallest near 0.2\,THz, so the two
+codes apply the same $\sigma$ differently in the energy-conserving delta. The two
+runs also differ in the acoustic sum rule on the force constants, imposed by
+phono3py and not by kaldo. The sweep does not separate these causes. All
 HiddenSpace per-element comparisons return \textsc{Not\_Comparable}. The $1/(4\pi)$ factor on $\Gamma$
 decomposes into a $1/(2\pi)$ \emph{unit} factor (kaldo angular vs phono3py linear
 THz) and a $1/2$ \emph{normalization} factor (kaldo $\Gamma = 2\,\text{Im}\,\Sigma$
@@ -2217,11 +2221,13 @@ factors were derived by the operator layer from declared adapter specs, then
 applied mechanically to the diagnostic data.
 
 The disagreement on $\kappa_\text{RTA}$, 16\%, is larger than the 11\% on the
-direct solution, as the operator layer's structure leads one to expect: RTA's
-approximation breaks $\kappa$'s gauge invariance via the $1/\Gamma$ non-linearity,
-so the per-mode Linewidth redistribution propagates into $\kappa$. Typing
-$\kappa_\text{RTA}$ as a HiddenSpace makes this a non-anomaly. The direct solution
-removes that channel but not the differences between the two runs' inputs.
+direct solution. That is consistent with the operator layer's typing of
+$\kappa_\text{RTA}$ as a HiddenSpace: RTA's approximation breaks $\kappa$'s gauge
+invariance via the $1/\Gamma$ non-linearity, so a per-mode Linewidth
+redistribution propagates into $\kappa$. The data do not test this channel,
+though. In the same sweep the two ratios nearly coincide at $\sigma = 0.5$\,THz
+(1.146 for RTA against 1.143 for the direct solution), so the RTA excess also
+follows the broadening.
 
 \paragraph{Cross-paradigm $\kappa$ (phase 2 P4).} On the same Si-Tersoff
 worked example, the LAMMPS Green-Kubo path
@@ -2266,8 +2272,8 @@ oriented but is deferred to Phase 2.
         same physical conditions, differing only in the method or the code that
         produced them, and reports each group's spread. The concrete cross-code
         case is silicon at the Tersoff potential, $8\times 8\times 8$ mesh,
-        $T=300\,\text{K}$: kaldo and phono3py agree on direct inversion at $26.9$
-        versus $24.3$ and on RTA at $19.5$ versus $16.7$ (in W/m~K), the same run
+        $T=300\,\text{K}$: kaldo and phono3py give $26.9$ versus $24.3$ on direct
+        inversion and $19.5$ versus $16.7$ on RTA (in W/m~K), 11\% and 16\% apart, the same run
         both cross-method and cross-code; the silicon DFPT LDA case, $19\times
         19\times 19$ q-grid, quantum statistics, contrasts direct inversion at
         $147$ against RTA at $140$. The caveat is the equivalence rule
@@ -3380,7 +3386,7 @@ pymatgen                     & 22 & MIT \\
 ShengBTE                     & 20 & GPL-3.0-or-later \\
 Quantum ESPRESSO             & 14 & GPL-2.0-or-later \\
 mp-api                       & 13 & BSD-3-Clause \\
-GPUMD                        & 14 & GPL-3.0-or-later \\
+GPUMD                        & 14 & LGPL-3.0-or-later \\
 LAMMPS                       & 12 & GPL-2.0-only \\
 VASP                         & 10 & Proprietary \\
 pycalphad                    & 7  & MIT \\
@@ -3390,7 +3396,7 @@ amset                        & 5  & BSD-3-Clause \\
 ORCA                         & 5  & Proprietary \\
 pymatgen-analysis-diffusion  & 5  & BSD-3-Clause \\
 D3Q (thermal2)               & 5  & GPL-2.0-only (CeCILL-2.1, GPL-3.0-only, Minpack parts) \\
-i-PI                         & 4  & GPL-2.0-or-later / MIT \\
+i-PI                         & 4  & GPL-3.0-or-later / MIT \\
 fairchem                     & 4  & MIT \\
 MACE                         & 4  & MIT \\
 OpenMM                       & 4  & MIT (LGPL parts) \\
@@ -3414,7 +3420,9 @@ Every code we represent must be cited and must carry its license. The License
 column above is read from the actual license text (the vendored LICENSE files
 for kaldo, LAMMPS, Quantum ESPRESSO, phonopy, phono3py, ShengBTE, and the
 AtomisticSkills skills; package metadata for the pip-distributed codes; the
-project's GitHub LICENSE for GPUMD, MatterGen, DiffCSP, and OpenMM;
+project's GitHub LICENSE for MatterGen, DiffCSP, and OpenMM; GPUMD's README and
+file headers at tag v5.9.1, LGPL-3.0-or-later since its relicensing of 5 October
+2026 (v3.9.5 and earlier are GPL-3.0-or-later);
 ngspice's COPYING and file headers at tag
 ngspice-47 (BSD-3-Clause; numparam and KLU LGPL, OSDI MPL-2.0, the XSPICE
 table code model GPL-2.0-or-later, the Sparse 1.3 solver an unnamed
