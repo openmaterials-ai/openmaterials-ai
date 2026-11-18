@@ -80,7 +80,7 @@
    ]
   },
   {
-   "instance": "si136-clathrate-thermalconductivity-transport-model-qhgk-kaldo-2020-barbalinardo.json",
+   "instance": "si116ge20-clathrate-thermalconductivity-transport-model-qhgk-kaldo-2020-barbalinardo.json",
    "node_id": "ThermalConductivity[transport_model=qhgk]",
    "node_uid": "8932e3cbadef74a82802b43fd1d25328cb40e6136c90df3b6a4a998e77f9567b",
    "value": 31.0,

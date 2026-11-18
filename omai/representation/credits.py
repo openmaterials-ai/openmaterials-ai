@@ -64,7 +64,7 @@ CODE_CREDITS: dict[str, dict] = {
         "solver of the Boltzmann transport equation for phonons, Comput. Phys. "
         "Commun. 185, 1747 (2014)",
         "doi": "10.1016/j.cpc.2014.02.015",
-        "license": "GPL-3.0",
+        "license": "GPL-3.0-or-later",
         "license_source": "shengbte/LICENSE (vendored clone, GPL v3)",
         "url": "https://bitbucket.org/sousaw/shengbte",
     },
@@ -95,7 +95,7 @@ CODE_CREDITS: dict[str, dict] = {
         "dynamics simulations with many-body potentials on graphics processing "
         "units, Comput. Phys. Commun. 218, 10 (2017)",
         "doi": "10.1016/j.cpc.2017.05.003",
-        "license": "GPL-3.0",
+        "license": "GPL-3.0-or-later",
         "license_source": "GPUMD GitHub LICENSE (WebFetch, GPL v3)",
         "url": "https://github.com/brucefan1983/GPUMD",
     },
@@ -106,7 +106,7 @@ CODE_CREDITS: dict[str, dict] = {
         "the atomic, meso, and continuum scales, Comput. Phys. Commun. 271, "
         "108171 (2022)",
         "doi": "10.1016/j.cpc.2021.108171",
-        "license": "GPL-2.0",
+        "license": "GPL-2.0-only",
         "license_source": "lammps/LICENSE (vendored clone, GPL v2); "
         "citation from lammps/CITATION.cff",
         "url": "https://www.lammps.org",
@@ -129,7 +129,7 @@ CODE_CREDITS: dict[str, dict] = {
         "G. Bussi, PLUMED 2: New feathers for an old bird, Comput. Phys. Commun. "
         "185, 604 (2014)",
         "doi": "10.1016/j.cpc.2013.09.018",
-        "license": "LGPL-3.0",
+        "license": "LGPL-3.0-or-later",
         "license_source": "plumed2 repo COPYING.LESSER (GNU LGPL v3, 29 June "
         "2007; verified 2026-07-11 from the reviewed cookbook-audit table)",
         "url": "https://www.plumed.org",
@@ -141,7 +141,7 @@ CODE_CREDITS: dict[str, dict] = {
         "ESPRESSO: a modular and open-source software project for quantum "
         "simulations of materials, J. Phys. Condens. Matter 21, 395502 (2009)",
         "doi": "10.1088/0953-8984/21/39/395502",
-        "license": "GPL-2.0",
+        "license": "GPL-2.0-or-later",
         "license_source": "q-e/LICENSE (vendored clone, GPL v2)",
         "url": "https://www.quantum-espresso.org",
     },
@@ -155,8 +155,8 @@ CODE_CREDITS: dict[str, dict] = {
         "conductivity, Phys. Rev. B 88, 045430 (2013), "
         "doi:10.1103/PhysRevB.88.045430",
         "doi": "10.1103/PhysRevB.87.214303",
-        "license": "GPL-2.0 (thermal2: CeCILL-2.1 OR GPL-2.0-or-later; some "
-        "files GPL-3.0; bundled minpack: Minpack)",
+        "license": "GPL-2.0-only (thermal2: CeCILL-2.1 OR GPL-2.0-or-later; some "
+        "files GPL-3.0-only; bundled minpack: Minpack)",
         "license_source": "anharmonic/d3q tag q-e-7.5, read 2026-10-01: "
         "LICENSE ('This code is licenced under GPLv2, you wll find a copy in "
         "the Doc subdirectory. Some libraries are available under GPLv3. The "
@@ -312,7 +312,7 @@ CODE_CREDITS: dict[str, dict] = {
         "Density-Dependent Dispersion Contributions, J. Chem. Theory Comput. "
         "15, 1652 (2019)",
         "doi": "10.1002/wcms.1493",
-        "license": "LGPL-3.0",
+        "license": "LGPL-3.0-or-later",
         "license_source": "grimme-lab/xtb license (gh api repos/grimme-lab/xtb/"
         "license -> spdx_id LGPL-3.0, verified 2026-07-22); software-paper DOI "
         "verified via doi.org metadata 2026-07-22 (Bannwarth 2020, WIREs "

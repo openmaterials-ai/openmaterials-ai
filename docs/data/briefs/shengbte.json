@@ -108,7 +108,7 @@
     },
     {
       "heading": "Numerics",
-      "text": "ShengBTE replaces the Dirac deltas of energy conservation by Gaussians whose width it estimates per scattering process from the group velocity differences and the q grid spacing, times the scalebroad constant. The default is 1.0. For Si the conductivity reaches 90% of its converged value on a 15x15x15 grid at scalebroad 1.0 and on 11x11x11 at 0.1, and fitting kappa(N) to 1 minus exp(-N/A) extrapolates to the dense limit (Li 2014). Point group symmetry reduces the q points. A constrained least squares compensation enforces the sum rules on the anharmonic constants. The lonsdaleite run took about one hour on 32 processors. The code is Fortran 90 with MPI, LAPACK and spglib, GPL-3.0."
+      "text": "ShengBTE replaces the Dirac deltas of energy conservation by Gaussians whose width it estimates per scattering process from the group velocity differences and the q grid spacing, times the scalebroad constant. The default is 1.0. For Si the conductivity reaches 90% of its converged value on a 15x15x15 grid at scalebroad 1.0 and on 11x11x11 at 0.1, and fitting kappa(N) to 1 minus exp(-N/A) extrapolates to the dense limit (Li 2014). Point group symmetry reduces the q points. A constrained least squares compensation enforces the sum rules on the anharmonic constants. The lonsdaleite run took about one hour on 32 processors. The code is Fortran 90 with MPI, LAPACK and spglib, GPL-3.0-or-later."
     },
     {
       "heading": "Inputs from other codes",

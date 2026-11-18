@@ -150,7 +150,7 @@ def page(key: str, rep: dict, reg: dict, refs: dict | None, text: dict, has_card
         poster_links = '<a href="infographic/">Poster page</a>' + (f'<a href="../../assets/infographics/{esc(key)}.png" download>Download the poster (PNG, 1920 x 1080)</a>' if has_poster else "")
         info_html = (
             f'<figure class="gsec info-figure" id="infographic">{infographic.block(brief, name, key, self_reported=own)}'
-            f'<figcaption><span>What {esc(name)} is, how it works and what it is used for, from the papers listed as sources. Every number links to its paper.</span>{poster_links}</figcaption></figure>'
+            f'<figcaption><span>What {esc(name)} is, how it works and what it is used for, from the papers listed as sources.</span>{poster_links}</figcaption></figure>'
         )
     detail_html = ""
     if brief and brief.get("detail"):

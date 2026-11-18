@@ -12,6 +12,7 @@ do with it (the numbers, then landmark studies), a workflow strip, and the sourc
 from __future__ import annotations
 
 import html
+import re
 
 from omai import glyphs
 
@@ -22,10 +23,11 @@ def esc(s: object) -> str:
     return html.escape("" if s is None else str(s), quote=True)
 
 
-def _panel(p: dict, cls: str = "info-panel") -> str:
+def _panel(p: dict, cls: str = "info-panel", brief: dict | None = None) -> str:
+    text = _linked(brief, p["text"]) if brief else esc(p["text"])
     return (
         f'<div class="{cls}">{glyphs.svg(p["glyph"], 64, "glyph")}'
-        f'<div><h4>{esc(p["title"])}</h4><p>{esc(p["text"])}</p></div></div>'
+        f'<div><h4>{esc(p["title"])}</h4><p>{text}</p></div></div>'
     )
 
 
@@ -47,6 +49,22 @@ def self_reported(brief: dict, references: dict | None) -> bool:
     code_dois = {r["doi"].lower() for r in references.get("code", [])}
     by_label = {s["label"]: (s.get("doi") or "").lower() for s in brief.get("sources") or []}
     return all(by_label.get(a["source"]) in code_dois for a in apps)
+
+
+def _linked(brief: dict, text: str) -> str:
+    """The text, escaped, with every mention of one of the brief's source labels
+    ("Barbalinardo 2020") linked to that source. Longer labels match first, and a label
+    glued to a longer word is left alone. Labels without a resolvable link stay text."""
+    out = esc(text)
+    labels = sorted({s["label"] for s in brief.get("sources") or [] if _source_href(brief, s["label"])},
+                    key=len, reverse=True)
+    if not labels:
+        return out
+    by_escaped = {esc(label): label for label in labels}
+    pattern = re.compile(r"(?<![\w])(?:" + "|".join(re.escape(e) for e in by_escaped) + r")(?![\w])")
+    return pattern.sub(
+        lambda m: f'<a class="info-cite" href="{esc(_source_href(brief, by_escaped[m.group(0)]))}" '
+                  f'rel="noopener">{m.group(0)}</a>', out)
 
 
 def _cite(brief: dict, label: str) -> str:
@@ -82,7 +100,7 @@ def block(brief: dict, name: str, key: str, poster: bool = False, self_reported:
         f'<div class="info-panel info-app">{glyphs.svg(a["glyph"], 64, "glyph")}<div><h4>{esc(a["title"])}</h4><p>{esc(a["text"])} {_cite(brief, a["source"])}</p></div></div>'
         for a in apps
     )
-    steps = "".join(f'<li><h4>{esc(s["title"])}</h4><p>{esc(s["text"])}</p></li>' for s in brief["workflow"])
+    steps = "".join(f'<li><h4>{esc(s["title"])}</h4><p>{_linked(brief, s["text"])}</p></li>' for s in brief["workflow"])
     sources = ", ".join(_cite(brief, s["label"]) for s in brief["sources"])
     page_url = f"{SITE}/codes/{key}/"
     zone_b_title = ("Results in the papers" if self_reported else "What people do with it") if apps else "By the numbers"
@@ -92,8 +110,8 @@ def block(brief: dict, name: str, key: str, poster: bool = False, self_reported:
         f'<h2 class="info-title">{esc(brief["headline"])}</h2><p class="info-claim">{esc(brief["claim"])}</p></header>'
         '<div class="info-zones">'
         '<section class="info-zone info-zone-a"><h3>What it is and how it works</h3>'
-        + _panel(brief["hero"], "info-panel info-hero")
-        + '<div class="info-panels">' + "".join(_panel(f) for f in brief["features"]) + "</div></section>"
+        + _panel(brief["hero"], "info-panel info-hero", brief)
+        + '<div class="info-panels">' + "".join(_panel(f, brief=brief) for f in brief["features"]) + "</div></section>"
         f'<section class="info-zone info-zone-b"><h3>{zone_b_title}</h3><ul class="info-facts">{facts}</ul>'
         + (f'<div class="info-panels">{app_panels}</div>' if apps else "")
         + "</section></div>"
@@ -131,6 +149,8 @@ CSS = """
   .info-label { font-size: 13px; line-height: 18px; }
   .info-src { font: 400 11px/16px var(--font-mono); color: var(--ink-2); text-decoration: none; }
   a.info-src:hover { color: var(--ink); text-decoration: underline; }
+  .info-cite { color: inherit; text-decoration: underline; text-decoration-color: var(--line); text-underline-offset: 2px; }
+  .info-cite:hover { text-decoration-color: currentColor; }
   .info-flow { padding: var(--info-pad); border-top: 1px solid var(--line); }
   .info-flow ol { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin: 0; padding: 0; list-style: none; counter-reset: step; }
   .info-flow li { position: relative; max-width: none; padding-top: 24px; counter-increment: step; }
@@ -167,6 +187,7 @@ CSS = """
   .info.poster .info-value { font-size: 36px; line-height: 42px; white-space: nowrap; }
   .info.poster .info-label { font-size: 17px; line-height: 23px; }
   .info.poster .info-src { font-size: 14px; line-height: 20px; }
+  .info.poster .info-cite { text-decoration: none; }
   .info.poster .info-flow { padding: 20px 56px 24px; overflow: hidden; }
   .info.poster .info-flow ol { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 24px; }
   .info.poster .info-flow li { padding-top: 30px; }

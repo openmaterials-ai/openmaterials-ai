@@ -39,7 +39,7 @@ observables, so they are axis descriptors, not evidence nodes); and PLUMED's
 committor and rate analyses.
 
 Credits (verified 2026-07-11, scans/cookbook-audit.json review table):
-  * License: LGPL-3.0 (repo COPYING.LESSER, GNU LGPL v3).
+  * License: LGPL-3.0-or-later (repo COPYING.LESSER, GNU LGPL v3; source headers grant "any later version").
   * Citation: G. A. Tribello, M. Bonomi, D. Branduardi, C. Camilloni, G. Bussi,
     PLUMED 2: New feathers for an old bird, Comput. Phys. Commun. 185, 604
     (2014); doi 10.1016/j.cpc.2013.09.018.

@@ -38,7 +38,7 @@ the quantum momentum distributions (the spectrum layer), and the multi-CV free
 energy surface (the field-evidence kernel).
 
 Credits (verified 2026-07-11, scans/cookbook-audit.json review table):
-  * License: dual GPL-2.0 / MIT (user's choice; repo licenses/LICENSE.md).
+  * License: dual GPL-2.0-or-later / MIT (user's choice; repo licenses/LICENSE.md).
   * Citation: Y. Litman, V. Kapil, Y. M. Y. Feldman, et al., i-PI 3.0: a
     flexible and efficient framework for advanced atomistic simulations,
     J. Chem. Phys. 161, 062504 (2024); doi 10.1063/5.0215869.

@@ -2186,24 +2186,29 @@ ObservableSpace / contraction & Operator prediction & Empirical residual \\
 \texttt{Frequency} per-mode (\textbf{O})            & factor $1$ (both linear THz)  & $5\times 10^{-4}$ \\
 \texttt{HeatCapacity} per-mode (\textbf{O})         & factor $1/e \approx 6\times 10^{18}$ & $3\times 10^{-5}$ \\
 $\sum_{q\nu}\Gamma$ contracted (\textbf{O})          & factor $1/(4\pi)$              & $5\times 10^{-4}$ \\
-$\kappa$\texttt{[bte\_solver=direct\_inverse]} (\textbf{O})\footnotemark{} & factor $1$                & $4\times 10^{-3}$ \\
+$\kappa$\texttt{[bte\_solver=direct\_inverse]} (\textbf{O}) & factor $1$                & 11\% \\
 \midrule
 \texttt{Linewidth} per-mode (\textbf{H})            & \textsc{Not\_Comparable} & 25\% (diagnostic only) \\
-$\kappa$\texttt{[bte\_solver=rta]} (\textbf{H})     & \textsc{Not\_Comparable} & 4\% (diagnostic only) \\
+$\kappa$\texttt{[bte\_solver=rta]} (\textbf{H})     & \textsc{Not\_Comparable} & 16\% (diagnostic only) \\
 \bottomrule
 \end{tabular}
 \end{center}
-\footnotetext{This $0.4\%$ residual and the $\sim 10\%$ figure that the map's
-published instances and the end-to-end cross-code experiments
-(\texttt{experiments/silicon\_tersoff}, the sigma sweep) show for kaldo versus
-phono3py at $8\times 8\times 8$ with independently computed force constants are not
-in contradiction: they describe different comparisons. The $\sim 10\%$ number is
-what two codes give when each computes its own force constants; the $0.4\%$ figure
-comes from a more controlled comparison whose exact setup is being re-established.
-Until that setup is re-pinned, treat the two numbers as measuring different things.}
+The two $\kappa$ residuals compare the committed values on the
+map, each code with its own force constants: kaldo 26.908 against phono3py
+24.301\,W/(m\,K) by the direct solution (values \texttt{52536963e294} and
+\texttt{e57d4c76b2b4}, ratio 1.107) and 19.46 against 16.735\,W/(m\,K) by RTA
+(\texttt{04c6dbdb9b04} and \texttt{c68baffc7890}, ratio 1.163). The per-mode
+residuals above them come from an earlier run of
+\texttt{experiments/silicon\_tersoff} whose outputs are not committed. A
+comparison of the two solvers on one shared set of force constants, which would
+isolate the solvers from the force constants, has not been reproduced and is
+not quoted here.
 
-All ObservableSpace comparisons pass at $\le 1\%$ tolerance; all HiddenSpace per-element
-comparisons return \textsc{Not\_Comparable}. The $1/(4\pi)$ factor on $\Gamma$
+The per-mode ObservableSpace comparisons pass at $\le 1\%$ tolerance. The
+direct-solution $\kappa$ does not: each run computed its own third-order force
+constants, and the committed values do not record the broadening of the
+energy-conserving delta, so this comparison does not separate the causes. All
+HiddenSpace per-element comparisons return \textsc{Not\_Comparable}. The $1/(4\pi)$ factor on $\Gamma$
 decomposes into a $1/(2\pi)$ \emph{unit} factor (kaldo angular vs phono3py linear
 THz) and a $1/2$ \emph{normalization} factor (kaldo $\Gamma = 2\,\text{Im}\,\Sigma$
 $\Rightarrow$ \texttt{linewidth\_2x\_imag\_self\_energy} with
@@ -2211,11 +2216,12 @@ $\Rightarrow$ \texttt{linewidth\_2x\_imag\_self\_energy} with
 factors were derived by the operator layer from declared adapter specs, then
 applied mechanically to the diagnostic data.
 
-The 4\% disagreement on $\kappa_\text{RTA}$ is the operator layer's structural prediction
-working as designed: RTA's approximation breaks $\kappa$'s gauge invariance via the
-$1/\Gamma$ non-linearity, so the per-mode Linewidth redistribution propagates into
-$\kappa$. Typing $\kappa_\text{RTA}$ as a HiddenSpace makes this a non-anomaly; the
-gauge-invariant $\kappa_\text{LBTE}$ agrees to 0.4\%.
+The disagreement on $\kappa_\text{RTA}$, 16\%, is larger than the 11\% on the
+direct solution, as the operator layer's structure leads one to expect: RTA's
+approximation breaks $\kappa$'s gauge invariance via the $1/\Gamma$ non-linearity,
+so the per-mode Linewidth redistribution propagates into $\kappa$. Typing
+$\kappa_\text{RTA}$ as a HiddenSpace makes this a non-anomaly. The direct solution
+removes that channel but not the differences between the two runs' inputs.
 
 \paragraph{Cross-paradigm $\kappa$ (phase 2 P4).} On the same Si-Tersoff
 worked example, the LAMMPS Green-Kubo path
@@ -2495,7 +2501,7 @@ Four longer-term directions follow naturally from the design:
         corresponds to a Lean lemma whose statement is the operation's error formula.
         The map's Lean layer is one lake package, \texttt{lean/bridge/}, pinned to
         one Physlib revision and one toolchain. It declares the dimension of each of
-        the 131 map nodes with dimensional content as a Physlib seven-base
+        the 132 map nodes with dimensional content as a Physlib seven-base
         \texttt{Dimension}; the five opaque nodes (\texttt{Structure},
         \texttt{Potential}, \texttt{AssessedDatabase} and the two autocorrelation
         kinds) have none. Its formula theorems are described below. Closed-form
@@ -3371,11 +3377,11 @@ phono3py                     & 31 & BSD-3-Clause \\
 kaldo                        & 28 & BSD-3-Clause \\
 phonopy                      & 22 & BSD-3-Clause \\
 pymatgen                     & 22 & MIT \\
-ShengBTE                     & 20 & GPL-3.0 \\
-Quantum ESPRESSO             & 14 & GPL-2.0 \\
+ShengBTE                     & 20 & GPL-3.0-or-later \\
+Quantum ESPRESSO             & 14 & GPL-2.0-or-later \\
 mp-api                       & 13 & BSD-3-Clause \\
-GPUMD                        & 13 & GPL-3.0 \\
-LAMMPS                       & 12 & GPL-2.0 \\
+GPUMD                        & 14 & GPL-3.0-or-later \\
+LAMMPS                       & 12 & GPL-2.0-only \\
 VASP                         & 10 & Proprietary \\
 pycalphad                    & 7  & MIT \\
 matgl                        & 5  & BSD-3-Clause \\
@@ -3383,7 +3389,7 @@ mat-elasticity               & 5  & MIT \\
 amset                        & 5  & BSD-3-Clause \\
 ORCA                         & 5  & Proprietary \\
 pymatgen-analysis-diffusion  & 5  & BSD-3-Clause \\
-D3Q (thermal2)               & 5  & GPL-2.0 (CeCILL-2.1, GPL-3.0, Minpack parts) \\
+D3Q (thermal2)               & 5  & GPL-2.0-only (CeCILL-2.1, GPL-3.0-only, Minpack parts) \\
 i-PI                         & 4  & GPL-2.0-or-later / MIT \\
 fairchem                     & 4  & MIT \\
 MACE                         & 4  & MIT \\
@@ -3392,8 +3398,8 @@ openmaterials-ai             & 4  & Apache-2.0 AND CC-BY-4.0 \\
 ASE                          & 3  & LGPL-2.1-or-later \\
 mat-diffusion-analysis       & 2  & MIT \\
 ngspice                      & 2  & BSD-3-Clause (LGPL, MPL-2.0, GPL-2.0-or-later parts, and a permissive Sparse notice) \\
-plumed                       & 2  & LGPL-3.0 \\
-xtb                          & 2  & LGPL-3.0 \\
+plumed                       & 2  & LGPL-3.0-or-later \\
+xtb                          & 2  & LGPL-3.0-or-later \\
 smol                         & 2  & BSD-3-Clause \\
 mat-equation-of-state        & 1  & MIT \\
 mat-surface-adsorption       & 1  & MIT \\
@@ -3413,8 +3419,8 @@ ngspice's COPYING and file headers at tag
 ngspice-47 (BSD-3-Clause; numparam and KLU LGPL, OSDI MPL-2.0, the XSPICE
 table code model GPL-2.0-or-later, the Sparse 1.3 solver an unnamed
 permissive notice); the D3Q
-repository's LICENSE and License files plus its file headers, GPL-2.0
-(thermal2: CeCILL-2.1 OR GPL-2.0-or-later; some files GPL-3.0; bundled minpack:
+repository's LICENSE and License files plus its file headers, GPL-2.0-only
+(thermal2: CeCILL-2.1 OR GPL-2.0-or-later; some files GPL-3.0-only; bundled minpack:
 Minpack); the i-PI
 repository's \texttt{licenses/LICENSE.md} for i-PI, distributed under both the
 GPL and MIT at the user's choice). VASP and
@@ -3423,7 +3429,9 @@ for academic use with commercial licensing through FACCTs. The mat-* rows are
 AtomisticSkills skills and carry that project's MIT license. The single source
 of truth is \texttt{omai/representation/credits.py}, and an enforcement test
 (\texttt{tests/test\_code\_credits.py}) fails if any mapped representation lacks a
-citation or a license, so no future representation can land uncredited.
+citation or a license, so no future representation can land uncredited. A GNU
+license is written with -only or -or-later, as the code's own version grant in
+its file headers or README reads, and the same test rejects the bare identifiers.
 
 \subsection{Code citations}
 \label{sec:code-citations}
