@@ -81,3 +81,20 @@ jobs:
         run: pip install -e ".[dev]" "pymatgen>=2024.1.1"
       - name: Test
         run: pytest tests/test_configurations.py -q
+
+  # OWNERS.md parses, every pattern a change adds matches a tracked file (one
+  # that HEAD^ already had and whose files are gone only warns), and the
+  # owner-agreement check passes its tests. The check itself runs in
+  # owner-agreement.yml and in deploy-site.yml.
+  owners:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # HEAD^: on a pull request the base tip, on a push main's previous commit.
+          fetch-depth: 2
+      - name: Owner table and check
+        run: |
+          python3 .github/scripts/owner_agreement.py --lint --base HEAD^1
+          python3 -m unittest discover -s .github/scripts -p 'test_owner_agreement.py'

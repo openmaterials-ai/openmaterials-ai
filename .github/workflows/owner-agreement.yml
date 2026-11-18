@@ -1,0 +1,43 @@
+name: owner-agreement
+
+# Part 9 of the working agreement between seats: a pull request that changes a seat's
+# paths (OWNERS.md) needs that seat's "<Seat> agreed at <head commit>" line. The result
+# is the commit status `owner-agreement` on the pull request's head.
+#
+# pull_request_target and issue_comment both run this file and the script as they are
+# on main, never the pull request's copies, so a pull request cannot change the check
+# it is held to. Nothing from the pull request is executed: the script only reads its
+# commits with git and its text with the API.
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened, edited]
+  issue_comment:
+    types: [created, edited, deleted]
+
+permissions:
+  contents: read
+  pull-requests: read
+  issues: read
+  statuses: write
+
+concurrency:
+  group: owner-agreement-${{ github.event.pull_request.number || github.event.issue.number }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    if: github.event_name == 'pull_request_target' || github.event.issue.pull_request
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          fetch-depth: 0
+      - name: Every owning seat agreed at the head
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.pull_request.number || github.event.issue.number }}
+        # The verdict is the commit status. The job fails only when the check itself breaks.
+        run: python3 .github/scripts/owner_agreement.py --repo "$GITHUB_REPOSITORY" --pr "$PR" --post-status || test $? -eq 3

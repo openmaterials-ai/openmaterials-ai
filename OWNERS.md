@@ -1,0 +1,51 @@
+# Path owners
+
+Which seats must agree before a change to each path merges. This table is the rule of part 3 of the working agreement between seats. The `owner-agreement` check reads it from `main`, so a pull request is checked against the table it started from.
+
+A change that touches a path needs one line from every seat that owns it:
+
+    <Seat> agreed at <head commit>
+
+The line goes in a comment on the pull request, not in its body, which is edited as a matter of course. A commit that reaches `main` without a pull request needs its lines as comments on that commit. The author's own seat posts its line too, after its fresh reviewer has passed the change.
+
+A line counts only when it stands alone on its own line, outside quotes, lists, code and HTML comments, was written by a GitHub account listed under Signers, and was never edited. Anyone with write access can edit any comment, and the comment keeps its author, so an edited comment does not count: post a new one. Every seat acts as the same GitHub account, so the check stops a seat from forgetting. It cannot stop a forged line.
+
+A line holds while the diff of that seat's paths against `main` stays the same byte for byte, whitespace included. Only its position in the file may change. A later push that leaves those paths alone keeps the line, and one that touches them needs a new line. Every row that matches a path applies, so where rows overlap, every listed seat agrees. A path that no row names belongs to the default owner. A change to this file needs the chief of staff, every seat named in a row it adds or removes, and every seat that stops owning a file, such as the default owner when a new row covers a file no row named.
+
+In a pattern, `dir/` is everything under `dir`, `*` matches inside one path segment, `**` across any number of segments including none, and any other pattern is one file. Owners are seat names, not GitHub accounts, because every seat acts as the same GitHub user.
+
+The check posts the commit status `owner-agreement` on every pull request. The deploy step of `deploy-site.yml` runs the check on every main commit since the last deploy whose check passed, and ships nothing when one fails. A line posted afterwards, on the merged pull request or on the commit, still counts, so the deploy can then be run again. When the commits being shipped change anything under `.github/`, the deploy runs the check as it was at the last checked commit, and refuses when that commit has no check at the same path. This stops a weakened check from judging itself by accident. It cannot stop a deliberate change, which can also edit the workflow, because GitHub runs the workflow as committed. The `.github/` row, which needs IT and security, is the guard for that.
+
+A pure revert needs no line (part 5 of the working agreement): a change whose diff is exactly the inverse of one of the last 100 commits on `main`, at the same place in each file. The seat that reverts tells the owners. A partial revert, a revert with any other change in it, the revert of a revert (which lands the first change again) and any revert that touches this file or `.github/` need their lines.
+
+CI checks this table on every push. It must parse, and a pattern a change adds must match a tracked file. A pattern whose files were later moved or deleted gives a warning instead, so a deletion cannot stop the deploys. Update its row.
+
+A change that leaves this table unreadable fails its check. If one reaches `main` anyway, each later change is judged by the last table that parses, and the seats of the `OWNERS.md` row and the `(the Signers list)` row must also agree to it, until a fix lands. The deploy also asks those seats to agree to the commit that broke it. A change to the table's format or to the check ships in two steps: the check that reads it first, then the change that uses it.
+
+Local merge gate, from a clone with `gh` signed in: `python3 .github/scripts/owner_agreement.py --pr <number>`. It exits 3 and names the missing seats, or 2 when the table cannot be read.
+
+## Seats
+
+Chief of staff, Platform, Engines, Map, Revenue and legal, Product and marketing, IT and security.
+
+## Signers
+
+`gbarbalinardo`
+
+The GitHub accounts whose lines count. They are read from `main` like the rest of this table, so a change cannot add a signer for itself. A change to this list needs the seats of the row `(the Signers list)`.
+
+## Table
+
+| Paths | Seats | What |
+| --- | --- | --- |
+| `OWNERS.md` | Chief of staff | This table, plus every seat named in a changed row |
+| `.github/` | Map, IT and security | CI, the site deploy and the owner check. Any workflow can read every repository secret |
+| `.github/scripts/owner_agreement.py`, `.github/scripts/test_owner_agreement.py`, `.github/workflows/owner-agreement.yml` | Platform, IT and security | The owner check |
+| `infra/` | Map, IT and security | The site Worker and the learn proxy, deployed with the Cloudflare token |
+| `README.md`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, `PRODUCT.md`, `examples/README.md` | Map, Product and marketing | Public copy |
+| `LICENSE`, `LICENSE-DATA`, `NOTICE`, `THIRD_PARTY_NOTICES`, `CITATION.cff`, `docs/assets/vendor/LICENSES/`, `infra/site/fonts/LICENSE-*` | Map, Revenue and legal | Licences, notices and citation, and the third-party licence texts the site ships |
+| `SECURITY.md` | Map, IT and security | Security policy |
+| `docs/index.html`, `docs/assets/site.css`, `omai/code_pages.py`, `omai/code_cards.py` | Map, Product and marketing | The site's hand-written copy and design, and the page generators whose templates carry visible wording |
+| `infra/learn-proxy/wrangler.jsonc` | Map, IT and security, Revenue and legal | The learn proxy's daily spend cap |
+| (the Signers list) | Chief of staff, IT and security | Who may sign: a change to the Signers list above |
+| (any other path) | Map | Default owner |
