@@ -9,6 +9,10 @@ A future representation therefore cannot land uncredited: adding an adapter with
 credits entry breaks this test.
 """
 
+import json
+import re
+from pathlib import Path
+
 from omai.map_data import DOMAINS, build_codes
 from omai.representation.credits import CODE_CREDITS, PER_NODE_CREDITS
 
@@ -114,3 +118,34 @@ def test_every_code_carries_its_display_name_on_every_entry():
         name = (CODE_CREDITS[code].get("name") or "").strip()
         assert name, code
         assert {e["name"] for e in spaces.values()} == {name}, code
+
+
+# GPL-2.0, GPL-3.0, LGPL-2.1 and LGPL-3.0 without a suffix, or with "+", are deprecated
+# SPDX ids. The bare form does not say whether later versions of the license are allowed.
+# A credits license names -only or -or-later, as the code's own grant reads.
+_BARE_GNU = re.compile(r"\b(?:L?GPL|AGPL)-[0-9]\.[0-9](?!-only|-or-later)\b")
+
+
+def test_no_deprecated_bare_gnu_license_id():
+    bare = {code: c["license"] for code, c in CODE_CREDITS.items()
+            if _BARE_GNU.search(c.get("license") or "")}
+    assert not bare, (
+        f"credits licenses with a deprecated bare GNU id: {bare}. Write the SPDX id "
+        "with -only or -or-later, as the code's own license grant reads")
+
+
+def test_license_agrees_with_the_release_read_at_its_tag():
+    # The release registry reads each license at the tag (docs/data/releases/<code>.json,
+    # field spdx). The code page shows both, so for a code with a registered release the
+    # credits license must lead with the same first SPDX id as the newest release. Codes
+    # without a release file are checked only by the bare-id test above.
+    releases = Path(__file__).resolve().parents[1] / "docs" / "data" / "releases"
+    first_id = re.compile(r"[A-Za-z0-9.+-]+")
+    for path in sorted(releases.glob("*.json")):
+        rows = json.loads(path.read_text()).get("releases") or []
+        spdx = (rows[-1].get("spdx") or "") if rows else ""
+        code = path.stem
+        if not spdx or code not in CODE_CREDITS:
+            continue
+        lead = first_id.match(CODE_CREDITS[code]["license"]).group(0)
+        assert lead == first_id.match(spdx).group(0), (code, CODE_CREDITS[code]["license"], spdx)

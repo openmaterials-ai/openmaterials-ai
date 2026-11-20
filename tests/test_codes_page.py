@@ -36,7 +36,7 @@ def test_lean_is_cited():
 
 
 def test_license_posture_is_stated():
-    assert "GPL-3.0" in PAGE and "GPUMD" in PAGE
+    assert "ShengBTE under GPL-3.0-or-later" in PAGE and "GPUMD under LGPL-3.0-or-later" in PAGE
     assert "Apache 2.0" in PAGE and "CC BY 4.0" in PAGE
     assert "does not vendor or copy" in FLAT
 
@@ -47,8 +47,8 @@ def test_entries_link_the_map_code_filter():
 
 def test_no_hardcoded_roster():
     """The page must not bake in per-code citations; codes.json is the
-    single source. Codes may appear only in prose (GPUMD in the posture
-    section), never as data rows."""
+    single source. Codes may appear only in prose (ShengBTE and GPUMD in the
+    posture section), never as data rows."""
     assert "bib-card" in PAGE, "card renderer present"
     body = PAGE.split("<body", 1)[1]
     static = re.sub(r"<script>.*?</script>", "", body, flags=re.S)
