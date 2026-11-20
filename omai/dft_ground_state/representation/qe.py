@@ -194,8 +194,8 @@ QE_CUBIC_LATTICE_PARAMETER = SpaceRepresentationSpec(
         "cell (q-e/PW/src/move_ions.f90:192-197). Its pressure P minus the "
         "target press is the Pulay stress of the fixed-basis relaxation, "
         "which a higher ecutwfc and ecutrho reduce, plus the residual the "
-        "relaxation left, up to press_conv_thr. Record it, and refuse the "
-        "value when it exceeds a stated tolerance."
+        "relaxation left, up to press_conv_thr. Record it in the provenance, "
+        "and refuse the value when it exceeds a stated tolerance."
     ),
 )
 
@@ -258,9 +258,11 @@ QE_RELAX_CUBIC_LATTICE_PARAMETER = OperatorRepresentationSpec(
         "an error unless ibrav=1 (q-e/Modules/cell_base.f90:753-755), and "
         "'ibrav' does nothing when ibrav=0 (q-e/Modules/latgen.f90:749-751). "
         "Instances record the Potential's provenance as for "
-        "solve_ground_state, and in the conditions press, press_conv_thr, "
-        "cell_dofree, cell_dynamics, nosym and noinv, ecutwfc, ecutrho, the "
-        "k-mesh, the smearing and degauss, the final-SCF pressure and its "
-        "tolerance, and the space group found with its symmetry tolerance."
+        "solve_ground_state, and in the conditions the run's settings: "
+        "press, press_conv_thr, cell_dofree, cell_dynamics, nosym and noinv, "
+        "ecutwfc, ecutrho, the k-mesh, the smearing and degauss. What the run "
+        "produced or the reader checked is not a condition. The final-SCF "
+        "pressure, the symmetry found and the tolerances of the acceptance "
+        "checks go in the record's provenance."
     ),
 )
