@@ -64,6 +64,10 @@ class Unit:
 
 
 _E = 1.602176634e-19  # Joules per electron-volt
+# Bohr radius in A (CODATA 2018), the value Quantum ESPRESSO 7.5 uses
+# (BOHR_RADIUS_SI = 0.529177210903E-10 m, q-e/Modules/constants.f90:38, under
+# its "NIST 2018" heading at :28). The Ry/bohr units below reuse it.
+_BOHR_A = 0.529177210903
 
 
 # Canonical energy unit: Joule. Per-mode energies (Helmholtz free energy,
@@ -157,9 +161,9 @@ EV_PER_A3 = Unit("eV_per_A3", ENERGY_PER_LENGTH_CUBED, 1.0)
 # flfrc files store force constants in Rydberg atomic units, Ry/bohr², with no
 # unit string printed in the file; the factor is Ry[eV] / bohr[Å]² (CODATA).
 EV_PER_A2 = Unit("eV_per_A2", ENERGY_PER_LENGTH_SQUARED, 1.0)
-RY_PER_BOHR2 = Unit("Ry_per_bohr2", ENERGY_PER_LENGTH_SQUARED, 13.605693122994 / 0.529177210903**2)
+RY_PER_BOHR2 = Unit("Ry_per_bohr2", ENERGY_PER_LENGTH_SQUARED, 13.605693122994 / _BOHR_A**2)
 # D3Q/thermal2 mat3R third-order force constants: Ry/bohr^3; the factor is Ry[eV] / bohr[Å]³ (CODATA).
-RY_PER_BOHR3 = Unit("Ry_per_bohr3", ENERGY_PER_LENGTH_CUBED, 13.605693122994 / 0.529177210903**3)
+RY_PER_BOHR3 = Unit("Ry_per_bohr3", ENERGY_PER_LENGTH_CUBED, 13.605693122994 / _BOHR_A**3)
 # Surface energy shares the M T^-2 exponents with the force constants (energy
 # per area vs force per length: same dimension, different quantities, kept
 # apart by the surface_energy quantity tag). Canonical stays eV/Å² (the map's
@@ -196,7 +200,7 @@ PER_EV = Unit("per_ev", INVERSE_ENERGY, 1.0 / _E)
 # Ry/bohr ("Ry/au"), whose factor to eV/Å is Ry[eV] / bohr[Å] =
 # 13.605693122994 / 0.529177210903 = 25.71104309541616.
 EV_PER_A = Unit("eV_per_A", FORCE, 1.0, si_scale=1.602176634e-9)
-RY_PER_BOHR = Unit("Ry_per_bohr", FORCE, 13.605693122994 / 0.529177210903)
+RY_PER_BOHR = Unit("Ry_per_bohr", FORCE, 13.605693122994 / _BOHR_A)
 
 
 # Pressure / stress units, sharing the ENERGY_PER_LENGTH_CUBED dimension with
@@ -224,6 +228,9 @@ ATM = Unit("atm", ENERGY_PER_LENGTH_CUBED, 101325.0 * 6.241509074460763e-12)
 # angstrom / angstrom_cubed convention so the executor's dimensional bridge
 # resolves LENGTH_SQUARED (the analog-device geometry area A_g in G = sigma A/L).
 ANGSTROM = Unit("angstrom", LENGTH, 1.0, si_scale=1e-10)
+# The bohr, Quantum ESPRESSO's length unit (celldm, CELL_PARAMETERS (bohr), the
+# XML cell vectors): 1 bohr = _BOHR_A A.
+BOHR = Unit("bohr", LENGTH, _BOHR_A)
 ANGSTROM_SQUARED = Unit("angstrom_squared", LENGTH_SQUARED, 1.0, si_scale=1e-20)
 ANGSTROM_CUBED = Unit("angstrom_cubed", VOLUME, 1.0, si_scale=1e-30)
 
@@ -368,6 +375,7 @@ UNITS: dict[str, Unit] = {
         PA,
         ATM,
         ANGSTROM,
+        BOHR,
         ANGSTROM_CUBED,
         DIMENSIONLESS_UNIT,
         VOLT,

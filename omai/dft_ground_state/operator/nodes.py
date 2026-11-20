@@ -22,6 +22,13 @@ and PotentialVirialFitError (ENERGY, eV/atom), each its own quantity tag and
 scalar: the held-out RMSE of a fitted Potential against TotalEnergy, Forces and
 Stress respectively.
 
+CubicLatticeParameter (quantity tag cubic_lattice_parameter, LENGTH in A,
+scalar) is the edge of the conventional cubic cell of a cubic crystal. A
+lattice that is not cubic needs up to six cell parameters (three lengths,
+three angles) in a standard setting. That is a different quantity, deferred
+until a workflow records it, and it would join as its own node rather than as
+labels on this one.
+
 Deferred v1 candidates (from the QE scan's seven new-node set), each with why:
 
   * ChargeDensity: an observable in principle (Hohenberg-Kohn), but needs a
@@ -72,6 +79,7 @@ from omai.operator.dimensions import (
     ENERGY,
     ENERGY_PER_LENGTH_CUBED,
     FORCE,
+    LENGTH,
     MAGNETIC_MOMENT,
 )
 from omai.operator.space import Field, ObservableSpace, Space
@@ -155,6 +163,28 @@ BAND_GAP = ObservableSpace(
     ),
 )
 
+CUBIC_LATTICE_PARAMETER = ObservableSpace(
+    name="CubicLatticeParameter",
+    fields=(Field("a_lat", LENGTH, indices=()),),
+    tier="Ground state",
+    description=(
+        "Lattice parameter a_lat of a cubic crystal (space groups 195 to "
+        "230): the edge length of its conventional cubic cell, one scalar in "
+        "A, at the temperature and pressure the conditions carry. The "
+        "conventional cell is the cubic cell of the Bravais lattice, which "
+        "holds 1, 2 or 4 lattice points for the P, I and F lattices, so a "
+        "primitive cell of volume V_prim gives a_lat = (n V_prim)^(1/3) with n "
+        "that count. A static-lattice relaxation "
+        "(relax_cubic_lattice_parameter) gives the value with the nuclei at "
+        "rest: no zero-point motion and no thermal expansion. A measured "
+        "lattice constant includes both, so its difference from a static "
+        "value holds them as well as the error of the Potential. Undefined "
+        "for a crystal that is not cubic: "
+        "its lattice needs up to six parameters in a standard setting, a "
+        "different quantity."
+    ),
+)
+
 # Held-out errors of a fitted potential against the three reference labels
 # above, one node per label (one dimension and one value per node).
 _FIT_SCOPE = (
@@ -225,4 +255,5 @@ NODES: tuple[Space, ...] = (
     POTENTIAL_ENERGY_FIT_ERROR,
     POTENTIAL_FORCE_FIT_ERROR,
     POTENTIAL_VIRIAL_FIT_ERROR,
+    CUBIC_LATTICE_PARAMETER,
 )

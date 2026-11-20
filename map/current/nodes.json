@@ -753,6 +753,26 @@
   },
   "uid": "343adfdb0717f7f81ae52cc5fca8279ff84a9715ba19b5630d405453682b12f9"
  },
+ "34444dc03b4b725e45b32fd46add68944be9111c6cc51a1d5ee4b2382c695962": {
+  "identity": {
+   "fields": [
+    {
+     "dimension": "L^1",
+     "indices": []
+    }
+   ],
+   "gauge": "observable",
+   "labels": {},
+   "quantity": "cubic_lattice_parameter"
+  },
+  "meta": {
+   "description": "Lattice parameter a_lat of a cubic crystal (space groups 195 to 230): the edge length of its conventional cubic cell, one scalar in A, at the temperature and pressure the conditions carry. The conventional cell is the cubic cell of the Bravais lattice, which holds 1, 2 or 4 lattice points for the P, I and F lattices, so a primitive cell of volume V_prim gives a_lat = (n V_prim)^(1/3) with n that count. A static-lattice relaxation (relax_cubic_lattice_parameter) gives the value with the nuclei at rest: no zero-point motion and no thermal expansion. A measured lattice constant includes both, so its difference from a static value holds them as well as the error of the Potential. Undefined for a crystal that is not cubic: its lattice needs up to six parameters in a standard setting, a different quantity.",
+   "name": "CubicLatticeParameter",
+   "symbol": "a_{\\mathrm{lat}}",
+   "tier": "Ground state"
+  },
+  "uid": "34444dc03b4b725e45b32fd46add68944be9111c6cc51a1d5ee4b2382c695962"
+ },
  "35e6000d8a0f2e4572e667befbd4cd5a8c6005fa8f6ef08791b6879c77baba64": {
   "identity": {
    "fields": [

@@ -37,4 +37,7 @@ register_symbol_dimensions({
     # Electronic band gap, an energy (the compute_band_gap formula stays a
     # dimensional SKIP because V is unregistered, like solve_ground_state).
     "E_{gap}": ENERGY,
+    # Cubic lattice parameter, a length (the relax_cubic_lattice_parameter
+    # formula stays a dimensional SKIP because V is unregistered).
+    r"a_{\mathrm{lat}}": LENGTH,
 })

@@ -11,7 +11,9 @@ is the corresponding submodule (e.g. `omai.dft_ground_state.representation.qe`).
 """
 
 from omai.dft_ground_state.representation.qe import (
+    QE_CUBIC_LATTICE_PARAMETER,
     QE_FORCES,
+    QE_RELAX_CUBIC_LATTICE_PARAMETER,
     QE_SOLVE_GROUND_STATE,
     QE_STRESS,
     QE_STRUCTURE,
@@ -70,7 +72,9 @@ from omai.dft_ground_state.representation.gpumd import (
 )
 
 __all__ = [
+    "QE_CUBIC_LATTICE_PARAMETER",
     "QE_FORCES",
+    "QE_RELAX_CUBIC_LATTICE_PARAMETER",
     "QE_SOLVE_GROUND_STATE",
     "QE_STRESS",
     "QE_STRUCTURE",

@@ -15,6 +15,10 @@ q-e/ tree via the scan catalog `scans/qe-phonon.json` (QE 7.5):
                    XML forces (Hartree/bohr, forces/e2)
   Stress           stdout 'total   stress' block (Ry/bohr**3 and      pw.x
                    kbar side by side); XML stress (Hartree/bohr^3)
+  CubicLatticeParameter
+                   vc-relax stdout 'Begin final coordinates' block    pw.x
+                   (cell volume, CELL_PARAMETERS); XML atomic_structure
+                   cell vectors (bohr)
 
 Convention traps this module pins down:
 
@@ -28,6 +32,8 @@ Convention traps this module pins down:
     QE_STRESS.notes for the file:line derivation.
   * With smearing, the printed '!' energy is the smeared free-energy variant
     (F = E - TS_smear), flagged in the output near the '!' line.
+  * The alat printed with the relaxed cell is the INPUT celldm(1), not the
+    relaxed lattice constant; see QE_CUBIC_LATTICE_PARAMETER.notes.
 """
 
 from __future__ import annotations
@@ -36,8 +42,12 @@ from omai.representation.adapter import (
     OperatorRepresentationSpec,
     SpaceRepresentationSpec,
 )
-from omai.dft_ground_state.operator.edges import solve_ground_state
+from omai.dft_ground_state.operator.edges import (
+    relax_cubic_lattice_parameter,
+    solve_ground_state,
+)
 from omai.dft_ground_state.operator.nodes import (
+    CUBIC_LATTICE_PARAMETER,
     FORCES,
     STRESS,
     STRUCTURE,
@@ -132,6 +142,64 @@ QE_STRESS = SpaceRepresentationSpec(
 )
 
 
+QE_CUBIC_LATTICE_PARAMETER = SpaceRepresentationSpec(
+    space=CUBIC_LATTICE_PARAMETER,
+    representation_name="qe",
+    observable_units={"a_lat": "bohr"},
+    code_api={
+        "a_lat": "pw.x vc-relax stdout block 'Begin final coordinates' to 'End final coordinates' (CELL_PARAMETERS vectors, 'new unit-cell volume'); XML output/atomic_structure cell a1, a2, a3",
+    },
+    notes=(
+        "From a converged pw.x run with calculation='vc-relax'. The final "
+        "cell is printed between 'Begin final coordinates' and 'End final "
+        "coordinates' (q-e/PW/src/output_tau.f90:89 and :163): the line "
+        "'new unit-cell volume = V a.u.^3 ( V Ang^3 )' (:92-93, F12.5 and "
+        "F11.5), the density, then the three cell vectors (3F14.9) under one "
+        "of three headers chosen by the units of the input CELL_PARAMETERS "
+        "card: 'CELL_PARAMETERS (alat= x)' with the vectors in units of alat "
+        "(:102, and the default at :112), 'CELL_PARAMETERS (bohr)' (:105) or "
+        "'CELL_PARAMETERS (angstrom)' (:108). A parser reads all three. The "
+        "alat in the first header is the INPUT celldm(1): pw.x moves the "
+        "cell by rescaling the vectors at fixed alat. The XML stores the same "
+        "input alat as an attribute of atomic_structure and the cell vectors "
+        "alat*at(:,i) in bohr (q-e/PW/src/pw_restart_new.f90:356-357). "
+        "Reading that alat returns the starting lattice constant. Only with "
+        "cell_dofree='ibrav' (and ibrav not 0) does pw.x print the relaxed "
+        "celldm(1), at every step through remake_cell "
+        "(q-e/PW/src/move_ions.f90:163, q-e/Modules/latgen.f90:755-756). For "
+        "ibrav 1, 2 and 3 that number is a_lat in bohr, a cross-check. a_lat "
+        "comes from the vectors: with "
+        "V_cell the volume of the final simulation cell, N_cell its atom "
+        "count and N_conv the atom count of the conventional cubic cell from "
+        "a symmetry analysis of the final structure, a_lat = (V_cell N_conv / "
+        "N_cell)^(1/3). For a primitive cell N_conv / N_cell is the lattice-"
+        "point count 1, 2 or 4 of the P, I or F lattice, so it is not 4 in "
+        "general. The vectors carry nine decimals, the volume line five, so "
+        "the vectors are the more precise source. 1 bohr = 0.529177210903 A, "
+        "the value pw.x 7.5 itself uses (q-e/Modules/constants.f90:38). "
+        "Record a value only when three checks pass. (1) The relaxation "
+        "converged. For cell_dynamics='bfgs' stdout prints 'bfgs converged "
+        "in N scf cycles and M bfgs steps' (q-e/Modules/bfgs_module.f90:"
+        "1114-1116) and never 'bfgs failed after' (:1109-1112). The final "
+        "coordinates block alone is no evidence: after a failure bfgs also "
+        "sets its converged flag (:388-394) and move_ions prints the block "
+        "(q-e/PW/src/move_ions.f90:262). For the same reason the XML "
+        "optimization flag (q-e/PW/src/pw_restart_new.f90:310-315) does not "
+        "separate the two, while the exit status does: 3 when the optimizer "
+        "failed, 0 otherwise (q-e/PW/src/run_pwscf.f90:343-351). Damped cell "
+        "dynamics print their own convergence line. (2) The final structure "
+        "is cubic, its space group 195 to 230 at a stated symmetry "
+        "tolerance. (3) The final SCF agrees with the target. After "
+        "convergence pw.x repeats the SCF with the G-vectors of the relaxed "
+        "cell (q-e/PW/src/move_ions.f90:192-197). Its pressure P minus the "
+        "target press is the Pulay stress of the fixed-basis relaxation, "
+        "which a higher ecutwfc and ecutrho reduce, plus the residual the "
+        "relaxation left, up to press_conv_thr. Record it, and refuse the "
+        "value when it exceeds a stated tolerance."
+    ),
+)
+
+
 # ---------------------------------------------------------------------------
 # Operator-level spec (diagnostic: how pw.x performs the SCF solve)
 # ---------------------------------------------------------------------------
@@ -155,5 +223,44 @@ QE_SOLVE_GROUND_STATE = OperatorRepresentationSpec(
         "record them in the conditions. The k-mesh, smearing, and conv_thr "
         "are discretization choices of the solve itself: they change how "
         "accurately E_KS is minimized, not what E_KS is."
+    ),
+)
+
+
+QE_RELAX_CUBIC_LATTICE_PARAMETER = OperatorRepresentationSpec(
+    operator=relax_cubic_lattice_parameter,
+    representation_name="qe",
+    discretization_choices={
+        "calculation": "vc-relax, the variable-cell relaxation. relax keeps the cell and scf moves nothing, so neither records a lattice parameter",
+        "cell_dynamics": "bfgs (default for vc-relax, with ion_dynamics bfgs) or damped dynamics damp-pr / damp-w, whose convergence line differs",
+        "cell_dofree": "cell degrees of freedom that move: all (default), ibrav (keeps the input Bravais lattice, no effect when ibrav=0), volume (only the scale changes, allowed only for ibrav=1) and others",
+        "press": "target pressure, kbar (default 0)",
+        "press_conv_thr": "convergence threshold on the pressure, kbar (default 0.5)",
+        "forc_conv_thr": "force threshold of the ionic steps, Ry/bohr (default 1.0D-3)",
+        "etot_conv_thr": "energy threshold between ionic steps, Ry (default 1.0D-4)",
+        "ecutwfc": "wavefunction cutoff, Ry, with ecutrho for the density: fixed-basis relaxation leaves a Pulay stress that falls as they rise",
+        "k_mesh": "Monkhorst-Pack K_POINTS grid, as for solve_ground_state",
+        "smearing": "occupations and degauss, as for solve_ground_state",
+    },
+    notes=(
+        "pw.x realizes relax_cubic_lattice_parameter as calculation="
+        "'vc-relax': ionic and cell steps until energy, force and pressure "
+        "meet their thresholds (defaults from q-e/PW/Doc/INPUT_PW.def at "
+        "qe-7.5), then a final SCF with the G-vectors of the relaxed cell. "
+        "pw.x symmetrizes forces and stress with the symmetry operations it "
+        "found for the input structure and kept, so the relaxation keeps "
+        "them, and the result is a stationary point within that symmetry, "
+        "not a proof of stability. The kept set can be smaller than the "
+        "space group: nosym and noinv remove operations, a "
+        "starting_magnetization pattern lowers them, and fractional "
+        "translations incommensurate with the FFT grid are dropped. Hence "
+        "the check on the final structure. cell_dofree='volume' stops with "
+        "an error unless ibrav=1 (q-e/Modules/cell_base.f90:753-755), and "
+        "'ibrav' does nothing when ibrav=0 (q-e/Modules/latgen.f90:749-751). "
+        "Instances record the Potential's provenance as for "
+        "solve_ground_state, and in the conditions press, press_conv_thr, "
+        "cell_dofree, cell_dynamics, nosym and noinv, ecutwfc, ecutrho, the "
+        "k-mesh, the smearing and degauss, the final-SCF pressure and its "
+        "tolerance, and the space group found with its symmetry tolerance."
     ),
 )

@@ -36,4 +36,6 @@ register_space_symbols({
     "PotentialEnergyFitError": {r"\epsilon_E"},
     "PotentialForceFitError": {r"\epsilon_F"},
     "PotentialVirialFitError": {r"\epsilon_W"},
+    # Static-lattice cubic lattice parameter (relax_cubic_lattice_parameter).
+    "CubicLatticeParameter": {r"a_{\mathrm{lat}}"},
 })

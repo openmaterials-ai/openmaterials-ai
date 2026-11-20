@@ -1916,6 +1916,32 @@
   ],
   "uid": "8514fb3e8586db31ec55ec353254d206a41722760541644b2b5c08f770716a81"
  },
+ "87e9751ce081b5e0946062840a2316664290c7942bcdf8e05415e94cf9e2e3f7": {
+  "identity": {
+   "formula": "Equality(Symbol('a_{\\\\mathrm{lat}}'), Function('a^{relax}_{KS}')(Symbol('\\\\mathcal{S}'), Symbol('V')))",
+   "inputs": [
+    "80a4273845e09207860e06db18d1f1ee5670a9b9c8b1020a99928c872878f901",
+    "db1df71467f5a79440f849704ac20a33573ed4e270b5ebba59549272b2475239"
+   ],
+   "output": "34444dc03b4b725e45b32fd46add68944be9111c6cc51a1d5ee4b2382c695962",
+   "outputs": [
+    "34444dc03b4b725e45b32fd46add68944be9111c6cc51a1d5ee4b2382c695962"
+   ],
+   "schemes": {
+    "method": "variable_cell_relaxation"
+   }
+  },
+  "meta": {
+   "description": "Static-lattice cubic lattice parameter a_lat = a^relax_KS[S, V]: the conventional cubic edge of the cell at which a variable-cell relaxation of the Structure S under the Potential V stops, with the forces and the stress relaxed to the run's thresholds at the target pressure P the conditions carry (0 unless stated). The nuclei are at rest, so no zero-point motion and no thermal expansion enter. A code that symmetrizes forces and stress keeps the symmetry operations it uses, so the result is a stationary point of the enthalpy E_tot + P V within that symmetry and need not be a minimum: a cubic cell that a lower symmetry would lower in enthalpy still stops cubic. A value is recorded only when the relaxation converged and the final structure is cubic by a symmetry analysis at a stated tolerance. The same (S, V) signature as solve_ground_state. Opaque (an external relaxation), so not sympy-executable, and the dimensional gate skips it.",
+   "formula_latex": "a_{\\mathrm{lat}} = a^{relax}_{KS}{\\left(\\mathcal{S},V \\right)}",
+   "formula_srepr": "Equality(Symbol('a_{\\\\mathrm{lat}}'), Function('a^{relax}_{KS}')(Symbol('\\\\mathcal{S}'), Symbol('V')))",
+   "name": "relax_cubic_lattice_parameter",
+   "schemes": {
+    "method": "variable_cell_relaxation"
+   }
+  },
+  "uid": "87e9751ce081b5e0946062840a2316664290c7942bcdf8e05415e94cf9e2e3f7"
+ },
  "88f8474bfda3d73e220f1db0ddfb8f00546007f1172ec663f4d4406568b3c5f2": {
   "identity": {
    "formula": "Equality(Indexed(IndexedBase(Symbol('\\\\sigma')), Symbol('\\\\alpha', integer=True), Symbol('\\\\beta', integer=True)), Mul(Integer(-1), Pow(Symbol('V_{cell}', positive=True), Integer(-1)), Derivative(Symbol('E_{tot}'), Tuple(Indexed(IndexedBase(Symbol('\\\\varepsilon^{str}')), Symbol('\\\\alpha', integer=True), Symbol('\\\\beta', integer=True)), Integer(1)))))",

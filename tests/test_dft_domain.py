@@ -56,7 +56,7 @@ def test_dft_nodes_are_structure_energy_forces_stress_moments():
     assert [s.name for s in NODES] == [
         "Structure", "TotalEnergy", "Forces", "Stress", "MagneticMoment",
         "BandGap", "PotentialEnergyFitError", "PotentialForceFitError",
-        "PotentialVirialFitError"]
+        "PotentialVirialFitError", "CubicLatticeParameter"]
 
 
 def test_dft_edges_are_the_ground_state_operators():
@@ -69,7 +69,8 @@ def test_dft_edges_are_the_ground_state_operators():
         "compute_fc2_finite_displacement", "compute_magnetic_moments",
         "compute_band_gap", "compute_potential_energy_fit_error",
         "compute_potential_force_fit_error",
-        "compute_potential_virial_fit_error"]
+        "compute_potential_virial_fit_error",
+        "relax_cubic_lattice_parameter"]
 
 
 def test_structure_is_imported_from_shared_primitives():
@@ -174,13 +175,15 @@ def test_new_nodes_validate_against_the_registries():
 # Task 3: the QE representation (pw.x energy, forces, stress, structure).
 # --------------------------------------------------------------------------
 
-def test_build_codes_qe_covers_14_including_the_ground_state():
+def test_build_codes_qe_covers_15_including_the_ground_state():
     from omai.map_data import build_codes
 
     qe = build_codes(DOMAINS)["qe"]
-    # 13 plus the ev.x BulkModulus row of the mechanics domain (2026-10-01).
-    assert len(qe) == 14
-    for name in ("Structure", "TotalEnergy", "Forces", "Stress", "BulkModulus"):
+    # 13 plus the ev.x BulkModulus row of the mechanics domain (2026-10-01),
+    # plus the vc-relax CubicLatticeParameter row (2026-11-20).
+    assert len(qe) == 15
+    for name in ("Structure", "TotalEnergy", "Forces", "Stress", "BulkModulus",
+                 "CubicLatticeParameter"):
         assert name in qe, f"qe coverage missing {name}"
 
 
@@ -219,8 +222,8 @@ def test_dft_representation_package_discovery_finds_the_specs():
     for _, s in op_specs:
         by_rep_op.setdefault(s.representation_name, set()).add(s.operator.name)
     assert by_rep_space["qe"] == {
-        "Structure", "TotalEnergy", "Forces", "Stress"}
-    assert by_rep_op["qe"] == {"solve_ground_state"}
+        "Structure", "TotalEnergy", "Forces", "Stress", "CubicLatticeParameter"}
+    assert by_rep_op["qe"] == {"solve_ground_state", "relax_cubic_lattice_parameter"}
     assert by_rep_space["pymatgen"] == {
         "Structure", "TotalEnergy", "Stress", "MagneticMoment"}
     assert by_rep_op["pymatgen"] == {"compute_magnetic_moments"}
@@ -261,11 +264,11 @@ def test_dft_representation_package_discovery_finds_the_specs():
         "PotentialEnergyFitError", "PotentialForceFitError",
         "PotentialVirialFitError"}
     assert "gpumd" not in by_rep_op
-    # 8 (qe 4 + pymatgen 4) + mace 4 + matgl 5 + fairchem 4 + vasp 7 + mp-api 3
-    # + ase 1 + gpumd 3 = 35 space specs; 2 (qe, pymatgen operator) + 3 MLIP +
-    # 4 vasp = 9 operator specs (mp-api, ase and gpumd add none).
-    assert len(space_specs) == 35, [a for a, _ in space_specs]
-    assert len(op_specs) == 9, [a for a, _ in op_specs]
+    # 9 (qe 5 + pymatgen 4) + mace 4 + matgl 5 + fairchem 4 + vasp 7 + mp-api 3
+    # + ase 1 + gpumd 3 = 36 space specs; 3 (qe 2, pymatgen 1 operator) + 3 MLIP
+    # + 4 vasp = 10 operator specs (mp-api, ase and gpumd add none).
+    assert len(space_specs) == 36, [a for a, _ in space_specs]
+    assert len(op_specs) == 10, [a for a, _ in op_specs]
 
 
 def test_qe_ground_state_units_are_the_declared_ones():

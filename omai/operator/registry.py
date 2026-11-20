@@ -111,6 +111,7 @@ QUANTITY_TAGS: dict[str, str] = {
     "voltage": "Average intercalation (open-circuit) voltage: the Nernst energy difference over the transferred charge.",
     "magnetic_moment": "Per-site magnetic moment of the spin-polarized ground state, in Bohr magnetons.",
     "band_gap": "Electronic band gap of the ground state, the Kohn-Sham eigenvalue gap (eV).",
+    "cubic_lattice_parameter": "Lattice parameter of a cubic crystal (space groups 195 to 230), the edge of its conventional cubic cell; LENGTH (A). At the temperature and pressure of the conditions. A static-lattice relaxation gives it without zero-point motion or thermal expansion, which a measured value includes. Undefined for a lattice that is not cubic.",
     "electronic_dos": "Electronic density of states g(E) = sum_nk delta(E - E_nk): a 1-D array of states per unit energy, binned in electron energy E. EMPHATICALLY NOT the PhononDOS g(omega): different physics, different axis (electron energy E in eV vs phonon frequency omega in THz), and a different dimension (inverse energy vs inverse frequency); kept apart by the electronic_dos quantity tag and the distinct dimension. Gauge-invariant (a spectral density over Kohn-Sham eigenvalues).",
     "pressure": "Mechanical pressure P = trace(stress)/3, positive under compression (the stress pressure convention).",
     "temperature": "Thermodynamic temperature at which the calculation is evaluated.",

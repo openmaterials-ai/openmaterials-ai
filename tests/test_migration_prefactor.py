@@ -67,8 +67,11 @@ def test_every_base_uid_is_unchanged_and_the_new_uids_are_pinned():
     edges = {o.name: edge_id(o, node_id) for d in DOMAINS for o in d.edges}
     assert {n: nodes.get(n) for n in base["nodes"]} == base["nodes"]
     assert {e: edges.get(e) for e in base["edges"]} == base["edges"]
-    assert set(nodes) - set(base["nodes"]) == {NAME}
-    assert set(edges) - set(base["edges"]) == {"compute_harmonic_migration_prefactor"}
+    # Nodes and edges added after this one: CubicLatticeParameter (2026-11-20).
+    later_nodes = {"CubicLatticeParameter"}
+    later_edges = {"relax_cubic_lattice_parameter"}
+    assert set(nodes) - set(base["nodes"]) - later_nodes == {NAME}
+    assert set(edges) - set(base["edges"]) - later_edges == {"compute_harmonic_migration_prefactor"}
     assert nodes[NAME] == NODE_UID and edges["compute_harmonic_migration_prefactor"] == EDGE_UID
     assert base["nodes"]["MigrationBarrier"] == MIGRATION_BARRIER_UID
 

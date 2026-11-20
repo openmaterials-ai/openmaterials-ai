@@ -1,6 +1,6 @@
 r"""Operators (edges) of the DFT ground-state domain.
 
-Nine edges, all implicit (is_executable_in_sympy_override=False): the
+Ten edges, all implicit (is_executable_in_sympy_override=False): the
 Kohn-Sham SCF solve, the two response derivatives (Hellmann-Feynman forces,
 cell stress) a DFT engine reports alongside the energy, the
 finite-displacement route from Forces to the second-order force constants
@@ -11,7 +11,10 @@ signature as the SCF solve), and the electronic band gap (added 2026-07-09
 from the atomate2/VASP scan, the same (Structure, Potential) signature: one
 more response read off a band-structure run), and the three held-out errors
 of a fitted potential against the reference labels TotalEnergy, Forces and
-Stress (compute_potential_{energy,force,virial}_fit_error, one label each).
+Stress (compute_potential_{energy,force,virial}_fit_error, one label each),
+and the static-lattice cubic lattice parameter a variable-cell relaxation
+reaches (relax_cubic_lattice_parameter, added 2026-11-20, the same
+(Structure, Potential) signature as the SCF solve).
 
 Symbol choices are deliberately distinct from the thermal domain's globals to
 avoid collisions in the shared dimension / vocabulary registries: E_{tot} and
@@ -27,6 +30,7 @@ import sympy as sp
 from omai.operator.operator import Operator
 from omai.dft_ground_state.operator.nodes import (
     BAND_GAP,
+    CUBIC_LATTICE_PARAMETER,
     FORCES,
     MAGNETIC_MOMENT_STATE,
     POTENTIAL_ENERGY_FIT_ERROR,
@@ -78,6 +82,11 @@ _eps_F = sp.Symbol(r"\epsilon_F")
 _eps_W = sp.Symbol(r"\epsilon_W")
 _rmse = sp.Function(r"\epsilon^{rmse}")
 _N = sp.Symbol("N", positive=True, integer=True)
+# Cubic lattice parameter (a_{\mathrm{lat}}: bare a is the thermal domain's
+# registered dimensionless symbol, and a_0 reads as the Bohr radius) and the
+# opaque variable-cell relaxation producing it.
+_a_lat = sp.Symbol(r"a_{\mathrm{lat}}")
+_a_relax = sp.Function(r"a^{relax}_{KS}")
 
 
 # ---------------------------------------------------------------------------
@@ -199,6 +208,32 @@ compute_band_gap = Operator(
     ),
 )
 
+relax_cubic_lattice_parameter = Operator(
+    name="relax_cubic_lattice_parameter",
+    inputs=(STRUCTURE, POTENTIAL),
+    outputs=(CUBIC_LATTICE_PARAMETER,),
+    schemes={"method": "variable_cell_relaxation"},
+    formula=sp.Eq(_a_lat, _a_relax(_S, _V_sym)),
+    is_executable_in_sympy_override=False,
+    description=(
+        "Static-lattice cubic lattice parameter a_lat = a^relax_KS[S, V]: "
+        "the conventional cubic edge of the cell at which a variable-cell "
+        "relaxation of the Structure S under the Potential V stops, with the "
+        "forces and the stress relaxed to the run's thresholds at the target "
+        "pressure P the conditions carry (0 unless stated). The nuclei are at "
+        "rest, so no zero-point motion and no thermal expansion enter. A "
+        "code that symmetrizes forces and stress keeps the symmetry "
+        "operations it uses, so the result is a stationary point of the "
+        "enthalpy E_tot + P V within that symmetry and need not be a "
+        "minimum: a cubic cell that a lower symmetry would lower in enthalpy "
+        "still stops cubic. A value is recorded only when the relaxation "
+        "converged and the final structure is cubic by a symmetry analysis "
+        "at a stated tolerance. The same (S, V) signature as "
+        "solve_ground_state. Opaque (an external relaxation), so not "
+        "sympy-executable, and the dimensional gate skips it."
+    ),
+)
+
 _FIT_EDGE_NOTE = (
     "stands for the family of reference labels over the held-out structures "
     "(the family-of-values convention of compute_fc2_finite_displacement), "
@@ -269,4 +304,5 @@ EDGES: tuple[Operator, ...] = (
     compute_potential_energy_fit_error,
     compute_potential_force_fit_error,
     compute_potential_virial_fit_error,
+    relax_cubic_lattice_parameter,
 )

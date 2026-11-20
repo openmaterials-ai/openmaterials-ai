@@ -109,7 +109,7 @@ def test_qe_and_lammps_coverage_counts(tmp_path):
         assert doc["representation"] == rep
         assert len(doc["covers"]) == len(codes[rep]), \
             f"{rep} covers {len(doc['covers'])}, live build_codes says {len(codes[rep])}"
-    assert len(codes["qe"]) == 14
+    assert len(codes["qe"]) == 15
     assert len(codes["lammps"]) == 12
 
 

@@ -159,6 +159,12 @@ ALIASES: dict[str, tuple[str, ...]] = {
     "reaction-enthalpy": (
         "MolecularReactionEnthalpy", "compute_molecular_reaction_enthalpy",
     ),
+    # Static-lattice cubic lattice parameter of a variable-cell relaxation.
+    # Only cubic surface labels: a lattice that is not cubic has no node yet.
+    "cubic-lattice-parameter": (
+        "CubicLatticeParameter", "relax_cubic_lattice_parameter",
+    ),
+    "cubic-lattice-constant": ("CubicLatticeParameter",),
     # NO-HOME markers live in the alignment files, not here: an alias
     # must point at something that exists (the gate below enforces it).
 }

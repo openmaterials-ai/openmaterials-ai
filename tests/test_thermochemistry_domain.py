@@ -378,7 +378,8 @@ def test_map_has_one_hundred_nodes_and_fifteen_tiers():
     # (Molecular dynamics, no new tier). +4 for the molecular gas-phase
     # thermochemistry nodes, the two Cp variants among them (Molecular, no new tier).
     # +1 for MigrationPrefactor[method=harmonic_tst] (Diffusion, no new tier).
-    assert len(g["nodes"]) == 142
+    # +1 for CubicLatticeParameter (Ground state, no new tier).
+    assert len(g["nodes"]) == 143
     assert len(g["tiers"]) == 18
 
 
